@@ -1,0 +1,21 @@
+{
+  "name": "vitacoach",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.101.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "axios": "^1.13.6",
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1",
+    "groq-sdk": "^1.1.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^8.0.3"
+  }
+}
