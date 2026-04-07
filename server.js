@@ -10,8 +10,16 @@ dotenv.config()
 
 const app = express()
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
 const __dirname = dirname(fileURLToPath(import.meta.url))
+
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_ANON_KEY
+console.log('SUPABASE_URL:', supabaseUrl ? '✅ défini' : '❌ manquant')
+console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY ? '✅ défini' : '❌ manquant')
+
+const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey)
+  : null
 
 app.use(express.json())
 
@@ -217,6 +225,7 @@ app.get('/api/image', async (req, res) => {
   }
 })
 
-app.listen(3001, () => {
-  console.log('✅ Serveur VitaCoach démarré sur http://localhost:3001')
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`✅ Serveur VitaCoach démarré sur port ${PORT}`)
 })
