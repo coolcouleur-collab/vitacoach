@@ -238,10 +238,7 @@ export default function App() {
                 <label style={styles.label}>Poids (kg) <span style={styles.hint}>(20–300)</span></label>
                 <input style={styles.inputField} type="number" placeholder="Ex: 65" value={form.poids}
                   min={20} max={300}
-                  onChange={e => {
-                    const v = Math.min(300, Math.max(20, parseInt(e.target.value) || ''))
-                    setForm({ ...form, poids: v || '' })
-                  }} />
+                  onChange={e => setForm({ ...form, poids: e.target.value })} />
               </div>
             </div>
             <div style={styles.field}>
