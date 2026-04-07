@@ -1,4 +1,10 @@
 import React, { useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
 
 export default function Auth({ onConnecte }) {
   const [mode, setMode] = useState('connexion')
@@ -13,21 +19,21 @@ export default function Auth({ onConnecte }) {
     setLoading(true)
     setMessage('')
 
-    const endpoint = mode === 'inscription' ? '/api/inscription' : '/api/connexion'
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-    const data = await res.json()
-
-    if (data.erreur) {
-      setMessage('❌ ' + data.erreur)
-    } else if (mode === 'inscription') {
-      setMessage('✅ Compte créé ! Vérifie ton email puis connecte-toi.')
-      setMode('connexion')
+    if (mode === 'inscription') {
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setMessage('❌ ' + error.message)
+      } else {
+        setMessage('✅ Compte créé ! Vérifie ton email puis connecte-toi.')
+        setMode('connexion')
+      }
     } else {
-      onConnecte(data.user)
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setMessage('❌ ' + error.message)
+      } else {
+        onConnecte(data.user)
+      }
     }
     setLoading(false)
   }
