@@ -100,34 +100,23 @@ const defaultForm = {
 }
 
 export default function App() {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('vitacoach_user')
-    return saved ? JSON.parse(saved) : null
-  })
-  const [profil, setProfil] = useState(() => {
-    const saved = localStorage.getItem('vitacoach_profil')
-    return saved ? JSON.parse(saved) : null
-  })
+  const safeParse = (key, fallback) => {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback }
+  }
+  const [user, setUser] = useState(() => safeParse('vitacoach_user', null))
+  const [profil, setProfil] = useState(() => safeParse('vitacoach_profil', null))
   const [etape, setEtape] = useState(() => {
     const saved = localStorage.getItem('vitacoach_etape')
     return saved ? parseInt(saved) : 1
   })
   const [messages, setMessages] = useState(() => {
-    const savedProfil = localStorage.getItem('vitacoach_profil')
-    const savedHistory = localStorage.getItem('vitacoach_historique')
-    if (savedProfil && savedHistory) {
-      return JSON.parse(savedHistory)
-    }
-    if (savedProfil) {
-      const p = JSON.parse(savedProfil)
-      return [{ role: 'assistant', content: `🌟 Bon retour ${p.nom} ! Comment puis-je t'aider aujourd'hui ?` }]
-    }
+    const p = safeParse('vitacoach_profil', null)
+    const h = safeParse('vitacoach_historique', null)
+    if (p && h) return h
+    if (p) return [{ role: 'assistant', content: `🌟 Bon retour ${p.nom} ! Comment puis-je t'aider aujourd'hui ?` }]
     return []
   })
-  const [form, setForm] = useState(() => {
-    const saved = localStorage.getItem('vitacoach_form')
-    return saved ? JSON.parse(saved) : defaultForm
-  })
+  const [form, setForm] = useState(() => safeParse('vitacoach_form', defaultForm))
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef(null)
