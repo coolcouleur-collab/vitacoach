@@ -1,8 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://believable-courtesy-production-82b6.up.railway.app/api/:path*"
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 30
     }
-  ]
+  }
 }
