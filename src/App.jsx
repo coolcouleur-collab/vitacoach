@@ -103,7 +103,24 @@ export default function App() {
   const safeParse = (key, fallback) => {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback } catch { return fallback }
   }
+
+  const FREE_LIMIT = 5
+
+  const getMsgCount = () => {
+    const today = new Date().toDateString()
+    const saved = safeParse('vitacoach_msg_count', { date: today, count: 0 })
+    if (saved.date !== today) return 0
+    return saved.count
+  }
+
+  const incrementMsgCount = () => {
+    const today = new Date().toDateString()
+    const count = getMsgCount() + 1
+    localStorage.setItem('vitacoach_msg_count', JSON.stringify({ date: today, count }))
+  }
+
   const [user, setUser] = useState(() => safeParse('vitacoach_user', null))
+  const [isPro, setIsPro] = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil] = useState(() => safeParse('vitacoach_profil', null))
   const [etape, setEtape] = useState(() => {
     const saved = localStorage.getItem('vitacoach_etape')
@@ -137,6 +154,15 @@ export default function App() {
     localStorage.setItem('vitacoach_etape', etape.toString())
   }, [form, etape, profil])
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('subscribed') === 'true') {
+      setIsPro(true)
+      localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+      window.history.replaceState({}, '', '/')
+    }
+  }, [])
+
   function toggle(key, val) {
     setForm(f => ({
       ...f,
@@ -153,12 +179,30 @@ export default function App() {
     setMessages([{ role: 'assistant', content: `🌟 Bonjour ${form.nom} ! Ton profil est créé. Je te connais maintenant parfaitement. Comment puis-je t'aider aujourd'hui ?` }])
   }
 
+  async function passerPro() {
+    const res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user?.id, email: user?.email })
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+  }
+
   async function envoyerMessage() {
     if (!input.trim()) return
+    if (!isPro && getMsgCount() >= FREE_LIMIT) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `⚠️ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à **VitaCoach Pro** pour des conseils illimités ! 🚀`
+      }])
+      return
+    }
     const userMsg = { role: 'user', content: input }
     setMessages(prev => [...prev, userMsg])
     setInput('')
     setLoading(true)
+    if (!isPro) incrementMsgCount()
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -337,9 +381,17 @@ export default function App() {
             <div style={styles.logo}>💚 VitaCoach</div>
             <div style={styles.subtitle}>Bonjour {profil.nom} 👋</div>
           </div>
-          <button style={styles.btnProfil} onClick={() => { setProfil(null); localStorage.removeItem('vitacoach_profil') }}>
-            ✏️ Modifier profil
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {!isPro && (
+              <button style={{ ...styles.btnProfil, background: 'linear-gradient(135deg, #ff6d00, #ff9800)', color: 'white', border: 'none' }} onClick={passerPro}>
+                ⭐ Pro 4.99€/mois
+              </button>
+            )}
+            {isPro && <div style={{ ...styles.stat, background: '#e8f5e9', borderColor: '#43a047' }}>✅ Pro</div>}
+            <button style={styles.btnProfil} onClick={() => { setProfil(null); localStorage.removeItem('vitacoach_profil') }}>
+              ✏️ Modifier profil
+            </button>
+          </div>
         </div>
       </div>
 
