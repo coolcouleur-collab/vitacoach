@@ -17,6 +17,6 @@ export default async function handler(req, res) {
 
     res.json({ url: session.url })
   } catch (e) {
-    res.status(500).json({ erreur: e.message })
+    res.status(200).json({ erreur: e.message, stack: e.stack?.slice(0, 300) })
   }
 }
