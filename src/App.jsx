@@ -199,7 +199,7 @@ export default function App() {
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `⚠️ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à **VitaCoach Pro** pour des conseils illimités ! 🚀`
+        content: `⚠️ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à **Oravi Pro** pour des conseils illimités ! 🚀`
       }])
       return
     }
@@ -237,7 +237,7 @@ export default function App() {
     return (
       <div style={styles.app}>
         <div style={styles.header}>
-          <div style={styles.logo}>💚 VitaCoach</div>
+          <div style={styles.logo}>✨ Oravi</div>
           <div style={styles.subtitle}>Crée ton profil personnalisé</div>
         </div>
 
@@ -368,7 +368,7 @@ export default function App() {
               }}>Suivant →</button>
             ) : (
               <button style={styles.btnSave} onClick={sauvegarderProfil}>
-                🚀 Lancer VitaCoach !
+                🚀 Lancer Oravi !
               </button>
             )}
           </div>
@@ -383,7 +383,7 @@ export default function App() {
       <div style={styles.header}>
         <div style={styles.headerTop}>
           <div>
-            <div style={styles.logo}>💚 VitaCoach</div>
+            <div style={styles.logo}>✨ Oravi</div>
             <div style={styles.subtitle}>Bonjour {profil.nom} 👋</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -410,7 +410,7 @@ export default function App() {
       <div style={styles.chatBox}>
         {messages.map((msg, i) => (
           <div key={i} style={msg.role === 'user' ? styles.userMsg : styles.botMsg}>
-            {msg.role === 'assistant' && <span style={styles.avatar}>💚</span>}
+            {msg.role === 'assistant' && <span style={styles.avatar}>✨</span>}
             <div style={msg.role === 'user' ? styles.userBubble : styles.botBubble}>
               {msg.content}
             </div>
@@ -418,8 +418,8 @@ export default function App() {
         ))}
         {loading && (
           <div style={styles.botMsg}>
-            <span style={styles.avatar}>💚</span>
-            <div style={styles.botBubble}>⏳ VitaCoach réfléchit...</div>
+            <span style={styles.avatar}>✨</span>
+            <div style={styles.botBubble}>⏳ Oravi réfléchit...</div>
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -431,7 +431,7 @@ export default function App() {
         <input style={styles.inputChat} value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && envoyerMessage()}
-          placeholder="Pose une question à VitaCoach..." />
+          placeholder="Pose une question à Oravi..." />
         <button style={styles.button} onClick={envoyerMessage}>Envoyer →</button>
       </div>
     </div>
@@ -541,65 +541,65 @@ function TenuesModule({ profil }) {
 }
 
 const styles = {
-  app: { fontFamily: 'Poppins, sans-serif', maxWidth: 820, margin: '0 auto', padding: 20, backgroundColor: '#f0f7ff', minHeight: '100vh' },
-  header: { background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', color: 'white', padding: '20px 30px', borderRadius: 16, marginBottom: 16 },
+  app: { fontFamily: 'Poppins, sans-serif', maxWidth: 820, margin: '0 auto', padding: 20, backgroundColor: '#f4f6fb', minHeight: '100vh' },
+  header: { background: 'linear-gradient(135deg, #1565c0 0%, #1a73e8 50%, #1e88e5 100%)', color: 'white', padding: '24px 32px', borderRadius: 20, marginBottom: 16, boxShadow: '0 8px 32px rgba(26,115,232,0.28)' },
   headerTop: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  logo: { fontSize: 28, fontWeight: 700 },
-  subtitle: { fontSize: 14, opacity: 0.8 },
+  logo: { fontSize: 32, fontWeight: 800, letterSpacing: '-0.5px', textShadow: '0 2px 8px rgba(0,0,0,0.18)' },
+  subtitle: { fontSize: 14, opacity: 0.85, marginTop: 2, fontWeight: 400 },
   progress: { display: 'flex', gap: 8, marginBottom: 16 },
-  step: { flex: 1, padding: '10px 6px', textAlign: 'center', background: 'white', borderRadius: 10, fontSize: 12, color: '#888', border: '2px solid #e0e0e0' },
-  stepActive: { flex: 1, padding: '10px 6px', textAlign: 'center', background: '#e8f0fe', borderRadius: 10, fontSize: 12, color: '#1a73e8', border: '2px solid #1a73e8', fontWeight: 700 },
-  stepDone: { flex: 1, padding: '10px 6px', textAlign: 'center', background: '#e8f5e9', borderRadius: 10, fontSize: 12, color: '#2e7d32', border: '2px solid #4caf50', fontWeight: 700 },
+  step: { flex: 1, padding: '10px 6px', textAlign: 'center', background: 'white', borderRadius: 12, fontSize: 12, color: '#999', border: '2px solid #e8eaf0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' },
+  stepActive: { flex: 1, padding: '10px 6px', textAlign: 'center', background: '#e8f0fe', borderRadius: 12, fontSize: 12, color: '#1a73e8', border: '2px solid #1a73e8', fontWeight: 700, boxShadow: '0 2px 8px rgba(26,115,232,0.15)' },
+  stepDone: { flex: 1, padding: '10px 6px', textAlign: 'center', background: '#e8f5e9', borderRadius: 12, fontSize: 12, color: '#2e7d32', border: '2px solid #4caf50', fontWeight: 700, boxShadow: '0 2px 8px rgba(76,175,80,0.12)' },
   stats: { display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' },
-  stat: { background: 'white', border: '2px solid #e8f5e9', borderRadius: 12, padding: '8px 14px', fontSize: 13, color: '#333', flex: 1 },
-  chatBox: { background: 'white', borderRadius: 16, padding: 20, minHeight: 400, maxHeight: 500, overflowY: 'auto', marginBottom: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' },
-  userMsg: { display: 'flex', justifyContent: 'flex-end', marginBottom: 12 },
-  botMsg: { display: 'flex', alignItems: 'flex-start', marginBottom: 12, gap: 8 },
-  userBubble: { background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', color: 'white', padding: '10px 16px', borderRadius: '18px 18px 4px 18px', maxWidth: '70%', fontSize: 14 },
-  botBubble: { background: '#f0f7ff', color: '#333', padding: '10px 16px', borderRadius: '4px 18px 18px 18px', maxWidth: '75%', fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' },
+  stat: { background: 'white', border: '1.5px solid #e8f5e9', borderRadius: 14, padding: '10px 16px', fontSize: 13, color: '#333', flex: 1, boxShadow: '0 2px 10px rgba(0,0,0,0.05)' },
+  chatBox: { background: 'white', borderRadius: 20, padding: 24, minHeight: 400, maxHeight: 500, overflowY: 'auto', marginBottom: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.09)' },
+  userMsg: { display: 'flex', justifyContent: 'flex-end', marginBottom: 14 },
+  botMsg: { display: 'flex', alignItems: 'flex-start', marginBottom: 14, gap: 10 },
+  userBubble: { background: 'linear-gradient(135deg, #1a73e8, #1565c0)', color: 'white', padding: '12px 18px', borderRadius: '20px 20px 4px 20px', maxWidth: '70%', fontSize: 14, boxShadow: '0 3px 12px rgba(26,115,232,0.25)', lineHeight: 1.5 },
+  botBubble: { background: '#f0f4ff', color: '#2c2c3e', padding: '12px 18px', borderRadius: '4px 20px 20px 20px', maxWidth: '75%', fontSize: 14, lineHeight: 1.65, whiteSpace: 'pre-wrap', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid #e4eaf8' },
   avatar: { fontSize: 24, marginTop: 4 },
   inputBox: { display: 'flex', gap: 10 },
-  inputChat: { flex: 1, padding: '14px 18px', borderRadius: 12, border: '2px solid #1a73e8', fontSize: 14, outline: 'none', fontFamily: 'Poppins, sans-serif' },
-  button: { background: 'linear-gradient(135deg, #ff6d00, #ff9800)', color: 'white', border: 'none', padding: '14px 24px', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' },
-  formBox: { background: 'white', borderRadius: 16, padding: 30, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' },
-  formTitle: { color: '#1a73e8', marginBottom: 24, fontSize: 22 },
+  inputChat: { flex: 1, padding: '14px 20px', borderRadius: 14, border: '2px solid #c5d8fb', fontSize: 14, outline: 'none', fontFamily: 'Poppins, sans-serif', background: 'white', boxShadow: '0 2px 8px rgba(26,115,232,0.08)', transition: 'border-color 0.2s' },
+  button: { background: 'linear-gradient(135deg, #ff6d00, #ff9800)', color: 'white', border: 'none', padding: '14px 26px', borderRadius: 14, fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(255,109,0,0.3)', letterSpacing: '0.3px' },
+  formBox: { background: 'white', borderRadius: 20, padding: 32, boxShadow: '0 4px 24px rgba(0,0,0,0.09)' },
+  formTitle: { color: '#1a73e8', marginBottom: 24, fontSize: 22, fontWeight: 700, letterSpacing: '-0.3px' },
   field: { marginBottom: 22 },
   row: { display: 'flex', gap: 12, marginBottom: 22 },
-  label: { display: 'block', marginBottom: 8, fontWeight: 600, color: '#333', fontSize: 14 },
-  inputField: { flex: 1, width: '100%', padding: '12px 16px', borderRadius: 10, border: '2px solid #e0e0e0', fontSize: 14, fontFamily: 'Poppins, sans-serif', boxSizing: 'border-box', outline: 'none' },
+  label: { display: 'block', marginBottom: 8, fontWeight: 600, color: '#2c2c3e', fontSize: 14 },
+  inputField: { flex: 1, width: '100%', padding: '12px 16px', borderRadius: 12, border: '2px solid #e4eaf8', fontSize: 14, fontFamily: 'Poppins, sans-serif', boxSizing: 'border-box', outline: 'none', background: '#fafbff', transition: 'border-color 0.2s' },
   chips: { display: 'flex', flexWrap: 'wrap', gap: 8 },
-  chip: { padding: '8px 14px', borderRadius: 20, border: '2px solid #e0e0e0', background: 'white', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', transition: 'all 0.2s' },
-  chipBlue: { padding: '8px 14px', borderRadius: 20, border: '2px solid #1a73e8', background: '#e8f0fe', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#1a73e8', fontWeight: 600 },
-  chipOrange: { padding: '8px 14px', borderRadius: 20, border: '2px solid #ff6d00', background: '#fff3e0', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#ff6d00', fontWeight: 600 },
-  aiBar: { background: '#f8f9ff', border: '2px dashed #1a73e8', borderRadius: 14, padding: 16, marginTop: 16, marginBottom: 8 },
-  aiBarTitle: { fontWeight: 700, color: '#1a73e8', marginBottom: 6, fontSize: 14 },
-  aiBarHint: { fontSize: 12, color: '#888', marginBottom: 10, fontStyle: 'italic' },
+  chip: { padding: '8px 16px', borderRadius: 20, border: '2px solid #e4eaf8', background: 'white', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', transition: 'all 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' },
+  chipBlue: { padding: '8px 16px', borderRadius: 20, border: '2px solid #1a73e8', background: '#e8f0fe', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#1a73e8', fontWeight: 700, boxShadow: '0 2px 8px rgba(26,115,232,0.15)' },
+  chipOrange: { padding: '8px 16px', borderRadius: 20, border: '2px solid #ff6d00', background: '#fff3e0', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#e65100', fontWeight: 700, boxShadow: '0 2px 8px rgba(255,109,0,0.15)' },
+  aiBar: { background: '#f0f4ff', border: '2px dashed #90b4f5', borderRadius: 16, padding: 18, marginTop: 16, marginBottom: 8 },
+  aiBarTitle: { fontWeight: 700, color: '#1a73e8', marginBottom: 6, fontSize: 14, letterSpacing: '0.2px' },
+  aiBarHint: { fontSize: 12, color: '#8a94a6', marginBottom: 10, fontStyle: 'italic' },
   aiBarRow: { display: 'flex', gap: 10 },
-  aiInput: { flex: 1, padding: '10px 14px', borderRadius: 10, border: '2px solid #c5d8fb', fontSize: 13, fontFamily: 'Poppins, sans-serif', outline: 'none' },
-  aiBtn: { background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', color: 'white', border: 'none', padding: '10px 18px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' },
-  aiResultat: { marginTop: 10, fontSize: 13, color: '#2e7d32', background: '#e8f5e9', padding: '8px 12px', borderRadius: 8 },
-  profileSaved: { fontSize: 13, color: '#2e7d32', marginTop: 8 },
+  aiInput: { flex: 1, padding: '10px 14px', borderRadius: 12, border: '2px solid #c5d8fb', fontSize: 13, fontFamily: 'Poppins, sans-serif', outline: 'none', background: 'white' },
+  aiBtn: { background: 'linear-gradient(135deg, #1a73e8, #1565c0)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', boxShadow: '0 3px 10px rgba(26,115,232,0.25)' },
+  aiResultat: { marginTop: 10, fontSize: 13, color: '#2e7d32', background: '#e8f5e9', padding: '10px 14px', borderRadius: 10, border: '1px solid #c8e6c9' },
+  profileSaved: { fontSize: 13, color: '#2e7d32', marginTop: 8, fontWeight: 600 },
   navBtns: { display: 'flex', justifyContent: 'space-between', marginTop: 30, gap: 12 },
-  btnBack: { padding: '14px 24px', borderRadius: 12, border: '2px solid #e0e0e0', background: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', color: '#666' },
-  btnNext: { flex: 1, padding: '14px 24px', background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', color: 'white', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' },
-  btnSave: { flex: 1, padding: '14px 24px', background: 'linear-gradient(135deg, #43a047, #1b5e20)', color: 'white', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' },
-  btnProfil: { background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)', padding: '8px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif' },
-  hint: { fontSize: 11, color: '#999', fontWeight: 400 },
+  btnBack: { padding: '14px 24px', borderRadius: 14, border: '2px solid #e4eaf8', background: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', color: '#666', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' },
+  btnNext: { flex: 1, padding: '14px 24px', background: 'linear-gradient(135deg, #1a73e8, #1565c0)', color: 'white', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', boxShadow: '0 4px 16px rgba(26,115,232,0.3)', letterSpacing: '0.3px' },
+  btnSave: { flex: 1, padding: '14px 24px', background: 'linear-gradient(135deg, #43a047, #1b5e20)', color: 'white', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', boxShadow: '0 4px 16px rgba(67,160,71,0.3)', letterSpacing: '0.3px' },
+  btnProfil: { background: 'rgba(255,255,255,0.18)', color: 'white', border: '1.5px solid rgba(255,255,255,0.45)', padding: '9px 16px', borderRadius: 12, cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', backdropFilter: 'blur(4px)', fontWeight: 600 },
+  hint: { fontSize: 11, color: '#a0a8b8', fontWeight: 400 },
   tenuesBox: { marginBottom: 16 },
-  tenuesBtn: { width: '100%', padding: '12px', background: 'linear-gradient(135deg, #6a1b9a, #ab47bc)', color: 'white', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' },
-  tenuesPanel: { background: 'white', borderRadius: '0 0 12px 12px', padding: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' },
-  meteoBar: { background: '#e8f0fe', borderRadius: 8, padding: '8px 12px', fontSize: 13, marginBottom: 12, color: '#1a73e8' },
+  tenuesBtn: { width: '100%', padding: '13px', background: 'linear-gradient(135deg, #6a1b9a, #ab47bc)', color: 'white', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', boxShadow: '0 4px 16px rgba(106,27,154,0.28)', letterSpacing: '0.3px' },
+  tenuesPanel: { background: 'white', borderRadius: '0 0 14px 14px', padding: 18, boxShadow: '0 8px 24px rgba(0,0,0,0.1)' },
+  meteoBar: { background: '#e8f0fe', borderRadius: 10, padding: '10px 14px', fontSize: 13, marginBottom: 12, color: '#1a73e8', fontWeight: 500, border: '1px solid #c5d8fb' },
   tenuesRow: { display: 'flex', gap: 8, marginBottom: 12 },
-  villeInput: { flex: 1, padding: '10px 14px', borderRadius: 10, border: '2px solid #e0e0e0', fontSize: 14, fontFamily: 'Poppins, sans-serif', outline: 'none' },
-  selectOccasion: { padding: '10px 14px', borderRadius: 10, border: '2px solid #e0e0e0', fontSize: 14, fontFamily: 'Poppins, sans-serif', outline: 'none', background: 'white' },
-  btnGetTenues: { padding: '10px 18px', background: 'linear-gradient(135deg, #6a1b9a, #ab47bc)', color: 'white', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' },
+  villeInput: { flex: 1, padding: '10px 14px', borderRadius: 12, border: '2px solid #e4eaf8', fontSize: 14, fontFamily: 'Poppins, sans-serif', outline: 'none', background: '#fafbff' },
+  selectOccasion: { padding: '10px 14px', borderRadius: 12, border: '2px solid #e4eaf8', fontSize: 14, fontFamily: 'Poppins, sans-serif', outline: 'none', background: 'white' },
+  btnGetTenues: { padding: '10px 20px', background: 'linear-gradient(135deg, #6a1b9a, #ab47bc)', color: 'white', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', boxShadow: '0 3px 12px rgba(106,27,154,0.25)' },
   tenuesGrid: { display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 12 },
-  tenueCard: { flex: '1 1 220px', background: '#f9f0ff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(106,27,154,0.1)' },
+  tenueCard: { flex: '1 1 220px', background: '#faf5ff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 6px 20px rgba(106,27,154,0.14)', border: '1px solid #ede0f5' },
   tenueImgBox: { width: '100%', height: 260, background: '#ede7f6', position: 'relative' },
   tenueImgPlaceholder: { width: '100%', height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9c27b0', fontSize: 13, textAlign: 'center', padding: 10, boxSizing: 'border-box' },
   tenueImg: { width: '100%', height: 260, objectFit: 'cover', display: 'block' },
-  tenueInfo: { padding: 14 },
-  tenueTitre: { fontWeight: 700, color: '#6a1b9a', fontSize: 15, marginBottom: 8 },
-  tenueDesc: { fontSize: 13, color: '#444', lineHeight: 1.6, marginBottom: 8 },
-  tenuePourquoi: { fontSize: 12, color: '#888', fontStyle: 'italic' }
+  tenueInfo: { padding: 16 },
+  tenueTitre: { fontWeight: 700, color: '#6a1b9a', fontSize: 15, marginBottom: 8, letterSpacing: '-0.2px' },
+  tenueDesc: { fontSize: 13, color: '#444', lineHeight: 1.65, marginBottom: 8 },
+  tenuePourquoi: { fontSize: 12, color: '#8a94a6', fontStyle: 'italic' }
 }
