@@ -1,14 +1,15 @@
+import Stripe from 'stripe'
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
   const stripeKey = process.env.STRIPE_SECRET_KEY
   const priceId = process.env.STRIPE_PRICE_ID
 
-  if (!stripeKey) return res.status(200).json({ erreur: 'STRIPE_SECRET_KEY manquant' })
-  if (!priceId) return res.status(200).json({ erreur: 'STRIPE_PRICE_ID manquant' })
+  if (!stripeKey) return res.json({ erreur: 'STRIPE_SECRET_KEY manquant' })
+  if (!priceId) return res.json({ erreur: 'STRIPE_PRICE_ID manquant' })
 
   try {
-    const Stripe = (await import('stripe')).default
     const stripe = new Stripe(stripeKey, { apiVersion: '2023-10-16' })
     const { email } = req.body
 
@@ -23,6 +24,6 @@ export default async function handler(req, res) {
 
     res.json({ url: session.url })
   } catch (e) {
-    res.status(200).json({ erreur: e.message })
+    res.json({ erreur: e.message })
   }
 }
