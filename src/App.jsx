@@ -136,6 +136,7 @@ export default function App() {
   const [form, setForm] = useState(() => safeParse('vitacoach_form', defaultForm))
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [onglet, setOnglet] = useState('chat')
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
@@ -400,42 +401,198 @@ export default function App() {
         </div>
       </div>
 
+      {/* Navigation onglets */}
+      <div style={styles.tabs}>
+        {[['chat', '💬 Coach'], ['routine', '📋 Ma Routine'], ['tenues', '👗 Tenues']].map(([id, label]) => (
+          <button key={id} style={onglet === id ? styles.tabActive : styles.tab} onClick={() => setOnglet(id)}>{label}</button>
+        ))}
+      </div>
+
+      {/* Stats rapides */}
       <div style={styles.stats}>
         {profil.regimes?.length > 0 && <div style={styles.stat}>🍽️ {profil.regimes.slice(0, 2).join(' + ')}</div>}
         {profil.objectifs?.length > 0 && <div style={styles.stat}>🎯 {profil.objectifs[0]}</div>}
         {profil.carences?.length > 0 && !profil.carences.includes('Aucune connue') && <div style={{ ...styles.stat, borderColor: '#ff6d00' }}>⚠️ {profil.carences[0]}</div>}
-        {profil.maladies?.length > 0 && !profil.maladies.includes('Aucune') && <div style={{ ...styles.stat, borderColor: '#e53935' }}>❤️ {profil.maladies[0]}</div>}
       </div>
 
-      <div style={styles.chatBox}>
-        {messages.map((msg, i) => (
-          <div key={i} style={msg.role === 'user' ? styles.userMsg : styles.botMsg}>
-            {msg.role === 'assistant' && <span style={styles.avatar}>✨</span>}
-            <div style={msg.role === 'user' ? styles.userBubble : styles.botBubble}>
-              {msg.content}
+      {/* Onglet Chat */}
+      {onglet === 'chat' && <>
+        <div style={styles.chatBox}>
+          {messages.map((msg, i) => (
+            <div key={i} style={msg.role === 'user' ? styles.userMsg : styles.botMsg}>
+              {msg.role === 'assistant' && <span style={styles.avatar}>✨</span>}
+              <div style={msg.role === 'user' ? styles.userBubble : styles.botBubble}>
+                {msg.content}
+              </div>
             </div>
-          </div>
-        ))}
-        {loading && (
-          <div style={styles.botMsg}>
-            <span style={styles.avatar}>✨</span>
-            <div style={styles.botBubble}>⏳ Oravi réfléchit...</div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+          ))}
+          {loading && (
+            <div style={styles.botMsg}>
+              <span style={styles.avatar}>✨</span>
+              <div style={styles.botBubble}>⏳ Oravi réfléchit...</div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        <div style={styles.inputBox}>
+          <input style={styles.inputChat} value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && envoyerMessage()}
+            placeholder="Pose une question à Oravi..." />
+          <button style={styles.button} onClick={envoyerMessage}>Envoyer →</button>
+        </div>
+      </>}
 
-      <TenuesModule profil={profil} />
+      {/* Onglet Routine */}
+      {onglet === 'routine' && <RoutineModule profil={profil} />}
 
-      <div style={styles.inputBox}>
-        <input style={styles.inputChat} value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && envoyerMessage()}
-          placeholder="Pose une question à Oravi..." />
-        <button style={styles.button} onClick={envoyerMessage}>Envoyer →</button>
-      </div>
+      {/* Onglet Tenues */}
+      {onglet === 'tenues' && <TenuesModule profil={profil} />}
     </div>
   )
+}
+
+function RoutineModule({ profil }) {
+  const [routine, setRoutine] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  async function genererRoutine() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/routine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profil })
+      })
+      const data = await res.json()
+      setRoutine(data)
+    } catch {
+      alert('Erreur lors de la génération de la routine.')
+    }
+    setLoading(false)
+  }
+
+  const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+
+  return (
+    <div style={{ padding: '0 0 20px' }}>
+      <div style={stylesRoutine.header}>
+        <div>
+          <div style={stylesRoutine.date}>{today}</div>
+          <div style={stylesRoutine.titre}>Ta routine personnalisée</div>
+        </div>
+        <button style={stylesRoutine.btnGen} onClick={genererRoutine} disabled={loading}>
+          {loading ? '⏳ Génération...' : routine ? '🔄 Régénérer' : '✨ Générer ma routine'}
+        </button>
+      </div>
+
+      {!routine && !loading && (
+        <div style={stylesRoutine.empty}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>📋</div>
+          <div style={{ fontSize: 16, color: '#666', marginBottom: 8 }}>Ta routine quotidienne personnalisée</div>
+          <div style={{ fontSize: 13, color: '#999' }}>Nutrition, bien-être, conseils adaptés à ton profil</div>
+        </div>
+      )}
+
+      {routine && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Motivation */}
+          {routine.motivation && (
+            <div style={stylesRoutine.motivCard}>
+              <div style={{ fontSize: 20, marginBottom: 6 }}>💫</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#1a73e8', lineHeight: 1.5 }}>{routine.motivation}</div>
+            </div>
+          )}
+
+          {/* Matin */}
+          {routine.matin && <RoutineSection icon="🌅" titre={routine.matin.titre} heure={routine.matin.heure} etapes={routine.matin.etapes} color="#fff8e1" borderColor="#ffb300" />}
+
+          {/* Nutrition */}
+          {routine.nutrition && (
+            <div style={{ ...stylesRoutine.card, borderLeft: '4px solid #43a047' }}>
+              <div style={stylesRoutine.cardHeader}>
+                <span style={{ fontSize: 20 }}>🥗</span>
+                <span style={stylesRoutine.cardTitre}>{routine.nutrition.titre}</span>
+              </div>
+              {routine.nutrition.repas?.map((r, i) => (
+                <div key={i} style={stylesRoutine.repasRow}>
+                  <span style={{ fontSize: 18 }}>{r.emoji}</span>
+                  <div><strong>{r.moment}</strong> — {r.suggestion}</div>
+                </div>
+              ))}
+              {routine.nutrition.supplements?.length > 0 && (
+                <div style={stylesRoutine.supplements}>
+                  💊 {routine.nutrition.supplements.join(' • ')}
+                </div>
+              )}
+              {routine.nutrition.plantes?.map((p, i) => (
+                <div key={i} style={stylesRoutine.planteRow}>
+                  <span>{p.emoji}</span>
+                  <div><strong>{p.nom}</strong> — {p.usage} <span style={{ color: '#888', fontSize: 12 }}>({p.benefice})</span></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Après-midi */}
+          {routine.apresmidi && <RoutineSection icon="☀️" titre={routine.apresmidi.titre} heure={routine.apresmidi.heure} etapes={routine.apresmidi.etapes} color="#e8f5e9" borderColor="#43a047" />}
+
+          {/* Soir */}
+          {routine.soir && <RoutineSection icon="🌙" titre={routine.soir.titre} heure={routine.soir.heure} etapes={routine.soir.etapes} color="#ede7f6" borderColor="#7b1fa2" />}
+
+          {/* Astuce */}
+          {routine.astuce && (
+            <div style={{ ...stylesRoutine.card, background: '#e8f0fe', borderLeft: '4px solid #1a73e8' }}>
+              <div style={stylesRoutine.cardHeader}>
+                <span style={{ fontSize: 20 }}>{routine.astuce.emoji}</span>
+                <span style={stylesRoutine.cardTitre}>{routine.astuce.titre}</span>
+              </div>
+              <div style={{ fontSize: 14, color: '#444', lineHeight: 1.6 }}>{routine.astuce.conseil}</div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RoutineSection({ icon, titre, heure, etapes, color, borderColor }) {
+  return (
+    <div style={{ ...stylesRoutine.card, background: color, borderLeft: `4px solid ${borderColor}` }}>
+      <div style={stylesRoutine.cardHeader}>
+        <span style={{ fontSize: 20 }}>{icon}</span>
+        <div>
+          <div style={stylesRoutine.cardTitre}>{titre}</div>
+          {heure && <div style={{ fontSize: 12, color: '#888' }}>{heure}</div>}
+        </div>
+      </div>
+      {etapes?.map((e, i) => (
+        <div key={i} style={stylesRoutine.etapeRow}>
+          <span style={{ fontSize: 20, minWidth: 28 }}>{e.emoji}</span>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: 14, color: '#222' }}>{e.action}</div>
+            <div style={{ fontSize: 12, color: '#666', marginTop: 2 }}>{e.detail}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const stylesRoutine = {
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, padding: '16px 0' },
+  date: { fontSize: 12, color: '#888', textTransform: 'capitalize' },
+  titre: { fontSize: 20, fontWeight: 700, color: '#1a73e8' },
+  btnGen: { background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', color: 'white', border: 'none', padding: '12px 20px', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' },
+  empty: { background: 'white', borderRadius: 20, padding: 40, textAlign: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
+  motivCard: { background: 'linear-gradient(135deg, #e8f0fe, #f0f4ff)', borderRadius: 16, padding: 20, textAlign: 'center', boxShadow: '0 2px 8px rgba(26,115,232,0.1)' },
+  card: { background: 'white', borderRadius: 16, padding: 20, boxShadow: '0 2px 10px rgba(0,0,0,0.06)' },
+  cardHeader: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 },
+  cardTitre: { fontSize: 16, fontWeight: 700, color: '#222' },
+  etapeRow: { display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 0', borderTop: '1px solid rgba(0,0,0,0.05)' },
+  repasRow: { display: 'flex', gap: 10, alignItems: 'center', padding: '6px 0', fontSize: 14, color: '#333' },
+  planteRow: { display: 'flex', gap: 10, alignItems: 'flex-start', padding: '6px 0', fontSize: 13, color: '#444', borderTop: '1px solid rgba(0,0,0,0.05)', marginTop: 4 },
+  supplements: { fontSize: 13, color: '#555', background: 'rgba(67,160,71,0.1)', borderRadius: 8, padding: '6px 10px', marginTop: 8 }
 }
 
 function TenueCard({ tenue }) {
@@ -601,5 +758,9 @@ const styles = {
   tenueInfo: { padding: 16 },
   tenueTitre: { fontWeight: 700, color: '#6a1b9a', fontSize: 15, marginBottom: 8, letterSpacing: '-0.2px' },
   tenueDesc: { fontSize: 13, color: '#444', lineHeight: 1.65, marginBottom: 8 },
-  tenuePourquoi: { fontSize: 12, color: '#8a94a6', fontStyle: 'italic' }
+  tenuePourquoi: { fontSize: 12, color: '#8a94a6', fontStyle: 'italic' },
+  tabs: { display: 'flex', gap: 8, marginBottom: 16, background: 'white', borderRadius: 14, padding: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' },
+  tab: { flex: 1, padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#888', borderRadius: 10, fontWeight: 500 },
+  tabActive: { flex: 1, padding: '10px', background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', border: 'none', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: 'white', borderRadius: 10, fontWeight: 700, boxShadow: '0 2px 8px rgba(26,115,232,0.3)' }
+}
 }
