@@ -137,6 +137,7 @@ export default function App() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [onglet, setOnglet] = useState('chat')
+  const [profilBackup, setProfilBackup] = useState(null)
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
@@ -177,7 +178,40 @@ export default function App() {
     localStorage.removeItem('vitacoach_form')
     localStorage.removeItem('vitacoach_etape')
     setProfil(form)
-    setMessages([{ role: 'assistant', content: `🌟 Bonjour ${form.nom} ! Ton profil est créé. Je te connais maintenant parfaitement. Comment puis-je t'aider aujourd'hui ?` }])
+    setProfilBackup(null)
+    const isEdit = !!profilBackup
+    setMessages([{ role: 'assistant', content: isEdit
+      ? `✅ Profil mis à jour ! Je prends en compte tes nouvelles infos, ${form.nom}. Comment puis-je t'aider ?`
+      : `🌟 Bonjour ${form.nom} ! Ton profil est créé. Je te connais maintenant parfaitement. Comment puis-je t'aider aujourd'hui ?`
+    }])
+  }
+
+  function modifierProfil() {
+    setProfilBackup(profil)
+    setForm({
+      nom: profil.nom || '',
+      age: profil.age || '',
+      taille: profil.taille || '',
+      poids: profil.poids || '',
+      objectifs: profil.objectifs || [],
+      regimes: profil.regimes || [],
+      alimentaireDetails: profil.alimentaireDetails || '',
+      styles: profil.styles || [],
+      styleDetails: profil.styleDetails || '',
+      mensurations: profil.mensurations || '',
+      carences: profil.carences || [],
+      santeDetails: profil.santeDetails || '',
+      maladies: profil.maladies || [],
+      maladiesDetails: profil.maladiesDetails || ''
+    })
+    setProfil(null)
+    setEtape(1)
+  }
+
+  function annulerModification() {
+    setProfil(profilBackup)
+    setProfilBackup(null)
+    setEtape(1)
   }
 
   async function passerPro() {
@@ -359,9 +393,11 @@ export default function App() {
 
           {/* Navigation */}
           <div style={styles.navBtns}>
-            {etape > 1 && (
+            {etape > 1 ? (
               <button style={styles.btnBack} onClick={() => setEtape(e => e - 1)}>← Retour</button>
-            )}
+            ) : profilBackup ? (
+              <button style={styles.btnAnnuler} onClick={annulerModification}>✕ Annuler</button>
+            ) : null}
             {etape < 4 ? (
               <button style={styles.btnNext} onClick={() => {
                 if (etape === 1 && (!form.nom || !form.age)) return alert('Prénom et âge obligatoires !')
@@ -369,7 +405,7 @@ export default function App() {
               }}>Suivant →</button>
             ) : (
               <button style={styles.btnSave} onClick={sauvegarderProfil}>
-                🚀 Lancer Oravi !
+                {profilBackup ? '💾 Sauvegarder' : '🚀 Lancer Oravi !'}
               </button>
             )}
           </div>
@@ -394,7 +430,7 @@ export default function App() {
               </button>
             )}
             {isPro && <div style={{ ...styles.stat, background: '#e8f5e9', borderColor: '#43a047' }}>✅ Pro</div>}
-            <button style={styles.btnProfil} onClick={() => { setProfil(null); localStorage.removeItem('vitacoach_profil') }}>
+            <button style={styles.btnProfil} onClick={modifierProfil}>
               ✏️ Modifier profil
             </button>
           </div>
@@ -759,8 +795,8 @@ const styles = {
   tenueTitre: { fontWeight: 700, color: '#6a1b9a', fontSize: 15, marginBottom: 8, letterSpacing: '-0.2px' },
   tenueDesc: { fontSize: 13, color: '#444', lineHeight: 1.65, marginBottom: 8 },
   tenuePourquoi: { fontSize: 12, color: '#8a94a6', fontStyle: 'italic' },
-  tabs: { display: 'flex', gap: 8, marginBottom: 16, background: 'white', borderRadius: 14, padding: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' },
-  tab: { flex: 1, padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: '#888', borderRadius: 10, fontWeight: 500 },
-  tabActive: { flex: 1, padding: '10px', background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', border: 'none', cursor: 'pointer', fontSize: 13, fontFamily: 'Poppins, sans-serif', color: 'white', borderRadius: 10, fontWeight: 700, boxShadow: '0 2px 8px rgba(26,115,232,0.3)' }
-}
+  tabs: { display: 'flex', gap: 6, marginBottom: 20, background: 'white', borderRadius: 18, padding: 6, boxShadow: '0 4px 20px rgba(0,0,0,0.10)', border: '1.5px solid #e8f0fe' },
+  tab: { flex: 1, padding: '13px 8px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 14, fontFamily: 'Poppins, sans-serif', color: '#9aa5b8', borderRadius: 12, fontWeight: 600, transition: 'all 0.2s', letterSpacing: '0.2px' },
+  tabActive: { flex: 1, padding: '13px 8px', background: 'linear-gradient(135deg, #1a73e8, #0d47a1)', border: 'none', cursor: 'pointer', fontSize: 14, fontFamily: 'Poppins, sans-serif', color: 'white', borderRadius: 12, fontWeight: 700, boxShadow: '0 4px 14px rgba(26,115,232,0.35)', letterSpacing: '0.2px' },
+  btnAnnuler: { padding: '14px 24px', borderRadius: 14, border: '2px solid #ffcdd2', background: '#fff5f5', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', color: '#e53935', boxShadow: '0 2px 8px rgba(229,57,53,0.08)' }
 }
