@@ -3,8 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VitaCoach</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Oravi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { background: #000010; overflow-x: hidden; height: 100%; }
+      #root { min-height: 100vh; }
+
+      @keyframes twinkle {
+        from { opacity: 0.08; transform: scale(0.7); }
+        to   { opacity: 0.9;  transform: scale(1.4); }
+      }
+      @keyframes floatOrb {
+        0%,100% { transform: translateY(0px) scale(1); }
+        50%      { transform: translateY(-18px) scale(1.04); }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+      @keyframes pulseNeon {
+        0%,100% { box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+        50%     { box-shadow: 0 0 24px rgba(0,212,255,0.9), 0 0 48px rgba(0,212,255,0.3); }
+      }
+
+      input::placeholder { color: rgba(255,255,255,0.22); }
+      textarea::placeholder { color: rgba(255,255,255,0.22); }
+      select option { background: #0d0d1a; color: white; }
+
+      ::-webkit-scrollbar { width: 0; background: transparent; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
