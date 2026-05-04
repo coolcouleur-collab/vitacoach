@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Auth from './Auth'
+import SanteTab, { scoreJour } from './SanteTab'
 
+// ─── OPTIONS ─────────────────────────────────────────────────────────────────
 const alimentaireOptions = [
   'Vegan','Végétarien','Flexitarien','Omnivore','Carnivore',
   'Keto','Sans gluten','Sans lactose','Méditerranéen','Jeûne intermittent',
@@ -13,7 +15,7 @@ const styleOptions = [
 const objectifsOptions = [
   'Perdre du poids','Prendre du muscle','Mieux dormir',"Plus d'énergie",
   'Réduire le stress','Manger sainement','Améliorer ma peau','Courir un marathon',
-  "Réduire l'alcool",'Arrêter de fumer'
+  "Réduire l'alcool",'Arrêter de fumer','Productivité maximale','Équilibre mental'
 ]
 const carencesOptions = [
   'Calcium','Vitamine D','Fer','Magnésium','Vitamine B12',
@@ -24,18 +26,20 @@ const maladiesOptions = [
   'Cholestérol élevé','Dépression / Anxiété','Endométriose','SOPK',
   'Maladie cœliaque','Crohn / MICI','Arthrite','Aucune'
 ]
+const activiteOptions = [
+  'Sédentaire','Légèrement actif','Modérément actif','Très actif','Sportif intensif'
+]
 
-/* ─── Starfield ─── */
+// ─── STARFIELD ────────────────────────────────────────────────────────────────
 function StarField() {
   const [stars] = useState(() =>
-    Array.from({ length: 90 }, (_, i) => ({
+    Array.from({ length: 80 }, (_, i) => ({
       id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2.2 + 0.4,
-      color: ['#00d4ff','#bf5af2','#00ff88','#fff','#fff','#fff','#fff'][Math.floor(Math.random()*7)],
-      dur: (1.8 + Math.random() * 4).toFixed(1),
-      op: (Math.random() * 0.55 + 0.08).toFixed(2)
+      x: Math.random() * 100, y: Math.random() * 100,
+      size: Math.random() * 2 + 0.4,
+      color: ['#00d4ff','#bf5af2','#00e676','#fff','#fff','#fff','#fff','#fff'][Math.floor(Math.random()*8)],
+      dur: (2 + Math.random() * 4).toFixed(1),
+      op: (Math.random() * 0.4 + 0.05).toFixed(2)
     }))
   )
   return (
@@ -49,28 +53,36 @@ function StarField() {
           animation:`twinkle ${s.dur}s ease-in-out infinite alternate`
         }} />
       ))}
-      {/* Orbs */}
-      <div style={{ position:'absolute', top:'8%', left:'5%', width:320, height:320, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%)', animation:'floatOrb 9s ease-in-out infinite' }} />
-      <div style={{ position:'absolute', top:'45%', right:'-5%', width:420, height:420, borderRadius:'50%', background:'radial-gradient(circle, rgba(191,90,242,0.08) 0%, transparent 70%)', animation:'floatOrb 12s ease-in-out infinite reverse' }} />
-      <div style={{ position:'absolute', bottom:'5%', left:'30%', width:240, height:240, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 70%)', animation:'floatOrb 7s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', top:'6%', left:'4%', width:340, height:340, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%)', animation:'floatOrb 9s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', top:'40%', right:'-8%', width:440, height:440, borderRadius:'50%', background:'radial-gradient(circle, rgba(191,90,242,0.06) 0%, transparent 70%)', animation:'floatOrb 13s ease-in-out infinite reverse' }} />
+      <div style={{ position:'absolute', bottom:'4%', left:'28%', width:260, height:260, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,230,118,0.05) 0%, transparent 70%)', animation:'floatOrb 7s ease-in-out infinite' }} />
     </div>
   )
 }
 
-/* ─── Chips ─── */
-function Chips({ options, selected, onToggle, color='blue' }) {
+// ─── CHIPS ────────────────────────────────────────────────────────────────────
+function Chips({ options, selected, onToggle, color='blue', single=false }) {
   return (
     <div style={styles.chips}>
       {options.map(o => {
-        const sel = selected.includes(o)
-        const st = sel ? (color==='orange' ? styles.chipOrange : styles.chipBlue) : styles.chip
-        return <button key={o} style={st} onClick={() => onToggle(o)}>{o}</button>
+        const sel = Array.isArray(selected) ? selected.includes(o) : selected === o
+        let st = styles.chip
+        if (sel) {
+          if (color === 'orange') st = styles.chipOrange
+          else if (color === 'green') st = styles.chipGreen
+          else st = styles.chipBlue
+        }
+        return (
+          <button key={o} style={st} onClick={() => onToggle(o)}>
+            {o}
+          </button>
+        )
       })}
     </div>
   )
 }
 
-/* ─── AIBar ─── */
+// ─── AI BAR ───────────────────────────────────────────────────────────────────
 function AIBar({ section, selections, onAnalyse, placeholder }) {
   const [texte, setTexte] = useState('')
   const [loading, setLoading] = useState(false)
@@ -94,13 +106,13 @@ function AIBar({ section, selections, onAnalyse, placeholder }) {
   if (selections.length === 0) return null
   return (
     <div style={styles.aiBar}>
-      <div style={styles.aiBarTitle}>⚡ Précise ton profil</div>
+      <div style={styles.aiBarTitle}>⚡ Précise ton profil avec l'IA</div>
       <div style={styles.aiBarHint}>{placeholder}</div>
       <div style={styles.aiBarRow}>
         <input style={styles.aiInput} value={texte}
           onChange={e => setTexte(e.target.value)}
           onKeyDown={e => e.key==='Enter' && analyser()}
-          placeholder="Écris librement..." />
+          placeholder="Décris en quelques mots..." />
         <button style={styles.aiBtn} onClick={analyser} disabled={loading}>
           {loading ? '⏳' : '→'}
         </button>
@@ -110,37 +122,57 @@ function AIBar({ section, selections, onAnalyse, placeholder }) {
   )
 }
 
+// ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
+const defaultMetriques = () => {
+  const today = new Date().toDateString()
+  try {
+    const saved = JSON.parse(localStorage.getItem('vitacoach_metriques') || '{}')
+    if (saved.date === today) return saved
+  } catch {}
+  return { date: today, pas: 0, sommeil: 0, eau: 0, fc: 0, humeur: 0, poids: 0 }
+}
+
+function sauverMetriques(m) {
+  localStorage.setItem('vitacoach_metriques', JSON.stringify({ ...m, date: new Date().toDateString() }))
+}
+
+// ─── DEFAULT FORM ─────────────────────────────────────────────────────────────
 const defaultForm = {
   nom:'', age:'', taille:'', poids:'',
   objectifs:[],
+  reveil:'07:00', coucher:'23:00',
+  activite:'Modérément actif', profession:'',
   regimes:[], alimentaireDetails:'',
   styles:[], styleDetails:'', mensurations:'',
   carences:[], santeDetails:'',
   maladies:[], maladiesDetails:''
 }
 
-/* ═══════════════════════════════════════════════ APP ══ */
+// ─── APP ══════════════════════════════════════════════════════════════════════
 export default function App() {
-  const safeParse = (key, fb) => {
-    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
-  }
   const FREE_LIMIT = 5
 
   const getMsgCount = () => {
     const today = new Date().toDateString()
-    const saved = safeParse('vitacoach_msg_count', { date:today, count:0 })
-    return saved.date !== today ? 0 : saved.count
+    try {
+      const saved = JSON.parse(localStorage.getItem('vitacoach_msg_count') || '{}')
+      return saved.date !== today ? 0 : saved.count
+    } catch { return 0 }
   }
   const incrementMsgCount = () => {
     const today = new Date().toDateString()
     localStorage.setItem('vitacoach_msg_count', JSON.stringify({ date:today, count: getMsgCount()+1 }))
   }
 
+  const safeParse = (key, fb) => {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
+  }
+
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
   const [profilBackup, setProfilBackup] = useState(null)
-  const [etape, setEtape]       = useState(() => { const s=localStorage.getItem('vitacoach_etape'); return s ? parseInt(s) : 1 })
+  const [etape, setEtape]       = useState(() => { const s = localStorage.getItem('vitacoach_etape'); return s ? parseInt(s) : 1 })
   const [messages, setMessages] = useState(() => {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
@@ -148,10 +180,12 @@ export default function App() {
     if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ✦ Comment puis-je t'aider aujourd'hui ?` }]
     return []
   })
-  const [form, setForm]   = useState(() => safeParse('vitacoach_form', defaultForm))
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [onglet, setOnglet]   = useState('chat')
+  const [form, setForm]         = useState(() => safeParse('vitacoach_form', defaultForm))
+  const [input, setInput]       = useState('')
+  const [loading, setLoading]   = useState(false)
+  const [onglet, setOnglet]     = useState('chat')
+  const [metriques, setMetriques] = useState(defaultMetriques)
+  const [suggestions, setSuggestions] = useState([])
   const messagesEndRef = useRef(null)
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
@@ -166,12 +200,22 @@ export default function App() {
   }, [form, etape, profil])
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
-    if (p.get('subscribed')==='true') {
+    if (p.get('subscribed') === 'true') {
       setIsPro(true)
       localStorage.setItem('vitacoach_pro', JSON.stringify(true))
       window.history.replaceState({}, '', '/')
     }
   }, [])
+
+  // Suggestions contextuelles selon l'heure
+  useEffect(() => {
+    if (!profil) return
+    const h = new Date().getHours()
+    if (h < 10)       setSuggestions(["Comment bien démarrer ma journée ?", "Que manger ce matin ?", "Comment booster mon énergie ?"])
+    else if (h < 14)  setSuggestions(["Idée repas de midi ?", "Comment rester concentré ?", "Stretch rapide pour le bureau ?"])
+    else if (h < 18)  setSuggestions(["Je suis fatigué, que faire ?", "Collation saine ?", "Comment gérer mon stress ?"])
+    else              setSuggestions(["Routine du soir pour bien dormir ?", "Que manger ce soir ?", "Comment me décompresser ?"])
+  }, [profil])
 
   function toggle(key, val) {
     setForm(f => ({ ...f, [key]: f[key].includes(val) ? f[key].filter(x=>x!==val) : [...f[key], val] }))
@@ -181,32 +225,34 @@ export default function App() {
     setProfilBackup(profil)
     setForm({
       nom: profil.nom||'', age: profil.age||'', taille: profil.taille||'', poids: profil.poids||'',
-      objectifs: profil.objectifs||[], regimes: profil.regimes||[], alimentaireDetails: profil.alimentaireDetails||'',
+      objectifs: profil.objectifs||[],
+      reveil: profil.reveil||'07:00', coucher: profil.coucher||'23:00',
+      activite: profil.activite||'Modérément actif', profession: profil.profession||'',
+      regimes: profil.regimes||[], alimentaireDetails: profil.alimentaireDetails||'',
       styles: profil.styles||[], styleDetails: profil.styleDetails||'', mensurations: profil.mensurations||'',
       carences: profil.carences||[], santeDetails: profil.santeDetails||'',
       maladies: profil.maladies||[], maladiesDetails: profil.maladiesDetails||''
     })
-    setProfil(null)
-    setEtape(1)
+    setProfil(null); setEtape(1)
   }
+
   function annulerModification() {
-    setProfil(profilBackup)
-    setProfilBackup(null)
-    setEtape(1)
+    setProfil(profilBackup); setProfilBackup(null); setEtape(1)
   }
+
   function sauvegarderProfil() {
     if (!form.nom || !form.age) return alert('Prénom et âge obligatoires !')
     localStorage.setItem('vitacoach_profil', JSON.stringify(form))
     localStorage.removeItem('vitacoach_form')
     localStorage.removeItem('vitacoach_etape')
     const isEdit = !!profilBackup
-    setProfil(form)
-    setProfilBackup(null)
+    setProfil(form); setProfilBackup(null)
     setMessages([{ role:'assistant', content: isEdit
       ? `✓ Profil mis à jour, ${form.nom} ! Comment puis-je t'aider ?`
-      : `✦ Bienvenue ${form.nom} ! Ton profil est prêt. Je suis là pour t'accompagner chaque jour.`
+      : `✦ Bienvenue ${form.nom} ! Ton profil est créé. Réveil à ${form.reveil}, coucher à ${form.coucher} — je vais adapter tous mes conseils à ton rythme de vie.`
     }])
   }
+
   async function passerPro() {
     try {
       const res = await fetch('/api/create-checkout', {
@@ -218,13 +264,15 @@ export default function App() {
       else alert('Erreur: ' + (data.erreur||'inconnue'))
     } catch(e) { alert('Erreur: '+e.message) }
   }
-  async function envoyerMessage() {
-    if (!input.trim()) return
+
+  async function envoyerMessage(msgOverride) {
+    const msg = msgOverride || input
+    if (!msg.trim()) return
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
       setMessages(prev => [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravi Pro pour des conseils illimités.` }])
       return
     }
-    const userMsg = { role:'user', content:input }
+    const userMsg = { role:'user', content: msg }
     setMessages(prev => [...prev, userMsg])
     setInput('')
     setLoading(true)
@@ -232,7 +280,7 @@ export default function App() {
     try {
       const resp = await fetch('/api/chat', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ message:input, profil, historique:messages.slice(-10) })
+        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-10), metriques })
       })
       const data = await resp.json()
       setMessages(prev => [...prev, { role:'assistant', content:data.reply }])
@@ -242,41 +290,53 @@ export default function App() {
     setLoading(false)
   }
 
-  /* ── AUTH ── */
-  if (!user) return <Auth onConnecte={u => { setUser(u); localStorage.setItem('vitacoach_user', JSON.stringify(u)) }} />
+  function mettreAJourMetrique(key, val) {
+    setMetriques(prev => {
+      const newM = { ...prev, [key]: val }
+      sauverMetriques(newM)
+      return newM
+    })
+  }
 
-  /* ── FORMULAIRE ONBOARDING ── */
+  // ── AUTH ────────────────────────────────────────────────────────────────────
+  if (!user) return (
+    <Auth onConnecte={u => {
+      setUser(u)
+      localStorage.setItem('vitacoach_user', JSON.stringify(u))
+    }} />
+  )
+
+  // ── ONBOARDING ─────────────────────────────────────────────────────────────
   if (!profil) {
-    const etapeLabels = ['Identité','Alimentation','Style','Santé']
+    const etapeLabels = ['Identité & Planning','Alimentation','Style','Santé']
     return (
       <div style={styles.app}>
         <StarField />
-        <div style={{ position:'relative', zIndex:1, padding:'40px 22px 60px' }}>
-          {/* Logo */}
-          <div style={{ textAlign:'center', marginBottom:36 }}>
+        <div style={{ position:'relative', zIndex:1, padding:'36px 22px 60px' }}>
+          <div style={{ textAlign:'center', marginBottom:32 }}>
             <div style={styles.logo}>✦ Oravi</div>
-            <div style={{ color:'rgba(255,255,255,0.35)', fontSize:13, marginTop:8 }}>
+            <div style={{ color:'rgba(255,255,255,0.3)', fontSize:12, marginTop:6, letterSpacing:0.5 }}>
               {profilBackup ? 'Modifier ton profil' : 'Crée ton profil personnalisé'}
             </div>
           </div>
 
           {/* Progress dots */}
-          <div style={{ display:'flex', gap:8, marginBottom:10, justifyContent:'center' }}>
+          <div style={{ display:'flex', gap:6, marginBottom:8, justifyContent:'center' }}>
             {[1,2,3,4].map(n => (
               <div key={n} style={{
-                width: etape===n ? 36 : 10, height:10, borderRadius:5,
-                background: etape===n ? '#00d4ff' : etape>n ? '#00ff88' : 'rgba(255,255,255,0.12)',
-                transition:'all 0.35s ease',
-                boxShadow: etape===n ? '0 0 14px #00d4ff' : 'none'
+                width: etape===n ? 32 : 9, height:9, borderRadius:5,
+                background: etape===n ? '#00d4ff' : etape>n ? '#00e676' : 'rgba(255,255,255,0.1)',
+                transition:'all 0.3s ease',
+                boxShadow: etape===n ? '0 0 12px #00d4ff' : 'none'
               }} />
             ))}
           </div>
-          <div style={{ color:'rgba(255,255,255,0.35)', fontSize:11, textAlign:'center', marginBottom:24, textTransform:'uppercase', letterSpacing:2 }}>
+          <div style={{ color:'rgba(255,255,255,0.3)', fontSize:10, textAlign:'center', marginBottom:22, textTransform:'uppercase', letterSpacing:2 }}>
             {etapeLabels[etape-1]}
           </div>
 
           <div style={styles.formBox}>
-            {/* Étape 1 */}
+            {/* ── Étape 1 ── */}
             {etape===1 && <>
               <h2 style={styles.formTitle}>👤 Qui es-tu ?</h2>
               <div style={styles.field}>
@@ -297,9 +357,37 @@ export default function App() {
                 <label style={styles.label}>Tes objectifs</label>
                 <Chips options={objectifsOptions} selected={form.objectifs} onToggle={v=>toggle('objectifs',v)} />
               </div>
+
+              {/* Planning section */}
+              <div style={styles.planningDivider}>
+                <span style={styles.planningLabel}>⏰ Ton rythme de vie</span>
+              </div>
+              <div style={styles.row}>
+                <div style={{flex:1}}>
+                  <label style={styles.label}>Réveil</label>
+                  <input style={styles.inputField} type="time" value={form.reveil}
+                    onChange={e => setForm({...form, reveil:e.target.value})} />
+                </div>
+                <div style={{flex:1}}>
+                  <label style={styles.label}>Coucher</label>
+                  <input style={styles.inputField} type="time" value={form.coucher}
+                    onChange={e => setForm({...form, coucher:e.target.value})} />
+                </div>
+              </div>
+              <div style={styles.field}>
+                <label style={styles.label}>Profession / Emploi du temps</label>
+                <input style={styles.inputField} placeholder="Ex: Ingénieur 9h-18h, étudiant, commercial..."
+                  value={form.profession} maxLength={80}
+                  onChange={e => setForm({...form, profession:e.target.value})} />
+              </div>
+              <div style={styles.field}>
+                <label style={styles.label}>Niveau d'activité physique</label>
+                <Chips options={activiteOptions} selected={form.activite ? [form.activite] : []}
+                  onToggle={v => setForm({...form, activite:v})} color="green" />
+              </div>
             </>}
 
-            {/* Étape 2 */}
+            {/* ── Étape 2 ── */}
             {etape===2 && <>
               <h2 style={styles.formTitle}>🍽️ Alimentation</h2>
               <div style={styles.field}>
@@ -312,19 +400,19 @@ export default function App() {
               {form.alimentaireDetails && <div style={styles.profileSaved}>✓ Profil alimentaire enrichi</div>}
             </>}
 
-            {/* Étape 3 */}
+            {/* ── Étape 3 ── */}
             {etape===3 && <>
-              <h2 style={styles.formTitle}>👗 Style</h2>
+              <h2 style={styles.formTitle}>👗 Style vestimentaire</h2>
               <div style={styles.field}>
                 <label style={styles.label}>Tes styles</label>
                 <Chips options={styleOptions} selected={form.styles} onToggle={v=>toggle('styles',v)} />
               </div>
               <div style={styles.field}>
-                <label style={styles.label}>Mensurations</label>
+                <label style={styles.label}>Mensurations (optionnel)</label>
                 <div style={styles.row}>
-                  <input style={styles.inputField} placeholder="Poitrine (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations+' poitrine:'+e.target.value}))} />
-                  <input style={styles.inputField} placeholder="Taille (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations+' taille:'+e.target.value}))} />
-                  <input style={styles.inputField} placeholder="Hanches (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations+' hanches:'+e.target.value}))} />
+                  <input style={styles.inputField} placeholder="Poitrine (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/poitrine:[^\s]*/,'')+' poitrine:'+e.target.value}))} />
+                  <input style={styles.inputField} placeholder="Taille (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/taille2:[^\s]*/,'')+' taille2:'+e.target.value}))} />
+                  <input style={styles.inputField} placeholder="Hanches (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/hanches:[^\s]*/,'')+' hanches:'+e.target.value}))} />
                 </div>
               </div>
               <AIBar section="style" selections={form.styles}
@@ -333,7 +421,7 @@ export default function App() {
               {form.styleDetails && <div style={styles.profileSaved}>✓ Profil style enrichi</div>}
             </>}
 
-            {/* Étape 4 */}
+            {/* ── Étape 4 ── */}
             {etape===4 && <>
               <h2 style={styles.formTitle}>❤️ Santé</h2>
               <div style={styles.field}>
@@ -374,7 +462,10 @@ export default function App() {
     )
   }
 
-  /* ── MAIN APP ── */
+  // ── MAIN APP ════════════════════════════════════════════════════════════════
+  const score = scoreJour(metriques)
+  const scoreColor = score >= 70 ? '#00e676' : score >= 40 ? '#ffd60a' : '#ff453a'
+
   return (
     <div style={styles.app}>
       <StarField />
@@ -387,20 +478,31 @@ export default function App() {
             <div style={styles.subtitle}>Bonjour {profil.nom} ✦</div>
           </div>
           <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+            {/* Score santé */}
+            <div style={{ ...styles.scorePill, color: scoreColor, borderColor: scoreColor+'40' }}
+              onClick={() => setOnglet('sante')} title="Score santé du jour">
+              ❤️ {score}
+            </div>
             {!isPro && (
-              <button style={styles.btnPro} onClick={passerPro}>⚡ Pro 4.99€</button>
+              <button style={styles.btnPro} onClick={passerPro}>⚡ Pro</button>
             )}
             {isPro && <div style={styles.proBadge}>✦ Pro</div>}
             <button style={styles.btnEdit} onClick={modifierProfil} title="Modifier le profil">✏️</button>
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Quick stats */}
         <div style={styles.stats}>
-          {profil.regimes?.length>0 && <div style={styles.stat}>🍽️ {profil.regimes.slice(0,2).join(' · ')}</div>}
-          {profil.objectifs?.length>0 && <div style={styles.stat}>🎯 {profil.objectifs[0]}</div>}
-          {profil.carences?.length>0 && !profil.carences.includes('Aucune connue') && (
-            <div style={{...styles.stat, borderColor:'rgba(255,152,0,0.35)', color:'#ffb74d'}}>⚠️ {profil.carences[0]}</div>
+          <div style={styles.stat} onClick={() => setOnglet('sante')}>
+            💧 {metriques.eau > 0 ? `${metriques.eau}/8` : '— verres'}
+          </div>
+          <div style={styles.stat} onClick={() => setOnglet('sante')}>
+            👣 {metriques.pas > 0 ? metriques.pas.toLocaleString('fr') : '— pas'}
+          </div>
+          {profil.reveil && (
+            <div style={{ ...styles.stat, color:'rgba(255,255,255,0.45)' }}>
+              ⏰ {profil.reveil}–{profil.coucher}
+            </div>
           )}
         </div>
       </div>
@@ -408,10 +510,21 @@ export default function App() {
       {/* ── Content ── */}
       <div style={styles.content}>
 
-        {/* Chat */}
+        {/* ── Chat ── */}
         {onglet==='chat' && <>
           <div style={styles.chatBox}>
-            {messages.map((msg,i) => (
+            {messages.length === 0 && (
+              <div style={styles.emptyChat}>
+                <div style={{ fontSize:40, marginBottom:12 }}>✦</div>
+                <div style={{ fontSize:16, fontWeight:700, color:'rgba(255,255,255,0.7)', marginBottom:6 }}>
+                  Je suis Oravi, ton coach de vie
+                </div>
+                <div style={{ fontSize:12, color:'rgba(255,255,255,0.3)', lineHeight:1.7 }}>
+                  Nutrition · Bien-être · Style · Gestion du temps
+                </div>
+              </div>
+            )}
+            {messages.map((msg, i) => (
               <div key={i} style={msg.role==='user' ? styles.userMsg : styles.botMsg}>
                 {msg.role==='assistant' && <span style={styles.avatar}>✦</span>}
                 <div style={msg.role==='user' ? styles.userBubble : styles.botBubble}>
@@ -423,22 +536,34 @@ export default function App() {
               <div style={styles.botMsg}>
                 <span style={styles.avatar}>✦</span>
                 <div style={styles.botBubble}>
-                  <span style={{ display:'inline-flex', gap:4 }}>
-                    <span style={{ animation:'twinkle 0.6s ease-in-out infinite alternate' }}>·</span>
-                    <span style={{ animation:'twinkle 0.6s 0.2s ease-in-out infinite alternate' }}>·</span>
-                    <span style={{ animation:'twinkle 0.6s 0.4s ease-in-out infinite alternate' }}>·</span>
+                  <span style={{ display:'inline-flex', gap:5 }}>
+                    {[0,0.2,0.4].map((d,i)=>(
+                      <span key={i} style={{ width:6, height:6, borderRadius:'50%', background:'#00d4ff', display:'inline-block', animation:`twinkle 0.6s ${d}s ease-in-out infinite alternate` }} />
+                    ))}
                   </span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Suggestions */}
+          {suggestions.length > 0 && messages.length <= 1 && (
+            <div style={styles.suggestionsRow}>
+              {suggestions.map((s, i) => (
+                <button key={i} style={styles.suggestion} onClick={() => envoyerMessage(s)}>
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div style={styles.inputBox}>
             <input style={styles.inputChat} value={input}
               onChange={e=>setInput(e.target.value)}
               onKeyDown={e=>e.key==='Enter' && envoyerMessage()}
               placeholder="Pose une question à Oravi..." />
-            <button style={styles.sendBtn} onClick={envoyerMessage} aria-label="Envoyer">
+            <button style={styles.sendBtn} onClick={() => envoyerMessage()} aria-label="Envoyer">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M22 2L11 13" stroke="#000" strokeWidth="2.5" strokeLinecap="round"/>
                 <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -447,21 +572,34 @@ export default function App() {
           </div>
         </>}
 
-        {/* Routine */}
-        {onglet==='routine' && <RoutineModule profil={profil} />}
+        {/* ── Santé ── */}
+        {onglet==='sante' && (
+          <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} />
+        )}
 
-        {/* Tenues */}
-        {onglet==='tenues' && <TenuesModule profil={profil} />}
+        {/* ── Routine ── */}
+        {onglet==='routine' && <RoutineModule profil={profil} metriques={metriques} />}
+
+        {/* ── Style ── */}
+        {onglet==='style' && <TenuesModule profil={profil} />}
       </div>
 
       {/* ── Bottom Nav ── */}
       <div style={styles.bottomNav}>
-        {[['chat','💬','Coach'],['routine','📋','Routine'],['tenues','👗','Tenues']].map(([id,icon,label])=>(
+        {[
+          ['chat', '💬', 'Coach'],
+          ['sante', '❤️', 'Santé'],
+          ['routine', '📋', 'Routine'],
+          ['style', '👗', 'Style'],
+        ].map(([id, icon, label]) => (
           <button key={id}
             style={onglet===id ? styles.navItemActive : styles.navItem}
-            onClick={()=>setOnglet(id)}>
+            onClick={() => setOnglet(id)}>
             <span style={{ fontSize:22, lineHeight:1 }}>{icon}</span>
             <span style={{ fontSize:9, fontWeight:onglet===id?700:500, letterSpacing:'0.8px', textTransform:'uppercase', marginTop:2 }}>{label}</span>
+            {id==='sante' && score > 0 && (
+              <span style={{ position:'absolute', top:6, right:'50%', transform:'translateX(10px)', width:6, height:6, borderRadius:'50%', background:scoreColor, boxShadow:`0 0 6px ${scoreColor}` }} />
+            )}
           </button>
         ))}
       </div>
@@ -469,22 +607,27 @@ export default function App() {
   )
 }
 
-/* ─── Routine Module ─── */
-function RoutineModule({ profil }) {
+// ─── ROUTINE MODULE ───────────────────────────────────────────────────────────
+function RoutineModule({ profil, metriques }) {
   const [routine, setRoutine] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [checkedSteps, setCheckedSteps] = useState({})
 
   async function genererRoutine() {
-    setLoading(true)
+    setLoading(true); setCheckedSteps({})
     try {
       const res = await fetch('/api/routine', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ profil })
+        body: JSON.stringify({ profil, metriques })
       })
       const data = await res.json()
       setRoutine(data)
     } catch { alert('Erreur lors de la génération.') }
     setLoading(false)
+  }
+
+  function toggleStep(id) {
+    setCheckedSteps(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
   const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
@@ -497,7 +640,7 @@ function RoutineModule({ profil }) {
           <div style={sr.titre}>Ta routine du jour</div>
         </div>
         <button style={sr.btnGen} onClick={genererRoutine} disabled={loading}>
-          {loading ? '⏳' : routine ? '🔄' : '✨ Générer'}
+          {loading ? '⏳' : routine ? '🔄 Regénérer' : '✨ Générer'}
         </button>
       </div>
 
@@ -505,21 +648,21 @@ function RoutineModule({ profil }) {
         <div style={sr.empty}>
           <div style={{ fontSize:44, marginBottom:14 }}>📋</div>
           <div style={{ fontSize:15, color:'rgba(255,255,255,0.5)', marginBottom:6 }}>Ta routine quotidienne personnalisée</div>
-          <div style={{ fontSize:12, color:'rgba(255,255,255,0.25)' }}>Nutrition · Bien-être · Conseils adaptés</div>
+          <div style={{ fontSize:12, color:'rgba(255,255,255,0.25)' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
         </div>
       )}
 
       {routine && (
-        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+        <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {routine.motivation && (
             <div style={sr.motivCard}>
               <div style={{ fontSize:18, marginBottom:8 }}>💫</div>
-              <div style={{ fontSize:14, fontWeight:600, color:'#00d4ff', lineHeight:1.6 }}>{routine.motivation}</div>
+              <div style={{ fontSize:14, fontWeight:600, color:'#00d4ff', lineHeight:1.65 }}>{routine.motivation}</div>
             </div>
           )}
-          {routine.matin && <RoutineSection icon="🌅" titre={routine.matin.titre} heure={routine.matin.heure} etapes={routine.matin.etapes} accent="#00d4ff" />}
+          {routine.matin && <RoutineSection id="matin" icon="🌅" titre={routine.matin.titre} heure={routine.matin.heure} etapes={routine.matin.etapes} accent="#00d4ff" checked={checkedSteps} onToggle={toggleStep} />}
           {routine.nutrition && (
-            <div style={{ ...sr.card, borderLeft:'3px solid rgba(0,255,136,0.5)' }}>
+            <div style={{ ...sr.card, borderLeft:'3px solid rgba(0,230,118,0.5)' }}>
               <div style={sr.cardHeader}>
                 <span style={{ fontSize:18 }}>🥗</span>
                 <span style={sr.cardTitre}>{routine.nutrition.titre}</span>
@@ -527,7 +670,9 @@ function RoutineModule({ profil }) {
               {routine.nutrition.repas?.map((r,i) => (
                 <div key={i} style={sr.repasRow}>
                   <span style={{ fontSize:16 }}>{r.emoji}</span>
-                  <div style={{ color:'rgba(255,255,255,0.75)', fontSize:13 }}><strong style={{ color:'rgba(255,255,255,0.9)' }}>{r.moment}</strong> — {r.suggestion}</div>
+                  <div style={{ color:'rgba(255,255,255,0.72)', fontSize:13, lineHeight:1.5 }}>
+                    <strong style={{ color:'rgba(255,255,255,0.9)' }}>{r.moment}</strong> — {r.suggestion}
+                  </div>
                 </div>
               ))}
               {routine.nutrition.supplements?.length>0 && (
@@ -536,20 +681,23 @@ function RoutineModule({ profil }) {
               {routine.nutrition.plantes?.map((p,i) => (
                 <div key={i} style={sr.planteRow}>
                   <span>{p.emoji}</span>
-                  <div style={{ color:'rgba(255,255,255,0.65)', fontSize:13 }}><strong style={{ color:'rgba(255,255,255,0.85)' }}>{p.nom}</strong> — {p.usage} <span style={{ color:'rgba(255,255,255,0.35)', fontSize:11 }}>({p.benefice})</span></div>
+                  <div style={{ color:'rgba(255,255,255,0.62)', fontSize:13, lineHeight:1.5 }}>
+                    <strong style={{ color:'rgba(255,255,255,0.82)' }}>{p.nom}</strong> — {p.usage}
+                    <span style={{ color:'rgba(255,255,255,0.3)', fontSize:11 }}> ({p.benefice})</span>
+                  </div>
                 </div>
               ))}
             </div>
           )}
-          {routine.apresmidi && <RoutineSection icon="☀️" titre={routine.apresmidi.titre} heure={routine.apresmidi.heure} etapes={routine.apresmidi.etapes} accent="#00ff88" />}
-          {routine.soir && <RoutineSection icon="🌙" titre={routine.soir.titre} heure={routine.soir.heure} etapes={routine.soir.etapes} accent="#bf5af2" />}
+          {routine.apresmidi && <RoutineSection id="apresmidi" icon="☀️" titre={routine.apresmidi.titre} heure={routine.apresmidi.heure} etapes={routine.apresmidi.etapes} accent="#00e676" checked={checkedSteps} onToggle={toggleStep} />}
+          {routine.soir && <RoutineSection id="soir" icon="🌙" titre={routine.soir.titre} heure={routine.soir.heure} etapes={routine.soir.etapes} accent="#bf5af2" checked={checkedSteps} onToggle={toggleStep} />}
           {routine.astuce && (
-            <div style={{ ...sr.card, borderLeft:'3px solid rgba(0,212,255,0.5)', background:'rgba(0,212,255,0.06)' }}>
+            <div style={{ ...sr.card, borderLeft:'3px solid rgba(0,212,255,0.4)', background:'rgba(0,212,255,0.04)' }}>
               <div style={sr.cardHeader}>
                 <span style={{ fontSize:18 }}>{routine.astuce.emoji}</span>
                 <span style={sr.cardTitre}>{routine.astuce.titre}</span>
               </div>
-              <div style={{ fontSize:13, color:'rgba(255,255,255,0.65)', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,0.62)', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
             </div>
           )}
         </div>
@@ -558,46 +706,61 @@ function RoutineModule({ profil }) {
   )
 }
 
-function RoutineSection({ icon, titre, heure, etapes, accent }) {
+function RoutineSection({ id, icon, titre, heure, etapes, accent, checked, onToggle }) {
+  const doneCount = etapes?.filter((_, i) => checked[`${id}_${i}`]).length || 0
+  const total = etapes?.length || 0
   return (
     <div style={{ ...sr.card, borderLeft:`3px solid ${accent}40` }}>
-      <div style={sr.cardHeader}>
-        <span style={{ fontSize:18 }}>{icon}</span>
-        <div>
-          <div style={{ ...sr.cardTitre, color: accent }}>{titre}</div>
-          {heure && <div style={{ fontSize:11, color:'rgba(255,255,255,0.3)', marginTop:2 }}>{heure}</div>}
-        </div>
-      </div>
-      {etapes?.map((e,i) => (
-        <div key={i} style={sr.etapeRow}>
-          <span style={{ fontSize:18, minWidth:28 }}>{e.emoji}</span>
+      <div style={{ ...sr.cardHeader, justifyContent:'space-between' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <span style={{ fontSize:18 }}>{icon}</span>
           <div>
-            <div style={{ fontWeight:600, fontSize:13, color:'rgba(255,255,255,0.88)' }}>{e.action}</div>
-            <div style={{ fontSize:12, color:'rgba(255,255,255,0.4)', marginTop:2 }}>{e.detail}</div>
+            <div style={{ ...sr.cardTitre, color: accent }}>{titre}</div>
+            {heure && <div style={{ fontSize:11, color:'rgba(255,255,255,0.28)', marginTop:1 }}>{heure}</div>}
           </div>
         </div>
-      ))}
+        {total > 0 && (
+          <div style={{ fontSize:11, color: doneCount===total ? accent : 'rgba(255,255,255,0.3)', fontWeight:700 }}>
+            {doneCount}/{total}
+          </div>
+        )}
+      </div>
+      {etapes?.map((e, i) => {
+        const done = checked[`${id}_${i}`]
+        return (
+          <div key={i} style={{ ...sr.etapeRow, opacity: done ? 0.5 : 1 }} onClick={() => onToggle(`${id}_${i}`)}>
+            <div style={{ width:22, height:22, borderRadius:7, border:`1.5px solid ${done ? accent : 'rgba(255,255,255,0.15)'}`, background: done ? accent+'20' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, cursor:'pointer' }}>
+              {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
+            </div>
+            <span style={{ fontSize:18, minWidth:26, flexShrink:0 }}>{e.emoji}</span>
+            <div>
+              <div style={{ fontWeight:600, fontSize:13, color:'rgba(255,255,255,0.88)', textDecoration: done ? 'line-through' : 'none' }}>{e.action}</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.38)', marginTop:2 }}>{e.detail}</div>
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
 const sr = {
-  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20, padding:'14px 0' },
-  date: { fontSize:11, color:'rgba(255,255,255,0.3)', textTransform:'capitalize', letterSpacing:1 },
+  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:18, padding:'12px 0' },
+  date: { fontSize:11, color:'rgba(255,255,255,0.28)', textTransform:'capitalize', letterSpacing:1 },
   titre: { fontSize:18, fontWeight:700, background:'linear-gradient(135deg, #00d4ff, #bf5af2)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', marginTop:4 },
-  btnGen: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', padding:'11px 18px', borderRadius:12, fontSize:13, fontWeight:700, cursor:'pointer', boxShadow:'0 4px 18px rgba(0,212,255,0.45)', flexShrink:0 },
+  btnGen: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', padding:'10px 16px', borderRadius:12, fontSize:12, fontWeight:700, cursor:'pointer', boxShadow:'0 4px 16px rgba(0,212,255,0.4)', flexShrink:0, fontFamily:'Poppins, sans-serif' },
   empty: { background:'rgba(255,255,255,0.03)', backdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:22, padding:44, textAlign:'center' },
-  motivCard: { background:'linear-gradient(135deg, rgba(0,212,255,0.08), rgba(191,90,242,0.08))', border:'1px solid rgba(0,212,255,0.2)', borderRadius:20, padding:22, textAlign:'center' },
-  card: { background:'rgba(255,255,255,0.04)', backdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:20, padding:18 },
-  cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:14 },
+  motivCard: { background:'linear-gradient(135deg, rgba(0,212,255,0.07), rgba(191,90,242,0.07))', border:'1px solid rgba(0,212,255,0.18)', borderRadius:20, padding:20, textAlign:'center' },
+  card: { background:'rgba(255,255,255,0.04)', backdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:20, padding:16 },
+  cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
   cardTitre: { fontSize:14, fontWeight:700, color:'rgba(255,255,255,0.9)' },
-  etapeRow: { display:'flex', gap:12, alignItems:'flex-start', padding:'8px 0', borderTop:'1px solid rgba(255,255,255,0.05)' },
+  etapeRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'9px 0', borderTop:'1px solid rgba(255,255,255,0.04)', cursor:'pointer' },
   repasRow: { display:'flex', gap:10, alignItems:'center', padding:'6px 0' },
-  planteRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'6px 0', borderTop:'1px solid rgba(255,255,255,0.05)', marginTop:4 },
-  supplements: { fontSize:12, color:'#00ff88', background:'rgba(0,255,136,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(0,255,136,0.15)' }
+  planteRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'6px 0', borderTop:'1px solid rgba(255,255,255,0.04)', marginTop:4 },
+  supplements: { fontSize:12, color:'#00e676', background:'rgba(0,230,118,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(0,230,118,0.15)' }
 }
 
-/* ─── Tenues ─── */
+// ─── TENUES MODULE ────────────────────────────────────────────────────────────
 function TenueCard({ tenue }) {
   const [imgSrc, setImgSrc] = useState(null)
   const [imgError, setImgError] = useState(false)
@@ -611,7 +774,7 @@ function TenueCard({ tenue }) {
   return (
     <div style={styles.tenueCard}>
       <div style={styles.tenueImgBox}>
-        {!imgSrc && !imgError && <div style={styles.tenueImgPlaceholder}>🔍 Recherche...</div>}
+        {!imgSrc && !imgError && <div style={styles.tenueImgPlaceholder}>🔍 Génération...</div>}
         {imgError && <div style={styles.tenueImgPlaceholder}>👗 {tenue.titre}</div>}
         {imgSrc && <img src={imgSrc} alt={tenue.titre} style={styles.tenueImg} onError={()=>setImgError(true)} />}
       </div>
@@ -625,12 +788,12 @@ function TenueCard({ tenue }) {
 }
 
 function TenuesModule({ profil }) {
-  const [ouvert, setOuvert]   = useState(false)
-  const [ville, setVille]     = useState('')
+  const [ouvert, setOuvert]     = useState(false)
+  const [ville, setVille]       = useState('')
   const [occasion, setOccasion] = useState('Casual')
-  const [tenues, setTenues]   = useState([])
-  const [meteo, setMeteo]     = useState('')
-  const [loading, setLoading] = useState(false)
+  const [tenues, setTenues]     = useState([])
+  const [meteo, setMeteo]       = useState('')
+  const [loading, setLoading]   = useState(false)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
   async function getTenues() {
@@ -651,7 +814,9 @@ function TenuesModule({ profil }) {
   return (
     <div style={styles.tenuesBox}>
       <button style={styles.tenuesBtn} onClick={()=>setOuvert(!ouvert)}>
-        👗 {ouvert ? 'Fermer' : 'Idées tenues du jour'}
+        <span style={{ fontSize:20 }}>👗</span>
+        <span>{ouvert ? 'Fermer les suggestions' : 'Idées tenues du jour'}</span>
+        <span style={{ marginLeft:'auto', opacity:0.5 }}>{ouvert ? '▲' : '▼'}</span>
       </button>
       {ouvert && (
         <div style={styles.tenuesPanel}>
@@ -677,88 +842,86 @@ function TenuesModule({ profil }) {
   )
 }
 
-/* ═══════════════════════════════════ STYLES ══ */
+// ─── STYLES ───────────────────────────────────────────────────────────────────
 const styles = {
-  app: { fontFamily:'Poppins, sans-serif', maxWidth:480, margin:'0 auto', minHeight:'100vh', background:'#000010', position:'relative', paddingBottom:85 },
+  app: { fontFamily:'Poppins, sans-serif', maxWidth:480, margin:'0 auto', minHeight:'100vh', background:'#050510', position:'relative', paddingBottom:85 },
 
-  /* Header */
-  header: { background:'rgba(0,0,16,0.75)', backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)', borderBottom:'1px solid rgba(255,255,255,0.06)', padding:'18px 22px 14px', position:'sticky', top:0, zIndex:100 },
-  headerTop: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 },
+  header: { background:'rgba(5,5,16,0.82)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'16px 20px 12px', position:'sticky', top:0, zIndex:100 },
+  headerTop: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:10 },
   logo: { fontSize:26, fontWeight:900, background:'linear-gradient(135deg, #00d4ff 30%, #bf5af2 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:'-0.5px' },
-  subtitle: { fontSize:12, color:'rgba(255,255,255,0.32)', marginTop:3, letterSpacing:'0.3px' },
+  subtitle: { fontSize:11, color:'rgba(255,255,255,0.28)', marginTop:2, letterSpacing:'0.3px' },
+  scorePill: { background:'rgba(255,255,255,0.05)', border:'1px solid', borderRadius:10, padding:'6px 10px', fontSize:11, fontWeight:800, cursor:'pointer', backdropFilter:'blur(10px)', letterSpacing:'0.5px' },
 
-  /* Stats */
-  stats: { display:'flex', gap:8, flexWrap:'wrap' },
-  stat: { background:'rgba(0,212,255,0.07)', border:'1px solid rgba(0,212,255,0.2)', borderRadius:8, padding:'6px 12px', fontSize:11, color:'rgba(255,255,255,0.55)', flex:1, backdropFilter:'blur(10px)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' },
+  stats: { display:'flex', gap:7, flexWrap:'wrap' },
+  stat: { background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, padding:'5px 10px', fontSize:11, color:'rgba(255,255,255,0.45)', cursor:'pointer', backdropFilter:'blur(10px)', whiteSpace:'nowrap' },
 
-  /* Content */
-  content: { padding:'18px 22px 10px', position:'relative', zIndex:1 },
+  content: { padding:'16px 20px 10px', position:'relative', zIndex:1 },
 
-  /* Chat */
-  chatBox: { minHeight:380, maxHeight:480, overflowY:'auto', marginBottom:14, padding:'4px 0' },
+  chatBox: { minHeight:360, maxHeight:460, overflowY:'auto', marginBottom:12, padding:'4px 0' },
+  emptyChat: { textAlign:'center', padding:'60px 20px 40px', color:'rgba(255,255,255,0.4)' },
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:12 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:12, gap:8 },
-  userBubble: { background:'linear-gradient(135deg, #1a73e8, #0d47a1)', color:'white', padding:'11px 16px', borderRadius:'18px 18px 4px 18px', maxWidth:'76%', fontSize:14, lineHeight:1.5, boxShadow:'0 4px 18px rgba(26,115,232,0.4)' },
-  botBubble: { background:'rgba(255,255,255,0.06)', backdropFilter:'blur(16px)', border:'1px solid rgba(0,212,255,0.14)', color:'rgba(255,255,255,0.88)', padding:'12px 16px', borderRadius:'4px 18px 18px 18px', maxWidth:'80%', fontSize:14, lineHeight:1.7, whiteSpace:'pre-wrap', boxShadow:'0 4px 18px rgba(0,0,0,0.25)' },
-  avatar: { fontSize:16, color:'#00d4ff', textShadow:'0 0 10px #00d4ff', marginTop:6, flexShrink:0 },
+  userBubble: { background:'linear-gradient(135deg, #1a73e8, #0d47a1)', color:'white', padding:'11px 15px', borderRadius:'18px 18px 4px 18px', maxWidth:'76%', fontSize:14, lineHeight:1.55, boxShadow:'0 4px 18px rgba(26,115,232,0.35)' },
+  botBubble: { background:'rgba(255,255,255,0.06)', backdropFilter:'blur(16px)', border:'1px solid rgba(0,212,255,0.12)', color:'rgba(255,255,255,0.88)', padding:'12px 15px', borderRadius:'4px 18px 18px 18px', maxWidth:'82%', fontSize:14, lineHeight:1.7, whiteSpace:'pre-wrap', boxShadow:'0 4px 18px rgba(0,0,0,0.2)' },
+  avatar: { fontSize:15, color:'#00d4ff', textShadow:'0 0 10px #00d4ff80', marginTop:6, flexShrink:0 },
 
-  /* Input */
-  inputBox: { display:'flex', gap:10, background:'rgba(255,255,255,0.05)', backdropFilter:'blur(20px)', borderRadius:18, padding:'10px 10px 10px 18px', border:'1px solid rgba(0,212,255,0.18)', alignItems:'center', boxShadow:'0 4px 24px rgba(0,0,0,0.3)' },
+  suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
+  suggestion: { background:'rgba(0,212,255,0.07)', border:'1px solid rgba(0,212,255,0.2)', borderRadius:20, padding:'7px 13px', fontSize:11, color:'rgba(0,212,255,0.85)', cursor:'pointer', fontFamily:'Poppins, sans-serif', whiteSpace:'nowrap' },
+
+  inputBox: { display:'flex', gap:8, background:'rgba(255,255,255,0.05)', backdropFilter:'blur(20px)', borderRadius:18, padding:'8px 8px 8px 16px', border:'1px solid rgba(0,212,255,0.16)', alignItems:'center', boxShadow:'0 4px 24px rgba(0,0,0,0.25)' },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:'Poppins, sans-serif', background:'transparent', color:'white' },
-  sendBtn: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', border:'none', width:42, height:42, borderRadius:13, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 4px 14px rgba(0,212,255,0.45)', animation:'pulseNeon 3s ease-in-out infinite' },
+  sendBtn: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', border:'none', width:40, height:40, borderRadius:12, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 4px 14px rgba(0,212,255,0.4)' },
 
-  /* Bottom Nav */
-  bottomNav: { position:'fixed', bottom:0, left:'50%', transform:'translateX(-50%)', width:'100%', maxWidth:480, background:'rgba(0,0,16,0.88)', backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)', borderTop:'1px solid rgba(255,255,255,0.07)', display:'flex', padding:'10px 0 18px', zIndex:200, boxShadow:'0 -8px 32px rgba(0,0,0,0.5)' },
-  navItem: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:3, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'rgba(255,255,255,0.28)', fontFamily:'Poppins, sans-serif', transition:'all 0.2s' },
-  navItemActive: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:3, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'#00d4ff', fontFamily:'Poppins, sans-serif', filter:'drop-shadow(0 0 8px rgba(0,212,255,0.9))', transition:'all 0.2s' },
+  bottomNav: { position:'fixed', bottom:0, left:'50%', transform:'translateX(-50%)', width:'100%', maxWidth:480, background:'rgba(5,5,16,0.92)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderTop:'1px solid rgba(255,255,255,0.07)', display:'flex', padding:'8px 0 18px', zIndex:200, boxShadow:'0 -8px 32px rgba(0,0,0,0.5)' },
+  navItem: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:2, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'rgba(255,255,255,0.25)', fontFamily:'Poppins, sans-serif', transition:'all 0.2s', position:'relative' },
+  navItemActive: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:2, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'#00d4ff', fontFamily:'Poppins, sans-serif', filter:'drop-shadow(0 0 8px rgba(0,212,255,0.8))', transition:'all 0.2s', position:'relative' },
 
-  /* Buttons header */
-  btnPro: { background:'linear-gradient(135deg, #ff6d00, #ff9800)', color:'white', border:'none', padding:'8px 14px', borderRadius:10, cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', fontWeight:700, boxShadow:'0 4px 14px rgba(255,109,0,0.45)' },
-  proBadge: { background:'rgba(191,90,242,0.14)', color:'#bf5af2', border:'1px solid rgba(191,90,242,0.35)', padding:'6px 12px', borderRadius:9, fontSize:11, fontWeight:700 },
-  btnEdit: { background:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.6)', border:'1px solid rgba(255,255,255,0.1)', width:36, height:36, borderRadius:9, cursor:'pointer', fontSize:15, display:'flex', alignItems:'center', justifyContent:'center' },
+  btnPro: { background:'linear-gradient(135deg, #ff6d00, #ff9800)', color:'white', border:'none', padding:'7px 12px', borderRadius:9, cursor:'pointer', fontSize:11, fontFamily:'Poppins, sans-serif', fontWeight:700, boxShadow:'0 4px 12px rgba(255,109,0,0.4)' },
+  proBadge: { background:'rgba(191,90,242,0.12)', color:'#bf5af2', border:'1px solid rgba(191,90,242,0.3)', padding:'5px 11px', borderRadius:8, fontSize:11, fontWeight:700 },
+  btnEdit: { background:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.55)', border:'1px solid rgba(255,255,255,0.1)', width:34, height:34, borderRadius:9, cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center' },
 
-  /* Form */
-  formBox: { background:'rgba(255,255,255,0.04)', backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:24, padding:26, boxShadow:'0 24px 64px rgba(0,0,0,0.4)' },
-  formTitle: { color:'#00d4ff', marginBottom:22, fontSize:18, fontWeight:700, textShadow:'0 0 20px rgba(0,212,255,0.4)' },
-  field: { marginBottom:20 },
-  row: { display:'flex', gap:10, marginBottom:20 },
-  label: { display:'block', marginBottom:7, fontWeight:600, color:'rgba(255,255,255,0.38)', fontSize:10, letterSpacing:'1.2px', textTransform:'uppercase' },
-  inputField: { flex:1, width:'100%', padding:'12px 14px', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.06)', fontSize:13, fontFamily:'Poppins, sans-serif', boxSizing:'border-box', outline:'none', color:'white', backdropFilter:'blur(10px)' },
+  formBox: { background:'rgba(255,255,255,0.04)', backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:24, padding:'22px 22px 24px', boxShadow:'0 24px 64px rgba(0,0,0,0.4)' },
+  formTitle: { color:'#00d4ff', marginBottom:18, fontSize:17, fontWeight:700, textShadow:'0 0 20px rgba(0,212,255,0.3)', marginTop:0 },
+  field: { marginBottom:18 },
+  row: { display:'flex', gap:8, marginBottom:18 },
+  label: { display:'block', marginBottom:6, fontWeight:600, color:'rgba(255,255,255,0.35)', fontSize:10, letterSpacing:'1.2px', textTransform:'uppercase' },
+  inputField: { flex:1, width:'100%', padding:'11px 13px', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.05)', fontSize:13, fontFamily:'Poppins, sans-serif', boxSizing:'border-box', outline:'none', color:'white', backdropFilter:'blur(10px)' },
+  planningDivider: { display:'flex', alignItems:'center', gap:10, margin:'20px 0 16px' },
+  planningLabel: { fontSize:11, color:'rgba(255,255,255,0.35)', textTransform:'uppercase', letterSpacing:1.5, whiteSpace:'nowrap' },
   chips: { display:'flex', flexWrap:'wrap', gap:7 },
-  chip: { padding:'7px 14px', borderRadius:20, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.04)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'rgba(255,255,255,0.5)' },
-  chipBlue: { padding:'7px 14px', borderRadius:20, border:'1px solid rgba(0,212,255,0.45)', background:'rgba(0,212,255,0.1)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'#00d4ff', fontWeight:700, boxShadow:'0 0 10px rgba(0,212,255,0.2)' },
-  chipOrange: { padding:'7px 14px', borderRadius:20, border:'1px solid rgba(255,152,0,0.45)', background:'rgba(255,152,0,0.1)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'#ffb74d', fontWeight:700, boxShadow:'0 0 10px rgba(255,152,0,0.2)' },
-  aiBar: { background:'rgba(0,212,255,0.05)', border:'1px dashed rgba(0,212,255,0.25)', borderRadius:14, padding:16, marginTop:12, marginBottom:6 },
-  aiBarTitle: { fontWeight:700, color:'#00d4ff', marginBottom:5, fontSize:12, letterSpacing:'0.3px' },
-  aiBarHint: { fontSize:11, color:'rgba(255,255,255,0.3)', marginBottom:10, fontStyle:'italic' },
-  aiBarRow: { display:'flex', gap:8 },
-  aiInput: { flex:1, padding:'9px 14px', borderRadius:10, border:'1px solid rgba(0,212,255,0.2)', background:'rgba(255,255,255,0.05)', fontSize:13, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
-  aiBtn: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', padding:'9px 16px', borderRadius:10, fontSize:14, fontWeight:800, cursor:'pointer', boxShadow:'0 0 12px rgba(0,212,255,0.4)' },
-  aiResultat: { marginTop:10, fontSize:12, color:'#00ff88', background:'rgba(0,255,136,0.07)', padding:'8px 12px', borderRadius:9, border:'1px solid rgba(0,255,136,0.2)' },
-  profileSaved: { fontSize:12, color:'#00ff88', marginTop:8, fontWeight:600 },
-  navBtns: { display:'flex', justifyContent:'space-between', marginTop:26, gap:12 },
-  btnBack: { padding:'13px 20px', borderRadius:13, border:'1px solid rgba(255,255,255,0.12)', background:'rgba(255,255,255,0.05)', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'rgba(255,255,255,0.5)' },
-  btnNext: { flex:1, padding:'13px 22px', background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', borderRadius:13, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 20px rgba(0,212,255,0.45)' },
-  btnSave: { flex:1, padding:'13px 22px', background:'linear-gradient(135deg, #bf5af2, #6e2da0)', color:'white', border:'none', borderRadius:13, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 20px rgba(191,90,242,0.45)' },
-  btnAnnuler: { padding:'13px 20px', borderRadius:13, border:'1px solid rgba(255,82,82,0.3)', background:'rgba(255,82,82,0.07)', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'#ff5252' },
-  hint: { fontSize:11, color:'rgba(255,255,255,0.25)', fontWeight:400 },
+  chip: { padding:'7px 13px', borderRadius:20, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.04)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'rgba(255,255,255,0.45)', transition:'all 0.15s' },
+  chipBlue: { padding:'7px 13px', borderRadius:20, border:'1px solid rgba(0,212,255,0.45)', background:'rgba(0,212,255,0.1)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'#00d4ff', fontWeight:700, boxShadow:'0 0 10px rgba(0,212,255,0.18)' },
+  chipOrange: { padding:'7px 13px', borderRadius:20, border:'1px solid rgba(255,152,0,0.45)', background:'rgba(255,152,0,0.1)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'#ffb74d', fontWeight:700, boxShadow:'0 0 10px rgba(255,152,0,0.18)' },
+  chipGreen: { padding:'7px 13px', borderRadius:20, border:'1px solid rgba(0,230,118,0.45)', background:'rgba(0,230,118,0.1)', cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', color:'#00e676', fontWeight:700, boxShadow:'0 0 10px rgba(0,230,118,0.18)' },
+  aiBar: { background:'rgba(0,212,255,0.04)', border:'1px dashed rgba(0,212,255,0.22)', borderRadius:13, padding:14, marginTop:10, marginBottom:5 },
+  aiBarTitle: { fontWeight:700, color:'#00d4ff', marginBottom:4, fontSize:11, letterSpacing:'0.3px' },
+  aiBarHint: { fontSize:11, color:'rgba(255,255,255,0.28)', marginBottom:9, fontStyle:'italic' },
+  aiBarRow: { display:'flex', gap:7 },
+  aiInput: { flex:1, padding:'8px 13px', borderRadius:10, border:'1px solid rgba(0,212,255,0.18)', background:'rgba(255,255,255,0.04)', fontSize:13, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
+  aiBtn: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', padding:'8px 14px', borderRadius:10, fontSize:14, fontWeight:800, cursor:'pointer', boxShadow:'0 0 12px rgba(0,212,255,0.35)' },
+  aiResultat: { marginTop:9, fontSize:12, color:'#00e676', background:'rgba(0,230,118,0.07)', padding:'7px 11px', borderRadius:8, border:'1px solid rgba(0,230,118,0.18)' },
+  profileSaved: { fontSize:12, color:'#00e676', marginTop:6, fontWeight:600 },
+  navBtns: { display:'flex', justifyContent:'space-between', marginTop:24, gap:10 },
+  btnBack: { padding:'12px 18px', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.04)', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'rgba(255,255,255,0.45)' },
+  btnNext: { flex:1, padding:'13px 20px', background:'linear-gradient(135deg, #00d4ff, #0080ff)', color:'#000', border:'none', borderRadius:12, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 20px rgba(0,212,255,0.4)' },
+  btnSave: { flex:1, padding:'13px 20px', background:'linear-gradient(135deg, #bf5af2, #6e2da0)', color:'white', border:'none', borderRadius:12, fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 20px rgba(191,90,242,0.4)' },
+  btnAnnuler: { padding:'12px 18px', borderRadius:12, border:'1px solid rgba(255,82,82,0.28)', background:'rgba(255,82,82,0.06)', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'#ff5252' },
 
-  /* Tenues */
-  tenuesBox: { marginBottom:16 },
-  tenuesBtn: { width:'100%', padding:'13px', background:'rgba(191,90,242,0.1)', color:'#bf5af2', border:'1px solid rgba(191,90,242,0.3)', borderRadius:14, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'Poppins, sans-serif', backdropFilter:'blur(10px)', boxShadow:'0 4px 18px rgba(191,90,242,0.15)' },
-  tenuesPanel: { background:'rgba(255,255,255,0.03)', backdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'0 0 18px 18px', padding:16 },
-  meteoBar: { background:'rgba(0,212,255,0.07)', borderRadius:10, padding:'9px 14px', fontSize:12, marginBottom:12, color:'#00d4ff', fontWeight:500, border:'1px solid rgba(0,212,255,0.18)' },
-  tenuesRow: { display:'flex', gap:8, marginBottom:12 },
-  villeInput: { flex:1, padding:'10px 14px', borderRadius:11, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.05)', fontSize:13, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
-  selectOccasion: { padding:'10px 12px', borderRadius:11, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(0,0,16,0.8)', fontSize:13, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
-  btnGetTenues: { padding:'10px 18px', background:'linear-gradient(135deg, #bf5af2, #6e2da0)', color:'white', border:'none', borderRadius:11, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 14px rgba(191,90,242,0.4)' },
-  tenuesGrid: { display:'flex', gap:14, flexWrap:'wrap', marginTop:12 },
-  tenueCard: { flex:'1 1 180px', background:'rgba(255,255,255,0.04)', backdropFilter:'blur(20px)', border:'1px solid rgba(191,90,242,0.2)', borderRadius:18, overflow:'hidden' },
-  tenueImgBox: { width:'100%', height:230, background:'rgba(191,90,242,0.06)', position:'relative' },
-  tenueImgPlaceholder: { width:'100%', height:230, display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(191,90,242,0.6)', fontSize:13, textAlign:'center', padding:10, boxSizing:'border-box' },
-  tenueImg: { width:'100%', height:230, objectFit:'cover', display:'block' },
-  tenueInfo: { padding:14 },
-  tenueTitre: { fontWeight:700, color:'#bf5af2', fontSize:13, marginBottom:7 },
-  tenueDesc: { fontSize:12, color:'rgba(255,255,255,0.55)', lineHeight:1.65, marginBottom:7 },
-  tenuePourquoi: { fontSize:11, color:'rgba(255,255,255,0.28)', fontStyle:'italic' }
+  tenuesBox: { marginBottom:14 },
+  tenuesBtn: { width:'100%', padding:'13px 16px', background:'rgba(191,90,242,0.08)', color:'#bf5af2', border:'1px solid rgba(191,90,242,0.28)', borderRadius:14, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'Poppins, sans-serif', backdropFilter:'blur(10px)', display:'flex', alignItems:'center', gap:10, boxShadow:'0 4px 16px rgba(191,90,242,0.12)' },
+  tenuesPanel: { background:'rgba(255,255,255,0.03)', backdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:'0 0 16px 16px', padding:14 },
+  meteoBar: { background:'rgba(0,212,255,0.06)', borderRadius:9, padding:'8px 13px', fontSize:12, marginBottom:11, color:'#00d4ff', fontWeight:500, border:'1px solid rgba(0,212,255,0.16)' },
+  tenuesRow: { display:'flex', gap:7, marginBottom:11 },
+  villeInput: { flex:1, padding:'9px 13px', borderRadius:10, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.05)', fontSize:13, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
+  selectOccasion: { padding:'9px 11px', borderRadius:10, border:'1px solid rgba(255,255,255,0.1)', background:'rgba(0,0,16,0.8)', fontSize:12, fontFamily:'Poppins, sans-serif', outline:'none', color:'white' },
+  btnGetTenues: { padding:'9px 16px', background:'linear-gradient(135deg, #bf5af2, #6e2da0)', color:'white', border:'none', borderRadius:10, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 4px 12px rgba(191,90,242,0.35)' },
+  tenuesGrid: { display:'flex', gap:12, flexWrap:'wrap', marginTop:10 },
+  tenueCard: { flex:'1 1 180px', background:'rgba(255,255,255,0.04)', backdropFilter:'blur(20px)', border:'1px solid rgba(191,90,242,0.18)', borderRadius:16, overflow:'hidden' },
+  tenueImgBox: { width:'100%', height:220, background:'rgba(191,90,242,0.05)', position:'relative' },
+  tenueImgPlaceholder: { width:'100%', height:220, display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(191,90,242,0.5)', fontSize:12, textAlign:'center', padding:10, boxSizing:'border-box' },
+  tenueImg: { width:'100%', height:220, objectFit:'cover', display:'block' },
+  tenueInfo: { padding:12 },
+  tenueTitre: { fontWeight:700, color:'#bf5af2', fontSize:12, marginBottom:6 },
+  tenueDesc: { fontSize:11, color:'rgba(255,255,255,0.52)', lineHeight:1.65, marginBottom:6 },
+  tenuePourquoi: { fontSize:10, color:'rgba(255,255,255,0.26)', fontStyle:'italic' }
 }
