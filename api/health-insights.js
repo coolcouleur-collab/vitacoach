@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return '⚪'
   }
 
-  const prompt = `Tu es Oravi, coach santé expert et bienveillant.
+  const prompt = `Tu es Oravia, coach santé expert et bienveillant.
 
 Analyse les métriques santé de ${profil?.nom || 'l\'utilisateur'} et génère 4 insights personnalisés, concrets et actionnables.
 

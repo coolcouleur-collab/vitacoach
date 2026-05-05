@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const h     = parseInt(heure.split(':')[0])
   const moment = h < 10 ? 'le matin' : h < 13 ? 'en matinée' : h < 17 ? "l'après-midi" : h < 20 ? 'en soirée' : 'la nuit'
 
-  const systemPrompt = `Tu es Oravi, coach de vie personnel premium et bienveillant, expert en bien-être holistique.
+  const systemPrompt = `Tu es Oravia, coach de vie personnel premium et bienveillant, expert en bien-être holistique.
 
 Domaines d'expertise : nutrition, sommeil, gestion du stress, style vestimentaire, fitness, remèdes naturels, plantes médicinales, gestion du temps, productivité et équilibre de vie. Tu connais les médecines traditionnelles mais les mentionnes subtilement, seulement quand pertinent, avec les contre-indications importantes.
 

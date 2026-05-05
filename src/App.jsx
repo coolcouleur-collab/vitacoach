@@ -269,7 +269,7 @@ export default function App() {
     const msg = msgOverride || input
     if (!msg.trim()) return
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
-      setMessages(prev => [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravi Pro pour des conseils illimités.` }])
+      setMessages(prev => [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravia Pro pour des conseils illimités.` }])
       return
     }
     const userMsg = { role:'user', content: msg }
@@ -314,7 +314,7 @@ export default function App() {
         <StarField />
         <div style={{ position:'relative', zIndex:1, padding:'36px 22px 60px' }}>
           <div style={{ textAlign:'center', marginBottom:32 }}>
-            <div style={styles.logo}>✦ Oravi</div>
+            <div style={styles.logo}>✦ Oravia</div>
             <div style={{ color:'rgba(255,255,255,0.3)', fontSize:12, marginTop:6, letterSpacing:0.5 }}>
               {profilBackup ? 'Modifier ton profil' : 'Crée ton profil personnalisé'}
             </div>
@@ -452,7 +452,7 @@ export default function App() {
                 }}>Suivant →</button>
               ) : (
                 <button style={styles.btnSave} onClick={sauvegarderProfil}>
-                  {profilBackup ? '💾 Sauvegarder' : '⚡ Lancer Oravi'}
+                  {profilBackup ? '💾 Sauvegarder' : '⚡ Lancer Oravia'}
                 </button>
               )}
             </div>
@@ -480,7 +480,7 @@ export default function App() {
       {/* ══ SIDEBAR ══ */}
       <aside style={styles.sidebar}>
         <div style={styles.sidebarTop}>
-          <div style={styles.logo}>✦ Oravi</div>
+          <div style={styles.logo}>✦ Oravia</div>
           <div style={styles.subtitle}>Coach de vie IA</div>
         </div>
 
@@ -540,7 +540,7 @@ export default function App() {
               <div style={styles.emptyChat}>
                 <div style={{ fontSize:40, marginBottom:12 }}>✦</div>
                 <div style={{ fontSize:16, fontWeight:700, color:'rgba(255,255,255,0.7)', marginBottom:6 }}>
-                  Je suis Oravi, ton coach de vie
+                  Je suis Oravia, ton coach de vie
                 </div>
                 <div style={{ fontSize:12, color:'rgba(255,255,255,0.3)', lineHeight:1.7 }}>
                   Nutrition · Bien-être · Style · Gestion du temps
@@ -585,7 +585,7 @@ export default function App() {
             <input style={styles.inputChat} value={input}
               onChange={e=>setInput(e.target.value)}
               onKeyDown={e=>e.key==='Enter' && envoyerMessage()}
-              placeholder="Pose une question à Oravi..." />
+              placeholder="Pose une question à Oravia..." />
             <button style={styles.sendBtn} onClick={() => envoyerMessage()} aria-label="Envoyer">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M22 2L11 13" stroke="#000" strokeWidth="2.5" strokeLinecap="round"/>

@@ -64,7 +64,7 @@ export default function Auth({ onConnecte }) {
       <Stars />
       <div style={s.card}>
         {/* Logo */}
-        <div style={s.logo}>✦ Oravi</div>
+        <div style={s.logo}>✦ Oravia</div>
         <div style={s.tagline}>Ton coach de vie personnel</div>
 
         {/* Tabs */}
