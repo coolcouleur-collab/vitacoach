@@ -530,7 +530,7 @@ export default function App() {
 
         {/* ── Chat ── */}
         {onglet==='chat' && (
-          <div style={{ display:'flex', flexDirection:'column', flex:1, minHeight:0 }}>
+          <div style={{ display:'flex', flexDirection:'column', minHeight:'calc(100vh - 0px)' }}>
             <div style={styles.pageHeader}>
               <div style={styles.pageTitle}>💬 Coach IA</div>
               <div style={styles.pageSubtitle}>Pose n'importe quelle question sur ton bien-être</div>
@@ -870,7 +870,7 @@ function TenuesModule({ profil }) {
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const styles = {
   /* ── Layout global ── */
-  app: { display:'flex', height:'100vh', background:'#050510', fontFamily:'Poppins, sans-serif', position:'relative', overflow:'hidden' },
+  app: { display:'flex', minHeight:'100vh', background:'#050510', fontFamily:'Poppins, sans-serif', position:'relative' },
 
   /* ── Sidebar ── */
   sidebar: { width:248, flexShrink:0, background:'rgba(5,5,16,0.88)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', padding:'26px 14px 22px', position:'fixed', top:0, left:0, height:'100vh', zIndex:50, overflowY:'auto' },
@@ -885,8 +885,8 @@ const styles = {
   navItemActive: { display:'flex', alignItems:'center', gap:12, padding:'11px 13px', borderRadius:13, border:'1px solid rgba(0,212,255,0.2)', background:'rgba(0,212,255,0.08)', cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'#00d4ff', fontWeight:700, textAlign:'left', width:'100%', fontSize:13, position:'relative', boxShadow:'0 0 20px rgba(0,212,255,0.08)', transition:'all 0.2s' },
 
   /* ── Main ── */
-  main: { flex:1, marginLeft:248, display:'flex', flexDirection:'column', position:'relative', zIndex:1, overflowY:'auto', height:'100vh' },
-  mainInner: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', padding:'0 36px', display:'flex', flexDirection:'column', minHeight:0 },
+  main: { flex:1, marginLeft:248, display:'flex', flexDirection:'column', position:'relative', zIndex:1 },
+  mainInner: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', padding:'0 36px 60px', display:'flex', flexDirection:'column' },
   pageHeader: { padding:'32px 0 20px', borderBottom:'1px solid rgba(255,255,255,0.05)', marginBottom:22, flexShrink:0 },
   pageTitle: { fontSize:24, fontWeight:800, color:'rgba(255,255,255,0.92)', marginBottom:5, letterSpacing:'-0.4px' },
   pageSubtitle: { fontSize:12, color:'rgba(255,255,255,0.28)' },
