@@ -466,53 +466,76 @@ export default function App() {
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#00e676' : score >= 40 ? '#ffd60a' : '#ff453a'
 
+  const navItems = [
+    ['chat','💬','Coach IA', null],
+    ['sante','❤️','Santé', score > 0 ? score : null],
+    ['routine','📋','Routine', null],
+    ['style','👗','Style', null],
+  ]
+
   return (
     <div style={styles.app}>
       <StarField />
 
-      {/* ── Header ── */}
-      <div style={styles.header}>
-        <div style={styles.headerTop}>
-          <div>
-            <div style={styles.logo}>✦ Oravi</div>
-            <div style={styles.subtitle}>Bonjour {profil.nom} ✦</div>
-          </div>
-          <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-            {/* Score santé */}
-            <div style={{ ...styles.scorePill, color: scoreColor, borderColor: scoreColor+'40' }}
-              onClick={() => setOnglet('sante')} title="Score santé du jour">
-              ❤️ {score}
-            </div>
-            {!isPro && (
-              <button style={styles.btnPro} onClick={passerPro}>⚡ Pro</button>
-            )}
-            {isPro && <div style={styles.proBadge}>✦ Pro</div>}
-            <button style={styles.btnEdit} onClick={modifierProfil} title="Modifier le profil">✏️</button>
-          </div>
+      {/* ══ SIDEBAR ══ */}
+      <aside style={styles.sidebar}>
+        <div style={styles.sidebarTop}>
+          <div style={styles.logo}>✦ Oravi</div>
+          <div style={styles.subtitle}>Coach de vie IA</div>
         </div>
 
-        {/* Quick stats */}
-        <div style={styles.stats}>
-          <div style={styles.stat} onClick={() => setOnglet('sante')}>
-            💧 {metriques.eau > 0 ? `${metriques.eau}/8` : '— verres'}
-          </div>
-          <div style={styles.stat} onClick={() => setOnglet('sante')}>
-            👣 {metriques.pas > 0 ? metriques.pas.toLocaleString('fr') : '— pas'}
-          </div>
-          {profil.reveil && (
-            <div style={{ ...styles.stat, color:'rgba(255,255,255,0.45)' }}>
-              ⏰ {profil.reveil}–{profil.coucher}
-            </div>
-          )}
-        </div>
-      </div>
+        <nav style={styles.sidebarNav}>
+          {navItems.map(([id, icon, label, badge]) => (
+            <button key={id} style={onglet===id ? styles.navItemActive : styles.navItem} onClick={() => setOnglet(id)}>
+              <span style={{ fontSize:18, lineHeight:1 }}>{icon}</span>
+              <span>{label}</span>
+              {badge && (
+                <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700, color: id==='sante' ? scoreColor : '#00d4ff', background: id==='sante' ? scoreColor+'18' : 'rgba(0,212,255,0.1)', borderRadius:6, padding:'2px 7px' }}>
+                  {badge}
+                </span>
+              )}
+            </button>
+          ))}
+        </nav>
 
-      {/* ── Content ── */}
-      <div style={styles.content}>
+        <div style={styles.sidebarBottom}>
+          {/* Quick metrics */}
+          <div style={{ display:'flex', gap:6 }}>
+            <div style={{ ...styles.stat, flex:1, textAlign:'center', cursor:'pointer' }} onClick={() => setOnglet('sante')}>
+              💧 {metriques.eau > 0 ? `${metriques.eau}/8` : '—'}
+            </div>
+            <div style={{ ...styles.stat, flex:1, textAlign:'center', cursor:'pointer' }} onClick={() => setOnglet('sante')}>
+              👣 {metriques.pas > 0 ? (metriques.pas >= 1000 ? Math.round(metriques.pas/1000)+'k' : metriques.pas) : '—'}
+            </div>
+          </div>
+
+          <div style={styles.profileCard}>
+            <div style={styles.profileAvatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={styles.profileName}>{profil.nom}</div>
+              {profil.objectifs?.[0] && <div style={styles.profileMeta}>🎯 {profil.objectifs[0]}</div>}
+              {profil.reveil && <div style={styles.profileMeta}>⏰ {profil.reveil}–{profil.coucher}</div>}
+            </div>
+          </div>
+
+          {!isPro && <button style={styles.btnPro} onClick={passerPro}>⚡ Pro — 4.99€/mois</button>}
+          {isPro && <div style={styles.proBadge}>✦ Membre Pro</div>}
+          <button style={styles.btnEdit} onClick={modifierProfil}>✏️ Modifier le profil</button>
+        </div>
+      </aside>
+
+      {/* ══ MAIN ══ */}
+      <main style={styles.main}>
+        <div style={styles.mainInner}>
 
         {/* ── Chat ── */}
-        {onglet==='chat' && <>
-          <div style={styles.chatBox}>
+        {onglet==='chat' && (
+          <div style={{ display:'flex', flexDirection:'column', flex:1, minHeight:0 }}>
+            <div style={styles.pageHeader}>
+              <div style={styles.pageTitle}>💬 Coach IA</div>
+              <div style={styles.pageSubtitle}>Pose n'importe quelle question sur ton bien-être</div>
+            </div>
+            <div style={{ ...styles.chatBox, flex:1, maxHeight:'none', minHeight:0 }}>
             {messages.length === 0 && (
               <div style={styles.emptyChat}>
                 <div style={{ fontSize:40, marginBottom:12 }}>✦</div>
@@ -570,7 +593,8 @@ export default function App() {
               </svg>
             </button>
           </div>
-        </>}
+        </div>
+        )}
 
         {/* ── Santé ── */}
         {onglet==='sante' && (
@@ -603,6 +627,7 @@ export default function App() {
           </button>
         ))}
       </div>
+      </main>
     </div>
   )
 }
@@ -844,18 +869,38 @@ function TenuesModule({ profil }) {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const styles = {
-  app: { fontFamily:'Poppins, sans-serif', maxWidth:480, margin:'0 auto', minHeight:'100vh', background:'#050510', position:'relative', paddingBottom:85 },
+  /* ── Layout global ── */
+  app: { display:'flex', height:'100vh', background:'#050510', fontFamily:'Poppins, sans-serif', position:'relative', overflow:'hidden' },
 
-  header: { background:'rgba(5,5,16,0.82)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderBottom:'1px solid rgba(255,255,255,0.07)', padding:'16px 20px 12px', position:'sticky', top:0, zIndex:100 },
-  headerTop: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:10 },
-  logo: { fontSize:26, fontWeight:900, background:'linear-gradient(135deg, #00d4ff 30%, #bf5af2 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:'-0.5px' },
-  subtitle: { fontSize:11, color:'rgba(255,255,255,0.28)', marginTop:2, letterSpacing:'0.3px' },
-  scorePill: { background:'rgba(255,255,255,0.05)', border:'1px solid', borderRadius:10, padding:'6px 10px', fontSize:11, fontWeight:800, cursor:'pointer', backdropFilter:'blur(10px)', letterSpacing:'0.5px' },
+  /* ── Sidebar ── */
+  sidebar: { width:248, flexShrink:0, background:'rgba(5,5,16,0.88)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', padding:'26px 14px 22px', position:'fixed', top:0, left:0, height:'100vh', zIndex:50, overflowY:'auto' },
+  sidebarTop: { marginBottom:32 },
+  sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
+  sidebarBottom: { display:'flex', flexDirection:'column', gap:9, marginTop:20 },
+  profileCard: { display:'flex', alignItems:'center', gap:11, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:14, padding:'11px 13px' },
+  profileAvatar: { width:36, height:36, borderRadius:11, background:'linear-gradient(135deg,#00d4ff,#bf5af2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, fontWeight:800, color:'#000', flexShrink:0 },
+  profileName: { fontSize:13, fontWeight:700, color:'rgba(255,255,255,0.8)', marginBottom:2 },
+  profileMeta: { fontSize:10, color:'rgba(255,255,255,0.3)', lineHeight:1.5 },
+  navItem: { display:'flex', alignItems:'center', gap:12, padding:'11px 13px', borderRadius:13, border:'none', background:'transparent', cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'rgba(255,255,255,0.32)', fontWeight:500, textAlign:'left', width:'100%', fontSize:13, position:'relative', transition:'all 0.2s' },
+  navItemActive: { display:'flex', alignItems:'center', gap:12, padding:'11px 13px', borderRadius:13, border:'1px solid rgba(0,212,255,0.2)', background:'rgba(0,212,255,0.08)', cursor:'pointer', fontFamily:'Poppins, sans-serif', color:'#00d4ff', fontWeight:700, textAlign:'left', width:'100%', fontSize:13, position:'relative', boxShadow:'0 0 20px rgba(0,212,255,0.08)', transition:'all 0.2s' },
 
-  stats: { display:'flex', gap:7, flexWrap:'wrap' },
-  stat: { background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, padding:'5px 10px', fontSize:11, color:'rgba(255,255,255,0.45)', cursor:'pointer', backdropFilter:'blur(10px)', whiteSpace:'nowrap' },
+  /* ── Main ── */
+  main: { flex:1, marginLeft:248, display:'flex', flexDirection:'column', position:'relative', zIndex:1, overflowY:'auto', height:'100vh' },
+  mainInner: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', padding:'0 36px', display:'flex', flexDirection:'column', minHeight:0 },
+  pageHeader: { padding:'32px 0 20px', borderBottom:'1px solid rgba(255,255,255,0.05)', marginBottom:22, flexShrink:0 },
+  pageTitle: { fontSize:24, fontWeight:800, color:'rgba(255,255,255,0.92)', marginBottom:5, letterSpacing:'-0.4px' },
+  pageSubtitle: { fontSize:12, color:'rgba(255,255,255,0.28)' },
 
-  content: { padding:'16px 20px 10px', position:'relative', zIndex:1 },
+  /* ── kept for compat ── */
+  header: { display:'none' },
+  headerTop: {},
+  logo: { fontSize:22, fontWeight:900, background:'linear-gradient(135deg, #00d4ff 30%, #bf5af2 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', letterSpacing:'-0.5px' },
+  subtitle: { fontSize:10, color:'rgba(255,255,255,0.25)', marginTop:3, letterSpacing:'0.3px' },
+  scorePill: { background:'rgba(255,255,255,0.05)', border:'1px solid', borderRadius:9, padding:'5px 9px', fontSize:11, fontWeight:800, cursor:'pointer', backdropFilter:'blur(10px)', letterSpacing:'0.5px' },
+  stats: { display:'flex', gap:6, flexWrap:'wrap', marginTop:8 },
+  stat: { background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', borderRadius:7, padding:'4px 9px', fontSize:10, color:'rgba(255,255,255,0.38)', cursor:'pointer', whiteSpace:'nowrap' },
+
+  content: { padding:'0', position:'relative', zIndex:1 },
 
   chatBox: { minHeight:360, maxHeight:460, overflowY:'auto', marginBottom:12, padding:'4px 0' },
   emptyChat: { textAlign:'center', padding:'60px 20px 40px', color:'rgba(255,255,255,0.4)' },
@@ -872,13 +917,11 @@ const styles = {
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:'Poppins, sans-serif', background:'transparent', color:'white' },
   sendBtn: { background:'linear-gradient(135deg, #00d4ff, #0080ff)', border:'none', width:40, height:40, borderRadius:12, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 4px 14px rgba(0,212,255,0.4)' },
 
-  bottomNav: { position:'fixed', bottom:0, left:'50%', transform:'translateX(-50%)', width:'100%', maxWidth:480, background:'rgba(5,5,16,0.92)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)', borderTop:'1px solid rgba(255,255,255,0.07)', display:'flex', padding:'8px 0 18px', zIndex:200, boxShadow:'0 -8px 32px rgba(0,0,0,0.5)' },
-  navItem: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:2, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'rgba(255,255,255,0.25)', fontFamily:'Poppins, sans-serif', transition:'all 0.2s', position:'relative' },
-  navItemActive: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:2, padding:'8px 0', cursor:'pointer', border:'none', background:'transparent', color:'#00d4ff', fontFamily:'Poppins, sans-serif', filter:'drop-shadow(0 0 8px rgba(0,212,255,0.8))', transition:'all 0.2s', position:'relative' },
+  bottomNav: { display:'none' },
 
   btnPro: { background:'linear-gradient(135deg, #ff6d00, #ff9800)', color:'white', border:'none', padding:'7px 12px', borderRadius:9, cursor:'pointer', fontSize:11, fontFamily:'Poppins, sans-serif', fontWeight:700, boxShadow:'0 4px 12px rgba(255,109,0,0.4)' },
   proBadge: { background:'rgba(191,90,242,0.12)', color:'#bf5af2', border:'1px solid rgba(191,90,242,0.3)', padding:'5px 11px', borderRadius:8, fontSize:11, fontWeight:700 },
-  btnEdit: { background:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.55)', border:'1px solid rgba(255,255,255,0.1)', width:34, height:34, borderRadius:9, cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center' },
+  btnEdit: { background:'rgba(255,255,255,0.04)', color:'rgba(255,255,255,0.4)', border:'1px solid rgba(255,255,255,0.09)', padding:'8px 12px', borderRadius:10, cursor:'pointer', fontSize:12, fontFamily:'Poppins, sans-serif', fontWeight:500, textAlign:'center', width:'100%', letterSpacing:'0.2px' },
 
   formBox: { background:'rgba(255,255,255,0.04)', backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:24, padding:'22px 22px 24px', boxShadow:'0 24px 64px rgba(0,0,0,0.4)' },
   formTitle: { color:'#00d4ff', marginBottom:18, fontSize:17, fontWeight:700, textShadow:'0 0 20px rgba(0,212,255,0.3)', marginTop:0 },
