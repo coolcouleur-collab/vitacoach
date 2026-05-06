@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Auth from './Auth'
+import Landing from './Landing'
 import SanteTab, { scoreJour } from './SanteTab'
 
 // ─── OPTIONS ─────────────────────────────────────────────────────────────────
@@ -297,6 +298,10 @@ export default function App() {
       return newM
     })
   }
+
+  // ── LANDING ─────────────────────────────────────────────────────────────────
+  const [showAuth, setShowAuth] = useState(false)
+  if (!user && !showAuth) return <Landing onCommencer={() => setShowAuth(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
   if (!user) return (
