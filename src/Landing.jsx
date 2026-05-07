@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 
 function StarField() {
   const [stars] = useState(() =>
@@ -6,7 +6,7 @@ function StarField() {
       id: i,
       x: Math.random() * 100, y: Math.random() * 100,
       size: Math.random() * 2.2 + 0.3,
-      color: ['#00d4ff','#bf5af2','#00e676','#fff','#fff','#fff','#fff','#fff','#fff'][Math.floor(Math.random()*9)],
+      color: ['#FF6B35','#FF9A3C','#00e676','#fff','#fff','#fff','#fff','#fff','#fff'][Math.floor(Math.random()*9)],
       dur: (2 + Math.random() * 5).toFixed(1),
       op: (Math.random() * 0.5 + 0.05).toFixed(2)
     }))
@@ -22,8 +22,8 @@ function StarField() {
           animation:`twinkle ${s.dur}s ease-in-out infinite alternate`
         }} />
       ))}
-      <div style={{ position:'absolute', top:'-5%', left:'-8%', width:600, height:600, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 65%)', animation:'floatOrb 12s ease-in-out infinite' }} />
-      <div style={{ position:'absolute', top:'30%', right:'-10%', width:700, height:700, borderRadius:'50%', background:'radial-gradient(circle, rgba(191,90,242,0.06) 0%, transparent 65%)', animation:'floatOrb 16s ease-in-out infinite reverse' }} />
+      <div style={{ position:'absolute', top:'-5%', left:'-8%', width:600, height:600, borderRadius:'50%', background:'radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 65%)', animation:'floatOrb 12s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', top:'30%', right:'-10%', width:700, height:700, borderRadius:'50%', background:'radial-gradient(circle, rgba(255,154,60,0.06) 0%, transparent 65%)', animation:'floatOrb 16s ease-in-out infinite reverse' }} />
       <div style={{ position:'absolute', bottom:'-5%', left:'35%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(0,230,118,0.05) 0%, transparent 65%)', animation:'floatOrb 10s ease-in-out infinite' }} />
     </div>
   )
@@ -120,21 +120,21 @@ export default function Landing({ onCommencer }) {
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'#050510', fontFamily:'Poppins, sans-serif', color:'white', position:'relative', overflowX:'hidden' },
+  page: { minHeight:'100vh', background:'#FFF8F4', fontFamily:'Poppins, sans-serif', color:'white', position:'relative', overflowX:'hidden' },
 
   hero: { maxWidth:820, margin:'0 auto', padding:'120px 32px 80px', textAlign:'center', position:'relative', zIndex:1 },
-  badge: { display:'inline-block', background:'rgba(0,212,255,0.08)', border:'1px solid rgba(0,212,255,0.22)', borderRadius:30, padding:'7px 18px', fontSize:12, color:'#00d4ff', fontWeight:600, marginBottom:32, letterSpacing:'0.5px' },
+  badge: { display:'inline-block', background:'rgba(255,107,53,0.08)', border:'1px solid rgba(255,107,53,0.22)', borderRadius:30, padding:'7px 18px', fontSize:12, color:'#FF6B35', fontWeight:600, marginBottom:32, letterSpacing:'0.5px' },
   h1: { fontSize:'clamp(36px, 6vw, 72px)', fontWeight:900, lineHeight:1.1, marginBottom:24, letterSpacing:'-2px', color:'rgba(255,255,255,0.95)' },
-  h1Gradient: { background:'linear-gradient(135deg, #00d4ff 20%, #bf5af2 80%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
+  h1Gradient: { background:'linear-gradient(135deg, #FF6B35 20%, #FF9A3C 80%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   subtitle: { fontSize:'clamp(15px, 2vw, 19px)', color:'rgba(255,255,255,0.42)', lineHeight:1.8, marginBottom:44, fontWeight:400 },
 
   ctaRow: { display:'flex', flexDirection:'column', alignItems:'center', gap:12, marginBottom:56 },
-  btnPrimary: { background:'linear-gradient(135deg, #00d4ff, #0066cc)', color:'#000', border:'none', padding:'16px 40px', borderRadius:16, fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 8px 32px rgba(0,212,255,0.45)', letterSpacing:'0.2px', transition:'transform 0.2s, box-shadow 0.2s' },
+  btnPrimary: { background:'linear-gradient(135deg, #FF6B35, #E55A00)', color:'#000', border:'none', padding:'16px 40px', borderRadius:16, fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'Poppins, sans-serif', boxShadow:'0 8px 32px rgba(255,107,53,0.45)', letterSpacing:'0.2px', transition:'transform 0.2s, box-shadow 0.2s' },
   freeNote: { fontSize:12, color:'rgba(255,255,255,0.22)', letterSpacing:'0.3px' },
 
   statsRow: { display:'flex', gap:0, justifyContent:'center', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:40 },
   statItem: { flex:1, maxWidth:180, textAlign:'center', padding:'0 20px', borderRight:'1px solid rgba(255,255,255,0.06)' },
-  statVal: { fontSize:28, fontWeight:900, background:'linear-gradient(135deg, #00d4ff, #bf5af2)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', marginBottom:6 },
+  statVal: { fontSize:28, fontWeight:900, background:'linear-gradient(135deg, #FF6B35, #FF9A3C)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', marginBottom:6 },
   statLabel: { fontSize:12, color:'rgba(255,255,255,0.28)', lineHeight:1.4 },
 
   featuresSection: { maxWidth:1100, margin:'0 auto', padding:'0 32px 100px', position:'relative', zIndex:1 },
@@ -146,10 +146,11 @@ const s = {
   cardDesc: { fontSize:13, color:'rgba(255,255,255,0.38)', lineHeight:1.75 },
 
   ctaSection: { padding:'0 32px 100px', position:'relative', zIndex:1 },
-  ctaBox: { maxWidth:600, margin:'0 auto', background:'linear-gradient(135deg, rgba(0,212,255,0.06), rgba(191,90,242,0.06))', border:'1px solid rgba(0,212,255,0.15)', borderRadius:28, padding:'60px 40px', textAlign:'center' },
+  ctaBox: { maxWidth:600, margin:'0 auto', background:'linear-gradient(135deg, rgba(255,107,53,0.06), rgba(255,154,60,0.06))', border:'1px solid rgba(255,107,53,0.15)', borderRadius:28, padding:'60px 40px', textAlign:'center' },
   ctaTitle: { fontSize:28, fontWeight:800, marginBottom:14, letterSpacing:'-0.5px' },
   ctaSubtitle: { fontSize:14, color:'rgba(255,255,255,0.38)', marginBottom:32, lineHeight:1.7 },
 
   footer: { display:'flex', justifyContent:'center', alignItems:'center', gap:16, padding:'28px 32px', borderTop:'1px solid rgba(255,255,255,0.05)', fontSize:12, color:'rgba(255,255,255,0.22)', position:'relative', zIndex:1 },
-  footerLogo: { fontWeight:800, fontSize:14, background:'linear-gradient(135deg, #00d4ff, #bf5af2)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
+  footerLogo: { fontWeight:800, fontSize:14, background:'linear-gradient(135deg, #FF6B35, #FF9A3C)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
 }
+

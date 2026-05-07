@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 
 // ─── BG BLOBS ────────────────────────────────────────────────────────────────
 function BgBlobs() {
   return (
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
       <div style={{position:'absolute',top:'-15%',left:'-10%',width:500,height:500,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(0,212,255,0.1) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(255,107,53,0.1) 0%,transparent 70%)',
         animation:'floatOrb 10s ease-in-out infinite'}}/>
       <div style={{position:'absolute',bottom:'-10%',right:'-8%',width:600,height:600,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(110,61,255,0.09) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(255,69,0,0.09) 0%,transparent 70%)',
         animation:'floatOrb 14s ease-in-out infinite reverse'}}/>
       <div style={{position:'absolute',top:'40%',right:'20%',width:300,height:300,borderRadius:'50%',
         background:'radial-gradient(circle,rgba(0,230,118,0.07) 0%,transparent 70%)',
@@ -343,12 +343,12 @@ export default function Onboarding({ onTermine }) {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const s = {
-  page: { minHeight:'100vh', background:'#f5f6ff', fontFamily:'Poppins, sans-serif', color:'#0d0d1a',
+  page: { minHeight:'100vh', background:'#FFF8F4', fontFamily:'Poppins, sans-serif', color:'#1a0a00',
     display:'flex', flexDirection:'column', position:'relative', overflowX:'hidden' },
 
   progressWrap: { position:'fixed', top:0, left:0, right:0, height:4,
     background:'#e5e7eb', zIndex:100 },
-  progressBar: { height:'100%', background:'linear-gradient(90deg,#00d4ff,#6e3dff)',
+  progressBar: { height:'100%', background:'linear-gradient(90deg,#FF6B35,#FF4500)',
     transition:'width 0.4s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:2 },
 
   backBtn: { position:'fixed', top:20, left:20, zIndex:100, background:'#ffffff',
@@ -358,7 +358,7 @@ const s = {
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
 
   logoTop: { position:'fixed', top:18, left:'50%', transform:'translateX(-50%)', zIndex:100,
-    fontSize:16, fontWeight:900, background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+    fontSize:16, fontWeight:900, background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
     letterSpacing:'-0.3px' },
 
@@ -367,7 +367,7 @@ const s = {
 
   questionWrap: { marginBottom:32 },
   question: { fontSize:'clamp(22px,5vw,30px)', fontWeight:800, lineHeight:1.25,
-    letterSpacing:'-0.5px', marginBottom:8, color:'#0d0d1a' },
+    letterSpacing:'-0.5px', marginBottom:8, color:'#1a0a00' },
   qSubtitle: { fontSize:14, color:'#9ca3af', lineHeight:1.5, fontWeight:400 },
 
   cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',
@@ -375,15 +375,15 @@ const s = {
   card: { background:'#ffffff', border:'1px solid #e5e7eb', borderRadius:18, padding:'16px 12px',
     cursor:'pointer', textAlign:'left', position:'relative', transition:'all 0.2s',
     fontFamily:'Poppins, sans-serif', display:'flex', flexDirection:'column', gap:6,
-    color:'#0d0d1a', boxShadow:'0 2px 8px rgba(0,0,0,0.04)' },
-  cardSel: { background:'linear-gradient(135deg,rgba(0,212,255,0.06),rgba(110,61,255,0.06))',
-    border:'1.5px solid #6e3dff', boxShadow:'0 4px 20px rgba(110,61,255,0.15)',
+    color:'#1a0a00', boxShadow:'0 2px 8px rgba(0,0,0,0.04)' },
+  cardSel: { background:'linear-gradient(135deg,rgba(255,107,53,0.06),rgba(255,69,0,0.06))',
+    border:'1.5px solid #FF4500', boxShadow:'0 4px 20px rgba(255,69,0,0.15)',
     transform:'scale(1.02)', animation:'popIn 0.25s ease' },
   cardIcon: { fontSize:28, lineHeight:1 },
   cardLabel: { fontSize:13, fontWeight:700, color:'#1a1a2e', lineHeight:1.3 },
   cardSub: { fontSize:11, color:'#9ca3af', lineHeight:1.3 },
   cardCheck: { position:'absolute', top:10, right:10, width:20, height:20,
-    borderRadius:'50%', background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+    borderRadius:'50%', background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:11, fontWeight:800, color:'white' },
 
@@ -392,36 +392,36 @@ const s = {
     background:'#ffffff', cursor:'pointer', fontSize:13,
     fontFamily:'Poppins, sans-serif', color:'#6b7280',
     transition:'all 0.18s', fontWeight:500, boxShadow:'0 1px 4px rgba(0,0,0,0.04)' },
-  chipSel: { border:'1.5px solid #6e3dff',
-    background:'linear-gradient(135deg,rgba(0,212,255,0.08),rgba(110,61,255,0.08))',
-    color:'#6e3dff', fontWeight:700, boxShadow:'0 4px 14px rgba(110,61,255,0.15)',
+  chipSel: { border:'1.5px solid #FF4500',
+    background:'linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,69,0,0.08))',
+    color:'#FF4500', fontWeight:700, boxShadow:'0 4px 14px rgba(255,69,0,0.15)',
     animation:'popIn 0.22s ease' },
 
   inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
     alignItems:'center' },
   textInput: { width:'100%', maxWidth:400, padding:'18px 20px', borderRadius:16,
     border:'1.5px solid #e5e7eb', background:'#ffffff', fontSize:18,
-    fontFamily:'Poppins, sans-serif', color:'#0d0d1a', outline:'none',
+    fontFamily:'Poppins, sans-serif', color:'#1a0a00', outline:'none',
     textAlign:'center', fontWeight:600, boxShadow:'0 4px 20px rgba(0,0,0,0.06)',
     transition:'border-color 0.2s' },
   numberRow: { display:'flex', alignItems:'center', gap:16 },
   numBtn: { width:52, height:52, borderRadius:16, border:'1px solid #e5e7eb',
-    background:'#ffffff', color:'#0d0d1a', fontSize:24, cursor:'pointer',
+    background:'#ffffff', color:'#1a0a00', fontSize:24, cursor:'pointer',
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   numberBox: { display:'flex', alignItems:'center', gap:8 },
   numberInput: { width:110, padding:'16px 0', borderRadius:16, border:'1.5px solid #e5e7eb',
     background:'#ffffff', fontSize:36, fontFamily:'Poppins, sans-serif',
-    color:'#0d0d1a', outline:'none', textAlign:'center', fontWeight:800,
+    color:'#1a0a00', outline:'none', textAlign:'center', fontWeight:800,
     boxShadow:'0 4px 20px rgba(0,0,0,0.06)' },
   unit: { fontSize:16, color:'#9ca3af', fontWeight:500 },
 
   bottom: { padding:'16px 24px 36px', maxWidth:600, width:'100%', margin:'0 auto',
     display:'flex', flexDirection:'column', gap:10, position:'relative', zIndex:1 },
-  ctaBtn: { padding:'18px', background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+  ctaBtn: { padding:'18px', background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     color:'white', border:'none', borderRadius:18, fontSize:16, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 8px 28px rgba(110,61,255,0.35)', transition:'opacity 0.2s, transform 0.15s',
+    boxShadow:'0 8px 28px rgba(255,69,0,0.35)', transition:'opacity 0.2s, transform 0.15s',
     letterSpacing:'0.2px' },
   skipBtn: { background:'transparent', border:'none', color:'#d1d5db',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
@@ -429,3 +429,4 @@ const s = {
   stepCount: { textAlign:'center', fontSize:11, color:'#d1d5db',
     letterSpacing:'1px', marginTop:2 },
 }
+

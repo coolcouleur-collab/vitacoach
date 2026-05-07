@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -74,7 +74,7 @@ export default function Auth({ onConnecte }) {
 
         <div style={s.footer}>
           En continuant tu acceptes nos{' '}
-          <span style={{ color:'#6e3dff', fontWeight:600 }}>conditions d'utilisation</span>
+          <span style={{ color:'#FF4500', fontWeight:600 }}>conditions d'utilisation</span>
         </div>
       </div>
     </div>
@@ -82,42 +82,43 @@ export default function Auth({ onConnecte }) {
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'#f5f6ff', display:'flex', alignItems:'center',
+  page: { minHeight:'100vh', background:'#FFF8F4', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     position:'relative', overflow:'hidden' },
   blob1: { position:'fixed', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(0,212,255,0.12) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(255,107,53,0.12) 0%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'fixed', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(110,61,255,0.1) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(255,69,0,0.1) 0%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' },
   card: { position:'relative', zIndex:1, width:'100%', maxWidth:420, background:'#ffffff',
     borderRadius:28, padding:'40px 36px',
     boxShadow:'0 8px 48px rgba(0,0,0,0.08)', animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:6 },
   logoIcon: { width:36, height:36, borderRadius:12,
-    background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+    background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
   logoText: { fontSize:26, fontWeight:900, letterSpacing:'-0.5px',
-    background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+    background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   tagline: { textAlign:'center', fontSize:13, color:'#9ca3af', marginBottom:28 },
-  tabs: { display:'flex', marginBottom:24, background:'#f5f6ff', borderRadius:14, padding:4, gap:4 },
+  tabs: { display:'flex', marginBottom:24, background:'#FFF8F4', borderRadius:14, padding:4, gap:4 },
   tab: { flex:1, padding:'10px', background:'transparent', border:'none', cursor:'pointer',
     fontSize:13, fontFamily:'Poppins, sans-serif', color:'#9ca3af', borderRadius:10, fontWeight:500 },
   tabActive: { flex:1, padding:'10px', background:'#ffffff', border:'none', cursor:'pointer',
-    fontSize:13, fontFamily:'Poppins, sans-serif', color:'#0d0d1a', borderRadius:10, fontWeight:700,
+    fontSize:13, fontFamily:'Poppins, sans-serif', color:'#1a0a00', borderRadius:10, fontWeight:700,
     boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
   field: { marginBottom:16 },
   label: { display:'block', marginBottom:6, fontWeight:600, fontSize:11,
     color:'#6b7280', letterSpacing:'1px', textTransform:'uppercase' },
   input: { width:'100%', padding:'13px 16px', borderRadius:14, border:'1px solid #e5e7eb',
     background:'#f9fafb', fontSize:14, fontFamily:'Poppins, sans-serif',
-    boxSizing:'border-box', outline:'none', color:'#0d0d1a', transition:'border-color 0.2s' },
+    boxSizing:'border-box', outline:'none', color:'#1a0a00', transition:'border-color 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
-  btn: { width:'100%', padding:'15px', background:'linear-gradient(135deg,#00d4ff,#6e3dff)',
+  btn: { width:'100%', padding:'15px', background:'linear-gradient(135deg,#FF6B35,#FF4500)',
     color:'white', border:'none', borderRadius:16, fontSize:15, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 6px 24px rgba(110,61,255,0.3)', letterSpacing:'0.3px', marginTop:4 },
+    boxShadow:'0 6px 24px rgba(255,69,0,0.3)', letterSpacing:'0.3px', marginTop:4 },
   footer: { marginTop:20, textAlign:'center', fontSize:11, color:'#d1d5db', lineHeight:1.6 },
 }
+
