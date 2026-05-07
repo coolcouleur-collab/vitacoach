@@ -280,7 +280,7 @@ Réponds UNIQUEMENT en JSON valide :
 {
   "motivation": "phrase motivante personnalisée pour aujourd'hui",
   "matin": { "titre": "Matin énergisant", "heure": "7h00 – 9h00", "etapes": [{ "id": "m1", "emoji": "🌅", "titre": "Titre", "description": "Description courte et concrète", "duree": "10 min" }] },
-  "nutrition": { "titre": "Nutrition du jour", "petitDej": "suggestion petit-déjeuner", "dejeuner": "suggestion déjeuner", "diner": "suggestion dîner", "hydratation": "conseil hydratation" },
+  "nutrition": { "titre": "Nutrition du jour", "repas": [{"emoji":"🌅","moment":"Petit-déjeuner","suggestion":"suggestion adaptée au profil"},{"emoji":"☀️","moment":"Déjeuner","suggestion":"suggestion adaptée"},{"emoji":"🌙","moment":"Dîner","suggestion":"suggestion légère et adaptée"}], "supplements": ["supplément si pertinent selon profil"] },
   "apresmidi": { "titre": "Après-midi productif", "heure": "14h00 – 17h00", "etapes": [{ "id": "a1", "emoji": "☀️", "titre": "Titre", "description": "Description", "duree": "15 min" }] },
   "soir": { "titre": "Soir récupération", "heure": "20h00 – 22h00", "etapes": [{ "id": "s1", "emoji": "🌙", "titre": "Titre", "description": "Description", "duree": "20 min" }] },
   "astuce": { "emoji": "💡", "titre": "Astuce du jour", "conseil": "conseil court et actionnable" }
