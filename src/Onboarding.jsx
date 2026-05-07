@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-// ─── BG BLOBS ────────────────────────────────────────────────────────────────
+// ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
   return (
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
@@ -20,14 +20,14 @@ function BgBlobs() {
   )
 }
 
-// ─── QUESTIONS ────────────────────────────────────────────────────────────────
-const questions = [
+// ─── QUESTIONS (avec branches conditionnelles) ────────────────────────────────
+const QUESTIONS = [
   {
     id:'objectif', type:'cards',
     question:'Quel est ton principal objectif ?',
-    subtitle:'On va personnaliser ton expérience',
+    subtitle:'On va personnaliser toute ton expérience autour de ça',
     options:[
-      {icon:'⚡',label:'Plus d\'énergie'},
+      {icon:'⚡',label:"Plus d'énergie"},
       {icon:'😴',label:'Mieux dormir'},
       {icon:'🥗',label:'Manger sainement'},
       {icon:'💪',label:'Prendre du muscle'},
@@ -47,14 +47,14 @@ const questions = [
   },
   {
     id:'activite', type:'cards',
-    question:'Quel est ton niveau d\'activité physique ?',
+    question:"Quel est ton niveau d'activité physique ?",
     subtitle:'Sois honnête, on ne juge pas 😄',
     options:[
-      {icon:'🛋️',label:'Sédentaire',sub:'Bureau, peu de sport'},
-      {icon:'🚶',label:'Légèrement actif',sub:'Marche quotidienne'},
-      {icon:'🏋️',label:'Modérément actif',sub:'Sport 2-3x/semaine'},
-      {icon:'🔥',label:'Très actif',sub:'Sport 4-5x/semaine'},
-      {icon:'🏆',label:'Sportif intensif',sub:'Entraînement quotidien'},
+      {icon:'🛋️',label:'Sédentaire',       sub:'Bureau, peu de sport'},
+      {icon:'🚶',label:'Légèrement actif', sub:'Marche quotidienne'},
+      {icon:'🏋️',label:'Modérément actif', sub:'Sport 2-3x/semaine'},
+      {icon:'🔥',label:'Très actif',       sub:'Sport 4-5x/semaine'},
+      {icon:'🏆',label:'Sportif intensif', sub:'Entraînement quotidien'},
     ],
     multi: false
   },
@@ -66,16 +66,45 @@ const questions = [
              'Sans lactose','Méditerranéen','Jeûne intermittent','Halal','Casher','Paléo'],
     multi: true
   },
+
+  // ── BRANCHE SANTÉ ──────────────────────────────────────────────────────────
   {
-    id:'sante', type:'chips',
-    question:'As-tu des conditions de santé ?',
-    subtitle:'Pour que nos conseils soient adaptés et sûrs',
-    skip: true,
-    options:['Diabète','Hypertension','Hypothyroïdie','Asthme','Cholestérol élevé',
-             'Dépression / Anxiété','Endométriose','Maladie cœliaque','Arthrite',
-             'Carence en Vitamine D','Carence en fer','Aucune'],
-    multi: true
+    id:'sante_yn', type:'cards',
+    question:'As-tu des problèmes de santé ou des maladies ?',
+    subtitle:'Pour que nos conseils soient totalement adaptés et sans risque pour toi',
+    options:[
+      {icon:'🏥', label:'Oui', sub:"J'ai des conditions médicales"},
+      {icon:'🎉', label:'Non', sub:'Je suis en bonne santé'},
+    ],
+    multi: false
   },
+  // Affiché seulement si sante_yn === 'Oui'
+  {
+    id:'sante_conditions', type:'chips',
+    question:'Quelles conditions as-tu ?',
+    subtitle:'Sélectionne tout ce qui te correspond — plusieurs choix possibles',
+    condition: (a) => a.sante_yn === 'Oui',
+    options:[
+      'Diabète type 1','Diabète type 2','Hypertension','Hypotension',
+      'Hypothyroïdie','Hyperthyroïdie','Asthme','Cholestérol élevé',
+      "Dépression / Anxiété",'Endométriose','SOPK','Maladie cœliaque',
+      'Arthrite / Arthrose','Carence en fer','Carence en Vit. D',
+      'Maladie de Crohn','Psoriasis','Autre'
+    ],
+    multi: true,
+    skip: true
+  },
+  // Affiché seulement si sante_yn === 'Oui'
+  {
+    id:'sante_detail', type:'textarea',
+    question:'Décris ta situation de santé en détail',
+    subtitle:'Plus tu es précis, meilleurs seront nos conseils — nom exact, médicaments, depuis quand...',
+    placeholder:'Ex: Diabète type 2 depuis 3 ans, sous Metformine 1g/jour. Hypothyroïdie traitée par Lévothyrox 50µg depuis 2021. Carence en Vit. D confirmée par prise de sang il y a 6 mois...',
+    condition: (a) => a.sante_yn === 'Oui',
+    skip: true
+  },
+  // ──────────────────────────────────────────────────────────────────────────
+
   {
     id:'reveil', type:'time',
     question:'À quelle heure tu te lèves ?',
@@ -100,68 +129,113 @@ const questions = [
   },
   {
     id:'nom', type:'text',
-    question:'Comment on t\'appelle ?',
-    subtitle:'Le prénom qu\'Oravia utilisera pour toi',
+    question:"Comment on t'appelle ?",
+    subtitle:"Le prénom qu'Oravia utilisera pour toi",
     placeholder:'Ton prénom',
   },
 ]
+
+// ─── NAVIGATION UTILITIES ────────────────────────────────────────────────────
+function getVisibleQs(answers) {
+  return QUESTIONS.filter(q => !q.condition || q.condition(answers))
+}
+function getNextStep(currentStep, answers) {
+  let next = currentStep + 1
+  while (next < QUESTIONS.length) {
+    if (!QUESTIONS[next].condition || QUESTIONS[next].condition(answers)) return next
+    next++
+  }
+  return null // fin du quiz
+}
+function getPrevStep(currentStep, answers) {
+  let prev = currentStep - 1
+  while (prev >= 0) {
+    if (!QUESTIONS[prev].condition || QUESTIONS[prev].condition(answers)) return prev
+    prev--
+  }
+  return null
+}
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine }) {
   const [step, setStep]           = useState(0)
   const [answers, setAnswers]     = useState({})
-  const [direction, setDirection] = useState('forward') // forward | back
+  const [direction, setDirection] = useState('forward')
   const [animKey, setAnimKey]     = useState(0)
   const [inputVal, setInputVal]   = useState('')
 
-  const q = questions[step]
-  const progress = (step / questions.length) * 100
+  const q = QUESTIONS[step]
 
-  // Reset input when question changes
+  // Progress calculé sur les questions visibles
+  const visibleQs  = getVisibleQs(answers)
+  const visibleIdx = visibleQs.findIndex(vq => vq.id === q.id)
+  const progress   = visibleQs.length > 0 ? ((visibleIdx + 1) / visibleQs.length) * 100 : 0
+
   useEffect(() => {
     const existing = answers[q.id]
-    if (q.type === 'text' || q.type === 'number') {
-      setInputVal(existing || (q.type === 'time' ? q.default||'07:00' : ''))
+    if (q.type === 'text' || q.type === 'number' || q.type === 'textarea') {
+      setInputVal(existing || '')
+    } else if (q.type === 'time') {
+      setInputVal(existing || q.default || '07:00')
     }
   }, [step])
 
-  function goNext() {
-    // Save text/number answer
-    if (q.type === 'text' || q.type === 'number') {
-      if (!inputVal.trim() && !q.skip) return
-      setAnswers(a => ({ ...a, [q.id]: inputVal }))
-    }
-    if (q.type === 'time') {
-      setAnswers(a => ({ ...a, [q.id]: inputVal || q.default || '07:00' }))
-    }
-
-    if (step < questions.length - 1) {
+  function advance(newAnswers) {
+    const next = getNextStep(step, newAnswers)
+    if (next !== null) {
       setDirection('forward')
-      setAnimKey(k => k+1)
-      setStep(s => s+1)
+      setAnimKey(k => k + 1)
+      setStep(next)
       setInputVal('')
     } else {
-      finish()
+      finish(newAnswers)
     }
+  }
+
+  function goNext() {
+    let newAnswers = answers
+    if (q.type === 'text' || q.type === 'number') {
+      if (!inputVal.trim() && !q.skip) return
+      newAnswers = { ...answers, [q.id]: inputVal }
+      setAnswers(newAnswers)
+    } else if (q.type === 'textarea') {
+      newAnswers = { ...answers, [q.id]: inputVal }
+      setAnswers(newAnswers)
+    } else if (q.type === 'time') {
+      newAnswers = { ...answers, [q.id]: inputVal || q.default || '07:00' }
+      setAnswers(newAnswers)
+    }
+    advance(newAnswers)
   }
 
   function goBack() {
-    if (step === 0) return
+    const prev = getPrevStep(step, answers)
+    if (prev === null) return
     setDirection('back')
-    setAnimKey(k => k+1)
-    setStep(s => s-1)
+    setAnimKey(k => k + 1)
+    setStep(prev)
     setInputVal('')
   }
 
-  function toggleCard(val) {
+  // Clic sur une carte : multi = toggle, single = sélection + auto-avance
+  function handleCardClick(val) {
+    if (q.multi) {
+      setAnswers(a => {
+        const cur = Array.isArray(a[q.id]) ? a[q.id] : []
+        return { ...a, [q.id]: cur.includes(val) ? cur.filter(x => x !== val) : [...cur, val] }
+      })
+    } else {
+      const newAnswers = { ...answers, [q.id]: val }
+      setAnswers(newAnswers)
+      // Auto-avance après 220 ms (laisse le temps de voir la sélection)
+      setTimeout(() => advance(newAnswers), 220)
+    }
+  }
+
+  function toggleChip(val) {
     setAnswers(a => {
-      const cur = a[q.id] || (q.multi ? [] : null)
-      if (q.multi) {
-        const arr = Array.isArray(cur) ? cur : []
-        return { ...a, [q.id]: arr.includes(val) ? arr.filter(x=>x!==val) : [...arr, val] }
-      } else {
-        return { ...a, [q.id]: val }
-      }
+      const cur = Array.isArray(a[q.id]) ? a[q.id] : []
+      return { ...a, [q.id]: cur.includes(val) ? cur.filter(x => x !== val) : [...cur, val] }
     })
   }
 
@@ -179,36 +253,46 @@ export default function Onboarding({ onTermine }) {
       return !!cur
     }
     if (q.type === 'text' || q.type === 'number') return inputVal.trim().length > 0
-    if (q.type === 'time') return true
     return true
   }
 
-  function finish() {
-    const taille = answers.taille || ''
-    const poids  = answers.poids  || ''
+  function skipStep() {
+    const next = getNextStep(step, answers)
+    if (next !== null) {
+      setDirection('forward'); setAnimKey(k => k + 1); setStep(next); setInputVal('')
+    } else finish(answers)
+  }
+
+  function finish(finalAnswers) {
+    const a = finalAnswers || answers
+    const hasHealth = a.sante_yn === 'Oui'
     const profil = {
-      nom:       answers.nom       || 'Ami',
-      age:       answers.age       || '',
-      taille, poids,
-      objectifs: Array.isArray(answers.objectif) ? answers.objectif : answers.objectif ? [answers.objectif] : [],
-      activite:  answers.activite  || 'Modérément actif',
-      regimes:   Array.isArray(answers.alimentation) ? answers.alimentation : [],
+      nom:        a.nom        || 'Ami',
+      age:        a.age        || '',
+      taille: '', poids: '',
+      objectifs:  Array.isArray(a.objectif) ? a.objectif : a.objectif ? [a.objectif] : [],
+      activite:   a.activite   || 'Modérément actif',
+      regimes:    Array.isArray(a.alimentation) ? a.alimentation : [],
       alimentaireDetails: '',
-      reveil:    answers.reveil    || '07:00',
-      coucher:   '23:00',
-      profession:answers.profession|| '',
-      styles:    Array.isArray(answers.style) ? answers.style : [],
+      reveil:     a.reveil     || '07:00',
+      coucher:    '23:00',
+      profession: a.profession || '',
+      styles:     Array.isArray(a.style) ? a.style : [],
       styleDetails:'', mensurations:'',
-      maladies:  Array.isArray(answers.sante) ? answers.sante.filter(s=>s!=='Aucune') : [],
-      carences:  [],
-      santeDetails:'', maladiesDetails:'',
+      maladies:   hasHealth && Array.isArray(a.sante_conditions)
+                    ? a.sante_conditions.filter(s => s !== 'Autre')
+                    : [],
+      carences: [],
+      santeDetails:    hasHealth ? (a.sante_detail || '') : '',
+      maladiesDetails: hasHealth ? (a.sante_detail || '') : '',
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
     onTermine(profil)
   }
 
+  const isLast  = getNextStep(step, answers) === null
   const animStyle = {
-    animation: `${direction==='forward' ? 'slideInRight' : 'slideInLeft'} 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both`
+    animation: `${direction === 'forward' ? 'slideInRight' : 'slideInLeft'} 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both`
   }
 
   return (
@@ -242,20 +326,18 @@ export default function Onboarding({ onTermine }) {
           0%,100% { box-shadow: 0 0 0 3px rgba(255,107,53,0.2), 0 8px 32px rgba(255,107,53,0.12); }
           50%     { box-shadow: 0 0 0 6px rgba(255,107,53,0.35), 0 8px 32px rgba(255,107,53,0.2); }
         }
-
         input[type='number']::-webkit-outer-spin-button,
         input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type='number'] { -moz-appearance: textfield; }
         input[type='time']::-webkit-calendar-picker-indicator { opacity: 0; }
-        input:focus { outline: none; }
-
+        input:focus, textarea:focus { outline: none; }
         .clay-text-input:focus {
           border-color: #FF6B35 !important;
           box-shadow: 0 0 0 4px rgba(255,107,53,0.15), 0 8px 32px rgba(255,107,53,0.12) !important;
         }
         .clay-time-input:focus {
           border-color: #FF6B35 !important;
-          box-shadow: 0 0 0 4px rgba(255,107,53,0.15), 0 8px 32px rgba(255,107,53,0.12) !important;
+          box-shadow: 0 0 0 4px rgba(255,107,53,0.15) !important;
         }
         .num-input-wrap { animation: ringGlow 2.4s ease-in-out infinite; }
         .cta-btn:active { transform: scale(0.97) !important; }
@@ -267,46 +349,45 @@ export default function Onboarding({ onTermine }) {
 
       <BgBlobs />
 
-      {/* Progress bar */}
+      {/* ── Barre de progression ── */}
       <div style={s.progressWrap}>
         <div style={{...s.progressBar, width:`${progress}%`}} />
       </div>
 
-      {/* Back button */}
+      {/* ── Bouton retour ── */}
       {step > 0 && (
         <button className="back-btn" style={s.backBtn} onClick={goBack}>←</button>
       )}
 
-      {/* Logo top */}
+      {/* ── Logo ── */}
       <div style={s.logoTop}>
         <span style={s.logoIcon}>✦</span>
         <span style={s.logoText}>Oravia</span>
       </div>
 
-      {/* Step dots */}
+      {/* ── Dots de progression ── */}
       <div style={s.dotsRow}>
-        {questions.map((_, i) => (
-          <div key={i} style={{
-            width: i === step ? 12 : 7,
-            height: i === step ? 12 : 7,
+        {visibleQs.map((vq, i) => (
+          <div key={vq.id} style={{
+            width:  i === visibleIdx ? 12 : 7,
+            height: i === visibleIdx ? 12 : 7,
             borderRadius: '50%',
-            background: i < step
+            background: i < visibleIdx
               ? 'linear-gradient(135deg,#FF6B35,#E55A00)'
-              : i === step
+              : i === visibleIdx
                 ? 'linear-gradient(135deg,#FF6B35,#FF9A3C)'
                 : '#e5d5cc',
             transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-            animation: i === step ? 'pulse 1.8s ease-in-out infinite' : 'none',
+            animation: i === visibleIdx ? 'pulse 1.8s ease-in-out infinite' : 'none',
             flexShrink: 0,
           }} />
         ))}
-        <div style={s.stepPill}>{step+1} / {questions.length}</div>
+        <div style={s.stepPill}>{visibleIdx + 1} / {visibleQs.length}</div>
       </div>
 
-      {/* Screen */}
+      {/* ── Écran question ── */}
       <div key={animKey} style={{...s.screen, ...animStyle}}>
 
-        {/* Question text */}
         <div style={s.questionWrap}>
           <div style={s.question}>{q.question}</div>
           <div style={s.qSubtitle}>{q.subtitle}</div>
@@ -320,18 +401,13 @@ export default function Onboarding({ onTermine }) {
               return (
                 <button key={opt.label} className="clay-card"
                   style={{...s.card, ...(sel ? s.cardSel : {})}}
-                  onClick={() => toggleCard(opt.label)}>
-                  <div style={{
-                    ...s.cardIconWrap,
-                    ...(sel ? s.cardIconWrapSel : {})
-                  }}>
+                  onClick={() => handleCardClick(opt.label)}>
+                  <div style={{...s.cardIconWrap, ...(sel ? s.cardIconWrapSel : {})}}>
                     <span style={{...s.cardIcon, fontSize: sel ? 34 : 28}}>{opt.icon}</span>
                   </div>
                   <div style={s.cardLabel}>{opt.label}</div>
                   {opt.sub && <div style={s.cardSub}>{opt.sub}</div>}
-                  {sel && (
-                    <div style={s.cardCheck}>✓</div>
-                  )}
+                  {sel && <div style={s.cardCheck}>✓</div>}
                 </button>
               )
             })}
@@ -346,7 +422,7 @@ export default function Onboarding({ onTermine }) {
               return (
                 <button key={opt} className="clay-chip"
                   style={{...s.chip, ...(sel ? s.chipSel : {})}}
-                  onClick={() => toggleCard(opt)}>
+                  onClick={() => toggleChip(opt)}>
                   {sel && <span style={{marginRight:6, fontSize:11}}>✓</span>}
                   {opt}
                 </button>
@@ -355,40 +431,50 @@ export default function Onboarding({ onTermine }) {
           </div>
         )}
 
-        {/* ── Number input ── */}
+        {/* ── Nombre ── */}
         {q.type === 'number' && (
           <div style={s.inputWrap}>
             <div style={s.numberRow}>
               <button className="num-btn" style={s.numBtn}
-                onClick={() => setInputVal(v => String(Math.max(q.min||1, (parseInt(v)||0)-1)))}>
-                −
-              </button>
+                onClick={() => setInputVal(v => String(Math.max(q.min||1, (parseInt(v)||0)-1)))}>−</button>
               <div className="num-input-wrap" style={s.numberBox}>
                 <input style={s.numberInput} type="number" value={inputVal}
                   onChange={e => setInputVal(e.target.value)}
-                  placeholder={q.placeholder || '0'}
-                  min={q.min} max={q.max} />
+                  placeholder={q.placeholder || '0'} min={q.min} max={q.max} />
                 {q.unit && <span style={s.unit}>{q.unit}</span>}
               </div>
               <button className="num-btn" style={s.numBtn}
-                onClick={() => setInputVal(v => String(Math.min(q.max||999, (parseInt(v)||0)+1)))}>
-                +
-              </button>
+                onClick={() => setInputVal(v => String(Math.min(q.max||999, (parseInt(v)||0)+1)))}>+</button>
             </div>
           </div>
         )}
 
-        {/* ── Text input ── */}
+        {/* ── Texte court ── */}
         {q.type === 'text' && (
           <div style={s.inputWrap}>
             <input className="clay-text-input" style={s.textInput} type="text"
               value={inputVal} onChange={e => setInputVal(e.target.value)}
-              onKeyDown={e => e.key==='Enter' && canContinue() && goNext()}
+              onKeyDown={e => e.key === 'Enter' && canContinue() && goNext()}
               placeholder={q.placeholder || ''} autoFocus />
           </div>
         )}
 
-        {/* ── Time picker ── */}
+        {/* ── Textarea (santé détail) ── */}
+        {q.type === 'textarea' && (
+          <div style={s.inputWrap}>
+            <textarea className="clay-text-input"
+              style={{
+                ...s.textInput,
+                height:170, resize:'none',
+                textAlign:'left', fontSize:14, fontWeight:500,
+                lineHeight:1.65, paddingTop:20, paddingBottom:16,
+              }}
+              value={inputVal} onChange={e => setInputVal(e.target.value)}
+              placeholder={q.placeholder || ''} autoFocus />
+          </div>
+        )}
+
+        {/* ── Heure ── */}
         {q.type === 'time' && (
           <div style={s.inputWrap}>
             <input className="clay-time-input"
@@ -400,20 +486,19 @@ export default function Onboarding({ onTermine }) {
 
       </div>
 
-      {/* Bottom CTA */}
+      {/* ── Bottom CTA ── */}
       <div style={s.bottom}>
         {q.skip && (
-          <button style={s.skipBtn} onClick={() => {
-            setDirection('forward'); setAnimKey(k=>k+1)
-            setStep(s => s < questions.length-1 ? s+1 : s)
-            if (step >= questions.length-1) finish()
-          }}>Passer cette étape</button>
+          <button style={s.skipBtn} onClick={skipStep}>Passer cette étape</button>
         )}
-        <button className="cta-btn"
-          style={{...s.ctaBtn, opacity: canContinue() ? 1 : 0.42, cursor: canContinue() ? 'pointer' : 'default'}}
-          onClick={goNext} disabled={!canContinue()}>
-          {step === questions.length-1 ? '✦ Lancer Oravia' : 'Continuer →'}
-        </button>
+        {/* Pas de bouton Continuer pour les cartes à choix unique (auto-avance) */}
+        {(q.type !== 'cards' || q.multi) && (
+          <button className="cta-btn"
+            style={{...s.ctaBtn, opacity: canContinue() ? 1 : 0.42, cursor: canContinue() ? 'pointer' : 'default'}}
+            onClick={goNext} disabled={!canContinue()}>
+            {isLast ? '✦ Lancer Oravia' : 'Continuer →'}
+          </button>
+        )}
       </div>
     </div>
   )
@@ -424,22 +509,19 @@ const s = {
   page: { minHeight:'100vh', background:'#FFF8F4', fontFamily:'Poppins, sans-serif', color:'#1a0a00',
     display:'flex', flexDirection:'column', position:'relative', overflowX:'hidden' },
 
-  // ── Progress bar (6px, gradient orange) ──
   progressWrap: { position:'fixed', top:0, left:0, right:0, height:6,
     background:'rgba(229,213,204,0.6)', zIndex:100 },
   progressBar: { height:'100%',
     background:'linear-gradient(90deg,#FF6B35 0%,#FF9A3C 60%,#FFB347 100%)',
     transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:3 },
 
-  // ── Back button (clay) ──
   backBtn: { position:'fixed', top:22, left:20, zIndex:100,
     background:'#ffffff', border:'1.5px solid #f0e8e0', color:'#a07060',
     width:42, height:42, borderRadius:14, cursor:'pointer', fontSize:18,
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
     boxShadow:'0 4px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
-    transition:'all 0.2s', outline:'none', border:'1.5px solid #f0e8e0' },
+    transition:'all 0.2s', outline:'none' },
 
-  // ── Logo ──
   logoTop: { position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', zIndex:100,
     display:'flex', alignItems:'center', gap:5 },
   logoIcon: { fontSize:18, background:'linear-gradient(135deg,#FF6B35,#E55A00)',
@@ -448,25 +530,21 @@ const s = {
     background:'linear-gradient(135deg,#FF6B35,#E55A00)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
 
-  // ── Step dots row ──
   dotsRow: { position:'fixed', top:72, left:'50%', transform:'translateX(-50%)', zIndex:100,
-    display:'flex', alignItems:'center', gap:6 },
+    display:'flex', alignItems:'center', gap:6, flexWrap:'nowrap', maxWidth:'90vw', overflow:'hidden' },
   stepPill: { marginLeft:10, padding:'3px 12px', borderRadius:20,
     background:'linear-gradient(135deg,rgba(255,107,53,0.12),rgba(255,154,60,0.08))',
     border:'1.5px solid rgba(255,107,53,0.3)', fontSize:11, fontWeight:800,
-    color:'#FF6B35', letterSpacing:'0.3px' },
+    color:'#FF6B35', letterSpacing:'0.3px', flexShrink:0 },
 
-  // ── Screen ──
   screen: { flex:1, display:'flex', flexDirection:'column', padding:'118px 24px 24px',
     maxWidth:600, width:'100%', margin:'0 auto', position:'relative', zIndex:1 },
 
-  // ── Question text ──
   questionWrap: { marginBottom:28 },
-  question: { fontSize:'clamp(24px,5vw,34px)', fontWeight:800, lineHeight:1.22,
+  question: { fontSize:'clamp(22px,5vw,34px)', fontWeight:800, lineHeight:1.22,
     letterSpacing:'-0.5px', marginBottom:10, color:'#1a0a00' },
   qSubtitle: { fontSize:14, color:'#b59080', lineHeight:1.55, fontWeight:500 },
 
-  // ── Cards ──
   cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',
     gap:12, flex:1 },
   card: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:22,
@@ -482,10 +560,8 @@ const s = {
     transform:'scale(1.03)',
     animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
-    justifyContent:'center', background:'rgba(0,0,0,0.03)',
-    transition:'all 0.2s' },
-  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(255,107,53,0.18),rgba(255,154,60,0.12))',
-    borderRadius:14 },
+    justifyContent:'center', background:'rgba(0,0,0,0.03)', transition:'all 0.2s' },
+  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(255,107,53,0.18),rgba(255,154,60,0.12))', borderRadius:14 },
   cardIcon: { lineHeight:1, transition:'font-size 0.2s' },
   cardLabel: { fontSize:13, fontWeight:700, color:'#1a0a00', lineHeight:1.3 },
   cardSub: { fontSize:11, color:'#b59080', lineHeight:1.3, fontWeight:500 },
@@ -493,10 +569,8 @@ const s = {
     borderRadius:'50%', background:'linear-gradient(135deg,#FF6B35,#E55A00)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:11, fontWeight:800, color:'white',
-    boxShadow:'0 3px 10px rgba(255,107,53,0.45)',
-    animation:'popIn 0.2s ease' },
+    boxShadow:'0 3px 10px rgba(255,107,53,0.45)', animation:'popIn 0.2s ease' },
 
-  // ── Chips ──
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
   chip: { padding:'12px 20px', borderRadius:40, border:'1px solid #f0e8e0',
     background:'#ffffff', cursor:'pointer', fontSize:13,
@@ -509,35 +583,29 @@ const s = {
     boxShadow:'0 6px 18px rgba(255,107,53,0.28), inset 0 1px 0 rgba(255,255,255,0.6)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
-  // ── Inputs ──
   inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
     alignItems:'center', gap:16 },
-  textInput: { width:'100%', maxWidth:420, padding:'20px 24px', borderRadius:20,
+  textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
     border:'1.5px solid #f0e8e0', background:'#ffffff', fontSize:22,
     fontFamily:'Poppins, sans-serif', color:'#1a0a00', outline:'none',
     textAlign:'center', fontWeight:700,
     boxShadow:'0 6px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
     transition:'border-color 0.2s, box-shadow 0.2s', boxSizing:'border-box' },
 
-  // ── Number input ──
   numberRow: { display:'flex', alignItems:'center', gap:20 },
   numBtn: { width:62, height:62, borderRadius:'50%', border:'none',
     background:'linear-gradient(145deg,#FF6B35,#E55A00)',
     color:'white', fontSize:28, fontWeight:700, cursor:'pointer',
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
     boxShadow:'0 8px 24px rgba(255,107,53,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
-    transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none',
-    lineHeight:1 },
+    transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none', lineHeight:1 },
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
-    padding:'12px 20px', background:'#ffffff',
-    border:'1.5px solid #f0e8e0' },
+    padding:'12px 20px', background:'#ffffff', border:'1.5px solid #f0e8e0' },
   numberInput: { width:120, border:'none', background:'transparent',
-    fontSize:52, fontFamily:'Poppins, sans-serif',
-    color:'#1a0a00', outline:'none', textAlign:'center', fontWeight:900,
-    padding:0 },
+    fontSize:52, fontFamily:'Poppins, sans-serif', color:'#1a0a00',
+    outline:'none', textAlign:'center', fontWeight:900, padding:0 },
   unit: { fontSize:18, color:'#b59080', fontWeight:600 },
 
-  // ── Bottom ──
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%', margin:'0 auto',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
   ctaBtn: { padding:'0 24px', height:58,
@@ -545,8 +613,7 @@ const s = {
     color:'white', border:'none', borderRadius:22, fontSize:17, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
     boxShadow:'0 12px 36px rgba(255,107,53,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)',
-    transition:'opacity 0.2s, transform 0.15s, box-shadow 0.2s',
-    letterSpacing:'0.3px', outline:'none' },
+    transition:'opacity 0.2s, transform 0.15s', letterSpacing:'0.3px', outline:'none' },
   skipBtn: { background:'transparent', border:'none', color:'#c9a090',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
     textDecoration:'underline', padding:'4px', textAlign:'center', fontWeight:500 },
