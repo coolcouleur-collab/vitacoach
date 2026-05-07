@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, Component } from 'react'
 import Auth from './Auth'
 import Landing from './Landing'
 import Onboarding from './Onboarding'
@@ -7,6 +7,22 @@ import HerbalTab from './HerbalTab'
 import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
+
+// ─── Error Boundary (évite page blanche sur crash de rendu) ──────────────────
+class MsgBoundary extends Component {
+  constructor(props) { super(props); this.state = { crashed: false } }
+  static getDerivedStateFromError() { return { crashed: true } }
+  render() {
+    if (this.state.crashed) {
+      return (
+        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'#1a0a00' }}>
+          {this.props.fallback}
+        </span>
+      )
+    }
+    return this.props.children
+  }
+}
 
 // ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
 const defaultMetriques = () => {
@@ -317,7 +333,11 @@ export default function App() {
                     }>
                       {msg.role==='user'
                         ? msg.content
-                        : <ResponseRenderer content={msg.content} />
+                        : (
+                          <MsgBoundary fallback={msg.content}>
+                            <ResponseRenderer content={msg.content} />
+                          </MsgBoundary>
+                        )
                       }
                     </div>
                   </div>

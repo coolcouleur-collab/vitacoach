@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 
 // ─── Parser ───────────────────────────────────────────────────────────────────
 function parseRich(text) {
-  const match = text.match(/\|\|\|JSON\|\|\|([\s\S]*?)\|\|\|END\|\|\|/)
-  if (!match) return null
+  if (!text || typeof text !== 'string') return null
   try {
+    const match = text.match(/\|\|\|JSON\|\|\|([\s\S]*?)\|\|\|END\|\|\|/)
+    if (!match) return null
     const data = JSON.parse(match[1].trim())
+    if (!data || typeof data !== 'object') return null
     const splitIdx = text.indexOf('|||JSON|||')
     const endIdx   = text.indexOf('|||END|||') + 9
     return {
@@ -249,6 +251,7 @@ function TypeHeader({ cfg, count }) {
 
 // ─── Main renderer ────────────────────────────────────────────────────────────
 export default function ResponseRenderer({ content }) {
+  if (!content) return null
   const parsed = parseRich(content)
 
   if (!parsed) {
