@@ -66,12 +66,8 @@ export default function App() {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
     if (p && h) {
-      // Supprime les doublons consécutifs de messages identiques
-      const clean = h.filter((msg, i) => {
-        if (i === 0) return true
-        return !(msg.role === h[i-1].role && msg.content === h[i-1].content)
-      })
-      return clean
+      // Purge tous les vieux messages de limite (jamais utiles dans l'historique)
+      return h.filter(m => !m.content?.includes('messages gratuits'))
     }
     if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ✦ Comment puis-je t'aider aujourd'hui ?` }]
     return []
@@ -95,8 +91,11 @@ export default function App() {
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
   useEffect(() => {
-    if (profil && messages.length > 0)
-      localStorage.setItem('vitacoach_historique', JSON.stringify(messages.slice(-50)))
+    if (profil && messages.length > 0) {
+      // Ne jamais sauvegarder les messages de limite dans l'historique
+      const toSave = messages.filter(m => !m.content?.includes('messages gratuits'))
+      localStorage.setItem('vitacoach_historique', JSON.stringify(toSave.slice(-50)))
+    }
   }, [messages, profil])
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
