@@ -132,8 +132,8 @@ export default function App() {
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
-      else alert('Erreur: ' + (data.erreur||'inconnue'))
-    } catch(e) { alert('Erreur: '+e.message) }
+      // Stripe pas encore configuré — silencieux
+    } catch {}
   }
 
   async function envoyerMessage(msgOverride) {
@@ -572,18 +572,20 @@ export default function App() {
 function RoutineModule({ profil, metriques }) {
   const [routine, setRoutine]       = useState(null)
   const [loading, setLoading]       = useState(false)
+  const [routineError, setRoutineError] = useState(false)
   const [checkedSteps, setCheckedSteps] = useState({})
 
   async function genererRoutine() {
-    setLoading(true); setCheckedSteps({})
+    setLoading(true); setCheckedSteps({}); setRoutineError(false)
     try {
       const res = await fetch('/api/routine', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ profil, metriques })
       })
       const data = await res.json()
-      setRoutine(data)
-    } catch { alert('Erreur lors de la génération.') }
+      if (data.erreur) setRoutineError(true)
+      else setRoutine(data)
+    } catch { setRoutineError(true) }
     setLoading(false)
   }
 
@@ -622,7 +624,15 @@ function RoutineModule({ profil, metriques }) {
         </div>
       )}
 
-      {!routine && !loading && (
+      {routineError && (
+        <div style={{ ...sr.empty, background:'#fff5f5', border:'1px solid #ffcdd2', borderRadius:16, padding:24 }}>
+          <div style={{ fontSize:32, marginBottom:10 }}>⚠️</div>
+          <div style={{ fontSize:14, color:'#c62828', fontWeight:600, marginBottom:8 }}>La génération a échoué</div>
+          <div style={{ fontSize:12, color:'#8a7265' }}>Vérifie ta connexion et réessaie</div>
+        </div>
+      )}
+
+      {!routine && !loading && !routineError && (
         <div style={sr.empty}>
           <div style={{ fontSize:48, marginBottom:14 }}>📋</div>
           <div style={{ fontSize:15, color:'#1a0a00', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
@@ -791,8 +801,11 @@ function TenuesModule({ profil }) {
   const [loading, setLoading]     = useState(false)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
+  const [villeError, setVilleError] = useState(false)
+
   async function getTenues() {
-    if (!ville.trim()) return alert('Entre ta ville !')
+    if (!ville.trim()) { setVilleError(true); return }
+    setVilleError(false)
     setLoading(true); setTenues([])
     try {
       const res = await fetch('/api/tenues', {
@@ -823,8 +836,9 @@ function TenuesModule({ profil }) {
             <div style={st.meteoBar}>🌤️ {meteo}</div>
           )}
           <div style={st.row}>
-            <input style={st.input} placeholder="Ta ville (ex: Paris)" value={ville}
-              onChange={e => setVille(e.target.value)}
+            <input style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
+              placeholder="Ta ville (ex: Paris)" value={ville}
+              onChange={e => { setVille(e.target.value); setVilleError(false) }}
               onKeyDown={e => e.key==='Enter' && getTenues()} />
             <select style={st.select} value={occasion} onChange={e => setOccasion(e.target.value)}>
               {occasions.map(o => <option key={o} value={o}>{o}</option>)}
@@ -833,6 +847,7 @@ function TenuesModule({ profil }) {
               {loading ? '⏳' : '✨'}
             </button>
           </div>
+          {villeError && <div style={{ fontSize:12, color:'#ff3b30', marginTop:4 }}>Entre ta ville pour continuer</div>}
           {tenues.length > 0 && (
             <div style={st.grid}>
               {tenues.map((t, i) => <TenueCard key={i} tenue={t} />)}

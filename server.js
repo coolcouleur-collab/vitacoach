@@ -199,7 +199,7 @@ Profil de l'utilisateur :
 Météo aujourd'hui à ${ville}: ${meteo}
 Occasion: ${occasion}
 
-Propose 3 tenues. Réponds UNIQUEMENT en JSON valide avec ce format exact :
+Propose 6 tenues avec des styles VARIÉS (ex: minimaliste, tendance, classique, streetwear, bohème, sportif chic). Réponds UNIQUEMENT en JSON valide :
 {
   "tenues": [
     {
