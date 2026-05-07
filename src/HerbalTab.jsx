@@ -1,263 +1,282 @@
 import React, { useState } from 'react'
+import { LeafIcon, SparkleIcon, ChevronIcon, BackIcon } from './Icons'
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
-const CATEGORIES = [
-  { id:'plantes', icon:'🌿', label:'Plantes médicinales' },
-  { id:'tisanes', icon:'☕', label:'Tisanes & infusions' },
-  { id:'chinoise', icon:'🐉', label:'Médecine chinoise' },
-  { id:'holistique', icon:'🧘', label:'Techniques holistiques' },
+const CATS = [
+  { id:'plantes',    label:'Plantes',    color:'#34c759' },
+  { id:'tisanes',    label:'Tisanes',    color:'#38bdf8' },
+  { id:'chinoise',   label:'Méd. chin.', color:'#ff6b35' },
+  { id:'holistique', label:'Holistique', color:'#a78bfa' },
 ]
 
-const STATIC_DATA = {
+const DATA = {
   plantes: [
-    { nom:'Ashwagandha', emoji:'🌱', couleur:'#34c759', tag:'Adaptogène', benefice:'Réduit le stress et le cortisol', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique considérée comme le roi des adaptogènes. Améliore l\'endurance, réduit l\'anxiété et booste la testostérone.' },
-    { nom:'Curcuma', emoji:'🟡', couleur:'#ff9500', tag:'Anti-inflammatoire', benefice:'Puissant anti-inflammatoire naturel', usage:'1 c.à.c avec poivre noir et huile', detail:'La curcumine, son principe actif, est 1000× plus biodisponible avec de la pipérine (poivre noir). Excellent pour les articulations et le foie.' },
-    { nom:'Gingembre', emoji:'🫚', couleur:'#ff6b35', tag:'Digestif', benefice:'Stimule la digestion et l\'immunité', usage:'Frais ou en tisane, 2–3 g/jour', detail:'Anti-nausée prouvé, stimule la circulation sanguine, réduit les douleurs musculaires. Idéal après le sport.' },
-    { nom:'Rhodiola', emoji:'🏔️', couleur:'#af52de', tag:'Énergie', benefice:'Combat la fatigue physique et mentale', usage:'200–400 mg le matin', detail:'Plante des régions arctiques utilisée par les olympiades soviétiques. Améliore les performances cognitives et la résistance au stress.' },
-    { nom:'Valériane', emoji:'😴', couleur:'#5856d6', tag:'Sommeil', benefice:'Améliore la qualité du sommeil', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, induisant un sommeil profond sans accoutumance. Résultats visibles après 2–4 semaines.' },
-    { nom:'Ginkgo Biloba', emoji:'🧠', couleur:'#30b0c7', tag:'Mémoire', benefice:'Booste la circulation cérébrale', usage:'120–240 mg/jour', detail:'Améliore la mémoire, la concentration et la circulation sanguine cérébrale. Un des suppléments les plus étudiés au monde.' },
-    { nom:'Chardon-marie', emoji:'🫀', couleur:'#34c759', tag:'Foie', benefice:'Détox et régénération du foie', usage:'140 mg de sylymarine, 3×/jour', detail:'La silymarine protège et régénère les cellules hépatiques. Indispensable après une période de stress, alcool ou médicaments.' },
-    { nom:'Ortie', emoji:'🌱', couleur:'#30d158', tag:'Minéraux', benefice:'Reminéralisant et anti-fatigue', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, vitamines K et C. Combat l\'anémie et les carences. Excellent dépuratif printanier.' },
+    { nom:'Ashwagandha',   tag:'Adaptogène',      color:'#34c759', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
+    { nom:'Curcuma',       tag:'Anti-inflammatoire', color:'#ff9500', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
+    { nom:'Gingembre',     tag:'Digestif',        color:'#ff6b35', benefice:'Stimule la digestion et booste l\'immunité naturellement', usage:'Frais ou tisane, 2–3 g/jour', detail:'Anti-nausée cliniquement prouvé. Réduit les douleurs musculaires post-entraînement et stimule la thermogenèse (brûle les graisses).' },
+    { nom:'Rhodiola Rosea',tag:'Énergie',         color:'#a78bfa', benefice:'Combat la fatigue physique et améliore la concentration', usage:'200–400 mg le matin, à jeun', detail:'Plante des montagnes arctiques utilisée par les cosmonautes soviétiques. Réduit le stress oxydatif et améliore les fonctions cognitives sous pression.' },
+    { nom:'Valériane',     tag:'Sommeil',         color:'#5856d6', benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
+    { nom:'Ginkgo Biloba', tag:'Mémoire',         color:'#0ea5e9', benefice:'Améliore la circulation cérébrale et la mémoire', usage:'120–240 mg/jour avec un repas', detail:'Un des suppléments les plus étudiés au monde. Augmente le flux sanguin vers le cerveau et protège les neurones du stress oxydatif.' },
+    { nom:'Chardon-marie', tag:'Foie',            color:'#34c759', benefice:'Régénère et détoxifie les cellules hépatiques', usage:'140 mg de silymarine, 3× par jour', detail:'La silymarine bloque les toxines et stimule la régénération cellulaire hépatique. Incontournable après antibiotiques, alcool ou médicaments.' },
+    { nom:'Ortie',         tag:'Minéraux',        color:'#30d158', benefice:'Reminéralise l\'organisme et combat la fatigue de fond', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, silice et vitamines K et C. Excellent dépuratif. Aide contre l\'anémie, les douleurs articulaires et la chute de cheveux.' },
   ],
   tisanes: [
-    { nom:'Camomille', emoji:'🌼', couleur:'#fbbf24', tag:'Apaisante', benefice:'Calme l\'anxiété et aide au sommeil', usage:'1 tasse le soir, 10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA. Réduit l\'inflammation intestinale, apaise les coliques et les migraines.' },
-    { nom:'Menthe poivrée', emoji:'🌿', couleur:'#34c759', tag:'Digestive', benefice:'Soulage les troubles digestifs', usage:'Après les repas, 1–2 tasses/jour', detail:'Le menthol relâche les muscles lisses intestinaux. Efficace contre le syndrome de l\'intestin irritable et les nausées.' },
-    { nom:'Hibiscus', emoji:'🌺', couleur:'#ff2d55', tag:'Cardio', benefice:'Réduit la tension artérielle', usage:'Froid ou chaud, 2–3 tasses/jour', detail:'Les anthocyanes réduisent la tension systolique de 7 points. Riche en vitamine C, antioxydants. Goût acidulé naturellement sans sucre.' },
-    { nom:'Rooibos', emoji:'🫖', couleur:'#ff9500', tag:'Antioxydant', benefice:'0% théine, riche en antioxydants', usage:'Toute la journée, sans restriction', detail:'Naturellement sans caféine, idéal le soir. Contient de l\'aspalathin, unique à cette plante, qui régule la glycémie.' },
-    { nom:'Tilleul', emoji:'🌳', couleur:'#30d158', tag:'Stress', benefice:'Soulage le stress et la nervosité', usage:'1–2 tasses en fin de journée', detail:'Flarbonoïdes sédatifs légers. Utilisé depuis le Moyen-Âge pour l\'anxiété, les maux de tête et les tensions musculaires.' },
-    { nom:'Gingembre-citron', emoji:'🍋', couleur:'#ffd60a', tag:'Immunité', benefice:'Booste les défenses immunitaires', usage:'Matin à jeun, avec miel de Manuka', detail:'Combinaison synergique : gingerols + vitamine C + enzymes. Le miel de Manuka amplifie les propriétés antibactériennes.' },
+    { nom:'Camomille',       tag:'Apaisante',   color:'#fbbf24', benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
+    { nom:'Menthe poivrée',  tag:'Digestive',   color:'#34c759', benefice:'Soulage les ballonnements et les douleurs intestinales', usage:'Après les repas, 2 tasses/jour max', detail:'Le menthol relâche la musculature lisse digestive. Cliniquement efficace contre le SII. Éviter en cas de reflux gastro-œsophagien.' },
+    { nom:'Hibiscus',        tag:'Cardio',      color:'#ff2d55', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
+    { nom:'Rooibos',         tag:'Antioxydant', color:'#ff9500', benefice:'Zéro caféine — riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
+    { nom:'Tilleul',         tag:'Stress',      color:'#86efac', benefice:'Relâche les tensions nerveuses et musculaires', usage:'1–2 tasses en fin d\'après-midi', detail:'Flavonoïdes sédatifs légers utilisés depuis le Moyen-Âge. Efficace contre les maux de tête de tension, l\'anxiété et l\'hypertension légère.' },
+    { nom:'Gingembre-citron',tag:'Immunité',    color:'#ffd60a', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
   ],
   chinoise: [
-    { nom:'Acupuncture', emoji:'📍', couleur:'#ff6b35', tag:'Méridiens', benefice:'Rééquilibre l\'énergie vitale (Qi)', usage:'Séances de 45–60 min, 1×/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée pour la douleur chronique, l\'insomnie, la fertilité et la dépression légère.' },
-    { nom:'Reishi (Ganoderma)', emoji:'🍄', couleur:'#8b5e3c', tag:'Longévité', benefice:'Le "champignon de l\'immortalité"', usage:'1–2 g/jour en poudre dans une boisson', detail:'Modifie la composition du microbiome intestinal, renforce l\'immunité et réduit la fatigue. Utilisé depuis 4000 ans en Asie.' },
-    { nom:'Ginseng Panax', emoji:'🌿', couleur:'#ff9500', tag:'Vitalité', benefice:'Tonique général, énergie et libido', usage:'200–400 mg/jour le matin', detail:'Le ginsénoside Rg1 améliore les performances cognitives et physiques. Le ginseng rouge coréen est le plus puissant.' },
-    { nom:'Moxibustion', emoji:'🔥', couleur:'#ff3b30', tag:'Chaleur', benefice:'Stimule les méridiens par la chaleur', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise (mugwort) près de points d\'acupuncture. Idéale pour les douleurs arthritiques, les problèmes digestifs et la fatigue chronique.' },
-    { nom:'Astragale', emoji:'🌾', couleur:'#34c759', tag:'Immunité', benefice:'Renforce profondément le système immunitaire', usage:'500 mg, 2×/jour pendant 3 mois', detail:'Allonge les télomères, ralentissant le vieillissement cellulaire. Utilisé en oncologie pour réduire les effets secondaires de la chimio.' },
-    { nom:'Qi Gong', emoji:'🧿', couleur:'#5856d6', tag:'Énergie', benefice:'Harmonise corps, souffle et esprit', usage:'20 min le matin à jeun', detail:'800 études scientifiques démontrent ses effets sur la pression artérielle, l\'immunité et l\'état mental. Idéal pour tous les âges.' },
+    { nom:'Acupuncture',     tag:'Méridiens',  color:'#ff6b35', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
+    { nom:'Reishi',          tag:'Longévité',  color:'#92400e', benefice:'"Champignon de l\'immortalité" — immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
+    { nom:'Ginseng Panax',   tag:'Vitalité',   color:'#ff9500', benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
+    { nom:'Moxibustion',     tag:'Chaleur',    color:'#ff3b30', benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
+    { nom:'Astragale',       tag:'Immunité',   color:'#34c759', benefice:'Renforce l\'immunité en profondeur et ralentit le vieillissement', usage:'500 mg, 2× par jour, cure de 3 mois', detail:'Allonge les télomères (marqueurs du vieillissement cellulaire). Utilisé en complément de la chimiothérapie pour réduire les effets secondaires.' },
+    { nom:'Qi Gong',         tag:'Énergie',    color:'#5856d6', benefice:'Harmonise corps, souffle et esprit par le mouvement', usage:'20 min le matin à jeun, quotidiennement', detail:'+800 études scientifiques. Réduit la tension artérielle, renforce l\'immunité et améliore l\'équilibre mental. Idéal pour tous les âges.' },
   ],
   holistique: [
-    { nom:'Cohérence cardiaque', emoji:'💓', couleur:'#ff2d55', tag:'Stress', benefice:'Régule le système nerveux autonome', usage:'5-5-5 : 5 min, 5 sec expir/inspir, 3×/jour', detail:'Résultats visibles dès 5 min : cortisol ↓ 20%, sérotonine ↑. App recommandée : RespiRelax. La posture debout amplifie les effets.' },
-    { nom:'Bain de forêt (Shinrin-yoku)', emoji:'🌲', couleur:'#34c759', tag:'Nature', benefice:'Réduit le cortisol de 12–16%', usage:'2h minimum en forêt, sans téléphone', detail:'Les phytoncides émis par les arbres augmentent les cellules NK (anti-cancer). 3h en forêt = 30% de réduction du stress en 3 jours.' },
-    { nom:'Thérapie par le froid', emoji:'🧊', couleur:'#38bdf8', tag:'Dopamine', benefice:'Dopamine +250%, immune boost', usage:'Douche froide 30 sec → 3 min, ou bain glacé', detail:'Protocole Wim Hof : la noradrénaline monte de 300%. Réduit l\'inflammation, améliore la récupération musculaire et la volonté.' },
-    { nom:'Earthing (Mise à la terre)', emoji:'🌍', couleur:'#8b5e3c', tag:'Électrons', benefice:'Réduit l\'inflammation chronique', usage:'20 min pieds nus sur herbe/sol naturel', detail:'Les électrons de la terre neutralisent les radicaux libres. Améliore le sommeil, réduit les douleurs et régule les rythmes circadiens.' },
-    { nom:'Méditation pleine conscience', emoji:'🧘', couleur:'#af52de', tag:'Mental', benefice:'Recâble le cortex préfrontal en 8 semaines', usage:'10–20 min/jour, le matin ou le soir', detail:'Études MBSR de Harvard : augmente la matière grise après 8 semaines. Réduit l\'amygdale (siège de la peur) de façon mesurable.' },
-    { nom:'Chromothérapie', emoji:'🌈', couleur:'#ff9500', tag:'Lumière', benefice:'La couleur influence l\'humeur et la santé', usage:'Exposition naturelle ou lampe chromothérapie', detail:'Bleu : baisse la tension. Orange : stimule la créativité. Vert : équilibre. La luminothérapie matinale (10 000 lux) traite la dépression saisonnière.' },
+    { nom:'Cohérence cardiaque', tag:'Système nerveux', color:'#ff2d55', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
+    { nom:'Bain de forêt',       tag:'Shinrin-yoku', color:'#34c759', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
+    { nom:'Thérapie par le froid',tag:'Dopamine',   color:'#38bdf8', benefice:'Dopamine +250%, inflammation réduite, volonté renforcée', usage:'Douche froide 30s → 3 min progressivement', detail:'La noradrénaline monte de 300% (Wim Hof Institute). Réduit l\'inflammation chronique, améliore la récupération musculaire et renforce la résilience mentale.' },
+    { nom:'Earthing',            tag:'Électrons',   color:'#92400e', benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
+    { nom:'Méditation MBSR',     tag:'Neuroplasticité', color:'#a78bfa', benefice:'Recâble le cerveau en 8 semaines — Harvard prouvé', usage:'10–20 min/jour, app ou guidance', detail:'L\'étude Harvard : augmentation de la matière grise après 8 semaines. L\'amygdale (siège de la peur) réduit de façon mesurable. MBSR = Mindfulness-Based Stress Reduction.' },
+    { nom:'Luminothérapie',      tag:'Rythme circadien', color:'#fbbf24', benefice:'Régule la mélatonine et traite la dépression saisonnière', usage:'10 000 lux, 20–30 min le matin au réveil', detail:'Efficacité comparable aux antidépresseurs pour le TAS (trouble affectif saisonnier). Synchronise l\'horloge interne et améliore l\'énergie matinale.' },
   ],
 }
 
-// ─── HERB CARD ───────────────────────────────────────────────────────────────
-function HerbCard({ item, onChat }) {
-  const [expanded, setExpanded] = useState(false)
-  return (
-    <div style={{ ...hb.card, borderTop: `3px solid ${item.couleur}` }}
-      onClick={() => setExpanded(e => !e)}>
-      <div style={hb.cardTop}>
-        <div style={{ ...hb.cardEmoji, background: item.couleur + '12' }}>
-          <span style={{ fontSize:22 }}>{item.emoji}</span>
-        </div>
-        <div style={{ flex:1, minWidth:0 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
-            <span style={hb.nom}>{item.nom}</span>
-            <span style={{ ...hb.tag, background: item.couleur + '15', color: item.couleur }}>{item.tag}</span>
-          </div>
-          <div style={hb.benefice}>{item.benefice}</div>
-        </div>
-        <span style={{ fontSize:12, color:'#c4b5a8', flexShrink:0 }}>{expanded ? '▲' : '▼'}</span>
-      </div>
-
-      {expanded && (
-        <div style={hb.expanded}>
-          <div style={hb.usageRow}>
-            <span style={{ fontSize:14 }}>💊</span>
-            <div>
-              <div style={hb.usageLabel}>Comment utiliser</div>
-              <div style={hb.usageVal}>{item.usage}</div>
-            </div>
-          </div>
-          <div style={hb.detailText}>{item.detail}</div>
-          <button style={{ ...hb.askBtn, background: item.couleur + '12', color: item.couleur, border: `1px solid ${item.couleur}25` }}
-            onClick={e => { e.stopPropagation(); onChat(`Parle-moi de ${item.nom} et comment ça peut m'aider avec mon profil`) }}>
-            💬 Demander des conseils personnalisés →
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─── AI RECOMMENDATION ────────────────────────────────────────────────────────
+// ─── AI RECO SECTION ─────────────────────────────────────────────────────────
 function AIReco({ profil, onChat }) {
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState(null)
+  const [items, setItems]     = useState(null)
+  const [err, setErr]         = useState(false)
 
-  async function getAIReco() {
-    setLoading(true)
+  async function analyse() {
+    setLoading(true); setErr(false)
     try {
       const res = await fetch('/api/herbal', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ profil })
       })
       const data = await res.json()
-      setResult(data)
-    } catch { setResult({ error: true }) }
+      setItems(data.recommendations)
+    } catch { setErr(true) }
     setLoading(false)
   }
 
   return (
-    <div style={hb.aiSection}>
-      <div style={hb.aiBg} />
-      <div style={{ position:'relative', zIndex:1 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
-          <span style={{ fontSize:24 }}>🤖</span>
-          <div>
-            <div style={hb.aiTitle}>Recommandation IA personnalisée</div>
-            <div style={hb.aiSub}>Basée sur ton profil et tes objectifs</div>
-          </div>
+    <div style={hb.aiBox}>
+      <div style={hb.aiTop}>
+        <div style={hb.aiIconWrap}>
+          <SparkleIcon color="#FF6B35" size={18} />
         </div>
-        {!result && (
-          <button style={hb.aiBtn} onClick={getAIReco} disabled={loading}>
-            {loading ? '⏳ Analyse en cours...' : '✨ Obtenir mes recommandations'}
+        <div style={{ flex:1 }}>
+          <div style={hb.aiTitle}>Recommandation IA</div>
+          <div style={hb.aiSub}>Basée sur ton profil {profil?.nom ? `· ${profil.nom}` : ''}</div>
+        </div>
+        {!items && (
+          <button style={{ ...hb.aiCta, opacity: loading ? 0.7 : 1 }}
+            onClick={analyse} disabled={loading}>
+            {loading ? <span style={hb.dotLoader}><span/><span/><span/></span> : 'Analyser →'}
           </button>
         )}
-        {result && !result.error && (
-          <div style={{ display:'flex', flexDirection:'column', gap:10, marginTop:10 }}>
-            {result.recommendations?.map((r, i) => (
-              <div key={i} style={hb.recoItem}>
-                <span style={{ fontSize:20, flexShrink:0 }}>{r.emoji}</span>
-                <div>
-                  <div style={hb.recoNom}>{r.nom}</div>
-                  <div style={hb.recoRaison}>{r.raison}</div>
-                  {r.usage && <div style={hb.recoUsage}>📌 {r.usage}</div>}
-                </div>
+        {items && (
+          <button style={{ ...hb.aiCta, background:'#f8f4f0', color:'#8a7265', fontSize:10 }}
+            onClick={() => setItems(null)}>Refaire</button>
+        )}
+      </div>
+
+      {items && (
+        <div style={hb.aiResults}>
+          {items.map((r, i) => (
+            <div key={i} style={hb.aiItem}>
+              <span style={{ fontSize:18, flexShrink:0 }}>{r.emoji}</span>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:12, fontWeight:700, color:'#1a0a00' }}>{r.nom}</div>
+                <div style={{ fontSize:11, color:'#8a7265', lineHeight:1.5 }}>{r.raison}</div>
               </div>
-            ))}
-            <button style={hb.retryBtn} onClick={() => setResult(null)}>🔄 Nouvelle analyse</button>
+              <button style={hb.aiAskBtn}
+                onClick={() => onChat(`Parle-moi de ${r.nom} pour mon profil`)}>
+                →
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      {err && <div style={{ fontSize:11, color:'#ff3b30', marginTop:8 }}>Erreur de connexion. Réessaie.</div>}
+    </div>
+  )
+}
+
+// ─── HERB ITEM (condensed row + inline expand) ────────────────────────────────
+function HerbItem({ item, onChat }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div style={{ ...hb.item, borderLeft:`3px solid ${item.color}` }}>
+      <div style={hb.itemRow} onClick={() => setOpen(o => !o)}>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={hb.itemTop}>
+            <span style={hb.itemNom}>{item.nom}</span>
+            <span style={{ ...hb.itemTag, background: item.color+'15', color: item.color }}>{item.tag}</span>
           </div>
-        )}
-        {result?.error && (
-          <div style={{ color:'#ff3b30', fontSize:12, marginTop:8 }}>
-            Erreur de connexion. Vérifie ta connexion et réessaie.
+          <div style={hb.itemBenef}>{item.benefice}</div>
+        </div>
+        <ChevronIcon color="#c4b5a8" size={15} direction={open ? 'up' : 'down'} />
+      </div>
+
+      {/* Expanded content — max-height transition */}
+      <div style={{ overflow:'hidden', maxHeight: open ? 260 : 0, transition:'max-height 0.32s cubic-bezier(0.4,0,0.2,1)' }}>
+        <div style={hb.expandBody}>
+          <div style={hb.usageRow}>
+            <div style={{ ...hb.usageDot, background: item.color }} />
+            <div>
+              <div style={{ fontSize:9, color:'#c4b5a8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.6px' }}>Comment utiliser</div>
+              <div style={{ fontSize:12, color:'#1a0a00', fontWeight:600, marginTop:1 }}>{item.usage}</div>
+            </div>
           </div>
-        )}
+          <div style={hb.detailText}>{item.detail}</div>
+          <button style={{ ...hb.askBtn, borderColor: item.color+'30', color: item.color, background: item.color+'08' }}
+            onClick={e => { e.stopPropagation(); onChat(`Explique-moi comment utiliser ${item.nom} selon mon profil`) }}>
+            💬 Conseils personnalisés →
+          </button>
+        </div>
       </div>
     </div>
   )
 }
 
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
-export default function HerbalTab({ profil, onChat }) {
+export default function HerbalTab({ profil, onChat, onBack }) {
   const [cat, setCat] = useState('plantes')
-  const data = STATIC_DATA[cat] || []
+  const items = DATA[cat] || []
+  const activeCat = CATS.find(c => c.id === cat)
 
   return (
     <div style={hb.page}>
 
-      {/* Header */}
-      <div style={hb.header}>
-        <div style={hb.headerIcon}>🌿</div>
-        <div>
-          <div style={hb.headerTitle}>Santé Naturelle</div>
-          <div style={hb.headerSub}>Plantes · Médecine chinoise · Holistic</div>
+      {/* Gradient header */}
+      <div style={{ ...hb.header, '--c': activeCat?.color || '#34c759' }}>
+        <div style={hb.headerGlow} />
+        <div style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center', gap:14 }}>
+          <div style={{ ...hb.headerIcon, boxShadow:`0 6px 24px ${activeCat?.color}40` }}>
+            <LeafIcon color="#fff" size={24} />
+          </div>
+          <div>
+            <div style={hb.headerTitle}>Santé Naturelle</div>
+            <div style={hb.headerSub}>Plantes · Médecine chinoise · Holistic</div>
+          </div>
         </div>
       </div>
 
       {/* AI Reco */}
       <AIReco profil={profil} onChat={onChat} />
 
-      {/* Category tabs */}
-      <div style={hb.tabs}>
-        {CATEGORIES.map(c => (
-          <button key={c.id} style={cat===c.id ? hb.tabActive : hb.tab}
+      {/* Category pills */}
+      <div style={hb.catRow}>
+        {CATS.map(c => (
+          <button key={c.id}
+            style={cat === c.id
+              ? { ...hb.cat, background: c.color, color:'#fff', borderColor: c.color, boxShadow:`0 4px 14px ${c.color}35` }
+              : { ...hb.cat, background:'#ffffff', color:'#8a7265', borderColor:'#f0e8e0' }
+            }
             onClick={() => setCat(c.id)}>
-            <span style={{ fontSize:16 }}>{c.icon}</span>
-            <span>{c.label}</span>
+            {c.label}
           </button>
         ))}
       </div>
 
-      {/* Cards */}
+      {/* Count */}
+      <div style={hb.countRow}>
+        <span style={hb.countText}>{items.length} items</span>
+        <span style={{ ...hb.countDot, background: activeCat?.color }} />
+        <span style={hb.countText}>Appuie pour développer</span>
+      </div>
+
+      {/* Items list */}
       <div style={hb.list}>
-        {data.map((item, i) => (
-          <HerbCard key={i} item={item} onChat={onChat} />
+        {items.map((item, i) => (
+          <HerbItem key={i} item={item} onChat={onChat} />
         ))}
       </div>
 
       {/* Disclaimer */}
       <div style={hb.disclaimer}>
-        ⚠️ Ces informations sont à titre éducatif. Consulte un professionnel de santé avant de commencer tout supplément, surtout si tu prends des médicaments.
+        ⚠️ À titre éducatif uniquement. Consulte un professionnel de santé avant tout supplément, particulièrement si tu prends des médicaments.
       </div>
-
     </div>
   )
 }
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hb = {
-  page: { paddingBottom:100, display:'flex', flexDirection:'column', gap:0 },
+  page: { paddingBottom:100 },
 
-  header: { display:'flex', alignItems:'center', gap:14, padding:'24px 20px 16px' },
-  headerIcon: { width:52, height:52, borderRadius:16,
+  // Header animated gradient
+  header: { margin:'0 0 0', padding:'24px 20px 22px', position:'relative', overflow:'hidden',
+    background:'linear-gradient(135deg, rgba(52,199,89,0.08) 0%, rgba(255,107,53,0.06) 100%)',
+    borderBottom:'1px solid #f0e8e0' },
+  headerGlow: { position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(52,199,89,0.05), transparent)',
+    animation:'floatOrb 8s ease-in-out infinite' },
+  headerIcon: { width:52, height:52, borderRadius:18,
     background:'linear-gradient(135deg,#34c759,#30d158)',
-    display:'flex', alignItems:'center', justifyContent:'center', fontSize:26,
-    boxShadow:'0 4px 18px rgba(52,199,89,0.3)', flexShrink:0 },
+    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+    transition:'box-shadow 0.3s' },
   headerTitle: { fontSize:20, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.3px' },
   headerSub: { fontSize:12, color:'#8a7265', marginTop:2, fontWeight:500 },
 
   // AI section
-  aiSection: { margin:'0 20px 16px', borderRadius:20, padding:20, position:'relative', overflow:'hidden',
-    border:'1px solid rgba(52,199,89,0.2)', background:'rgba(52,199,89,0.03)' },
-  aiBg: { position:'absolute', inset:0, background:'linear-gradient(135deg,rgba(52,199,89,0.04),rgba(255,107,53,0.04))' },
-  aiTitle: { fontSize:15, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' },
-  aiSub: { fontSize:11, color:'#8a7265', fontWeight:500, marginTop:2 },
-  aiBtn: { width:'100%', padding:'13px 20px',
-    background:'linear-gradient(135deg,#34c759,#30d158)',
-    color:'#fff', border:'none', borderRadius:14, fontSize:14, fontWeight:700,
-    cursor:'pointer', fontFamily:'Poppins,sans-serif', boxShadow:'0 4px 18px rgba(52,199,89,0.3)',
-    marginTop:4 },
-  recoItem: { display:'flex', gap:12, alignItems:'flex-start', background:'#ffffff',
-    border:'1px solid #f0e8e0', borderRadius:14, padding:'12px 14px',
-    boxShadow:'0 2px 10px rgba(0,0,0,0.05)' },
-  recoNom: { fontSize:14, fontWeight:700, color:'#1a0a00', marginBottom:3 },
-  recoRaison: { fontSize:12, color:'#8a7265', lineHeight:1.5, marginBottom:4 },
-  recoUsage: { fontSize:11, color:'#FF6B35', fontWeight:600, background:'rgba(255,107,53,0.08)',
-    padding:'3px 10px', borderRadius:8, display:'inline-block' },
-  retryBtn: { background:'transparent', border:'1px solid #f0e8e0', color:'#8a7265',
-    padding:'8px 16px', borderRadius:10, fontSize:12, fontWeight:600, cursor:'pointer',
-    fontFamily:'Poppins,sans-serif', alignSelf:'flex-start', marginTop:4 },
+  aiBox: { margin:'12px 16px', background:'#ffffff', border:'1px solid #f0e8e0',
+    borderRadius:16, padding:'14px 14px', boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
+  aiTop: { display:'flex', alignItems:'center', gap:10 },
+  aiIconWrap: { width:34, height:34, borderRadius:10, background:'rgba(255,107,53,0.1)',
+    border:'1.5px solid rgba(255,107,53,0.2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
+  aiTitle: { fontSize:13, fontWeight:700, color:'#1a0a00' },
+  aiSub: { fontSize:10, color:'#c4b5a8', fontWeight:500, marginTop:1 },
+  aiCta: { background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff', border:'none',
+    padding:'7px 14px', borderRadius:10, fontSize:11, fontWeight:700, cursor:'pointer',
+    fontFamily:'Poppins,sans-serif', flexShrink:0, boxShadow:'0 3px 10px rgba(255,107,53,0.3)' },
+  dotLoader: { display:'inline-flex', gap:3, alignItems:'center',
+    '& span': { width:4, height:4, borderRadius:'50%', background:'white' } },
+  aiResults: { marginTop:12, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid #f8f4f0', paddingTop:12 },
+  aiItem: { display:'flex', alignItems:'center', gap:10, background:'#f9fafb', borderRadius:10, padding:'10px 12px' },
+  aiAskBtn: { width:28, height:28, borderRadius:8, background:'rgba(255,107,53,0.1)', border:'1px solid rgba(255,107,53,0.2)',
+    color:'#FF6B35', fontSize:13, fontWeight:800, cursor:'pointer', flexShrink:0,
+    display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif' },
 
-  // Tabs
-  tabs: { display:'flex', gap:8, padding:'0 20px 14px', overflowX:'auto',
+  // Category pills
+  catRow: { display:'flex', gap:7, padding:'12px 16px 8px', overflowX:'auto',
     scrollbarWidth:'none', WebkitOverflowScrolling:'touch' },
-  tab: { flexShrink:0, display:'flex', alignItems:'center', gap:6, padding:'8px 14px',
-    borderRadius:12, border:'1px solid #f0e8e0', background:'#ffffff',
-    fontSize:12, fontWeight:600, color:'#8a7265', cursor:'pointer',
-    fontFamily:'Poppins,sans-serif', boxShadow:'0 1px 6px rgba(0,0,0,0.04)', whiteSpace:'nowrap' },
-  tabActive: { flexShrink:0, display:'flex', alignItems:'center', gap:6, padding:'8px 14px',
-    borderRadius:12, border:'1.5px solid rgba(52,199,89,0.5)',
-    background:'rgba(52,199,89,0.08)',
-    fontSize:12, fontWeight:700, color:'#34c759', cursor:'pointer',
-    fontFamily:'Poppins,sans-serif', whiteSpace:'nowrap' },
+  cat: { flexShrink:0, padding:'7px 14px', borderRadius:20, border:'1.5px solid',
+    fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'Poppins,sans-serif',
+    transition:'all 0.2s', whiteSpace:'nowrap' },
 
-  // Cards list
-  list: { display:'flex', flexDirection:'column', gap:10, padding:'0 20px' },
-  card: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:16,
-    padding:'14px 16px', cursor:'pointer', boxShadow:'0 2px 10px rgba(0,0,0,0.05)',
-    transition:'transform 0.15s', overflow:'hidden' },
-  cardTop: { display:'flex', alignItems:'flex-start', gap:12 },
-  cardEmoji: { width:44, height:44, borderRadius:13, display:'flex', alignItems:'center',
-    justifyContent:'center', flexShrink:0 },
-  nom: { fontSize:14, fontWeight:700, color:'#1a0a00' },
-  tag: { fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:6 },
-  benefice: { fontSize:12, color:'#8a7265', marginTop:2 },
-  expanded: { marginTop:12, paddingTop:12, borderTop:'1px solid #f8f0e8', display:'flex', flexDirection:'column', gap:10 },
-  usageRow: { display:'flex', gap:10, alignItems:'flex-start', background:'rgba(255,107,53,0.04)', borderRadius:10, padding:'10px 12px' },
-  usageLabel: { fontSize:10, color:'#c4b5a8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:2 },
-  usageVal: { fontSize:13, color:'#1a0a00', fontWeight:600 },
-  detailText: { fontSize:13, color:'#8a7265', lineHeight:1.7 },
-  askBtn: { padding:'10px 14px', borderRadius:12, fontSize:12, fontWeight:700,
-    cursor:'pointer', fontFamily:'Poppins,sans-serif', border:'1px solid' },
+  countRow: { display:'flex', alignItems:'center', gap:6, padding:'0 16px 8px' },
+  countText: { fontSize:10, color:'#c4b5a8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.5px' },
+  countDot: { width:4, height:4, borderRadius:'50%' },
 
-  disclaimer: { margin:'16px 20px 0', padding:'12px 16px',
-    background:'rgba(255,107,53,0.05)', border:'1px solid rgba(255,107,53,0.15)',
-    borderRadius:12, fontSize:11, color:'#8a7265', lineHeight:1.6 },
+  // List
+  list: { display:'flex', flexDirection:'column', gap:0, padding:'0 16px' },
+  item: { background:'#ffffff', borderRadius:12, marginBottom:6,
+    overflow:'hidden', boxShadow:'0 1px 6px rgba(0,0,0,0.05)',
+    transition:'box-shadow 0.2s' },
+  itemRow: { display:'flex', alignItems:'center', gap:12, padding:'12px 14px',
+    cursor:'pointer' },
+  itemTop: { display:'flex', alignItems:'center', gap:7, marginBottom:3, flexWrap:'wrap' },
+  itemNom: { fontSize:13, fontWeight:700, color:'#1a0a00' },
+  itemTag: { fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:5, letterSpacing:'0.3px' },
+  itemBenef: { fontSize:12, color:'#8a7265', lineHeight:1.4 },
+
+  // Expanded
+  expandBody: { padding:'0 14px 14px', borderTop:'1px solid #f8f4f0' },
+  usageRow: { display:'flex', alignItems:'flex-start', gap:10, padding:'12px 0 10px' },
+  usageDot: { width:8, height:8, borderRadius:'50%', marginTop:4, flexShrink:0 },
+  detailText: { fontSize:12, color:'#8a7265', lineHeight:1.7, marginBottom:10 },
+  askBtn: { display:'inline-block', padding:'7px 14px', borderRadius:10, border:'1px solid',
+    fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'Poppins,sans-serif' },
+
+  // Disclaimer
+  disclaimer: { margin:'12px 16px 0', padding:'10px 14px',
+    background:'rgba(255,107,53,0.04)', border:'1px solid rgba(255,107,53,0.12)',
+    borderRadius:10, fontSize:10, color:'#8a7265', lineHeight:1.6 },
 }

@@ -5,6 +5,7 @@ import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
 import SanteTab, { scoreJour } from './SanteTab'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
 
 // ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
 const defaultMetriques = () => {
@@ -164,13 +165,17 @@ export default function App() {
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
 
+  const sectionTitles = {
+    chat:'Coach IA', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style'
+  }
+
   const navItems = [
-    { id:'accueil', icon:'🏠', label:'Accueil' },
-    { id:'chat',    icon:'💬', label:'Coach' },
-    { id:'sante',   icon:'❤️', label:'Santé' },
-    { id:'routine', icon:'📋', label:'Routine' },
-    { id:'herbal',  icon:'🌿', label:'Herbal' },
-    { id:'style',   icon:'👗', label:'Style' },
+    { id:'accueil', Icon: HomeIcon,    label:'Accueil' },
+    { id:'chat',    Icon: ChatIcon,    label:'Coach' },
+    { id:'sante',   Icon: HeartIcon,   label:'Santé' },
+    { id:'routine', Icon: RoutineIcon, label:'Routine' },
+    { id:'herbal',  Icon: LeafIcon,    label:'Herbal' },
+    { id:'style',   Icon: StyleIcon,   label:'Style' },
   ]
 
   return (
@@ -185,19 +190,23 @@ export default function App() {
           </div>
 
           <nav style={s.sidebarNav}>
-            {navItems.map(n => (
-              <button key={n.id} style={onglet===n.id ? s.navActive : s.nav}
-                onClick={() => setOnglet(n.id)}>
-                <span style={{ fontSize:18, lineHeight:1 }}>{n.icon}</span>
-                <span>{n.label}</span>
-                {n.id === 'sante' && score > 0 && (
-                  <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700,
-                    color: scoreColor, background: scoreColor+'18', borderRadius:6, padding:'2px 7px' }}>
-                    {score}
-                  </span>
-                )}
-              </button>
-            ))}
+            {navItems.map(({ id, Icon, label }) => {
+              const active = onglet === id
+              const color = active ? '#FF6B35' : '#8a7265'
+              return (
+                <button key={id} style={active ? s.navActive : s.nav}
+                  onClick={() => setOnglet(id)}>
+                  <Icon color={color} size={18} />
+                  <span>{label}</span>
+                  {id === 'sante' && score > 0 && (
+                    <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700,
+                      color: scoreColor, background: scoreColor+'18', borderRadius:6, padding:'2px 7px' }}>
+                      {score}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </nav>
 
           <div style={s.sidebarBottom}>
@@ -226,11 +235,22 @@ export default function App() {
           {/* Mobile header */}
           {isMobile && (
             <div style={s.mobileHeader}>
-              <div style={s.logo}>✦ Oravia</div>
+              {onglet !== 'accueil' ? (
+                <button style={s.backBtn} onClick={() => setOnglet('accueil')}>
+                  <BackIcon color="#1a0a00" size={20} />
+                </button>
+              ) : (
+                <div style={s.logo}>✦ Oravia</div>
+              )}
+
+              <div style={s.mobileTitle}>
+                {onglet === 'accueil' ? '' : sectionTitles[onglet] || ''}
+              </div>
+
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                {score > 0 && (
+                {score > 0 && onglet === 'accueil' && (
                   <div style={{ ...s.scorePill, background: scoreColor+'15', color: scoreColor, border:`1px solid ${scoreColor}30` }}>
-                    {score}/100
+                    {score}
                   </div>
                 )}
                 <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
@@ -254,13 +274,18 @@ export default function App() {
           {/* ── Chat ── */}
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
-              {/* Page header desktop */}
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div style={s.pageTitle}>💬 Coach IA</div>
-                  <div style={s.pageSubtitle}>Pose n'importe quelle question à Oravia</div>
+              {/* Page header */}
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && (
+                  <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}>
+                    <BackIcon color="#8a7265" size={18} />
+                  </button>
+                )}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Coach IA' : '💬 Coach IA'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Oravia</div>}
                 </div>
-              )}
+              </div>
 
               <div style={s.chatBox}>
                 {messages.length === 0 && (
@@ -324,10 +349,7 @@ export default function App() {
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
                     placeholder="Pose une question à Oravia..." />
                   <button style={s.sendBtn} onClick={() => envoyerMessage()}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <path d="M22 2L11 13" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-                      <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <SendIcon color="#fff" size={17} />
                   </button>
                 </div>
               </div>
@@ -336,44 +358,51 @@ export default function App() {
 
           {/* ── Santé ── */}
           {onglet === 'sante' && (
-            <div style={{ padding: isMobile ? '16px 16px 0' : '28px 0 0' }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div style={s.pageTitle}>❤️ Suivi Santé</div>
-                  <div style={s.pageSubtitle}>Tes métriques du jour</div>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Santé' : '❤️ Suivi Santé'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Tes métriques du jour</div>}
                 </div>
-              )}
+              </div>
               <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} />
             </div>
           )}
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <div style={{ padding: isMobile ? '16px 16px 0' : '28px 0 0' }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div style={s.pageTitle}>📋 Routine du jour</div>
-                  <div style={s.pageSubtitle}>Ton programme personnalisé</div>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Routine' : '📋 Routine du jour'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Ton programme personnalisé</div>}
                 </div>
-              )}
+              </div>
               <RoutineModule profil={profil} metriques={metriques} />
             </div>
           )}
 
           {/* ── Herbal ── */}
           {onglet === 'herbal' && (
-            <HerbalTab profil={profil} onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }} />
+            <HerbalTab
+              profil={profil}
+              onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
+              onBack={() => setOnglet('accueil')}
+            />
           )}
 
           {/* ── Style ── */}
           {onglet === 'style' && (
-            <div style={{ padding: isMobile ? '16px 16px 0' : '28px 0 0' }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div style={s.pageTitle}>👗 Style & Tenues</div>
-                  <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Style' : '👗 Style & Tenues'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>}
                 </div>
-              )}
+              </div>
               <TenuesModule profil={profil} />
             </div>
           )}
@@ -383,16 +412,18 @@ export default function App() {
         {/* ══ BOTTOM NAV (mobile) ══ */}
         {isMobile && (
           <nav style={s.bottomNav}>
-            {navItems.map(n => {
-              const active = onglet === n.id
+            {navItems.map(({ id, Icon, label }) => {
+              const active = onglet === id
+              const color = active ? '#FF6B35' : '#c4b5a8'
               return (
-                <button key={n.id} style={{ ...s.navBot, ...(active ? s.navBotActive : {}) }}
-                  onClick={() => setOnglet(n.id)}>
-                  <span style={{ fontSize:20, lineHeight:1, transition:'transform 0.2s', transform: active ? 'scale(1.15)' : 'scale(1)' }}>
-                    {n.icon}
-                  </span>
-                  <span style={{ fontSize:9, fontWeight: active ? 700 : 500, letterSpacing:'0.3px', marginTop:3, transition:'color 0.2s' }}>
-                    {n.label}
+                <button key={id}
+                  style={{ ...s.navBot, color: active ? '#FF6B35' : '#c4b5a8' }}
+                  onClick={() => setOnglet(id)}>
+                  <div style={{ transition:'transform 0.2s', transform: active ? 'scale(1.12)' : 'scale(1)' }}>
+                    <Icon color={color} size={22} />
+                  </div>
+                  <span style={{ fontSize:9, fontWeight: active ? 700 : 500, letterSpacing:'0.3px', marginTop:2 }}>
+                    {label}
                   </span>
                   {active && <div style={s.navDot} />}
                 </button>
@@ -795,13 +826,23 @@ const s = {
 
   // Mobile header
   mobileHeader: { display:'flex', justifyContent:'space-between', alignItems:'center',
-    padding:'18px 20px 12px', borderBottom:'1px solid #f0e8e0', background:'#ffffff',
+    padding:'14px 16px 12px', borderBottom:'1px solid #f0e8e0', background:'rgba(255,255,255,0.95)',
+    backdropFilter:'blur(12px)', position:'sticky', top:0, zIndex:40,
     boxShadow:'0 1px 8px rgba(0,0,0,0.05)' },
+  backBtn: { width:36, height:36, borderRadius:12, background:'#f8f4f0',
+    border:'1px solid #f0e8e0', display:'flex', alignItems:'center', justifyContent:'center',
+    cursor:'pointer', flexShrink:0 },
+  mobileTitle: { fontSize:15, fontWeight:700, color:'#1a0a00', letterSpacing:'-0.2px',
+    flex:1, textAlign:'center' },
   scorePill: { borderRadius:20, padding:'4px 12px', fontSize:11, fontWeight:700 },
 
-  // Page header (desktop)
+  // Page header
   pageHeader: { padding:'28px 0 20px', borderBottom:'1px solid #f0e8e0', marginBottom:20 },
-  pageTitle: { fontSize:24, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.3px', marginBottom:4 },
+  tabHeaderMobile: { display:'flex', alignItems:'center', gap:10, padding:'16px 0 14px', marginBottom:4 },
+  backBtnInline: { width:34, height:34, borderRadius:10, background:'#f8f4f0',
+    border:'1px solid #f0e8e0', display:'flex', alignItems:'center', justifyContent:'center',
+    cursor:'pointer', flexShrink:0 },
+  pageTitle: { fontSize:18, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.3px', marginBottom:2 },
   pageSubtitle: { fontSize:12, color:'#c4b5a8', fontWeight:500 },
 
   // Chat
