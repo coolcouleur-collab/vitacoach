@@ -65,7 +65,14 @@ export default function App() {
   const [messages, setMessages] = useState(() => {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
-    if (p && h) return h
+    if (p && h) {
+      // Supprime les doublons consécutifs de messages identiques
+      const clean = h.filter((msg, i) => {
+        if (i === 0) return true
+        return !(msg.role === h[i-1].role && msg.content === h[i-1].content)
+      })
+      return clean
+    }
     if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ✦ Comment puis-je t'aider aujourd'hui ?` }]
     return []
   })
