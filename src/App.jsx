@@ -75,6 +75,7 @@ export default function App() {
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const messagesEndRef = useRef(null)
+  const isSendingRef   = useRef(false)   // verrou anti-doublon
 
   // Responsive
   const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -131,13 +132,17 @@ export default function App() {
 
   async function envoyerMessage(msgOverride) {
     const msg = msgOverride || input
-    if (!msg.trim() || loading) return   // évite les doubles envois
+    if (!msg.trim()) return
+    if (isSendingRef.current) return     // verrou : un seul envoi à la fois
+    isSendingRef.current = true
+
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
       setMessages(prev => {
         const last = prev[prev.length - 1]
-        if (last?.role === 'assistant' && last?.content?.includes('messages gratuits')) return prev
+        if (last?.content?.includes('messages gratuits')) return prev
         return [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravia Pro pour des conseils illimités !` }]
       })
+      isSendingRef.current = false
       return
     }
     const userMsg = { role:'user', content: msg }
@@ -154,8 +159,10 @@ export default function App() {
       setMessages(prev => [...prev, { role:'assistant', content:data.reply }])
     } catch {
       setMessages(prev => [...prev, { role:'assistant', content:'Une erreur est survenue. Réessaie.' }])
+    } finally {
+      setLoading(false)
+      isSendingRef.current = false      // libère le verrou
     }
-    setLoading(false)
   }
 
   // ── LANDING ─────────────────────────────────────────────────────────────────
