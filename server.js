@@ -92,14 +92,17 @@ Utilise quand l'utilisateur parle de réserver, sortir, aller quelque part, pren
 ✅ "j'ai envie d'aller au restaurant", "réserve-moi un médecin", "je veux faire du sport dehors", "prends rdv chez le kiné"
 
 |||JSON|||
-{"type":"booking","emoji":"🍽️","service":"Nom du lieu/service","lieu":"Ville ou quartier si connu","date":"Ce soir / Demain / etc.","heure":"20h00","note":"Message chaleureux et personnel du coach — max 2 phrases","links":[{"icon":"🍴","label":"Chercher sur TheFork","url":"https://www.thefork.com/restaurants/france--r1/?searchtext=TERME"},{"icon":"🗺️","label":"Voir sur Google Maps","url":"https://www.google.com/maps/search/TERME+VILLE"}]}
+{"type":"booking","emoji":"🍽️","service":"Nom du lieu/service","lieu":"Ville ou quartier si connu","date":"Ce soir / Demain / etc.","heure":"20h00","note":"Message chaleureux et personnel du coach — max 2 phrases","links":[{"icon":"🗺️","label":"Chercher sur Google Maps","url":"https://www.google.com/maps/search/MOTS+CLES+VILLE"},{"icon":"🔍","label":"Rechercher sur Google","url":"https://www.google.com/search?q=MOTS+CLES+VILLE"}]}
 |||END|||
 
-Liens selon le contexte :
-- Restaurant → TheFork : https://www.thefork.com/restaurants/france--r1/?searchtext=TYPE+CUISINE et Maps
-- Médecin/kiné/dentiste → Doctolib : https://www.doctolib.fr/SPECIALITE/VILLE et Maps
-- Salle de sport → https://www.google.com/maps/search/salle+sport+VILLE et https://www.urban-challenge.fr
-- Autre → Google Maps adapté
+Liens — utilise UNIQUEMENT ces formats qui fonctionnent toujours :
+- Google Maps : https://www.google.com/maps/search/MOTS_CLES_ESPACES_REMPLACÉS_PAR_+
+- Google Search : https://www.google.com/search?q=MOTS_CLES_ESPACES_REMPLACÉS_PAR_+
+- Doctolib (médecin/kiné/dentiste) : https://www.doctolib.fr/SPECIALITE/VILLE (ex: https://www.doctolib.fr/medecin-generaliste/paris)
+Exemples :
+- Restaurant casher Paris → Maps: https://www.google.com/maps/search/restaurant+casher+paris
+- Kiné Paris → Doctolib: https://www.doctolib.fr/kinesitherapeute/paris + Maps: https://www.google.com/maps/search/kinesitherapeute+paris
+- Salle de sport Lyon → Maps: https://www.google.com/maps/search/salle+de+sport+lyon
 
 ━━ FORMAT 2 : LISTES (meals/exercises/tips/plants/routine) ━━
 Utilise UNIQUEMENT quand demande explicite de liste :
