@@ -269,6 +269,94 @@ app.get('/api/image', async (req, res) => {
   }
 })
 
+// ── Routine du jour ──────────────────────────────────────────────────────────
+app.post('/api/routine', async (req, res) => {
+  const { profil, metriques } = req.body
+  const prompt = `Tu es Oravia, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
+Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
+Métriques d'hier : sommeil ${metriques.sommeil || 0}h, pas ${metriques.pas || 0}, humeur ${metriques.humeur || 0}/5.
+
+Réponds UNIQUEMENT en JSON valide :
+{
+  "motivation": "phrase motivante personnalisée pour aujourd'hui",
+  "matin": { "titre": "Matin énergisant", "heure": "7h00 – 9h00", "etapes": [{ "id": "m1", "emoji": "🌅", "titre": "Titre", "description": "Description courte et concrète", "duree": "10 min" }] },
+  "nutrition": { "titre": "Nutrition du jour", "petitDej": "suggestion petit-déjeuner", "dejeuner": "suggestion déjeuner", "diner": "suggestion dîner", "hydratation": "conseil hydratation" },
+  "apresmidi": { "titre": "Après-midi productif", "heure": "14h00 – 17h00", "etapes": [{ "id": "a1", "emoji": "☀️", "titre": "Titre", "description": "Description", "duree": "15 min" }] },
+  "soir": { "titre": "Soir récupération", "heure": "20h00 – 22h00", "etapes": [{ "id": "s1", "emoji": "🌙", "titre": "Titre", "description": "Description", "duree": "20 min" }] },
+  "astuce": { "emoji": "💡", "titre": "Astuce du jour", "conseil": "conseil court et actionnable" }
+}
+Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
+
+  try {
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: 'Tu génères des routines personnalisées. Réponds UNIQUEMENT en JSON valide, sans texte avant ou après.' },
+        { role: 'user', content: prompt }
+      ]
+    })
+    const text = response.choices[0].message.content
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    const data = JSON.parse(jsonMatch[0])
+    res.json(data)
+  } catch (e) {
+    res.status(500).json({ erreur: 'Erreur génération routine' })
+  }
+})
+
+// ── Insights santé ───────────────────────────────────────────────────────────
+app.post('/api/health-insights', async (req, res) => {
+  const { metriques, profil } = req.body
+  const prompt = `Tu es Oravia, coach santé. Analyse les métriques de ${profil.nom} et donne 3 insights personnalisés.
+Métriques : pas=${metriques.pas || 0}, sommeil=${metriques.sommeil || 0}h, eau=${metriques.eau || 0} verres, humeur=${metriques.humeur || 0}/5, FC=${metriques.fc || 0}bpm, poids=${metriques.poids || 0}kg.
+Objectifs : ${profil.objectifs?.join(', ') || 'non renseignés'}.
+
+Réponds en JSON : { "insights": [{ "emoji": "emoji", "titre": "titre court", "message": "analyse personnalisée 2-3 phrases", "type": "positif|attention|conseil" }] }
+Maximum 3 insights, pertinents et actionnables.`
+
+  try {
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: 'Tu analyses des données de santé. Réponds UNIQUEMENT en JSON valide.' },
+        { role: 'user', content: prompt }
+      ]
+    })
+    const text = response.choices[0].message.content
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    const data = JSON.parse(jsonMatch[0])
+    res.json(data)
+  } catch {
+    res.json({ insights: [] })
+  }
+})
+
+// ── Recommandations herbal IA ─────────────────────────────────────────────────
+app.post('/api/herbal', async (req, res) => {
+  const { profil } = req.body
+  const prompt = `Tu es Oravia, expert en plantes et remèdes naturels. Recommande des plantes personnalisées pour ${profil.nom}.
+Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, santé : ${profil.santeDetails || profil.carences?.join(', ') || 'aucune précision'}.
+
+Réponds en JSON : { "recommendations": [{ "nom": "Nom", "emoji": "🌿", "tag": "Catégorie", "benefice": "bénéfice principal", "usage": "dosage/usage", "detail": "explication 2-3 phrases pourquoi adapté à ce profil" }] }
+Donne 5 recommandations vraiment adaptées au profil.`
+
+  try {
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: 'Tu es un expert herbal. Réponds UNIQUEMENT en JSON valide.' },
+        { role: 'user', content: prompt }
+      ]
+    })
+    const text = response.choices[0].message.content
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    const data = JSON.parse(jsonMatch[0])
+    res.json(data)
+  } catch {
+    res.json({ recommendations: [] })
+  }
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`✅ Serveur VitaCoach démarré sur port ${PORT}`)
