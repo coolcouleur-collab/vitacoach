@@ -258,6 +258,9 @@ export default function App() {
             </div>
           )}
 
+          {/* ── Tab content (keyed for fade-in animation on tab switch) ── */}
+          <div key={onglet} style={{ animation:'tabFade 0.28s ease both', flex:1, display:'flex', flexDirection:'column' }}>
+
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (
             <HomeTab
@@ -407,33 +410,52 @@ export default function App() {
             </div>
           )}
 
+          </div>{/* end keyed tab wrapper */}
+
         </div>
 
         {/* ══ BOTTOM NAV (mobile) ══ */}
-        {isMobile && (
-          <nav style={s.bottomNav}>
-            {navItems.map(({ id, Icon, label }) => {
-              const active = onglet === id
-              const color = active ? '#FF6B35' : '#c4b5a8'
-              return (
-                <button key={id}
-                  style={{ ...s.navBot, color: active ? '#FF6B35' : '#c4b5a8' }}
-                  onClick={() => setOnglet(id)}>
-                  <div style={{ transition:'transform 0.2s', transform: active ? 'scale(1.12)' : 'scale(1)' }}>
-                    <Icon color={color} size={22} />
-                  </div>
-                  <span style={{ fontSize:9, fontWeight: active ? 700 : 500, letterSpacing:'0.3px', marginTop:2 }}>
-                    {label}
-                  </span>
-                  {active && <div style={s.navDot} />}
-                </button>
-              )
-            })}
-          </nav>
-        )}
+        {isMobile && (() => {
+          const activeIdx = navItems.findIndex(n => n.id === onglet)
+          return (
+            <nav style={s.bottomNav}>
+              {/* Sliding background pill */}
+              <div style={{
+                position:'absolute',
+                top:6, bottom:6,
+                left:`calc(${activeIdx} * (100% / ${navItems.length}) + 4px)`,
+                width:`calc(100% / ${navItems.length} - 8px)`,
+                background:'rgba(255,107,53,0.1)',
+                borderRadius:16,
+                transition:'left 0.32s cubic-bezier(0.4,0,0.2,1)',
+                zIndex:0,
+                pointerEvents:'none',
+              }} />
+              {navItems.map(({ id, Icon, label }, idx) => {
+                const active = onglet === id
+                const color = active ? '#FF6B35' : '#c4b5a8'
+                return (
+                  <button key={id}
+                    style={{ ...s.navBot, color: active ? '#FF6B35' : '#c4b5a8', zIndex:1 }}
+                    onClick={() => setOnglet(id)}>
+                    <div style={{
+                      transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                      transform: active ? 'scale(1.18) translateY(-1px)' : 'scale(1)'
+                    }}>
+                      <Icon color={color} size={22} />
+                    </div>
+                    <span style={{ fontSize:9, fontWeight: active ? 700 : 400, letterSpacing:'0.3px', marginTop:2, transition:'font-weight 0.2s' }}>
+                      {label}
+                    </span>
+                  </button>
+                )
+              })}
+            </nav>
+          )
+        })()}
       </main>
 
-      {/* Global typing animation */}
+      {/* Global animations */}
       <style>{`
         @keyframes typing {
           from { opacity:0.3; transform:scale(0.8); }
@@ -463,6 +485,34 @@ export default function App() {
         @keyframes slideInLeft {
           from { opacity:0; transform:translateX(-50px); }
           to   { opacity:1; transform:translateX(0); }
+        }
+        @keyframes heroGradient {
+          0%,100% { background-position: 0% 50%; }
+          50%      { background-position: 100% 50%; }
+        }
+        @keyframes scoreGlow {
+          0%,100% { opacity:0.4; transform:scale(1); }
+          50%      { opacity:0.9; transform:scale(1.08); }
+        }
+        @keyframes dotPulse {
+          0%,100% { opacity:1; transform:scale(1); }
+          50%      { opacity:0.45; transform:scale(0.72); }
+        }
+        @keyframes metricPulse {
+          0%,100% { transform:scale(1); }
+          50%      { transform:scale(1.06); }
+        }
+        @keyframes countIn {
+          from { opacity:0; transform:translateY(10px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes tabFade {
+          from { opacity:0; transform:translateY(14px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes navPillSlide {
+          from { opacity:0; }
+          to   { opacity:1; }
         }
         * { -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width:0; height:0; background:transparent; }
@@ -896,6 +946,4 @@ const s = {
     fontFamily:'Poppins,sans-serif', color:'#c4b5a8', position:'relative',
     transition:'color 0.2s' },
   navBotActive: { color:'#FF6B35' },
-  navDot: { position:'absolute', top:2, width:4, height:4, borderRadius:'50%',
-    background:'#FF6B35', boxShadow:'0 0 6px rgba(255,107,53,0.6)' },
 }
