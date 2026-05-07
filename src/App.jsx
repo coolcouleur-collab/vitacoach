@@ -131,9 +131,13 @@ export default function App() {
 
   async function envoyerMessage(msgOverride) {
     const msg = msgOverride || input
-    if (!msg.trim()) return
+    if (!msg.trim() || loading) return   // évite les doubles envois
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
-      setMessages(prev => [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravia Pro pour des conseils illimités !` }])
+      setMessages(prev => {
+        const last = prev[prev.length - 1]
+        if (last?.role === 'assistant' && last?.content?.includes('messages gratuits')) return prev
+        return [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravia Pro pour des conseils illimités !` }]
+      })
       return
     }
     const userMsg = { role:'user', content: msg }
