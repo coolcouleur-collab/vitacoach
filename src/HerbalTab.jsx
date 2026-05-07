@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LeafIcon, SparkleIcon, ChevronIcon, BackIcon } from './Icons'
+import { LeafIcon, SparkleIcon, ChevronIcon } from './Icons'
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const CATS = [
@@ -46,6 +46,38 @@ const DATA = {
   ],
 }
 
+// ─── HERO BACKGROUND (aurora animated, like HomeTab) ─────────────────────────
+function HeroBg({ color }) {
+  const c = color || '#34c759'
+  return (
+    <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden', borderRadius:'inherit' }}>
+      {/* Animated aurora gradient */}
+      <div style={{
+        position:'absolute', inset:0,
+        background:`linear-gradient(-45deg, ${c}22, #f0fff4, ${c}12, #e8fdf0, ${c}18)`,
+        backgroundSize:'400% 400%',
+        animation:'heroGradient 10s ease infinite',
+      }} />
+      {/* Floating orbs */}
+      <div style={{
+        position:'absolute', top:'-20%', right:'-6%', width:260, height:260,
+        borderRadius:'50%', background:`radial-gradient(circle, ${c}40 0%, transparent 65%)`,
+        animation:'floatOrb 8s ease-in-out infinite', filter:'blur(4px)',
+      }} />
+      <div style={{
+        position:'absolute', bottom:'-12%', left:'-5%', width:200, height:200,
+        borderRadius:'50%', background:`radial-gradient(circle, ${c}28 0%, transparent 65%)`,
+        animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(4px)',
+      }} />
+      <div style={{
+        position:'absolute', top:'35%', left:'18%', width:120, height:120,
+        borderRadius:'50%', background:`radial-gradient(circle, rgba(255,255,255,0.45) 0%, transparent 65%)`,
+        animation:'floatOrb 6s ease-in-out infinite', filter:'blur(2px)',
+      }} />
+    </div>
+  )
+}
+
 // ─── AI RECO SECTION ─────────────────────────────────────────────────────────
 function AIReco({ profil, onChat }) {
   const [loading, setLoading] = useState(false)
@@ -67,77 +99,176 @@ function AIReco({ profil, onChat }) {
 
   return (
     <div style={hb.aiBox}>
-      <div style={hb.aiTop}>
-        <div style={hb.aiIconWrap}>
-          <SparkleIcon color="#FF6B35" size={18} />
+      {/* Subtle gradient tint layer */}
+      <div style={hb.aiBoxTint} />
+      <div style={{ position:'relative', zIndex:1 }}>
+        <div style={hb.aiTop}>
+          {/* Clay icon circle */}
+          <div style={hb.aiIconWrap}>
+            <SparkleIcon color="#FF6B35" size={22} />
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={hb.aiTitle}>Recommandation IA</div>
+            <div style={hb.aiSub}>Basée sur ton profil {profil?.nom ? `· ${profil.nom}` : ''}</div>
+          </div>
+          {!items && (
+            <button
+              style={{ ...hb.aiCta, opacity: loading ? 0.72 : 1 }}
+              onClick={analyse}
+              disabled={loading}
+            >
+              {loading
+                ? <span style={{ display:'inline-flex', gap:4, alignItems:'center' }}>
+                    <span style={hb.dot} /><span style={{ ...hb.dot, animationDelay:'0.15s' }} /><span style={{ ...hb.dot, animationDelay:'0.3s' }} />
+                  </span>
+                : 'Analyser →'}
+            </button>
+          )}
+          {items && (
+            <button
+              style={{ ...hb.aiCta, background:'rgba(255,107,53,0.08)', color:'#ff6b35',
+                border:'1.5px solid rgba(255,107,53,0.22)', boxShadow:'0 3px 10px rgba(255,107,53,0.12)', fontSize:10 }}
+              onClick={() => setItems(null)}
+            >
+              Refaire
+            </button>
+          )}
         </div>
-        <div style={{ flex:1 }}>
-          <div style={hb.aiTitle}>Recommandation IA</div>
-          <div style={hb.aiSub}>Basée sur ton profil {profil?.nom ? `· ${profil.nom}` : ''}</div>
-        </div>
-        {!items && (
-          <button style={{ ...hb.aiCta, opacity: loading ? 0.7 : 1 }}
-            onClick={analyse} disabled={loading}>
-            {loading ? <span style={hb.dotLoader}><span/><span/><span/></span> : 'Analyser →'}
-          </button>
-        )}
+
         {items && (
-          <button style={{ ...hb.aiCta, background:'#f8f4f0', color:'#8a7265', fontSize:10 }}
-            onClick={() => setItems(null)}>Refaire</button>
+          <div style={hb.aiResults}>
+            {items.map((r, i) => (
+              <div key={i} style={hb.aiItem}>
+                <span style={{ fontSize:20, flexShrink:0 }}>{r.emoji}</span>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontSize:13, fontWeight:700, color:'#1a0a00' }}>{r.nom}</div>
+                  <div style={{ fontSize:11, color:'#8a7265', lineHeight:1.5, marginTop:1 }}>{r.raison}</div>
+                </div>
+                <button
+                  style={hb.aiAskBtn}
+                  onClick={() => onChat(`Parle-moi de ${r.nom} pour mon profil`)}
+                >
+                  →
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        {err && (
+          <div style={{ fontSize:11, color:'#ff3b30', marginTop:10, fontWeight:600 }}>
+            Erreur de connexion. Réessaie.
+          </div>
         )}
       </div>
-
-      {items && (
-        <div style={hb.aiResults}>
-          {items.map((r, i) => (
-            <div key={i} style={hb.aiItem}>
-              <span style={{ fontSize:18, flexShrink:0 }}>{r.emoji}</span>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:12, fontWeight:700, color:'#1a0a00' }}>{r.nom}</div>
-                <div style={{ fontSize:11, color:'#8a7265', lineHeight:1.5 }}>{r.raison}</div>
-              </div>
-              <button style={hb.aiAskBtn}
-                onClick={() => onChat(`Parle-moi de ${r.nom} pour mon profil`)}>
-                →
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      {err && <div style={{ fontSize:11, color:'#ff3b30', marginTop:8 }}>Erreur de connexion. Réessaie.</div>}
     </div>
   )
 }
 
-// ─── HERB ITEM (condensed row + inline expand) ────────────────────────────────
+// ─── HERB ITEM — clay card with expand ───────────────────────────────────────
 function HerbItem({ item, onChat }) {
   const [open, setOpen] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
   return (
-    <div style={{ ...hb.item, borderLeft:`3px solid ${item.color}` }}>
-      <div style={hb.itemRow} onClick={() => setOpen(o => !o)}>
+    <div style={{
+      background: `${item.color}10`,
+      border: `1.5px solid ${item.color}30`,
+      borderRadius: 20,
+      marginBottom: 10,
+      overflow: 'hidden',
+      boxShadow: `0 6px 20px ${item.color}18, inset 0 1px 0 rgba(255,255,255,0.8)`,
+      transform: pressed ? 'scale(0.985)' : 'scale(1)',
+      transition: 'transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease',
+    }}>
+      {/* Clickable header row */}
+      <div
+        style={{
+          display:'flex', alignItems:'center', gap:13,
+          padding:'13px 15px', cursor:'pointer',
+        }}
+        onClick={() => setOpen(o => !o)}
+        onPointerDown={() => setPressed(true)}
+        onPointerUp={() => setPressed(false)}
+        onPointerLeave={() => setPressed(false)}
+      >
         <div style={{ flex:1, minWidth:0 }}>
-          <div style={hb.itemTop}>
-            <span style={hb.itemNom}>{item.nom}</span>
-            <span style={{ ...hb.itemTag, background: item.color+'15', color: item.color }}>{item.tag}</span>
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4, flexWrap:'wrap' }}>
+            <span style={{ fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' }}>{item.nom}</span>
+            <span style={{
+              fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:8,
+              background: `${item.color}22`, color: item.color,
+              border: `1px solid ${item.color}30`, letterSpacing:'0.4px', textTransform:'uppercase',
+            }}>
+              {item.tag}
+            </span>
           </div>
-          <div style={hb.itemBenef}>{item.benefice}</div>
+          <div style={{ fontSize:12, color:'#6b5c52', lineHeight:1.45, fontWeight:500 }}>{item.benefice}</div>
         </div>
-        <ChevronIcon color="#c4b5a8" size={15} direction={open ? 'up' : 'down'} />
+        {/* Chevron in colored circle */}
+        <div style={{
+          width:30, height:30, borderRadius:'50%', flexShrink:0,
+          background: `${item.color}16`, border:`1.5px solid ${item.color}28`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+        }}>
+          <ChevronIcon color={item.color} size={13} direction="down" />
+        </div>
       </div>
 
-      {/* Expanded content — max-height transition */}
-      <div style={{ overflow:'hidden', maxHeight: open ? 260 : 0, transition:'max-height 0.32s cubic-bezier(0.4,0,0.2,1)' }}>
-        <div style={hb.expandBody}>
-          <div style={hb.usageRow}>
-            <div style={{ ...hb.usageDot, background: item.color }} />
+      {/* Expanded content */}
+      <div style={{
+        overflow:'hidden',
+        maxHeight: open ? 320 : 0,
+        transition:'max-height 0.35s cubic-bezier(0.4,0,0.2,1)',
+      }}>
+        <div style={{
+          padding:'0 15px 15px',
+          borderTop:`1px solid ${item.color}20`,
+        }}>
+          {/* Usage box with gradient tint */}
+          <div style={{
+            display:'flex', alignItems:'flex-start', gap:11,
+            background:`linear-gradient(135deg, ${item.color}12, ${item.color}06)`,
+            border:`1px solid ${item.color}22`,
+            borderRadius:14, padding:'11px 13px', margin:'12px 0 10px',
+          }}>
+            <div style={{
+              width:10, height:10, borderRadius:'50%',
+              background:`linear-gradient(135deg, ${item.color}, ${item.color}aa)`,
+              marginTop:3, flexShrink:0,
+              boxShadow:`0 2px 6px ${item.color}40`,
+            }} />
             <div>
-              <div style={{ fontSize:9, color:'#c4b5a8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.6px' }}>Comment utiliser</div>
-              <div style={{ fontSize:12, color:'#1a0a00', fontWeight:600, marginTop:1 }}>{item.usage}</div>
+              <div style={{ fontSize:9, color:`${item.color}cc`, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px' }}>
+                Comment utiliser
+              </div>
+              <div style={{ fontSize:12, color:'#1a0a00', fontWeight:700, marginTop:2, lineHeight:1.4 }}>
+                {item.usage}
+              </div>
             </div>
           </div>
-          <div style={hb.detailText}>{item.detail}</div>
-          <button style={{ ...hb.askBtn, borderColor: item.color+'30', color: item.color, background: item.color+'08' }}
-            onClick={e => { e.stopPropagation(); onChat(`Explique-moi comment utiliser ${item.nom} selon mon profil`) }}>
+          {/* Detail text */}
+          <div style={{ fontSize:12, color:'#6b5c52', lineHeight:1.75, marginBottom:12 }}>
+            {item.detail}
+          </div>
+          {/* Clay CTA button */}
+          <button
+            style={{
+              display:'inline-flex', alignItems:'center', gap:6,
+              padding:'9px 16px', borderRadius:14,
+              background:`linear-gradient(135deg, ${item.color}18, ${item.color}0c)`,
+              border:`1.5px solid ${item.color}35`,
+              color: item.color, fontSize:11, fontWeight:800,
+              cursor:'pointer', fontFamily:'Poppins,sans-serif',
+              boxShadow:`0 4px 14px ${item.color}20, inset 0 1px 0 rgba(255,255,255,0.7)`,
+              transition:'transform 0.15s, box-shadow 0.15s',
+            }}
+            onClick={e => {
+              e.stopPropagation()
+              onChat(`Explique-moi comment utiliser ${item.nom} selon mon profil`)
+            }}
+          >
             💬 Conseils personnalisés →
           </button>
         </div>
@@ -151,56 +282,102 @@ export default function HerbalTab({ profil, onChat, onBack }) {
   const [cat, setCat] = useState('plantes')
   const items = DATA[cat] || []
   const activeCat = CATS.find(c => c.id === cat)
+  const activeColor = activeCat?.color || '#34c759'
 
   return (
     <div style={hb.page}>
 
-      {/* Gradient header */}
-      <div style={{ ...hb.header, '--c': activeCat?.color || '#34c759' }}>
-        <div style={hb.headerGlow} />
-        <div style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center', gap:14 }}>
-          <div style={{ ...hb.headerIcon, boxShadow:`0 6px 24px ${activeCat?.color}40` }}>
-            <LeafIcon color="#fff" size={24} />
+      {/* ── Aurora Hero Header ── */}
+      <div style={{ ...hb.hero }}>
+        <HeroBg color={activeColor} />
+        <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
+          {/* Clay leaf icon */}
+          <div style={{
+            width:64, height:64, borderRadius:22,
+            background:`linear-gradient(135deg, ${activeColor}, ${activeColor}bb)`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow:`0 8px 28px ${activeColor}50, 0 2px 6px ${activeColor}30, inset 0 1px 0 rgba(255,255,255,0.35)`,
+            transition:'box-shadow 0.4s, background 0.4s',
+            animation:'popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
+          }}>
+            <LeafIcon color="#fff" size={28} />
           </div>
-          <div>
-            <div style={hb.headerTitle}>Santé Naturelle</div>
-            <div style={hb.headerSub}>Plantes · Médecine chinoise · Holistic</div>
+          {/* Title */}
+          <div style={{
+            fontSize:26, fontWeight:900, color:'#1a0a00',
+            letterSpacing:'-0.5px', textAlign:'center', lineHeight:1.1,
+          }}>
+            Santé Naturelle
+          </div>
+          {/* Subtitle badge */}
+          <div style={{
+            display:'inline-flex', alignItems:'center', gap:6,
+            background:'rgba(255,255,255,0.65)', backdropFilter:'blur(8px)',
+            border:`1px solid ${activeColor}28`,
+            borderRadius:24, padding:'5px 14px',
+            fontSize:11, color:'#6b5c52', fontWeight:600,
+            boxShadow:`0 2px 10px ${activeColor}15`,
+          }}>
+            🌿 Plantes · Médecine Chinoise · Holistic
           </div>
         </div>
       </div>
 
-      {/* AI Reco */}
+      {/* ── AI Reco ── */}
       <AIReco profil={profil} onChat={onChat} />
 
-      {/* Category pills */}
+      {/* ── Category pills row ── */}
       <div style={hb.catRow}>
-        {CATS.map(c => (
-          <button key={c.id}
-            style={cat === c.id
-              ? { ...hb.cat, background: c.color, color:'#fff', borderColor: c.color, boxShadow:`0 4px 14px ${c.color}35` }
-              : { ...hb.cat, background:'#ffffff', color:'#8a7265', borderColor:'#f0e8e0' }
-            }
-            onClick={() => setCat(c.id)}>
-            {c.label}
-          </button>
-        ))}
+        {CATS.map(c => {
+          const active = cat === c.id
+          return (
+            <button
+              key={c.id}
+              style={{
+                flexShrink:0, padding:'10px 20px', borderRadius:24,
+                border: active ? `1.5px solid ${c.color}` : '1.5px solid #f0e8e0',
+                fontSize:12, fontWeight:700,
+                cursor:'pointer', fontFamily:'Poppins,sans-serif',
+                whiteSpace:'nowrap',
+                background: active
+                  ? `linear-gradient(135deg, ${c.color}, ${c.color}cc)`
+                  : 'rgba(255,255,255,0.85)',
+                color: active ? '#fff' : '#8a7265',
+                boxShadow: active
+                  ? `0 6px 20px ${c.color}30, inset 0 1px 0 rgba(255,255,255,0.25)`
+                  : '0 2px 8px rgba(0,0,0,0.05)',
+                transform: active ? 'scale(1.04)' : 'scale(1)',
+                transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+              }}
+              onClick={() => setCat(c.id)}
+            >
+              {c.label}
+            </button>
+          )
+        })}
       </div>
 
-      {/* Count */}
+      {/* ── Count row ── */}
       <div style={hb.countRow}>
-        <span style={hb.countText}>{items.length} items</span>
-        <span style={{ ...hb.countDot, background: activeCat?.color }} />
+        <div style={{
+          width:8, height:8, borderRadius:'50%',
+          background:`linear-gradient(135deg, ${activeColor}, ${activeColor}99)`,
+          boxShadow:`0 2px 6px ${activeColor}40`,
+          flexShrink:0,
+        }} />
+        <span style={hb.countText}>{items.length} remèdes</span>
+        <span style={{ ...hb.countSep }}>·</span>
         <span style={hb.countText}>Appuie pour développer</span>
       </div>
 
-      {/* Items list */}
+      {/* ── Items list ── */}
       <div style={hb.list}>
         {items.map((item, i) => (
           <HerbItem key={i} item={item} onChat={onChat} />
         ))}
       </div>
 
-      {/* Disclaimer */}
+      {/* ── Disclaimer ── */}
       <div style={hb.disclaimer}>
         ⚠️ À titre éducatif uniquement. Consulte un professionnel de santé avant tout supplément, particulièrement si tu prends des médicaments.
       </div>
@@ -210,73 +387,105 @@ export default function HerbalTab({ profil, onChat, onBack }) {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hb = {
-  page: { paddingBottom:100 },
+  page: { paddingBottom:100, animation:'tabFade 0.28s ease both' },
 
-  // Header animated gradient
-  header: { margin:'0 0 0', padding:'24px 20px 22px', position:'relative', overflow:'hidden',
-    background:'linear-gradient(135deg, rgba(52,199,89,0.08) 0%, rgba(255,107,53,0.06) 100%)',
-    borderBottom:'1px solid #f0e8e0' },
-  headerGlow: { position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(52,199,89,0.05), transparent)',
-    animation:'floatOrb 8s ease-in-out infinite' },
-  headerIcon: { width:52, height:52, borderRadius:18,
-    background:'linear-gradient(135deg,#34c759,#30d158)',
-    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-    transition:'box-shadow 0.3s' },
-  headerTitle: { fontSize:20, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.3px' },
-  headerSub: { fontSize:12, color:'#8a7265', marginTop:2, fontWeight:500 },
+  // ── Aurora hero header
+  hero: {
+    position:'relative', minHeight:160,
+    display:'flex', alignItems:'center', justifyContent:'center',
+    overflow:'hidden', padding:'28px 20px 24px',
+    borderRadius:'0 0 28px 28px',
+    marginBottom:4,
+  },
 
-  // AI section
-  aiBox: { margin:'12px 16px', background:'#ffffff', border:'1px solid #f0e8e0',
-    borderRadius:16, padding:'14px 14px', boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
-  aiTop: { display:'flex', alignItems:'center', gap:10 },
-  aiIconWrap: { width:34, height:34, borderRadius:10, background:'rgba(255,107,53,0.1)',
-    border:'1.5px solid rgba(255,107,53,0.2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
-  aiTitle: { fontSize:13, fontWeight:700, color:'#1a0a00' },
-  aiSub: { fontSize:10, color:'#c4b5a8', fontWeight:500, marginTop:1 },
-  aiCta: { background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff', border:'none',
-    padding:'7px 14px', borderRadius:10, fontSize:11, fontWeight:700, cursor:'pointer',
-    fontFamily:'Poppins,sans-serif', flexShrink:0, boxShadow:'0 3px 10px rgba(255,107,53,0.3)' },
-  dotLoader: { display:'inline-flex', gap:3, alignItems:'center',
-    '& span': { width:4, height:4, borderRadius:'50%', background:'white' } },
-  aiResults: { marginTop:12, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid #f8f4f0', paddingTop:12 },
-  aiItem: { display:'flex', alignItems:'center', gap:10, background:'#f9fafb', borderRadius:10, padding:'10px 12px' },
-  aiAskBtn: { width:28, height:28, borderRadius:8, background:'rgba(255,107,53,0.1)', border:'1px solid rgba(255,107,53,0.2)',
-    color:'#FF6B35', fontSize:13, fontWeight:800, cursor:'pointer', flexShrink:0,
-    display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif' },
+  // ── AI box — hero-style gradient card
+  aiBox: {
+    position:'relative',
+    margin:'14px 16px 4px',
+    borderRadius:24,
+    padding:'16px 16px',
+    border:'1.5px solid rgba(255,107,53,0.22)',
+    background:'rgba(255,255,255,0.7)',
+    boxShadow:'0 8px 28px rgba(255,107,53,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
+    overflow:'hidden',
+  },
+  aiBoxTint: {
+    position:'absolute', inset:0, zIndex:0, borderRadius:'inherit',
+    background:'linear-gradient(145deg, rgba(255,107,53,0.08), rgba(255,154,60,0.05))',
+    pointerEvents:'none',
+  },
+  aiTop: { display:'flex', alignItems:'center', gap:12 },
+  aiIconWrap: {
+    width:44, height:44, borderRadius:16, flexShrink:0,
+    background:'linear-gradient(135deg, rgba(255,107,53,0.18), rgba(255,154,60,0.12))',
+    border:'1.5px solid rgba(255,107,53,0.28)',
+    boxShadow:'0 4px 14px rgba(255,107,53,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
+    display:'flex', alignItems:'center', justifyContent:'center',
+  },
+  aiTitle: { fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' },
+  aiSub: { fontSize:10, color:'#c4b5a8', fontWeight:600, marginTop:1 },
+  aiCta: {
+    background:'linear-gradient(135deg, #FF6B35, #E55A00)',
+    color:'#fff', border:'none',
+    padding:'9px 16px', borderRadius:14,
+    fontSize:11, fontWeight:800, cursor:'pointer',
+    fontFamily:'Poppins,sans-serif', flexShrink:0,
+    boxShadow:'0 5px 16px rgba(255,107,53,0.38), inset 0 1px 0 rgba(255,255,255,0.2)',
+    transition:'opacity 0.15s, transform 0.15s',
+  },
+  dot: {
+    display:'inline-block', width:5, height:5,
+    borderRadius:'50%', background:'white',
+    animation:'dotPulse 0.7s ease-in-out infinite',
+  },
+  aiResults: {
+    marginTop:14, display:'flex', flexDirection:'column', gap:8,
+    borderTop:'1px solid rgba(255,107,53,0.12)', paddingTop:14,
+  },
+  aiItem: {
+    display:'flex', alignItems:'center', gap:11,
+    background:'linear-gradient(135deg, rgba(255,107,53,0.07), rgba(255,154,60,0.04))',
+    border:'1px solid rgba(255,107,53,0.14)',
+    borderRadius:14, padding:'11px 13px',
+    boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)',
+  },
+  aiAskBtn: {
+    width:32, height:32, borderRadius:10, flexShrink:0,
+    background:'rgba(255,107,53,0.12)', border:'1.5px solid rgba(255,107,53,0.24)',
+    color:'#FF6B35', fontSize:14, fontWeight:900, cursor:'pointer',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontFamily:'Poppins,sans-serif',
+    boxShadow:'0 3px 10px rgba(255,107,53,0.18)',
+  },
 
-  // Category pills
-  catRow: { display:'flex', gap:7, padding:'12px 16px 8px', overflowX:'auto',
-    scrollbarWidth:'none', WebkitOverflowScrolling:'touch' },
-  cat: { flexShrink:0, padding:'7px 14px', borderRadius:20, border:'1.5px solid',
-    fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'Poppins,sans-serif',
-    transition:'all 0.2s', whiteSpace:'nowrap' },
+  // ── Category pills
+  catRow: {
+    display:'flex', gap:8, padding:'14px 16px 10px',
+    overflowX:'auto', scrollbarWidth:'none', WebkitOverflowScrolling:'touch',
+  },
 
-  countRow: { display:'flex', alignItems:'center', gap:6, padding:'0 16px 8px' },
-  countText: { fontSize:10, color:'#c4b5a8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.5px' },
-  countDot: { width:4, height:4, borderRadius:'50%' },
+  // ── Count row
+  countRow: {
+    display:'flex', alignItems:'center', gap:7,
+    padding:'2px 16px 10px',
+  },
+  countText: {
+    fontSize:10, color:'#b0a09a', fontWeight:700,
+    textTransform:'uppercase', letterSpacing:'0.5px',
+  },
+  countSep: { fontSize:10, color:'#d0c8c0' },
 
-  // List
+  // ── Items list
   list: { display:'flex', flexDirection:'column', gap:0, padding:'0 16px' },
-  item: { background:'#ffffff', borderRadius:12, marginBottom:6,
-    overflow:'hidden', boxShadow:'0 1px 6px rgba(0,0,0,0.05)',
-    transition:'box-shadow 0.2s' },
-  itemRow: { display:'flex', alignItems:'center', gap:12, padding:'12px 14px',
-    cursor:'pointer' },
-  itemTop: { display:'flex', alignItems:'center', gap:7, marginBottom:3, flexWrap:'wrap' },
-  itemNom: { fontSize:13, fontWeight:700, color:'#1a0a00' },
-  itemTag: { fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:5, letterSpacing:'0.3px' },
-  itemBenef: { fontSize:12, color:'#8a7265', lineHeight:1.4 },
 
-  // Expanded
-  expandBody: { padding:'0 14px 14px', borderTop:'1px solid #f8f4f0' },
-  usageRow: { display:'flex', alignItems:'flex-start', gap:10, padding:'12px 0 10px' },
-  usageDot: { width:8, height:8, borderRadius:'50%', marginTop:4, flexShrink:0 },
-  detailText: { fontSize:12, color:'#8a7265', lineHeight:1.7, marginBottom:10 },
-  askBtn: { display:'inline-block', padding:'7px 14px', borderRadius:10, border:'1px solid',
-    fontSize:11, fontWeight:700, cursor:'pointer', fontFamily:'Poppins,sans-serif' },
-
-  // Disclaimer
-  disclaimer: { margin:'12px 16px 0', padding:'10px 14px',
-    background:'rgba(255,107,53,0.04)', border:'1px solid rgba(255,107,53,0.12)',
-    borderRadius:10, fontSize:10, color:'#8a7265', lineHeight:1.6 },
+  // ── Disclaimer
+  disclaimer: {
+    margin:'14px 16px 0',
+    padding:'10px 14px',
+    background:'rgba(139,120,110,0.05)',
+    border:'1px solid rgba(139,120,110,0.14)',
+    borderRadius:14,
+    fontSize:10, color:'#b0a09a', lineHeight:1.6,
+    fontStyle:'italic',
+  },
 }
