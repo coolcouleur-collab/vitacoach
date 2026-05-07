@@ -6,6 +6,7 @@ import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
 import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
+import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
 const defaultMetriques = () => {
@@ -309,8 +310,15 @@ export default function App() {
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
                     {msg.role==='assistant' && <span style={s.botAvatar}>✦</span>}
-                    <div style={msg.role==='user' ? s.userBubble : s.botBubble}>
-                      {msg.content}
+                    <div style={
+                      msg.role==='user'
+                        ? s.userBubble
+                        : isRich(msg.content) ? s.botBubbleRich : s.botBubble
+                    }>
+                      {msg.role==='user'
+                        ? msg.content
+                        : <ResponseRenderer content={msg.content} />
+                      }
                     </div>
                   </div>
                 ))}
@@ -921,6 +929,9 @@ const s = {
     padding:'12px 16px', borderRadius:'4px 20px 20px 20px', maxWidth:'82%',
     fontSize:14, lineHeight:1.75, whiteSpace:'pre-wrap',
     boxShadow:'0 4px 20px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)' },
+  botBubbleRich: { background:'transparent', color:'#1a0a00',
+    padding:'4px 0', borderRadius:0, maxWidth:'90%',
+    fontSize:14, lineHeight:1.75 },
   botAvatar: { fontSize:16, color:'#FF6B35', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
