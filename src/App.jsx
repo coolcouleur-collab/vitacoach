@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Auth from './Auth'
 import Landing from './Landing'
+import Onboarding from './Onboarding'
 import SanteTab, { scoreJour } from './SanteTab'
 
 // ─── OPTIONS ─────────────────────────────────────────────────────────────────
@@ -313,157 +314,12 @@ export default function App() {
 
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
   if (!profil) {
-    const etapeLabels = ['Identité & Planning','Alimentation','Style','Santé']
     return (
-      <div style={styles.app}>
-        <StarField />
-        <div style={{ position:'relative', zIndex:1, padding:'36px 22px 60px' }}>
-          <div style={{ textAlign:'center', marginBottom:32 }}>
-            <div style={styles.logo}>✦ Oravia</div>
-            <div style={{ color:'rgba(255,255,255,0.3)', fontSize:12, marginTop:6, letterSpacing:0.5 }}>
-              {profilBackup ? 'Modifier ton profil' : 'Crée ton profil personnalisé'}
-            </div>
-          </div>
-
-          {/* Progress dots */}
-          <div style={{ display:'flex', gap:6, marginBottom:8, justifyContent:'center' }}>
-            {[1,2,3,4].map(n => (
-              <div key={n} style={{
-                width: etape===n ? 32 : 9, height:9, borderRadius:5,
-                background: etape===n ? '#00d4ff' : etape>n ? '#00e676' : 'rgba(255,255,255,0.1)',
-                transition:'all 0.3s ease',
-                boxShadow: etape===n ? '0 0 12px #00d4ff' : 'none'
-              }} />
-            ))}
-          </div>
-          <div style={{ color:'rgba(255,255,255,0.3)', fontSize:10, textAlign:'center', marginBottom:22, textTransform:'uppercase', letterSpacing:2 }}>
-            {etapeLabels[etape-1]}
-          </div>
-
-          <div style={styles.formBox}>
-            {/* ── Étape 1 ── */}
-            {etape===1 && <>
-              <h2 style={styles.formTitle}>👤 Qui es-tu ?</h2>
-              <div style={styles.field}>
-                <label style={styles.label}>Prénom *</label>
-                <input style={styles.inputField} placeholder="Ton prénom" value={form.nom} maxLength={30}
-                  onChange={e => setForm({...form, nom:e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-']/g,'')})} />
-              </div>
-              <div style={styles.row}>
-                {[['age','Âge *',1,120,'Ex: 28'],['taille','Taille (cm)',50,250,'Ex: 170'],['poids','Poids (kg)',20,300,'Ex: 65']].map(([k,lb,mn,mx,ph])=>(
-                  <div key={k} style={{flex:1}}>
-                    <label style={styles.label}>{lb}</label>
-                    <input style={styles.inputField} type="number" placeholder={ph} value={form[k]} min={mn} max={mx}
-                      onChange={e => setForm({...form,[k]:e.target.value})} />
-                  </div>
-                ))}
-              </div>
-              <div style={styles.field}>
-                <label style={styles.label}>Tes objectifs</label>
-                <Chips options={objectifsOptions} selected={form.objectifs} onToggle={v=>toggle('objectifs',v)} />
-              </div>
-
-              {/* Planning section */}
-              <div style={styles.planningDivider}>
-                <span style={styles.planningLabel}>⏰ Ton rythme de vie</span>
-              </div>
-              <div style={styles.row}>
-                <div style={{flex:1}}>
-                  <label style={styles.label}>Réveil</label>
-                  <input style={styles.inputField} type="time" value={form.reveil}
-                    onChange={e => setForm({...form, reveil:e.target.value})} />
-                </div>
-                <div style={{flex:1}}>
-                  <label style={styles.label}>Coucher</label>
-                  <input style={styles.inputField} type="time" value={form.coucher}
-                    onChange={e => setForm({...form, coucher:e.target.value})} />
-                </div>
-              </div>
-              <div style={styles.field}>
-                <label style={styles.label}>Profession / Emploi du temps</label>
-                <input style={styles.inputField} placeholder="Ex: Ingénieur 9h-18h, étudiant, commercial..."
-                  value={form.profession} maxLength={80}
-                  onChange={e => setForm({...form, profession:e.target.value})} />
-              </div>
-              <div style={styles.field}>
-                <label style={styles.label}>Niveau d'activité physique</label>
-                <Chips options={activiteOptions} selected={form.activite ? [form.activite] : []}
-                  onToggle={v => setForm({...form, activite:v})} color="green" />
-              </div>
-            </>}
-
-            {/* ── Étape 2 ── */}
-            {etape===2 && <>
-              <h2 style={styles.formTitle}>🍽️ Alimentation</h2>
-              <div style={styles.field}>
-                <label style={styles.label}>Ce qui te correspond</label>
-                <Chips options={alimentaireOptions} selected={form.regimes} onToggle={v=>toggle('regimes',v)} />
-              </div>
-              <AIBar section="alimentation" selections={form.regimes}
-                placeholder="Ex: vegan 5j/7 mais poisson le weekend, j'adore les légumineuses..."
-                onAnalyse={d=>setForm(f=>({...f,alimentaireDetails:d}))} />
-              {form.alimentaireDetails && <div style={styles.profileSaved}>✓ Profil alimentaire enrichi</div>}
-            </>}
-
-            {/* ── Étape 3 ── */}
-            {etape===3 && <>
-              <h2 style={styles.formTitle}>👗 Style vestimentaire</h2>
-              <div style={styles.field}>
-                <label style={styles.label}>Tes styles</label>
-                <Chips options={styleOptions} selected={form.styles} onToggle={v=>toggle('styles',v)} />
-              </div>
-              <div style={styles.field}>
-                <label style={styles.label}>Mensurations (optionnel)</label>
-                <div style={styles.row}>
-                  <input style={styles.inputField} placeholder="Poitrine (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/poitrine:[^\s]*/,'')+' poitrine:'+e.target.value}))} />
-                  <input style={styles.inputField} placeholder="Taille (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/taille2:[^\s]*/,'')+' taille2:'+e.target.value}))} />
-                  <input style={styles.inputField} placeholder="Hanches (cm)" onChange={e=>setForm(f=>({...f,mensurations:f.mensurations.replace(/hanches:[^\s]*/,'')+' hanches:'+e.target.value}))} />
-                </div>
-              </div>
-              <AIBar section="style" selections={form.styles}
-                placeholder="Ex: streetwear au quotidien mais business au bureau..."
-                onAnalyse={d=>setForm(f=>({...f,styleDetails:d}))} />
-              {form.styleDetails && <div style={styles.profileSaved}>✓ Profil style enrichi</div>}
-            </>}
-
-            {/* ── Étape 4 ── */}
-            {etape===4 && <>
-              <h2 style={styles.formTitle}>❤️ Santé</h2>
-              <div style={styles.field}>
-                <label style={styles.label}>Carences connues</label>
-                <Chips options={carencesOptions} selected={form.carences} onToggle={v=>toggle('carences',v)} color="orange" />
-              </div>
-              <div style={styles.field}>
-                <label style={styles.label}>Maladies / Pathologies</label>
-                <Chips options={maladiesOptions} selected={form.maladies} onToggle={v=>toggle('maladies',v)} color="orange" />
-              </div>
-              <AIBar section="sante" selections={[...form.carences,...form.maladies]}
-                placeholder="Ex: Diabète type 2, je prends de la metformine..."
-                onAnalyse={d=>setForm(f=>({...f,santeDetails:d}))} />
-              {form.santeDetails && <div style={styles.profileSaved}>✓ Profil santé enrichi</div>}
-            </>}
-
-            {/* Navigation */}
-            <div style={styles.navBtns}>
-              {etape>1 ? (
-                <button style={styles.btnBack} onClick={()=>setEtape(e=>e-1)}>← Retour</button>
-              ) : profilBackup ? (
-                <button style={styles.btnAnnuler} onClick={annulerModification}>✕ Annuler</button>
-              ) : null}
-              {etape<4 ? (
-                <button style={styles.btnNext} onClick={()=>{
-                  if (etape===1 && (!form.nom||!form.age)) return alert('Prénom et âge obligatoires !')
-                  setEtape(e=>e+1)
-                }}>Suivant →</button>
-              ) : (
-                <button style={styles.btnSave} onClick={sauvegarderProfil}>
-                  {profilBackup ? '💾 Sauvegarder' : '⚡ Lancer Oravia'}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Onboarding onTermine={p => {
+        setProfil(p)
+        setProfilBackup(null)
+        setMessages([{ role:'assistant', content:`✦ Bienvenue ${p.nom} ! Ton profil est prêt. Je suis Oravia, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
+      }} />
     )
   }
 
