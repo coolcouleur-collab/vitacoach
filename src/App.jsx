@@ -419,15 +419,17 @@ export default function App() {
           const activeIdx = navItems.findIndex(n => n.id === onglet)
           return (
             <nav style={s.bottomNav}>
-              {/* Sliding background pill */}
+              {/* Sliding background pill — clay style */}
               <div style={{
                 position:'absolute',
-                top:6, bottom:6,
-                left:`calc(${activeIdx} * (100% / ${navItems.length}) + 4px)`,
-                width:`calc(100% / ${navItems.length} - 8px)`,
-                background:'rgba(255,107,53,0.1)',
-                borderRadius:16,
-                transition:'left 0.32s cubic-bezier(0.4,0,0.2,1)',
+                top:6, bottom:8,
+                left:`calc(${activeIdx} * (100% / ${navItems.length}) + 5px)`,
+                width:`calc(100% / ${navItems.length} - 10px)`,
+                background:'linear-gradient(145deg, rgba(255,107,53,0.18), rgba(255,154,60,0.10))',
+                borderRadius:18,
+                border:'1px solid rgba(255,107,53,0.20)',
+                boxShadow:'0 4px 16px rgba(255,107,53,0.20), inset 0 1px 0 rgba(255,255,255,0.7)',
+                transition:'left 0.34s cubic-bezier(0.34,1.56,0.64,1)',
                 zIndex:0,
                 pointerEvents:'none',
               }} />
@@ -874,11 +876,12 @@ const s = {
   main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh' },
   content: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', display:'flex', flexDirection:'column' },
 
-  // Mobile header
+  // Mobile header — clay
   mobileHeader: { display:'flex', justifyContent:'space-between', alignItems:'center',
-    padding:'14px 16px 12px', borderBottom:'1px solid #f0e8e0', background:'rgba(255,255,255,0.95)',
-    backdropFilter:'blur(12px)', position:'sticky', top:0, zIndex:40,
-    boxShadow:'0 1px 8px rgba(0,0,0,0.05)' },
+    padding:'14px 16px 12px', borderBottom:'1px solid rgba(255,107,53,0.08)',
+    background:'rgba(255,251,248,0.92)',
+    backdropFilter:'blur(20px)', position:'sticky', top:0, zIndex:40,
+    boxShadow:'0 4px 24px rgba(255,107,53,0.08), 0 1px 4px rgba(0,0,0,0.04)' },
   backBtn: { width:36, height:36, borderRadius:12, background:'#f8f4f0',
     border:'1px solid #f0e8e0', display:'flex', alignItems:'center', justifyContent:'center',
     cursor:'pointer', flexShrink:0 },
@@ -910,13 +913,14 @@ const s = {
 
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:14 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:14, gap:8 },
-  userBubble: { background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff',
-    padding:'12px 16px', borderRadius:'18px 18px 4px 18px', maxWidth:'76%',
-    fontSize:14, lineHeight:1.6, boxShadow:'0 4px 16px rgba(255,107,53,0.25)' },
+  userBubble: { background:'linear-gradient(145deg,#FF6B35,#E55A00)', color:'#fff',
+    padding:'12px 16px', borderRadius:'20px 20px 4px 20px', maxWidth:'76%',
+    fontSize:14, lineHeight:1.6,
+    boxShadow:'0 8px 28px rgba(255,107,53,0.40), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)' },
   botBubble: { background:'#ffffff', border:'1px solid #f0e8e0', color:'#1a0a00',
-    padding:'12px 16px', borderRadius:'4px 18px 18px 18px', maxWidth:'82%',
+    padding:'12px 16px', borderRadius:'4px 20px 20px 20px', maxWidth:'82%',
     fontSize:14, lineHeight:1.75, whiteSpace:'pre-wrap',
-    boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
+    boxShadow:'0 4px 20px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)' },
   botAvatar: { fontSize:16, color:'#FF6B35', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
@@ -936,11 +940,12 @@ const s = {
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
     boxShadow:'0 4px 14px rgba(255,107,53,0.35)' },
 
-  // Bottom nav
+  // Bottom nav — clay glassmorphism
   bottomNav: { position:'fixed', bottom:0, left:0, right:0, display:'flex',
-    background:'rgba(255,255,255,0.96)', backdropFilter:'blur(20px)',
-    borderTop:'1px solid #f0e8e0', padding:'6px 0 10px', zIndex:100,
-    boxShadow:'0 -4px 24px rgba(0,0,0,0.07)' },
+    background:'rgba(255,251,248,0.92)', backdropFilter:'blur(28px)',
+    borderTop:'1px solid rgba(255,107,53,0.10)',
+    padding:'8px 6px 12px', zIndex:100,
+    boxShadow:'0 -8px 40px rgba(255,107,53,0.10), 0 -2px 8px rgba(0,0,0,0.05)' },
   navBot: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:0,
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
     fontFamily:'Poppins,sans-serif', color:'#c4b5a8', position:'relative',

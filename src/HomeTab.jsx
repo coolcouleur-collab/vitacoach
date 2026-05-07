@@ -4,23 +4,21 @@ import React, { useState, useEffect } from 'react'
 function HeroBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-      {/* Animated aurora gradient */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(-45deg, #FFE8D6, #FFF1EA, #FFDCC8, #FFF8F4, #FFE4D0)',
+        background:'linear-gradient(-45deg, #FFE0CC, #FFF3EC, #FFD4B8, #FFF8F4, #FFDDC8)',
         backgroundSize:'400% 400%',
-        animation:'heroGradient 10s ease infinite',
+        animation:'heroGradient 9s ease infinite',
       }} />
-      {/* Floating orbs */}
-      <div style={{ position:'absolute', top:'-20%', right:'-10%', width:320, height:320,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,107,53,0.22) 0%, transparent 65%)',
-        animation:'floatOrb 8s ease-in-out infinite', filter:'blur(2px)' }} />
-      <div style={{ position:'absolute', bottom:'-10%', left:'-5%', width:250, height:250,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,154,60,0.18) 0%, transparent 65%)',
-        animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(2px)' }} />
-      <div style={{ position:'absolute', top:'30%', left:'20%', width:180, height:180,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 65%)',
-        animation:'floatOrb 6s ease-in-out infinite', filter:'blur(1px)' }} />
+      <div style={{ position:'absolute', top:'-15%', right:'-8%', width:340, height:340,
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,107,53,0.3) 0%, transparent 65%)',
+        animation:'floatOrb 7s ease-in-out infinite', filter:'blur(3px)' }} />
+      <div style={{ position:'absolute', bottom:'-8%', left:'-8%', width:280, height:280,
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,154,60,0.25) 0%, transparent 65%)',
+        animation:'floatOrb 11s ease-in-out infinite reverse', filter:'blur(3px)' }} />
+      <div style={{ position:'absolute', top:'40%', left:'15%', width:160, height:160,
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,200,100,0.18) 0%, transparent 65%)',
+        animation:'floatOrb 5s ease-in-out infinite', filter:'blur(2px)' }} />
     </div>
   )
 }
@@ -30,7 +28,7 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
   const [animated, setAnimated] = useState(false)
   useEffect(() => { setTimeout(() => setAnimated(true), 200) }, [])
 
-  const R = 84
+  const R = 82
   const C = 2 * Math.PI * R
   const dash = animated ? (score / 100) * C : 0
 
@@ -43,20 +41,25 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
       <HeroBg />
       <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center' }}>
 
-        {/* Greeting */}
+        {/* Greeting badge */}
         <div style={hc.greetBadge}>
           <span style={hc.greetDot} />
           {dayLabel}
         </div>
-        <div style={hc.greetName}>{greeting}, {profil?.nom} ✦</div>
+        <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> ✦</div>
 
-        {/* Score Ring */}
+        {/* Score Ring — clay style */}
         <div style={hc.circleWrap}>
-          {/* Outer glow ring */}
+          {/* Outer glow */}
           <div style={{
-            position:'absolute', inset:-16, borderRadius:'50%',
-            background: score > 0 ? `radial-gradient(circle, ${scoreColor}20 0%, transparent 65%)` : 'none',
+            position:'absolute', inset:-20, borderRadius:'50%',
+            background: score > 0 ? `radial-gradient(circle, ${scoreColor}30 0%, transparent 60%)` : 'none',
             animation: score > 0 ? 'scoreGlow 3s ease-in-out infinite' : 'none',
+          }} />
+          {/* Clay shadow ring */}
+          <div style={{
+            position:'absolute', inset:-6, borderRadius:'50%',
+            boxShadow:`0 16px 48px ${score > 0 ? scoreColor : '#ff9a3c'}35, 0 4px 16px rgba(0,0,0,0.10)`,
           }} />
 
           <svg width={200} height={200} viewBox="0 0 200 200" style={{ overflow:'visible' }}>
@@ -66,39 +69,39 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
                 <stop offset="100%" stopColor="#FF9A3C" />
               </linearGradient>
               <filter id="arcGlow">
-                <feGaussianBlur stdDeviation="4" result="b"/>
+                <feGaussianBlur stdDeviation="5" result="b"/>
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
             {/* Track */}
             <circle cx="100" cy="100" r={R} fill="none"
-              stroke="rgba(255,107,53,0.12)" strokeWidth="12"/>
-            {/* Progress */}
+              stroke="rgba(255,107,53,0.10)" strokeWidth="14"/>
+            {/* Progress arc */}
             {score > 0 && (
               <circle cx="100" cy="100" r={R} fill="none"
-                stroke="url(#arcG)" strokeWidth="12" strokeLinecap="round"
+                stroke="url(#arcG)" strokeWidth="14" strokeLinecap="round"
                 strokeDasharray={`${dash} ${C}`} strokeDashoffset={C * 0.25}
                 filter="url(#arcGlow)"
-                style={{ transition:'stroke-dasharray 1.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                style={{ transition:'stroke-dasharray 2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
             )}
-            {/* Score number */}
-            <text x="100" y="93" textAnchor="middle" fill="#1a0a00"
-              fontSize="40" fontWeight="900" fontFamily="Poppins,sans-serif"
-              style={{ animation:'countIn 0.6s ease 0.3s both' }}>
+            {/* Score text */}
+            <text x="100" y="90" textAnchor="middle" fill="#1a0a00"
+              fontSize="44" fontWeight="900" fontFamily="Poppins,sans-serif"
+              style={{ animation:'countIn 0.7s ease 0.3s both' }}>
               {score > 0 ? score : '—'}
             </text>
-            <text x="100" y="113" textAnchor="middle"
-              fill="#8a7265" fontSize="10" letterSpacing="2" fontFamily="Poppins,sans-serif" fontWeight="600">
+            <text x="100" y="115" textAnchor="middle"
+              fill="#8a7265" fontSize="10" letterSpacing="2.5" fontFamily="Poppins,sans-serif" fontWeight="700">
               SCORE FORME
             </text>
           </svg>
 
-          {/* Metric dots around circle */}
+          {/* Metric dots — clay pill style */}
           {[
-            { angle:-90, icon:'💧', val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v },
-            { angle:-18, icon:'👣', val:metriques?.pas,     color:'#ff6b35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-            { angle: 54, icon:'😴', val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v },
-            { angle:126, icon:'😊', val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v },
+            { angle:-90, icon:'💧', val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
+            { angle:-18, icon:'👣', val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+            { angle: 54, icon:'😴', val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
+            { angle:126, icon:'😊', val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
             { angle:198, icon:'❤️', val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
           ].map(m => {
             const rad = (m.angle * Math.PI) / 180
@@ -107,18 +110,24 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
             const filled = m.val > 0
             return (
               <button key={m.key} onClick={onLog} style={{
-                position:'absolute', left:x-22, top:y-22, width:44, height:44,
-                borderRadius:14,
-                background: filled ? m.color + '18' : 'rgba(255,255,255,0.7)',
-                border: `1.5px solid ${filled ? m.color + '50' : 'rgba(255,255,255,0.6)'}`,
-                backdropFilter:'blur(8px)',
+                position:'absolute', left:x-24, top:y-24, width:48, height:48,
+                borderRadius:16,
+                background: filled
+                  ? `linear-gradient(145deg, ${m.color}30, ${m.color}18)`
+                  : 'rgba(255,255,255,0.85)',
+                border: `1.5px solid ${filled ? m.color+'60' : 'rgba(255,255,255,0.9)'}`,
+                backdropFilter:'blur(10px)',
                 display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                 gap:1, cursor:'pointer',
-                boxShadow: filled ? `0 4px 16px ${m.color}35` : '0 2px 8px rgba(0,0,0,0.08)',
+                boxShadow: filled
+                  ? `0 8px 24px ${m.color}40, 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)`
+                  : '0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
                 animation: filled ? 'metricPulse 4s ease-in-out infinite' : 'none',
-                fontFamily:'Poppins,sans-serif' }}>
-                <span style={{ fontSize:16, lineHeight:1 }}>{m.icon}</span>
-                <span style={{ fontSize:8, color: filled ? m.color : '#8a7265', fontWeight:700, lineHeight:1 }}>
+                fontFamily:'Poppins,sans-serif',
+                transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+              }}>
+                <span style={{ fontSize:17, lineHeight:1 }}>{m.icon}</span>
+                <span style={{ fontSize:8, color: filled ? m.color : '#8a7265', fontWeight:800, lineHeight:1 }}>
                   {filled ? m.fmt(m.val) : '—'}
                 </span>
               </button>
@@ -126,9 +135,9 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
           })}
         </div>
 
-        {/* Log button */}
+        {/* Log CTA */}
         <button style={hc.logBtn} onClick={onLog}>
-          <span style={{ fontSize:14 }}>📊</span>
+          <span style={{ fontSize:15 }}>📊</span>
           Mettre à jour mes métriques
         </button>
       </div>
@@ -139,10 +148,10 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
 // ─── PROGRESS STRIP ───────────────────────────────────────────────────────────
 function ProgressStrip({ metriques }) {
   const items = [
-    { icon:'💧', label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => v+'v' },
-    { icon:'👣', label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#ff6b35', fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { icon:'😴', label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => v+'h' },
-    { icon:'😊', label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => v+'/5' },
+    { icon:'💧', label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
+    { icon:'👣', label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : v },
+    { icon:'😴', label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => `${v}h` },
+    { icon:'😊', label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
     <div style={hc.strip}>
@@ -150,22 +159,28 @@ function ProgressStrip({ metriques }) {
         const pct = Math.min((it.val / it.goal) * 100, 100)
         const done = pct >= 100
         return (
-          <div key={i} style={hc.stripItem}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
-              <span style={{ fontSize:16 }}>{it.icon}</span>
-              <span style={{ fontSize:11, fontWeight:700, color: done ? it.color : '#1a0a00' }}>
+          <div key={i} style={{
+            ...hc.stripItem,
+            boxShadow:`0 8px 24px ${it.color}22, 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)`,
+            borderColor: it.val > 0 ? it.color + '35' : '#f0e8e0',
+            animation:`tabFade 0.4s ease ${i * 0.08}s both`,
+          }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+              <span style={{ fontSize:18 }}>{it.icon}</span>
+              <span style={{ fontSize:12, fontWeight:800, color: it.val > 0 ? it.color : '#c4b5a8' }}>
                 {it.val > 0 ? it.fmt(it.val) : '—'}
               </span>
             </div>
-            <div style={{ height:6, background:'rgba(0,0,0,0.06)', borderRadius:3, overflow:'hidden' }}>
+            <div style={{ height:7, background:'rgba(0,0,0,0.05)', borderRadius:4, overflow:'hidden' }}>
               <div style={{
                 height:'100%', width:`${pct}%`,
-                background:`linear-gradient(90deg, ${it.color}aa, ${it.color})`,
-                borderRadius:3, transition:'width 1.2s cubic-bezier(0.4,0,0.2,1)',
-                boxShadow: done ? `0 0 8px ${it.color}60` : 'none'
+                background:`linear-gradient(90deg, ${it.color}cc, ${it.color})`,
+                borderRadius:4,
+                transition:'width 1.4s cubic-bezier(0.34,1.56,0.64,1)',
+                boxShadow: done ? `0 0 10px ${it.color}80` : 'none',
               }} />
             </div>
-            <div style={{ fontSize:9, color:'#8a7265', marginTop:4, fontWeight:600 }}>{it.label}</div>
+            <div style={{ fontSize:9, color:'#8a7265', marginTop:5, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px' }}>{it.label}</div>
           </div>
         )
       })}
@@ -175,36 +190,39 @@ function ProgressStrip({ metriques }) {
 
 // ─── INSIGHT CARDS ────────────────────────────────────────────────────────────
 const CARD_COLORS = [
-  { from:'#FF6B35', to:'#FF9A3C' },
-  { from:'#38bdf8', to:'#7dd3fc' },
-  { from:'#34c759', to:'#86efac' },
-  { from:'#a78bfa', to:'#c4b5fd' },
-  { from:'#fbbf24', to:'#fde68a' },
+  { from:'#FF6B35', to:'#FF9A3C', bg:'#FFF3EE' },
+  { from:'#38bdf8', to:'#7dd3fc', bg:'#EFF9FF' },
+  { from:'#34c759', to:'#86efac', bg:'#EDFFF3' },
+  { from:'#a78bfa', to:'#c4b5fd', bg:'#F5F0FF' },
+  { from:'#fbbf24', to:'#fde68a', bg:'#FFFBEC' },
 ]
 
 function InsightCards({ profil, metriques, onChat }) {
   const [hovered, setHovered] = useState(null)
+  const [pressed, setPressed] = useState(null)
   const h = new Date().getHours()
   const cards = [
     h < 10
-      ? { title:'Débute bien ta journée', body:'Boire 1 verre d\'eau au réveil active le métabolisme. Essaie avec du citron.', action:'Conseils matin' }
+      ? { title:'🌅 Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme.', action:'Conseils matin' }
       : h < 14
-      ? { title:'Repas de midi', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent.', action:'Idées repas' }
+      ? { title:'🥗 Repas de midi', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent.', action:'Idées repas' }
       : h < 18
-      ? { title:'Regain d\'énergie', body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.', action:'Me remotiver' }
-      : { title:'Prépare ton sommeil', body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.', action:'Routine soir' },
+      ? { title:'⚡ Regain d\'énergie', body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.', action:'Me remotiver' }
+      : { title:'🌙 Prépare ton sommeil', body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.', action:'Routine soir' },
     {
       title: metriques?.eau >= 4 ? '💧 Hydratation OK !' : '💧 Bois de l\'eau',
-      body: metriques?.eau > 0 ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Bois un verre maintenant !' : 'Continue comme ça !'}` : 'Objectif : 8 verres/jour. Commence maintenant.',
+      body: metriques?.eau > 0
+        ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Bois un verre maintenant !' : 'Continue comme ça !'}`
+        : 'Objectif : 8 verres/jour. Commence maintenant.',
       action:'Mettre à jour',
     },
     profil?.objectifs?.[0] && {
-      title: `🎯 ${profil.objectifs[0]}`,
+      title:`🎯 ${profil.objectifs[0]}`,
       body:'Chaque petite action compte. Qu\'est-ce que tu peux faire aujourd\'hui ?',
       action:'Conseils personnalisés',
     },
-    { title:'🌿 Santé naturelle', body:'Découvre plantes, tisanes et techniques holistiques personnalisées pour toi.', action:'herbal' },
-    { title:'🧘 Respiration 5-5', body:'2 minutes de cohérence cardiaque réduisent le cortisol de 20% immédiatement.', action:'En savoir plus' },
+    { title:'🌿 Santé naturelle', body:'Plantes, tisanes et techniques holistiques personnalisées pour ton profil.', action:'herbal' },
+    { title:'🧘 Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement.', action:'En savoir plus' },
   ].filter(Boolean)
 
   return (
@@ -217,28 +235,42 @@ function InsightCards({ profil, metriques, onChat }) {
         {cards.map((c, i) => {
           const col = CARD_COLORS[i % CARD_COLORS.length]
           const isHov = hovered === i
+          const isPrs = pressed === i
           return (
             <button key={i}
               style={{
                 ...hc.card,
-                background: `linear-gradient(145deg, ${col.from}${isHov ? '28' : '18'}, ${col.to}${isHov ? '18' : '10'})`,
-                borderColor: col.from + (isHov ? '55' : '30'),
-                transform: isHov ? 'translateY(-4px) scale(1.02)' : 'none',
-                boxShadow: isHov ? `0 12px 32px ${col.from}25` : '0 4px 20px rgba(0,0,0,0.08)',
-                transition:'all 0.2s cubic-bezier(0.4,0,0.2,1)',
+                background: col.bg,
+                borderColor: isHov ? col.from + '60' : col.from + '25',
+                transform: isPrs ? 'scale(0.96)' : isHov ? 'translateY(-6px) scale(1.02)' : 'none',
+                boxShadow: isHov
+                  ? `0 20px 48px ${col.from}35, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)`
+                  : `0 6px 24px ${col.from}18, 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8)`,
+                transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
                 animation:`tabFade 0.4s ease ${i * 0.07}s both`,
               }}
               onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
+              onMouseLeave={() => { setHovered(null); setPressed(null) }}
+              onMouseDown={() => setPressed(i)}
+              onMouseUp={() => setPressed(null)}
+              onTouchStart={() => setPressed(i)}
+              onTouchEnd={() => setPressed(null)}
               onClick={() => {
                 if (c.action === 'herbal') onChat('herbal')
                 else if (c.action === 'Mettre à jour') onChat('sante')
                 else onChat(c.action)
               }}>
+              {/* Color bar top */}
               <div style={{ ...hc.cardBar, background:`linear-gradient(90deg, ${col.from}, ${col.to})` }} />
               <div style={hc.cardTitle}>{c.title}</div>
               <div style={hc.cardBody}>{c.body}</div>
-              <div style={{ ...hc.cardCta, color: col.from }}>{c.action === 'herbal' ? 'Voir Herbal →' : c.action + ' →'}</div>
+              <div style={{
+                ...hc.cardCta,
+                color: col.from,
+                background:`linear-gradient(90deg, ${col.from}15, ${col.to}08)`,
+              }}>
+                {c.action === 'herbal' ? 'Voir Herbal →' : c.action + ' →'}
+              </div>
             </button>
           )
         })}
@@ -249,42 +281,58 @@ function InsightCards({ profil, metriques, onChat }) {
 
 // ─── QUICK ACTIONS ─────────────────────────────────────────────────────────────
 const ACTIONS = [
-  { tab:'chat',    emoji:'💬', label:'Coach',    from:'#FF6B35', to:'#FF9A3C' },
-  { tab:'routine', emoji:'📋', label:'Routine',  from:'#5856d6', to:'#7c7aef' },
+  { tab:'chat',    emoji:'💬', label:'Coach IA', from:'#FF6B35', to:'#FF9A3C' },
+  { tab:'routine', emoji:'📋', label:'Routine',  from:'#5856d6', to:'#8b89f5' },
   { tab:'herbal',  emoji:'🌿', label:'Herbal',   from:'#34c759', to:'#30d158' },
-  { tab:'style',   emoji:'✨', label:'Style',    from:'#af52de', to:'#c97ef0' },
+  { tab:'style',   emoji:'✨', label:'Style',    from:'#af52de', to:'#d490f7' },
 ]
 
 function QuickActions({ onNavigate }) {
   const [hov, setHov] = useState(null)
+  const [prs, setPrs] = useState(null)
   return (
     <div style={hc.actionsWrap}>
       <span style={hc.cardsTitle}>Accès rapide</span>
       <div style={hc.actionsGrid}>
         {ACTIONS.map((a, i) => {
           const isHov = hov === i
+          const isPrs = prs === i
           return (
             <button key={a.tab}
               style={{
                 ...hc.actionBtn,
-                transform: isHov ? 'translateY(-5px) scale(1.04)' : 'none',
-                boxShadow: isHov ? `0 12px 28px ${a.from}30` : '0 4px 16px rgba(0,0,0,0.07)',
-                borderColor: isHov ? a.from + '40' : '#f0e8e0',
-                transition:'all 0.2s cubic-bezier(0.34,1.56,0.64,1)',
-                animation:`tabFade 0.4s ease ${i * 0.06 + 0.1}s both`,
+                background: isHov
+                  ? `linear-gradient(145deg, ${a.from}20, ${a.to}12)`
+                  : '#ffffff',
+                transform: isPrs ? 'scale(0.93)' : isHov ? 'translateY(-6px)' : 'none',
+                boxShadow: isHov
+                  ? `0 16px 40px ${a.from}40, 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)`
+                  : `0 6px 20px ${a.from}20, 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)`,
+                borderColor: isHov ? a.from + '50' : a.from + '20',
+                transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                animation:`tabFade 0.45s ease ${i * 0.07 + 0.1}s both`,
               }}
               onMouseEnter={() => setHov(i)}
-              onMouseLeave={() => setHov(null)}
+              onMouseLeave={() => { setHov(null); setPrs(null) }}
+              onMouseDown={() => setPrs(i)}
+              onMouseUp={() => setPrs(null)}
+              onTouchStart={() => setPrs(i)}
+              onTouchEnd={() => setPrs(null)}
               onClick={() => onNavigate(a.tab)}>
               <div style={{
                 ...hc.actionIcon,
-                background:`linear-gradient(135deg, ${a.from}, ${a.to})`,
-                transform: isHov ? 'scale(1.1) rotate(-4deg)' : 'none',
-                transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+                background:`linear-gradient(145deg, ${a.from}, ${a.to})`,
+                transform: isHov ? 'scale(1.12) rotate(-6deg)' : isPrs ? 'scale(0.9)' : 'scale(1)',
+                boxShadow:`0 8px 24px ${a.from}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
               }}>
-                <span style={{ fontSize:22 }}>{a.emoji}</span>
+                <span style={{ fontSize:24 }}>{a.emoji}</span>
               </div>
-              <span style={{ fontSize:11, fontWeight:700, color: isHov ? a.from : '#1a0a00', marginTop:6, transition:'color 0.2s' }}>{a.label}</span>
+              <span style={{
+                fontSize:11, fontWeight:800,
+                color: isHov ? a.from : '#1a0a00',
+                marginTop:8, transition:'color 0.2s',
+              }}>{a.label}</span>
             </button>
           )
         })}
@@ -310,7 +358,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         }}
       />
       <QuickActions onNavigate={onSwitchTab} />
-      <div style={{ height:20 }} />
+      <div style={{ height:24 }} />
     </div>
   )
 }
@@ -320,58 +368,62 @@ const hc = {
   page: { display:'flex', flexDirection:'column', paddingBottom:90 },
 
   // Hero
-  hero: { position:'relative', minHeight:460, display:'flex', alignItems:'center',
-    justifyContent:'center', overflow:'hidden', paddingBottom:24 },
+  hero: { position:'relative', minHeight:500, display:'flex', alignItems:'center',
+    justifyContent:'center', overflow:'hidden', paddingBottom:28 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
-    background:'rgba(255,107,53,0.12)', border:'1px solid rgba(255,107,53,0.25)',
-    borderRadius:20, padding:'5px 14px', fontSize:11, color:'#FF6B35', fontWeight:600,
-    marginBottom:10, marginTop:28, letterSpacing:'0.3px' },
-  greetDot: { width:6, height:6, borderRadius:'50%', background:'#FF6B35',
-    display:'inline-block', animation:'dotPulse 2s ease-in-out infinite' },
-  greetName: { fontSize:24, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.5px',
-    marginBottom:20, textAlign:'center' },
-  circleWrap: { position:'relative', width:240, height:240,
-    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 },
-  logBtn: { display:'flex', alignItems:'center', gap:8, padding:'13px 28px',
-    background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff',
-    border:'none', borderRadius:18, fontSize:13, fontWeight:700,
+    background:'rgba(255,107,53,0.14)', border:'1px solid rgba(255,107,53,0.3)',
+    borderRadius:24, padding:'6px 16px', fontSize:11, color:'#FF6B35', fontWeight:700,
+    marginBottom:12, marginTop:32, letterSpacing:'0.3px',
+    boxShadow:'0 2px 12px rgba(255,107,53,0.15)' },
+  greetDot: { width:7, height:7, borderRadius:'50%', background:'#FF6B35',
+    display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
+    boxShadow:'0 0 6px rgba(255,107,53,0.7)' },
+  greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
+    marginBottom:22, textAlign:'center' },
+  greetNameAccent: { background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
+    WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
+  circleWrap: { position:'relative', width:248, height:248,
+    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 },
+  logBtn: {
+    display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
+    background:'linear-gradient(145deg, #FF6B35, #E55A00)',
+    color:'#fff', border:'none', borderRadius:22, fontSize:13, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins,sans-serif',
-    boxShadow:'0 8px 28px rgba(255,107,53,0.4)',
-    transition:'transform 0.15s, box-shadow 0.15s' },
+    boxShadow:'0 12px 36px rgba(255,107,53,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
+    transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s' },
 
   // Progress strip
-  strip: { display:'flex', gap:10, padding:'16px 20px', borderTop:'none' },
-  stripItem: { flex:1, background:'#ffffff', border:'1px solid #f0e8e0',
-    borderRadius:14, padding:'10px 10px 8px',
-    boxShadow:'0 2px 12px rgba(0,0,0,0.06)' },
+  strip: { display:'flex', gap:10, padding:'14px 18px' },
+  stripItem: { flex:1, background:'#ffffff', border:'1px solid',
+    borderRadius:20, padding:'12px 12px 10px',
+    transition:'box-shadow 0.2s' },
 
   // Cards
-  cardsWrap: { padding:'16px 20px 8px' },
-  cardsHeader: { display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:12 },
-  cardsTitle: { fontSize:15, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' },
-  cardsCount: { fontSize:11, color:'#FF6B35', fontWeight:700,
-    background:'rgba(255,107,53,0.1)', padding:'2px 10px', borderRadius:20 },
-  cardsScroll: { display:'flex', gap:12, overflowX:'auto', paddingBottom:8,
+  cardsWrap: { padding:'8px 18px 8px' },
+  cardsHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
+  cardsTitle: { fontSize:16, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.3px' },
+  cardsCount: { fontSize:11, color:'#FF6B35', fontWeight:800,
+    background:'rgba(255,107,53,0.12)', padding:'3px 12px', borderRadius:20,
+    boxShadow:'0 2px 8px rgba(255,107,53,0.15)' },
+  cardsScroll: { display:'flex', gap:14, overflowX:'auto', paddingBottom:10,
     scrollbarWidth:'none', WebkitOverflowScrolling:'touch' },
-  card: { flexShrink:0, width:195, background:'white',
-    border:'1px solid', borderRadius:20, padding:'14px 14px 14px',
+  card: { flexShrink:0, width:200,
+    border:'1.5px solid', borderRadius:24, padding:'16px 14px 14px',
     textAlign:'left', cursor:'pointer', fontFamily:'Poppins,sans-serif',
     display:'flex', flexDirection:'column',
-    boxShadow:'0 4px 20px rgba(0,0,0,0.08)', transition:'transform 0.2s, box-shadow 0.2s',
     position:'relative', overflow:'hidden' },
-  cardBar: { position:'absolute', top:0, left:0, right:0, height:3, borderRadius:'20px 20px 0 0' },
-  cardTitle: { fontSize:13, fontWeight:800, color:'#1a0a00', marginBottom:7, lineHeight:1.3, marginTop:6 },
-  cardBody: { fontSize:12, color:'#8a7265', lineHeight:1.6, flex:1, marginBottom:12 },
-  cardCta: { fontSize:11, fontWeight:700 },
+  cardBar: { position:'absolute', top:0, left:0, right:0, height:4, borderRadius:'24px 24px 0 0' },
+  cardTitle: { fontSize:13, fontWeight:800, color:'#1a0a00', marginBottom:8, lineHeight:1.3, marginTop:8 },
+  cardBody: { fontSize:12, color:'#6b5e55', lineHeight:1.65, flex:1, marginBottom:12 },
+  cardCta: { fontSize:11, fontWeight:800, borderRadius:10, padding:'5px 10px',
+    display:'inline-block', alignSelf:'flex-start' },
 
   // Quick actions
-  actionsWrap: { padding:'8px 20px' },
-  actionsGrid: { display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:10, marginTop:10 },
-  actionBtn: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:18,
-    padding:'16px 8px 12px', display:'flex', flexDirection:'column', alignItems:'center',
-    cursor:'pointer', fontFamily:'Poppins,sans-serif',
-    boxShadow:'0 4px 16px rgba(0,0,0,0.07)', transition:'transform 0.15s' },
-  actionIcon: { width:48, height:48, borderRadius:16,
-    display:'flex', alignItems:'center', justifyContent:'center',
-    boxShadow:'0 4px 14px rgba(0,0,0,0.15)' },
+  actionsWrap: { padding:'8px 18px 4px' },
+  actionsGrid: { display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:10, marginTop:12 },
+  actionBtn: { border:'1.5px solid', borderRadius:22,
+    padding:'18px 8px 14px', display:'flex', flexDirection:'column', alignItems:'center',
+    cursor:'pointer', fontFamily:'Poppins,sans-serif' },
+  actionIcon: { width:52, height:52, borderRadius:18,
+    display:'flex', alignItems:'center', justifyContent:'center' },
 }
