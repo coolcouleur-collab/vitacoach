@@ -78,6 +78,135 @@ function HeroBg({ color }) {
   )
 }
 
+// ─── AI RECO EXPANDABLE CARD ──────────────────────────────────────────────────
+function AIRecoCard({ r, onChat, index }) {
+  const [open, setOpen]       = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const c = '#34c759'
+
+  return (
+    <div
+      style={{
+        background:`${c}0c`, border:`1.5px solid ${c}25`, borderRadius:18,
+        overflow:'hidden',
+        transform: pressed ? 'scale(0.985)' : 'scale(1)',
+        transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
+        boxShadow:`0 4px 16px ${c}15, inset 0 1px 0 rgba(255,255,255,0.8)`,
+        animation:`slideUp 0.3s ${index * 0.07}s ease both`,
+      }}
+      onPointerDown={() => setPressed(true)}
+      onPointerUp={() => setPressed(false)}
+      onPointerLeave={() => setPressed(false)}
+    >
+      {/* Collapsed header — always visible */}
+      <div
+        style={{ display:'flex', alignItems:'center', gap:12, padding:'13px 14px', cursor:'pointer' }}
+        onClick={() => setOpen(o => !o)}
+      >
+        <span style={{ fontSize:22, flexShrink:0 }}>{r.emoji}</span>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap', marginBottom:2 }}>
+            <span style={{ fontSize:13, fontWeight:700, color:'#1a0a00' }}>{r.nom}</span>
+            {r.tag && (
+              <span style={{
+                fontSize:9, fontWeight:800, padding:'2px 8px', borderRadius:6,
+                background:`${c}18`, color:c, border:`1px solid ${c}28`,
+                textTransform:'uppercase', letterSpacing:'0.4px',
+              }}>{r.tag}</span>
+            )}
+          </div>
+          <div style={{ fontSize:11.5, color:'#8a7265', lineHeight:1.4 }}>{r.benefice}</div>
+        </div>
+        <div style={{
+          width:28, height:28, borderRadius:'50%', flexShrink:0,
+          background:`${c}16`, border:`1.5px solid ${c}28`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          transform: open ? 'rotate(180deg)' : 'rotate(0)',
+          transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+        }}>
+          <ChevronIcon color={c} size={12} direction="down" />
+        </div>
+      </div>
+
+      {/* Expanded details */}
+      <div style={{ overflow:'hidden', maxHeight: open ? 520 : 0, transition:'max-height 0.38s cubic-bezier(0.4,0,0.2,1)' }}>
+        <div style={{ padding:'0 14px 14px', borderTop:`1px solid ${c}18` }}>
+
+          {/* Pourquoi — personnalisé */}
+          {r.pourquoi && (
+            <div style={{
+              background:`linear-gradient(135deg, ${c}10, ${c}06)`,
+              border:`1px solid ${c}22`, borderRadius:12,
+              padding:'10px 12px', margin:'10px 0 8px',
+            }}>
+              <div style={{ fontSize:9, color:`${c}cc`, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
+                🎯 Pourquoi pour toi ?
+              </div>
+              <div style={{ fontSize:12, color:'#4a3c35', lineHeight:1.72 }}>{r.pourquoi}</div>
+            </div>
+          )}
+
+          {/* Usage */}
+          {r.usage && (
+            <div style={{
+              display:'flex', gap:9, alignItems:'flex-start',
+              background:'rgba(255,107,53,0.06)', border:'1px solid rgba(255,107,53,0.16)',
+              borderRadius:10, padding:'10px 12px', marginBottom:8,
+            }}>
+              <span style={{ fontSize:16, flexShrink:0 }}>💊</span>
+              <div>
+                <div style={{ fontSize:9, color:'#FF6B35', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
+                  Comment utiliser
+                </div>
+                <div style={{ fontSize:12, color:'#1a0a00', fontWeight:600, lineHeight:1.55 }}>{r.usage}</div>
+              </div>
+            </div>
+          )}
+
+          {/* Précaution */}
+          {r.precaution && (
+            <div style={{
+              fontSize:11.5, color:'#d97706',
+              background:'rgba(251,191,36,0.08)', borderRadius:10,
+              padding:'8px 11px', marginBottom:8,
+              border:'1px solid rgba(251,191,36,0.22)', lineHeight:1.55,
+            }}>
+              ⚠️ <strong>Précaution :</strong> {r.precaution}
+            </div>
+          )}
+
+          {/* Synergie */}
+          {r.synergie && (
+            <div style={{
+              fontSize:11.5, color:'#0ea5e9',
+              background:'rgba(14,165,233,0.07)', borderRadius:10,
+              padding:'8px 11px', marginBottom:10,
+              border:'1px solid rgba(14,165,233,0.18)', lineHeight:1.55,
+            }}>
+              🔗 <strong>Synergie :</strong> {r.synergie}
+            </div>
+          )}
+
+          <button
+            style={{
+              display:'inline-flex', alignItems:'center', gap:6,
+              padding:'9px 15px', borderRadius:12,
+              background:`linear-gradient(135deg, ${c}18, ${c}0c)`,
+              border:`1.5px solid ${c}30`, color:c,
+              fontSize:11, fontWeight:800, cursor:'pointer',
+              fontFamily:'Poppins,sans-serif',
+              boxShadow:`0 4px 12px ${c}18, inset 0 1px 0 rgba(255,255,255,0.7)`,
+            }}
+            onClick={e => { e.stopPropagation(); onChat(`Parle-moi en détail de ${r.nom} selon mon profil`) }}
+          >
+            💬 En savoir plus →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── AI RECO SECTION ─────────────────────────────────────────────────────────
 function AIReco({ profil, onChat }) {
   const [loading, setLoading] = useState(false)
@@ -99,11 +228,9 @@ function AIReco({ profil, onChat }) {
 
   return (
     <div style={hb.aiBox}>
-      {/* Subtle gradient tint layer */}
       <div style={hb.aiBoxTint} />
       <div style={{ position:'relative', zIndex:1 }}>
         <div style={hb.aiTop}>
-          {/* Clay icon circle */}
           <div style={hb.aiIconWrap}>
             <SparkleIcon color="#FF6B35" size={22} />
           </div>
@@ -114,8 +241,7 @@ function AIReco({ profil, onChat }) {
           {!items && (
             <button
               style={{ ...hb.aiCta, opacity: loading ? 0.72 : 1 }}
-              onClick={analyse}
-              disabled={loading}
+              onClick={analyse} disabled={loading}
             >
               {loading
                 ? <span style={{ display:'inline-flex', gap:4, alignItems:'center' }}>
@@ -136,24 +262,13 @@ function AIReco({ profil, onChat }) {
         </div>
 
         {items && (
-          <div style={hb.aiResults}>
+          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(255,107,53,0.12)', paddingTop:14 }}>
             {items.map((r, i) => (
-              <div key={i} style={hb.aiItem}>
-                <span style={{ fontSize:20, flexShrink:0 }}>{r.emoji}</span>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:13, fontWeight:700, color:'#1a0a00' }}>{r.nom}</div>
-                  <div style={{ fontSize:11, color:'#8a7265', lineHeight:1.5, marginTop:1 }}>{r.raison}</div>
-                </div>
-                <button
-                  style={hb.aiAskBtn}
-                  onClick={() => onChat(`Parle-moi de ${r.nom} pour mon profil`)}
-                >
-                  →
-                </button>
-              </div>
+              <AIRecoCard key={i} r={r} onChat={onChat} index={i} />
             ))}
           </div>
         )}
+
         {err && (
           <div style={{ fontSize:11, color:'#ff3b30', marginTop:10, fontWeight:600 }}>
             Erreur de connexion. Réessaie.

@@ -90,6 +90,13 @@ export default function App() {
   const isMobile = windowWidth < 768
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
+  // Scroll to last message when user navigates back to chat tab
+  useEffect(() => {
+    if (onglet === 'chat' && messages.length > 0) {
+      const t = setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior:'instant' }), 60)
+      return () => clearTimeout(t)
+    }
+  }, [onglet])
   useEffect(() => {
     if (profil && messages.length > 0) {
       // Ne jamais sauvegarder les messages de limite dans l'historique
@@ -732,8 +739,8 @@ function RoutineSection({ id, icon, titre, heure, etapes, accent, checked, onTog
             </div>
             <span style={{ fontSize:18, minWidth:26, flexShrink:0 }}>{e.emoji}</span>
             <div>
-              <div style={{ fontWeight:600, fontSize:13, color:'#1a0a00', textDecoration: done ? 'line-through' : 'none' }}>{e.action}</div>
-              <div style={{ fontSize:12, color:'#8a7265', marginTop:2 }}>{e.detail}</div>
+              <div style={{ fontWeight:600, fontSize:13, color:'#1a0a00', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
+              <div style={{ fontSize:12, color:'#8a7265', marginTop:2 }}>{e.detail || e.description}</div>
             </div>
           </div>
         )
