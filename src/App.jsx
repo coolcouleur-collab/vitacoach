@@ -8,6 +8,45 @@ import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
+// ─── ORAVIA MASCOT FACE ───────────────────────────────────────────────────────
+function OraviaFace({ size = 34 }) {
+  return (
+    <div style={{
+      width: size, height: size,
+      borderRadius: size * 0.30,
+      background: 'linear-gradient(145deg, #FF6B35, #E55A00)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      flexShrink: 0, position: 'relative', overflow: 'hidden',
+      boxShadow: '0 4px 14px rgba(255,107,53,0.50), inset 0 1px 0 rgba(255,255,255,0.25)',
+      marginTop: 4,
+    }}>
+      {/* Reflet */}
+      <div style={{
+        position:'absolute', top:3, left:4,
+        width: size * 0.50, height: size * 0.30,
+        borderRadius:'50%',
+        background:'rgba(255,255,255,0.20)',
+        pointerEvents:'none',
+      }} />
+      {/* Visage */}
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: size * 0.10 }}>
+        {/* Yeux */}
+        <div style={{ display:'flex', gap: size * 0.20 }}>
+          <div style={{ width: size*0.13, height: size*0.13, borderRadius:'50%', background:'#fff', animation:'oravBlink 4s ease-in-out infinite' }} />
+          <div style={{ width: size*0.13, height: size*0.13, borderRadius:'50%', background:'#fff', animation:'oravBlink 4s ease-in-out infinite 0.07s' }} />
+        </div>
+        {/* Sourire */}
+        <div style={{
+          width: size * 0.38, height: size * 0.17,
+          borderRadius: `0 0 ${size*0.22}px ${size*0.22}px`,
+          border: `${Math.max(1.5, size*0.055)}px solid rgba(255,255,255,0.90)`,
+          borderTop: 'none',
+        }} />
+      </div>
+    </div>
+  )
+}
+
 // ─── Error Boundary (évite page blanche sur crash de rendu) ──────────────────
 class MsgBoundary extends Component {
   constructor(props) { super(props); this.state = { crashed: false } }
@@ -349,7 +388,7 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {msg.role==='assistant' && <span style={s.botAvatar}>✦</span>}
+                    {msg.role==='assistant' && <OraviaFace size={34} />}
                     <div style={
                       msg.role==='user'
                         ? s.userBubble
@@ -369,7 +408,7 @@ export default function App() {
 
                 {loading && (
                   <div style={s.botMsg}>
-                    <span style={s.botAvatar}>✦</span>
+                    <OraviaFace size={34} />
                     <div style={s.botBubble}>
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
@@ -511,6 +550,11 @@ export default function App() {
 
       {/* Global animations */}
       <style>{`
+        @keyframes oravBlink {
+          0%, 85%, 100% { transform: scaleY(1); }
+          91% { transform: scaleY(0.07); }
+          96% { transform: scaleY(1); }
+        }
         @keyframes typing {
           from { opacity:0.3; transform:scale(0.8); }
           to   { opacity:1;   transform:scale(1.2); }
