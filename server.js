@@ -1,5 +1,6 @@
 import express from 'express'
 import Groq from 'groq-sdk'
+import Stripe from 'stripe'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -9,7 +10,8 @@ import { createClient } from '@supabase/supabase-js'
 dotenv.config()
 
 const app = express()
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+const groq   = new Groq({ apiKey: process.env.GROQ_API_KEY })
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const supabaseUrl = process.env.SUPABASE_URL
@@ -334,11 +336,32 @@ Maximum 3 insights, pertinents et actionnables.`
 // ── Recommandations herbal IA ─────────────────────────────────────────────────
 app.post('/api/herbal', async (req, res) => {
   const { profil } = req.body
-  const prompt = `Tu es Oravia, expert en plantes et remèdes naturels. Recommande des plantes personnalisées pour ${profil.nom}.
-Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, santé : ${profil.santeDetails || profil.carences?.join(', ') || 'aucune précision'}.
+  const prompt = `Tu es Oravia, expert en phytothérapie et médecine naturelle. Analyse le profil de ${profil.nom} et propose des plantes/remèdes VRAIMENT personnalisés.
 
-Réponds en JSON : { "recommendations": [{ "nom": "Nom", "emoji": "🌿", "tag": "Catégorie", "benefice": "bénéfice principal", "usage": "dosage/usage", "detail": "explication 2-3 phrases pourquoi adapté à ce profil" }] }
-Donne 5 recommandations vraiment adaptées au profil.`
+PROFIL COMPLET :
+- Âge : ${profil.age} ans
+- Objectifs : ${profil.objectifs?.join(', ') || 'non renseignés'}
+- Alimentation : ${profil.alimentaireDetails || profil.regimes?.join(', ') || 'non renseignée'}
+- Carences / Santé : ${profil.santeDetails || profil.carences?.join(', ') || 'non renseignées'}
+- Maladies : ${profil.maladiesDetails || profil.maladies?.join(', ') || 'aucune'}
+- Mode de vie : ${profil.activite || 'non renseigné'}
+
+Pour chaque recommandation, explique PRÉCISÉMENT pourquoi c'est adapté à CE profil spécifique (cite les objectifs, les carences, l'âge). Les explications doivent être différentes et personnalisées pour chaque plante.
+
+Réponds en JSON :
+{ "recommendations": [
+  {
+    "nom": "Nom de la plante",
+    "emoji": "🌿",
+    "tag": "Catégorie courte",
+    "benefice": "Bénéfice principal en 1 phrase",
+    "pourquoi": "Explication en 2-3 phrases POURQUOI c'est adapté à ce profil précis — cite les objectifs, carences ou conditions de ${profil.nom}",
+    "usage": "Dosage précis, forme, moment de prise",
+    "precaution": "1 précaution ou contre-indication si pertinent, sinon null",
+    "synergie": "Avec quoi combiner pour plus d'effet (optionnel)"
+  }
+] }
+Donne 6 recommandations vraiment différentes et adaptées. Sois précis et scientifique.`
 
   try {
     const response = await groq.chat.completions.create({
@@ -354,6 +377,50 @@ Donne 5 recommandations vraiment adaptées au profil.`
     res.json(data)
   } catch {
     res.json({ recommendations: [] })
+  }
+})
+
+// ── Stripe Checkout ──────────────────────────────────────────────────────────
+app.post('/api/create-checkout', async (req, res) => {
+  try {
+    const origin = req.headers.origin || `http://${req.headers.host}` || 'http://152.228.131.218'
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      locale: 'fr',
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: 'Oravia Pro',
+            description: 'Coach IA illimité · Analyses personnalisées · Toutes les fonctionnalités',
+            images: [],
+          },
+          unit_amount: 499,
+          recurring: { interval: 'month' },
+        },
+        quantity: 1,
+      }],
+      success_url: `${origin}/?subscribed=true`,
+      cancel_url:  `${origin}/?subscribed=cancel`,
+      metadata: { userId: req.body.userId || 'anonymous' },
+    })
+    res.json({ url: session.url })
+  } catch (e) {
+    console.error('Stripe error:', e.message)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Vérifier statut abonnement ───────────────────────────────────────────────
+app.get('/api/check-subscription', async (req, res) => {
+  const { sessionId } = req.query
+  if (!sessionId) return res.json({ active: false })
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    res.json({ active: session.payment_status === 'paid' || session.status === 'complete' })
+  } catch {
+    res.json({ active: false })
   }
 })
 
