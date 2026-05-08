@@ -341,8 +341,91 @@ function QuickActions({ onNavigate }) {
   )
 }
 
+// ─── STREAK & XP WIDGET ───────────────────────────────────────────────────────
+function StreakXP({ streak, xp, level }) {
+  const xpInLevel  = xp % 100
+  const xpNext     = 100
+  const pct        = (xpInLevel / xpNext) * 100
+
+  const badges = [
+    { min:1,  icon:'🌱', label:'Débutant'   },
+    { min:3,  icon:'⚡', label:'Actif'      },
+    { min:7,  icon:'🔥', label:'En feu'     },
+    { min:14, icon:'💎', label:'Diamant'    },
+    { min:30, icon:'🏆', label:'Légendaire' },
+  ]
+  const badge = [...badges].reverse().find(b => streak >= b.min) || null
+
+  return (
+    <div style={{ display:'flex', gap:10, padding:'0 18px 14px' }}>
+      {/* Streak */}
+      <div style={{
+        flex:1, borderRadius:22, padding:'14px 16px',
+        background:'linear-gradient(145deg,rgba(255,107,53,0.10),rgba(255,154,60,0.06))',
+        border:'1.5px solid rgba(255,107,53,0.20)',
+        boxShadow:'0 6px 20px rgba(255,107,53,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
+        display:'flex', alignItems:'center', gap:12,
+      }}>
+        <div style={{
+          width:44, height:44, borderRadius:14, flexShrink:0,
+          background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          fontSize:22, boxShadow:'0 6px 16px rgba(255,107,53,0.40)',
+        }}>
+          {streak >= 7 ? '🔥' : streak >= 3 ? '⚡' : '🌱'}
+        </div>
+        <div>
+          <div style={{ fontSize:22, fontWeight:900, color:'#1a0a00', lineHeight:1 }}>
+            {streak}<span style={{ fontSize:11, fontWeight:500, color:'#c4b5a8', marginLeft:3 }}>jours</span>
+          </div>
+          <div style={{ fontSize:10, color:'#FF6B35', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:2 }}>
+            {streak > 0 ? (badge ? badge.label : 'Streak') : 'Commence !'}
+          </div>
+        </div>
+      </div>
+
+      {/* XP + Level */}
+      <div style={{
+        flex:1.4, borderRadius:22, padding:'14px 16px',
+        background:'linear-gradient(145deg,rgba(168,139,250,0.10),rgba(124,58,237,0.06))',
+        border:'1.5px solid rgba(168,139,250,0.22)',
+        boxShadow:'0 6px 20px rgba(168,139,250,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
+      }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+          <div>
+            <div style={{ fontSize:10, color:'#a78bfa', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px' }}>
+              Niveau {level}
+            </div>
+            <div style={{ fontSize:18, fontWeight:900, color:'#1a0a00', lineHeight:1.1 }}>
+              {xp} <span style={{ fontSize:10, color:'#c4b5a8', fontWeight:500 }}>XP</span>
+            </div>
+          </div>
+          <div style={{
+            width:36, height:36, borderRadius:12,
+            background:'linear-gradient(135deg,#a78bfa,#7c3aed)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize:18, boxShadow:'0 4px 14px rgba(167,139,250,0.45)',
+          }}>⭐</div>
+        </div>
+        {/* Progress bar */}
+        <div style={{ height:6, background:'rgba(167,139,250,0.15)', borderRadius:4, overflow:'hidden' }}>
+          <div style={{
+            height:'100%', width:`${pct}%`,
+            background:'linear-gradient(90deg,#a78bfa,#7c3aed)',
+            borderRadius:4, transition:'width 1s cubic-bezier(0.34,1.56,0.64,1)',
+            boxShadow:'0 0 8px rgba(167,139,250,0.60)',
+          }} />
+        </div>
+        <div style={{ fontSize:9, color:'#c4b5a8', marginTop:4, fontWeight:600 }}>
+          {xpNext - xpInLevel} XP pour le niveau {level + 1}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
-export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onSwitchTab, onChat }) {
+export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onSwitchTab, onChat, streak = 0, xp = 0, level = 1 }) {
   return (
     <div style={hc.page}>
       <ScoreCircle
@@ -350,6 +433,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         profil={profil} metriques={metriques} onLog={onLog}
       />
       <ProgressStrip metriques={metriques} />
+      <StreakXP streak={streak} xp={xp} level={level} />
       <InsightCards profil={profil} metriques={metriques}
         onChat={action => {
           if (action === 'herbal') { onSwitchTab('herbal'); return }

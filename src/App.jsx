@@ -116,8 +116,28 @@ export default function App() {
   const [onglet, setOnglet]     = useState('accueil')
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
+  const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
+
+  // ── Calculs gamification ──────────────────────────────────────────────────
+  const streak = (() => {
+    if (!history || history.length === 0) return 0
+    const sorted = [...history].sort((a,b) => new Date(b.date) - new Date(a.date))
+    const today = new Date().toDateString()
+    const yesterday = new Date(Date.now() - 86400000).toDateString()
+    if (sorted[0].date !== today && sorted[0].date !== yesterday) return 0
+    let count = 0, expected = sorted[0].date
+    for (const e of sorted) {
+      if (e.date === expected) {
+        count++
+        const d = new Date(expected); d.setDate(d.getDate() - 1); expected = d.toDateString()
+      } else break
+    }
+    return count
+  })()
+  const xp    = history.length * 15 + messages.filter(m => m.role === 'user').length * 5
+  const level = Math.floor(xp / 100) + 1
 
   // Responsive
   const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -166,6 +186,14 @@ export default function App() {
     setMetriques(prev => {
       const newM = { ...prev, [key]: val }
       sauverMetriques(newM)
+      // Sauvegarde dans l'historique 30 jours
+      const today = new Date().toDateString()
+      const hist = safeParse('vitacoach_history', [])
+      const filtered = hist.filter(h => h.date !== today)
+      filtered.push({ ...newM, date: today })
+      const sorted = filtered.sort((a,b) => new Date(a.date) - new Date(b.date)).slice(-30)
+      localStorage.setItem('vitacoach_history', JSON.stringify(sorted))
+      setHistory(sorted)
       return newM
     })
   }
@@ -351,6 +379,9 @@ export default function App() {
               onLog={() => setOnglet('sante')}
               onSwitchTab={setOnglet}
               onChat={envoyerMessage}
+              streak={streak}
+              xp={xp}
+              level={level}
             />
           )}
 
@@ -460,7 +491,7 @@ export default function App() {
                   {!isMobile && <div style={s.pageSubtitle}>Tes métriques du jour</div>}
                 </div>
               </div>
-              <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} />
+              <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} />
             </div>
           )}
 

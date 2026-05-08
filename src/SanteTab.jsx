@@ -21,7 +21,108 @@ export function scoreJour(m) {
   return Math.min(s, 100)
 }
 
-export default function SanteTab({ metriques, profil, onUpdate, score }) {
+// ─── SPARKLINE 7 JOURS ────────────────────────────────────────────────────────
+function Sparkline({ history, metricKey, color, goal }) {
+  const last7 = (() => {
+    const days = []
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 86400000).toDateString()
+      const entry = history?.find(h => h.date === d)
+      days.push({ val: entry?.[metricKey] || 0, date: d })
+    }
+    return days
+  })()
+  const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
+  const hasData = last7.some(d => d.val > 0)
+  if (!hasData) return (
+    <div style={{ fontSize:10, color:'#c4b5a8', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
+      Pas encore de données — commence à logger !
+    </div>
+  )
+  return (
+    <div style={{ display:'flex', alignItems:'flex-end', gap:3, height:36, marginTop:8 }}>
+      {last7.map((d, i) => {
+        const pct = maxVal > 0 ? Math.max((d.val / maxVal) * 100, d.val > 0 ? 5 : 0) : 0
+        const isToday = i === 6
+        return (
+          <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:2 }}>
+            <div style={{
+              width:'100%', height:`${pct}%`, minHeight: d.val > 0 ? 4 : 2,
+              background: d.val > 0
+                ? isToday ? `linear-gradient(to top, ${color}, ${color}cc)` : `${color}55`
+                : 'rgba(0,0,0,0.05)',
+              borderRadius:'3px 3px 0 0',
+              boxShadow: isToday && d.val > 0 ? `0 0 8px ${color}60` : 'none',
+              transition:'height 0.5s ease',
+            }} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── HISTORIQUE SECTION ────────────────────────────────────────────────────────
+function HistoriqueSection({ history }) {
+  const [open, setOpen] = useState(false)
+  const metricsToShow = [
+    { key:'pas',     label:'Pas',     color:'#FF6B35', goal:10000 },
+    { key:'sommeil', label:'Sommeil', color:'#a78bfa', goal:8 },
+    { key:'eau',     label:'Eau',     color:'#38bdf8', goal:8 },
+    { key:'humeur',  label:'Humeur',  color:'#fbbf24', goal:5 },
+  ]
+  return (
+    <div style={{
+      background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:22,
+      overflow:'hidden', marginBottom:14,
+      boxShadow:'0 4px 20px rgba(0,0,0,0.05)',
+    }}>
+      <button
+        style={{ width:'100%', background:'transparent', border:'none', padding:'16px 18px',
+          display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:'Poppins,sans-serif' }}
+        onClick={() => setOpen(v => !v)}
+      >
+        <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
+          background:'linear-gradient(135deg,rgba(255,107,53,0.15),rgba(255,154,60,0.10))',
+          border:'1.5px solid rgba(255,107,53,0.25)',
+          display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
+        <div style={{ flex:1, textAlign:'left' }}>
+          <div style={{ fontSize:13, fontWeight:800, color:'#1a0a00' }}>Historique 7 jours</div>
+          <div style={{ fontSize:11, color:'#8a7265', marginTop:1 }}>Progression de tes métriques</div>
+        </div>
+        <div style={{
+          fontSize:10, fontWeight:700, color:'#FF6B35',
+          background:'rgba(255,107,53,0.10)', padding:'4px 10px', borderRadius:8,
+          border:'1px solid rgba(255,107,53,0.20)',
+          transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
+        }}>▼</div>
+      </button>
+      {open && (
+        <div style={{ padding:'4px 18px 18px', borderTop:'1px solid #f0e8e0' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginTop:12 }}>
+            {metricsToShow.map(m => (
+              <div key={m.key} style={{
+                background:`${m.color}08`, border:`1px solid ${m.color}20`,
+                borderRadius:14, padding:'12px 14px',
+              }}>
+                <div style={{ fontSize:10, color:m.color, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:4 }}>
+                  {m.label}
+                </div>
+                <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} />
+                <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
+                  <span style={{ fontSize:9, color:'#c4b5a8' }}>il y a 6j</span>
+                  <span style={{ fontSize:9, color:m.color, fontWeight:700 }}>Aujourd'hui</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function SanteTab({ metriques, profil, onUpdate, score, history = [] }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -229,6 +330,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score }) {
           )
         })}
       </div>
+
+      {/* ── Historique 7 jours ── */}
+      <HistoriqueSection history={history} />
 
       {/* ── Apple Health ── */}
       <div style={ss.appleSection}>
