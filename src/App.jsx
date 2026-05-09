@@ -9,7 +9,7 @@ import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIc
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── ORAVIA MASCOT FACE ───────────────────────────────────────────────────────
-function OraviaFace({ size = 34 }) {
+function RevaFace({ size = 34 }) {
   return (
     <div style={{
       width: size, height: size,
@@ -243,7 +243,7 @@ export default function App() {
       localStorage.setItem('vitacoach_notif', JSON.stringify(true))
 
       // Notif de bienvenue immédiate
-      reg.showNotification('Oravia activé ! 🎉', {
+      reg.showNotification('Reva activé ! 🎉', {
         body: `Salut ${profil?.nom} ! Tu recevras tes rappels santé quotidiens.`,
         icon: '/icon-192.png',
         tag: 'welcome',
@@ -293,7 +293,7 @@ export default function App() {
       setMessages(prev => {
         const last = prev[prev.length - 1]
         if (last?.content?.includes('messages gratuits')) return prev
-        return [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Oravia Pro pour des conseils illimités !` }]
+        return [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Reva Pro pour des conseils illimités !` }]
       })
       isSendingRef.current = false
       return
@@ -337,7 +337,7 @@ export default function App() {
         setProfil(p)
         setProfilBackup(null)
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
-        setMessages([{ role:'assistant', content:`✦ Bienvenue ${p.nom} ! Je suis Oravia, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
+        setMessages([{ role:'assistant', content:`Bienvenue ${p.nom} ! Je suis Reva, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
       }} />
     )
   }
@@ -366,8 +366,8 @@ export default function App() {
       {!isMobile && (
         <aside style={s.sidebar}>
           <div style={s.sidebarTop}>
-            <div style={s.logo}>✦ Oravia</div>
-            <div style={s.logoSub}>Coach de vie IA</div>
+            <div style={s.logo}>Reva</div>
+            <div style={s.logoSub}>re-vivre · évoluer</div>
           </div>
 
           <nav style={s.sidebarNav}>
@@ -399,7 +399,7 @@ export default function App() {
               </div>
             </div>
             {!isPro && (
-              <button style={s.btnPro} onClick={passerPro}>⚡ Oravia Pro — 4.99€/mois</button>
+              <button style={s.btnPro} onClick={passerPro}>⚡ Reva Pro — 4.99€/mois</button>
             )}
             {isPro && <div style={s.proBadge}>✦ Membre Pro</div>}
             <button
@@ -432,7 +432,7 @@ export default function App() {
                   <BackIcon color="#1a0a00" size={20} />
                 </button>
               ) : (
-                <div style={s.logo}>✦ Oravia</div>
+                <div style={s.logo}>Reva</div>
               )}
 
               <div style={s.mobileTitle}>
@@ -481,7 +481,7 @@ export default function App() {
                 )}
                 <div>
                   <div style={s.pageTitle}>{isMobile ? 'Coach IA' : '💬 Coach IA'}</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Oravia</div>}
+                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Reva</div>}
                 </div>
               </div>
 
@@ -489,7 +489,7 @@ export default function App() {
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
                     <div style={s.emptyChatIcon}>✦</div>
-                    <div style={s.emptyChatTitle}>Je suis Oravia, ton coach de vie</div>
+                    <div style={s.emptyChatTitle}>Je suis Reva, ton coach de vie</div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     <div style={s.suggestionsPile}>
                       {suggestions.map((sug, i) => (
@@ -503,7 +503,7 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {msg.role==='assistant' && <OraviaFace size={34} />}
+                    {msg.role==='assistant' && <RevaFace size={34} />}
                     <div style={
                       msg.role==='user'
                         ? s.userBubble
@@ -523,7 +523,7 @@ export default function App() {
 
                 {loading && (
                   <div style={s.botMsg}>
-                    <OraviaFace size={34} />
+                    <RevaFace size={34} />
                     <div style={s.botBubble}>
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
@@ -556,7 +556,7 @@ export default function App() {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
-                    placeholder="Pose une question à Oravia..." />
+                    placeholder="Pose une question à Reva..." />
                   <button style={s.sendBtn} onClick={() => envoyerMessage()}>
                     <SendIcon color="#fff" size={17} />
                   </button>
