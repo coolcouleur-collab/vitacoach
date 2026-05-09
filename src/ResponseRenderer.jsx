@@ -25,7 +25,7 @@ const TYPES = {
   tips:      { accent:'#FF9A3C', label:'💡 Conseils',    gradient:'linear-gradient(135deg,#FF9A3C,#f59e0b)' },
   plants:    { accent:'#34c759', label:'🌿 Plantes',     gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
   routine:   { accent:'#38bdf8', label:'📅 Programme',   gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
-  generic:   { accent:'#FF6B35', label:'✦ Suggestions', gradient:'linear-gradient(135deg,#FF6B35,#E55A00)' },
+  generic:   { accent:'#FF6B35', label:'• Suggestions', gradient:'linear-gradient(135deg,#FF6B35,#E55A00)' },
 }
 
 // ─── Global keyframes injected once ──────────────────────────────────────────
@@ -211,7 +211,7 @@ function RichCard({ item, accent, index }) {
         transform: hovered ? 'scale(1.08) rotate(-4deg)' : 'scale(1)',
         transition:'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
-        {item.icon || '✦'}
+        {item.icon || '→'}
       </div>
 
       {/* Text */}

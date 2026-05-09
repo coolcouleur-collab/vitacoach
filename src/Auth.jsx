@@ -34,7 +34,7 @@ export default function Auth({ onConnecte }) {
       <div style={s.blob1} /><div style={s.blob2} />
       <div style={s.card}>
         <div style={s.logoWrap}>
-          <div style={s.logoIcon}>✦</div>
+          <div style={s.logoIcon}>R</div>
           <div style={s.logoText}>Reva</div>
         </div>
         <div style={s.tagline}>Ton coach de vie personnel</div>

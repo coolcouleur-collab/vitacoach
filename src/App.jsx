@@ -8,7 +8,7 @@ import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
-// ─── ORAVIA MASCOT FACE ───────────────────────────────────────────────────────
+// ─── REVA MASCOT FACE ────────────────────────────────────────────────────────
 function RevaFace({ size = 34 }) {
   return (
     <div style={{
@@ -116,7 +116,7 @@ export default function App() {
       // Purge tous les vieux messages de limite (jamais utiles dans l'historique)
       return h.filter(m => !m.content?.includes('messages gratuits'))
     }
-    if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ✦ Comment puis-je t'aider aujourd'hui ?` }]
+    if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ! Comment puis-je t'aider aujourd'hui ?` }]
     return []
   })
   const [input, setInput]       = useState('')
@@ -401,7 +401,7 @@ export default function App() {
             {!isPro && (
               <button style={s.btnPro} onClick={passerPro}>⚡ Reva Pro — 4.99€/mois</button>
             )}
-            {isPro && <div style={s.proBadge}>✦ Membre Pro</div>}
+            {isPro && <div style={s.proBadge}>⭐ Membre Pro</div>}
             <button
               style={{
                 ...s.btnEdit,
@@ -488,7 +488,7 @@ export default function App() {
               <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
-                    <div style={s.emptyChatIcon}>✦</div>
+                    <div style={s.emptyChatIcon}><RevaFace size={56} /></div>
                     <div style={s.emptyChatTitle}>Je suis Reva, ton coach de vie</div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     <div style={s.suggestionsPile}>
@@ -950,7 +950,7 @@ function TenueCard({ tenue }) {
         {imgSrc && <img src={imgSrc} alt={tenue.titre} style={st.img} onError={() => setImgError(true)} />}
       </div>
       <div style={st.tenueInfo}>
-        <div style={st.tenueTitre}>✦ {tenue.titre}</div>
+        <div style={st.tenueTitre}>▸ {tenue.titre}</div>
         <div style={st.tenueDesc}>{tenue.description}</div>
         <div style={st.tenuePourquoi}>💡 {tenue.pourquoi}</div>
       </div>

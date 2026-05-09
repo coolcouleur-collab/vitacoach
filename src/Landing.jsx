@@ -277,7 +277,7 @@ export default function Landing({ onCommencer }) {
           borderRadius:32, padding:'52px 40px',
           boxShadow:'0 24px 64px rgba(255,107,53,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
         }}>
-          <div style={{ fontSize:42, marginBottom:16 }}>✦</div>
+          <div style={{ fontSize:42, marginBottom:16, fontWeight:900, background:'linear-gradient(135deg,#FF6B35,#FF4500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>R</div>
           <h2 style={{ fontSize:26, fontWeight:900, color:'#1a0a00', marginBottom:14, letterSpacing:'-0.5px' }}>
             Prêt à transformer ton quotidien ?
           </h2>

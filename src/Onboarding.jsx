@@ -361,7 +361,7 @@ export default function Onboarding({ onTermine }) {
 
       {/* ── Logo ── */}
       <div style={s.logoTop}>
-        <span style={s.logoIcon}>✦</span>
+        <span style={s.logoIcon}>R</span>
         <span style={s.logoText}>Reva</span>
       </div>
 

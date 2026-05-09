@@ -46,7 +46,7 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
           <span style={hc.greetDot} />
           {dayLabel}
         </div>
-        <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> ✦</div>
+        <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> !</div>
 
         {/* Score Ring — clay style */}
         <div style={hc.circleWrap}>

@@ -130,7 +130,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const [showApple, setShowApple]         = useState(false)
 
   const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
-  const scoreLabel = score >= 80 ? 'Excellent ✦' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
+  const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
   const circumference = 2 * Math.PI * 52
   const dash = (score / 100) * circumference
 
