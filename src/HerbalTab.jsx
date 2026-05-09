@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LeafIcon, SparkleIcon, ChevronIcon } from './Icons'
+import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon } from './Icons'
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const CATS = [
@@ -140,7 +140,7 @@ function AIRecoCard({ r, onChat, index }) {
               padding:'10px 12px', margin:'10px 0 8px',
             }}>
               <div style={{ fontSize:9, color:`${c}cc`, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
-                🎯 Pourquoi pour toi ?
+                <span style={{display:'flex',alignItems:'center',gap:4}}><TargetIcon size={9} color={`${c}cc`} /> Pourquoi pour toi ?</span>
               </div>
               <div style={{ fontSize:12, color:'#4a3c35', lineHeight:1.72 }}>{r.pourquoi}</div>
             </div>
@@ -153,7 +153,7 @@ function AIRecoCard({ r, onChat, index }) {
               background:'rgba(255,107,53,0.06)', border:'1px solid rgba(255,107,53,0.16)',
               borderRadius:10, padding:'10px 12px', marginBottom:8,
             }}>
-              <span style={{ fontSize:16, flexShrink:0 }}>💊</span>
+              <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color="#FF6B35" /></span>
               <div>
                 <div style={{ fontSize:9, color:'#FF6B35', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
                   Comment utiliser

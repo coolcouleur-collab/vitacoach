@@ -1,5 +1,6 @@
 ﻿import React, { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import { FlashIcon, LoadingIcon } from './Icons'
 
 const supabase = createClient(
   'https://ejbfexxhrxcvmolpwuvg.supabase.co',
@@ -69,7 +70,13 @@ export default function Auth({ onConnecte }) {
 
         <button style={{ ...s.btn, opacity: loading ? 0.7 : 1 }}
           onClick={soumettre} disabled={loading}>
-          {loading ? '⏳ Chargement...' : mode==='connexion' ? 'Se connecter →' : 'Créer mon compte ⚡'}
+          <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>
+            {loading
+              ? <><LoadingIcon size={16} color="#fff" /> Chargement...</>
+              : mode==='connexion'
+                ? 'Se connecter →'
+                : <><FlashIcon size={14} color="#fff" /> Créer mon compte</>}
+          </span>
         </button>
 
         <div style={s.footer}>

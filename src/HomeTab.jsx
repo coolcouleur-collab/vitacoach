@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
 // ─── ANIMATED HERO BACKGROUND ─────────────────────────────────────────────────
 function HeroBg() {
@@ -98,11 +99,11 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
 
           {/* Metric dots — clay pill style */}
           {[
-            { angle:-90, icon:'💧', val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
-            { angle:-18, icon:'👣', val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-            { angle: 54, icon:'😴', val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
-            { angle:126, icon:'😊', val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
-            { angle:198, icon:'❤️', val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
+            { angle:-90, iconEl:<WaterIcon size={17} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
+            { angle:-18, iconEl:<RunIcon size={17} color="#FF6B35" />,   val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+            { angle: 54, iconEl:<MoonIcon size={17} color="#a78bfa" />,  val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
+            { angle:126, iconEl:<MoodIcon size={17} color="#fbbf24" />,  val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
+            { angle:198, iconEl:<HeartIcon size={17} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
           ].map(m => {
             const rad = (m.angle * Math.PI) / 180
             const x = 100 + 118 * Math.cos(rad)
@@ -126,7 +127,7 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
                 fontFamily:'Poppins,sans-serif',
                 transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
               }}>
-                <span style={{ fontSize:17, lineHeight:1 }}>{m.icon}</span>
+                <span style={{ lineHeight:1, display:'flex', alignItems:'center' }}>{m.iconEl}</span>
                 <span style={{ fontSize:8, color: filled ? m.color : '#8a7265', fontWeight:800, lineHeight:1 }}>
                   {filled ? m.fmt(m.val) : '—'}
                 </span>
@@ -136,8 +137,8 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
         </div>
 
         {/* Log CTA */}
-        <button style={hc.logBtn} onClick={onLog}>
-          <span style={{ fontSize:15 }}>📊</span>
+        <button style={{...hc.logBtn, display:'flex', alignItems:'center', gap:8, justifyContent:'center'}} onClick={onLog}>
+          <HeartIcon size={15} color="#FF6B35" />
           Mettre à jour mes métriques
         </button>
       </div>
@@ -148,10 +149,10 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
 // ─── PROGRESS STRIP ───────────────────────────────────────────────────────────
 function ProgressStrip({ metriques }) {
   const items = [
-    { icon:'💧', label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
-    { icon:'👣', label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : v },
-    { icon:'😴', label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => `${v}h` },
-    { icon:'😊', label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
+    { iconEl:<WaterIcon size={16} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
+    { iconEl:<RunIcon size={16} color="#FF6B35" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : v },
+    { iconEl:<MoonIcon size={16} color="#a78bfa" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={16} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
     <div style={hc.strip}>
@@ -166,7 +167,7 @@ function ProgressStrip({ metriques }) {
             animation:`tabFade 0.4s ease ${i * 0.08}s both`,
           }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
-              <span style={{ fontSize:18 }}>{it.icon}</span>
+              <span style={{ display:'flex', alignItems:'center' }}>{it.iconEl}</span>
               <span style={{ fontSize:12, fontWeight:800, color: it.val > 0 ? it.color : '#c4b5a8' }}>
                 {it.val > 0 ? it.fmt(it.val) : '—'}
               </span>
@@ -203,26 +204,28 @@ function InsightCards({ profil, metriques, onChat }) {
   const h = new Date().getHours()
   const cards = [
     h < 10
-      ? { title:'🌅 Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme.', action:'Conseils matin' }
+      ? { icon:<SunIcon size={18} color="#FF6B35" />, title:'Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme.', action:'Conseils matin' }
       : h < 14
-      ? { title:'🥗 Repas de midi', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent.', action:'Idées repas' }
+      ? { icon:<FoodIcon size={18} color="#34c759" />, title:'Repas de midi', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent.', action:'Idées repas' }
       : h < 18
-      ? { title:'⚡ Regain d\'énergie', body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.', action:'Me remotiver' }
-      : { title:'🌙 Prépare ton sommeil', body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.', action:'Routine soir' },
+      ? { icon:<FlashIcon size={18} color="#fbbf24" />, title:'Regain d\'énergie', body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.', action:'Me remotiver' }
+      : { icon:<MoonIcon size={18} color="#a78bfa" />, title:'Prépare ton sommeil', body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.', action:'Routine soir' },
     {
-      title: metriques?.eau >= 4 ? '💧 Hydratation OK !' : '💧 Bois de l\'eau',
+      icon:<WaterIcon size={18} color="#38bdf8" />,
+      title: metriques?.eau >= 4 ? 'Hydratation OK !' : 'Bois de l\'eau',
       body: metriques?.eau > 0
         ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Bois un verre maintenant !' : 'Continue comme ça !'}`
         : 'Objectif : 8 verres/jour. Commence maintenant.',
       action:'Mettre à jour',
     },
     profil?.objectifs?.[0] && {
-      title:`🎯 ${profil.objectifs[0]}`,
+      icon:<TargetIcon size={18} color="#FF6B35" />,
+      title: profil.objectifs[0],
       body:'Chaque petite action compte. Qu\'est-ce que tu peux faire aujourd\'hui ?',
       action:'Conseils personnalisés',
     },
-    { title:'🌿 Santé naturelle', body:'Plantes, tisanes et techniques holistiques personnalisées pour ton profil.', action:'herbal' },
-    { title:'🧘 Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement.', action:'En savoir plus' },
+    { icon:<LeafIcon size={18} color="#34c759" />, title:'Santé naturelle', body:'Plantes, tisanes et techniques holistiques personnalisées pour ton profil.', action:'herbal' },
+    { icon:<MeditateIcon size={18} color="#a78bfa" />, title:'Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement.', action:'En savoir plus' },
   ].filter(Boolean)
 
   return (
@@ -262,7 +265,7 @@ function InsightCards({ profil, metriques, onChat }) {
               }}>
               {/* Color bar top */}
               <div style={{ ...hc.cardBar, background:`linear-gradient(90deg, ${col.from}, ${col.to})` }} />
-              <div style={hc.cardTitle}>{c.title}</div>
+              <div style={{...hc.cardTitle, display:'flex', alignItems:'center', gap:8}}>{c.icon}{c.title}</div>
               <div style={hc.cardBody}>{c.body}</div>
               <div style={{
                 ...hc.cardCta,
@@ -281,10 +284,10 @@ function InsightCards({ profil, metriques, onChat }) {
 
 // ─── QUICK ACTIONS ─────────────────────────────────────────────────────────────
 const ACTIONS = [
-  { tab:'chat',    emoji:'💬', label:'Coach IA', from:'#FF6B35', to:'#FF9A3C' },
-  { tab:'routine', emoji:'📋', label:'Routine',  from:'#5856d6', to:'#8b89f5' },
-  { tab:'herbal',  emoji:'🌿', label:'Herbal',   from:'#34c759', to:'#30d158' },
-  { tab:'style',   emoji:'✨', label:'Style',    from:'#af52de', to:'#d490f7' },
+  { tab:'chat',    iconEl:<ChatIcon size={24} color="#fff" />,    label:'Coach IA', from:'#FF6B35', to:'#FF9A3C' },
+  { tab:'routine', iconEl:<CalendarIcon size={24} color="#fff" />,label:'Routine',  from:'#5856d6', to:'#8b89f5' },
+  { tab:'herbal',  iconEl:<LeafIcon size={24} color="#fff" />,    label:'Herbal',   from:'#34c759', to:'#30d158' },
+  { tab:'style',   iconEl:<SparkleIcon size={24} color="#fff" />, label:'Style',    from:'#af52de', to:'#d490f7' },
 ]
 
 function QuickActions({ onNavigate }) {
@@ -326,7 +329,7 @@ function QuickActions({ onNavigate }) {
                 boxShadow:`0 8px 24px ${a.from}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
                 transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
               }}>
-                <span style={{ fontSize:24 }}>{a.emoji}</span>
+                <span style={{ display:'flex', alignItems:'center' }}>{a.iconEl}</span>
               </div>
               <span style={{
                 fontSize:11, fontWeight:800,
@@ -348,11 +351,11 @@ function StreakXP({ streak, xp, level }) {
   const pct        = (xpInLevel / xpNext) * 100
 
   const badges = [
-    { min:1,  icon:'🌱', label:'Débutant'   },
-    { min:3,  icon:'⚡', label:'Actif'      },
-    { min:7,  icon:'🔥', label:'En feu'     },
-    { min:14, icon:'💎', label:'Diamant'    },
-    { min:30, icon:'🏆', label:'Légendaire' },
+    { min:1,  iconEl:<LeafIcon size={22} color="#fff" />,    label:'Débutant'   },
+    { min:3,  iconEl:<FlashIcon size={22} color="#fff" />,   label:'Actif'      },
+    { min:7,  iconEl:<FireIcon size={22} color="#fff" />,    label:'En feu'     },
+    { min:14, iconEl:<DiamondIcon size={22} color="#fff" />, label:'Diamant'    },
+    { min:30, iconEl:<StarIcon size={22} color="#fff" />,    label:'Légendaire' },
   ]
   const badge = [...badges].reverse().find(b => streak >= b.min) || null
 
@@ -370,9 +373,10 @@ function StreakXP({ streak, xp, level }) {
           width:44, height:44, borderRadius:14, flexShrink:0,
           background:'linear-gradient(135deg,#FF6B35,#E55A00)',
           display:'flex', alignItems:'center', justifyContent:'center',
+          display:'flex', alignItems:'center', justifyContent:'center',
           fontSize:22, boxShadow:'0 6px 16px rgba(255,107,53,0.40)',
         }}>
-          {streak >= 7 ? '🔥' : streak >= 3 ? '⚡' : '🌱'}
+          {streak >= 7 ? <FireIcon size={22} color="#fff" /> : streak >= 3 ? <FlashIcon size={22} color="#fff" /> : <LeafIcon size={22} color="#fff" />}
         </div>
         <div>
           <div style={{ fontSize:22, fontWeight:900, color:'#1a0a00', lineHeight:1 }}>
@@ -405,7 +409,8 @@ function StreakXP({ streak, xp, level }) {
             background:'linear-gradient(135deg,#a78bfa,#7c3aed)',
             display:'flex', alignItems:'center', justifyContent:'center',
             fontSize:18, boxShadow:'0 4px 14px rgba(167,139,250,0.45)',
-          }}>⭐</div>
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}><StarIcon size={18} color="#fff" /></div>
         </div>
         {/* Progress bar */}
         <div style={{ height:6, background:'rgba(167,139,250,0.15)', borderRadius:4, overflow:'hidden' }}>

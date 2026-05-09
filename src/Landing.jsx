@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { BrainIcon, FoodIcon, HeartIcon, LeafIcon, StyleIcon, FlashIcon, StarIcon, PhoneIcon, BellIcon } from './Icons'
 
 function BgBlobs() {
   return (
@@ -16,12 +17,12 @@ function BgBlobs() {
 const ROTATING = ['Nutrition', 'Sommeil', 'Stress', 'Style', 'Bien-être', 'Énergie']
 
 const FEATURES = [
-  { icon:'🧠', color:'#FF6B35', titre:'Coach IA personnalisé',  desc:'Une IA qui mémorise ton profil complet — pathologies, régimes, objectifs — pour des conseils qui te ressemblent vraiment.' },
-  { icon:'🥗', color:'#34c759', titre:'Nutrition sur-mesure',   desc:'Idées repas adaptées à tes restrictions, tes carences et ton mode de vie. Jamais génériques, toujours personnalisés.' },
-  { icon:'📋', color:'#5856d6', titre:'Routine quotidienne',    desc:'Un programme matin-midi-soir généré chaque jour selon ton heure de réveil, ton énergie et tes objectifs.' },
-  { icon:'❤️', color:'#ff3b30', titre:'Suivi santé IA',        desc:'Pas, sommeil, hydratation, humeur — un score journalier et des insights IA pour progresser chaque jour.' },
-  { icon:'👗', color:'#af52de', titre:'Style & météo',          desc:'Tenues suggérées selon la météo réelle de ta ville, ton style et l\'occasion. Jamais à court d\'idées.' },
-  { icon:'🌿', color:'#30d158', titre:'Médecine naturelle',     desc:'Plantes, tisanes, techniques holistiques — des recommandations ciblées basées sur ton profil santé exact.' },
+  { iconEl:<BrainIcon size={28} color="#FF6B35" />,  color:'#FF6B35', titre:'Coach IA personnalisé',  desc:'Une IA qui mémorise ton profil complet — pathologies, régimes, objectifs — pour des conseils qui te ressemblent vraiment.' },
+  { iconEl:<FoodIcon size={28} color="#34c759" />,   color:'#34c759', titre:'Nutrition sur-mesure',   desc:'Idées repas adaptées à tes restrictions, tes carences et ton mode de vie. Jamais génériques, toujours personnalisés.' },
+  { iconEl:<StarIcon size={28} color="#5856d6" />,   color:'#5856d6', titre:'Routine quotidienne',    desc:'Un programme matin-midi-soir généré chaque jour selon ton heure de réveil, ton énergie et tes objectifs.' },
+  { iconEl:<HeartIcon size={28} color="#ff3b30" />,  color:'#ff3b30', titre:'Suivi santé IA',         desc:'Pas, sommeil, hydratation, humeur — un score journalier et des insights IA pour progresser chaque jour.' },
+  { iconEl:<StyleIcon size={28} color="#af52de" />,  color:'#af52de', titre:'Style & météo',           desc:'Tenues suggérées selon la météo réelle de ta ville, ton style et l\'occasion. Jamais à court d\'idées.' },
+  { iconEl:<LeafIcon size={28} color="#30d158" />,   color:'#30d158', titre:'Médecine naturelle',     desc:'Plantes, tisanes, techniques holistiques — des recommandations ciblées basées sur ton profil santé exact.' },
 ]
 
 const TESTIMONIALS = [
@@ -45,7 +46,7 @@ const PLANS = [
     name:'Pro', price:'4.99€', period:'/mois',
     color:'#FF6B35', gradient:'linear-gradient(135deg,#FF6B35,#E55A00)',
     border:'rgba(255,107,53,0.35)',
-    badge:'⚡ Le plus populaire',
+    badge:'Le plus populaire',
     features:['Messages IA illimités 24/7','Routine quotidienne personnalisée','Analyse herbal IA complète','Suggestions tenues avec météo','Insights santé IA avancés','Historique 30 jours + graphiques','Support prioritaire'],
     cta:'Essayer Pro →', main:true,
   },
@@ -142,7 +143,7 @@ export default function Landing({ onCommencer }) {
               transition:'transform 0.25s ease, box-shadow 0.25s ease',
             }}>
               <div style={{ ...s.featIcon, background:`${f.color}15`, border:`1.5px solid ${f.color}28` }}>
-                <span style={{ fontSize:26 }}>{f.icon}</span>
+                <span style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>{f.iconEl || f.icon}</span>
               </div>
               <div style={s.featTitle}>{f.titre}</div>
               <div style={s.featDesc}>{f.desc}</div>
@@ -162,7 +163,7 @@ export default function Landing({ onCommencer }) {
               transition:'transform 0.22s ease, box-shadow 0.22s ease',
               animationDelay:`${i*0.1}s`,
             }}>
-              <div style={s.testiStars}>{'⭐'.repeat(t.stars)}</div>
+              <div style={{...s.testiStars, display:'flex', gap:2}}>{Array.from({length:t.stars}).map((_,j)=><StarIcon key={j} size={14} color="#fbbf24" />)}</div>
               <div style={s.testiText}>{t.text}</div>
               <div style={s.testiAuthor}>
                 <div style={s.testiAvatar}>{t.name.charAt(0)}</div>
@@ -245,8 +246,8 @@ export default function Landing({ onCommencer }) {
         </p>
         <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
           {[
-            { store:'App Store', icon:'🍎', sub:'iOS • iPhone & iPad' },
-            { store:'Google Play', icon:'🤖', sub:'Android • Tous appareils' },
+            { store:'App Store', iconEl:<PhoneIcon size={28} color="#1a0a00" />, sub:'iOS • iPhone & iPad' },
+            { store:'Google Play', iconEl:<PhoneIcon size={28} color="#1a0a00" />, sub:'Android • Tous appareils' },
           ].map(s2 => (
             <div key={s2.store} style={{
               display:'flex', alignItems:'center', gap:14, padding:'14px 28px',
@@ -254,7 +255,7 @@ export default function Landing({ onCommencer }) {
               borderRadius:18, opacity:0.6, cursor:'not-allowed',
               boxShadow:'0 4px 16px rgba(0,0,0,0.05)',
             }}>
-              <span style={{ fontSize:28 }}>{s2.icon}</span>
+              <span style={{ display:'flex', alignItems:'center' }}>{s2.iconEl}</span>
               <div style={{ textAlign:'left' }}>
                 <div style={{ fontSize:10, color:'#8a7265', fontWeight:600 }}>Bientôt sur</div>
                 <div style={{ fontSize:15, fontWeight:800, color:'#1a0a00' }}>{s2.store}</div>
@@ -264,7 +265,7 @@ export default function Landing({ onCommencer }) {
           ))}
         </div>
         <div style={{ marginTop:20, fontSize:12, color:'#c4b5a8' }}>
-          🔔 En attendant, accède à Reva depuis ton navigateur mobile
+          <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}><BellIcon size={13} color="#c4b5a8" /> En attendant, accède à Reva depuis ton navigateur mobile</span>
         </div>
       </section>
 

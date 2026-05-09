@@ -5,7 +5,7 @@ import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
 import SanteTab, { scoreJour } from './SanteTab'
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon } from './Icons'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── REVA MASCOT FACE ────────────────────────────────────────────────────────
@@ -185,10 +185,10 @@ export default function App() {
   useEffect(() => {
     if (!profil) return
     const h = new Date().getHours()
-    if (h < 10)       setSuggestions(["🌅 Comment bien démarrer ma journée ?", "🥗 Que manger ce matin ?", "⚡ Comment booster mon énergie ?"])
-    else if (h < 14)  setSuggestions(["🥗 Idée repas de midi ?", "🧠 Comment rester concentré ?", "🏃 Stretch rapide pour le bureau ?"])
-    else if (h < 18)  setSuggestions(["😴 Je suis fatigué, que faire ?", "🍎 Collation saine ?", "🧘 Comment gérer mon stress ?"])
-    else              setSuggestions(["🌙 Routine du soir pour bien dormir ?", "🍽️ Que manger ce soir ?", "📵 Comment me décompresser ?"])
+    if (h < 10)       setSuggestions(["Comment bien démarrer ma journée ?", "Que manger ce matin ?", "Comment booster mon énergie ?"])
+    else if (h < 14)  setSuggestions(["Idée repas de midi ?", "Comment rester concentré ?", "Stretch rapide pour le bureau ?"])
+    else if (h < 18)  setSuggestions(["Je suis fatigué, que faire ?", "Collation saine ?", "Comment gérer mon stress ?"])
+    else              setSuggestions(["Routine du soir pour bien dormir ?", "Que manger ce soir ?", "Comment me décompresser ?"])
   }, [profil])
 
   function mettreAJourMetrique(key, val) {
@@ -243,7 +243,7 @@ export default function App() {
       localStorage.setItem('vitacoach_notif', JSON.stringify(true))
 
       // Notif de bienvenue immédiate
-      reg.showNotification('Reva activé ! 🎉', {
+      reg.showNotification('Reva activé !', {
         body: `Salut ${profil?.nom} ! Tu recevras tes rappels santé quotidiens.`,
         icon: '/icon-192.png',
         tag: 'welcome',
@@ -293,7 +293,7 @@ export default function App() {
       setMessages(prev => {
         const last = prev[prev.length - 1]
         if (last?.content?.includes('messages gratuits')) return prev
-        return [...prev, { role:'assistant', content:`⚡ Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Reva Pro pour des conseils illimités !` }]
+        return [...prev, { role:'assistant', content:`Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Reva Pro pour des conseils illimités !` }]
       })
       isSendingRef.current = false
       return
@@ -395,27 +395,28 @@ export default function App() {
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={s.profileName}>{profil.nom}</div>
-                {profil.objectifs?.[0] && <div style={s.profileMeta}>🎯 {profil.objectifs[0]}</div>}
+                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#FF6B35" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
             {!isPro && (
-              <button style={s.btnPro} onClick={passerPro}>⚡ Reva Pro — 4.99€/mois</button>
+              <button style={s.btnPro} onClick={passerPro}><FlashIcon size={14} color="#fff" /> Reva Pro — 4.99€/mois</button>
             )}
-            {isPro && <div style={s.proBadge}>⭐ Membre Pro</div>}
+            {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
             <button
               style={{
                 ...s.btnEdit,
                 background: notifEnabled ? 'rgba(52,199,89,0.10)' : 'rgba(0,0,0,0.04)',
                 color: notifEnabled ? '#34c759' : '#8a7265',
                 border: notifEnabled ? '1px solid rgba(52,199,89,0.25)' : '1px solid rgba(0,0,0,0.08)',
+                display:'flex', alignItems:'center', gap:6,
               }}
               onClick={notifEnabled ? desactiverNotifications : activerNotifications}
             >
-              {notifEnabled ? '🔔 Rappels activés' : '🔕 Activer les rappels'}
+              {notifEnabled ? <><BellIcon size={15} color="#34c759" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={s.btnEdit} onClick={() => {
+            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => {
               setProfilBackup(profil); setProfil(null)
-            }}>✏️ Modifier mon profil</button>
+            }}>✏ Modifier mon profil</button>
           </div>
         </aside>
       )}
@@ -480,7 +481,7 @@ export default function App() {
                   </button>
                 )}
                 <div>
-                  <div style={s.pageTitle}>{isMobile ? 'Coach IA' : '💬 Coach IA'}</div>
+                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#FF6B35" />} Coach IA</div>
                   {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Reva</div>}
                 </div>
               </div>
@@ -571,7 +572,7 @@ export default function App() {
               <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
                 {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
                 <div>
-                  <div style={s.pageTitle}>{isMobile ? 'Santé' : '❤️ Suivi Santé'}</div>
+                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <HeartIcon size={20} color="#ff3b30" />} Suivi Santé</div>
                   {!isMobile && <div style={s.pageSubtitle}>Tes métriques du jour</div>}
                 </div>
               </div>
@@ -772,8 +773,8 @@ function RoutineModule({ profil, metriques }) {
           <div style={sr.date}>{today}</div>
           <div style={sr.titre}>Ta routine du jour</div>
         </div>
-        <button style={sr.btnGen} onClick={genererRoutine} disabled={loading}>
-          {loading ? '⏳' : routine ? '🔄 Regénérer' : '✨ Générer'}
+        <button style={{...sr.btnGen, display:'flex', alignItems:'center', gap:6}} onClick={genererRoutine} disabled={loading}>
+          {loading ? <><LoadingIcon size={14} color="#fff" /> Génération...</> : routine ? <><RefreshIcon size={14} color="#fff" /> Regénérer</> : <><SparkleIcon size={14} color="#fff" /> Générer</>}
         </button>
       </div>
 
@@ -792,7 +793,7 @@ function RoutineModule({ profil, metriques }) {
 
       {routineError && (
         <div style={{ ...sr.empty, background:'#fff5f5', border:'1px solid #ffcdd2', borderRadius:16, padding:24 }}>
-          <div style={{ fontSize:32, marginBottom:10 }}>⚠️</div>
+          <div style={{ fontSize:32, marginBottom:10, color:'#c62828' }}>!</div>
           <div style={{ fontSize:14, color:'#c62828', fontWeight:600, marginBottom:8 }}>La génération a échoué</div>
           <div style={{ fontSize:12, color:'#8a7265' }}>Vérifie ta connexion et réessaie</div>
         </div>
@@ -800,7 +801,7 @@ function RoutineModule({ profil, metriques }) {
 
       {!routine && !loading && !routineError && (
         <div style={sr.empty}>
-          <div style={{ fontSize:48, marginBottom:14 }}>📋</div>
+          <div style={{ marginBottom:14 }}><RoutineIcon size={48} color="#c4b5a8" /></div>
           <div style={{ fontSize:15, color:'#1a0a00', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
           <div style={{ fontSize:12, color:'#8a7265' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
         </div>
@@ -810,21 +811,21 @@ function RoutineModule({ profil, metriques }) {
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {routine.motivation && (
             <div style={sr.motivCard}>
-              <div style={{ fontSize:20, marginBottom:8 }}>💫</div>
+              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#FF6B35" /></div>
               <div style={{ fontSize:14, fontWeight:600, color:'#FF6B35', lineHeight:1.65 }}>{routine.motivation}</div>
             </div>
           )}
           {routine.matin && (
-            <RoutineSection id="matin" icon="🌅" titre={routine.matin.titre} heure={routine.matin.heure}
+            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#FF6B35" />} titre={routine.matin.titre} heure={routine.matin.heure}
               etapes={routine.matin.etapes} accent="#FF6B35" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.nutrition && <NutritionCard nutrition={routine.nutrition} />}
           {routine.apresmidi && (
-            <RoutineSection id="apresmidi" icon="☀️" titre={routine.apresmidi.titre} heure={routine.apresmidi.heure}
+            <RoutineSection id="apresmidi" iconEl={<SunIcon size={18} color="#ff9500" />} titre={routine.apresmidi.titre} heure={routine.apresmidi.heure}
               etapes={routine.apresmidi.etapes} accent="#ff9500" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.soir && (
-            <RoutineSection id="soir" icon="🌙" titre={routine.soir.titre} heure={routine.soir.heure}
+            <RoutineSection id="soir" iconEl={<MoonIcon size={18} color="#5856d6" />} titre={routine.soir.titre} heure={routine.soir.heure}
               etapes={routine.soir.etapes} accent="#5856d6" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.astuce && (
@@ -846,12 +847,12 @@ function NutritionCard({ nutrition }) {
   return (
     <div style={{ ...sr.card, borderTop:'3px solid #34c759' }}>
       <div style={sr.cardHeader}>
-        <span style={{ fontSize:20 }}>🥗</span>
+        <span style={{ fontSize:20, display:'flex', alignItems:'center' }}><FoodIcon size={20} color="#34c759" /></span>
         <span style={{ ...sr.cardTitre, color:'#34c759' }}>{nutrition.titre}</span>
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
-          <span style={{ fontSize:18 }}>{r.emoji}</span>
+          <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={16} color="#8a7265" /></span>
           <div style={{ fontSize:13, color:'#8a7265', lineHeight:1.5 }}>
             <strong style={{ color:'#1a0a00' }}>{r.moment}</strong> — {r.suggestion}
           </div>
@@ -859,21 +860,21 @@ function NutritionCard({ nutrition }) {
       ))}
       {nutrition.supplements?.length > 0 && (
         <div style={{ fontSize:12, color:'#34c759', background:'rgba(52,199,89,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(52,199,89,0.2)' }}>
-          💊 {nutrition.supplements.join(' · ')}
+          <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#34c759" />{nutrition.supplements.join(' · ')}</span>
         </div>
       )}
     </div>
   )
 }
 
-function RoutineSection({ id, icon, titre, heure, etapes, accent, checked, onToggle }) {
+function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checked, onToggle }) {
   const doneCount = etapes?.filter((_, i) => checked[`${id}_${i}`]).length || 0
   const total = etapes?.length || 0
   return (
     <div style={{ ...sr.card, borderTop:`3px solid ${accent}` }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <span style={{ fontSize:20 }}>{icon}</span>
+          <span style={{ fontSize:20, display:'flex', alignItems:'center' }}>{iconEl || icon}</span>
           <div>
             <div style={{ ...sr.cardTitre, color: accent }}>{titre}</div>
             {heure && <div style={{ fontSize:11, color:'#c4b5a8', marginTop:1 }}>{heure}</div>}
@@ -952,7 +953,7 @@ function TenueCard({ tenue }) {
       <div style={st.tenueInfo}>
         <div style={st.tenueTitre}>▸ {tenue.titre}</div>
         <div style={st.tenueDesc}>{tenue.description}</div>
-        <div style={st.tenuePourquoi}>💡 {tenue.pourquoi}</div>
+        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#FF9A3C" /> {tenue.pourquoi}</div>
       </div>
     </div>
   )
@@ -999,7 +1000,7 @@ function TenuesModule({ profil }) {
       {ouvert && (
         <div style={st.panel}>
           {meteo && (
-            <div style={st.meteoBar}>🌤️ {meteo}</div>
+            <div style={{...st.meteoBar, display:'flex', alignItems:'center', gap:6}}><WeatherIcon size={16} color="#fbbf24" /> {meteo}</div>
           )}
           <div style={st.row}>
             <input style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
@@ -1010,7 +1011,7 @@ function TenuesModule({ profil }) {
               {occasions.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
             <button style={st.btn} onClick={getTenues} disabled={loading}>
-              {loading ? '⏳' : '✨'}
+              {loading ? <LoadingIcon size={16} color="#fff" /> : <SparkleIcon size={16} color="#fff" />}
             </button>
           </div>
           {villeError && <div style={{ fontSize:12, color:'#ff3b30', marginTop:4 }}>Entre ta ville pour continuer</div>}

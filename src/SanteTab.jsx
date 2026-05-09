@@ -1,15 +1,31 @@
 import React, { useState } from 'react'
+import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
+
+function ScaleIcon({ color = '#34c759', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M12 3v18M3 9l9-6 9 6M5 21h14" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M3 15l4 4M21 15l-4 4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  )
+}
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            icon: '👣', unit: '',      goal: 10000, color: '#ff6b35', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
-  { key: 'sommeil', label: 'Sommeil',         icon: '😴', unit: 'h',    goal: 8,     color: '#a78bfa', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
-  { key: 'eau',     label: 'Hydratation',     icon: '💧', unit: ' v.',  goal: 8,     color: '#38bdf8', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
-  { key: 'fc',      label: 'Fréq. Cardiaque', icon: '❤️', unit: ' bpm', goal: 70,    color: '#ff3b30', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
-  { key: 'humeur',  label: 'Humeur',          icon: '😊', unit: '/5',   goal: 5,     color: '#fbbf24', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
-  { key: 'poids',   label: 'Poids',           icon: '⚖️', unit: ' kg',  goal: null,  color: '#34c759', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#ff6b35" />,   unit: '',      goal: 10000, color: '#ff6b35', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
+  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#a78bfa" />,  unit: 'h',    goal: 8,     color: '#a78bfa', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
+  { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#38bdf8" />, unit: ' v.',  goal: 8,     color: '#38bdf8', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
+  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#ff3b30" />, unit: ' bpm', goal: 70,    color: '#ff3b30', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
+  { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#fbbf24" />,  unit: '/5',   goal: 5,     color: '#fbbf24', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
+  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#34c759" />, unit: ' kg',  goal: null,  color: '#34c759', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
 ]
 
-const HUMEUR_EMOJIS = ['', '😞', '😕', '😐', '🙂', '😄']
+const HUMEUR_ICONS = [null,
+  <SadIcon size={20} color="#ef4444" />,
+  <SadIcon size={20} color="#f97316" />,
+  <NeutralIcon size={20} color="#eab308" />,
+  <HappyIcon size={20} color="#22c55e" />,
+  <HappyIcon size={20} color="#10b981" />,
+]
 
 export function scoreJour(m) {
   let s = 0
@@ -202,7 +218,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
-            {loadingInsights ? '⏳ Analyse...' : '✨ Analyse IA personnalisée'}
+            <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>{loadingInsights ? 'Analyse...' : 'Analyse IA personnalisée'}</span>
           </button>
         </div>
       </div>
@@ -211,11 +227,11 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {insights && (
         <div style={ss.insightsCard}>
           <div style={{ fontWeight: 700, color: '#F97316', marginBottom: 12, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>💡</span> Analyse personnalisée
+            <LightbulbIcon size={14} color="#F97316" /> Analyse personnalisée
           </div>
           {insights.points?.map((p, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{p.emoji}</span>
+              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{p.emoji || '•'}</span>
               <div style={{ fontSize: 13, color: '#1a0a00', lineHeight: 1.65 }}>{p.message}</div>
             </div>
           ))}
@@ -225,7 +241,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Quick Water Bar ── */}
       <div style={ss.waterBar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-          <span style={{ fontSize: 24, filter: 'drop-shadow(0 2px 4px rgba(56,189,248,0.4))' }}>💧</span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 4px rgba(56,189,248,0.4))' }}><WaterIcon size={24} color="#38bdf8" /></span>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
               {Array.from({ length: 8 }).map((_, i) => (
@@ -284,7 +300,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                <span style={{ fontSize: 24, filter: done ? `drop-shadow(0 2px 4px ${m.color}60)` : 'none' }}>{m.icon}</span>
+                <span style={{ display:'flex', alignItems:'center', filter: done ? `drop-shadow(0 2px 4px ${m.color}60)` : 'none' }}>{m.iconEl}</span>
                 {done && (
                   <span style={{
                     fontSize: 9, color: '#fff',
@@ -324,7 +340,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 </div>
               )}
               {m.key === 'humeur' && val > 0 && (
-                <div style={{ fontSize: 22, marginTop: 6, textAlign: 'center' }}>{HUMEUR_EMOJIS[val]}</div>
+                <div style={{ display:'flex', justifyContent:'center', marginTop: 6 }}>{HUMEUR_ICONS[val]}</div>
               )}
             </div>
           )
@@ -337,7 +353,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Apple Health ── */}
       <div style={ss.appleSection}>
         <button style={ss.appleTrigger} onClick={() => setShowApple(v => !v)}>
-          <span style={{ fontSize: 24, filter: 'drop-shadow(0 2px 6px rgba(52,199,89,0.4))' }}>🍎</span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(52,199,89,0.4))' }}><HeartIcon size={24} color="#34c759" /></span>
           <div style={{ flex: 1, textAlign: 'left' }}>
             <div style={{ fontWeight: 800, color: '#1a0a00', fontSize: 13 }}>Apple Santé & HealthKit</div>
             <div style={{ fontSize: 11, color: '#8a7265', marginTop: 2 }}>Synchronisation native iOS</div>
@@ -367,7 +383,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               fontSize: 12, color: '#34c759', fontWeight: 700,
               boxShadow: '0 4px 12px rgba(52,199,89,0.12), inset 0 1px 0 rgba(255,255,255,0.8)'
             }}>
-              📱 App iOS native avec HealthKit automatique — bientôt disponible
+              <span style={{display:'flex',alignItems:'center',gap:6}}><PhoneIcon size={13} color="#34c759" /> App iOS native avec HealthKit automatique — bientôt disponible</span>
             </div>
           </div>
         )}
@@ -408,7 +424,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                         } : {})
                       }}
                       onClick={() => setTempVal(n.toString())}>
-                      {HUMEUR_EMOJIS[n]}
+                      <span style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>{HUMEUR_ICONS[n]}</span>
                     </button>
                   ))}
                 </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, FireIcon, GiftIcon, LeafIcon } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -27,14 +28,14 @@ const QUESTIONS = [
     question:'Quel est ton principal objectif ?',
     subtitle:'On va personnaliser toute ton expérience autour de ça',
     options:[
-      {icon:'⚡',label:"Plus d'énergie"},
-      {icon:'😴',label:'Mieux dormir'},
-      {icon:'🥗',label:'Manger sainement'},
-      {icon:'💪',label:'Prendre du muscle'},
-      {icon:'🧘',label:'Réduire le stress'},
-      {icon:'⚖️',label:'Perdre du poids'},
-      {icon:'🏃',label:'Courir un marathon'},
-      {icon:'🧠',label:'Productivité maximale'},
+      {iconEl:<FlashIcon size={20} color="#fbbf24" />,  label:"Plus d'énergie"},
+      {iconEl:<LeafIcon size={20} color="#a78bfa" />,   label:'Mieux dormir'},
+      {iconEl:<FoodIcon size={20} color="#34c759" />,   label:'Manger sainement'},
+      {iconEl:<MuscleIcon size={20} color="#FF6B35" />, label:'Prendre du muscle'},
+      {iconEl:<MeditateIcon size={20} color="#a78bfa" />,label:'Réduire le stress'},
+      {iconEl:<RunIcon size={20} color="#38bdf8" />,    label:'Perdre du poids'},
+      {iconEl:<RunIcon size={20} color="#FF6B35" />,    label:'Courir un marathon'},
+      {iconEl:<BrainIcon size={20} color="#FF6B35" />,  label:'Productivité maximale'},
     ],
     multi: true
   },
@@ -48,13 +49,13 @@ const QUESTIONS = [
   {
     id:'activite', type:'cards',
     question:"Quel est ton niveau d'activité physique ?",
-    subtitle:'Sois honnête, on ne juge pas 😄',
+    subtitle:'Sois honnête, on ne juge pas :)',
     options:[
-      {icon:'🛋️',label:'Sédentaire',       sub:'Bureau, peu de sport'},
-      {icon:'🚶',label:'Légèrement actif', sub:'Marche quotidienne'},
-      {icon:'🏋️',label:'Modérément actif', sub:'Sport 2-3x/semaine'},
-      {icon:'🔥',label:'Très actif',       sub:'Sport 4-5x/semaine'},
-      {icon:'🏆',label:'Sportif intensif', sub:'Entraînement quotidien'},
+      {iconEl:<LeafIcon size={20} color="#9ca3af" />,    label:'Sédentaire',       sub:'Bureau, peu de sport'},
+      {iconEl:<RunIcon size={20} color="#38bdf8" />,     label:'Légèrement actif', sub:'Marche quotidienne'},
+      {iconEl:<MuscleIcon size={20} color="#FF6B35" />,  label:'Modérément actif', sub:'Sport 2-3x/semaine'},
+      {iconEl:<FireIcon size={20} color="#FF6B35" />,    label:'Très actif',       sub:'Sport 4-5x/semaine'},
+      {iconEl:<FlashIcon size={20} color="#fbbf24" />,   label:'Sportif intensif', sub:'Entraînement quotidien'},
     ],
     multi: false
   },
@@ -73,8 +74,8 @@ const QUESTIONS = [
     question:'As-tu des problèmes de santé ou des maladies ?',
     subtitle:'Pour que nos conseils soient totalement adaptés et sans risque pour toi',
     options:[
-      {icon:'🏥', label:'Oui', sub:"J'ai des conditions médicales"},
-      {icon:'🎉', label:'Non', sub:'Je suis en bonne santé'},
+      {iconEl:<MeditateIcon size={20} color="#FF6B35" />, label:'Oui', sub:"J'ai des conditions médicales"},
+      {iconEl:<GiftIcon size={20} color="#34c759" />,     label:'Non', sub:'Je suis en bonne santé'},
     ],
     multi: false
   },
@@ -403,7 +404,7 @@ export default function Onboarding({ onTermine }) {
                   style={{...s.card, ...(sel ? s.cardSel : {})}}
                   onClick={() => handleCardClick(opt.label)}>
                   <div style={{...s.cardIconWrap, ...(sel ? s.cardIconWrapSel : {})}}>
-                    <span style={{...s.cardIcon, fontSize: sel ? 34 : 28}}>{opt.icon}</span>
+                    <span style={{...s.cardIcon, display:'flex', alignItems:'center', justifyContent:'center'}}>{opt.iconEl || opt.icon}</span>
                   </div>
                   <div style={s.cardLabel}>{opt.label}</div>
                   {opt.sub && <div style={s.cardSub}>{opt.sub}</div>}

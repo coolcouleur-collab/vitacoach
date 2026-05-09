@@ -1,4 +1,5 @@
 import React, { useState, Component } from 'react'
+import { MuscleIcon, LightbulbIcon, LeafIcon, CalendarIcon, ChatIcon, CheckIcon } from './Icons'
 
 // ─── Parser ───────────────────────────────────────────────────────────────────
 function parseRich(text) {
@@ -21,11 +22,11 @@ function parseRich(text) {
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
   meals:     { accent:'#FF6B35', label:'🍽️ Repas',      gradient:'linear-gradient(135deg,#FF6B35,#FF9A3C)' },
-  exercises: { accent:'#a78bfa', label:'💪 Exercices',   gradient:'linear-gradient(135deg,#a78bfa,#7c3aed)' },
-  tips:      { accent:'#FF9A3C', label:'💡 Conseils',    gradient:'linear-gradient(135deg,#FF9A3C,#f59e0b)' },
-  plants:    { accent:'#34c759', label:'🌿 Plantes',     gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
-  routine:   { accent:'#38bdf8', label:'📅 Programme',   gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
-  generic:   { accent:'#FF6B35', label:'• Suggestions', gradient:'linear-gradient(135deg,#FF6B35,#E55A00)' },
+  exercises: { accent:'#a78bfa', labelEl:<><MuscleIcon size={13} color="#a78bfa" /> Exercices</>,  gradient:'linear-gradient(135deg,#a78bfa,#7c3aed)' },
+  tips:      { accent:'#FF9A3C', labelEl:<><LightbulbIcon size={13} color="#FF9A3C" /> Conseils</>, gradient:'linear-gradient(135deg,#FF9A3C,#f59e0b)' },
+  plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
+  routine:   { accent:'#38bdf8', labelEl:<><CalendarIcon size={13} color="#38bdf8" /> Programme</>,gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
+  generic:   { accent:'#FF6B35', labelEl:<><ChatIcon size={13} color="#FF6B35" /> Suggestions</>, gradient:'linear-gradient(135deg,#FF6B35,#E55A00)' },
 }
 
 // ─── Global keyframes injected once ──────────────────────────────────────────
@@ -76,7 +77,7 @@ function BookingCard({ data }) {
           display:'flex', alignItems:'center', justifyContent:'center',
           fontSize:26,
         }}>
-          {data.emoji || '📅'}
+          {data.emoji || <CalendarIcon size={26} color="rgba(255,255,255,0.9)" />}
         </div>
 
         <div style={{ flex:1, minWidth:0 }}>
@@ -112,7 +113,7 @@ function BookingCard({ data }) {
             border:'1px solid rgba(255,107,53,0.15)',
             borderRadius:14, padding:'12px 14px',
           }}>
-            <span style={{ fontSize:18, flexShrink:0 }}>💬</span>
+            <span style={{ flexShrink:0, display:'flex' }}><ChatIcon size={18} color="#FF6B35" /></span>
             <span style={{ fontSize:13, color:'#6b5042', lineHeight:1.65 }}>{data.note}</span>
           </div>
         )}
@@ -133,7 +134,7 @@ function BookingCard({ data }) {
               transition:'all 0.3s ease',
               cursor:'pointer',
             }}>
-              {added ? '✅ Ajouté au calendrier !' : '📅 Ajouter à mon calendrier'}
+              {added ? <><CheckIcon size={14} color="#34c759" /> Ajouté au calendrier !</> : <><CalendarIcon size={14} color="#FF6B35" /> Ajouter à mon calendrier</>}
             </div>
           </a>
 
@@ -240,7 +241,7 @@ function TypeHeader({ cfg, count }) {
   return (
     <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14, animation:'fadeIn 0.3s ease both' }}>
       <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:cfg.gradient, borderRadius:20, padding:'7px 16px', boxShadow:`0 6px 20px ${cfg.accent}30` }}>
-        <span style={{ fontSize:13, fontWeight:800, color:'#fff', letterSpacing:'0.2px' }}>{cfg.label}</span>
+        <span style={{ fontSize:13, fontWeight:800, color:'#fff', letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
       </div>
       {count > 0 && <span style={{ fontSize:11, color:'#c4b5a8', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
     </div>
@@ -308,7 +309,7 @@ export default function ResponseRenderer({ content }) {
 
       {data.outro && (
         <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'12px 14px', background:`linear-gradient(135deg, ${cfg.accent}08, ${cfg.accent}04)`, border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
-          <span style={{ fontSize:16 }}>💬</span>
+          <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={16} color={cfg.accent} /></span>
           <span style={{ fontSize:12.5, color:'#6b5042', lineHeight:1.6, fontStyle:'italic' }}>{data.outro}</span>
         </div>
       )}
