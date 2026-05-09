@@ -77,6 +77,14 @@ function sauverMetriques(m) {
   localStorage.setItem('vitacoach_metriques', JSON.stringify({ ...m, date: new Date().toDateString() }))
 }
 
+// Convertit base64url en Uint8Array pour VAPID
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const raw = window.atob(base64)
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)))
+}
+
 // ─── APP ══════════════════════════════════════════════════════════════════════
 export default function App() {
   const FREE_LIMIT = 5
@@ -117,6 +125,7 @@ export default function App() {
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
+  const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
 
@@ -196,6 +205,70 @@ export default function App() {
       setHistory(sorted)
       return newM
     })
+  }
+
+  // ── Notifications Push ────────────────────────────────────────────────────
+  async function activerNotifications() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('Ton navigateur ne supporte pas les notifications push.')
+      return
+    }
+    try {
+      // Enregistre le service worker
+      const reg = await navigator.serviceWorker.register('/sw.js')
+      await navigator.serviceWorker.ready
+
+      // Demande la permission
+      const perm = await Notification.requestPermission()
+      if (perm !== 'granted') return
+
+      // Récupère la clé VAPID publique
+      const { key } = await fetch('/api/vapid-public-key').then(r => r.json())
+      const appServerKey = urlBase64ToUint8Array(key)
+
+      // Crée la subscription
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: appServerKey,
+      })
+
+      // Envoie la subscription au serveur
+      await fetch('/api/push-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscription: sub.toJSON(), userId: profil?.nom || 'user' })
+      })
+
+      setNotifEnabled(true)
+      localStorage.setItem('vitacoach_notif', JSON.stringify(true))
+
+      // Notif de bienvenue immédiate
+      reg.showNotification('Oravia activé ! 🎉', {
+        body: `Salut ${profil?.nom} ! Tu recevras tes rappels santé quotidiens.`,
+        icon: '/icon-192.png',
+        tag: 'welcome',
+      })
+    } catch (e) {
+      console.error('Push error:', e)
+    }
+  }
+
+  async function desactiverNotifications() {
+    try {
+      const reg = await navigator.serviceWorker.getRegistration('/sw.js')
+      if (reg) {
+        const sub = await reg.pushManager.getSubscription()
+        if (sub) {
+          await fetch('/api/push-unsubscribe', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: profil?.nom || 'user', endpoint: sub.endpoint })
+          })
+          await sub.unsubscribe()
+        }
+      }
+    } catch {}
+    setNotifEnabled(false)
+    localStorage.setItem('vitacoach_notif', JSON.stringify(false))
   }
 
   async function passerPro() {
@@ -329,6 +402,17 @@ export default function App() {
               <button style={s.btnPro} onClick={passerPro}>⚡ Oravia Pro — 4.99€/mois</button>
             )}
             {isPro && <div style={s.proBadge}>✦ Membre Pro</div>}
+            <button
+              style={{
+                ...s.btnEdit,
+                background: notifEnabled ? 'rgba(52,199,89,0.10)' : 'rgba(0,0,0,0.04)',
+                color: notifEnabled ? '#34c759' : '#8a7265',
+                border: notifEnabled ? '1px solid rgba(52,199,89,0.25)' : '1px solid rgba(0,0,0,0.08)',
+              }}
+              onClick={notifEnabled ? desactiverNotifications : activerNotifications}
+            >
+              {notifEnabled ? '🔔 Rappels activés' : '🔕 Activer les rappels'}
+            </button>
             <button style={s.btnEdit} onClick={() => {
               setProfilBackup(profil); setProfil(null)
             }}>✏️ Modifier mon profil</button>

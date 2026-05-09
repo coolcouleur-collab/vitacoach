@@ -1,6 +1,7 @@
 import express from 'express'
 import Groq from 'groq-sdk'
 import Stripe from 'stripe'
+import webpush from 'web-push'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -12,6 +13,16 @@ dotenv.config()
 const app = express()
 const groq   = new Groq({ apiKey: process.env.GROQ_API_KEY })
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+// Web Push VAPID
+webpush.setVapidDetails(
+  process.env.VAPID_EMAIL || 'mailto:contact@oravia.app',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+)
+
+// Stockage en mémoire des subscriptions (remplacer par DB en prod)
+const pushSubscriptions = new Map()
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const supabaseUrl = process.env.SUPABASE_URL
@@ -378,6 +389,53 @@ Donne 6 recommandations vraiment différentes et adaptées. Sois précis et scie
   } catch {
     res.json({ recommendations: [] })
   }
+})
+
+// ── Clé publique VAPID ───────────────────────────────────────────────────────
+app.get('/api/vapid-public-key', (req, res) => {
+  res.json({ key: process.env.VAPID_PUBLIC_KEY })
+})
+
+// ── Sauvegarder subscription push ────────────────────────────────────────────
+app.post('/api/push-subscribe', (req, res) => {
+  const { subscription, userId } = req.body
+  if (!subscription?.endpoint) return res.status(400).json({ error: 'Subscription invalide' })
+  pushSubscriptions.set(userId || subscription.endpoint, subscription)
+  console.log(`Push subscription sauvegardee (total: ${pushSubscriptions.size})`)
+  res.json({ ok: true })
+})
+
+// ── Supprimer subscription ────────────────────────────────────────────────────
+app.post('/api/push-unsubscribe', (req, res) => {
+  const { userId, endpoint } = req.body
+  pushSubscriptions.delete(userId || endpoint)
+  res.json({ ok: true })
+})
+
+// ── Envoyer notif a un utilisateur ───────────────────────────────────────────
+app.post('/api/push-send', async (req, res) => {
+  const { userId, title, body, url, tag } = req.body
+  const sub = pushSubscriptions.get(userId)
+  if (!sub) return res.status(404).json({ error: 'Subscription introuvable' })
+  try {
+    await webpush.sendNotification(sub, JSON.stringify({ title, body, url: url || '/', tag }))
+    res.json({ ok: true })
+  } catch (e) {
+    if (e.statusCode === 410) pushSubscriptions.delete(userId)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Broadcast toutes les subscriptions ───────────────────────────────────────
+app.post('/api/push-broadcast', async (req, res) => {
+  const { title, body, url, tag } = req.body
+  const payload = JSON.stringify({ title, body, url: url || '/', tag })
+  let ok = 0, fail = 0
+  for (const [id, sub] of pushSubscriptions) {
+    try { await webpush.sendNotification(sub, payload); ok++ }
+    catch (e) { if (e.statusCode === 410) pushSubscriptions.delete(id); fail++ }
+  }
+  res.json({ ok, fail, total: pushSubscriptions.size })
 })
 
 // ── Stripe Checkout ──────────────────────────────────────────────────────────
