@@ -1,5 +1,5 @@
-// ─── Service Worker Oravia — Notifications Push ───────────────────────────────
-const CACHE = 'oravia-v1'
+// ─── Service Worker Elio — Notifications Push ────────────────────────────────
+const CACHE = 'elio-v1'
 
 self.addEventListener('install', e => {
   self.skipWaiting()
@@ -11,7 +11,7 @@ self.addEventListener('activate', e => {
 
 // Réception d'une notification push
 self.addEventListener('push', e => {
-  let data = { title: 'Oravia', body: 'Un message de ton coach !', icon: '/icon-192.png', badge: '/icon-192.png' }
+  let data = { title: 'Elio', body: 'Un message de ton coach !', icon: '/icon-192.png', badge: '/icon-192.png' }
   try { if (e.data) data = { ...data, ...e.data.json() } } catch {}
 
   e.waitUntil(
@@ -19,7 +19,7 @@ self.addEventListener('push', e => {
       body:    data.body,
       icon:    data.icon || '/icon-192.png',
       badge:   data.badge || '/icon-192.png',
-      tag:     data.tag || 'oravia',
+      tag:     data.tag || 'elio',
       data:    data.url ? { url: data.url } : {},
       vibrate: [200, 100, 200],
       actions: data.actions || [],

@@ -27,9 +27,9 @@ const FEATURES = [
 
 const TESTIMONIALS = [
   { name:'Sophie M.', tag:'Perte de poids', stars:5,
-    text:'"J\'ai perdu 8 kg en 3 mois grâce aux conseils nutrition. Reva comprend vraiment mes contraintes halal et ma carence en fer."' },
+    text:'"J\'ai perdu 8 kg en 3 mois grâce aux conseils nutrition. Elio comprend vraiment mes contraintes halal et ma carence en fer."' },
   { name:'Thomas L.', tag:'Productivité',  stars:5,
-    text:'"La routine du matin générée par Reva a transformé mes journées. Je dors mieux, je me concentre mieux."' },
+    text:'"La routine du matin générée par Elio a transformé mes journées. Je dors mieux, je me concentre mieux."' },
   { name:'Amira K.', tag:'SOPK & bien-être', stars:5,
     text:'"Les recommandations de plantes pour mon SOPK sont d\'une précision incroyable. Enfin un coach qui prend mes pathologies au sérieux."' },
 ]
@@ -86,7 +86,7 @@ export default function Landing({ onCommencer }) {
 
       {/* ── NAV ── */}
       <nav style={s.nav}>
-        <div style={s.navLogo}>Reva <span style={{ fontSize:11, fontWeight:400, opacity:0.6, letterSpacing:'0.5px' }}>re-vivre · évoluer</span></div>
+        <div style={s.navLogo}>Elio <span style={{ fontSize:11, fontWeight:400, opacity:0.6, letterSpacing:'0.5px' }}>re·vivre · évoluer</span></div>
         <div style={{ display:'flex', gap:12, alignItems:'center' }}>
           <span style={s.navFree}>5 messages gratuits/jour</span>
           <button style={s.navCta} onClick={onCommencer}>Commencer →</button>
@@ -111,7 +111,7 @@ export default function Landing({ onCommencer }) {
         </h1>
 
         <p style={s.subtitle}>
-          Reva analyse ton profil complet, tes objectifs et ton rythme de vie<br />
+          Elio analyse ton profil complet, tes objectifs et ton rythme de vie<br />
           pour t'accompagner chaque jour avec des conseils vraiment personnalisés.
         </p>
 
@@ -265,7 +265,7 @@ export default function Landing({ onCommencer }) {
           ))}
         </div>
         <div style={{ marginTop:20, fontSize:12, color:'#c4b5a8' }}>
-          <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}><BellIcon size={13} color="#c4b5a8" /> En attendant, accède à Reva depuis ton navigateur mobile</span>
+          <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}><BellIcon size={13} color="#c4b5a8" /> En attendant, accède à Elio depuis ton navigateur mobile</span>
         </div>
       </section>
 
@@ -278,12 +278,12 @@ export default function Landing({ onCommencer }) {
           borderRadius:32, padding:'52px 40px',
           boxShadow:'0 24px 64px rgba(255,107,53,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
         }}>
-          <div style={{ fontSize:42, marginBottom:16, fontWeight:900, background:'linear-gradient(135deg,#FF6B35,#FF4500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>R</div>
+          <div style={{ fontSize:42, marginBottom:16, fontWeight:900, background:'linear-gradient(135deg,#FF6B35,#FF4500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>E</div>
           <h2 style={{ fontSize:26, fontWeight:900, color:'#1a0a00', marginBottom:14, letterSpacing:'-0.5px' }}>
             Prêt à transformer ton quotidien ?
           </h2>
           <p style={{ fontSize:14, color:'#8a7265', marginBottom:32, lineHeight:1.75 }}>
-            Rejoins Reva maintenant et reçois des conseils personnalisés dès aujourd'hui.<br />
+            Rejoins Elio maintenant et reçois des conseils personnalisés dès aujourd'hui.<br />
             5 messages gratuits chaque jour, sans carte bancaire.
           </p>
           <button className="btn-primary" style={{ ...s.btnPrimary, width:'100%', maxWidth:360, margin:'0 auto', display:'block' }} onClick={onCommencer}>
@@ -296,7 +296,7 @@ export default function Landing({ onCommencer }) {
       {/* ── FOOTER ── */}
       <footer style={s.footer}>
         <div style={s.footerTop}>
-          <div style={s.footerLogo}>Reva</div>
+          <div style={s.footerLogo}>Elio</div>
           <div style={s.footerTagline}>re-vivre · évoluer</div>
         </div>
         <div style={s.footerLinks}>
@@ -306,7 +306,7 @@ export default function Landing({ onCommencer }) {
           <span style={{ color:'rgba(255,255,255,0.1)' }}>·</span>
           <span style={s.footerLink}>Contact</span>
         </div>
-        <div style={s.footerCopy}>© 2026 Reva · Tous droits réservés</div>
+        <div style={s.footerCopy}>© 2026 Elio · Tous droits réservés</div>
       </footer>
     </div>
   )

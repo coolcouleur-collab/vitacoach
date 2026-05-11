@@ -131,7 +131,7 @@ const QUESTIONS = [
   {
     id:'nom', type:'text',
     question:"Comment on t'appelle ?",
-    subtitle:"Le prénom qu'Reva utilisera pour toi",
+    subtitle:"Le prénom qu'Elio utilisera pour toi",
     placeholder:'Ton prénom',
   },
 ]
@@ -362,8 +362,8 @@ export default function Onboarding({ onTermine }) {
 
       {/* ── Logo ── */}
       <div style={s.logoTop}>
-        <span style={s.logoIcon}>R</span>
-        <span style={s.logoText}>Reva</span>
+        <span style={s.logoIcon}>E</span>
+        <span style={s.logoText}>Elio</span>
       </div>
 
       {/* ── Dots de progression ── */}
@@ -497,7 +497,7 @@ export default function Onboarding({ onTermine }) {
           <button className="cta-btn"
             style={{...s.ctaBtn, opacity: canContinue() ? 1 : 0.42, cursor: canContinue() ? 'pointer' : 'default'}}
             onClick={goNext} disabled={!canContinue()}>
-            {isLast ? 'Lancer Reva' : 'Continuer →'}
+            {isLast ? 'Lancer Elio' : 'Continuer →'}
           </button>
         )}
       </div>

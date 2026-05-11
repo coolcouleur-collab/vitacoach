@@ -8,8 +8,8 @@ import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
-// ─── REVA MASCOT FACE ────────────────────────────────────────────────────────
-function RevaFace({ size = 34 }) {
+// ─── ELIO MASCOT FACE ────────────────────────────────────────────────────────
+function ElioFace({ size = 34 }) {
   return (
     <div style={{
       width: size, height: size,
@@ -243,7 +243,7 @@ export default function App() {
       localStorage.setItem('vitacoach_notif', JSON.stringify(true))
 
       // Notif de bienvenue immédiate
-      reg.showNotification('Reva activé !', {
+      reg.showNotification('Elio activé !', {
         body: `Salut ${profil?.nom} ! Tu recevras tes rappels santé quotidiens.`,
         icon: '/icon-192.png',
         tag: 'welcome',
@@ -293,7 +293,7 @@ export default function App() {
       setMessages(prev => {
         const last = prev[prev.length - 1]
         if (last?.content?.includes('messages gratuits')) return prev
-        return [...prev, { role:'assistant', content:`Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Reva Pro pour des conseils illimités !` }]
+        return [...prev, { role:'assistant', content:`Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Elio Pro pour des conseils illimités !` }]
       })
       isSendingRef.current = false
       return
@@ -337,7 +337,7 @@ export default function App() {
         setProfil(p)
         setProfilBackup(null)
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
-        setMessages([{ role:'assistant', content:`Bienvenue ${p.nom} ! Je suis Reva, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
+        setMessages([{ role:'assistant', content:`Bienvenue ${p.nom} ! Je suis Elio, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
       }} />
     )
   }
@@ -366,8 +366,8 @@ export default function App() {
       {!isMobile && (
         <aside style={s.sidebar}>
           <div style={s.sidebarTop}>
-            <div style={s.logo}>Reva</div>
-            <div style={s.logoSub}>re-vivre · évoluer</div>
+            <div style={s.logo}>Elio</div>
+            <div style={s.logoSub}>re·vivre · évoluer</div>
           </div>
 
           <nav style={s.sidebarNav}>
@@ -399,7 +399,7 @@ export default function App() {
               </div>
             </div>
             {!isPro && (
-              <button style={s.btnPro} onClick={passerPro}><FlashIcon size={14} color="#fff" /> Reva Pro — 4.99€/mois</button>
+              <button style={s.btnPro} onClick={passerPro}><FlashIcon size={14} color="#fff" /> Elio Pro — 4.99€/mois</button>
             )}
             {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
             <button
@@ -433,7 +433,7 @@ export default function App() {
                   <BackIcon color="#1a0a00" size={20} />
                 </button>
               ) : (
-                <div style={s.logo}>Reva</div>
+                <div style={s.logo}>Elio</div>
               )}
 
               <div style={s.mobileTitle}>
@@ -482,15 +482,15 @@ export default function App() {
                 )}
                 <div>
                   <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#FF6B35" />} Coach IA</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Reva</div>}
+                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Elio</div>}
                 </div>
               </div>
 
               <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
-                    <div style={s.emptyChatIcon}><RevaFace size={56} /></div>
-                    <div style={s.emptyChatTitle}>Je suis Reva, ton coach de vie</div>
+                    <div style={s.emptyChatIcon}><ElioFace size={56} /></div>
+                    <div style={s.emptyChatTitle}>Je suis Elio, ton coach de vie</div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     <div style={s.suggestionsPile}>
                       {suggestions.map((sug, i) => (
@@ -504,7 +504,7 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {msg.role==='assistant' && <RevaFace size={34} />}
+                    {msg.role==='assistant' && <ElioFace size={34} />}
                     <div style={
                       msg.role==='user'
                         ? s.userBubble
@@ -524,7 +524,7 @@ export default function App() {
 
                 {loading && (
                   <div style={s.botMsg}>
-                    <RevaFace size={34} />
+                    <ElioFace size={34} />
                     <div style={s.botBubble}>
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
@@ -557,7 +557,7 @@ export default function App() {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
-                    placeholder="Pose une question à Reva..." />
+                    placeholder="Pose une question à Elio..." />
                   <button style={s.sendBtn} onClick={() => envoyerMessage()}>
                     <SendIcon color="#fff" size={17} />
                   </button>
