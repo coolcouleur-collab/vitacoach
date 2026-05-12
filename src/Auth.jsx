@@ -36,7 +36,7 @@ export default function Auth({ onConnecte }) {
       <div style={s.card}>
         <div style={s.logoWrap}>
           <div style={s.logoIcon}>E</div>
-          <div style={s.logoText}>Elio</div>
+          <div style={s.logoText}>Solenn</div>
         </div>
         <div style={s.tagline}>Ton coach de vie personnel</div>
 

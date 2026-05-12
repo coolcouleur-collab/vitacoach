@@ -16,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 // Web Push VAPID
 webpush.setVapidDetails(
-  process.env.VAPID_EMAIL || 'mailto:contact@elio.fr',
+  process.env.VAPID_EMAIL || 'mailto:contact@meet-solenn.com',
   process.env.VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY
 )
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.get('/', (req, res) => res.json({ status: 'Elio OK' }))
+app.get('/', (req, res) => res.json({ status: 'Solenn OK' }))
 
 // Inscription
 app.post('/api/inscription', async (req, res) => {
@@ -82,7 +82,7 @@ app.get('/api/charger-profil', async (req, res) => {
 app.post('/api/chat', async (req, res) => {
   const { message, profil, historique = [] } = req.body
 
-  const systemPrompt = `Tu es Elio, un coach de vie personnel et bienveillant.
+  const systemPrompt = `Tu es Solenn, un coach de vie personnel et bienveillant.
 Tu connais parfaitement ton utilisateur :
 - Nom: ${profil.nom}
 - Age: ${profil.age} ans
@@ -285,7 +285,7 @@ app.get('/api/image', async (req, res) => {
 // ── Routine du jour ──────────────────────────────────────────────────────────
 app.post('/api/routine', async (req, res) => {
   const { profil, metriques } = req.body
-  const prompt = `Tu es Elio, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
+  const prompt = `Tu es Solenn, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
 Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
 Métriques d'hier : sommeil ${metriques.sommeil || 0}h, pas ${metriques.pas || 0}, humeur ${metriques.humeur || 0}/5.
 
@@ -320,7 +320,7 @@ Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
 // ── Insights santé ───────────────────────────────────────────────────────────
 app.post('/api/health-insights', async (req, res) => {
   const { metriques, profil } = req.body
-  const prompt = `Tu es Elio, coach santé. Analyse les métriques de ${profil.nom} et donne 3 insights personnalisés.
+  const prompt = `Tu es Solenn, coach santé. Analyse les métriques de ${profil.nom} et donne 3 insights personnalisés.
 Métriques : pas=${metriques.pas || 0}, sommeil=${metriques.sommeil || 0}h, eau=${metriques.eau || 0} verres, humeur=${metriques.humeur || 0}/5, FC=${metriques.fc || 0}bpm, poids=${metriques.poids || 0}kg.
 Objectifs : ${profil.objectifs?.join(', ') || 'non renseignés'}.
 
@@ -347,7 +347,7 @@ Maximum 3 insights, pertinents et actionnables.`
 // ── Recommandations herbal IA ─────────────────────────────────────────────────
 app.post('/api/herbal', async (req, res) => {
   const { profil } = req.body
-  const prompt = `Tu es Elio, expert en phytothérapie et médecine naturelle. Analyse le profil de ${profil.nom} et propose des plantes/remèdes VRAIMENT personnalisés.
+  const prompt = `Tu es Solenn, expert en phytothérapie et médecine naturelle. Analyse le profil de ${profil.nom} et propose des plantes/remèdes VRAIMENT personnalisés.
 
 PROFIL COMPLET :
 - Âge : ${profil.age} ans
@@ -450,7 +450,7 @@ app.post('/api/create-checkout', async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'Elio Pro',
+            name: 'Solenn Pro',
             description: 'Coach IA illimité · Analyses personnalisées · Toutes les fonctionnalités',
             images: [],
           },
@@ -484,5 +484,5 @@ app.get('/api/check-subscription', async (req, res) => {
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`✅ Serveur Elio démarré sur port ${PORT}`)
+  console.log(`✅ Serveur Solenn démarré sur port ${PORT}`)
 })
