@@ -164,45 +164,77 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
   )
 }
 
-// ─── PROGRESS STRIP ───────────────────────────────────────────────────────────
-function ProgressStrip({ metriques }) {
+// ─── METRIC RINGS (remplace ProgressStrip) ────────────────────────────────────
+function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
+  const [anim, setAnim] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setAnim(true), 120 + index * 90); return () => clearTimeout(t) }, [])
+  const R = 24
+  const C = 2 * Math.PI * R
+  const pct = Math.min((val / goal) * 100, 100)
+  const dash = anim ? (pct / 100) * C : 0
+  const done = pct >= 100
+
+  return (
+    <div style={{
+      flex:1, background:'#ffffff',
+      border:`1.5px solid ${val > 0 ? color+'30' : '#f0e8e0'}`,
+      borderRadius:22, padding:'14px 8px 12px',
+      boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.9)`,
+      display:'flex', flexDirection:'column', alignItems:'center', gap:6,
+      animation:`tabFade 0.4s ease ${index * 0.08}s both`,
+      transition:'box-shadow 0.3s ease',
+    }}>
+      {/* Ring SVG */}
+      <div style={{ position:'relative', width:60, height:60 }}>
+        <svg width={60} height={60} viewBox="0 0 60 60"
+          style={{ transform:'rotate(-90deg)', overflow:'visible' }}>
+          <circle cx="30" cy="30" r={R} fill="none"
+            stroke={color+'18'} strokeWidth="4.5"/>
+          <circle cx="30" cy="30" r={R} fill="none"
+            stroke={color} strokeWidth="4.5" strokeLinecap="round"
+            strokeDasharray={`${dash} ${C}`}
+            style={{
+              transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)',
+              filter: done
+                ? `drop-shadow(0 0 6px ${color})`
+                : `drop-shadow(0 0 3px ${color}80)`,
+            }}/>
+        </svg>
+        {/* Center icon/check */}
+        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+          {done
+            ? <span style={{ fontSize:16, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>
+            : iconEl}
+        </div>
+        {/* Completed pulse ring */}
+        {done && (
+          <div style={{
+            position:'absolute', inset:-6, borderRadius:'50%',
+            border:`2px solid ${color}40`,
+            animation:'scoreGlow 2s ease-in-out infinite',
+            pointerEvents:'none',
+          }} />
+        )}
+      </div>
+      {/* Value */}
+      <div style={{ fontSize:13, fontWeight:900, color: val > 0 ? color : '#c4b5a8', lineHeight:1 }}>
+        {val > 0 ? fmt(val) : '·'}
+      </div>
+      <div style={{ fontSize:8, color:'#8a7265', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.7px' }}>{label}</div>
+    </div>
+  )
+}
+
+function MetricRings({ metriques }) {
   const items = [
-    { iconEl:<WaterIcon size={16} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
-    { iconEl:<RunIcon size={16} color="#FF6B35" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : v },
-    { iconEl:<MoonIcon size={16} color="#a78bfa" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => `${v}h` },
-    { iconEl:<MoodIcon size={16} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
+    { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
+    { iconEl:<RunIcon size={17} color="#FF6B35" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
+    { iconEl:<MoonIcon size={17} color="#a78bfa" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#a78bfa', fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
-    <div style={hc.strip}>
-      {items.map((it, i) => {
-        const pct = Math.min((it.val / it.goal) * 100, 100)
-        const done = pct >= 100
-        return (
-          <div key={i} style={{
-            ...hc.stripItem,
-            boxShadow:`0 8px 24px ${it.color}22, 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)`,
-            borderColor: it.val > 0 ? it.color + '35' : '#f0e8e0',
-            animation:`tabFade 0.4s ease ${i * 0.08}s both`,
-          }}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
-              <span style={{ display:'flex', alignItems:'center' }}>{it.iconEl}</span>
-              <span style={{ fontSize:12, fontWeight:800, color: it.val > 0 ? it.color : '#c4b5a8' }}>
-                {it.val > 0 ? it.fmt(it.val) : ''}
-              </span>
-            </div>
-            <div style={{ height:7, background:'rgba(0,0,0,0.05)', borderRadius:4, overflow:'hidden' }}>
-              <div style={{
-                height:'100%', width:`${pct}%`,
-                background:`linear-gradient(90deg, ${it.color}cc, ${it.color})`,
-                borderRadius:4,
-                transition:'width 1.4s cubic-bezier(0.34,1.56,0.64,1)',
-                boxShadow: done ? `0 0 10px ${it.color}80` : 'none',
-              }} />
-            </div>
-            <div style={{ fontSize:9, color:'#8a7265', marginTop:5, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px' }}>{it.label}</div>
-          </div>
-        )
-      })}
+    <div style={{ display:'flex', gap:10, padding:'14px 18px' }}>
+      {items.map((it, i) => <MetricRing key={i} {...it} index={i} />)}
     </div>
   )
 }
@@ -257,13 +289,26 @@ function StreakXP({ streak, xp, level }) {
             boxShadow:'0 4px 14px rgba(167,139,250,0.45)',
           }}><StarIcon size={18} color="#fff" /></div>
         </div>
-        <div style={{ height:6, background:'rgba(167,139,250,0.15)', borderRadius:4, overflow:'hidden' }}>
-          <div style={{
-            height:'100%', width:`${pct}%`,
-            background:'linear-gradient(90deg,#a78bfa,#7c3aed)',
-            borderRadius:4, transition:'width 1s cubic-bezier(0.34,1.56,0.64,1)',
-            boxShadow:'0 0 8px rgba(167,139,250,0.60)',
-          }} />
+        {/* Glowing nodes instead of bar */}
+        <div style={{ display:'flex', alignItems:'center', gap:3, margin:'6px 0 2px' }}>
+          {Array.from({length:10}).map((_, i) => {
+            const filled = i < Math.floor(pct / 10)
+            const active = i === Math.floor(pct / 10) && pct < 100
+            return (
+              <div key={i} style={{
+                flex: filled ? 1.4 : 1,
+                height:5, borderRadius:3,
+                background: filled
+                  ? 'linear-gradient(90deg,#a78bfa,#7c3aed)'
+                  : active
+                  ? 'rgba(167,139,250,0.35)'
+                  : 'rgba(167,139,250,0.12)',
+                boxShadow: filled ? '0 0 7px rgba(167,139,250,0.80)' : 'none',
+                transition:'all 0.45s cubic-bezier(0.34,1.56,0.64,1)',
+                animation: active ? 'dotPulse 1.6s ease-in-out infinite' : 'none',
+              }} />
+            )
+          })}
         </div>
         <div style={{ fontSize:9, color:'#c4b5a8', marginTop:4, fontWeight:600 }}>
           {100 - xpInLevel} XP pour le niveau {level + 1}
@@ -365,17 +410,20 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
         }}>{collapsed ? '+' : '−'}</button>
       </div>
 
-      {/* Animated progress bar */}
-      <div style={{ height:6, background:'rgba(0,0,0,0.06)', borderRadius:4, marginBottom: collapsed ? 0 : 12, overflow:'hidden' }}>
-        <div style={{
-          height:'100%', width:`${pct}%`,
-          background:'linear-gradient(90deg,#FF6B35,#fbbf24,#34c759)',
-          backgroundSize:'200% 100%',
-          animation:'shimmerGrad 3s linear infinite',
-          borderRadius:4,
-          transition:'width 0.6s cubic-bezier(0.34,1.56,0.64,1)',
-          boxShadow: pct > 0 ? '0 0 10px rgba(255,107,53,0.55)' : 'none',
-        }} />
+      {/* 7 segment dynamic indicators */}
+      <div style={{ display:'flex', gap:4, alignItems:'center', marginBottom: collapsed ? 0 : 12 }}>
+        {enriched.map((t, i) => (
+          <div key={t.id} style={{
+            flex: t.isDone ? 2 : 1,
+            height: t.isDone ? 8 : 6,
+            borderRadius: 4,
+            background: t.isDone
+              ? `linear-gradient(90deg, ${t.color}dd, ${t.color})`
+              : 'rgba(0,0,0,0.07)',
+            boxShadow: t.isDone ? `0 0 10px ${t.color}70` : 'none',
+            transition: 'all 0.48s cubic-bezier(0.34,1.56,0.64,1)',
+          }} />
+        ))}
       </div>
 
       {!collapsed && (
@@ -626,7 +674,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={onLog}
       />
-      <ProgressStrip metriques={metriques} />
+      <MetricRings metriques={metriques} />
       <StreakXP streak={streak} xp={xp} level={level} />
       <DailyTasks profil={profil} metriques={metriques} onSwitchTab={onSwitchTab} />
       <SwipeableInsights profil={profil} metriques={metriques}
