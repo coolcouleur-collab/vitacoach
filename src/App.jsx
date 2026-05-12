@@ -737,9 +737,18 @@ export default function App() {
           70%  { transform: scale(1.25) rotate(4deg); opacity:1; }
           100% { transform: scale(1) rotate(0deg); opacity:1; }
         }
-        @keyframes navPillSlide {
-          from { opacity:0; }
-          to   { opacity:1; }
+        @keyframes meshGrad {
+          0%,100% { background-position: 0% 50%; }
+          33%      { background-position: 100% 0%; }
+          66%      { background-position: 50% 100%; }
+        }
+        @keyframes shimmerGrad {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        @keyframes swipeHint {
+          0%,100% { transform: translateX(0) translateY(-50%); opacity:0.3; }
+          50%      { transform: translateX(6px) translateY(-50%); opacity:0.7; }
         }
         * { -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width:0; height:0; background:transparent; }

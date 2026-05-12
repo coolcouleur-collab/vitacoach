@@ -304,15 +304,21 @@ Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
     const response = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: 'system', content: 'Tu génères des routines personnalisées. Réponds UNIQUEMENT en JSON valide, sans texte avant ou après.' },
+        { role: 'system', content: 'Tu génères des routines personnalisées. Réponds UNIQUEMENT en JSON valide, sans balises markdown, sans texte avant ou après le JSON.' },
         { role: 'user', content: prompt }
-      ]
+      ],
+      temperature: 0.7,
+      max_tokens: 2500,
     })
-    const text = response.choices[0].message.content
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    const raw = response.choices[0].message.content
+    // Strip markdown code fences if present
+    const cleaned = raw.replace(/```(?:json)?\s*/gi, '').replace(/```\s*/g, '').trim()
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) throw new Error('No JSON')
     const data = JSON.parse(jsonMatch[0])
     res.json(data)
   } catch (e) {
+    console.error('Routine error:', e.message)
     res.status(500).json({ erreur: 'Erreur génération routine' })
   }
 })
@@ -331,12 +337,15 @@ Maximum 3 insights, pertinents et actionnables.`
     const response = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: 'system', content: 'Tu analyses des données de santé. Réponds UNIQUEMENT en JSON valide.' },
+        { role: 'system', content: 'Tu analyses des données de santé. Réponds UNIQUEMENT en JSON valide, sans balises markdown.' },
         { role: 'user', content: prompt }
-      ]
+      ],
+      temperature: 0.6,
+      max_tokens: 800,
     })
-    const text = response.choices[0].message.content
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    const raw = response.choices[0].message.content
+    const cleaned = raw.replace(/```(?:json)?\s*/gi, '').replace(/```\s*/g, '').trim()
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
     const data = JSON.parse(jsonMatch[0])
     res.json(data)
   } catch {
