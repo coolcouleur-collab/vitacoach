@@ -408,6 +408,14 @@ export function RefreshIcon({ color = '#FF6B35', size = 20 }) {
   )
 }
 
+export function ForumIcon({ color = '#c4b5a8', size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
 export function GiftIcon({ color = '#FF6B35', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">

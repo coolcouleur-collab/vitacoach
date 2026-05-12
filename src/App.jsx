@@ -6,7 +6,7 @@ import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
 import SanteTab, { scoreJour } from './SanteTab'
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
@@ -351,16 +351,14 @@ export default function App() {
   const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
 
   const sectionTitles = {
-    chat:'Coach IA', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style'
+    chat:'Coach IA', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style', forum:'Forum'
   }
 
   const navItems = [
-    { id:'accueil', Icon: HomeIcon,    label:'Accueil' },
-    { id:'chat',    Icon: ChatIcon,    label:'Coach' },
-    { id:'sante',   Icon: HeartIcon,   label:'Santé' },
-    { id:'routine', Icon: RoutineIcon, label:'Routine' },
-    { id:'herbal',  Icon: LeafIcon,    label:'Herbal' },
-    { id:'style',   Icon: StyleIcon,   label:'Style' },
+    { id:'accueil', Icon: HomeIcon,   label:'Accueil' },
+    { id:'chat',    Icon: ChatIcon,   label:'Coach' },
+    { id:'sante',   Icon: HeartIcon,  label:'Santé' },
+    { id:'forum',   Icon: ForumIcon,  label:'Forum' },
   ]
 
   return (
@@ -619,6 +617,11 @@ export default function App() {
               </div>
               <TenuesModule profil={profil} />
             </div>
+          )}
+
+          {/* ── Forum ── */}
+          {onglet === 'forum' && (
+            <Forum onBack={() => setOnglet('accueil')} user={user} />
           )}
 
           </div>{/* end keyed tab wrapper */}
@@ -1071,7 +1074,7 @@ const st = {
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const F = "'Inter', system-ui, sans-serif"
 const s = {
-  app: { display:'flex', minHeight:'100vh', background:'#FFF8F4', fontFamily:F, position:'relative' },
+  app: { display:'flex', minHeight:'100vh', background:'#F2F2F0', fontFamily:F, position:'relative' },
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
@@ -1145,15 +1148,15 @@ const s = {
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'14px 18px 12px',
-    borderBottom:'1px solid rgba(255,107,53,.07)',
-    background:'rgba(255,248,244,.94)',
+    borderBottom:'1px solid rgba(0,0,0,.06)',
+    background:'rgba(242,242,240,.97)',
     backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
     position:'sticky', top:0, zIndex:40,
-    boxShadow:'0 2px 20px rgba(255,107,53,.06)',
+    boxShadow:'0 2px 20px rgba(0,0,0,.04)',
   },
   backBtn: {
     width:36, height:36, borderRadius:12,
-    background:'rgba(255,107,53,.07)', border:'1px solid rgba(255,107,53,.12)',
+    background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
   mobileTitle: { fontSize:15, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.02em', flex:1, textAlign:'center' },
@@ -1164,7 +1167,7 @@ const s = {
   tabHeaderMobile: { display:'flex', alignItems:'center', gap:10, padding:'16px 0 12px', marginBottom:4 },
   backBtnInline: {
     width:34, height:34, borderRadius:10,
-    background:'rgba(255,107,53,.07)', border:'1px solid rgba(255,107,53,.12)',
+    background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
   pageTitle: { fontSize:18, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.03em', marginBottom:2 },
@@ -1229,10 +1232,10 @@ const s = {
   // ── Bottom nav ────────────────────────────────────────────────────────────────
   bottomNav: {
     position:'fixed', bottom:0, left:0, right:0, display:'flex',
-    background:'rgba(255,248,244,.94)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
-    borderTop:'1px solid rgba(255,107,53,.08)',
+    background:'rgba(242,242,240,.97)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+    borderTop:'1px solid rgba(0,0,0,.06)',
     padding:'8px 6px 14px', zIndex:100,
-    boxShadow:'0 -8px 40px rgba(255,107,53,.08)',
+    boxShadow:'0 -8px 40px rgba(0,0,0,.06)',
   },
   navBot: {
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:0,

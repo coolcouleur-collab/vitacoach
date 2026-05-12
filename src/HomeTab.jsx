@@ -141,9 +141,11 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
                   </div>
                 )}
                 <span style={{ lineHeight:1, display:'flex', alignItems:'center' }}>{m.iconEl}</span>
-                <span style={{ fontSize:8, color: filled ? m.color : '#8a7265', fontWeight:800, lineHeight:1 }}>
-                  {filled ? m.fmt(m.val) : '—'}
-                </span>
+                {filled && (
+                  <span style={{ fontSize:8, color: m.color, fontWeight:800, lineHeight:1 }}>
+                    {m.fmt(m.val)}
+                  </span>
+                )}
               </button>
             )
           })}
@@ -182,7 +184,7 @@ function ProgressStrip({ metriques }) {
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
               <span style={{ display:'flex', alignItems:'center' }}>{it.iconEl}</span>
               <span style={{ fontSize:12, fontWeight:800, color: it.val > 0 ? it.color : '#c4b5a8' }}>
-                {it.val > 0 ? it.fmt(it.val) : '—'}
+                {it.val > 0 ? it.fmt(it.val) : ''}
               </span>
             </div>
             <div style={{ height:7, background:'rgba(0,0,0,0.05)', borderRadius:4, overflow:'hidden' }}>
