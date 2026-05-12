@@ -729,6 +729,11 @@ export default function App() {
           from { opacity:0; transform:translateY(14px); }
           to   { opacity:1; transform:translateY(0); }
         }
+        @keyframes badgePop {
+          0%   { transform: scale(0) rotate(-20deg); opacity:0; }
+          70%  { transform: scale(1.25) rotate(4deg); opacity:1; }
+          100% { transform: scale(1) rotate(0deg); opacity:1; }
+        }
         @keyframes navPillSlide {
           from { opacity:0; }
           to   { opacity:1; }

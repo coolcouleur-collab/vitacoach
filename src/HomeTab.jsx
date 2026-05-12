@@ -113,20 +113,33 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
               <button key={m.key} onClick={onLog} style={{
                 position:'absolute', left:x-24, top:y-24, width:48, height:48,
                 borderRadius:16,
-                background: filled
-                  ? `linear-gradient(145deg, ${m.color}30, ${m.color}18)`
-                  : 'rgba(255,255,255,0.85)',
-                border: `1.5px solid ${filled ? m.color+'60' : 'rgba(255,255,255,0.9)'}`,
+                background: 'rgba(255,255,255,0.92)',
+                border: filled
+                  ? `2px solid ${m.color}`
+                  : '1.5px solid rgba(255,255,255,0.9)',
                 backdropFilter:'blur(10px)',
                 display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                 gap:1, cursor:'pointer',
                 boxShadow: filled
-                  ? `0 8px 24px ${m.color}40, 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6)`
+                  ? `0 0 0 4px ${m.color}22, 0 6px 20px ${m.color}30, inset 0 1px 0 rgba(255,255,255,0.9)`
                   : '0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
-                animation: filled ? 'metricPulse 4s ease-in-out infinite' : 'none',
-                fontFamily:'Poppins,sans-serif',
-                transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+                fontFamily:"'Inter',system-ui,sans-serif",
+                transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+                position:'absolute', left:x-24, top:y-24,
               }}>
+                {/* Petit badge ✓ quand objectif atteint */}
+                {filled && (
+                  <div style={{
+                    position:'absolute', top:-5, right:-5,
+                    width:14, height:14, borderRadius:'50%',
+                    background: m.color,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    boxShadow:`0 2px 6px ${m.color}60`,
+                    animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
+                  }}>
+                    <span style={{ fontSize:8, color:'#fff', fontWeight:900, lineHeight:1 }}>✓</span>
+                  </div>
+                )}
                 <span style={{ lineHeight:1, display:'flex', alignItems:'center' }}>{m.iconEl}</span>
                 <span style={{ fontSize:8, color: filled ? m.color : '#8a7265', fontWeight:800, lineHeight:1 }}>
                   {filled ? m.fmt(m.val) : '—'}
