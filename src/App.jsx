@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, Component } from 'react'
 import Auth from './Auth'
 import Landing from './Landing'
+import Forum from './Forum'
 import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
@@ -318,9 +319,12 @@ export default function App() {
     }
   }
 
-  // ── LANDING ─────────────────────────────────────────────────────────────────
+  // ── LANDING / FORUM ────────────────────────────────────────────────────────
   const [showAuth, setShowAuth] = useState(false)
-  if (!user && !showAuth) return <Landing onCommencer={() => setShowAuth(true)} />
+  const [showForum, setShowForum] = useState(false)
+
+  if (showForum) return <Forum onBack={() => setShowForum(false)} user={user} />
+  if (!user && !showAuth) return <Landing onCommencer={() => setShowAuth(true)} onForum={() => setShowForum(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
   if (!user) return (

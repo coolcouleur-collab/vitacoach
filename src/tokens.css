@@ -1,0 +1,134 @@
+/* ─── SOLENN — Design Tokens ─────────────────────────────────────────────────
+   Inspiré de espaciolanube.com — adapté à l'univers santé/wellness de Solenn
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Couleurs ── */
+  --bg:           #F2F2F0;
+  --bg-card:      #FFFFFF;
+  --text-strong:  #111111;
+  --text-body:    #333333;
+  --text-muted:   #989490;
+  --border:       #D8D8D8;
+  --border-soft:  #DADAD8;
+  --border-faint: #D7D6D3;
+
+  /* Accents Solenn */
+  --accent:       #FF6B35;
+  --accent-2:     #E55A00;
+  --accent-green: #0F4223;
+  --accent-red:   #FF303C;
+
+  /* Transparences */
+  --glass-bg:     #8080804D;
+  --glass-white:  #FFFFFFF5;
+  --overlay-sm:   #0000001A;
+  --overlay-md:   #00000012;
+  --overlay-lg:   #0000004D;
+
+  /* ── Typographie ── */
+  --font: 'Inter', 'Neue Haas Grotesk', 'Söhne', system-ui, sans-serif;
+
+  /* Fluid font-size base: ~10px sur 1512px desktop */
+  --multi: 0px;
+  font-size: clamp(9.14px, calc(100vw / 1512 * 10 - var(--multi)), 10px);
+
+  /* Échelle fluide */
+  --h1: calc(28px + 14.9256 * (100vw - 375px) / 819);
+  --h2: calc(24px + 9.9504  * (100vw - 375px) / 819);
+  --p1: 2.1rem;
+  --body: 1.6rem;
+  --p3: max(1.4rem, 14px);
+
+  /* ── Formes ── */
+  --br:       4rem;
+  --br-sm:    2rem;
+  --br-xs:    1rem;
+
+  /* ── Espacements ── */
+  --padgrid:  4rem;
+  --nav-top:  3.2rem;
+
+  /* ── Easing unique ── */
+  --ease:     cubic-bezier(.55, 0, .1, 1);
+
+  /* ── Durées ── */
+  --t-micro:  .45s;
+  --t-panel:  .6s;
+  --t-large:  2s;
+
+  /* ── Shine border gradient ── */
+  --degshine: 156deg;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1194px) {
+  :root { --padgrid: 2.4rem; }
+}
+@media (max-width: 768px) {
+  :root { --padgrid: 1.6rem; --nav-top: 1.6rem; }
+}
+
+/* ── Reset moderne ── */
+*, *::before, *::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  scroll-behavior: auto; /* Lenis gère le smooth */
+}
+html.lenis { height: auto; }
+body {
+  background: var(--bg);
+  color: var(--text-body);
+  font-family: var(--font);
+  font-size: var(--body);
+  line-height: 1.6;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scroll reveal IO ── */
+.IO {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity var(--t-panel) var(--ease),
+    transform var(--t-panel) var(--ease);
+}
+.IO.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Shine border mixin réutilisable ── */
+.shine-border {
+  position: relative;
+}
+.shine-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--br);
+  border: 2px solid transparent;
+  background:
+    linear-gradient(
+      var(--degshine, 156deg),
+      rgba(255,255,255,.4) 2%,
+      rgba(255,255,255,0) 39%,
+      rgba(255,255,255,0) 54%,
+      rgba(255,255,255,.1) 93%
+    ) border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Scrollbar invisible ── */
+::-webkit-scrollbar { width: 0; background: transparent; }
