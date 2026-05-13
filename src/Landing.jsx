@@ -122,12 +122,12 @@ function Nav({ onCommencer, onForum }) {
               color: '#fff', border: 'none', borderRadius: 'var(--br)',
               padding: '.7rem 2rem', fontSize: 'max(1.4rem,14px)', fontWeight: 700,
               cursor: 'pointer', fontFamily: 'var(--font)',
-              boxShadow: '0 .4rem 1.6rem rgba(255,107,53,.38)',
+              boxShadow: '0 .4rem 1.6rem rgba(139,92,246,.38)',
               transition: `transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease)`,
               whiteSpace: 'nowrap',
             }}
-              onMouseEnter={e => { e.target.style.transform = 'scale(1.05)'; e.target.style.boxShadow = '0 .8rem 2.8rem rgba(255,107,53,.5)' }}
-              onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.boxShadow = '0 .4rem 1.6rem rgba(255,107,53,.38)' }}
+              onMouseEnter={e => { e.target.style.transform = 'scale(1.05)'; e.target.style.boxShadow = '0 .8rem 2.8rem rgba(139,92,246,.5)' }}
+              onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.boxShadow = '0 .4rem 1.6rem rgba(139,92,246,.38)' }}
             >
               Commencer →
             </button>
@@ -195,7 +195,7 @@ function Hero({ onCommencer }) {
     }}>
       {/* Orbes déco */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
-        <div style={{ position: 'absolute', top: '-5%', left: '-10%', width: '60rem', height: '60rem', borderRadius: '50%', background: 'radial-gradient(circle,rgba(255,107,53,.07) 0%,transparent 65%)', animation: 'floatOrb 14s ease-in-out infinite' }} />
+        <div style={{ position: 'absolute', top: '-5%', left: '-10%', width: '60rem', height: '60rem', borderRadius: '50%', background: 'radial-gradient(circle,rgba(139,92,246,.07) 0%,transparent 65%)', animation: 'floatOrb 14s ease-in-out infinite' }} />
         <div style={{ position: 'absolute', bottom: '0%', right: '-8%', width: '80rem', height: '80rem', borderRadius: '50%', background: 'radial-gradient(circle,rgba(15,66,35,.06) 0%,transparent 65%)', animation: 'floatOrb 18s ease-in-out infinite reverse' }} />
       </div>
 
@@ -263,11 +263,11 @@ function Hero({ onCommencer }) {
             padding: '1.8rem 4.8rem',
             fontSize: 'max(1.6rem,16px)', fontWeight: 800,
             cursor: 'pointer', fontFamily: 'var(--font)',
-            boxShadow: '0 1.2rem 4rem rgba(255,107,53,.42)',
+            boxShadow: '0 1.2rem 4rem rgba(139,92,246,.42)',
             transition: `transform var(--t-micro) var(--ease), box-shadow var(--t-micro) var(--ease)`,
           }}
-            onMouseEnter={e => { e.target.style.transform = 'translateY(-3px) scale(1.02)'; e.target.style.boxShadow = '0 1.8rem 5.2rem rgba(255,107,53,.56)' }}
-            onMouseLeave={e => { e.target.style.transform = 'none'; e.target.style.boxShadow = '0 1.2rem 4rem rgba(255,107,53,.42)' }}
+            onMouseEnter={e => { e.target.style.transform = 'translateY(-3px) scale(1.02)'; e.target.style.boxShadow = '0 1.8rem 5.2rem rgba(139,92,246,.56)' }}
+            onMouseLeave={e => { e.target.style.transform = 'none'; e.target.style.boxShadow = '0 1.2rem 4rem rgba(139,92,246,.42)' }}
           >
             Créer mon profil gratuitement →
           </button>
@@ -281,7 +281,7 @@ function Hero({ onCommencer }) {
             cursor: 'pointer', fontFamily: 'var(--font)',
             transition: `border-color var(--t-micro) var(--ease), background var(--t-micro) var(--ease)`,
           }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(255,107,53,.04)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(139,92,246,.04)' }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent' }}
             onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
           >
@@ -319,12 +319,12 @@ function Hero({ onCommencer }) {
 // ─── CKGRID (chaque feature = 100vh) ─────────────────────────────────────────
 const FEATURES = [
   {
-    num: '01', color: '#FF6B35',
+    num: '01', color: '#8b5cf6',
     tag: 'Intelligence adaptative',
     title: 'Un coach qui\nte comprend vraiment',
     desc: 'Solenn mémorise ton profil complet — pathologies, objectifs, régimes, allergies, rythme de vie — pour t\'offrir des conseils qui te ressemblent, pas des recommandations génériques copiées-collées.',
     detail: 'Profil · Pathologies · Objectifs · Habitudes',
-    bg: 'linear-gradient(145deg, rgba(255,107,53,.05) 0%, rgba(255,154,60,.03) 100%)',
+    bg: 'linear-gradient(145deg, rgba(139,92,246,.05) 0%, rgba(255,154,60,.03) 100%)',
     emoji: '🧠',
   },
   {
@@ -540,8 +540,8 @@ function PricingCard({ plan, onCommencer, delay }) {
       background: p.main ? 'linear-gradient(145deg,#fff,#FFF8F4)' : '#fff',
       borderRadius: 'var(--br)',
       padding: '4rem 3.6rem',
-      border: p.main ? '2px solid rgba(255,107,53,.3)' : '1.5px solid var(--border-soft)',
-      boxShadow: p.main ? '0 2.4rem 6.4rem rgba(255,107,53,.16), 0 .8rem 2.4rem rgba(0,0,0,.05)' : '0 .4rem 2rem rgba(0,0,0,.04)',
+      border: p.main ? '2px solid rgba(139,92,246,.3)' : '1.5px solid var(--border-soft)',
+      boxShadow: p.main ? '0 2.4rem 6.4rem rgba(139,92,246,.16), 0 .8rem 2.4rem rgba(0,0,0,.05)' : '0 .4rem 2rem rgba(0,0,0,.04)',
       display: 'flex', flexDirection: 'column',
       position: 'relative', overflow: 'hidden',
       transition: `transform var(--t-micro) var(--ease), opacity var(--t-panel) var(--ease)`,
@@ -573,7 +573,7 @@ function PricingCard({ plan, onCommencer, delay }) {
         cursor: 'pointer', fontFamily: 'var(--font)',
         background: p.main ? 'linear-gradient(135deg,var(--accent),var(--accent-2))' : 'rgba(0,0,0,.05)',
         color: p.main ? '#fff' : 'var(--text-muted)',
-        boxShadow: p.main ? '0 .8rem 2.8rem rgba(255,107,53,.38)' : 'none',
+        boxShadow: p.main ? '0 .8rem 2.8rem rgba(139,92,246,.38)' : 'none',
         transition: `transform var(--t-micro) var(--ease)`,
       }}
         onMouseEnter={e => { if (p.main) e.target.style.transform = 'scale(1.02)' }}
@@ -616,7 +616,7 @@ function CtaBand({ onCommencer }) {
       textAlign: 'center',
     }}>
       {/* Glow */}
-      <div style={{ position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)', width: '80rem', height: '50rem', background: 'radial-gradient(circle, rgba(255,107,53,.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)', width: '80rem', height: '50rem', background: 'radial-gradient(circle, rgba(139,92,246,.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 700, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.2em', marginBottom: '2rem' }}>Commence aujourd'hui</div>
@@ -631,7 +631,7 @@ function CtaBand({ onCommencer }) {
           color: '#fff', border: 'none', borderRadius: 'var(--br)',
           padding: '2rem 5.6rem', fontSize: 'max(1.6rem,16px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 1.2rem 4rem rgba(255,107,53,.5)',
+          boxShadow: '0 1.2rem 4rem rgba(139,92,246,.5)',
           transition: `transform var(--t-micro) var(--ease)`,
         }}
           onMouseEnter={e => { e.target.style.transform = 'scale(1.04) translateY(-2px)' }}

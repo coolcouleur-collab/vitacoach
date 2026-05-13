@@ -5,7 +5,7 @@ import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon } from './Icon
 const CATS = [
   { id:'plantes',    label:'Plantes',    color:'#34c759' },
   { id:'tisanes',    label:'Tisanes',    color:'#38bdf8' },
-  { id:'chinoise',   label:'Méd. chin.', color:'#ff6b35' },
+  { id:'chinoise',   label:'Méd. chin.', color:'#8b5cf6' },
   { id:'holistique', label:'Holistique', color:'#a78bfa' },
 ]
 
@@ -13,7 +13,7 @@ const DATA = {
   plantes: [
     { nom:'Ashwagandha',   tag:'Adaptogène',      color:'#34c759', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
     { nom:'Curcuma',       tag:'Anti-inflammatoire', color:'#ff9500', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
-    { nom:'Gingembre',     tag:'Digestif',        color:'#ff6b35', benefice:'Stimule la digestion et booste l\'immunité naturellement', usage:'Frais ou tisane, 2–3 g/jour', detail:'Anti-nausée cliniquement prouvé. Réduit les douleurs musculaires post-entraînement et stimule la thermogenèse (brûle les graisses).' },
+    { nom:'Gingembre',     tag:'Digestif',        color:'#8b5cf6', benefice:'Stimule la digestion et booste l\'immunité naturellement', usage:'Frais ou tisane, 2–3 g/jour', detail:'Anti-nausée cliniquement prouvé. Réduit les douleurs musculaires post-entraînement et stimule la thermogenèse (brûle les graisses).' },
     { nom:'Rhodiola Rosea',tag:'Énergie',         color:'#a78bfa', benefice:'Combat la fatigue physique et améliore la concentration', usage:'200–400 mg le matin, à jeun', detail:'Plante des montagnes arctiques utilisée par les cosmonautes soviétiques. Réduit le stress oxydatif et améliore les fonctions cognitives sous pression.' },
     { nom:'Valériane',     tag:'Sommeil',         color:'#5856d6', benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
     { nom:'Ginkgo Biloba', tag:'Mémoire',         color:'#0ea5e9', benefice:'Améliore la circulation cérébrale et la mémoire', usage:'120–240 mg/jour avec un repas', detail:'Un des suppléments les plus étudiés au monde. Augmente le flux sanguin vers le cerveau et protège les neurones du stress oxydatif.' },
@@ -29,7 +29,7 @@ const DATA = {
     { nom:'Gingembre-citron',tag:'Immunité',    color:'#ffd60a', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
   ],
   chinoise: [
-    { nom:'Acupuncture',     tag:'Méridiens',  color:'#ff6b35', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
+    { nom:'Acupuncture',     tag:'Méridiens',  color:'#8b5cf6', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
     { nom:'Reishi',          tag:'Longévité',  color:'#92400e', benefice:'"Champignon de l\'immortalité" — immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
     { nom:'Ginseng Panax',   tag:'Vitalité',   color:'#ff9500', benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
     { nom:'Moxibustion',     tag:'Chaleur',    color:'#ff3b30', benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
@@ -150,12 +150,12 @@ function AIRecoCard({ r, onChat, index }) {
           {r.usage && (
             <div style={{
               display:'flex', gap:9, alignItems:'flex-start',
-              background:'rgba(255,107,53,0.06)', border:'1px solid rgba(255,107,53,0.16)',
+              background:'rgba(139,92,246,0.06)', border:'1px solid rgba(139,92,246,0.16)',
               borderRadius:10, padding:'10px 12px', marginBottom:8,
             }}>
-              <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color="#FF6B35" /></span>
+              <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color="#8b5cf6" /></span>
               <div>
-                <div style={{ fontSize:9, color:'#FF6B35', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
+                <div style={{ fontSize:9, color:'#8b5cf6', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
                   Comment utiliser
                 </div>
                 <div style={{ fontSize:12, color:'#1a0a00', fontWeight:600, lineHeight:1.55 }}>{r.usage}</div>
@@ -232,7 +232,7 @@ function AIReco({ profil, onChat }) {
       <div style={{ position:'relative', zIndex:1 }}>
         <div style={hb.aiTop}>
           <div style={hb.aiIconWrap}>
-            <SparkleIcon color="#FF6B35" size={22} />
+            <SparkleIcon color="#8b5cf6" size={22} />
           </div>
           <div style={{ flex:1 }}>
             <div style={hb.aiTitle}>Recommandation IA</div>
@@ -252,8 +252,8 @@ function AIReco({ profil, onChat }) {
           )}
           {items && (
             <button
-              style={{ ...hb.aiCta, background:'rgba(255,107,53,0.08)', color:'#ff6b35',
-                border:'1.5px solid rgba(255,107,53,0.22)', boxShadow:'0 3px 10px rgba(255,107,53,0.12)', fontSize:10 }}
+              style={{ ...hb.aiCta, background:'rgba(139,92,246,0.08)', color:'#8b5cf6',
+                border:'1.5px solid rgba(139,92,246,0.22)', boxShadow:'0 3px 10px rgba(139,92,246,0.12)', fontSize:10 }}
               onClick={() => setItems(null)}
             >
               Refaire
@@ -262,7 +262,7 @@ function AIReco({ profil, onChat }) {
         </div>
 
         {items && (
-          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(255,107,53,0.12)', paddingTop:14 }}>
+          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(139,92,246,0.12)', paddingTop:14 }}>
             {items.map((r, i) => (
               <AIRecoCard key={i} r={r} onChat={onChat} index={i} />
             ))}
@@ -519,33 +519,33 @@ const hb = {
     margin:'14px 16px 4px',
     borderRadius:24,
     padding:'16px 16px',
-    border:'1.5px solid rgba(255,107,53,0.22)',
+    border:'1.5px solid rgba(139,92,246,0.22)',
     background:'rgba(255,255,255,0.7)',
-    boxShadow:'0 8px 28px rgba(255,107,53,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
+    boxShadow:'0 8px 28px rgba(139,92,246,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
     overflow:'hidden',
   },
   aiBoxTint: {
     position:'absolute', inset:0, zIndex:0, borderRadius:'inherit',
-    background:'linear-gradient(145deg, rgba(255,107,53,0.08), rgba(255,154,60,0.05))',
+    background:'linear-gradient(145deg, rgba(139,92,246,0.08), rgba(255,154,60,0.05))',
     pointerEvents:'none',
   },
   aiTop: { display:'flex', alignItems:'center', gap:12 },
   aiIconWrap: {
     width:44, height:44, borderRadius:16, flexShrink:0,
-    background:'linear-gradient(135deg, rgba(255,107,53,0.18), rgba(255,154,60,0.12))',
-    border:'1.5px solid rgba(255,107,53,0.28)',
-    boxShadow:'0 4px 14px rgba(255,107,53,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
+    background:'linear-gradient(135deg, rgba(139,92,246,0.18), rgba(255,154,60,0.12))',
+    border:'1.5px solid rgba(139,92,246,0.28)',
+    boxShadow:'0 4px 14px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
     display:'flex', alignItems:'center', justifyContent:'center',
   },
   aiTitle: { fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' },
   aiSub: { fontSize:10, color:'#c4b5a8', fontWeight:600, marginTop:1 },
   aiCta: {
-    background:'linear-gradient(135deg, #FF6B35, #E55A00)',
+    background:'linear-gradient(135deg, #8b5cf6, #6d28d9)',
     color:'#fff', border:'none',
     padding:'9px 16px', borderRadius:14,
     fontSize:11, fontWeight:800, cursor:'pointer',
     fontFamily:'Poppins,sans-serif', flexShrink:0,
-    boxShadow:'0 5px 16px rgba(255,107,53,0.38), inset 0 1px 0 rgba(255,255,255,0.2)',
+    boxShadow:'0 5px 16px rgba(139,92,246,0.38), inset 0 1px 0 rgba(255,255,255,0.2)',
     transition:'opacity 0.15s, transform 0.15s',
   },
   dot: {
@@ -555,22 +555,22 @@ const hb = {
   },
   aiResults: {
     marginTop:14, display:'flex', flexDirection:'column', gap:8,
-    borderTop:'1px solid rgba(255,107,53,0.12)', paddingTop:14,
+    borderTop:'1px solid rgba(139,92,246,0.12)', paddingTop:14,
   },
   aiItem: {
     display:'flex', alignItems:'center', gap:11,
-    background:'linear-gradient(135deg, rgba(255,107,53,0.07), rgba(255,154,60,0.04))',
-    border:'1px solid rgba(255,107,53,0.14)',
+    background:'linear-gradient(135deg, rgba(139,92,246,0.07), rgba(255,154,60,0.04))',
+    border:'1px solid rgba(139,92,246,0.14)',
     borderRadius:14, padding:'11px 13px',
     boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)',
   },
   aiAskBtn: {
     width:32, height:32, borderRadius:10, flexShrink:0,
-    background:'rgba(255,107,53,0.12)', border:'1.5px solid rgba(255,107,53,0.24)',
-    color:'#FF6B35', fontSize:14, fontWeight:900, cursor:'pointer',
+    background:'rgba(139,92,246,0.12)', border:'1.5px solid rgba(139,92,246,0.24)',
+    color:'#8b5cf6', fontSize:14, fontWeight:900, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontFamily:'Poppins,sans-serif',
-    boxShadow:'0 3px 10px rgba(255,107,53,0.18)',
+    boxShadow:'0 3px 10px rgba(139,92,246,0.18)',
   },
 
   // ── Category pills

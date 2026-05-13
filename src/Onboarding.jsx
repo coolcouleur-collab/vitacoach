@@ -6,7 +6,7 @@ function BgBlobs() {
   return (
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
       <div style={{position:'absolute',top:'-18%',left:'-12%',width:680,height:680,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(255,107,53,0.17) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(139,92,246,0.17) 0%,transparent 70%)',
         animation:'floatOrb 10s ease-in-out infinite'}}/>
       <div style={{position:'absolute',bottom:'-12%',right:'-10%',width:780,height:780,borderRadius:'50%',
         background:'radial-gradient(circle,rgba(255,69,0,0.15) 0%,transparent 70%)',
@@ -31,11 +31,11 @@ const QUESTIONS = [
       {iconEl:<FlashIcon size={20} color="#fbbf24" />,  label:"Plus d'énergie"},
       {iconEl:<LeafIcon size={20} color="#a78bfa" />,   label:'Mieux dormir'},
       {iconEl:<FoodIcon size={20} color="#34c759" />,   label:'Manger sainement'},
-      {iconEl:<MuscleIcon size={20} color="#FF6B35" />, label:'Prendre du muscle'},
+      {iconEl:<MuscleIcon size={20} color="#8b5cf6" />, label:'Prendre du muscle'},
       {iconEl:<MeditateIcon size={20} color="#a78bfa" />,label:'Réduire le stress'},
       {iconEl:<RunIcon size={20} color="#38bdf8" />,    label:'Perdre du poids'},
-      {iconEl:<RunIcon size={20} color="#FF6B35" />,    label:'Courir un marathon'},
-      {iconEl:<BrainIcon size={20} color="#FF6B35" />,  label:'Productivité maximale'},
+      {iconEl:<RunIcon size={20} color="#8b5cf6" />,    label:'Courir un marathon'},
+      {iconEl:<BrainIcon size={20} color="#8b5cf6" />,  label:'Productivité maximale'},
     ],
     multi: true
   },
@@ -53,8 +53,8 @@ const QUESTIONS = [
     options:[
       {iconEl:<LeafIcon size={20} color="#9ca3af" />,    label:'Sédentaire',       sub:'Bureau, peu de sport'},
       {iconEl:<RunIcon size={20} color="#38bdf8" />,     label:'Légèrement actif', sub:'Marche quotidienne'},
-      {iconEl:<MuscleIcon size={20} color="#FF6B35" />,  label:'Modérément actif', sub:'Sport 2-3x/semaine'},
-      {iconEl:<FireIcon size={20} color="#FF6B35" />,    label:'Très actif',       sub:'Sport 4-5x/semaine'},
+      {iconEl:<MuscleIcon size={20} color="#8b5cf6" />,  label:'Modérément actif', sub:'Sport 2-3x/semaine'},
+      {iconEl:<FireIcon size={20} color="#8b5cf6" />,    label:'Très actif',       sub:'Sport 4-5x/semaine'},
       {iconEl:<FlashIcon size={20} color="#fbbf24" />,   label:'Sportif intensif', sub:'Entraînement quotidien'},
     ],
     multi: false
@@ -74,7 +74,7 @@ const QUESTIONS = [
     question:'As-tu des problèmes de santé ou des maladies ?',
     subtitle:'Pour que nos conseils soient totalement adaptés et sans risque pour toi',
     options:[
-      {iconEl:<MeditateIcon size={20} color="#FF6B35" />, label:'Oui', sub:"J'ai des conditions médicales"},
+      {iconEl:<MeditateIcon size={20} color="#8b5cf6" />, label:'Oui', sub:"J'ai des conditions médicales"},
       {iconEl:<GiftIcon size={20} color="#34c759" />,     label:'Non', sub:'Je suis en bonne santé'},
     ],
     multi: false
@@ -320,12 +320,12 @@ export default function Onboarding({ onTermine }) {
           66%     { transform: translateY(14px) scale(0.97); }
         }
         @keyframes pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.55); transform: scale(1.15); }
-          50%     { box-shadow: 0 0 0 8px rgba(255,107,53,0); transform: scale(1.2); }
+          0%,100% { box-shadow: 0 0 0 0 rgba(139,92,246,0.55); transform: scale(1.15); }
+          50%     { box-shadow: 0 0 0 8px rgba(139,92,246,0); transform: scale(1.2); }
         }
         @keyframes ringGlow {
-          0%,100% { box-shadow: 0 0 0 3px rgba(255,107,53,0.2), 0 8px 32px rgba(255,107,53,0.12); }
-          50%     { box-shadow: 0 0 0 6px rgba(255,107,53,0.35), 0 8px 32px rgba(255,107,53,0.2); }
+          0%,100% { box-shadow: 0 0 0 3px rgba(139,92,246,0.2), 0 8px 32px rgba(139,92,246,0.12); }
+          50%     { box-shadow: 0 0 0 6px rgba(139,92,246,0.35), 0 8px 32px rgba(139,92,246,0.2); }
         }
         input[type='number']::-webkit-outer-spin-button,
         input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -333,19 +333,19 @@ export default function Onboarding({ onTermine }) {
         input[type='time']::-webkit-calendar-picker-indicator { opacity: 0; }
         input:focus, textarea:focus { outline: none; }
         .clay-text-input:focus {
-          border-color: #FF6B35 !important;
-          box-shadow: 0 0 0 4px rgba(255,107,53,0.15), 0 8px 32px rgba(255,107,53,0.12) !important;
+          border-color: #8b5cf6 !important;
+          box-shadow: 0 0 0 4px rgba(139,92,246,0.15), 0 8px 32px rgba(139,92,246,0.12) !important;
         }
         .clay-time-input:focus {
-          border-color: #FF6B35 !important;
-          box-shadow: 0 0 0 4px rgba(255,107,53,0.15) !important;
+          border-color: #8b5cf6 !important;
+          box-shadow: 0 0 0 4px rgba(139,92,246,0.15) !important;
         }
         .num-input-wrap { animation: ringGlow 2.4s ease-in-out infinite; }
         .cta-btn:active { transform: scale(0.97) !important; }
-        .back-btn:hover { background: #fff1ec !important; border-color: #FF6B35 !important; color: #FF6B35 !important; }
+        .back-btn:hover { background: #fff1ec !important; border-color: #8b5cf6 !important; color: #8b5cf6 !important; }
         .clay-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.9) !important; }
         .clay-chip:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(0,0,0,0.1) !important; }
-        .num-btn:hover { transform: scale(1.08); box-shadow: 0 8px 24px rgba(255,107,53,0.45) !important; }
+        .num-btn:hover { transform: scale(1.08); box-shadow: 0 8px 24px rgba(139,92,246,0.45) !important; }
       `}</style>
 
       <BgBlobs />
@@ -374,9 +374,9 @@ export default function Onboarding({ onTermine }) {
             height: i === visibleIdx ? 12 : 7,
             borderRadius: '50%',
             background: i < visibleIdx
-              ? 'linear-gradient(135deg,#FF6B35,#E55A00)'
+              ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)'
               : i === visibleIdx
-                ? 'linear-gradient(135deg,#FF6B35,#FF9A3C)'
+                ? 'linear-gradient(135deg,#8b5cf6,#a78bfa)'
                 : '#e5d5cc',
             transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
             animation: i === visibleIdx ? 'pulse 1.8s ease-in-out infinite' : 'none',
@@ -513,7 +513,7 @@ const s = {
   progressWrap: { position:'fixed', top:0, left:0, right:0, height:6,
     background:'rgba(229,213,204,0.6)', zIndex:100 },
   progressBar: { height:'100%',
-    background:'linear-gradient(90deg,#FF6B35 0%,#FF9A3C 60%,#FFB347 100%)',
+    background:'linear-gradient(90deg,#8b5cf6 0%,#a78bfa 60%,#FFB347 100%)',
     transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:3 },
 
   backBtn: { position:'fixed', top:22, left:20, zIndex:100,
@@ -525,18 +525,18 @@ const s = {
 
   logoTop: { position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', zIndex:100,
     display:'flex', alignItems:'center', gap:5 },
-  logoIcon: { fontSize:18, background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+  logoIcon: { fontSize:18, background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.5px',
-    background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
 
   dotsRow: { position:'fixed', top:72, left:'50%', transform:'translateX(-50%)', zIndex:100,
     display:'flex', alignItems:'center', gap:6, flexWrap:'nowrap', maxWidth:'90vw', overflow:'hidden' },
   stepPill: { marginLeft:10, padding:'3px 12px', borderRadius:20,
-    background:'linear-gradient(135deg,rgba(255,107,53,0.12),rgba(255,154,60,0.08))',
-    border:'1.5px solid rgba(255,107,53,0.3)', fontSize:11, fontWeight:800,
-    color:'#FF6B35', letterSpacing:'0.3px', flexShrink:0 },
+    background:'linear-gradient(135deg,rgba(139,92,246,0.12),rgba(255,154,60,0.08))',
+    border:'1.5px solid rgba(139,92,246,0.3)', fontSize:11, fontWeight:800,
+    color:'#8b5cf6', letterSpacing:'0.3px', flexShrink:0 },
 
   screen: { flex:1, display:'flex', flexDirection:'column', padding:'118px 24px 24px',
     maxWidth:600, width:'100%', margin:'0 auto', position:'relative', zIndex:1 },
@@ -555,22 +555,22 @@ const s = {
     color:'#1a0a00', outline:'none',
     boxShadow:'0 4px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' },
   cardSel: {
-    background:'linear-gradient(145deg,rgba(255,107,53,0.12),rgba(255,154,60,0.08))',
-    border:'1.5px solid #FF6B35',
-    boxShadow:'0 8px 28px rgba(255,107,53,0.28), inset 0 1px 0 rgba(255,255,255,0.8)',
+    background:'linear-gradient(145deg,rgba(139,92,246,0.12),rgba(255,154,60,0.08))',
+    border:'1.5px solid #8b5cf6',
+    boxShadow:'0 8px 28px rgba(139,92,246,0.28), inset 0 1px 0 rgba(255,255,255,0.8)',
     transform:'scale(1.03)',
     animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
     justifyContent:'center', background:'rgba(0,0,0,0.03)', transition:'all 0.2s' },
-  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(255,107,53,0.18),rgba(255,154,60,0.12))', borderRadius:14 },
+  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(139,92,246,0.18),rgba(255,154,60,0.12))', borderRadius:14 },
   cardIcon: { lineHeight:1, transition:'font-size 0.2s' },
   cardLabel: { fontSize:13, fontWeight:700, color:'#1a0a00', lineHeight:1.3 },
   cardSub: { fontSize:11, color:'#b59080', lineHeight:1.3, fontWeight:500 },
   cardCheck: { position:'absolute', top:10, right:10, width:22, height:22,
-    borderRadius:'50%', background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+    borderRadius:'50%', background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:11, fontWeight:800, color:'white',
-    boxShadow:'0 3px 10px rgba(255,107,53,0.45)', animation:'popIn 0.2s ease' },
+    boxShadow:'0 3px 10px rgba(139,92,246,0.45)', animation:'popIn 0.2s ease' },
 
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
   chip: { padding:'12px 20px', borderRadius:40, border:'1px solid #f0e8e0',
@@ -578,10 +578,10 @@ const s = {
     fontFamily:'Poppins, sans-serif', color:'#7a5c50',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', fontWeight:600, outline:'none',
     boxShadow:'0 3px 10px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)' },
-  chipSel: { border:'1.5px solid #FF6B35',
-    background:'linear-gradient(135deg,rgba(255,107,53,0.1),rgba(255,154,60,0.07))',
-    color:'#E55A00', fontWeight:700,
-    boxShadow:'0 6px 18px rgba(255,107,53,0.28), inset 0 1px 0 rgba(255,255,255,0.6)',
+  chipSel: { border:'1.5px solid #8b5cf6',
+    background:'linear-gradient(135deg,rgba(139,92,246,0.1),rgba(255,154,60,0.07))',
+    color:'#6d28d9', fontWeight:700,
+    boxShadow:'0 6px 18px rgba(139,92,246,0.28), inset 0 1px 0 rgba(255,255,255,0.6)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
   inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
@@ -595,10 +595,10 @@ const s = {
 
   numberRow: { display:'flex', alignItems:'center', gap:20 },
   numBtn: { width:62, height:62, borderRadius:'50%', border:'none',
-    background:'linear-gradient(145deg,#FF6B35,#E55A00)',
+    background:'linear-gradient(145deg,#8b5cf6,#6d28d9)',
     color:'white', fontSize:28, fontWeight:700, cursor:'pointer',
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
-    boxShadow:'0 8px 24px rgba(255,107,53,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow:'0 8px 24px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none', lineHeight:1 },
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
     padding:'12px 20px', background:'#ffffff', border:'1.5px solid #f0e8e0' },
@@ -610,10 +610,10 @@ const s = {
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%', margin:'0 auto',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
   ctaBtn: { padding:'0 24px', height:58,
-    background:'linear-gradient(145deg,#FF6B35,#E55A00)',
+    background:'linear-gradient(145deg,#8b5cf6,#6d28d9)',
     color:'white', border:'none', borderRadius:22, fontSize:17, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 12px 36px rgba(255,107,53,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)',
+    boxShadow:'0 12px 36px rgba(139,92,246,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)',
     transition:'opacity 0.2s, transform 0.15s', letterSpacing:'0.3px', outline:'none' },
   skipBtn: { background:'transparent', border:'none', color:'#c9a090',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',

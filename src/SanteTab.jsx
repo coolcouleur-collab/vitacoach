@@ -11,7 +11,7 @@ function ScaleIcon({ color = '#34c759', size = 20 }) {
 }
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#ff6b35" />,   unit: '',      goal: 10000, color: '#ff6b35', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#8b5cf6" />,   unit: '',      goal: 10000, color: '#8b5cf6', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
   { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#a78bfa" />,  unit: 'h',    goal: 8,     color: '#a78bfa', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
   { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#38bdf8" />, unit: ' v.',  goal: 8,     color: '#38bdf8', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
   { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#ff3b30" />, unit: ' bpm', goal: 70,    color: '#ff3b30', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
@@ -82,7 +82,7 @@ function Sparkline({ history, metricKey, color, goal }) {
 function HistoriqueSection({ history }) {
   const [open, setOpen] = useState(false)
   const metricsToShow = [
-    { key:'pas',     label:'Pas',     color:'#FF6B35', goal:10000 },
+    { key:'pas',     label:'Pas',     color:'#8b5cf6', goal:10000 },
     { key:'sommeil', label:'Sommeil', color:'#a78bfa', goal:8 },
     { key:'eau',     label:'Eau',     color:'#38bdf8', goal:8 },
     { key:'humeur',  label:'Humeur',  color:'#fbbf24', goal:5 },
@@ -99,17 +99,17 @@ function HistoriqueSection({ history }) {
         onClick={() => setOpen(v => !v)}
       >
         <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
-          background:'linear-gradient(135deg,rgba(255,107,53,0.15),rgba(255,154,60,0.10))',
-          border:'1.5px solid rgba(255,107,53,0.25)',
+          background:'linear-gradient(135deg,rgba(139,92,246,0.15),rgba(255,154,60,0.10))',
+          border:'1.5px solid rgba(139,92,246,0.25)',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:800, color:'#1a0a00' }}>Historique 7 jours</div>
           <div style={{ fontSize:11, color:'#8a7265', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
-          fontSize:10, fontWeight:700, color:'#FF6B35',
-          background:'rgba(255,107,53,0.10)', padding:'4px 10px', borderRadius:8,
-          border:'1px solid rgba(255,107,53,0.20)',
+          fontSize:10, fontWeight:700, color:'#8b5cf6',
+          background:'rgba(139,92,246,0.10)', padding:'4px 10px', borderRadius:8,
+          border:'1px solid rgba(139,92,246,0.20)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
       </button>
@@ -471,11 +471,11 @@ const ss = {
     border: '1px solid rgba(249,115,22,0.15)',
     borderRadius: 26, padding: '22px 20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
-    boxShadow: '0 12px 40px rgba(255,107,53,0.20), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: '0 12px 40px rgba(139,92,246,0.20), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   btnInsights: {
     width: '100%',
-    background: 'linear-gradient(145deg, #F97316, #FF6B35)',
+    background: 'linear-gradient(145deg, #F97316, #8b5cf6)',
     color: '#fff',
     border: 'none', padding: '12px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
@@ -484,11 +484,11 @@ const ss = {
     letterSpacing: 0.3
   },
   insightsCard: {
-    background: 'linear-gradient(145deg, rgba(255,107,53,0.06), rgba(255,154,60,0.04))',
-    border: '1px solid rgba(255,107,53,0.18)',
+    background: 'linear-gradient(145deg, rgba(139,92,246,0.06), rgba(255,154,60,0.04))',
+    border: '1px solid rgba(139,92,246,0.18)',
     borderLeft: '4px solid #F97316',
     borderRadius: 22, padding: '16px 18px', marginBottom: 14,
-    boxShadow: '0 8px 24px rgba(255,107,53,0.10), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: '0 8px 24px rgba(139,92,246,0.10), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   waterBar: {
     background: 'linear-gradient(145deg, rgba(56,189,248,0.10), rgba(125,211,252,0.06))',

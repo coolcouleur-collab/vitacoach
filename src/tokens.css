@@ -10,9 +10,9 @@
   --border:       #E2E0DC;
   --border-soft:  #E8E6E2;
 
-  /* Accents — orange uniquement pour CTAs et états actifs */
-  --accent:       #FF6B35;
-  --accent-2:     #E55A00;
+  /* Accents — violet pour CTAs et états actifs */
+  --accent:       #8b5cf6;
+  --accent-2:     #6d28d9;
   --accent-green: #0F4223;
   --accent-red:   #FF303C;
 

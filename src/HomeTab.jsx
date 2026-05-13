@@ -475,16 +475,16 @@ function StreakXP({ streak, xp, level }) {
     <div style={{ display:'flex', gap:10, padding:'0 18px 14px' }}>
       <div style={{
         flex:1, borderRadius:22, padding:'14px 16px',
-        background:'linear-gradient(145deg,rgba(255,107,53,0.10),rgba(255,154,60,0.06))',
-        border:'1.5px solid rgba(255,107,53,0.20)',
-        boxShadow:'0 6px 20px rgba(255,107,53,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
+        background:'linear-gradient(145deg,rgba(139,92,246,0.10),rgba(255,154,60,0.06))',
+        border:'1.5px solid rgba(139,92,246,0.20)',
+        boxShadow:'0 6px 20px rgba(139,92,246,0.12), inset 0 1px 0 rgba(255,255,255,0.9)',
         display:'flex', alignItems:'center', gap:12,
       }}>
         <div style={{
           width:44, height:44, borderRadius:14, flexShrink:0,
-          background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+          background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
           display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize:22, boxShadow:'0 6px 16px rgba(255,107,53,0.40)',
+          fontSize:22, boxShadow:'0 6px 16px rgba(139,92,246,0.40)',
         }}>
           {streak >= 7 ? <FireIcon size={22} color="#fff" /> : streak >= 3 ? <FlashIcon size={22} color="#fff" /> : <LeafIcon size={22} color="#fff" />}
         </div>
@@ -492,7 +492,7 @@ function StreakXP({ streak, xp, level }) {
           <div style={{ fontSize:22, fontWeight:900, color:'#1a0a00', lineHeight:1 }}>
             {streak}<span style={{ fontSize:11, fontWeight:500, color:'#c4b5a8', marginLeft:3 }}>jours</span>
           </div>
-          <div style={{ fontSize:10, color:'#FF6B35', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:2 }}>
+          <div style={{ fontSize:10, color:'#8b5cf6', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:2 }}>
             {streak > 0 ? 'Streak actif' : 'Commence !'}
           </div>
         </div>
@@ -626,7 +626,7 @@ function generateDailyTasks(profil, metriques) {
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', emoji:'👟', color:'#FF6B35',
+      id:'pas', emoji:'👟', color:'#8b5cf6',
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
@@ -656,7 +656,7 @@ function generateDailyTasks(profil, metriques) {
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', emoji:'🎯', color:'#FF6B35',
+      id:'objectif', emoji:'🎯', color:'#8b5cf6',
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Une action concrète vers : ${objectif}` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',
@@ -742,7 +742,7 @@ function SwipeableInsights({ profil, metriques, onChat }) {
   const h = new Date().getHours()
   const cards = [
     h < 10
-      ? { icon:<SunIcon size={20} color="#FF6B35" />, title:'Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme immédiatement.', action:'Conseils matin', from:'#FF6B35', to:'#FF9A3C', bg:'#FFF3EE' }
+      ? { icon:<SunIcon size={20} color="#8b5cf6" />, title:'Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme immédiatement.', action:'Conseils matin', from:'#8b5cf6', to:'#a78bfa', bg:'#FFF3EE' }
       : h < 14
       ? { icon:<FoodIcon size={20} color="#34c759" />, title:'Repas de midi équilibré', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui te fatiguent l\'après-midi.', action:'Idées repas', from:'#34c759', to:'#86efac', bg:'#EDFFF3' }
       : h < 18
@@ -757,10 +757,10 @@ function SwipeableInsights({ profil, metriques, onChat }) {
       action:'Mettre à jour', from:'#38bdf8', to:'#7dd3fc', bg:'#EFF9FF',
     },
     profil?.objectifs?.[0] ? {
-      icon:<TargetIcon size={20} color="#FF6B35" />,
+      icon:<TargetIcon size={20} color="#8b5cf6" />,
       title: profil.objectifs[0],
       body:'Chaque petite action compte. Qu\'est-ce que tu peux faire concrètement aujourd\'hui ?',
-      action:'Conseils personnalisés', from:'#FF6B35', to:'#FF9A3C', bg:'#FFF3EE',
+      action:'Conseils personnalisés', from:'#8b5cf6', to:'#a78bfa', bg:'#FFF3EE',
     } : null,
     { icon:<LeafIcon size={20} color="#34c759" />, title:'Santé naturelle', body:'Plantes, tisanes et techniques holistiques adaptées à ton profil et tes objectifs.', action:'herbal', from:'#34c759', to:'#86efac', bg:'#EDFFF3' },
     { icon:<MeditateIcon size={20} color="#a78bfa" />, title:'Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement. Inspire 5s, expire 5s.', action:'En savoir plus', from:'#a78bfa', to:'#c4b5fd', bg:'#F5F0FF' },
@@ -780,9 +780,9 @@ function SwipeableInsights({ profil, metriques, onChat }) {
     <div style={{ padding:'8px 18px 0' }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
         <span style={hc.cardsTitle}>Insights du jour</span>
-        <span style={{ fontSize:12, color:'#FF6B35', fontWeight:700,
-          background:'rgba(255,107,53,0.10)', padding:'3px 12px', borderRadius:20,
-          boxShadow:'0 2px 8px rgba(255,107,53,0.15)' }}>
+        <span style={{ fontSize:12, color:'#8b5cf6', fontWeight:700,
+          background:'rgba(139,92,246,0.10)', padding:'3px 12px', borderRadius:20,
+          boxShadow:'0 2px 8px rgba(139,92,246,0.15)' }}>
           {idx + 1} / {cards.length}
         </span>
       </div>
@@ -852,7 +852,7 @@ function SwipeableInsights({ profil, metriques, onChat }) {
         {cards.map((_, i) => (
           <div key={i} onClick={() => setIdx(i)} style={{
             height:6, width: i === idx ? 22 : 6, borderRadius:3,
-            background: i === idx ? '#FF6B35' : 'rgba(0,0,0,0.12)',
+            background: i === idx ? '#8b5cf6' : 'rgba(0,0,0,0.12)',
             transition:'all 0.32s cubic-bezier(0.34,1.56,0.64,1)',
             cursor:'pointer',
           }} />
@@ -930,17 +930,17 @@ const hc = {
     boxShadow:'0 0 6px rgba(52,199,89,0.7)' },
   greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
     marginBottom:22, textAlign:'center' },
-  greetNameAccent: { background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
+  greetNameAccent: { background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:248, height:248,
     display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20,
     animation:'novaFloat 7s ease-in-out infinite' },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
-    background:'linear-gradient(145deg, #FF6B35, #E55A00)',
+    background:'linear-gradient(145deg, #8b5cf6, #6d28d9)',
     color:'#fff', border:'none', borderRadius:22, fontSize:13, fontWeight:800,
     cursor:'pointer', fontFamily:"'Inter',system-ui,sans-serif",
-    boxShadow:'0 12px 36px rgba(255,107,53,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow:'0 12px 36px rgba(139,92,246,0.45), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)' },
 
   strip: { display:'flex', gap:10, padding:'14px 18px' },

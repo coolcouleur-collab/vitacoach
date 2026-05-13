@@ -375,7 +375,7 @@ export default function App() {
           <nav style={s.sidebarNav}>
             {navItems.map(({ id, Icon, label }) => {
               const active = onglet === id
-              const color = active ? '#FF6B35' : '#8a7265'
+              const color = active ? '#8b5cf6' : '#8a7265'
               return (
                 <button key={id} style={active ? s.navActive : s.nav}
                   onClick={() => setOnglet(id)}>
@@ -397,7 +397,7 @@ export default function App() {
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={s.profileName}>{profil.nom}</div>
-                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#FF6B35" /> {profil.objectifs[0]}</div>}
+                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#8b5cf6" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
             {!isPro && (
@@ -483,7 +483,7 @@ export default function App() {
                   </button>
                 )}
                 <div>
-                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#FF6B35" />} Coach IA</div>
+                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#8b5cf6" />} Coach IA</div>
                   {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Solenn</div>}
                 </div>
               </div>
@@ -531,7 +531,7 @@ export default function App() {
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
                           <span key={i} style={{ width:7, height:7, borderRadius:'50%',
-                            background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
+                            background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
                             display:'inline-block',
                             animation:`typing 0.8s ${d}s ease-in-out infinite alternate` }} />
                         ))}
@@ -649,10 +649,10 @@ export default function App() {
               }} />
               {navItems.map(({ id, Icon, label }, idx) => {
                 const active = onglet === id
-                const color = active ? '#FF6B35' : '#c4b5a8'
+                const color = active ? '#8b5cf6' : '#c4b5a8'
                 return (
                   <button key={id}
-                    style={{ ...s.navBot, color: active ? '#FF6B35' : '#c4b5a8', zIndex:1 }}
+                    style={{ ...s.navBot, color: active ? '#8b5cf6' : '#c4b5a8', zIndex:1 }}
                     onClick={() => setOnglet(id)}>
                     <div style={{
                       transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
@@ -771,8 +771,8 @@ export default function App() {
           50%      { transform:scale(1.35); opacity:1; }
         }
         @keyframes pulseDot2 {
-          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(255,107,53,0.4); }
-          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(255,107,53,0.7); }
+          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(139,92,246,0.4); }
+          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(139,92,246,0.7); }
         }
         @keyframes pulseDot3 {
           0%,100% { transform:scale(1);    opacity:0.7; }
@@ -788,12 +788,12 @@ export default function App() {
         ::-webkit-scrollbar { width:5px; height:5px; }
         ::-webkit-scrollbar-track { background:transparent; border-radius:10px; }
         ::-webkit-scrollbar-thumb {
-          background:linear-gradient(180deg, #FF6B35 0%, #a78bfa 100%);
+          background:linear-gradient(180deg, #8b5cf6 0%, #a78bfa 100%);
           border-radius:10px;
           transition:width 0.3s ease;
         }
-        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#FF9A3C,#8b5cf6); }
-        * { scrollbar-width:thin; scrollbar-color:#FF6B35 transparent; }
+        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#a78bfa,#8b5cf6); }
+        * { scrollbar-width:thin; scrollbar-color:#8b5cf6 transparent; }
       `}</style>
     </div>
   )
@@ -846,11 +846,11 @@ function RoutineModule({ profil, metriques }) {
         <div style={sr.progressBar}>
           <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
             <span style={{ fontSize:12, fontWeight:700, color:'#1a0a00' }}>Progression</span>
-            <span style={{ fontSize:12, color:'#FF6B35', fontWeight:700 }}>{doneTotal}/{stepsTotal}</span>
+            <span style={{ fontSize:12, color:'#8b5cf6', fontWeight:700 }}>{doneTotal}/{stepsTotal}</span>
           </div>
           <div style={{ height:6, background:'#f0e8e0', borderRadius:4, overflow:'hidden' }}>
             <div style={{ height:'100%', width:`${stepsTotal>0?(doneTotal/stepsTotal)*100:0}%`,
-              background:'linear-gradient(90deg,#FF6B35,#FF9A3C)', borderRadius:4, transition:'width 0.4s ease' }} />
+              background:'linear-gradient(90deg,#8b5cf6,#a78bfa)', borderRadius:4, transition:'width 0.4s ease' }} />
           </div>
         </div>
       )}
@@ -875,13 +875,13 @@ function RoutineModule({ profil, metriques }) {
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {routine.motivation && (
             <div style={sr.motivCard}>
-              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#FF6B35" /></div>
-              <div style={{ fontSize:14, fontWeight:600, color:'#FF6B35', lineHeight:1.65 }}>{routine.motivation}</div>
+              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#8b5cf6" /></div>
+              <div style={{ fontSize:14, fontWeight:600, color:'#8b5cf6', lineHeight:1.65 }}>{routine.motivation}</div>
             </div>
           )}
           {routine.matin && (
-            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#FF6B35" />} titre={routine.matin.titre} heure={routine.matin.heure}
-              etapes={routine.matin.etapes} accent="#FF6B35" checked={checkedSteps} onToggle={toggleStep} />
+            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#8b5cf6" />} titre={routine.matin.titre} heure={routine.matin.heure}
+              etapes={routine.matin.etapes} accent="#8b5cf6" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.nutrition && <NutritionCard nutrition={routine.nutrition} />}
           {routine.apresmidi && (
@@ -896,7 +896,7 @@ function RoutineModule({ profil, metriques }) {
             <div style={sr.card}>
               <div style={sr.cardHeader}>
                 <span style={{ fontSize:20 }}>{routine.astuce.emoji}</span>
-                <span style={{ ...sr.cardTitre, color:'#FF6B35' }}>{routine.astuce.titre}</span>
+                <span style={{ ...sr.cardTitre, color:'#8b5cf6' }}>{routine.astuce.titre}</span>
               </div>
               <div style={{ fontSize:13, color:'#8a7265', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
             </div>
@@ -977,9 +977,9 @@ const sr = {
   header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0' },
   date: { fontSize:11, color:'#c4b5a8', textTransform:'capitalize', letterSpacing:0.5, fontWeight:500 },
   titre: { fontSize:20, fontWeight:800, color:'#1a0a00', marginTop:3, letterSpacing:'-0.3px' },
-  btnGen: { background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff', border:'none',
+  btnGen: { background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', color:'#fff', border:'none',
     padding:'10px 18px', borderRadius:13, fontSize:12, fontWeight:700, cursor:'pointer',
-    boxShadow:'0 4px 16px rgba(255,107,53,0.35)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
+    boxShadow:'0 4px 16px rgba(139,92,246,0.35)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
   progressBar: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:14,
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(0,0,0,0.04)' },
   empty: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20, padding:'48px 32px',
@@ -1017,7 +1017,7 @@ function TenueCard({ tenue }) {
       <div style={st.tenueInfo}>
         <div style={st.tenueTitre}>▸ {tenue.titre}</div>
         <div style={st.tenueDesc}>{tenue.description}</div>
-        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#FF9A3C" /> {tenue.pourquoi}</div>
+        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#a78bfa" /> {tenue.pourquoi}</div>
       </div>
     </div>
   )
@@ -1099,8 +1099,8 @@ const st = {
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
   panel: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:16, padding:14, marginTop:4,
     boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
-  meteoBar: { background:'rgba(255,107,53,0.06)', borderRadius:10, padding:'8px 14px',
-    fontSize:12, marginBottom:12, color:'#FF6B35', fontWeight:600, border:'1px solid rgba(255,107,53,0.15)' },
+  meteoBar: { background:'rgba(139,92,246,0.06)', borderRadius:10, padding:'8px 14px',
+    fontSize:12, marginBottom:12, color:'#8b5cf6', fontWeight:600, border:'1px solid rgba(139,92,246,0.15)' },
   row: { display:'flex', gap:8, marginBottom:12 },
   input: { flex:1, padding:'10px 14px', borderRadius:12, border:'1px solid #e5e7eb',
     background:'#f9fafb', fontSize:13, fontFamily:"'Inter',system-ui,sans-serif", outline:'none', color:'#1a0a00' },
@@ -1117,7 +1117,7 @@ const st = {
     justifyContent:'center', color:'#c4b5a8', fontSize:12, textAlign:'center', padding:10 },
   img: { width:'100%', height:200, objectFit:'cover', display:'block' },
   tenueInfo: { padding:'12px 12px' },
-  tenueTitre: { fontWeight:700, color:'#FF6B35', fontSize:13, marginBottom:5 },
+  tenueTitre: { fontWeight:700, color:'#8b5cf6', fontSize:13, marginBottom:5 },
   tenueDesc: { fontSize:12, color:'#8a7265', lineHeight:1.6, marginBottom:5 },
   tenuePourquoi: { fontSize:11, color:'#c4b5a8', fontStyle:'italic' },
 }
@@ -1141,7 +1141,7 @@ const s = {
   sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid #E8E6E2' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
-    background:'linear-gradient(135deg,#FF6B35,#E55A00)',
+    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
   logoSub: { fontSize:11, color:'#c4b5a8', marginTop:3, letterSpacing:'0.04em', fontWeight:500 },
@@ -1156,7 +1156,7 @@ const s = {
   navActive: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'rgba(0,0,0,0.05)',
-    cursor:'pointer', fontFamily:F, color:'#FF6B35', fontWeight:700,
+    cursor:'pointer', fontFamily:F, color:'#8b5cf6', fontWeight:700,
     textAlign:'left', width:'100%', fontSize:13, transition:'all .2s',
     boxShadow:'inset 0 0 0 1.5px rgba(0,0,0,0.08)',
   },
@@ -1167,21 +1167,21 @@ const s = {
   },
   avatar: {
     width:36, height:36, borderRadius:10,
-    background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
+    background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
-    boxShadow:'0 4px 12px rgba(255,107,53,.3)',
+    boxShadow:'0 4px 12px rgba(139,92,246,.3)',
   },
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,#FF6B35,#E55A00)', color:'#fff', border:'none',
+    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', color:'#fff', border:'none',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 6px 20px rgba(255,107,53,.32)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 6px 20px rgba(139,92,246,.32)', textAlign:'center',
   },
   proBadge: {
-    background:'rgba(255,107,53,.08)', color:'#FF6B35',
-    border:'1px solid rgba(255,107,53,.2)',
+    background:'rgba(139,92,246,.08)', color:'#8b5cf6',
+    border:'1px solid rgba(139,92,246,.2)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
@@ -1242,10 +1242,10 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'linear-gradient(145deg,#FF6B35,#E55A00)', color:'#fff',
+    background:'linear-gradient(145deg,#8b5cf6,#6d28d9)', color:'#fff',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
-    boxShadow:'0 8px 28px rgba(255,107,53,.38), inset 0 1px 0 rgba(255,255,255,.2)',
+    boxShadow:'0 8px 28px rgba(139,92,246,.38), inset 0 1px 0 rgba(255,255,255,.2)',
   },
   botBubble: {
     background:'#ffffff', border:'1px solid #f0e8e0', color:'#1a0a00',
@@ -1257,12 +1257,12 @@ const s = {
     background:'transparent', color:'#1a0a00',
     padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.75,
   },
-  botAvatar: { fontSize:16, color:'#FF6B35', marginTop:10, flexShrink:0, fontWeight:900 },
+  botAvatar: { fontSize:16, color:'#8b5cf6', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
   suggestion: {
     background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'#FF6B35', cursor:'pointer',
+    padding:'7px 14px', fontSize:12, color:'#8b5cf6', cursor:'pointer',
     fontFamily:F, fontWeight:600, boxShadow:'0 1px 6px rgba(0,0,0,.04)',
   },
 
@@ -1274,10 +1274,10 @@ const s = {
   },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'#1a0a00' },
   sendBtn: {
-    background:'linear-gradient(135deg,#FF6B35,#E55A00)', border:'none',
+    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', border:'none',
     width:42, height:42, borderRadius:14, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-    boxShadow:'0 4px 16px rgba(255,107,53,.38)',
+    boxShadow:'0 4px 16px rgba(139,92,246,.38)',
   },
 
   // ── Bottom nav ────────────────────────────────────────────────────────────────
@@ -1293,5 +1293,5 @@ const s = {
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
     fontFamily:F, color:'#c4b5a8', position:'relative', transition:'color .2s',
   },
-  navBotActive: { color:'#FF6B35' },
+  navBotActive: { color:'#8b5cf6' },
 }

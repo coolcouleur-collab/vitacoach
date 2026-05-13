@@ -108,7 +108,7 @@ function ReplyForm({ onSubmit, authorName }) {
               border: 'none', borderRadius: 'var(--br)',
               padding: '.7rem 2rem', fontSize: 'var(--p3)', fontWeight: 700,
               cursor: text.trim() ? 'pointer' : 'default', fontFamily: 'var(--font)',
-              boxShadow: text.trim() ? '0 4px 14px rgba(255,107,53,.3)' : 'none',
+              boxShadow: text.trim() ? '0 4px 14px rgba(139,92,246,.3)' : 'none',
               transition: 'all .2s var(--ease)',
             }}
           >
@@ -236,8 +236,8 @@ function NewPostForm({ onSubmit, onCancel, authorName }) {
   return (
     <div style={{
       background: '#fff', borderRadius: 'var(--br)', padding: '2.8rem',
-      border: '2px solid rgba(255,107,53,.25)',
-      boxShadow: '0 1.6rem 4.8rem rgba(255,107,53,.12)',
+      border: '2px solid rgba(139,92,246,.25)',
+      boxShadow: '0 1.6rem 4.8rem rgba(139,92,246,.12)',
       marginBottom: '3.2rem',
     }}>
       <div style={{ fontSize: 'max(1.7rem,17px)', fontWeight: 900, color: 'var(--text-strong)', marginBottom: '2rem' }}>
@@ -267,7 +267,7 @@ function NewPostForm({ onSubmit, onCancel, authorName }) {
             fontSize: 'max(1.1rem,11px)', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)',
             background: category === c ? 'linear-gradient(135deg, var(--accent), var(--accent-2))' : '#f0e8e0',
             color: category === c ? '#fff' : 'var(--text-muted)',
-            boxShadow: category === c ? '0 4px 12px rgba(255,107,53,.3)' : 'none',
+            boxShadow: category === c ? '0 4px 12px rgba(139,92,246,.3)' : 'none',
             transition: 'all .2s var(--ease)',
           }}>
             {c}
@@ -317,7 +317,7 @@ function NewPostForm({ onSubmit, onCancel, authorName }) {
           color: '#fff', border: 'none',
           borderRadius: 'var(--br)', padding: '.9rem 2.8rem', fontSize: 'var(--p3)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 .8rem 2.4rem rgba(255,107,53,.35)',
+          boxShadow: '0 .8rem 2.4rem rgba(139,92,246,.35)',
         }}>
           Publier →
         </button>
@@ -427,7 +427,7 @@ export default function Forum({ onBack, user }) {
           color: '#fff', border: 'none', borderRadius: 'var(--br)',
           padding: '.8rem 2rem', fontSize: 'max(1.3rem,13px)', fontWeight: 700,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 4px 16px rgba(255,107,53,.35)', whiteSpace: 'nowrap',
+          boxShadow: '0 4px 16px rgba(139,92,246,.35)', whiteSpace: 'nowrap',
         }}>
           + Nouvelle discussion
         </button>
