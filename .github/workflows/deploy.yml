@@ -15,29 +15,14 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            STATUS="/var/www/html/deploy-status.txt"
-            echo "STEP_CD" > $STATUS
-
-            cd /home/ubuntu/vitacoach || { echo "FAIL_CD" > $STATUS; exit 1; }
-            echo "STEP_GIT" > $STATUS
-
-            git fetch origin main 2>&1 || { echo "FAIL_GIT_FETCH" > $STATUS; exit 1; }
-            git reset --hard origin/main 2>&1 || { echo "FAIL_GIT_RESET" > $STATUS; exit 1; }
-            echo "STEP_NPM_INSTALL" > $STATUS
-
-            npm install 2>&1 | tail -3 || { echo "FAIL_NPM_INSTALL" > $STATUS; exit 1; }
-            echo "STEP_BUILD" > $STATUS
-
-            NODE_OPTIONS="--max-old-space-size=512" npm run build 2>&1 | tail -5
-            BUILD_EXIT=$?
-            if [ $BUILD_EXIT -ne 0 ]; then
-              echo "FAIL_BUILD_exit$BUILD_EXIT" > $STATUS
-              exit 1
-            fi
-
-            echo "STEP_COPY" > $STATUS
-            cp -r dist/. /var/www/html/
-            echo "STEP_PM2" > $STATUS
-
-            pm2 restart oravia 2>&1 || true
-            echo "SUCCESS_$(git log --oneline -1 | cut -c1-7)" > $STATUS
+            set -e
+            cd /home/ubuntu/vitacoach
+            echo "📦 Node $(node --version) | npm $(npm --version)"
+            git fetch origin main
+            git reset --hard origin/main
+            echo "🔍 Commit: $(git log --oneline -1)"
+            npm install
+            NODE_OPTIONS="--max-old-space-size=512" npm run build
+            echo "✅ Build OK"
+            pm2 restart oravia
+            echo "🚀 Déployé !"
