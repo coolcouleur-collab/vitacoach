@@ -28,10 +28,10 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
   function handleClick() {
     setActive(true)
     clearTimeout(offTimer.current)
-    // Sur mobile (pas de mouseLeave) : arrête après 1,5 cycle
+    // Sur mobile (pas de mouseLeave) : arrête après 1 cycle complet
     offTimer.current = setTimeout(() => {
       if (!hovering.current) setActive(false)
-    }, parseFloat(animDuration) * 1500)
+    }, parseFloat(animDuration) * 1000)
   }
 
   return (
@@ -45,7 +45,7 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
-        animation: active ? `shimmerGrad ${animDuration} linear infinite ${animDelay}` : 'none',
+        animation: active ? `shimmerGrad ${animDuration} ease-in-out infinite ${animDelay}` : 'none',
         cursor: 'default',
         userSelect: 'none',
         WebkitUserSelect: 'none',
@@ -442,14 +442,14 @@ export default function App() {
             <ShinyLogoText
               text="Solenn"
               gradient="linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)"
-              animDuration="4s"
+              animDuration="10s"
               style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
             />
             <ShinyLogoText
               text="re·vivre · évoluer"
               gradient="linear-gradient(90deg, #D4844A 0%, #F5C8AA 25%, #ffffff 45%, #F5C8AA 68%, #D4844A 100%)"
-              animDuration="6s"
-              animDelay="0.8s"
+              animDuration="14s"
+              animDelay="0s"
               style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}
             />
           </div>
@@ -987,7 +987,8 @@ export default function App() {
         }
         @keyframes shimmerGrad {
           0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+          50%  { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
         @keyframes swipeHint {
           0%,100% { transform: translateX(0) translateY(-50%); opacity:0.3; }
