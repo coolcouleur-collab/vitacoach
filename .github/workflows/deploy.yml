@@ -15,39 +15,29 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            LOG="/tmp/deploy_diag.txt"
-            echo "=== DEPLOY DIAG $(date) ===" > $LOG
+            STATUS="/var/www/html/deploy-status.txt"
+            echo "STEP_CD" > $STATUS
 
-            echo "--- whoami ---" >> $LOG
-            whoami >> $LOG 2>&1
+            cd /home/ubuntu/vitacoach || { echo "FAIL_CD" > $STATUS; exit 1; }
+            echo "STEP_GIT" > $STATUS
 
-            echo "--- pwd ---" >> $LOG
-            pwd >> $LOG 2>&1
+            git fetch origin main 2>&1 || { echo "FAIL_GIT_FETCH" > $STATUS; exit 1; }
+            git reset --hard origin/main 2>&1 || { echo "FAIL_GIT_RESET" > $STATUS; exit 1; }
+            echo "STEP_NPM_INSTALL" > $STATUS
 
-            echo "--- ls /home/ubuntu/ ---" >> $LOG
-            ls /home/ubuntu/ >> $LOG 2>&1 || echo "FAILED ls /home/ubuntu" >> $LOG
+            npm install 2>&1 | tail -3 || { echo "FAIL_NPM_INSTALL" > $STATUS; exit 1; }
+            echo "STEP_BUILD" > $STATUS
 
-            echo "--- ls /root/ ---" >> $LOG
-            ls /root/ >> $LOG 2>&1 || echo "FAILED ls /root" >> $LOG
+            NODE_OPTIONS="--max-old-space-size=512" npm run build 2>&1 | tail -5
+            BUILD_EXIT=$?
+            if [ $BUILD_EXIT -ne 0 ]; then
+              echo "FAIL_BUILD_exit$BUILD_EXIT" > $STATUS
+              exit 1
+            fi
 
-            echo "--- nginx sites-enabled ---" >> $LOG
-            cat /etc/nginx/sites-enabled/* >> $LOG 2>&1 || echo "FAILED nginx sites" >> $LOG
+            echo "STEP_COPY" > $STATUS
+            cp -r dist/. /var/www/html/
+            echo "STEP_PM2" > $STATUS
 
-            echo "--- nginx conf.d ---" >> $LOG
-            ls /etc/nginx/conf.d/ >> $LOG 2>&1 || true
-            cat /etc/nginx/conf.d/* >> $LOG 2>&1 || true
-
-            echo "--- pm2 list ---" >> $LOG
-            pm2 list >> $LOG 2>&1 || echo "FAILED pm2" >> $LOG
-
-            echo "--- node/npm versions ---" >> $LOG
-            node --version >> $LOG 2>&1
-            npm --version >> $LOG 2>&1
-
-            # Copie du log dans toutes les racines possibles
-            cp $LOG /var/www/html/deploy-diag.txt 2>/dev/null || true
-            cp $LOG /home/ubuntu/vitacoach/dist/deploy-diag.txt 2>/dev/null || true
-            cp $LOG /usr/share/nginx/html/deploy-diag.txt 2>/dev/null || true
-
-            echo "=== FIN ===" >> $LOG
-            cat $LOG
+            pm2 restart oravia 2>&1 || true
+            echo "SUCCESS_$(git log --oneline -1 | cut -c1-7)" > $STATUS
