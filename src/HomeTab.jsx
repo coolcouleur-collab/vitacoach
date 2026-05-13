@@ -276,53 +276,98 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
 function NovaLogBtn({ onClick }) {
   const [hovered, setHovered] = useState(false)
+  const [ripples, setRipples] = useState([])
+
+  function handleClick(e) {
+    const r = e.currentTarget.getBoundingClientRect()
+    const id = Date.now()
+    setRipples(prev => [...prev, { x: e.clientX-r.left, y: e.clientY-r.top, id }])
+    setTimeout(() => setRipples(prev => prev.filter(rp => rp.id !== id)), 800)
+    onClick?.()
+  }
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        position:'relative', overflow:'hidden',
         marginTop:10, borderRadius:100,
-        border:`1.5px solid ${hovered ? '#8b5cf6' : 'rgba(139,92,246,0.35)'}`,
-        background: hovered ? 'rgba(139,92,246,0.08)' : 'rgba(255,255,255,0.85)',
-        backdropFilter:'blur(12px)',
+        border:`1px solid ${hovered ? 'rgba(139,92,246,0.48)' : 'rgba(139,92,246,0.20)'}`,
+        background:'rgba(255,255,255,0.92)',
+        backdropFilter:'blur(18px)',
         cursor:'pointer', display:'flex', alignItems:'center', gap:8,
-        padding:'12px 28px',
+        padding:'13px 30px',
         fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:700,
         color: hovered ? '#6d28d9' : '#4c1d95',
-        boxShadow: hovered ? '0 4px 20px rgba(139,92,246,0.25)' : '0 2px 10px rgba(139,92,246,0.12)',
+        boxShadow: hovered
+          ? '0 6px 24px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.95)'
+          : '0 2px 12px rgba(139,92,246,0.08), inset 0 1px 0 rgba(255,255,255,0.90)',
         transform: hovered ? 'scale(1.04)' : 'scale(1)',
-        transition:'all 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+        transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
+      {/* ── Rotating inner sweep — Framer Button style ── */}
+      <div style={{
+        position:'absolute', left:'50%', top:'50%',
+        width:'260%', height:7,
+        marginLeft:'-130%', marginTop:-3.5,
+        background:'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(167,139,250,0.40) 45%, rgba(255,255,255,0.85) 50%, rgba(167,243,208,0.38) 55%, transparent 80%, transparent 100%)',
+        filter:'blur(5px)',
+        animation:'btnLightSpin 9s linear infinite',
+        opacity: hovered ? 1 : 0.50,
+        transition:'opacity 0.35s ease',
+        pointerEvents:'none',
+      }} />
+      {/* ── Liquid ripples ── */}
+      {ripples.map(rp => (
+        <span key={rp.id} style={{
+          position:'absolute', borderRadius:'50%', pointerEvents:'none',
+          left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
+          background:'rgba(139,92,246,0.45)',
+          animation:'liquidRipple 0.75s ease-out forwards',
+        }} />
+      ))}
       <HeartIcon size={15} color={hovered ? '#6d28d9' : '#8b5cf6'} />
       Mettre à jour mes métriques
     </button>
   )
 }
 
-// ─── MAGNETIC GLOW BUTTON (Quick Actions) ─────────────────────────────────────
-// Particles pré-calculées (Framer Button style) — stables entre les renders
-const GLOW_BTN_PARTICLES = [
-  { x:16, y:26, s:1.5, d:1.8, del:0.0 },
-  { x:76, y:16, s:1.0, d:2.1, del:0.4 },
-  { x:88, y:63, s:1.8, d:1.6, del:0.8 },
-  { x:26, y:79, s:1.2, d:2.3, del:1.2 },
-  { x:57, y:43, s:0.8, d:1.9, del:0.2 },
-  { x:92, y:34, s:1.4, d:2.0, del:0.6 },
-  { x:11, y:57, s:1.1, d:2.2, del:1.0 },
-  { x:68, y:83, s:1.3, d:1.7, del:0.35 },
+// ─── FRAMER BUTTON — particles stables ────────────────────────────────────────
+const BTN_PARTICLES = [
+  { x:14, y:22, s:1.2, d:2.0, del:0.0 },
+  { x:78, y:14, s:0.9, d:2.3, del:0.5 },
+  { x:86, y:68, s:1.4, d:1.8, del:0.9 },
+  { x:22, y:80, s:1.0, d:2.5, del:1.3 },
+  { x:55, y:45, s:0.7, d:2.1, del:0.25 },
+  { x:90, y:36, s:1.1, d:2.2, del:0.7 },
+  { x:10, y:60, s:0.9, d:2.4, del:1.1 },
+  { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
+// ─── MAGNETIC GLOW BUTTON — Framer Button style (rotating sweep + liquid ripple)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
-  const [spot, setSpot] = useState({ x:50, y:50 })
+  const [spot, setSpot]     = useState({ x:50, y:50 })
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
+  const [ripples, setRipples] = useState([])
   const ref = useRef()
+
   function onMove(e) {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
     setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
   }
+  function handleClick(e) {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    const id = Date.now()
+    setRipples(prev => [...prev, { x: e.clientX-r.left, y: e.clientY-r.top, id }])
+    setTimeout(() => setRipples(prev => prev.filter(rp => rp.id !== id)), 800)
+    onClick?.()
+  }
+
   return (
     <div ref={ref}
       onMouseMove={onMove}
@@ -330,53 +375,70 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
       onMouseLeave={() => setHovered(false)}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
-      onTouchStart={() => setPressed(true)}
+      onTouchStart={() => { setPressed(true) }}
       onTouchEnd={() => { setPressed(false); setHovered(false) }}
-      onClick={onClick}
+      onClick={handleClick}
       style={{
-        position:'relative', borderRadius:22, cursor:'pointer',
-        transform: pressed ? 'scale(0.90)' : hovered ? 'scale(1.06)' : 'scale(1)',
-        transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
+        position:'relative', borderRadius:24, cursor:'pointer', overflow:'hidden',
+        border:`1px solid ${hovered ? from+'70' : from+'28'}`,
+        background:'rgba(255,255,255,0.94)',
+        backdropFilter:'blur(14px)',
+        boxShadow: hovered
+          ? `0 10px 32px ${from}28, 0 2px 8px ${from}18, inset 0 1px 0 rgba(255,255,255,0.95)`
+          : `0 2px 10px ${from}12, inset 0 1px 0 rgba(255,255,255,0.90)`,
+        transform: pressed ? 'scale(0.91)' : hovered ? 'scale(1.06)' : 'scale(1)',
+        transition:'transform 0.20s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease',
       }}>
-      {/* Spinning conic border */}
+
+      {/* ── Rotating inner light sweep — Framer Button style ── */}
       <div style={{
-        position:'absolute', inset:-1.5, borderRadius:23.5,
-        background:`conic-gradient(from 0deg, ${from} 0%, ${to} 45%, ${from} 100%)`,
-        animation:`novaSpin ${hovered ? '2s' : '4s'} linear infinite`,
-        opacity: hovered ? 1 : 0.45,
-        transition:'opacity 0.3s ease, animation-duration 0.3s ease',
-      }} />
-      {/* White glass body */}
-      <div style={{
-        position:'absolute', inset:1.5, borderRadius:20.5,
-        background:'rgba(255,255,255,0.97)',
-        backdropFilter:'blur(12px)',
-        overflow:'hidden',
+        position:'absolute', inset:0, overflow:'hidden',
+        borderRadius:'inherit', pointerEvents:'none',
+        display:'flex', alignItems:'center', justifyContent:'center',
       }}>
-        {/* Floating particles (Framer Button style) */}
-        {GLOW_BTN_PARTICLES.map((p, i) => (
-          <div key={i} style={{
-            position:'absolute',
-            left:`${p.x}%`, top:`${p.y}%`,
-            width:`${p.s}px`, height:`${p.s}px`,
-            borderRadius:'50%',
-            background: from,
-            opacity: hovered ? 0.72 : 0.18,
-            animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
-            transition:'opacity 0.35s ease',
-            pointerEvents:'none',
-          }} />
-        ))}
-        {/* Mouse spotlight */}
         <div style={{
-          position:'absolute', inset:0, pointerEvents:'none',
-          background: hovered
-            ? `radial-gradient(circle 65px at ${spot.x}% ${spot.y}%, ${from}20 0%, transparent 72%)`
-            : 'transparent',
-          transition: hovered ? 'none' : 'opacity 0.4s ease',
+          width:'240%', height:8,
+          background:`linear-gradient(90deg, transparent 0%, transparent 22%, ${from}28 44%, rgba(255,255,255,0.82) 50%, ${to}28 56%, transparent 78%, transparent 100%)`,
+          filter:'blur(6px)',
+          animation:'btnLightSpin 10s linear infinite',
+          opacity: hovered ? 1 : 0.52,
+          transition:'opacity 0.4s ease',
         }} />
       </div>
-      {/* Content */}
+
+      {/* ── Micro-particles ── */}
+      {BTN_PARTICLES.map((p, i) => (
+        <div key={i} style={{
+          position:'absolute',
+          left:`${p.x}%`, top:`${p.y}%`,
+          width:`${p.s}px`, height:`${p.s}px`,
+          borderRadius:'50%', background:from,
+          opacity: hovered ? 0.50 : 0.09,
+          animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
+          transition:'opacity 0.4s ease', pointerEvents:'none',
+        }} />
+      ))}
+
+      {/* ── Mouse spotlight ── */}
+      <div style={{
+        position:'absolute', inset:0, pointerEvents:'none',
+        background: hovered
+          ? `radial-gradient(circle 62px at ${spot.x}% ${spot.y}%, ${from}1C 0%, transparent 68%)`
+          : 'transparent',
+        transition: hovered ? 'none' : 'opacity 0.4s ease',
+      }} />
+
+      {/* ── Liquid ripple (LiquidImage style) ── */}
+      {ripples.map(rp => (
+        <span key={rp.id} style={{
+          position:'absolute', borderRadius:'50%', pointerEvents:'none',
+          left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
+          background:`${from}50`,
+          animation:'liquidRipple 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
+        }} />
+      ))}
+
+      {/* ── Content ── */}
       <div style={{
         position:'relative', zIndex:2,
         display:'flex', flexDirection:'column', alignItems:'center',
@@ -387,8 +449,8 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
           background:`linear-gradient(145deg, ${from}, ${to})`,
           display:'flex', alignItems:'center', justifyContent:'center',
           boxShadow: hovered ? `0 8px 28px ${from}80` : `0 5px 16px ${from}50`,
-          transition:'box-shadow 0.25s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
-          transform: hovered ? 'scale(1.12) translateY(-2px)' : 'scale(1)',
+          transition:'box-shadow 0.25s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+          transform: hovered ? 'scale(1.14) translateY(-3px)' : 'scale(1)',
         }}>
           {iconEl}
         </div>

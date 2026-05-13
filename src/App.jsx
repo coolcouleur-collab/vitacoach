@@ -740,6 +740,14 @@ export default function App() {
         @keyframes novaSpin {
           to { transform: rotate(360deg); }
         }
+        @keyframes btnLightSpin {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes liquidRipple {
+          0%   { transform: scale(1);  opacity: 0.55; }
+          65%  { opacity: 0.12; }
+          100% { transform: scale(32); opacity: 0; }
+        }
         @keyframes novaBreath {
           0%,100% { transform: scale(1) translateZ(0); opacity: 0.65; }
           50%      { transform: scale(1.14) translateZ(0); opacity: 1; }
