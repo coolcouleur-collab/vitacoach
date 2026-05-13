@@ -415,26 +415,21 @@ const BTN_PARTICLES = [
   { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
-// ─── PILL BUTTON — fidèle au Framer Button-RgS3 (border-radius:100, balayage lumineux blanc rotatif)
+// ─── PILL BUTTON — reconstruction exacte du Framer Button-RgS3 ────────────────
+// Structure Framer :
+//   outer wrapper  → padding:2px, overflow:hidden, border-radius:100px, border:1px
+//   light bar      → position:absolute, h:8px, left:-16px right:-16px, z-index:1
+//                    background:white, filter:blur(10px), rotate 360°/10s
+//   inner card     → border-radius:100px, background:couleur, z-index:2
+//                    row: icon + label + arrow (width:1→20px au hover)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed]  = useState(false)
-  const [ripples, setRipples]  = useState([])
-  const ref = useRef()
-
-  function handleClick(e) {
-    const r = ref.current?.getBoundingClientRect()
-    if (!r) return
-    const id = Date.now()
-    setRipples(prev => [...prev, { x: e.clientX - r.left, y: e.clientY - r.top, id }])
-    setTimeout(() => setRipples(prev => prev.filter(rp => rp.id !== id)), 800)
-    onClick?.()
-  }
 
   return (
-    <button
-      ref={ref}
-      onClick={handleClick}
+    /* ── Outer wrapper — 2px gap laisse la lumière percer sur les bords ── */
+    <div
+      onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
@@ -442,85 +437,83 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => setPressed(false)}
       style={{
-        /* ── Pill shape (Framer: borderRadius 100px) ── */
-        position:'relative', cursor:'pointer', overflow:'hidden',
-        display:'flex', flexDirection:'row', alignItems:'center',
-        gap:10, padding:'14px 18px',
+        position:'relative',
+        padding:'2px',
         borderRadius:100,
-        border:'1px solid rgba(255,255,255,0.22)',
-        background:`linear-gradient(135deg, ${from} 0%, ${to} 100%)`,
-        /* ── Shadows ── */
-        boxShadow: hovered
-          ? `0 10px 32px ${from}80, 0 2px 8px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.30)`
-          : `0 4px 18px ${from}50, 0 1px 4px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.20)`,
-        /* ── Scale spring (Framer: bounce 0.2, duration 0.4) ── */
+        border:`1px solid ${from}55`,
+        overflow:'hidden',
+        cursor:'pointer',
+        display:'inline-flex',
+        /* Spring scale (Framer bounce:0.2 duration:0.4) */
         transform: pressed ? 'scale(0.94)' : hovered ? 'scale(1.04)' : 'scale(1)',
         transition:'transform 0.40s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease',
-        fontFamily:"'Inter',system-ui,sans-serif",
-        outline:'none', userSelect:'none',
+        boxShadow: hovered
+          ? `0 0 0 1px ${from}40, 0 8px 28px ${from}65, 0 2px 8px rgba(0,0,0,0.18)`
+          : `0 0 0 1px ${from}20, 0 4px 16px ${from}38`,
+        userSelect:'none',
       }}
     >
-      {/* ── Rotating white light sweep (Framer: 360° / 10s linear) ── */}
+      {/* ── Rotating white light — exactement Framer: h=8px, left/right=-16px, blur=10px, 360°/10s ── */}
       <div style={{
-        position:'absolute', left:'50%', top:'50%',
-        width:'280%', height:9,
-        marginLeft:'-140%', marginTop:-4.5,
-        background:'linear-gradient(90deg, transparent 15%, rgba(255,255,255,0.55) 44%, rgba(255,255,255,0.90) 50%, rgba(255,255,255,0.55) 56%, transparent 85%)',
+        position:'absolute',
+        height:8,
+        left:-16, right:-16,
+        top:'calc(50% - 4px)',
+        background:'#ffffff',
         filter:'blur(10px)',
+        WebkitFilter:'blur(10px)',
+        zIndex:1,
         animation:'btnLightSpin 10s linear infinite',
-        opacity: hovered ? 1 : 0.42,
-        transition:'opacity 0.35s ease',
         pointerEvents:'none',
+        opacity: hovered ? 0.95 : 0.60,
+        transition:'opacity 0.35s ease',
       }} />
 
-      {/* ── Top glass shine ── */}
+      {/* ── Inner card — z-index:2 au-dessus de la lumière ── */}
       <div style={{
-        position:'absolute', top:0, left:0, right:0, height:'52%',
-        background:'linear-gradient(180deg, rgba(255,255,255,0.24) 0%, transparent 100%)',
-        borderRadius:'100px 100px 0 0', pointerEvents:'none',
-      }} />
-
-      {/* ── Ripple au clic ── */}
-      {ripples.map(rp => (
-        <span key={rp.id} style={{
-          position:'absolute', borderRadius:'50%', pointerEvents:'none',
-          left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-          background:'rgba(255,255,255,0.55)',
-          animation:'liquidRipple 0.75s ease-out forwards',
-        }} />
-      ))}
-
-      {/* ── Icône ── */}
-      <div style={{
-        position:'relative', zIndex:1,
-        width:24, height:24, flexShrink:0,
-        display:'flex', alignItems:'center', justifyContent:'center',
-        transform: hovered ? 'scale(1.18)' : 'scale(1)',
-        transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1)',
-      }}>
-        {iconEl}
-      </div>
-
-      {/* ── Label ── */}
-      <span style={{
-        position:'relative', zIndex:1,
-        flex:1, fontSize:12, fontWeight:800, color:'#ffffff',
-        letterSpacing:'0.15px', textAlign:'left', whiteSpace:'nowrap',
-      }}>
-        {label}
-      </span>
-
-      {/* ── Flèche (Framer: width 1→20px spring au hover) ── */}
-      <span style={{
-        position:'relative', zIndex:1,
-        display:'inline-flex', alignItems:'center', justifyContent:'center',
-        fontSize:15, fontWeight:900, color:'rgba(255,255,255,0.92)',
-        width: hovered ? 20 : 1,
+        position:'relative',
+        zIndex:2,
+        borderRadius:100,
+        background:`linear-gradient(135deg, ${from} 0%, ${to} 100%)`,
+        display:'flex',
+        flexDirection:'row',
+        alignItems:'center',
+        gap:8,
+        padding:'13px 16px',
         overflow:'hidden',
-        transition:'width 0.40s cubic-bezier(0.34,1.56,0.64,1)',
-        flexShrink:0,
-      }}>→</span>
-    </button>
+        /* Shine supérieure */
+        boxShadow:'inset 0 1px 0 rgba(255,255,255,0.28)',
+      }}>
+        {/* Icône — grossit légèrement au hover */}
+        <div style={{
+          width:20, height:20, flexShrink:0,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          transform: hovered ? 'scale(1.18)' : 'scale(1)',
+          transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1)',
+        }}>
+          {iconEl}
+        </div>
+
+        {/* Label */}
+        <span style={{
+          flex:1, fontSize:12, fontWeight:800, color:'#ffffff',
+          letterSpacing:'0.15px', whiteSpace:'nowrap',
+          fontFamily:"'Inter',system-ui,sans-serif",
+        }}>
+          {label}
+        </span>
+
+        {/* Flèche — width:1px→20px spring au hover (Framer exact) */}
+        <span style={{
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+          fontSize:14, fontWeight:900, color:'rgba(255,255,255,0.90)',
+          width: hovered ? 20 : 1,
+          overflow:'hidden',
+          transition:'width 0.40s cubic-bezier(0.34,1.56,0.64,1)',
+          flexShrink:0,
+        }}>→</span>
+      </div>
+    </div>
   )
 }
 
