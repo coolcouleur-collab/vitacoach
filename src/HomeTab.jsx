@@ -137,8 +137,8 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
   const METRICS = [
     { angle:-90, iconEl:<WaterIcon size={17} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
-    { angle:-18, iconEl:<RunIcon size={17} color="#FF7112" />,   val:metriques?.pas,     color:'#FF7112', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { angle: 54, iconEl:<MoonIcon size={17} color="#FF7112" />,  val:metriques?.sommeil, color:'#FF7112', key:'sommeil', fmt: v => v+'h' },
+    { angle:-18, iconEl:<RunIcon size={17} color="#8b5cf6" />,   val:metriques?.pas,     color:'#8b5cf6', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { angle: 54, iconEl:<MoonIcon size={17} color="#8b5cf6" />,  val:metriques?.sommeil, color:'#8b5cf6', key:'sommeil', fmt: v => v+'h' },
     { angle:126, iconEl:<MoodIcon size={17} color="#fbbf24" />,  val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
     { angle:198, iconEl:<HeartIcon size={17} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
   ]
@@ -224,9 +224,9 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             ) : (
               /* Pas de score encore — 3 dots discrets */
               <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-                <div style={{ width:8, height:8, borderRadius:'50%', background:'#FFB060', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
-                <div style={{ width:11, height:11, borderRadius:'50%', background:'linear-gradient(135deg,#FF7112,#FFB060)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 10px rgba(255,113,18,0.55)' }} />
-                <div style={{ width:8, height:8, borderRadius:'50%', background:'#FFB060', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
+                <div style={{ width:8, height:8, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
+                <div style={{ width:11, height:11, borderRadius:'50%', background:'linear-gradient(135deg,#8b5cf6,#a78bfa)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 10px rgba(139,92,246,0.55)' }} />
+                <div style={{ width:8, height:8, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
               </div>
             )}
           </div>
@@ -348,16 +348,16 @@ function NovaLogBtn({ onClick }) {
       style={{
         position:'relative', overflow:'hidden',
         marginTop:10, borderRadius:100,
-        border:`1px solid ${hovered ? 'rgba(255,113,18,0.48)' : 'rgba(255,113,18,0.20)'}`,
+        border:`1px solid ${hovered ? 'rgba(139,92,246,0.48)' : 'rgba(139,92,246,0.20)'}`,
         background:'rgba(255,255,255,0.92)',
         backdropFilter:'blur(18px)',
         cursor:'pointer', display:'flex', alignItems:'center', gap:8,
         padding:'13px 30px',
         fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:700,
-        color: hovered ? '#d45a00' : '#FF7112',
+        color: hovered ? '#6d28d9' : '#8b5cf6',
         boxShadow: hovered
-          ? '0 6px 24px rgba(255,113,18,0.18), inset 0 1px 0 rgba(255,255,255,0.95)'
-          : '0 2px 12px rgba(255,113,18,0.08), inset 0 1px 0 rgba(255,255,255,0.90)',
+          ? '0 6px 24px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.95)'
+          : '0 2px 12px rgba(139,92,246,0.08), inset 0 1px 0 rgba(255,255,255,0.90)',
         transform: hovered ? 'scale(1.04)' : 'scale(1)',
         transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
@@ -366,7 +366,7 @@ function NovaLogBtn({ onClick }) {
         position:'absolute', left:'50%', top:'50%',
         width:'260%', height:7,
         marginLeft:'-130%', marginTop:-3.5,
-        background:'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(255,193,96,0.45) 45%, rgba(255,255,255,0.85) 50%, rgba(56,193,182,0.38) 55%, transparent 80%, transparent 100%)',
+        background:'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(167,139,250,0.45) 45%, rgba(255,255,255,0.85) 50%, rgba(56,193,182,0.38) 55%, transparent 80%, transparent 100%)',
         filter:'blur(5px)',
         animation:'btnLightSpin 9s linear infinite',
         opacity: hovered ? 1 : 0.50,
@@ -378,11 +378,11 @@ function NovaLogBtn({ onClick }) {
         <span key={rp.id} style={{
           position:'absolute', borderRadius:'50%', pointerEvents:'none',
           left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-          background:'rgba(255,113,18,0.45)',
+          background:'rgba(139,92,246,0.45)',
           animation:'liquidRipple 0.75s ease-out forwards',
         }} />
       ))}
-      <HeartIcon size={15} color={hovered ? '#d45a00' : '#FF7112'} />
+      <HeartIcon size={15} color={hovered ? '#6d28d9' : '#8b5cf6'} />
       Mettre à jour mes métriques
     </button>
   )
@@ -624,7 +624,7 @@ function MetricRings({ metriques }) {
   const items = [
     { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
     { iconEl:<RunIcon size={17} color="#FF6B35" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
-    { iconEl:<MoonIcon size={17} color="#FF7112" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#FF7112', fmt: v => `${v}h` },
+    { iconEl:<MoonIcon size={17} color="#8b5cf6" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#8b5cf6', fmt: v => `${v}h` },
     { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
@@ -642,16 +642,16 @@ function StreakXP({ streak, xp, level }) {
     <div style={{ display:'flex', gap:10, padding:'0 18px 14px' }}>
       <div style={{
         flex:1, borderRadius:22, padding:'14px 16px',
-        background:'linear-gradient(145deg,rgba(255,113,18,0.09),rgba(255,193,96,0.06))',
-        border:'1.5px solid rgba(255,113,18,0.18)',
-        boxShadow:'0 6px 20px rgba(255,113,18,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
+        background:'linear-gradient(145deg,rgba(139,92,246,0.09),rgba(167,139,250,0.06))',
+        border:'1.5px solid rgba(139,92,246,0.18)',
+        boxShadow:'0 6px 20px rgba(139,92,246,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
         display:'flex', alignItems:'center', gap:12,
       }}>
         <div style={{
           width:44, height:44, borderRadius:14, flexShrink:0,
-          background:'linear-gradient(135deg,#FF7112,#d45a00)',
+          background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
           display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize:22, boxShadow:'0 6px 16px rgba(255,113,18,0.40)',
+          fontSize:22, boxShadow:'0 6px 16px rgba(139,92,246,0.40)',
         }}>
           {streak >= 7 ? <FireIcon size={22} color="#fff" /> : streak >= 3 ? <FlashIcon size={22} color="#fff" /> : <LeafIcon size={22} color="#fff" />}
         </div>
@@ -659,7 +659,7 @@ function StreakXP({ streak, xp, level }) {
           <div style={{ fontSize:22, fontWeight:900, color:'#1a0a00', lineHeight:1 }}>
             {streak}<span style={{ fontSize:11, fontWeight:500, color:'#c4b5a8', marginLeft:3 }}>jours</span>
           </div>
-          <div style={{ fontSize:10, color:'#FF7112', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:2 }}>
+          <div style={{ fontSize:10, color:'#8b5cf6', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:2 }}>
             {streak > 0 ? 'Streak actif' : 'Commence !'}
           </div>
         </div>
@@ -672,16 +672,16 @@ function StreakXP({ streak, xp, level }) {
       }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
           <div>
-            <div style={{ fontSize:10, color:'#FF7112', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
+            <div style={{ fontSize:10, color:'#8b5cf6', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
             <div style={{ fontSize:18, fontWeight:900, color:'#1a0a00', lineHeight:1.1 }}>
               {xp} <span style={{ fontSize:10, color:'#c4b5a8', fontWeight:500 }}>XP</span>
             </div>
           </div>
           <div style={{
             width:36, height:36, borderRadius:12,
-            background:'linear-gradient(135deg,#FF7112,#d45a00)',
+            background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
             display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow:'0 4px 14px rgba(255,113,18,0.40)',
+            boxShadow:'0 4px 14px rgba(139,92,246,0.40)',
           }}><StarIcon size={18} color="#fff" /></div>
         </div>
         {/* Glowing nodes instead of bar */}
@@ -694,11 +694,11 @@ function StreakXP({ streak, xp, level }) {
                 flex: filled ? 1.4 : 1,
                 height:5, borderRadius:3,
                 background: filled
-                  ? 'linear-gradient(90deg,#FF7112,#d45a00)'
+                  ? 'linear-gradient(90deg,#8b5cf6,#6d28d9)'
                   : active
-                  ? 'rgba(255,113,18,0.35)'
-                  : 'rgba(255,113,18,0.12)',
-                boxShadow: filled ? '0 0 7px rgba(255,113,18,0.80)' : 'none',
+                  ? 'rgba(139,92,246,0.35)'
+                  : 'rgba(139,92,246,0.12)',
+                boxShadow: filled ? '0 0 7px rgba(139,92,246,0.80)' : 'none',
                 transition:'all 0.45s cubic-bezier(0.34,1.56,0.64,1)',
                 animation: active ? 'dotPulse 1.6s ease-in-out infinite' : 'none',
               }} />
@@ -793,7 +793,7 @@ function generateDailyTasks(profil, metriques) {
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', emoji:'👟', color:'#FF7112',
+      id:'pas', emoji:'👟', color:'#8b5cf6',
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
@@ -804,7 +804,7 @@ function generateDailyTasks(profil, metriques) {
       detail: profil?.reveil ? `Levé à ${profil.reveil} — 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
-      id:'soir', emoji:'🌙', color:'#FF7112',
+      id:'soir', emoji:'🌙', color:'#8b5cf6',
       title:'Prépare ton sommeil',
       detail: profil?.coucher ? `Écrans off 30 min avant ${profil.coucher}` : 'Écrans éteints 30 min avant dormir',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -823,13 +823,13 @@ function generateDailyTasks(profil, metriques) {
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', emoji:'🎯', color:'#FF7112',
+      id:'objectif', emoji:'🎯', color:'#8b5cf6',
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Une action concrète vers : ${objectif}` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',
     },
     {
-      id:'mental', emoji:'🧘', color:'#FF7112',
+      id:'mental', emoji:'🧘', color:'#8b5cf6',
       title:'Bien-être mental',
       detail:'5 min cohérence cardiaque ou journaling',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -910,17 +910,17 @@ function SwipeableInsights({ profil, metriques, onChat }) {
       image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&q=72',
       title:'Débute bien ta journée',
       body:"1 verre d'eau + 5 min de lumière naturelle activent ton métabolisme dès le réveil.",
-      action:'Conseils matin', from:'#FF7112', to:'#FF9A50',
+      action:'Conseils matin', from:'#8b5cf6', to:'#a78bfa',
     } : h < 14 ? {
       image:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&q=72',
       title:'Repas de midi équilibré',
       body:"Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent l'après-midi.",
-      action:'Idées repas', from:'#FF7112', to:'#FF9A50',
+      action:'Idées repas', from:'#8b5cf6', to:'#a78bfa',
     } : h < 18 ? {
       image:'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&q=72',
       title:"Regain d'énergie",
       body:"10 min de marche = autant d'énergie qu'un café, sans le crash post-caféine.",
-      action:'Me remotiver', from:'#FF7112', to:'#FF9A50',
+      action:'Me remotiver', from:'#8b5cf6', to:'#a78bfa',
     } : {
       image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
       title:'Prépare ton sommeil',
@@ -939,7 +939,7 @@ function SwipeableInsights({ profil, metriques, onChat }) {
       image:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&q=72',
       title:'Respiration 5-5',
       body:"2 min de cohérence cardiaque réduisent le cortisol de 20%. Inspire 5s, expire 5s.",
-      action:'En savoir plus', from:'#E8A000', to:'#FFD060',
+      action:'En savoir plus', from:'#8b5cf6', to:'#c4b5fd',
     },
   ]
 
@@ -960,8 +960,8 @@ function SwipeableInsights({ profil, metriques, onChat }) {
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
         <span style={hc.cardsTitle}>Insights du jour</span>
-        <span style={{ fontSize:11, color:'#FF7112', fontWeight:700,
-          background:'rgba(255,113,18,0.10)', padding:'3px 12px', borderRadius:20 }}>
+        <span style={{ fontSize:11, color:'#8b5cf6', fontWeight:700,
+          background:'rgba(139,92,246,0.10)', padding:'3px 12px', borderRadius:20 }}>
           {frontIdx + 1} / {allCards.length}
         </span>
       </div>
@@ -1070,7 +1070,7 @@ function SwipeableInsights({ profil, metriques, onChat }) {
             onClick={() => { setFrontIdx(i); setSpread(false) }}
             style={{
               height:5, width: i === frontIdx ? 20 : 5, borderRadius:3,
-              background: i === frontIdx ? '#FF7112' : 'rgba(0,0,0,0.11)',
+              background: i === frontIdx ? '#8b5cf6' : 'rgba(0,0,0,0.11)',
               transition:'all 0.32s cubic-bezier(0.34,1.56,0.64,1)', cursor:'pointer',
             }} />
         ))}
@@ -1148,17 +1148,17 @@ const hc = {
     boxShadow:'0 0 6px rgba(52,199,89,0.7)' },
   greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
     marginBottom:42, textAlign:'center' },
-  greetNameAccent: { background:'linear-gradient(135deg,#FF7112,#FFB060)',
+  greetNameAccent: { background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:248, height:248,
     display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20,
     animation:'novaFloat 7s ease-in-out infinite' },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
-    background:'linear-gradient(145deg, #FF7112, #d45a00)',
+    background:'linear-gradient(145deg, #8b5cf6, #6d28d9)',
     color:'#fff', border:'none', borderRadius:22, fontSize:13, fontWeight:800,
     cursor:'pointer', fontFamily:"'Inter',system-ui,sans-serif",
-    boxShadow:'0 12px 36px rgba(255,113,18,0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow:'0 12px 36px rgba(139,92,246,0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)' },
 
   strip: { display:'flex', gap:10, padding:'14px 18px' },
