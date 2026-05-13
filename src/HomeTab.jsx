@@ -228,7 +228,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             </div>
           </div>
 
-          {/* ── Metric dots : pointer events pour contrôler les comètes ── */}
+          {/* ── Metric dots — spring bounce + glow ring au clic (gradient Framer button style) ── */}
           {METRICS.map(m => {
             const rad = (m.angle * Math.PI) / 180
             const x = 100 + 118 * Math.cos(rad)
@@ -236,41 +236,11 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             const filled = m.val > 0
             const isActive = activeMetric === m.key
             return (
-              <button key={m.key}
-                onClick={onLog}
-                onPointerDown={() => setActiveMetric(m.key)}
-                onPointerUp={() => setActiveMetric(null)}
-                onPointerLeave={() => setActiveMetric(null)}
-                onPointerCancel={() => setActiveMetric(null)}
-                style={{
-                  position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
-                  borderRadius:15,
-                  background: isActive ? `${m.color}15` : 'rgba(255,255,255,0.95)',
-                  border:`1.5px solid ${isActive ? m.color+'90' : filled ? m.color+'50' : 'rgba(0,0,0,0.08)'}`,
-                  backdropFilter:'blur(14px)',
-                  display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                  gap:1.5, cursor:'pointer',
-                  boxShadow: isActive
-                    ? `0 0 0 4px ${m.color}35, 0 0 24px ${m.color}70, inset 0 1px 0 rgba(255,255,255,1)`
-                    : filled
-                    ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
-                    : '0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
-                  transform: isActive ? 'scale(0.88)' : 'scale(1)',
-                  fontFamily:"'Inter',system-ui,sans-serif",
-                  transition:'all 0.15s cubic-bezier(0.34,1.56,0.64,1)',
-                }}>
-                {filled && (
-                  <div style={{
-                    position:'absolute', top:-5, right:-5, width:14, height:14, borderRadius:'50%',
-                    background:m.color, display:'flex', alignItems:'center', justifyContent:'center',
-                    boxShadow:`0 0 8px ${m.color}`, animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
-                  }}>
-                    <span style={{ fontSize:8, color:'#fff', fontWeight:900, lineHeight:1 }}>✓</span>
-                  </div>
-                )}
-                <span style={{ display:'flex', alignItems:'center', lineHeight:1 }}>{m.iconEl}</span>
-                {filled && <span style={{ fontSize:7, color:m.color, fontWeight:800, lineHeight:1 }}>{m.fmt(m.val)}</span>}
-              </button>
+              <MetricDot key={m.key} m={m} x={x} y={y} filled={filled} isActive={isActive}
+                onDown={() => setActiveMetric(m.key)}
+                onUp={() => setActiveMetric(null)}
+                onLog={onLog}
+              />
             )
           })}
         </div>
@@ -279,6 +249,79 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         <NovaLogBtn onClick={onLog} />
       </div>
     </div>
+  )
+}
+
+// ─── METRIC DOT — spring bounce + glow ring (gradient Framer button style) ────
+function MetricDot({ m, x, y, filled, isActive, onDown, onUp, onLog }) {
+  const [springing, setSpringing] = useState(false)
+  const [rings, setRings] = useState([])
+
+  function handleDown() {
+    onDown()
+    setSpringing(false) // reset d'abord
+  }
+  function handleUp(e) {
+    onUp()
+    // Lance le spring bounce + glow ring
+    const id = Date.now()
+    setSpringing(true)
+    setRings(prev => [...prev, id])
+    setTimeout(() => { setSpringing(false) }, 650)
+    setTimeout(() => setRings(prev => prev.filter(r => r !== id)), 750)
+  }
+  function handleLeave() {
+    onUp()
+  }
+
+  return (
+    <button
+      onClick={onLog}
+      onPointerDown={handleDown}
+      onPointerUp={handleUp}
+      onPointerLeave={handleLeave}
+      onPointerCancel={handleLeave}
+      style={{
+        position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
+        borderRadius:15, overflow:'visible',
+        background: isActive ? `${m.color}18` : springing ? `${m.color}12` : 'rgba(255,255,255,0.95)',
+        border:`1.5px solid ${isActive ? m.color+'90' : filled ? m.color+'55' : 'rgba(0,0,0,0.08)'}`,
+        backdropFilter:'blur(14px)',
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        gap:1.5, cursor:'pointer',
+        boxShadow: isActive
+          ? `0 0 0 4px ${m.color}35, 0 0 28px ${m.color}80, inset 0 1px 0 rgba(255,255,255,1)`
+          : filled
+          ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
+          : '0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+        transform: isActive ? 'scale(0.84)' : 'scale(1)',
+        animation: springing ? 'metricSpring 0.55s cubic-bezier(0.34,1.56,0.64,1) both' : 'none',
+        fontFamily:"'Inter',system-ui,sans-serif",
+        transition: springing ? 'none' : 'background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1)',
+      }}>
+      {/* Glow rings au clic */}
+      {rings.map(id => (
+        <span key={id} style={{
+          position:'absolute', inset:-2, borderRadius:17, pointerEvents:'none',
+          border:`2px solid ${m.color}`,
+          animation:'metricGlowRing 0.65s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
+        }} />
+      ))}
+      {filled && (
+        <div style={{
+          position:'absolute', top:-5, right:-5, width:14, height:14, borderRadius:'50%',
+          background:m.color, display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow:`0 0 8px ${m.color}`, animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
+        }}>
+          <span style={{ fontSize:8, color:'#fff', fontWeight:900, lineHeight:1 }}>✓</span>
+        </div>
+      )}
+      <span style={{
+        display:'flex', alignItems:'center', lineHeight:1,
+        animation: springing ? 'iconBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both' : 'none',
+      }}>{m.iconEl}</span>
+      {filled && <span style={{ fontSize:7, color:m.color, fontWeight:800, lineHeight:1 }}>{m.fmt(m.val)}</span>}
+    </button>
   )
 }
 
@@ -354,19 +397,13 @@ const BTN_PARTICLES = [
   { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
-// ─── MAGNETIC GLOW BUTTON — Framer Button style (rotating sweep + liquid ripple)
+// ─── MAGNETIC GLOW BUTTON — Button-RgS3 style (dark bg, rotating sweep, icon spring, arrow reveal)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
-  const [spot, setSpot]     = useState({ x:50, y:50 })
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
-  const [ripples, setRipples] = useState([])
+  const [hovered, setHovered]   = useState(false)
+  const [pressed, setPressed]   = useState(false)
+  const [ripples, setRipples]   = useState([])
   const ref = useRef()
 
-  function onMove(e) {
-    const r = ref.current?.getBoundingClientRect()
-    if (!r) return
-    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
-  }
   function handleClick(e) {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
@@ -378,70 +415,59 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
 
   return (
     <div ref={ref}
-      onMouseMove={onMove}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
-      onTouchStart={() => { setPressed(true) }}
+      onTouchStart={() => setPressed(true)}
       onTouchEnd={() => { setPressed(false); setHovered(false) }}
       onClick={handleClick}
       style={{
-        position:'relative', borderRadius:24, cursor:'pointer', overflow:'hidden',
-        border:`1px solid ${hovered ? from+'70' : from+'28'}`,
-        background:'rgba(255,255,255,0.94)',
-        backdropFilter:'blur(14px)',
+        position:'relative', borderRadius:22, cursor:'pointer', overflow:'hidden',
+        background:'linear-gradient(158deg, #1e0f40 0%, #110826 100%)',
+        border:`1px solid ${from}50`,
         boxShadow: hovered
-          ? `0 10px 32px ${from}28, 0 2px 8px ${from}18, inset 0 1px 0 rgba(255,255,255,0.95)`
-          : `0 2px 10px ${from}12, inset 0 1px 0 rgba(255,255,255,0.90)`,
-        transform: pressed ? 'scale(0.91)' : hovered ? 'scale(1.06)' : 'scale(1)',
-        transition:'transform 0.20s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease',
+          ? `0 14px 40px rgba(0,0,0,0.38), 0 0 26px ${from}38, inset 0 1px 0 rgba(255,255,255,0.10)`
+          : `0 4px 16px rgba(0,0,0,0.24), 0 0 10px ${from}18, inset 0 1px 0 rgba(255,255,255,0.06)`,
+        transform: pressed ? 'scale(0.92)' : hovered ? 'scale(1.07)' : 'scale(1)',
+        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.30s ease, border-color 0.30s ease',
       }}>
 
-      {/* ── Rotating inner light sweep — Framer Button style ── */}
+      {/* ── Rotating inner light sweep — Button-RgS3 style ── */}
       <div style={{
         position:'absolute', inset:0, overflow:'hidden',
         borderRadius:'inherit', pointerEvents:'none',
         display:'flex', alignItems:'center', justifyContent:'center',
       }}>
         <div style={{
-          width:'240%', height:8,
-          background:`linear-gradient(90deg, transparent 0%, transparent 22%, ${from}28 44%, rgba(255,255,255,0.82) 50%, ${to}28 56%, transparent 78%, transparent 100%)`,
+          width:'280%', height:8,
+          background:`linear-gradient(90deg, transparent 0%, transparent 20%, ${from}38 44%, rgba(255,255,255,0.82) 50%, ${to}32 56%, transparent 80%, transparent 100%)`,
           filter:'blur(6px)',
           animation:'btnLightSpin 10s linear infinite',
-          opacity: hovered ? 1 : 0.52,
-          transition:'opacity 0.4s ease',
+          opacity: hovered ? 0.95 : 0.35,
+          transition:'opacity 0.38s ease',
         }} />
       </div>
 
-      {/* ── Micro-particles ── */}
+      {/* ── Micro-particles — white on dark bg ── */}
       {BTN_PARTICLES.map((p, i) => (
         <div key={i} style={{
           position:'absolute',
           left:`${p.x}%`, top:`${p.y}%`,
           width:`${p.s}px`, height:`${p.s}px`,
-          borderRadius:'50%', background:from,
-          opacity: hovered ? 0.50 : 0.09,
+          borderRadius:'50%', background:'rgba(255,255,255,0.80)',
+          opacity: hovered ? 0.42 : 0.05,
           animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
           transition:'opacity 0.4s ease', pointerEvents:'none',
         }} />
       ))}
 
-      {/* ── Mouse spotlight ── */}
-      <div style={{
-        position:'absolute', inset:0, pointerEvents:'none',
-        background: hovered
-          ? `radial-gradient(circle 62px at ${spot.x}% ${spot.y}%, ${from}1C 0%, transparent 68%)`
-          : 'transparent',
-        transition: hovered ? 'none' : 'opacity 0.4s ease',
-      }} />
-
-      {/* ── Liquid ripple (LiquidImage style) ── */}
+      {/* ── Liquid ripple ── */}
       {ripples.map(rp => (
         <span key={rp.id} style={{
           position:'absolute', borderRadius:'50%', pointerEvents:'none',
           left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-          background:`${from}50`,
+          background:'rgba(255,255,255,0.28)',
           animation:'liquidRipple 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
         }} />
       ))}
@@ -450,19 +476,39 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
       <div style={{
         position:'relative', zIndex:2,
         display:'flex', flexDirection:'column', alignItems:'center',
-        padding:'18px 8px 14px',
+        padding:'18px 8px 12px',
       }}>
+        {/* Icon — spring bounce + lift on hover */}
         <div style={{
-          width:50, height:50, borderRadius:17,
-          background:`linear-gradient(145deg, ${from}, ${to})`,
+          width:48, height:48, borderRadius:16,
+          background:`linear-gradient(145deg, ${from}60, ${to}48)`,
+          border:`1px solid ${from}65`,
           display:'flex', alignItems:'center', justifyContent:'center',
-          boxShadow: hovered ? `0 8px 28px ${from}80` : `0 5px 16px ${from}50`,
-          transition:'box-shadow 0.25s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-          transform: hovered ? 'scale(1.14) translateY(-3px)' : 'scale(1)',
+          boxShadow: hovered ? `0 10px 28px ${from}72` : `0 5px 16px ${from}44`,
+          transform: hovered ? 'scale(1.16) translateY(-5px)' : pressed ? 'scale(0.90)' : 'scale(1)',
+          transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+          marginBottom:9,
         }}>
           {iconEl}
         </div>
-        <span style={{ fontSize:11, fontWeight:800, color:'#1a0a00', marginTop:9, letterSpacing:'0.2px' }}>{label}</span>
+
+        {/* Label */}
+        <span style={{
+          fontSize:10, fontWeight:800,
+          color: hovered ? '#ffffff' : 'rgba(255,255,255,0.78)',
+          letterSpacing:'0.4px',
+          transition:'color 0.2s ease',
+        }}>{label}</span>
+
+        {/* Arrow — slides up and fades in on hover */}
+        <span style={{
+          fontSize:9, fontWeight:900,
+          color: from,
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? 'translateY(0px)' : 'translateY(5px)',
+          transition:'opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+          marginTop:2, lineHeight:1, display:'block',
+        }}>→</span>
       </div>
     </div>
   )

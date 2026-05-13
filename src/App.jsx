@@ -748,6 +748,22 @@ export default function App() {
           65%  { opacity: 0.12; }
           100% { transform: scale(32); opacity: 0; }
         }
+        @keyframes metricSpring {
+          0%   { transform: scale(0.84); }
+          40%  { transform: scale(1.22); }
+          65%  { transform: scale(0.95); }
+          82%  { transform: scale(1.06); }
+          100% { transform: scale(1.00); }
+        }
+        @keyframes metricGlowRing {
+          0%   { transform: scale(0.85); opacity: 0.90; }
+          100% { transform: scale(2.00); opacity: 0; }
+        }
+        @keyframes iconBounce {
+          0%   { transform: scale(0.72) rotate(-10deg); }
+          50%  { transform: scale(1.32) rotate(5deg); }
+          100% { transform: scale(1.00) rotate(0deg); }
+        }
         @keyframes novaBreath {
           0%,100% { transform: scale(1) translateZ(0); opacity: 0.65; }
           50%      { transform: scale(1.14) translateZ(0); opacity: 1; }
