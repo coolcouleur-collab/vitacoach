@@ -244,6 +244,22 @@ Propose 6 tenues avec des styles VARIÉS (ex: minimaliste, tendance, classique, 
 
 // Recherche images mode via Pexels
 app.get('/api/image', async (req, res) => {
+  // Helper : LoremFlickr garanti, sans auth
+  function loremFlickrUrl(prompt) {
+    const safeKeyword = (prompt || 'fashion')
+      .replace(/[^a-zA-Z\s]/g, ' ')
+      .split(' ')
+      .filter(w => w.length > 3)
+      .slice(0, 2)
+      .join(',') || 'fashion'
+    return `https://loremflickr.com/400/560/${safeKeyword},fashion/all`
+  }
+
+  // Pas de clé Pexels → fallback immédiat
+  if (!process.env.PEXELS_API_KEY) {
+    return res.json({ url: loremFlickrUrl(req.query.prompt) })
+  }
+
   try {
     const prompt = req.query.prompt
     // On extrait les mots clés importants pour Pexels
@@ -273,12 +289,14 @@ app.get('/api/image', async (req, res) => {
       if (photos2?.length > 0) {
         res.json({ url: photos2[Math.floor(Math.random() * photos2.length)].src.large })
       } else {
-        res.json({ url: null })
+        // Fallback garanti : LoremFlickr (Creative Commons, no auth needed)
+        res.json({ url: loremFlickrUrl(req.query.prompt) })
       }
     }
   } catch (e) {
     console.log('❌ Erreur Pexels:', e.message)
-    res.json({ url: null })
+    // Fallback garanti : LoremFlickr (Creative Commons, no auth needed)
+    res.json({ url: loremFlickrUrl(req.query.prompt) })
   }
 })
 

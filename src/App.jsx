@@ -1015,6 +1015,10 @@ export default function App() {
           25%      { transform: translate(3px, -7px) scale(1.6); opacity: 0.85; }
           60%      { transform: translate(-4px, 4px) scale(0.7); opacity: 0.35; }
         }
+        @keyframes capsuleSkeleton {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
         * { -webkit-tap-highlight-color: transparent; }
         /* Custom Scrollbar Pro — gradient violet, 5px, auto-hide */
         ::-webkit-scrollbar { width:5px; height:5px; }
@@ -1228,43 +1232,270 @@ const sr = {
     borderTop:'1px solid #f8f4f0' },
 }
 
-// ─── TENUES MODULE ────────────────────────────────────────────────────────────
-function TenueCard({ tenue }) {
+// ─── TENUES MODULE — CAPSULE SLIDER 3D ───────────────────────────────────────
+
+function TenueCard({ tenue, style: extraStyle }) {
   const [imgSrc, setImgSrc] = useState(null)
+  const [imgLoading, setImgLoading] = useState(true)
   const [imgError, setImgError] = useState(false)
+
   useEffect(() => {
     const q = tenue.imagePrompt || tenue.description || tenue.titre
     fetch(`/api/image?prompt=${encodeURIComponent(q)}`)
       .then(r => r.json())
-      .then(d => { if (d.url) setImgSrc(d.url); else setImgError(true) })
-      .catch(() => setImgError(true))
+      .then(d => {
+        if (d.url) { setImgSrc(d.url); setImgLoading(false) }
+        else { setImgError(true); setImgLoading(false) }
+      })
+      .catch(() => { setImgError(true); setImgLoading(false) })
   }, [])
+
   return (
-    <div style={st.tenueCard}>
-      <div style={st.imgBox}>
-        {!imgSrc && !imgError && <div style={st.imgPlaceholder}>🔍 Génération...</div>}
-        {imgError && <div style={st.imgPlaceholder}>👗 {tenue.titre}</div>}
-        {imgSrc && <img src={imgSrc} alt={tenue.titre} style={st.img} onError={() => setImgError(true)} />}
+    <div style={{
+      width: 280,
+      borderRadius: 28,
+      overflow: 'hidden',
+      background: '#FFF3EC',
+      boxShadow: '0 16px 48px rgba(158,92,53,0.22), 0 2px 8px rgba(0,0,0,0.08)',
+      border: '1px solid rgba(200,123,82,0.18)',
+      flexShrink: 0,
+      ...extraStyle,
+    }}>
+      {/* Image area */}
+      <div style={{ width: '100%', height: 320, background: '#F5E8DE', overflow: 'hidden', position: 'relative' }}>
+        {imgLoading && (
+          <div style={{
+            width: '100%', height: '100%',
+            background: 'linear-gradient(110deg, #F5E8DE 30%, #FCDEC8 50%, #F5E8DE 70%)',
+            backgroundSize: '200% 100%',
+            animation: 'capsuleSkeleton 1.4s ease infinite',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 32, opacity: 0.35 }}>👗</span>
+          </div>
+        )}
+        {imgError && !imgLoading && (
+          <div style={{
+            width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 8,
+            background: '#F5E8DE',
+          }}>
+            <span style={{ fontSize: 40 }}>👗</span>
+            <span style={{ fontSize: 11, color: '#C87B52', fontWeight: 600, textAlign: 'center', padding: '0 16px' }}>{tenue.titre}</span>
+          </div>
+        )}
+        {imgSrc && (
+          <img
+            src={imgSrc}
+            alt={tenue.titre}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            onError={() => { setImgError(true); setImgSrc(null) }}
+          />
+        )}
       </div>
-      <div style={st.tenueInfo}>
-        <div style={st.tenueTitre}>▸ {tenue.titre}</div>
-        <div style={st.tenueDesc}>{tenue.description}</div>
-        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#E8A07A" /> {tenue.pourquoi}</div>
+      {/* Info area */}
+      <div style={{ padding: '16px 18px 20px' }}>
+        <div style={{ fontWeight: 800, color: '#C87B52', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em' }}>
+          {tenue.titre}
+        </div>
+        <div style={{ fontSize: 12, color: '#6B4226', lineHeight: 1.65, marginBottom: 8 }}>
+          {tenue.description}
+        </div>
+        <div style={{
+          fontSize: 11, color: '#9E5C35', fontStyle: 'italic', lineHeight: 1.55,
+          display: 'flex', alignItems: 'flex-start', gap: 5,
+          background: 'rgba(200,123,82,0.07)', borderRadius: 10, padding: '6px 10px',
+        }}>
+          <LightbulbIcon size={12} color="#C87B52" />
+          <span>{tenue.pourquoi}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Skeleton card shown while tenues are loading
+function SkeletonCard({ style: extraStyle }) {
+  return (
+    <div style={{
+      width: 280,
+      borderRadius: 28,
+      overflow: 'hidden',
+      background: '#FFF3EC',
+      boxShadow: '0 8px 24px rgba(158,92,53,0.12)',
+      border: '1px solid rgba(200,123,82,0.12)',
+      flexShrink: 0,
+      ...extraStyle,
+    }}>
+      <div style={{
+        width: '100%', height: 320,
+        background: 'linear-gradient(110deg, #F5E8DE 30%, #FCDEC8 50%, #F5E8DE 70%)',
+        backgroundSize: '200% 100%',
+        animation: 'capsuleSkeleton 1.4s ease infinite',
+      }} />
+      <div style={{ padding: '16px 18px 20px' }}>
+        <div style={{ height: 14, borderRadius: 7, background: '#F0DDD0', marginBottom: 10, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 10, borderRadius: 5, background: '#F5E8DE', marginBottom: 6, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 10, borderRadius: 5, background: '#F5E8DE', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+      </div>
+    </div>
+  )
+}
+
+function CapsuleSlider({ tenues, loading }) {
+  const [active, setActive] = useState(0)
+  const touchStartX = useRef(null)
+  const containerRef = useRef(null)
+  const count = loading ? 6 : tenues.length
+  const clamp = v => Math.max(0, Math.min(count - 1, v))
+
+  // Keyboard navigation
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'ArrowLeft') setActive(a => clamp(a - 1))
+      if (e.key === 'ArrowRight') setActive(a => clamp(a + 1))
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [count])
+
+  // Reset active index when tenues change
+  useEffect(() => { setActive(0) }, [tenues.length])
+
+  function onTouchStart(e) { touchStartX.current = e.touches[0].clientX }
+  function onTouchEnd(e) {
+    if (touchStartX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (dx < -40) setActive(a => clamp(a + 1))
+    else if (dx > 40) setActive(a => clamp(a - 1))
+    touchStartX.current = null
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, userSelect: 'none' }}>
+      {/* 3D Stage */}
+      <div
+        ref={containerRef}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: 520,
+          perspective: '900px',
+          overflow: 'visible',
+        }}
+      >
+        {Array.from({ length: count }).map((_, i) => {
+          const rel = i - active
+          const abs = Math.abs(rel)
+          if (abs > 2) return null
+          const x = rel * 48
+          const y = abs * 18
+          const z = -abs * 90
+          const scale = 1 / (1 + abs * 0.12)
+          const rotate = rel * 8
+          const opacity = abs === 0 ? 1 : abs === 1 ? 0.75 : 0.5
+          const zIndex = 10 - abs
+
+          const cardStyle = {
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: `translate(-50%,-50%) translateX(${x}px) translateY(${y}px) translateZ(${z}px) scale(${scale}) rotateZ(${rotate}deg)`,
+            opacity,
+            zIndex,
+            transition: 'transform 0.5s cubic-bezier(.4,2,.3,1), opacity 0.4s ease',
+            cursor: abs === 0 ? 'default' : 'pointer',
+          }
+
+          if (loading) return <SkeletonCard key={i} style={cardStyle} />
+          return (
+            <TenueCard
+              key={i}
+              tenue={tenues[i]}
+              style={cardStyle}
+            />
+          )
+        })}
+      </div>
+
+      {/* Navigation buttons + dots */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginTop: 8 }}>
+        <button
+          onClick={() => setActive(a => clamp(a - 1))}
+          disabled={active === 0}
+          style={{
+            width: 40, height: 40, borderRadius: 24,
+            background: 'rgba(255,255,255,0.9)',
+            border: '1px solid rgba(200,123,82,0.25)',
+            boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
+            color: '#C87B52', fontSize: 18, fontWeight: 700,
+            cursor: active === 0 ? 'not-allowed' : 'pointer',
+            opacity: active === 0 ? 0.35 : 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'opacity 0.2s',
+            fontFamily: 'sans-serif',
+          }}
+          aria-label="Précédent"
+        >
+          ←
+        </button>
+
+        {/* Dots */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {Array.from({ length: count }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              style={{
+                height: 6,
+                width: i === active ? 18 : 6,
+                borderRadius: 6,
+                background: i === active ? '#C87B52' : 'rgba(200,123,82,0.28)',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'width 0.35s cubic-bezier(.4,2,.3,1), background 0.2s',
+              }}
+              aria-label={`Tenue ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => setActive(a => clamp(a + 1))}
+          disabled={active === count - 1}
+          style={{
+            width: 40, height: 40, borderRadius: 24,
+            background: 'rgba(255,255,255,0.9)',
+            border: '1px solid rgba(200,123,82,0.25)',
+            boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
+            color: '#C87B52', fontSize: 18, fontWeight: 700,
+            cursor: active === count - 1 ? 'not-allowed' : 'pointer',
+            opacity: active === count - 1 ? 0.35 : 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'opacity 0.2s',
+            fontFamily: 'sans-serif',
+          }}
+          aria-label="Suivant"
+        >
+          →
+        </button>
       </div>
     </div>
   )
 }
 
 function TenuesModule({ profil }) {
-  const [ouvert, setOuvert]       = useState(false)
-  const [ville, setVille]         = useState('')
-  const [occasion, setOccasion]   = useState('Casual')
-  const [tenues, setTenues]       = useState([])
-  const [meteo, setMeteo]         = useState('')
-  const [loading, setLoading]     = useState(false)
-  const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
-
+  const [ouvert, setOuvert]     = useState(false)
+  const [ville, setVille]       = useState('')
+  const [occasion, setOccasion] = useState('Casual')
+  const [tenues, setTenues]     = useState([])
+  const [meteo, setMeteo]       = useState('')
+  const [loading, setLoading]   = useState(false)
   const [villeError, setVilleError] = useState(false)
+  const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
   async function getTenues() {
     if (!ville.trim()) { setVilleError(true); return }
@@ -1272,37 +1503,38 @@ function TenuesModule({ profil }) {
     setLoading(true); setTenues([])
     try {
       const res = await fetch('/api/tenues', {
-        method:'POST', headers:{'Content-Type':'application/json'},
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profil, ville, occasion })
       })
       const data = await res.json()
-      setTenues(data.tenues||[])
+      setTenues(data.tenues || [])
       setMeteo(data.meteo)
     } catch {}
     setLoading(false)
   }
 
   return (
-    <div style={{ paddingBottom:20 }}>
+    <div style={{ paddingBottom: 20 }}>
+      {/* Trigger */}
       <button style={st.trigger} onClick={() => setOuvert(!ouvert)}>
-        <div style={st.triggerIcon}><span style={{ fontSize:22 }}>👗</span></div>
-        <div style={{ flex:1, textAlign:'left' }}>
-          <div style={{ fontSize:14, fontWeight:700, color:'#1a0a00' }}>Idées tenues du jour</div>
-          <div style={{ fontSize:12, color:'#8a7265', marginTop:2 }}>Adaptées à la météo et l'occasion</div>
+        <div style={st.triggerIcon}><span style={{ fontSize: 22 }}>👗</span></div>
+        <div style={{ flex: 1, textAlign: 'left' }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#1a0a00' }}>Idées tenues du jour</div>
+          <div style={{ fontSize: 12, color: '#8a7265', marginTop: 2 }}>Capsule Slider · Adaptées à la météo</div>
         </div>
-        <span style={{ color:'#c4b5a8' }}>{ouvert ? '▲' : '▼'}</span>
+        <span style={{ color: '#c4b5a8' }}>{ouvert ? '▲' : '▼'}</span>
       </button>
 
       {ouvert && (
         <div style={st.panel}>
-          {meteo && (
-            <div style={{...st.meteoBar, display:'flex', alignItems:'center', gap:6}}><WeatherIcon size={16} color="#fbbf24" /> {meteo}</div>
-          )}
+          {/* Controls */}
           <div style={st.row}>
-            <input style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
+            <input
+              style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
               placeholder="Ta ville (ex: Paris)" value={ville}
               onChange={e => { setVille(e.target.value); setVilleError(false) }}
-              onKeyDown={e => e.key==='Enter' && getTenues()} />
+              onKeyDown={e => e.key === 'Enter' && getTenues()}
+            />
             <select style={st.select} value={occasion} onChange={e => setOccasion(e.target.value)}>
               {occasions.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
@@ -1310,10 +1542,19 @@ function TenuesModule({ profil }) {
               {loading ? <LoadingIcon size={16} color="#fff" /> : <SparkleIcon size={16} color="#fff" />}
             </button>
           </div>
-          {villeError && <div style={{ fontSize:12, color:'#ff3b30', marginTop:4 }}>Entre ta ville pour continuer</div>}
-          {tenues.length > 0 && (
-            <div style={st.grid}>
-              {tenues.map((t, i) => <TenueCard key={i} tenue={t} />)}
+          {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+
+          {/* Météo */}
+          {meteo && (
+            <div style={{ ...st.meteoBar, display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+              <WeatherIcon size={16} color="#fbbf24" /> {meteo}
+            </div>
+          )}
+
+          {/* Capsule Slider — loading skeletons OR tenues */}
+          {(loading || tenues.length > 0) && (
+            <div style={{ marginTop: 16 }}>
+              <CapsuleSlider tenues={tenues} loading={loading} />
             </div>
           )}
         </div>
@@ -1323,35 +1564,39 @@ function TenuesModule({ profil }) {
 }
 
 const st = {
-  trigger: { width:'100%', display:'flex', alignItems:'center', gap:14, padding:'16px',
-    background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:18, cursor:'pointer',
-    fontFamily:"'Inter',system-ui,sans-serif", boxShadow:'0 2px 12px rgba(0,0,0,0.05)', marginBottom:2 },
-  triggerIcon: { width:48, height:48, background:'linear-gradient(135deg,rgba(200,123,82,0.12),rgba(200,123,82,0.06))',
-    border:'1.5px solid rgba(200,123,82,0.2)', borderRadius:14,
-    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
-  panel: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:16, padding:14, marginTop:4,
-    boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
-  meteoBar: { background:'rgba(200,123,82,0.06)', borderRadius:10, padding:'8px 14px',
-    fontSize:12, marginBottom:12, color:'#C87B52', fontWeight:600, border:'1px solid rgba(200,123,82,0.16)' },
-  row: { display:'flex', gap:8, marginBottom:12 },
-  input: { flex:1, padding:'10px 14px', borderRadius:12, border:'1px solid #e5e7eb',
-    background:'#f9fafb', fontSize:13, fontFamily:"'Inter',system-ui,sans-serif", outline:'none', color:'#1a0a00' },
-  select: { padding:'10px 12px', borderRadius:12, border:'1px solid #e5e7eb',
-    background:'#f9fafb', fontSize:12, fontFamily:"'Inter',system-ui,sans-serif", outline:'none', color:'#1a0a00' },
-  btn: { padding:'10px 16px', background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff',
-    border:'none', borderRadius:12, fontSize:16, fontWeight:700, cursor:'pointer',
-    fontFamily:"'Inter',system-ui,sans-serif", boxShadow:'0 4px 12px rgba(200,123,82,0.35)' },
-  grid: { display:'flex', gap:12, flexWrap:'wrap', marginTop:10 },
-  tenueCard: { flex:'1 1 160px', background:'#ffffff', border:'1px solid #f0e8e0',
-    borderRadius:16, overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' },
-  imgBox: { width:'100%', height:200, background:'#f8f4f0' },
-  imgPlaceholder: { width:'100%', height:200, display:'flex', alignItems:'center',
-    justifyContent:'center', color:'#c4b5a8', fontSize:12, textAlign:'center', padding:10 },
-  img: { width:'100%', height:200, objectFit:'cover', display:'block' },
-  tenueInfo: { padding:'12px 12px' },
-  tenueTitre: { fontWeight:700, color:'#C87B52', fontSize:13, marginBottom:5 },
-  tenueDesc: { fontSize:12, color:'#8a7265', lineHeight:1.6, marginBottom:5 },
-  tenuePourquoi: { fontSize:11, color:'#c4b5a8', fontStyle:'italic' },
+  trigger: {
+    width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '16px',
+    background: '#ffffff', border: '1px solid #f0e8e0', borderRadius: 18, cursor: 'pointer',
+    fontFamily: "'Inter',system-ui,sans-serif", boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 2,
+  },
+  triggerIcon: {
+    width: 48, height: 48,
+    background: 'linear-gradient(135deg,rgba(200,123,82,0.12),rgba(200,123,82,0.06))',
+    border: '1.5px solid rgba(200,123,82,0.2)', borderRadius: 14,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  panel: {
+    background: '#ffffff', border: '1px solid #f0e8e0', borderRadius: 16, padding: 14, marginTop: 4,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+  },
+  meteoBar: {
+    background: 'rgba(200,123,82,0.06)', borderRadius: 10, padding: '8px 14px',
+    fontSize: 12, marginBottom: 12, color: '#C87B52', fontWeight: 600, border: '1px solid rgba(200,123,82,0.16)',
+  },
+  row: { display: 'flex', gap: 8, marginBottom: 12 },
+  input: {
+    flex: 1, padding: '10px 14px', borderRadius: 12, border: '1px solid #e5e7eb',
+    background: '#f9fafb', fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
+  },
+  select: {
+    padding: '10px 12px', borderRadius: 12, border: '1px solid #e5e7eb',
+    background: '#f9fafb', fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
+  },
+  btn: {
+    padding: '10px 16px', background: 'linear-gradient(135deg,#C87B52,#9E5C35)', color: '#fff',
+    border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: 'pointer',
+    fontFamily: "'Inter',system-ui,sans-serif", boxShadow: '0 4px 12px rgba(200,123,82,0.35)',
+  },
 }
 
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
