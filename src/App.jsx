@@ -784,7 +784,7 @@ export default function App() {
           60%      { transform: translate(-4px, 4px) scale(0.7); opacity: 0.35; }
         }
         * { -webkit-tap-highlight-color: transparent; }
-        /* Custom Scrollbar Pro — gradient orange → violet, 5px, auto-hide */
+        /* Custom Scrollbar Pro — gradient violet, 5px, auto-hide */
         ::-webkit-scrollbar { width:5px; height:5px; }
         ::-webkit-scrollbar-track { background:transparent; border-radius:10px; }
         ::-webkit-scrollbar-thumb {
