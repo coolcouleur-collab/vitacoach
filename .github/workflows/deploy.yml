@@ -20,8 +20,27 @@ jobs:
             echo "📦 Node $(node --version) | npm $(npm --version)"
             git fetch origin main
             git reset --hard origin/main
+            echo "🔍 Commit actuel: $(git log --oneline -1)"
+
+            echo "📥 npm install..."
+            npm install
+
             echo "🔨 Build en cours..."
             npm run build
-            echo "✅ Build OK"
+            echo "✅ Build OK — bundle:"
+            ls -lh dist/assets/*.js | head -5
+
+            echo "🔍 Config nginx..."
+            nginx -T 2>/dev/null | grep -E "^\s*(root|server_name|listen|proxy_pass)" | head -20 || true
+
+            echo "🔄 Copie dist/ vers /var/www/html si différent..."
+            NGINX_ROOT=$(nginx -T 2>/dev/null | grep -oP 'root\s+\K[^;]+' | head -1 | xargs || echo "")
+            echo "Nginx root = '$NGINX_ROOT'"
+            if [ -n "$NGINX_ROOT" ] && [ "$NGINX_ROOT" != "/home/ubuntu/vitacoach/dist" ] && [ -d "$NGINX_ROOT" ]; then
+              cp -r dist/. "$NGINX_ROOT/"
+              echo "✅ Fichiers copiés vers $NGINX_ROOT"
+            fi
+
             pm2 restart oravia
+            nginx -s reload 2>/dev/null || true
             echo "🚀 Déployé !"
