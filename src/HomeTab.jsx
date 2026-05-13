@@ -21,14 +21,14 @@ function FuturisticBg() {
 
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(135deg, #FFF8F4 0%, #F5F0FF 45%, #EFF9FF 75%, #FFF8F4 100%)',
+        background:'linear-gradient(135deg, #FAF8FF 0%, #F3EEFF 45%, #FAF8FF 75%, #FAF6F2 100%)',
         backgroundSize:'400% 400%',
         animation:'meshGrad 10s ease infinite',
       }} />
       {/* Liquid orb orange — morphing */}
       <div style={{ position:'absolute', top:'-12%', right:'-6%', width:380, height:380,
         borderRadius:'50%',
-        background:'radial-gradient(circle at 30% 30%, rgba(255,107,53,0.40), rgba(255,154,60,0.18), transparent 66%)',
+        background:'radial-gradient(circle at 30% 30%, rgba(139,92,246,0.28), rgba(167,139,250,0.12), transparent 66%)',
         animation:'floatOrb 8s ease-in-out infinite',
         filter:'url(#liquidMorph) blur(3px)', willChange:'transform' }} />
       {/* Liquid orb violet — morphing */}
@@ -40,13 +40,13 @@ function FuturisticBg() {
       {/* Orb cyan */}
       <div style={{ position:'absolute', top:'40%', right:'6%', width:160, height:160,
         borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(56,189,248,0.24), transparent 66%)',
+        background:'radial-gradient(circle, rgba(245,240,230,0.80), transparent 66%)',
         animation:'floatOrb 6.5s ease-in-out infinite 1.5s' }} />
       {/* Dot grid */}
       <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.055 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.5" fill="#FF6B35"/>
+            <circle cx="2" cy="2" r="1.5" fill="#a78bfa"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dotGrid)"/>
@@ -90,7 +90,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           {/* ── Aurora clouds : halos doux qui respirent (pas de rotation = pas d'artefact) ── */}
           <div style={{
             position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 28% 28%, rgba(255,107,53,0.38) 0%, transparent 52%)',
+            background:'radial-gradient(ellipse at 28% 28%, rgba(139,92,246,0.28) 0%, transparent 52%)',
             animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)',
           }} />
           <div style={{
@@ -100,7 +100,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           }} />
           <div style={{
             position:'absolute', inset:-70, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 15% 70%, rgba(56,189,248,0.28) 0%, transparent 48%)',
+            background:'radial-gradient(ellipse at 15% 70%, rgba(245,235,225,0.70) 0%, transparent 48%)',
             animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(18px)',
           }} />
 
@@ -112,7 +112,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             {/* ── Glow copy : halo blurré derrière l'anneau (clippé au cercle) ── */}
             <div style={{
               position:'absolute', inset:-6, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, #FF6B35 0deg, transparent 50deg, #a78bfa 100deg, transparent 150deg, #38bdf8 205deg, transparent 255deg, #fbbf24 305deg, transparent 350deg, #FF6B35 360deg)',
+              background:'conic-gradient(from 0deg, #a78bfa 0deg, transparent 50deg, #8b5cf6 100deg, transparent 150deg, #c4b5fd 205deg, transparent 255deg, #ddd6fe 305deg, transparent 350deg, #a78bfa 360deg)',
               animation:'novaSpin 5s linear infinite',
               filter:'blur(10px)', opacity:0.75,
             }} />
@@ -120,7 +120,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             {/* ── Anneau principal segmenté (arcs + gaps transparents) ── */}
             <div style={{
               position:'absolute', inset:0, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, #FF6B35 0deg, #FF9A3C 22deg, transparent 48deg, #a78bfa 102deg, #8b5cf6 128deg, transparent 154deg, #38bdf8 208deg, #06b6d4 232deg, transparent 258deg, #fbbf24 308deg, #f59e0b 326deg, transparent 348deg, #FF6B35 360deg)',
+              background:'conic-gradient(from 0deg, #a78bfa 0deg, #c4b5fd 22deg, transparent 48deg, #8b5cf6 102deg, #7c3aed 128deg, transparent 154deg, #ddd6fe 208deg, #c4b5fd 232deg, transparent 258deg, #ede9fe 308deg, #a78bfa 326deg, transparent 348deg, #a78bfa 360deg)',
               animation:'novaSpin 5s linear infinite',
             }}>
               {/* Centre verre blanc */}
@@ -248,7 +248,7 @@ function NovaLogBtn({ onClick }) {
       {/* Spinning conic border */}
       <div style={{
         position:'absolute', inset:-1.5, borderRadius:23.5,
-        background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 35%, #38bdf8 60%, #FF6B35 100%)',
+        background:'conic-gradient(from 0deg, #a78bfa 0%, #c4b5fd 35%, #ede9fe 60%, #a78bfa 100%)',
         animation:'novaSpin 4s linear infinite',
         opacity: hovered ? 1 : 0.55, transition:'opacity 0.3s ease',
       }} />
@@ -264,11 +264,11 @@ function NovaLogBtn({ onClick }) {
         {/* Spotlight */}
         <div style={{
           position:'absolute', inset:0, pointerEvents:'none',
-          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(255,107,53,0.12) 0%, transparent 72%)` : 'transparent',
+          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(139,92,246,0.10) 0%, transparent 72%)` : 'transparent',
           transition: hovered ? 'none' : 'opacity 0.4s ease',
         }} />
         <span style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center' }}>
-          <HeartIcon size={15} color="#FF6B35" />
+          <HeartIcon size={15} color="#8b5cf6" />
         </span>
         <span style={{ position:'relative', zIndex:1 }}>Mettre à jour mes métriques</span>
       </button>
@@ -877,7 +877,7 @@ function SwipeableInsights({ profil, metriques, onChat }) {
 
 // ─── QUICK ACTIONS ─────────────────────────────────────────────────────────────
 const ACTIONS = [
-  { tab:'chat',    iconEl:<ChatIcon size={24} color="#fff" />,    label:'Coach IA', from:'#FF6B35', to:'#FF9A3C' },
+  { tab:'chat',    iconEl:<ChatIcon size={24} color="#fff" />,    label:'Coach IA', from:'#8b5cf6', to:'#a78bfa' },
   { tab:'routine', iconEl:<CalendarIcon size={24} color="#fff" />,label:'Routine',  from:'#5856d6', to:'#8b89f5' },
   { tab:'herbal',  iconEl:<LeafIcon size={24} color="#fff" />,    label:'Herbal',   from:'#34c759', to:'#30d158' },
   { tab:'style',   iconEl:<SparkleIcon size={24} color="#fff" />, label:'Style',    from:'#af52de', to:'#d490f7' },

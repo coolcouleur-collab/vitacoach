@@ -15,10 +15,10 @@ function SolennFace({ size = 34 }) {
     <div style={{
       width: size, height: size,
       borderRadius: size * 0.30,
-      background: 'linear-gradient(145deg, #FF6B35, #E55A00)',
+      background: 'linear-gradient(145deg, #8b5cf6, #6d28d9)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 4px 14px rgba(255,107,53,0.50), inset 0 1px 0 rgba(255,255,255,0.25)',
+      boxShadow: '0 4px 14px rgba(139,92,246,0.40), inset 0 1px 0 rgba(255,255,255,0.25)',
       marginTop: 4,
     }}>
       {/* Reflet */}
