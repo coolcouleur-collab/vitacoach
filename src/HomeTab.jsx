@@ -928,36 +928,61 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
   )
 }
 
-// ─── EXPANDED MASK INSIGHTS — horizontal accordion strip ─────────────────────
+// ─── STACKED CARDS INSIGHTS — hover spreads deck, click side card to bring front
 function SwipeableInsights({ profil, metriques, onChat }) {
-  const [activeIdx, setActiveIdx] = useState(0)
+  const [spread, setSpread]     = useState(false)
+  const [frontIdx, setFrontIdx] = useState(0)
 
   const h = new Date().getHours()
-  const cards = [
-    h < 10
-      ? { icon:<SunIcon size={20} color="#8b5cf6" />,   title:'Débute bien ta journée',  body:"1 verre d'eau au réveil + 5 min de lumière naturelle active le métabolisme immédiatement.", action:'Conseils matin',       from:'#8b5cf6', to:'#a78bfa', bg:'#F7F3FF' }
-      : h < 14
-      ? { icon:<FoodIcon size={20} color="#16a34a" />,   title:'Repas de midi équilibré', body:"Protéines + légumes + glucides lents. Évite les sucres rapides qui te fatiguent l'après-midi.", action:'Idées repas',        from:'#16a34a', to:'#4ade80', bg:'#F0FDF4' }
-      : h < 18
-      ? { icon:<FlashIcon size={20} color="#d97706" />,  title:'Regain d\'énergie',       body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.',              action:'Me remotiver',        from:'#d97706', to:'#fbbf24', bg:'#FFFBEB' }
-      : { icon:<MoonIcon size={20} color="#7c3aed" />,   title:'Prépare ton sommeil',     body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.',       action:'Routine soir',        from:'#7c3aed', to:'#a78bfa', bg:'#F5F3FF' },
+
+  const allCards = [
+    h < 10 ? {
+      image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&q=72',
+      title:'Débute bien ta journée',
+      body:"1 verre d'eau + 5 min de lumière naturelle activent ton métabolisme dès le réveil.",
+      action:'Conseils matin', from:'#FF7112', to:'#FF9A50',
+    } : h < 14 ? {
+      image:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&q=72',
+      title:'Repas de midi équilibré',
+      body:"Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent l'après-midi.",
+      action:'Idées repas', from:'#FF7112', to:'#FF9A50',
+    } : h < 18 ? {
+      image:'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&q=72',
+      title:"Regain d'énergie",
+      body:"10 min de marche = autant d'énergie qu'un café, sans le crash post-caféine.",
+      action:'Me remotiver', from:'#FF7112', to:'#FF9A50',
+    } : {
+      image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
+      title:'Prépare ton sommeil',
+      body:"Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l'obscurité.",
+      action:'Routine soir', from:'#38C1B6', to:'#6FD9D3',
+    },
     {
-      icon:<WaterIcon size={20} color="#0284c7" />,
+      image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&auto=format&q=72',
       title: (metriques?.eau||0) >= 4 ? 'Hydratation OK !' : "Bois de l'eau",
       body: (metriques?.eau||0) > 0
         ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Un verre maintenant !' : 'Continue comme ça !'}`
-        : "Objectif : 8 verres/jour. Commence maintenant — pose un grand verre devant toi.",
-      action:'Mettre à jour', from:'#0284c7', to:'#38bdf8', bg:'#F0F9FF',
+        : "Objectif : 8 verres/jour. Pose un grand verre devant toi maintenant.",
+      action:'Mettre à jour', from:'#38C1B6', to:'#6FD9D3',
     },
-    { icon:<LeafIcon size={20} color="#15803d" />, title:'Santé naturelle', body:'Plantes, tisanes et techniques holistiques adaptées à ton profil et tes objectifs.', action:'herbal', from:'#15803d', to:'#4ade80', bg:'#F0FDF4' },
-    { icon:<MeditateIcon size={20} color="#7c3aed" />, title:'Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement. Inspire 5s, expire 5s.', action:'En savoir plus', from:'#7c3aed', to:'#a78bfa', bg:'#F5F3FF' },
-  ].filter(Boolean).slice(0, 4)
+    {
+      image:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&q=72',
+      title:'Respiration 5-5',
+      body:"2 min de cohérence cardiaque réduisent le cortisol de 20%. Inspire 5s, expire 5s.",
+      action:'En savoir plus', from:'#E8A000', to:'#FFD060',
+    },
+  ]
 
-  function handleAction(e, c) {
+  const SPREAD = 82
+  const ROT    = 7
+
+  // 3 cards visible — front + 2 behind
+  const visible = [0, 1, 2].map(i => allCards[(frontIdx + i) % allCards.length])
+
+  function handleAction(e, action) {
     e.stopPropagation()
-    if (c.action === 'herbal')        onChat('herbal')
-    else if (c.action === 'Mettre à jour') onChat('sante')
-    else                               onChat(c.action)
+    if (action === 'Mettre à jour') onChat('sante')
+    else onChat(action)
   }
 
   return (
@@ -965,114 +990,119 @@ function SwipeableInsights({ profil, metriques, onChat }) {
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
         <span style={hc.cardsTitle}>Insights du jour</span>
-        <span style={{ fontSize:11, color:'#8b5cf6', fontWeight:700,
-          background:'rgba(139,92,246,0.10)', padding:'3px 12px', borderRadius:20 }}>
-          {activeIdx + 1} / {cards.length}
+        <span style={{ fontSize:11, color:'#FF7112', fontWeight:700,
+          background:'rgba(255,113,18,0.10)', padding:'3px 12px', borderRadius:20 }}>
+          {frontIdx + 1} / {allCards.length}
         </span>
       </div>
 
-      {/* ── ExpandedMask strip ── */}
-      <div style={{ display:'flex', gap:8, height:210 }}>
-        {cards.map((c, i) => {
-          const isActive = i === activeIdx
+      {/* ── Stacked cards container ── */}
+      <div
+        style={{ position:'relative', height:296 }}
+        onMouseEnter={() => setSpread(true)}
+        onMouseLeave={() => setSpread(false)}>
+
+        {visible.map((card, i) => {
+          const isFront = i === 0
+          let xPx = 0, rotate = 0
+          if (spread) {
+            if (i === 1) { xPx = -SPREAD; rotate = -ROT }
+            if (i === 2) { xPx = SPREAD;  rotate = ROT  }
+          }
+
           return (
             <div
-              key={i}
-              onClick={() => setActiveIdx(i)}
+              key={`${frontIdx}-${i}`}
+              onClick={() => {
+                if (isFront) setSpread(s => !s)  // tap front → toggle spread (mobile)
+                else { setFrontIdx(prev => (prev + i) % allCards.length); setSpread(false) }
+              }}
               style={{
-                position:'relative',
-                borderRadius:24,
-                overflow:'hidden',
-                cursor:'pointer',
-                background: c.bg,
-                border:`1.5px solid ${c.from}30`,
-                /* ── Expanding mask : flex transition ── */
-                flex: isActive ? '1 0 0' : '0 0 46px',
-                transition:'flex 0.54s cubic-bezier(0.25,0,0,1), box-shadow 0.35s ease',
-                boxShadow: isActive
-                  ? `0 10px 32px ${c.from}22, inset 0 1px 0 rgba(255,255,255,0.95)`
-                  : '0 2px 8px rgba(0,0,0,0.05)',
+                position:'absolute', top:0, left:0, right:0,
+                borderRadius:24, overflow:'hidden',
+                background:'#ffffff',
+                border:'1px solid rgba(220,212,198,0.60)',
+                boxShadow: isFront
+                  ? '0 12px 40px rgba(0,0,0,0.13), 0 3px 10px rgba(0,0,0,0.07)'
+                  : '0 4px 18px rgba(0,0,0,0.08)',
+                zIndex: 10 - i,
+                transform:`translateX(${xPx}px) rotate(${rotate}deg)`,
+                transformOrigin:'bottom center',
+                transition:'transform 0.46s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease',
+                cursor: isFront ? 'default' : 'pointer',
+                willChange:'transform',
               }}>
 
-              {/* Top gradient bar */}
+              {/* Image zone */}
               <div style={{
-                position:'absolute', top:0, left:0, right:0, height:3,
-                background:`linear-gradient(90deg,${c.from},${c.to})`,
-                borderRadius:'24px 24px 0 0',
-              }} />
-
-              {/* ── ACTIVE — full content ── */}
-              {isActive && (
+                margin:'8px 8px 0',
+                height:148, borderRadius:18, overflow:'hidden', position:'relative',
+              }}>
+                <img src={card.image} alt={card.title}
+                  style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+                  loading="lazy" />
+                {/* Gradient overlay bottom */}
                 <div style={{
-                  padding:'20px 18px 16px',
-                  height:'100%', display:'flex', flexDirection:'column',
-                  animation:'tabFade 0.26s ease both',
-                  minWidth:0,
+                  position:'absolute', bottom:0, left:0, right:0, height:'52%',
+                  background:`linear-gradient(0deg, ${card.from}99 0%, transparent 100%)`,
+                  pointerEvents:'none',
+                }} />
+              </div>
+
+              {/* Text content */}
+              <div style={{ padding:'10px 16px 14px' }}>
+                <div style={{ fontSize:14, fontWeight:800, color:'#111',
+                  letterSpacing:'-0.02em', marginBottom:5, lineHeight:1.3 }}>
+                  {card.title}
+                </div>
+                <div style={{ fontSize:12, color:'#666', lineHeight:1.65,
+                  marginBottom: isFront ? 10 : 0,
+                  overflow:'hidden', display:'-webkit-box',
+                  WebkitLineClamp:2, WebkitBoxOrient:'vertical',
                 }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:9, marginBottom:10, marginTop:4 }}>
-                    <div style={{
-                      width:36, height:36, borderRadius:11, flexShrink:0,
-                      background:`${c.from}18`, border:`1px solid ${c.from}28`,
-                      display:'flex', alignItems:'center', justifyContent:'center',
-                    }}>{c.icon}</div>
-                    <div style={{
-                      fontSize:14, fontWeight:800, color:'#111',
-                      letterSpacing:'-0.02em', lineHeight:1.3,
-                      whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
-                    }}>{c.title}</div>
-                  </div>
-                  <div style={{
-                    fontSize:12.5, color:'#555', lineHeight:1.70, flex:1,
-                    overflow:'hidden', display:'-webkit-box',
-                    WebkitLineClamp:4, WebkitBoxOrient:'vertical',
-                  }}>{c.body}</div>
+                  {card.body}
+                </div>
+
+                {/* CTA — front card only */}
+                {isFront && (
                   <button
-                    onClick={e => handleAction(e, c)}
+                    onClick={e => handleAction(e, card.action)}
                     style={{
-                      display:'inline-flex', alignItems:'center', gap:5, marginTop:12,
-                      fontSize:11, fontWeight:800, color:c.from, alignSelf:'flex-start',
-                      background:`${c.from}18`, padding:'7px 14px', borderRadius:12,
-                      border:`1px solid ${c.from}25`, cursor:'pointer',
-                      fontFamily:"'Inter',system-ui,sans-serif",
+                      display:'inline-flex', alignItems:'center', gap:5,
+                      fontSize:11, fontWeight:800, color:'#fff',
+                      background:`linear-gradient(135deg, ${card.from}, ${card.to})`,
+                      padding:'7px 16px', borderRadius:20, border:'none',
+                      cursor:'pointer', fontFamily:"'Inter',system-ui,sans-serif",
+                      boxShadow:`0 4px 14px ${card.from}55`,
                     }}>
-                    {c.action === 'herbal' ? 'Voir Herbal →' : c.action + ' →'}
+                    {card.action === 'herbal' ? 'Voir Herbal →' : card.action + ' →'}
                   </button>
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* ── INACTIVE — icon + pulse dot ── */}
-              {!isActive && (
+              {/* Spread hint on front card */}
+              {isFront && !spread && (
                 <div style={{
-                  height:'100%', display:'flex', flexDirection:'column',
-                  alignItems:'center', justifyContent:'center', gap:10, paddingTop:6,
-                }}>
-                  <div style={{
-                    width:34, height:34, borderRadius:11,
-                    background:`${c.from}1A`, border:`1px solid ${c.from}35`,
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                    transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
-                  }}>{c.icon}</div>
-                  <div style={{
-                    width:5, height:5, borderRadius:'50%',
-                    background:c.from, opacity:0.45,
-                    animation:'dotPulse 2.2s ease-in-out infinite',
-                  }} />
-                </div>
+                  position:'absolute', top:'50%', right:14, transform:'translateY(-50%)',
+                  fontSize:18, opacity:0.22, pointerEvents:'none',
+                  animation:'swipeHint 2.5s ease-in-out infinite',
+                }}>⇆</div>
               )}
             </div>
           )
         })}
       </div>
 
-      {/* Bottom nav dots */}
-      <div style={{ display:'flex', justifyContent:'center', gap:6, marginTop:14, marginBottom:4 }}>
-        {cards.map((c, i) => (
-          <div key={i} onClick={() => setActiveIdx(i)} style={{
-            height:5, width: i === activeIdx ? 20 : 5, borderRadius:3,
-            background: i === activeIdx ? cards[activeIdx].from : 'rgba(0,0,0,0.11)',
-            transition:'all 0.32s cubic-bezier(0.34,1.56,0.64,1)',
-            cursor:'pointer',
-          }} />
+      {/* Dot nav */}
+      <div style={{ display:'flex', justifyContent:'center', gap:6, marginTop:10, marginBottom:4 }}>
+        {allCards.map((_, i) => (
+          <div key={i}
+            onClick={() => { setFrontIdx(i); setSpread(false) }}
+            style={{
+              height:5, width: i === frontIdx ? 20 : 5, borderRadius:3,
+              background: i === frontIdx ? '#FF7112' : 'rgba(0,0,0,0.11)',
+              transition:'all 0.32s cubic-bezier(0.34,1.56,0.64,1)', cursor:'pointer',
+            }} />
         ))}
       </div>
     </div>
