@@ -447,7 +447,7 @@ export default function App() {
             />
             <ShinyLogoText
               text="re·vivre · évoluer"
-              gradient="linear-gradient(90deg, #38c1b6 0%, #a8e8e4 25%, #ffffff 45%, #a8e8e4 68%, #38c1b6 100%)"
+              gradient="linear-gradient(90deg, #D4844A 0%, #F5C8AA 25%, #ffffff 45%, #F5C8AA 68%, #D4844A 100%)"
               animDuration="6s"
               animDelay="0.8s"
               style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}

@@ -22,18 +22,18 @@ function FuturisticBg() {
         animation:'liquidBlob1 18s ease-in-out infinite reverse',
       }} />
 
-      {/* Teal haut-droite — accent doux */}
+      {/* Pêche chaud haut-droite */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(56,193,182,0.55) 0%, transparent 58%)',
+        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.45) 0%, transparent 58%)',
         filter:'blur(72px)',
         animation:'liquidBlob2 16s ease-in-out infinite',
       }} />
 
-      {/* Teal bas-gauche — accent doux */}
+      {/* Ambre bas-gauche */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(56,193,182,0.42) 0%, transparent 52%)',
+        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(212,132,74,0.32) 0%, transparent 52%)',
         filter:'blur(64px)',
         animation:'liquidBlob4 20s ease-in-out infinite reverse',
       }} />
@@ -50,7 +50,7 @@ function FuturisticBg() {
       <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.022 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.4" fill="#38c1b6"/>
+            <circle cx="2" cy="2" r="1.4" fill="#D4844A"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dotGrid)"/>
@@ -74,20 +74,20 @@ const RING_ARCS = [
   [  0,  90, 'rgba(255,255,255,0.95)', 3.5],   // blanc
   [100, 185, 'rgba(245,236,210,0.88)', 3.0],   // beige doré
   [195, 280, 'rgba(209,196,253,0.60)', 2.5],   // violet doux
-  [290, 354, 'rgba(167,243,208,0.70)', 2.5],   // menthe
+  [290, 354, 'rgba(255,210,150,0.70)', 2.5],   // or chaud
 ]
 // Glow derrière
 const GLOW_ARCS = [
   [  0,  90, 'rgba(255,255,255,0.30)', 14],
   [100, 185, 'rgba(245,228,175,0.28)', 14],    // beige glow
   [195, 280, 'rgba(209,196,253,0.20)', 12],
-  [290, 354, 'rgba(167,243,208,0.22)', 12],
+  [290, 354, 'rgba(255,200,130,0.22)', 12],
 ]
 // Comètes : blanc, beige doré, menthe
 const COMET_DOTS = [
   { a:   0, r: 5.5, fill:'#ffffff',              glowColor:'rgba(255,255,255,0.90)' },
   { a: 130, r: 4.0, fill:'rgba(245,225,160,1)',  glowColor:'rgba(240,200,100,0.65)' }, // beige/or
-  { a: 255, r: 3.5, fill:'rgba(167,243,208,1)',  glowColor:'rgba(52,211,153,0.60)'  }, // menthe
+  { a: 255, r: 3.5, fill:'rgba(255,210,150,1)',  glowColor:'rgba(255,170,80,0.60)'   }, // or chaud
 ]
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
@@ -164,7 +164,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             background:'radial-gradient(ellipse at 30% 70%, rgba(216,180,254,0.22) 0%, transparent 52%)',
             animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)' }} />
           <div style={{ position:'absolute', top:0, left:-80, right:-80, bottom:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 70% 80%, rgba(167,243,208,0.20) 0%, transparent 52%)',
+            background:'radial-gradient(ellipse at 70% 80%, rgba(255,200,130,0.20) 0%, transparent 52%)',
             animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)' }} />
           <div style={{ position:'absolute', top:0, left:-65, right:-65, bottom:-65, borderRadius:'50%', pointerEvents:'none',
             background:'radial-gradient(ellipse at 20% 75%, rgba(255,249,145,0.50) 0%, transparent 50%)',
@@ -366,7 +366,7 @@ function NovaLogBtn({ onClick }) {
         position:'absolute', left:'50%', top:'50%',
         width:'260%', height:7,
         marginLeft:'-130%', marginTop:-3.5,
-        background:'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(232,160,122,0.45) 45%, rgba(255,255,255,0.85) 50%, rgba(56,193,182,0.38) 55%, transparent 80%, transparent 100%)',
+        background:'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(232,160,122,0.45) 45%, rgba(255,255,255,0.85) 50%, rgba(212,132,74,0.38) 55%, transparent 80%, transparent 100%)',
         filter:'blur(5px)',
         animation:'btnLightSpin 9s linear infinite',
         opacity: hovered ? 1 : 0.50,
@@ -1143,9 +1143,9 @@ const hc = {
     borderRadius:24, padding:'6px 16px', fontSize:11, color:'#555', fontWeight:600,
     marginBottom:12, marginTop:32, letterSpacing:'0.3px',
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
-  greetDot: { width:7, height:7, borderRadius:'50%', background:'#34c759',
+  greetDot: { width:7, height:7, borderRadius:'50%', background:'#E8A07A',
     display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
-    boxShadow:'0 0 6px rgba(52,199,89,0.7)' },
+    boxShadow:'0 0 6px rgba(232,160,122,0.7)' },
   greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
     marginBottom:42, textAlign:'center' },
   greetNameAccent: { background:'linear-gradient(135deg,#C87B52,#E8A07A)',
