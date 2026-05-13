@@ -5,48 +5,35 @@ import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafI
 function FuturisticBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-      {/* ── LiquidImage : filtre SVG feTurbulence qui morphe les blobs en forme liquide ── */}
-      <svg aria-hidden="true" style={{ position:'absolute', width:0, height:0, overflow:'hidden' }}>
-        <defs>
-          <filter id="liquidMorph" x="-40%" y="-40%" width="180%" height="180%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.007" numOctaves="3" seed="8" result="noise">
-              <animate attributeName="baseFrequency" dur="18s"
-                values="0.006 0.005;0.011 0.013;0.008 0.006;0.006 0.005"
-                repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-
+      {/* Base gradient — blanc/crème dominant, soupçon violet + menthe */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(135deg, #FAF8FF 0%, #F3EEFF 45%, #FAF8FF 75%, #FAF6F2 100%)',
+        background:'linear-gradient(150deg, #FDFCFA 0%, #F9F7FF 32%, #FDFCFA 62%, #F3FBF5 100%)',
         backgroundSize:'400% 400%',
-        animation:'meshGrad 10s ease infinite',
+        animation:'meshGrad 12s ease infinite',
       }} />
-      {/* Liquid orb orange — morphing */}
-      <div style={{ position:'absolute', top:'-12%', right:'-6%', width:380, height:380,
+      {/* Orb haut-droite — violet très doux */}
+      <div style={{ position:'absolute', top:'-10%', right:'-5%', width:340, height:340,
         borderRadius:'50%',
-        background:'radial-gradient(circle at 30% 30%, rgba(139,92,246,0.28), rgba(167,139,250,0.12), transparent 66%)',
-        animation:'floatOrb 8s ease-in-out infinite',
-        filter:'url(#liquidMorph) blur(3px)', willChange:'transform' }} />
-      {/* Liquid orb violet — morphing */}
-      <div style={{ position:'absolute', bottom:'-10%', left:'-8%', width:320, height:320,
+        background:'radial-gradient(circle at 35% 35%, rgba(216,180,254,0.16), rgba(196,181,253,0.07), transparent 65%)',
+        animation:'floatOrb 9s ease-in-out infinite',
+        filter:'blur(28px)', willChange:'transform' }} />
+      {/* Orb bas-gauche — menthe légère */}
+      <div style={{ position:'absolute', bottom:'-8%', left:'-6%', width:300, height:300,
         borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(167,139,250,0.32), transparent 66%)',
-        animation:'floatOrb 12s ease-in-out infinite reverse',
-        filter:'url(#liquidMorph) blur(3px)', willChange:'transform' }} />
-      {/* Orb cyan */}
-      <div style={{ position:'absolute', top:'40%', right:'6%', width:160, height:160,
+        background:'radial-gradient(circle, rgba(167,243,208,0.16), transparent 65%)',
+        animation:'floatOrb 13s ease-in-out infinite reverse',
+        filter:'blur(28px)', willChange:'transform' }} />
+      {/* Orb centre — beige chaud */}
+      <div style={{ position:'absolute', top:'38%', right:'8%', width:180, height:180,
         borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(245,240,230,0.80), transparent 66%)',
-        animation:'floatOrb 6.5s ease-in-out infinite 1.5s' }} />
-      {/* Dot grid */}
-      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.055 }}>
+        background:'radial-gradient(circle, rgba(250,246,236,0.75), transparent 65%)',
+        animation:'floatOrb 7s ease-in-out infinite 1.5s', filter:'blur(12px)' }} />
+      {/* Dot grid — discret */}
+      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.032 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.5" fill="#a78bfa"/>
+            <circle cx="2" cy="2" r="1.5" fill="#c4b5fd"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dotGrid)"/>
@@ -55,12 +42,76 @@ function FuturisticBg() {
   )
 }
 
+// ─── NOVA SVG RING — helpers ──────────────────────────────────────────────────
+function arcPath(cx, cy, r, a0, a1) {
+  const rad = d => (d - 90) * Math.PI / 180
+  const sx = cx + r * Math.cos(rad(a0)), sy = cy + r * Math.sin(rad(a0))
+  const ex = cx + r * Math.cos(rad(a1)), ey = cy + r * Math.sin(rad(a1))
+  return `M${sx.toFixed(2)},${sy.toFixed(2)} A${r},${r},0,${a1-a0>180?1:0},1,${ex.toFixed(2)},${ey.toFixed(2)}`
+}
+
+const SVG_SZ = 248, SVG_C = 124, RING_R = 112
+
+// Arcs principaux : blanc/beige dominant, violet discret, soupçon menthe
+const RING_ARCS = [
+  [  0,  92, 'rgba(255,255,255,0.94)', 3.5],
+  [102, 188, 'rgba(209,196,253,0.58)', 2.5],
+  [198, 288, 'rgba(248,244,236,0.72)', 2.0],
+  [298, 354, 'rgba(167,243,208,0.68)', 2.5],
+]
+// Copies floutées derrière pour le glow
+const GLOW_ARCS = [
+  [  0,  92, 'rgba(255,255,255,0.28)', 14],
+  [102, 188, 'rgba(209,196,253,0.20)', 12],
+  [298, 354, 'rgba(167,243,208,0.22)', 12],
+]
+// Comètes : blanc, lavande, menthe
+const COMET_DOTS = [
+  { a:   0, r: 5.5, fill:'#ffffff',              glowColor:'rgba(255,255,255,0.85)' },
+  { a: 125, r: 3.5, fill:'rgba(209,196,253,1)',  glowColor:'rgba(167,139,250,0.70)' },
+  { a: 248, r: 3.5, fill:'rgba(167,243,208,1)',  glowColor:'rgba(52,211,153,0.60)'  },
+]
+
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
 function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   const [mounted, setMounted] = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
-  const [novaHovered, setNovaHovered] = useState(false)
+
+  // rAF refs — rotation fluide sans re-render React
+  const ringRef    = useRef(null)
+  const glowRef    = useRef(null)
+  const angleRef   = useRef(0)
+  const speedRef   = useRef(1)
+  const targetRef  = useRef(1)
+  const pausedRef  = useRef(false)
+  const lastTsRef  = useRef(null)
+  const rafRef     = useRef(null)
+
   useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
+
+  // Sync pause sans re-render
+  useEffect(() => { pausedRef.current = !!activeMetric }, [activeMetric])
+
+  // Boucle rAF — vitesse lissée par lerp
+  useEffect(() => {
+    function tick(ts) {
+      if (!lastTsRef.current) lastTsRef.current = ts
+      const dt = Math.min(ts - lastTsRef.current, 50)
+      lastTsRef.current = ts
+      // lerp doux vers la vitesse cible
+      speedRef.current += (targetRef.current - speedRef.current) * 0.045
+      if (!pausedRef.current) {
+        // ~60°/s à speed=1 → tour complet en ~6s
+        angleRef.current = (angleRef.current + dt * 0.058 * speedRef.current) % 360
+      }
+      const xfm = `rotate(${angleRef.current.toFixed(2)},${SVG_C},${SVG_C})`
+      if (ringRef.current) ringRef.current.setAttribute('transform', xfm)
+      if (glowRef.current) glowRef.current.setAttribute('transform', xfm)
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+  }, [])
 
   const hour = new Date().getHours()
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
@@ -68,7 +119,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
   const METRICS = [
     { angle:-90, iconEl:<WaterIcon size={17} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
-    { angle:-18, iconEl:<RunIcon size={17} color="#FF6B35" />,   val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { angle:-18, iconEl:<RunIcon size={17} color="#a78bfa" />,   val:metriques?.pas,     color:'#a78bfa', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
     { angle: 54, iconEl:<MoonIcon size={17} color="#a78bfa" />,  val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
     { angle:126, iconEl:<MoodIcon size={17} color="#fbbf24" />,  val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
     { angle:198, iconEl:<HeartIcon size={17} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
@@ -87,77 +138,63 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
         {/* ── Nova Glow Ring ── */}
         <div style={hc.circleWrap}
-          onMouseEnter={() => setNovaHovered(true)}
-          onMouseLeave={() => setNovaHovered(false)}
+          onMouseEnter={() => { targetRef.current = 3 }}
+          onMouseLeave={() => { targetRef.current = 1 }}
         >
+          {/* Halos aurora — respirent doucement */}
+          <div style={{ position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 30% 30%, rgba(216,180,254,0.20) 0%, transparent 52%)',
+            animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)' }} />
+          <div style={{ position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 70% 72%, rgba(167,243,208,0.18) 0%, transparent 52%)',
+            animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)' }} />
+          <div style={{ position:'absolute', inset:-65, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 15% 70%, rgba(250,246,236,0.65) 0%, transparent 50%)',
+            animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(16px)' }} />
 
-          {/* ── Aurora clouds : halos doux qui respirent (pas de rotation = pas d'artefact) ── */}
+          {/* SVG Ring — animé par rAF, aucun re-render React */}
+          <svg width={SVG_SZ} height={SVG_SZ} aria-hidden="true"
+            style={{ position:'absolute', inset:0, pointerEvents:'none', overflow:'visible' }}>
+            <defs>
+              <filter id="novaGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="7" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            {/* Glow flou derrière */}
+            <g ref={glowRef}>
+              {GLOW_ARCS.map(([a0,a1,color,w], i) => (
+                <path key={i}
+                  d={arcPath(SVG_C, SVG_C, RING_R, a0, a1)}
+                  stroke={color} strokeWidth={w} fill="none" strokeLinecap="round"
+                  filter="url(#novaGlow)" />
+              ))}
+            </g>
+            {/* Arcs principaux + comètes */}
+            <g ref={ringRef}>
+              {RING_ARCS.map(([a0,a1,color,w], i) => (
+                <path key={i}
+                  d={arcPath(SVG_C, SVG_C, RING_R, a0, a1)}
+                  stroke={color} strokeWidth={w} fill="none" strokeLinecap="round" />
+              ))}
+              {COMET_DOTS.map((c, i) => {
+                const rad = (c.a - 90) * Math.PI / 180
+                const cx = SVG_C + RING_R * Math.cos(rad)
+                const cy = SVG_C + RING_R * Math.sin(rad)
+                return (
+                  <circle key={i} cx={cx.toFixed(2)} cy={cy.toFixed(2)} r={c.r} fill={c.fill}
+                    style={{ filter:`drop-shadow(0 0 7px ${c.glowColor})` }} />
+                )
+              })}
+            </g>
+          </svg>
+
+          {/* Centre verre blanc/crème */}
           <div style={{
-            position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 28% 28%, rgba(139,92,246,0.28) 0%, transparent 52%)',
-            animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)',
+            position:'absolute', inset:11, borderRadius:'50%',
+            background:'rgba(253,252,250,0.97)', backdropFilter:'blur(4px)',
+            pointerEvents:'none',
           }} />
-          <div style={{
-            position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 72% 72%, rgba(167,139,250,0.34) 0%, transparent 52%)',
-            animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)',
-          }} />
-          <div style={{
-            position:'absolute', inset:-70, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 15% 70%, rgba(245,235,225,0.70) 0%, transparent 48%)',
-            animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(18px)',
-          }} />
-
-          {/* ── Clip container : confine tous les éléments qui tournent dans le cercle ── */}
-          {/* ── Empêche les "gros traits" de déborder en dessous du nova ring ── */}
-          <div style={{
-            position:'absolute', inset:0, borderRadius:'50%', overflow:'hidden', pointerEvents:'none',
-          }}>
-            {/* ── Glow copy : halo blurré derrière l'anneau ── */}
-            <div style={{
-              position:'absolute', inset:-6, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, #a78bfa 0deg, transparent 50deg, #8b5cf6 100deg, transparent 150deg, #c4b5fd 205deg, transparent 255deg, #ddd6fe 305deg, transparent 350deg, #a78bfa 360deg)',
-              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
-              filter:'blur(10px)', opacity: novaHovered ? 1 : 0.75,
-              transition:'opacity 0.4s ease',
-            }} />
-
-            {/* ── Anneau principal ── */}
-            <div style={{
-              position:'absolute', inset:0, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, #a78bfa 0deg, #c4b5fd 22deg, transparent 48deg, #8b5cf6 102deg, #7c3aed 128deg, transparent 154deg, #ddd6fe 208deg, #c4b5fd 232deg, transparent 258deg, #ede9fe 308deg, #a78bfa 326deg, transparent 348deg, #a78bfa 360deg)',
-              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
-              transition:'animation-duration 0.4s ease',
-            }}>
-              {/* Centre verre blanc */}
-              <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(250,249,255,0.98)', backdropFilter:'blur(4px)' }} />
-            </div>
-
-            {/* ── Comète 1 : lumineuse + interactive (se fige si bouton pressé) ── */}
-            <div style={{
-              position:'absolute', inset:-1, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, transparent 0%, transparent 80%, rgba(255,255,255,0) 84%, rgba(255,255,255,0.95) 88%, rgba(255,255,255,1) 91%, rgba(230,210,255,1) 94%, transparent 97%, transparent 100%)',
-              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
-              animationPlayState: activeMetric ? 'paused' : 'running',
-              filter:'blur(0.5px)',
-              boxShadow:'0 0 12px 2px rgba(255,255,255,0.6)',
-            }} />
-
-            {/* ── Comète 2 : contre-rotation lumineuse + interactive ── */}
-            <div style={{
-              position:'absolute', inset:2, borderRadius:'50%',
-              background:'conic-gradient(from 180deg, transparent 0%, transparent 85%, rgba(196,181,253,0) 88%, rgba(196,181,253,1) 92%, rgba(255,255,255,0.9) 94%, transparent 97%, transparent 100%)',
-              animation:`novaSpin ${novaHovered ? '3s' : '8s'} linear infinite reverse`,
-              animationPlayState: activeMetric ? 'paused' : 'running',
-              filter:'blur(0.5px)',
-            }} />
-
-            {/* ── Anneau intérieur fin ── */}
-            <div style={{
-              position:'absolute', inset:16, borderRadius:'50%',
-              border:'1px solid rgba(0,0,0,0.04)',
-            }} />
-          </div>
 
           {/* ── Score texte — fixe, centré ── */}
           <div style={{
