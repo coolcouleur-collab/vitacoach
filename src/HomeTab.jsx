@@ -63,15 +63,15 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         {/* ── Nova Glow Ring ── */}
         <div style={hc.circleWrap}>
 
-          {/* Aurora halos — behind everything */}
+          {/* Aurora halos — subtle, behind ring */}
           <div style={{
-            position:'absolute', inset:-55, borderRadius:'50%', pointerEvents:'none',
-            background:`radial-gradient(circle at center, ${glowColor}48 0%, rgba(167,139,250,0.24) 36%, transparent 62%)`,
-            animation:'novaBreath 3.5s ease-in-out infinite', filter:'blur(12px)',
+            position:'absolute', inset:-50, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(circle at center, rgba(167,139,250,0.22) 0%, rgba(56,189,248,0.12) 40%, transparent 65%)',
+            animation:'novaBreath 3.5s ease-in-out infinite', filter:'blur(14px)',
           }} />
           <div style={{
-            position:'absolute', inset:-28, borderRadius:'50%', pointerEvents:'none',
-            background:`radial-gradient(circle, ${glowColor}22 0%, transparent 55%)`,
+            position:'absolute', inset:-24, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(circle, rgba(255,107,53,0.14) 0%, transparent 55%)',
             animation:'novaBreath 3.5s ease-in-out infinite 0.9s',
           }} />
 
@@ -81,14 +81,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 28%, #38bdf8 52%, #fbbf24 74%, #FF6B35 100%)',
             animation:'novaSpin 6s linear infinite',
           }}>
-            {/* Dark glass center — creates ring effect */}
-            <div style={{ position:'absolute', inset:7, borderRadius:'50%', background:'rgba(8,8,14,0.96)' }} />
+            {/* White/beige glass center — creates ring effect */}
+            <div style={{ position:'absolute', inset:7, borderRadius:'50%', background:'rgba(248,248,246,0.97)', backdropFilter:'blur(8px)' }} />
           </div>
 
           {/* Inner fine ring */}
           <div style={{
             position:'absolute', inset:14, borderRadius:'50%', pointerEvents:'none',
-            border:'1px solid rgba(255,255,255,0.06)',
+            border:'1px solid rgba(0,0,0,0.05)',
           }} />
 
           {/* Score text — non-rotating, centered */}
@@ -97,13 +97,12 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
           }}>
             <div style={{
-              fontSize:50, fontWeight:900, color:'#fff', lineHeight:1,
-              textShadow:`0 0 30px ${glowColor}95, 0 0 60px ${glowColor}40`,
+              fontSize:50, fontWeight:900, color:'#1a0a00', lineHeight:1,
               animation: mounted ? 'countIn 0.8s ease 0.3s both' : 'none',
             }}>
               {score > 0 ? score : '—'}
             </div>
-            <div style={{ fontSize:9, color:'rgba(255,255,255,0.38)', letterSpacing:'2.8px', textTransform:'uppercase', fontWeight:700, marginTop:5 }}>
+            <div style={{ fontSize:9, color:'#8a7265', letterSpacing:'2.8px', textTransform:'uppercase', fontWeight:700, marginTop:5 }}>
               SCORE FORME
             </div>
           </div>
@@ -124,14 +123,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
               <button key={m.key} onClick={onLog} style={{
                 position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
                 borderRadius:15,
-                background: filled ? 'rgba(8,8,14,0.92)' : 'rgba(255,255,255,0.90)',
-                border:`1.5px solid ${filled ? m.color+'65' : 'rgba(255,255,255,0.65)'}`,
+                background: 'rgba(255,255,255,0.95)',
+                border:`1.5px solid ${filled ? m.color+'50' : 'rgba(0,0,0,0.08)'}`,
                 backdropFilter:'blur(14px)',
                 display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                 gap:1.5, cursor:'pointer',
                 boxShadow: filled
-                  ? `0 0 0 3px ${m.color}18, 0 0 20px ${m.color}60, inset 0 1px 0 rgba(255,255,255,0.07)`
-                  : '0 4px 14px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
+                  ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
+                  : '0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
                 fontFamily:"'Inter',system-ui,sans-serif",
                 transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
               }}>
@@ -178,21 +177,21 @@ function NovaLogBtn({ onClick }) {
         position:'absolute', inset:-1.5, borderRadius:23.5,
         background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 35%, #38bdf8 60%, #FF6B35 100%)',
         animation:'novaSpin 4s linear infinite',
-        opacity: hovered ? 1 : 0.65, transition:'opacity 0.3s ease',
+        opacity: hovered ? 1 : 0.55, transition:'opacity 0.3s ease',
       }} />
       <button onClick={onClick} style={{
         position:'relative', zIndex:1, borderRadius:22,
-        background:'rgba(8,8,14,0.92)', backdropFilter:'blur(12px)',
+        background:'rgba(255,255,255,0.97)', backdropFilter:'blur(12px)',
         border:'none', cursor:'pointer', overflow:'hidden',
         display:'flex', alignItems:'center', gap:9, padding:'14px 30px',
-        fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:800, color:'#fff',
-        boxShadow: hovered ? '0 0 28px rgba(255,107,53,0.50)' : '0 0 12px rgba(255,107,53,0.22)',
+        fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:800, color:'#1a0a00',
+        boxShadow: hovered ? '0 8px 32px rgba(0,0,0,0.12)' : '0 4px 16px rgba(0,0,0,0.06)',
         transition:'box-shadow 0.25s ease',
       }}>
         {/* Spotlight */}
         <div style={{
           position:'absolute', inset:0, pointerEvents:'none',
-          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(255,107,53,0.38) 0%, transparent 72%)` : 'transparent',
+          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(255,107,53,0.12) 0%, transparent 72%)` : 'transparent',
           transition: hovered ? 'none' : 'opacity 0.4s ease',
         }} />
         <span style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center' }}>
@@ -238,10 +237,10 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
         opacity: hovered ? 1 : 0.45,
         transition:'opacity 0.3s ease, animation-duration 0.3s ease',
       }} />
-      {/* Dark glass body */}
+      {/* White glass body */}
       <div style={{
         position:'absolute', inset:1.5, borderRadius:20.5,
-        background:'rgba(8,8,14,0.90)',
+        background:'rgba(255,255,255,0.97)',
         backdropFilter:'blur(12px)',
         overflow:'hidden',
       }}>
@@ -249,7 +248,7 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
         <div style={{
           position:'absolute', inset:0, pointerEvents:'none',
           background: hovered
-            ? `radial-gradient(circle 65px at ${spot.x}% ${spot.y}%, ${from}50 0%, transparent 72%)`
+            ? `radial-gradient(circle 65px at ${spot.x}% ${spot.y}%, ${from}20 0%, transparent 72%)`
             : 'transparent',
           transition: hovered ? 'none' : 'opacity 0.4s ease',
         }} />
@@ -270,7 +269,7 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
         }}>
           {iconEl}
         </div>
-        <span style={{ fontSize:11, fontWeight:800, color:'#fff', marginTop:9, letterSpacing:'0.2px' }}>{label}</span>
+        <span style={{ fontSize:11, fontWeight:800, color:'#1a0a00', marginTop:9, letterSpacing:'0.2px' }}>{label}</span>
       </div>
     </div>
   )
@@ -773,13 +772,13 @@ const hc = {
   hero: { position:'relative', minHeight:500, display:'flex', alignItems:'center',
     justifyContent:'center', overflow:'hidden', paddingBottom:28 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
-    background:'rgba(255,107,53,0.14)', border:'1px solid rgba(255,107,53,0.3)',
-    borderRadius:24, padding:'6px 16px', fontSize:11, color:'#FF6B35', fontWeight:700,
+    background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
+    borderRadius:24, padding:'6px 16px', fontSize:11, color:'#555', fontWeight:600,
     marginBottom:12, marginTop:32, letterSpacing:'0.3px',
-    boxShadow:'0 2px 12px rgba(255,107,53,0.15)' },
-  greetDot: { width:7, height:7, borderRadius:'50%', background:'#FF6B35',
+    boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
+  greetDot: { width:7, height:7, borderRadius:'50%', background:'#34c759',
     display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
-    boxShadow:'0 0 6px rgba(255,107,53,0.7)' },
+    boxShadow:'0 0 6px rgba(52,199,89,0.7)' },
   greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
     marginBottom:22, textAlign:'center' },
   greetNameAccent: { background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
