@@ -59,6 +59,7 @@ function FuturisticBg() {
 function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   const [mounted, setMounted] = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
+  const [novaHovered, setNovaHovered] = useState(false)
   useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
 
   const hour = new Date().getHours()
@@ -85,7 +86,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> !</div>
 
         {/* ── Nova Glow Ring ── */}
-        <div style={hc.circleWrap}>
+        <div style={hc.circleWrap}
+          onMouseEnter={() => setNovaHovered(true)}
+          onMouseLeave={() => setNovaHovered(false)}
+        >
 
           {/* ── Aurora clouds : halos doux qui respirent (pas de rotation = pas d'artefact) ── */}
           <div style={{
@@ -109,40 +113,43 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           <div style={{
             position:'absolute', inset:0, borderRadius:'50%', overflow:'hidden', pointerEvents:'none',
           }}>
-            {/* ── Glow copy : halo blurré derrière l'anneau (clippé au cercle) ── */}
+            {/* ── Glow copy : halo blurré derrière l'anneau ── */}
             <div style={{
               position:'absolute', inset:-6, borderRadius:'50%',
               background:'conic-gradient(from 0deg, #a78bfa 0deg, transparent 50deg, #8b5cf6 100deg, transparent 150deg, #c4b5fd 205deg, transparent 255deg, #ddd6fe 305deg, transparent 350deg, #a78bfa 360deg)',
-              animation:'novaSpin 5s linear infinite',
-              filter:'blur(10px)', opacity:0.75,
+              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
+              filter:'blur(10px)', opacity: novaHovered ? 1 : 0.75,
+              transition:'opacity 0.4s ease',
             }} />
 
-            {/* ── Anneau principal segmenté (arcs + gaps transparents) ── */}
+            {/* ── Anneau principal ── */}
             <div style={{
               position:'absolute', inset:0, borderRadius:'50%',
               background:'conic-gradient(from 0deg, #a78bfa 0deg, #c4b5fd 22deg, transparent 48deg, #8b5cf6 102deg, #7c3aed 128deg, transparent 154deg, #ddd6fe 208deg, #c4b5fd 232deg, transparent 258deg, #ede9fe 308deg, #a78bfa 326deg, transparent 348deg, #a78bfa 360deg)',
-              animation:'novaSpin 5s linear infinite',
+              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
+              transition:'animation-duration 0.4s ease',
             }}>
               {/* Centre verre blanc */}
-              <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(248,248,246,0.98)', backdropFilter:'blur(4px)' }} />
+              <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(250,249,255,0.98)', backdropFilter:'blur(4px)' }} />
             </div>
 
-            {/* ── Comète 1 : interactive — se fige dès qu'un bouton est pressé ── */}
+            {/* ── Comète 1 : lumineuse + interactive (se fige si bouton pressé) ── */}
             <div style={{
               position:'absolute', inset:-1, borderRadius:'50%',
-              background:'conic-gradient(from 0deg, transparent 0%, transparent 82%, rgba(255,255,255,0.0) 85%, rgba(255,255,255,1) 90%, rgba(255,220,180,0.8) 93%, transparent 97%, transparent 100%)',
-              animation:'novaSpin 5s linear infinite',
+              background:'conic-gradient(from 0deg, transparent 0%, transparent 80%, rgba(255,255,255,0) 84%, rgba(255,255,255,0.95) 88%, rgba(255,255,255,1) 91%, rgba(230,210,255,1) 94%, transparent 97%, transparent 100%)',
+              animation:`novaSpin ${novaHovered ? '2s' : '5s'} linear infinite`,
               animationPlayState: activeMetric ? 'paused' : 'running',
-              filter:'blur(1px)',
+              filter:'blur(0.5px)',
+              boxShadow:'0 0 12px 2px rgba(255,255,255,0.6)',
             }} />
 
-            {/* ── Comète 2 : contre-rotation interactive ── */}
+            {/* ── Comète 2 : contre-rotation lumineuse + interactive ── */}
             <div style={{
               position:'absolute', inset:2, borderRadius:'50%',
-              background:'conic-gradient(from 180deg, transparent 0%, transparent 88%, rgba(200,180,255,0.9) 92%, transparent 96%)',
-              animation:'novaSpin 8s linear infinite reverse',
+              background:'conic-gradient(from 180deg, transparent 0%, transparent 85%, rgba(196,181,253,0) 88%, rgba(196,181,253,1) 92%, rgba(255,255,255,0.9) 94%, transparent 97%, transparent 100%)',
+              animation:`novaSpin ${novaHovered ? '3s' : '8s'} linear infinite reverse`,
               animationPlayState: activeMetric ? 'paused' : 'running',
-              filter:'blur(1.5px)',
+              filter:'blur(0.5px)',
             }} />
 
             {/* ── Anneau intérieur fin ── */}
@@ -163,11 +170,11 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             }}>
               {score > 0 ? score : (
                 <div style={{ display:'flex', alignItems:'center', gap:5, justifyContent:'center', marginTop:8 }}>
-                  <div style={{ width:38, height:2, background:'linear-gradient(to right, transparent, #FF6B35)', animation:'shimmerDot 2s ease-in-out infinite' }} />
-                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#FF6B35', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
-                  <div style={{ width:9, height:9, borderRadius:'50%', background:'linear-gradient(135deg,#FF6B35,#FF9A3C)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 8px rgba(255,107,53,0.5)' }} />
-                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#FF6B35', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
-                  <div style={{ width:38, height:2, background:'linear-gradient(to left, transparent, #FF6B35)', animation:'shimmerDot 2s ease-in-out infinite' }} />
+                  <div style={{ width:38, height:2, background:'linear-gradient(to right, transparent, #a78bfa)', animation:'shimmerDot 2s ease-in-out infinite' }} />
+                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
+                  <div style={{ width:9, height:9, borderRadius:'50%', background:'linear-gradient(135deg,#8b5cf6,#a78bfa)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 8px rgba(139,92,246,0.5)' }} />
+                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
+                  <div style={{ width:38, height:2, background:'linear-gradient(to left, transparent, #a78bfa)', animation:'shimmerDot 2s ease-in-out infinite' }} />
                 </div>
               )}
             </div>
@@ -232,47 +239,27 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
 function NovaLogBtn({ onClick }) {
   const [hovered, setHovered] = useState(false)
-  const [spot, setSpot] = useState({ x:50, y:50 })
-  const ref = useRef()
-  function onMove(e) {
-    const r = ref.current?.getBoundingClientRect()
-    if (!r) return
-    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
-  }
   return (
-    <div ref={ref} onMouseMove={onMove} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ position:'relative', borderRadius:22, marginTop:2,
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        marginTop:10, borderRadius:100,
+        border:`1.5px solid ${hovered ? '#8b5cf6' : 'rgba(139,92,246,0.35)'}`,
+        background: hovered ? 'rgba(139,92,246,0.08)' : 'rgba(255,255,255,0.85)',
+        backdropFilter:'blur(12px)',
+        cursor:'pointer', display:'flex', alignItems:'center', gap:8,
+        padding:'12px 28px',
+        fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:700,
+        color: hovered ? '#6d28d9' : '#4c1d95',
+        boxShadow: hovered ? '0 4px 20px rgba(139,92,246,0.25)' : '0 2px 10px rgba(139,92,246,0.12)',
         transform: hovered ? 'scale(1.04)' : 'scale(1)',
-        transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+        transition:'all 0.2s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
-      {/* Spinning conic border */}
-      <div style={{
-        position:'absolute', inset:-1.5, borderRadius:23.5,
-        background:'conic-gradient(from 0deg, #a78bfa 0%, #c4b5fd 35%, #ede9fe 60%, #a78bfa 100%)',
-        animation:'novaSpin 4s linear infinite',
-        opacity: hovered ? 1 : 0.55, transition:'opacity 0.3s ease',
-      }} />
-      <button onClick={onClick} style={{
-        position:'relative', zIndex:1, borderRadius:22,
-        background:'rgba(255,255,255,0.97)', backdropFilter:'blur(12px)',
-        border:'none', cursor:'pointer', overflow:'hidden',
-        display:'flex', alignItems:'center', gap:9, padding:'14px 30px',
-        fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:800, color:'#1a0a00',
-        boxShadow: hovered ? '0 8px 32px rgba(0,0,0,0.12)' : '0 4px 16px rgba(0,0,0,0.06)',
-        transition:'box-shadow 0.25s ease',
-      }}>
-        {/* Spotlight */}
-        <div style={{
-          position:'absolute', inset:0, pointerEvents:'none',
-          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(139,92,246,0.10) 0%, transparent 72%)` : 'transparent',
-          transition: hovered ? 'none' : 'opacity 0.4s ease',
-        }} />
-        <span style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center' }}>
-          <HeartIcon size={15} color="#8b5cf6" />
-        </span>
-        <span style={{ position:'relative', zIndex:1 }}>Mettre à jour mes métriques</span>
-      </button>
-    </div>
+      <HeartIcon size={15} color={hovered ? '#6d28d9' : '#8b5cf6'} />
+      Mettre à jour mes métriques
+    </button>
   )
 }
 
