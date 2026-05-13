@@ -59,15 +59,17 @@ function FuturisticBg() {
   )
 }
 
-// ─── NOVA WEBGL ORB — reconstruction du composant Framer Nova-Glow-lv7f ────────
-// Design : orb WebGL avec bruit de Simplex + palette pêche/beige/crème
-// Interaction : active=true déclenche la distorsion ondulante (quand l'utilisateur
-//               touche les émojis métriques autour du cercle)
+// ─── NOVA WEBGL ORB — reconstruction exacte Framer Nova-Glow-lv7f ───────────────
+// Fidèle au composant Framer : Simplex noise + rotation qui s'accélère au toucher
+// Palette 100% pêche/beige/crème (pas de violet, pas de teal)
 function NovaOrbGL({ active }) {
-  const ctnRef   = useRef(null)
-  const activeRef = useRef(active)
-  const hoverRef  = useRef(0)
-  const rafRef    = useRef(null)
+  const ctnRef      = useRef(null)
+  const activeRef   = useRef(active)
+  const hoverRef    = useRef(0)       // lerp 0→1 au survol/toucher
+  const rotRef      = useRef(0)       // angle de rotation courant (rad)
+  const rotSpeedRef = useRef(0.18)    // vitesse courante (lerp vers cible)
+  const rafRef      = useRef(null)
+  const lastTRef    = useRef(null)
 
   useEffect(() => { activeRef.current = active }, [active])
 
@@ -75,7 +77,6 @@ function NovaOrbGL({ active }) {
     const container = ctnRef.current
     if (!container || typeof window === 'undefined') return
 
-    // ── Vertex shader ────────────────────────────────────────────────────────
     const VERT = `
       precision highp float;
       attribute vec2 position;
@@ -83,13 +84,13 @@ function NovaOrbGL({ active }) {
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = vec4(position, 0.0, 1.0); }
     `
-    // ── Fragment shader — palette pêche/crème/ambre ──────────────────────────
+    // Shader avec rotation (identique au Framer) + palette pêche/crème/ambre
     const FRAG = `
       precision highp float;
       uniform float iTime;
       uniform vec3  iResolution;
-      uniform float hover;
-      uniform float hoverIntensity;
+      uniform float hover;   /* 0..1 lerp */
+      uniform float rot;     /* angle de rotation en radians */
       varying vec2  vUv;
 
       vec3 hash33(vec3 p3) {
@@ -116,11 +117,11 @@ function NovaOrbGL({ active }) {
         return vec4(c/(a+1e-5), a);
       }
 
-      /* Palette pêche / crème / ambre — sans aucun violet ni teal */
-      const vec3 c1 = vec3(0.902, 0.573, 0.353);  /* pêche ambre   #E6925A */
-      const vec3 c2 = vec3(1.000, 0.918, 0.827);  /* crème chaude  #FFEAD3 */
-      const vec3 c3 = vec3(0.502, 0.267, 0.125);  /* ambre profond #80441F */
-      const float innerR = 0.32;
+      /* Palette pêche / crème / ambre */
+      const vec3 c1 = vec3(0.902, 0.573, 0.353);  /* pêche ambre  #E6925A */
+      const vec3 c2 = vec3(1.000, 0.918, 0.827);  /* crème chaude #FFEAD3 */
+      const vec3 c3 = vec3(0.502, 0.267, 0.125);  /* ambre foncé  #80441F */
+      const float innerR = 0.6;   /* identique au Framer original */
       const float noiseS = 0.65;
 
       float l1(float I,float a,float d){ return I/(1.0+d*a); }
@@ -153,9 +154,15 @@ function NovaOrbGL({ active }) {
         vec2 ctr = iResolution.xy * 0.5;
         float sz = min(iResolution.x, iResolution.y);
         vec2 uv  = (fc - ctr) / sz * 2.0;
+
+        /* Rotation — identique au Framer (s'accélère au toucher) */
+        float cosR = cos(rot), sinR = sin(rot);
+        uv = vec2(cosR*uv.x - sinR*uv.y, sinR*uv.x + cosR*uv.y);
+
         /* Distorsion ondulante au toucher des émojis */
-        uv.x += hover * hoverIntensity * 0.13 * sin(uv.y*8.0 + iTime*3.2);
-        uv.y += hover * hoverIntensity * 0.13 * sin(uv.x*8.0 + iTime*3.2);
+        uv.x += hover * 0.2 * sin(uv.y*10.0 + iTime);
+        uv.y += hover * 0.2 * sin(uv.x*10.0 + iTime);
+
         vec4 col = draw(uv);
         gl_FragColor = vec4(col.rgb*col.a, col.a);
       }
@@ -167,7 +174,6 @@ function NovaOrbGL({ active }) {
     gl.clearColor(0,0,0,0)
     container.appendChild(canvas)
 
-    // Compile + link
     function mkShader(type, src) {
       const s = gl.createShader(type)
       gl.shaderSource(s, src); gl.compileShader(s); return s
@@ -177,7 +183,6 @@ function NovaOrbGL({ active }) {
     const prog = gl.createProgram()
     gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog)
 
-    // Full-screen triangle
     const posBuf = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuf)
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW)
@@ -190,7 +195,7 @@ function NovaOrbGL({ active }) {
     const timeLoc = gl.getUniformLocation(prog, 'iTime')
     const resLoc  = gl.getUniformLocation(prog, 'iResolution')
     const hovLoc  = gl.getUniformLocation(prog, 'hover')
-    const hiLoc   = gl.getUniformLocation(prog, 'hoverIntensity')
+    const rotLoc  = gl.getUniformLocation(prog, 'rot')
 
     function resize() {
       const dpr = window.devicePixelRatio || 1
@@ -203,16 +208,26 @@ function NovaOrbGL({ active }) {
 
     function frame(t) {
       rafRef.current = requestAnimationFrame(frame)
-      // Lerp hover vers la cible (actif = 1, inactif = 0)
-      const target = activeRef.current ? 1 : 0
-      hoverRef.current += (target - hoverRef.current) * 0.07
+      if (!lastTRef.current) lastTRef.current = t
+      const dt = Math.min((t - lastTRef.current) * 0.001, 0.05)
+      lastTRef.current = t
+
+      // Hover lerp
+      const hTarget = activeRef.current ? 1 : 0
+      hoverRef.current += (hTarget - hoverRef.current) * 0.08
+
+      // Rotation : lente au repos (0.18 rad/s), rapide au toucher (1.4 rad/s)
+      // Identique au comportement Framer rotateOnHover
+      const sTarget = activeRef.current ? 1.4 : 0.18
+      rotSpeedRef.current += (sTarget - rotSpeedRef.current) * 0.06
+      rotRef.current += dt * rotSpeedRef.current
 
       gl.clear(gl.COLOR_BUFFER_BIT)
       gl.useProgram(prog)
       gl.uniform1f(timeLoc, t * 0.001)
       gl.uniform3f(resLoc, canvas.width, canvas.height, 1)
       gl.uniform1f(hovLoc, hoverRef.current)
-      gl.uniform1f(hiLoc, 0.50)
+      gl.uniform1f(rotLoc, rotRef.current)
 
       gl.bindBuffer(gl.ARRAY_BUFFER, posBuf)
       gl.enableVertexAttribArray(posLoc)
@@ -278,10 +293,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           {/* Orb WebGL — distorsion quand circleHovered ou métrique active */}
           <NovaOrbGL active={circleHovered || !!activeMetric} />
 
-          {/* Voile blanc central radial — lisibilité du score sans fond dur */}
+          {/* Voile blanc central léger — juste pour la lisibilité du score */}
           <div style={{
             position:'absolute', inset:0, borderRadius:'50%', pointerEvents:'none', zIndex:1,
-            background:'radial-gradient(circle at center, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.22) 36%, transparent 58%)',
+            background:'radial-gradient(circle at center, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.10) 32%, transparent 52%)',
           }} />
 
           {/* ── Score texte — centré, au-dessus du voile ── */}
