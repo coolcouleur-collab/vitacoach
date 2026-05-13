@@ -63,10 +63,10 @@ function SolennFace({ size = 34 }) {
     <div style={{
       width: size, height: size,
       borderRadius: size * 0.30,
-      background: 'linear-gradient(145deg, #8b5cf6, #6d28d9)',
+      background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 4px 14px rgba(139,92,246,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
+      boxShadow: '0 4px 14px rgba(200,123,82,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
       marginTop: 4,
     }}>
       {/* Reflet */}
@@ -441,7 +441,7 @@ export default function App() {
           <div style={s.sidebarTop}>
             <ShinyLogoText
               text="Solenn"
-              gradient="linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)"
+              gradient="linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)"
               animDuration="4s"
               style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
             />
@@ -457,7 +457,7 @@ export default function App() {
           <nav style={s.sidebarNav}>
             {navItems.map(({ id, Icon, label }) => {
               const active = onglet === id
-              const color = active ? '#8b5cf6' : '#8a7265'
+              const color = active ? '#C87B52' : '#8a7265'
               return (
                 <button key={id} style={active ? s.navActive : s.nav}
                   onClick={() => setOnglet(id)}>
@@ -479,7 +479,7 @@ export default function App() {
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={s.profileName}>{profil.nom}</div>
-                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#8b5cf6" /> {profil.objectifs[0]}</div>}
+                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#C87B52" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
             {!isPro && (
@@ -519,7 +519,7 @@ export default function App() {
               ) : (
                 <ShinyLogoText
                   text="Solenn"
-                  gradient="linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)"
+                  gradient="linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)"
                   animDuration="4s"
                   style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
                 />
@@ -596,13 +596,13 @@ export default function App() {
                 {navItems.map(({ id, Icon, label }) => (
                   <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
                     display:'flex', alignItems:'center', gap:12, padding:'13px 16px', borderRadius:14,
-                    border:'none', background: onglet===id ? 'rgba(139,92,246,0.08)' : 'transparent',
+                    border:'none', background: onglet===id ? 'rgba(200,123,82,0.08)' : 'transparent',
                     cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
-                    color: onglet===id ? '#8b5cf6' : '#4a3728', fontWeight: onglet===id ? 700 : 500,
+                    color: onglet===id ? '#C87B52' : '#4a3728', fontWeight: onglet===id ? 700 : 500,
                     fontSize:14, marginBottom:3,
-                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(139,92,246,0.18)' : 'none',
+                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(200,123,82,0.18)' : 'none',
                   }}>
-                    <Icon color={onglet===id ? '#8b5cf6' : '#8a7265'} size={18} />
+                    <Icon color={onglet===id ? '#C87B52' : '#8a7265'} size={18} />
                     {label}
                   </button>
                 ))}
@@ -652,7 +652,7 @@ export default function App() {
                   </button>
                 )}
                 <div>
-                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#8b5cf6" />} Coach IA</div>
+                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#C87B52" />} Coach IA</div>
                   {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Solenn</div>}
                 </div>
               </div>
@@ -700,7 +700,7 @@ export default function App() {
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
                           <span key={i} style={{ width:7, height:7, borderRadius:'50%',
-                            background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
+                            background:'linear-gradient(135deg,#C87B52,#E8A07A)',
                             display:'inline-block',
                             animation:`typing 0.8s ${d}s ease-in-out infinite alternate` }} />
                         ))}
@@ -820,16 +820,16 @@ export default function App() {
                 position:'absolute', top:7, bottom:7,
                 width:`calc((100% - 16px) / ${navItems.length})`,
                 left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
-                background:'rgba(139,92,246,0.10)',
+                background:'rgba(200,123,82,0.10)',
                 borderRadius:100,
-                border:'1px solid rgba(139,92,246,0.22)',
-                boxShadow:'0 2px 10px rgba(139,92,246,0.16)',
+                border:'1px solid rgba(200,123,82,0.22)',
+                boxShadow:'0 2px 10px rgba(200,123,82,0.16)',
                 transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
                 pointerEvents:'none', zIndex:0,
               }} />
               {navItems.map(({ id, Icon, label }) => {
                 const active = onglet === id
-                const color  = active ? '#8b5cf6' : '#9e8c7c'
+                const color  = active ? '#C87B52' : '#9e8c7c'
                 return (
                   <button key={id}
                     style={{
@@ -1002,8 +1002,8 @@ export default function App() {
           50%      { transform:scale(1.35); opacity:1; }
         }
         @keyframes pulseDot2 {
-          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(139,92,246,0.4); }
-          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(139,92,246,0.7); }
+          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(200,123,82,0.4); }
+          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(200,123,82,0.7); }
         }
         @keyframes pulseDot3 {
           0%,100% { transform:scale(1);    opacity:0.7; }
@@ -1019,12 +1019,12 @@ export default function App() {
         ::-webkit-scrollbar { width:5px; height:5px; }
         ::-webkit-scrollbar-track { background:transparent; border-radius:10px; }
         ::-webkit-scrollbar-thumb {
-          background:linear-gradient(180deg, #8b5cf6 0%, #a78bfa 100%);
+          background:linear-gradient(180deg, #C87B52 0%, #E8A07A 100%);
           border-radius:10px;
           transition:width 0.3s ease;
         }
-        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#a78bfa,#8b5cf6); }
-        * { scrollbar-width:thin; scrollbar-color:#8b5cf6 transparent; }
+        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#E8A07A,#C87B52); }
+        * { scrollbar-width:thin; scrollbar-color:#C87B52 transparent; }
       `}</style>
     </div>
   )
@@ -1077,11 +1077,11 @@ function RoutineModule({ profil, metriques }) {
         <div style={sr.progressBar}>
           <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
             <span style={{ fontSize:12, fontWeight:700, color:'#1a0a00' }}>Progression</span>
-            <span style={{ fontSize:12, color:'#8b5cf6', fontWeight:700 }}>{doneTotal}/{stepsTotal}</span>
+            <span style={{ fontSize:12, color:'#C87B52', fontWeight:700 }}>{doneTotal}/{stepsTotal}</span>
           </div>
           <div style={{ height:6, background:'#f0e8e0', borderRadius:4, overflow:'hidden' }}>
             <div style={{ height:'100%', width:`${stepsTotal>0?(doneTotal/stepsTotal)*100:0}%`,
-              background:'linear-gradient(90deg,#8b5cf6,#a78bfa)', borderRadius:4, transition:'width 0.4s ease' }} />
+              background:'linear-gradient(90deg,#C87B52,#E8A07A)', borderRadius:4, transition:'width 0.4s ease' }} />
           </div>
         </div>
       )}
@@ -1106,13 +1106,13 @@ function RoutineModule({ profil, metriques }) {
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {routine.motivation && (
             <div style={sr.motivCard}>
-              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#8b5cf6" /></div>
-              <div style={{ fontSize:14, fontWeight:600, color:'#8b5cf6', lineHeight:1.65 }}>{routine.motivation}</div>
+              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#C87B52" /></div>
+              <div style={{ fontSize:14, fontWeight:600, color:'#C87B52', lineHeight:1.65 }}>{routine.motivation}</div>
             </div>
           )}
           {routine.matin && (
-            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#8b5cf6" />} titre={routine.matin.titre} heure={routine.matin.heure}
-              etapes={routine.matin.etapes} accent="#8b5cf6" checked={checkedSteps} onToggle={toggleStep} />
+            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#C87B52" />} titre={routine.matin.titre} heure={routine.matin.heure}
+              etapes={routine.matin.etapes} accent="#C87B52" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.nutrition && <NutritionCard nutrition={routine.nutrition} />}
           {routine.apresmidi && (
@@ -1127,7 +1127,7 @@ function RoutineModule({ profil, metriques }) {
             <div style={sr.card}>
               <div style={sr.cardHeader}>
                 <span style={{ fontSize:20 }}>{routine.astuce.emoji}</span>
-                <span style={{ ...sr.cardTitre, color:'#8b5cf6' }}>{routine.astuce.titre}</span>
+                <span style={{ ...sr.cardTitre, color:'#C87B52' }}>{routine.astuce.titre}</span>
               </div>
               <div style={{ fontSize:13, color:'#8a7265', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
             </div>
@@ -1208,9 +1208,9 @@ const sr = {
   header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0' },
   date: { fontSize:11, color:'#c4b5a8', textTransform:'capitalize', letterSpacing:0.5, fontWeight:500 },
   titre: { fontSize:20, fontWeight:800, color:'#1a0a00', marginTop:3, letterSpacing:'-0.3px' },
-  btnGen: { background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', color:'#fff', border:'none',
+  btnGen: { background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff', border:'none',
     padding:'10px 18px', borderRadius:13, fontSize:12, fontWeight:700, cursor:'pointer',
-    boxShadow:'0 4px 16px rgba(139,92,246,0.38)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
+    boxShadow:'0 4px 16px rgba(200,123,82,0.38)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
   progressBar: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:14,
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(0,0,0,0.04)' },
   empty: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20, padding:'48px 32px',
@@ -1248,7 +1248,7 @@ function TenueCard({ tenue }) {
       <div style={st.tenueInfo}>
         <div style={st.tenueTitre}>▸ {tenue.titre}</div>
         <div style={st.tenueDesc}>{tenue.description}</div>
-        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#a78bfa" /> {tenue.pourquoi}</div>
+        <div style={{...st.tenuePourquoi, display:'flex', alignItems:'center', gap:5}}><LightbulbIcon size={13} color="#E8A07A" /> {tenue.pourquoi}</div>
       </div>
     </div>
   )
@@ -1325,21 +1325,21 @@ const st = {
   trigger: { width:'100%', display:'flex', alignItems:'center', gap:14, padding:'16px',
     background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:18, cursor:'pointer',
     fontFamily:"'Inter',system-ui,sans-serif", boxShadow:'0 2px 12px rgba(0,0,0,0.05)', marginBottom:2 },
-  triggerIcon: { width:48, height:48, background:'linear-gradient(135deg,rgba(175,82,222,0.12),rgba(175,82,222,0.06))',
-    border:'1.5px solid rgba(175,82,222,0.2)', borderRadius:14,
+  triggerIcon: { width:48, height:48, background:'linear-gradient(135deg,rgba(200,123,82,0.12),rgba(200,123,82,0.06))',
+    border:'1.5px solid rgba(200,123,82,0.2)', borderRadius:14,
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
   panel: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:16, padding:14, marginTop:4,
     boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
-  meteoBar: { background:'rgba(139,92,246,0.06)', borderRadius:10, padding:'8px 14px',
-    fontSize:12, marginBottom:12, color:'#8b5cf6', fontWeight:600, border:'1px solid rgba(139,92,246,0.16)' },
+  meteoBar: { background:'rgba(200,123,82,0.06)', borderRadius:10, padding:'8px 14px',
+    fontSize:12, marginBottom:12, color:'#C87B52', fontWeight:600, border:'1px solid rgba(200,123,82,0.16)' },
   row: { display:'flex', gap:8, marginBottom:12 },
   input: { flex:1, padding:'10px 14px', borderRadius:12, border:'1px solid #e5e7eb',
     background:'#f9fafb', fontSize:13, fontFamily:"'Inter',system-ui,sans-serif", outline:'none', color:'#1a0a00' },
   select: { padding:'10px 12px', borderRadius:12, border:'1px solid #e5e7eb',
     background:'#f9fafb', fontSize:12, fontFamily:"'Inter',system-ui,sans-serif", outline:'none', color:'#1a0a00' },
-  btn: { padding:'10px 16px', background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', color:'#fff',
+  btn: { padding:'10px 16px', background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff',
     border:'none', borderRadius:12, fontSize:16, fontWeight:700, cursor:'pointer',
-    fontFamily:"'Inter',system-ui,sans-serif", boxShadow:'0 4px 12px rgba(139,92,246,0.35)' },
+    fontFamily:"'Inter',system-ui,sans-serif", boxShadow:'0 4px 12px rgba(200,123,82,0.35)' },
   grid: { display:'flex', gap:12, flexWrap:'wrap', marginTop:10 },
   tenueCard: { flex:'1 1 160px', background:'#ffffff', border:'1px solid #f0e8e0',
     borderRadius:16, overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' },
@@ -1348,7 +1348,7 @@ const st = {
     justifyContent:'center', color:'#c4b5a8', fontSize:12, textAlign:'center', padding:10 },
   img: { width:'100%', height:200, objectFit:'cover', display:'block' },
   tenueInfo: { padding:'12px 12px' },
-  tenueTitre: { fontWeight:700, color:'#8b5cf6', fontSize:13, marginBottom:5 },
+  tenueTitre: { fontWeight:700, color:'#C87B52', fontSize:13, marginBottom:5 },
   tenueDesc: { fontSize:12, color:'#8a7265', lineHeight:1.6, marginBottom:5 },
   tenuePourquoi: { fontSize:11, color:'#c4b5a8', fontStyle:'italic' },
 }
@@ -1374,7 +1374,7 @@ const s = {
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
     /* Géré par ShinyLogoText — statique par défaut, shimmer au hover/tap */
-    background:'linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)',
+    background:'linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
@@ -1394,10 +1394,10 @@ const s = {
   },
   navActive: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
-    border:'none', background:'rgba(139,92,246,0.07)',
-    cursor:'pointer', fontFamily:F, color:'#8b5cf6', fontWeight:700,
+    border:'none', background:'rgba(200,123,82,0.07)',
+    cursor:'pointer', fontFamily:F, color:'#C87B52', fontWeight:700,
     textAlign:'left', width:'100%', fontSize:13, transition:'all .2s',
-    boxShadow:'inset 0 0 0 1.5px rgba(139,92,246,0.18)',
+    boxShadow:'inset 0 0 0 1.5px rgba(200,123,82,0.18)',
   },
   profileCard: {
     display:'flex', alignItems:'center', gap:10,
@@ -1406,21 +1406,21 @@ const s = {
   },
   avatar: {
     width:36, height:36, borderRadius:10,
-    background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
+    background:'linear-gradient(135deg,#C87B52,#E8A07A)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
-    boxShadow:'0 4px 12px rgba(139,92,246,.35)',
+    boxShadow:'0 4px 12px rgba(200,123,82,.35)',
   },
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', color:'#fff', border:'none',
+    background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff', border:'none',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 6px 20px rgba(139,92,246,.35)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 6px 20px rgba(200,123,82,.35)', textAlign:'center',
   },
   proBadge: {
-    background:'rgba(139,92,246,.08)', color:'#8b5cf6',
-    border:'1px solid rgba(139,92,246,.22)',
+    background:'rgba(200,123,82,.08)', color:'#C87B52',
+    border:'1px solid rgba(200,123,82,.22)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
@@ -1442,7 +1442,7 @@ const s = {
     background:'rgba(255,255,250,0.88)',
     backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
     position:'sticky', top:0, zIndex:40,
-    boxShadow:'0 2px 20px rgba(139,92,246,.06)',
+    boxShadow:'0 2px 20px rgba(200,123,82,.06)',
   },
   backBtn: {
     width:36, height:36, borderRadius:12,
@@ -1481,10 +1481,10 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'linear-gradient(145deg,#8b5cf6,#6d28d9)', color:'#fff',
+    background:'linear-gradient(145deg,#C87B52,#9E5C35)', color:'#fff',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
-    boxShadow:'0 8px 28px rgba(139,92,246,.38), inset 0 1px 0 rgba(255,255,255,.2)',
+    boxShadow:'0 8px 28px rgba(200,123,82,.38), inset 0 1px 0 rgba(255,255,255,.2)',
   },
   botBubble: {
     background:'#ffffff', border:'1px solid #f0e8e0', color:'#1a0a00',
@@ -1496,12 +1496,12 @@ const s = {
     background:'transparent', color:'#1a0a00',
     padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.75,
   },
-  botAvatar: { fontSize:16, color:'#8b5cf6', marginTop:10, flexShrink:0, fontWeight:900 },
+  botAvatar: { fontSize:16, color:'#C87B52', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
   suggestion: {
-    background:'#ffffff', border:'1px solid rgba(139,92,246,.20)', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'#8b5cf6', cursor:'pointer',
+    background:'#ffffff', border:'1px solid rgba(200,123,82,.20)', borderRadius:20,
+    padding:'7px 14px', fontSize:12, color:'#C87B52', cursor:'pointer',
     fontFamily:F, fontWeight:600, boxShadow:'0 1px 6px rgba(0,0,0,.04)',
   },
 
@@ -1513,10 +1513,10 @@ const s = {
   },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'#1a0a00' },
   sendBtn: {
-    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)', border:'none',
+    background:'linear-gradient(135deg,#C87B52,#9E5C35)', border:'none',
     width:42, height:42, borderRadius:14, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-    boxShadow:'0 4px 16px rgba(139,92,246,.40)',
+    boxShadow:'0 4px 16px rgba(200,123,82,.40)',
   },
 
   // ── Bottom nav ────────────────────────────────────────────────────────────────
@@ -1532,5 +1532,5 @@ const s = {
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
     fontFamily:F, color:'#c4b5a8', position:'relative', transition:'color .2s',
   },
-  navBotActive: { color:'#8b5cf6' },
+  navBotActive: { color:'#C87B52' },
 }
