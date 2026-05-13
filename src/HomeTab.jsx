@@ -1,58 +1,68 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
-// ─── ANIMATED LIQUID BACKGROUND — yellow · orange · teal ─────────────────────
+// ─── ANIMATED LIQUID BACKGROUND — yellow dominant · orange · teal accents ─────
 function FuturisticBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden', background:'#ffffff' }}>
 
-      {/* ── Soft yellow glow — center, multiply ── */}
+      {/* ══ LAYER 1 — Soft Yellow Glow (dominant, centré) ══
+           Inspiré du background-components fourni :
+           radial-gradient(circle at center, #FFF991 0%, transparent 70%) · opacity 0.6 · multiply */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
-        opacity:0.62, mixBlendMode:'multiply',
-        willChange:'transform, border-radius',
+        backgroundImage:'radial-gradient(circle at 50% 50%, #FFF991 0%, transparent 70%)',
+        opacity:0.62,
+        mixBlendMode:'multiply',
         animation:'liquidBlob3 14s ease-in-out infinite',
       }} />
 
-      {/* ── Orange glow — slightly off-center, multiply ── */}
+      {/* ══ LAYER 2 — Orange Soft Glow (centré, dominant secondaire) ══
+           Inspiré du demo.tsx fourni :
+           radial-gradient(circle at center, #FF7112, transparent) · opacity 0.3 · multiply */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
-        opacity:0.20, mixBlendMode:'multiply',
-        willChange:'transform, border-radius',
+        backgroundImage:'radial-gradient(circle at 50% 50%, #FF7112 0%, transparent 65%)',
+        opacity:0.30,
+        mixBlendMode:'multiply',
         animation:'liquidBlob1 18s ease-in-out infinite reverse',
       }} />
 
-      {/* ── Teal glow — haut-droite ── */}
+      {/* ══ LAYER 3 — Deuxième jaune chaud en mouvement (breathing) ══ */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(56,193,182,0.55) 0%, transparent 58%)',
-        filter:'blur(72px)',
-        willChange:'transform, border-radius',
+        backgroundImage:'radial-gradient(circle at 45% 55%, #FFF991 0%, transparent 55%)',
+        opacity:0.35,
+        mixBlendMode:'multiply',
+        animation:'liquidBlob4 11s ease-in-out infinite 1.5s',
+      }} />
+
+      {/* ══ LAYER 4 — Orange doux bas-droite (chaleur périphérique) ══ */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 80% 78%, rgba(255,113,18,0.38) 0%, transparent 52%)',
+        filter:'blur(48px)',
+        animation:'liquidBlob3 13s ease-in-out infinite 2s',
+      }} />
+
+      {/* ══ LAYER 5 — Teal accent discret haut-droite ══ */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 90% 6%, rgba(56,193,182,0.38) 0%, transparent 48%)',
+        filter:'blur(68px)',
         animation:'liquidBlob2 16s ease-in-out infinite',
       }} />
 
-      {/* ── Teal glow — bas-gauche ── */}
+      {/* ══ LAYER 6 — Teal accent discret bas-gauche ══ */}
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(56,193,182,0.42) 0%, transparent 52%)',
-        filter:'blur(64px)',
-        willChange:'transform, border-radius',
+        backgroundImage:'radial-gradient(circle at 6% 92%, rgba(56,193,182,0.28) 0%, transparent 44%)',
+        filter:'blur(60px)',
         animation:'liquidBlob4 20s ease-in-out infinite reverse',
       }} />
 
-      {/* ── Deuxième orange doux — bas-droite ── */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 82% 80%, rgba(255,180,80,0.28) 0%, transparent 50%)',
-        filter:'blur(50px)',
-        willChange:'transform, border-radius',
-        animation:'liquidBlob3 11s ease-in-out infinite 2s',
-      }} />
-
-      {/* Dot grid discret */}
-      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.022 }}>
+      {/* Dot grid teal très discret */}
+      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.018 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
             <circle cx="2" cy="2" r="1.4" fill="#38c1b6"/>
