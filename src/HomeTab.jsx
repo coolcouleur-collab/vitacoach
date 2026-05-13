@@ -63,35 +63,65 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         {/* ── Nova Glow Ring ── */}
         <div style={hc.circleWrap}>
 
-          {/* Aurora halos — subtle, behind ring */}
+          {/* ── Aurora clouds : 3 blobs colorés respirants ── */}
           <div style={{
-            position:'absolute', inset:-50, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(circle at center, rgba(167,139,250,0.22) 0%, rgba(56,189,248,0.12) 40%, transparent 65%)',
-            animation:'novaBreath 3.5s ease-in-out infinite', filter:'blur(14px)',
+            position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 28% 28%, rgba(255,107,53,0.38) 0%, transparent 52%)',
+            animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)',
           }} />
           <div style={{
-            position:'absolute', inset:-24, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(circle, rgba(255,107,53,0.14) 0%, transparent 55%)',
-            animation:'novaBreath 3.5s ease-in-out infinite 0.9s',
+            position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 72% 72%, rgba(167,139,250,0.34) 0%, transparent 52%)',
+            animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)',
+          }} />
+          <div style={{
+            position:'absolute', inset:-70, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 15% 70%, rgba(56,189,248,0.28) 0%, transparent 48%)',
+            animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(18px)',
           }} />
 
-          {/* Spinning conic gradient ring */}
+          {/* ── Glow copy : même gradient mais blurré, halo ── */}
+          <div style={{
+            position:'absolute', inset:-6, borderRadius:'50%', pointerEvents:'none',
+            background:'conic-gradient(from 0deg, #FF6B35 0deg, transparent 50deg, #a78bfa 100deg, transparent 150deg, #38bdf8 205deg, transparent 255deg, #fbbf24 305deg, transparent 350deg, #FF6B35 360deg)',
+            animation:'novaSpin 5s linear infinite',
+            filter:'blur(10px)',
+            opacity:0.75,
+          }} />
+
+          {/* ── Anneau principal segmenté (arcs + gaps transparents) ── */}
           <div style={{
             position:'absolute', inset:0, borderRadius:'50%', pointerEvents:'none',
-            background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 28%, #38bdf8 52%, #fbbf24 74%, #FF6B35 100%)',
-            animation:'novaSpin 6s linear infinite',
+            background:'conic-gradient(from 0deg, #FF6B35 0deg, #FF9A3C 22deg, transparent 48deg, #a78bfa 102deg, #8b5cf6 128deg, transparent 154deg, #38bdf8 208deg, #06b6d4 232deg, transparent 258deg, #fbbf24 308deg, #f59e0b 326deg, transparent 348deg, #FF6B35 360deg)',
+            animation:'novaSpin 5s linear infinite',
           }}>
-            {/* White/beige glass center — creates ring effect */}
-            <div style={{ position:'absolute', inset:7, borderRadius:'50%', background:'rgba(248,248,246,0.97)', backdropFilter:'blur(8px)' }} />
+            {/* Centre verre blanc */}
+            <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(248,248,246,0.98)', backdropFilter:'blur(4px)' }} />
           </div>
 
-          {/* Inner fine ring */}
+          {/* ── Comète 1 : arc brillant qui orbite (même vitesse = fixe sur l'anneau) ── */}
           <div style={{
-            position:'absolute', inset:14, borderRadius:'50%', pointerEvents:'none',
-            border:'1px solid rgba(0,0,0,0.05)',
+            position:'absolute', inset:-1, borderRadius:'50%', pointerEvents:'none',
+            background:'conic-gradient(from 0deg, transparent 0%, transparent 82%, rgba(255,255,255,0.0) 85%, rgba(255,255,255,1) 90%, rgba(255,220,180,0.8) 93%, transparent 97%, transparent 100%)',
+            animation:'novaSpin 5s linear infinite',
+            filter:'blur(1px)',
           }} />
 
-          {/* Score text — non-rotating, centered */}
+          {/* ── Comète 2 : contre-rotation plus lente ── */}
+          <div style={{
+            position:'absolute', inset:2, borderRadius:'50%', pointerEvents:'none',
+            background:'conic-gradient(from 180deg, transparent 0%, transparent 88%, rgba(200,180,255,0.9) 92%, transparent 96%)',
+            animation:'novaSpin 8s linear infinite reverse',
+            filter:'blur(1.5px)',
+          }} />
+
+          {/* ── Anneau intérieur fin ── */}
+          <div style={{
+            position:'absolute', inset:16, borderRadius:'50%', pointerEvents:'none',
+            border:'1px solid rgba(0,0,0,0.04)',
+          }} />
+
+          {/* ── Score texte — fixe, centré ── */}
           <div style={{
             position:'absolute', inset:0, zIndex:2, pointerEvents:'none',
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
@@ -784,7 +814,8 @@ const hc = {
   greetNameAccent: { background:'linear-gradient(135deg,#FF6B35,#FF9A3C)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:248, height:248,
-    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 },
+    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20,
+    animation:'novaFloat 7s ease-in-out infinite' },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
     background:'linear-gradient(145deg, #FF6B35, #E55A00)',

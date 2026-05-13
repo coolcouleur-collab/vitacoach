@@ -741,8 +741,13 @@ export default function App() {
           to { transform: rotate(360deg); }
         }
         @keyframes novaBreath {
-          0%,100% { transform: scale(1); opacity: 0.7; }
-          50%      { transform: scale(1.10); opacity: 1; }
+          0%,100% { transform: scale(1) translateZ(0); opacity: 0.65; }
+          50%      { transform: scale(1.14) translateZ(0); opacity: 1; }
+        }
+        @keyframes novaFloat {
+          0%,100% { transform: translateY(0px) scale(1); }
+          33%      { transform: translateY(-6px) scale(1.02); }
+          66%      { transform: translateY(3px) scale(0.99); }
         }
         @keyframes meshGrad {
           0%,100% { background-position: 0% 50%; }
