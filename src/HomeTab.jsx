@@ -884,128 +884,148 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
   )
 }
 
-// ─── SWIPEABLE INSIGHT CARDS ─────────────────────────────────────────────────
+// ─── EXPANDED MASK INSIGHTS — horizontal accordion strip ─────────────────────
 function SwipeableInsights({ profil, metriques, onChat }) {
-  const [idx, setIdx] = useState(0)
-  const [drag, setDrag] = useState(0)
-  const [active, setActive] = useState(false)
-  const startRef = useRef(0)
-  const THRESH = 68
+  const [activeIdx, setActiveIdx] = useState(0)
 
   const h = new Date().getHours()
   const cards = [
     h < 10
-      ? { icon:<SunIcon size={20} color="#8b5cf6" />, title:'Débute bien ta journée', body:'1 verre d\'eau au réveil + 5 min de lumière naturelle active le métabolisme immédiatement.', action:'Conseils matin', from:'#8b5cf6', to:'#a78bfa', bg:'#FFF3EE' }
+      ? { icon:<SunIcon size={20} color="#8b5cf6" />,   title:'Débute bien ta journée',  body:"1 verre d'eau au réveil + 5 min de lumière naturelle active le métabolisme immédiatement.", action:'Conseils matin',       from:'#8b5cf6', to:'#a78bfa', bg:'#F7F3FF' }
       : h < 14
-      ? { icon:<FoodIcon size={20} color="#34c759" />, title:'Repas de midi équilibré', body:'Protéines + légumes + glucides lents. Évite les sucres rapides qui te fatiguent l\'après-midi.', action:'Idées repas', from:'#34c759', to:'#86efac', bg:'#EDFFF3' }
+      ? { icon:<FoodIcon size={20} color="#16a34a" />,   title:'Repas de midi équilibré', body:"Protéines + légumes + glucides lents. Évite les sucres rapides qui te fatiguent l'après-midi.", action:'Idées repas',        from:'#16a34a', to:'#4ade80', bg:'#F0FDF4' }
       : h < 18
-      ? { icon:<FlashIcon size={20} color="#fbbf24" />, title:'Regain d\'énergie', body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.', action:'Me remotiver', from:'#fbbf24', to:'#fde68a', bg:'#FFFBEC' }
-      : { icon:<MoonIcon size={20} color="#a78bfa" />, title:'Prépare ton sommeil', body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.', action:'Routine soir', from:'#a78bfa', to:'#c4b5fd', bg:'#F5F0FF' },
+      ? { icon:<FlashIcon size={20} color="#d97706" />,  title:'Regain d\'énergie',       body:'10 min de marche = autant d\'énergie qu\'un café, sans le crash post-caféine.',              action:'Me remotiver',        from:'#d97706', to:'#fbbf24', bg:'#FFFBEB' }
+      : { icon:<MoonIcon size={20} color="#7c3aed" />,   title:'Prépare ton sommeil',     body:'Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l\'obscurité.',       action:'Routine soir',        from:'#7c3aed', to:'#a78bfa', bg:'#F5F3FF' },
     {
-      icon:<WaterIcon size={20} color="#38bdf8" />,
-      title: (metriques?.eau||0) >= 4 ? 'Hydratation OK !' : 'Bois de l\'eau',
+      icon:<WaterIcon size={20} color="#0284c7" />,
+      title: (metriques?.eau||0) >= 4 ? 'Hydratation OK !' : "Bois de l'eau",
       body: (metriques?.eau||0) > 0
         ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Un verre maintenant !' : 'Continue comme ça !'}`
-        : 'Objectif : 8 verres/jour. Commence maintenant — pose un grand verre devant toi.',
-      action:'Mettre à jour', from:'#38bdf8', to:'#7dd3fc', bg:'#EFF9FF',
+        : "Objectif : 8 verres/jour. Commence maintenant — pose un grand verre devant toi.",
+      action:'Mettre à jour', from:'#0284c7', to:'#38bdf8', bg:'#F0F9FF',
     },
-    profil?.objectifs?.[0] ? {
-      icon:<TargetIcon size={20} color="#8b5cf6" />,
-      title: profil.objectifs[0],
-      body:'Chaque petite action compte. Qu\'est-ce que tu peux faire concrètement aujourd\'hui ?',
-      action:'Conseils personnalisés', from:'#8b5cf6', to:'#a78bfa', bg:'#FFF3EE',
-    } : null,
-    { icon:<LeafIcon size={20} color="#34c759" />, title:'Santé naturelle', body:'Plantes, tisanes et techniques holistiques adaptées à ton profil et tes objectifs.', action:'herbal', from:'#34c759', to:'#86efac', bg:'#EDFFF3' },
-    { icon:<MeditateIcon size={20} color="#a78bfa" />, title:'Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement. Inspire 5s, expire 5s.', action:'En savoir plus', from:'#a78bfa', to:'#c4b5fd', bg:'#F5F0FF' },
-  ].filter(Boolean)
+    { icon:<LeafIcon size={20} color="#15803d" />, title:'Santé naturelle', body:'Plantes, tisanes et techniques holistiques adaptées à ton profil et tes objectifs.', action:'herbal', from:'#15803d', to:'#4ade80', bg:'#F0FDF4' },
+    { icon:<MeditateIcon size={20} color="#7c3aed" />, title:'Respiration 5-5', body:'2 min de cohérence cardiaque réduisent le cortisol de 20% immédiatement. Inspire 5s, expire 5s.', action:'En savoir plus', from:'#7c3aed', to:'#a78bfa', bg:'#F5F3FF' },
+  ].filter(Boolean).slice(0, 4)
 
-  function onDown(x) { startRef.current = x; setActive(true) }
-  function onMove(x) { if (active) setDrag(x - startRef.current) }
-  function onUp() {
-    if (!active) return
-    setActive(false)
-    if (drag < -THRESH && idx < cards.length - 1) setIdx(i => i + 1)
-    else if (drag > THRESH && idx > 0) setIdx(i => i - 1)
-    setDrag(0)
+  function handleAction(e, c) {
+    e.stopPropagation()
+    if (c.action === 'herbal')        onChat('herbal')
+    else if (c.action === 'Mettre à jour') onChat('sante')
+    else                               onChat(c.action)
   }
 
   return (
     <div style={{ padding:'8px 18px 0' }}>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
+      {/* Header */}
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
         <span style={hc.cardsTitle}>Insights du jour</span>
-        <span style={{ fontSize:12, color:'#8b5cf6', fontWeight:700,
-          background:'rgba(139,92,246,0.10)', padding:'3px 12px', borderRadius:20,
-          boxShadow:'0 2px 8px rgba(139,92,246,0.15)' }}>
-          {idx + 1} / {cards.length}
+        <span style={{ fontSize:11, color:'#8b5cf6', fontWeight:700,
+          background:'rgba(139,92,246,0.10)', padding:'3px 12px', borderRadius:20 }}>
+          {activeIdx + 1} / {cards.length}
         </span>
       </div>
 
-      {/* Card stack */}
-      <div style={{ position:'relative', height:208, userSelect:'none', touchAction: active ? 'none' : 'pan-y' }}>
+      {/* ── ExpandedMask strip ── */}
+      <div style={{ display:'flex', gap:8, height:210 }}>
         {cards.map((c, i) => {
-          const offset = i - idx
-          if (offset < 0 || offset > 2) return null
-          const isFront = offset === 0
-          const tx = isFront ? drag : 0
-          const rot = isFront ? drag / 22 : 0
-          const scale = 1 - offset * 0.045
-          const ty = offset * 16
+          const isActive = i === activeIdx
           return (
-            <div key={i}
+            <div
+              key={i}
+              onClick={() => setActiveIdx(i)}
               style={{
-                position:'absolute', inset:0, borderRadius:28,
+                position:'relative',
+                borderRadius:24,
+                overflow:'hidden',
+                cursor:'pointer',
                 background: c.bg,
                 border:`1.5px solid ${c.from}30`,
-                padding:'20px 18px 16px',
-                boxShadow:`0 ${8+offset*4}px ${20+offset*14}px ${c.from}${isFront?'32':'18'}`,
-                transform:`perspective(900px) translateX(${tx}px) rotate(${rot}deg) scale(${scale}) translateY(${ty}px)`,
-                transformOrigin:'bottom center',
-                zIndex: cards.length - offset,
-                transition: active && isFront ? 'none' : 'transform 0.38s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease',
-                cursor: isFront ? (active ? 'grabbing' : 'grab') : 'default',
-                pointerEvents: isFront ? 'auto' : 'none',
-                overflow:'hidden',
-              }}
-              onMouseDown={isFront ? e => onDown(e.clientX) : null}
-              onMouseMove={isFront ? e => onMove(e.clientX) : null}
-              onMouseUp={isFront ? onUp : null}
-              onMouseLeave={isFront ? onUp : null}
-              onTouchStart={isFront ? e => onDown(e.touches[0].clientX) : null}
-              onTouchMove={isFront ? e => onMove(e.touches[0].clientX) : null}
-              onTouchEnd={isFront ? onUp : null}
-            >
-              {/* Color bar */}
-              <div style={{ position:'absolute', top:0, left:0, right:0, height:4,
-                background:`linear-gradient(90deg,${c.from},${c.to})`, borderRadius:'28px 28px 0 0' }} />
-              {/* Swipe hint (first card only, first visit) */}
-              {isFront && idx === 0 && Math.abs(drag) < 5 && (
-                <div style={{ position:'absolute', top:'50%', right:14, transform:'translateY(-50%)',
-                  opacity:0.3, fontSize:20, animation:'swipeHint 2s ease-in-out infinite',
-                  pointerEvents:'none' }}>›</div>
+                /* ── Expanding mask : flex transition ── */
+                flex: isActive ? '1 0 0' : '0 0 46px',
+                transition:'flex 0.54s cubic-bezier(0.25,0,0,1), box-shadow 0.35s ease',
+                boxShadow: isActive
+                  ? `0 10px 32px ${c.from}22, inset 0 1px 0 rgba(255,255,255,0.95)`
+                  : '0 2px 8px rgba(0,0,0,0.05)',
+              }}>
+
+              {/* Top gradient bar */}
+              <div style={{
+                position:'absolute', top:0, left:0, right:0, height:3,
+                background:`linear-gradient(90deg,${c.from},${c.to})`,
+                borderRadius:'24px 24px 0 0',
+              }} />
+
+              {/* ── ACTIVE — full content ── */}
+              {isActive && (
+                <div style={{
+                  padding:'20px 18px 16px',
+                  height:'100%', display:'flex', flexDirection:'column',
+                  animation:'tabFade 0.26s ease both',
+                  minWidth:0,
+                }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:9, marginBottom:10, marginTop:4 }}>
+                    <div style={{
+                      width:36, height:36, borderRadius:11, flexShrink:0,
+                      background:`${c.from}18`, border:`1px solid ${c.from}28`,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                    }}>{c.icon}</div>
+                    <div style={{
+                      fontSize:14, fontWeight:800, color:'#111',
+                      letterSpacing:'-0.02em', lineHeight:1.3,
+                      whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
+                    }}>{c.title}</div>
+                  </div>
+                  <div style={{
+                    fontSize:12.5, color:'#555', lineHeight:1.70, flex:1,
+                    overflow:'hidden', display:'-webkit-box',
+                    WebkitLineClamp:4, WebkitBoxOrient:'vertical',
+                  }}>{c.body}</div>
+                  <button
+                    onClick={e => handleAction(e, c)}
+                    style={{
+                      display:'inline-flex', alignItems:'center', gap:5, marginTop:12,
+                      fontSize:11, fontWeight:800, color:c.from, alignSelf:'flex-start',
+                      background:`${c.from}18`, padding:'7px 14px', borderRadius:12,
+                      border:`1px solid ${c.from}25`, cursor:'pointer',
+                      fontFamily:"'Inter',system-ui,sans-serif",
+                    }}>
+                    {c.action === 'herbal' ? 'Voir Herbal →' : c.action + ' →'}
+                  </button>
+                </div>
               )}
-              <div style={{ display:'flex', alignItems:'center', gap:9, marginBottom:10, marginTop:4 }}>
-                {c.icon}
-                <div style={{ fontSize:14, fontWeight:800, color:'#111', letterSpacing:'-0.02em', lineHeight:1.3 }}>{c.title}</div>
-              </div>
-              <div style={{ fontSize:13, color:'#555', lineHeight:1.68, marginBottom:13 }}>{c.body}</div>
-              <button
-                onClick={e => { e.stopPropagation(); if (c.action === 'herbal') onChat('herbal'); else if (c.action === 'Mettre à jour') onChat('sante'); else onChat(c.action) }}
-                style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:11, fontWeight:800, color:c.from,
-                  background:`${c.from}18`, padding:'6px 13px', borderRadius:12, border:'none', cursor:'pointer',
-                  fontFamily:"'Inter',system-ui,sans-serif", transition:'background 0.2s' }}>
-                {c.action === 'herbal' ? 'Voir Herbal →' : c.action + ' →'}
-              </button>
+
+              {/* ── INACTIVE — icon + pulse dot ── */}
+              {!isActive && (
+                <div style={{
+                  height:'100%', display:'flex', flexDirection:'column',
+                  alignItems:'center', justifyContent:'center', gap:10, paddingTop:6,
+                }}>
+                  <div style={{
+                    width:34, height:34, borderRadius:11,
+                    background:`${c.from}1A`, border:`1px solid ${c.from}35`,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+                  }}>{c.icon}</div>
+                  <div style={{
+                    width:5, height:5, borderRadius:'50%',
+                    background:c.from, opacity:0.45,
+                    animation:'dotPulse 2.2s ease-in-out infinite',
+                  }} />
+                </div>
+              )}
             </div>
           )
         })}
       </div>
 
-      {/* Dot indicators */}
-      <div style={{ display:'flex', justifyContent:'center', gap:6, marginTop:16, marginBottom:4 }}>
-        {cards.map((_, i) => (
-          <div key={i} onClick={() => setIdx(i)} style={{
-            height:6, width: i === idx ? 22 : 6, borderRadius:3,
-            background: i === idx ? '#8b5cf6' : 'rgba(0,0,0,0.12)',
+      {/* Bottom nav dots */}
+      <div style={{ display:'flex', justifyContent:'center', gap:6, marginTop:14, marginBottom:4 }}>
+        {cards.map((c, i) => (
+          <div key={i} onClick={() => setActiveIdx(i)} style={{
+            height:5, width: i === activeIdx ? 20 : 5, borderRadius:3,
+            background: i === activeIdx ? cards[activeIdx].from : 'rgba(0,0,0,0.11)',
             transition:'all 0.32s cubic-bezier(0.34,1.56,0.64,1)',
             cursor:'pointer',
           }} />
