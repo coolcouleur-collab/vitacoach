@@ -18,9 +18,10 @@ jobs:
             set -e
             cd /home/ubuntu/vitacoach
             echo "📦 Node $(node --version) | npm $(npm --version)"
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             echo "🔨 Build en cours..."
             npm run build
             echo "✅ Build OK"
             pm2 restart oravia
-            echo "🚀 Déployé avec succès !"
+            echo "🚀 Déployé !"
