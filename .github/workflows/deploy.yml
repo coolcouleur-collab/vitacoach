@@ -8,21 +8,5 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy sur le VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: 152.228.131.218
-          username: ubuntu
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            set -e
-            cd /home/ubuntu/vitacoach
-            echo "📦 Node $(node --version) | npm $(npm --version)"
-            git fetch origin main
-            git reset --hard origin/main
-            echo "🔍 Commit: $(git log --oneline -1)"
-            npm install
-            NODE_OPTIONS="--max-old-space-size=512" npm run build
-            echo "✅ Build OK"
-            pm2 restart oravia
-            echo "🚀 Déployé !"
+      - name: Deploy via cron VPS
+        run: echo "✅ Push reçu — le cron job sur le VPS déploiera dans max 5 minutes."
