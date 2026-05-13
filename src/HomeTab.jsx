@@ -42,12 +42,20 @@ function FuturisticBg() {
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
 function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   const [mounted, setMounted] = useState(false)
+  const [activeMetric, setActiveMetric] = useState(null)
   useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
 
   const hour = new Date().getHours()
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
-  const glowColor = scoreColor || '#FF6B35'
+
+  const METRICS = [
+    { angle:-90, iconEl:<WaterIcon size={17} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
+    { angle:-18, iconEl:<RunIcon size={17} color="#FF6B35" />,   val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { angle: 54, iconEl:<MoonIcon size={17} color="#a78bfa" />,  val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
+    { angle:126, iconEl:<MoodIcon size={17} color="#fbbf24" />,  val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
+    { angle:198, iconEl:<HeartIcon size={17} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
+  ]
 
   return (
     <div style={hc.hero}>
@@ -63,7 +71,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         {/* ── Nova Glow Ring ── */}
         <div style={hc.circleWrap}>
 
-          {/* ── Aurora clouds : 3 blobs colorés respirants ── */}
+          {/* ── Aurora clouds : halos doux qui respirent (pas de rotation = pas d'artefact) ── */}
           <div style={{
             position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
             background:'radial-gradient(ellipse at 28% 28%, rgba(255,107,53,0.38) 0%, transparent 52%)',
@@ -80,46 +88,53 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(18px)',
           }} />
 
-          {/* ── Glow copy : même gradient mais blurré, halo ── */}
+          {/* ── Clip container : confine tous les éléments qui tournent dans le cercle ── */}
+          {/* ── Empêche les "gros traits" de déborder en dessous du nova ring ── */}
           <div style={{
-            position:'absolute', inset:-6, borderRadius:'50%', pointerEvents:'none',
-            background:'conic-gradient(from 0deg, #FF6B35 0deg, transparent 50deg, #a78bfa 100deg, transparent 150deg, #38bdf8 205deg, transparent 255deg, #fbbf24 305deg, transparent 350deg, #FF6B35 360deg)',
-            animation:'novaSpin 5s linear infinite',
-            filter:'blur(10px)',
-            opacity:0.75,
-          }} />
-
-          {/* ── Anneau principal segmenté (arcs + gaps transparents) ── */}
-          <div style={{
-            position:'absolute', inset:0, borderRadius:'50%', pointerEvents:'none',
-            background:'conic-gradient(from 0deg, #FF6B35 0deg, #FF9A3C 22deg, transparent 48deg, #a78bfa 102deg, #8b5cf6 128deg, transparent 154deg, #38bdf8 208deg, #06b6d4 232deg, transparent 258deg, #fbbf24 308deg, #f59e0b 326deg, transparent 348deg, #FF6B35 360deg)',
-            animation:'novaSpin 5s linear infinite',
+            position:'absolute', inset:0, borderRadius:'50%', overflow:'hidden', pointerEvents:'none',
           }}>
-            {/* Centre verre blanc */}
-            <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(248,248,246,0.98)', backdropFilter:'blur(4px)' }} />
+            {/* ── Glow copy : halo blurré derrière l'anneau (clippé au cercle) ── */}
+            <div style={{
+              position:'absolute', inset:-6, borderRadius:'50%',
+              background:'conic-gradient(from 0deg, #FF6B35 0deg, transparent 50deg, #a78bfa 100deg, transparent 150deg, #38bdf8 205deg, transparent 255deg, #fbbf24 305deg, transparent 350deg, #FF6B35 360deg)',
+              animation:'novaSpin 5s linear infinite',
+              filter:'blur(10px)', opacity:0.75,
+            }} />
+
+            {/* ── Anneau principal segmenté (arcs + gaps transparents) ── */}
+            <div style={{
+              position:'absolute', inset:0, borderRadius:'50%',
+              background:'conic-gradient(from 0deg, #FF6B35 0deg, #FF9A3C 22deg, transparent 48deg, #a78bfa 102deg, #8b5cf6 128deg, transparent 154deg, #38bdf8 208deg, #06b6d4 232deg, transparent 258deg, #fbbf24 308deg, #f59e0b 326deg, transparent 348deg, #FF6B35 360deg)',
+              animation:'novaSpin 5s linear infinite',
+            }}>
+              {/* Centre verre blanc */}
+              <div style={{ position:'absolute', inset:9, borderRadius:'50%', background:'rgba(248,248,246,0.98)', backdropFilter:'blur(4px)' }} />
+            </div>
+
+            {/* ── Comète 1 : interactive — se fige dès qu'un bouton est pressé ── */}
+            <div style={{
+              position:'absolute', inset:-1, borderRadius:'50%',
+              background:'conic-gradient(from 0deg, transparent 0%, transparent 82%, rgba(255,255,255,0.0) 85%, rgba(255,255,255,1) 90%, rgba(255,220,180,0.8) 93%, transparent 97%, transparent 100%)',
+              animation:'novaSpin 5s linear infinite',
+              animationPlayState: activeMetric ? 'paused' : 'running',
+              filter:'blur(1px)',
+            }} />
+
+            {/* ── Comète 2 : contre-rotation interactive ── */}
+            <div style={{
+              position:'absolute', inset:2, borderRadius:'50%',
+              background:'conic-gradient(from 180deg, transparent 0%, transparent 88%, rgba(200,180,255,0.9) 92%, transparent 96%)',
+              animation:'novaSpin 8s linear infinite reverse',
+              animationPlayState: activeMetric ? 'paused' : 'running',
+              filter:'blur(1.5px)',
+            }} />
+
+            {/* ── Anneau intérieur fin ── */}
+            <div style={{
+              position:'absolute', inset:16, borderRadius:'50%',
+              border:'1px solid rgba(0,0,0,0.04)',
+            }} />
           </div>
-
-          {/* ── Comète 1 : arc brillant qui orbite (même vitesse = fixe sur l'anneau) ── */}
-          <div style={{
-            position:'absolute', inset:-1, borderRadius:'50%', pointerEvents:'none',
-            background:'conic-gradient(from 0deg, transparent 0%, transparent 82%, rgba(255,255,255,0.0) 85%, rgba(255,255,255,1) 90%, rgba(255,220,180,0.8) 93%, transparent 97%, transparent 100%)',
-            animation:'novaSpin 5s linear infinite',
-            filter:'blur(1px)',
-          }} />
-
-          {/* ── Comète 2 : contre-rotation plus lente ── */}
-          <div style={{
-            position:'absolute', inset:2, borderRadius:'50%', pointerEvents:'none',
-            background:'conic-gradient(from 180deg, transparent 0%, transparent 88%, rgba(200,180,255,0.9) 92%, transparent 96%)',
-            animation:'novaSpin 8s linear infinite reverse',
-            filter:'blur(1.5px)',
-          }} />
-
-          {/* ── Anneau intérieur fin ── */}
-          <div style={{
-            position:'absolute', inset:16, borderRadius:'50%', pointerEvents:'none',
-            border:'1px solid rgba(0,0,0,0.04)',
-          }} />
 
           {/* ── Score texte — fixe, centré ── */}
           <div style={{
@@ -137,33 +152,37 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             </div>
           </div>
 
-          {/* Metric dots */}
-          {[
-            { angle:-90, iconEl:<WaterIcon size={17} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
-            { angle:-18, iconEl:<RunIcon size={17} color="#FF6B35" />,   val:metriques?.pas,     color:'#FF6B35', key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-            { angle: 54, iconEl:<MoonIcon size={17} color="#a78bfa" />,  val:metriques?.sommeil, color:'#a78bfa', key:'sommeil', fmt: v => v+'h' },
-            { angle:126, iconEl:<MoodIcon size={17} color="#fbbf24" />,  val:metriques?.humeur,  color:'#fbbf24', key:'humeur',  fmt: v => v+'/5' },
-            { angle:198, iconEl:<HeartIcon size={17} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
-          ].map(m => {
+          {/* ── Metric dots : pointer events pour contrôler les comètes ── */}
+          {METRICS.map(m => {
             const rad = (m.angle * Math.PI) / 180
             const x = 100 + 118 * Math.cos(rad)
             const y = 100 + 118 * Math.sin(rad)
             const filled = m.val > 0
+            const isActive = activeMetric === m.key
             return (
-              <button key={m.key} onClick={onLog} style={{
-                position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
-                borderRadius:15,
-                background: 'rgba(255,255,255,0.95)',
-                border:`1.5px solid ${filled ? m.color+'50' : 'rgba(0,0,0,0.08)'}`,
-                backdropFilter:'blur(14px)',
-                display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                gap:1.5, cursor:'pointer',
-                boxShadow: filled
-                  ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
-                  : '0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
-                fontFamily:"'Inter',system-ui,sans-serif",
-                transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-              }}>
+              <button key={m.key}
+                onClick={onLog}
+                onPointerDown={() => setActiveMetric(m.key)}
+                onPointerUp={() => setActiveMetric(null)}
+                onPointerLeave={() => setActiveMetric(null)}
+                onPointerCancel={() => setActiveMetric(null)}
+                style={{
+                  position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
+                  borderRadius:15,
+                  background: isActive ? `${m.color}15` : 'rgba(255,255,255,0.95)',
+                  border:`1.5px solid ${isActive ? m.color+'90' : filled ? m.color+'50' : 'rgba(0,0,0,0.08)'}`,
+                  backdropFilter:'blur(14px)',
+                  display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                  gap:1.5, cursor:'pointer',
+                  boxShadow: isActive
+                    ? `0 0 0 4px ${m.color}35, 0 0 24px ${m.color}70, inset 0 1px 0 rgba(255,255,255,1)`
+                    : filled
+                    ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
+                    : '0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+                  transform: isActive ? 'scale(0.88)' : 'scale(1)',
+                  fontFamily:"'Inter',system-ui,sans-serif",
+                  transition:'all 0.15s cubic-bezier(0.34,1.56,0.64,1)',
+                }}>
                 {filled && (
                   <div style={{
                     position:'absolute', top:-5, right:-5, width:14, height:14, borderRadius:'50%',
@@ -180,7 +199,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           })}
         </div>
 
-        {/* Log button — dark glass style */}
+        {/* Log button */}
         <NovaLogBtn onClick={onLog} />
       </div>
     </div>
