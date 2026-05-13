@@ -5,22 +5,38 @@ import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafI
 function FuturisticBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
+      {/* ── LiquidImage : filtre SVG feTurbulence qui morphe les blobs en forme liquide ── */}
+      <svg aria-hidden="true" style={{ position:'absolute', width:0, height:0, overflow:'hidden' }}>
+        <defs>
+          <filter id="liquidMorph" x="-40%" y="-40%" width="180%" height="180%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.007" numOctaves="3" seed="8" result="noise">
+              <animate attributeName="baseFrequency" dur="18s"
+                values="0.006 0.005;0.011 0.013;0.008 0.006;0.006 0.005"
+                repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
       <div style={{
         position:'absolute', inset:0,
         background:'linear-gradient(135deg, #FFF8F4 0%, #F5F0FF 45%, #EFF9FF 75%, #FFF8F4 100%)',
         backgroundSize:'400% 400%',
         animation:'meshGrad 10s ease infinite',
       }} />
-      {/* Orb orange */}
+      {/* Liquid orb orange — morphing */}
       <div style={{ position:'absolute', top:'-12%', right:'-6%', width:380, height:380,
         borderRadius:'50%',
         background:'radial-gradient(circle at 30% 30%, rgba(255,107,53,0.40), rgba(255,154,60,0.18), transparent 66%)',
-        animation:'floatOrb 8s ease-in-out infinite', filter:'blur(2px)' }} />
-      {/* Orb violet */}
+        animation:'floatOrb 8s ease-in-out infinite',
+        filter:'url(#liquidMorph) blur(3px)', willChange:'transform' }} />
+      {/* Liquid orb violet — morphing */}
       <div style={{ position:'absolute', bottom:'-10%', left:'-8%', width:320, height:320,
         borderRadius:'50%',
         background:'radial-gradient(circle, rgba(167,139,250,0.32), transparent 66%)',
-        animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(2px)' }} />
+        animation:'floatOrb 12s ease-in-out infinite reverse',
+        filter:'url(#liquidMorph) blur(3px)', willChange:'transform' }} />
       {/* Orb cyan */}
       <div style={{ position:'absolute', top:'40%', right:'6%', width:160, height:160,
         borderRadius:'50%',
@@ -253,6 +269,18 @@ function NovaLogBtn({ onClick }) {
 }
 
 // ─── MAGNETIC GLOW BUTTON (Quick Actions) ─────────────────────────────────────
+// Particles pré-calculées (Framer Button style) — stables entre les renders
+const GLOW_BTN_PARTICLES = [
+  { x:16, y:26, s:1.5, d:1.8, del:0.0 },
+  { x:76, y:16, s:1.0, d:2.1, del:0.4 },
+  { x:88, y:63, s:1.8, d:1.6, del:0.8 },
+  { x:26, y:79, s:1.2, d:2.3, del:1.2 },
+  { x:57, y:43, s:0.8, d:1.9, del:0.2 },
+  { x:92, y:34, s:1.4, d:2.0, del:0.6 },
+  { x:11, y:57, s:1.1, d:2.2, del:1.0 },
+  { x:68, y:83, s:1.3, d:1.7, del:0.35 },
+]
+
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
   const [spot, setSpot] = useState({ x:50, y:50 })
   const [hovered, setHovered] = useState(false)
@@ -293,6 +321,20 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
         backdropFilter:'blur(12px)',
         overflow:'hidden',
       }}>
+        {/* Floating particles (Framer Button style) */}
+        {GLOW_BTN_PARTICLES.map((p, i) => (
+          <div key={i} style={{
+            position:'absolute',
+            left:`${p.x}%`, top:`${p.y}%`,
+            width:`${p.s}px`, height:`${p.s}px`,
+            borderRadius:'50%',
+            background: from,
+            opacity: hovered ? 0.72 : 0.18,
+            animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
+            transition:'opacity 0.35s ease',
+            pointerEvents:'none',
+          }} />
+        ))}
         {/* Mouse spotlight */}
         <div style={{
           position:'absolute', inset:0, pointerEvents:'none',
@@ -324,10 +366,25 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
   )
 }
 
-// ─── METRIC RINGS (remplace ProgressStrip) ────────────────────────────────────
+// ─── METRIC RINGS (Glow Card + MagicBentoGrid 3D tilt) ───────────────────────
 function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
   const [anim, setAnim] = useState(false)
+  const [glowPos, setGlowPos] = useState({ x:50, y:50 })
+  const [glowing, setGlowing] = useState(false)
+  const [tilt, setTilt] = useState({ rx:0, ry:0 })
+  const cardRef = useRef()
+
   useEffect(() => { const t = setTimeout(() => setAnim(true), 120 + index * 90); return () => clearTimeout(t) }, [])
+
+  function onMouseMove(e) {
+    const r = cardRef.current?.getBoundingClientRect()
+    if (!r) return
+    setGlowPos({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
+    const dx = (e.clientX-r.left-r.width/2)/(r.width/2)
+    const dy = (e.clientY-r.top-r.height/2)/(r.height/2)
+    setTilt({ rx:-dy*14, ry:dx*14 })
+  }
+
   const R = 24
   const C = 2 * Math.PI * R
   const pct = Math.min((val / goal) * 100, 100)
@@ -335,52 +392,68 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
   const done = pct >= 100
 
   return (
-    <div style={{
-      flex:1, background:'#ffffff',
-      border:`1.5px solid ${val > 0 ? color+'30' : '#f0e8e0'}`,
-      borderRadius:22, padding:'14px 8px 12px',
-      boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.9)`,
-      display:'flex', flexDirection:'column', alignItems:'center', gap:6,
-      animation:`tabFade 0.4s ease ${index * 0.08}s both`,
-      transition:'box-shadow 0.3s ease',
-    }}>
-      {/* Ring SVG */}
-      <div style={{ position:'relative', width:60, height:60 }}>
-        <svg width={60} height={60} viewBox="0 0 60 60"
-          style={{ transform:'rotate(-90deg)', overflow:'visible' }}>
-          <circle cx="30" cy="30" r={R} fill="none"
-            stroke={color+'18'} strokeWidth="4.5"/>
-          <circle cx="30" cy="30" r={R} fill="none"
-            stroke={color} strokeWidth="4.5" strokeLinecap="round"
-            strokeDasharray={`${dash} ${C}`}
-            style={{
-              transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)',
-              filter: done
-                ? `drop-shadow(0 0 6px ${color})`
-                : `drop-shadow(0 0 3px ${color}80)`,
-            }}/>
-        </svg>
-        {/* Center icon/check */}
-        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-          {done
-            ? <span style={{ fontSize:16, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>
-            : iconEl}
+    /* ── Glow Card wrapper (Framer Glow-Card style) ── */
+    <div ref={cardRef}
+      onMouseMove={onMouseMove}
+      onMouseEnter={() => setGlowing(true)}
+      onMouseLeave={() => { setGlowing(false); setTilt({ rx:0, ry:0 }) }}
+      style={{
+        flex:1, position:'relative',
+        padding:'1.5px', borderRadius:22,
+        /* Glow border suit le curseur */
+        background: glowing
+          ? `radial-gradient(circle 220px at ${glowPos.x}% ${glowPos.y}%, ${color}65, ${color}22 42%, rgba(0,0,0,0.07) 68%)`
+          : 'rgba(0,0,0,0.07)',
+        animation:`tabFade 0.4s ease ${index * 0.08}s both`,
+        transition: glowing
+          ? 'background 0s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'
+          : 'background 0.5s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+        /* MagicBentoGrid 3D tilt */
+        transform:`perspective(500px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+        transformStyle:'preserve-3d',
+        willChange:'transform',
+      }}>
+      {/* Inner card — fond blanc */}
+      <div style={{
+        background:'#ffffff',
+        borderRadius:20.5, padding:'14px 8px 12px',
+        boxShadow:`0 6px 20px ${color}15, inset 0 1px 0 rgba(255,255,255,0.9)`,
+        display:'flex', flexDirection:'column', alignItems:'center', gap:6,
+        height:'100%', position:'relative', zIndex:1,
+        transition:'box-shadow 0.3s ease',
+      }}>
+        {/* Ring SVG */}
+        <div style={{ position:'relative', width:60, height:60 }}>
+          <svg width={60} height={60} viewBox="0 0 60 60"
+            style={{ transform:'rotate(-90deg)', overflow:'visible' }}>
+            <circle cx="30" cy="30" r={R} fill="none" stroke={color+'18'} strokeWidth="4.5"/>
+            <circle cx="30" cy="30" r={R} fill="none"
+              stroke={color} strokeWidth="4.5" strokeLinecap="round"
+              strokeDasharray={`${dash} ${C}`}
+              style={{
+                transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)',
+                filter: done ? `drop-shadow(0 0 6px ${color})` : `drop-shadow(0 0 3px ${color}80)`,
+              }}/>
+          </svg>
+          <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+            {done
+              ? <span style={{ fontSize:16, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>
+              : iconEl}
+          </div>
+          {done && (
+            <div style={{
+              position:'absolute', inset:-6, borderRadius:'50%',
+              border:`2px solid ${color}40`,
+              animation:'scoreGlow 2s ease-in-out infinite',
+              pointerEvents:'none',
+            }} />
+          )}
         </div>
-        {/* Completed pulse ring */}
-        {done && (
-          <div style={{
-            position:'absolute', inset:-6, borderRadius:'50%',
-            border:`2px solid ${color}40`,
-            animation:'scoreGlow 2s ease-in-out infinite',
-            pointerEvents:'none',
-          }} />
-        )}
+        <div style={{ fontSize:13, fontWeight:900, color: val > 0 ? color : '#c4b5a8', lineHeight:1 }}>
+          {val > 0 ? fmt(val) : '·'}
+        </div>
+        <div style={{ fontSize:8, color:'#8a7265', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.7px' }}>{label}</div>
       </div>
-      {/* Value */}
-      <div style={{ fontSize:13, fontWeight:900, color: val > 0 ? color : '#c4b5a8', lineHeight:1 }}>
-        {val > 0 ? fmt(val) : '·'}
-      </div>
-      <div style={{ fontSize:8, color:'#8a7265', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.7px' }}>{label}</div>
     </div>
   )
 }
@@ -473,6 +546,72 @@ function StreakXP({ streak, xp, level }) {
         <div style={{ fontSize:9, color:'#c4b5a8', marginTop:4, fontWeight:600 }}>
           {100 - xpInLevel} XP pour le niveau {level + 1}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── DAILY TASK ITEM — Glow Card style ───────────────────────────────────────
+function DailyTaskItem({ t, i, onToggle }) {
+  const [hovered, setHovered] = useState(false)
+  const [glowPos, setGlowPos] = useState({ x:50, y:50 })
+  const ref = useRef()
+
+  function onMouseMove(e) {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    setGlowPos({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
+  }
+
+  return (
+    <div ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => onToggle(t)}
+      style={{
+        position:'relative', padding:'1.5px', borderRadius:17.5,
+        background: hovered
+          ? `radial-gradient(circle 280px at ${glowPos.x}% ${glowPos.y}%, ${t.color}55, ${t.color}18 42%, rgba(0,0,0,0.07) 65%)`
+          : t.isDone
+          ? `linear-gradient(135deg, ${t.color}30, ${t.color}12)`
+          : 'rgba(0,0,0,0.06)',
+        transition: hovered ? 'none' : 'background 0.45s ease',
+        animation:`tabFade 0.4s ease ${i*0.06}s both`,
+      }}>
+      <div style={{
+        display:'flex', alignItems:'center', gap:11,
+        padding:'11px 14px',
+        background: t.isDone ? t.color+'12' : '#ffffff',
+        border:`1px solid ${t.isDone ? t.color+'30' : 'transparent'}`,
+        borderRadius:16, cursor:'pointer',
+        opacity: t.isDone ? 0.72 : 1,
+        boxShadow: t.isDone ? `0 4px 14px ${t.color}22` : '0 2px 8px rgba(0,0,0,0.04)',
+        transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+        position:'relative', zIndex:1,
+      }}>
+        <div style={{
+          width:26, height:26, borderRadius:8, flexShrink:0,
+          background: t.isDone ? `linear-gradient(135deg,${t.color},${t.color}cc)` : 'transparent',
+          border:`2px solid ${t.isDone ? 'transparent' : '#d1d5db'}`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow: t.isDone ? `0 4px 10px ${t.color}50` : 'none',
+          transition:'all 0.25s cubic-bezier(0.34,1.56,0.64,1)',
+        }}>
+          {t.isDone && <span style={{ color:'#fff', fontSize:13, fontWeight:900, lineHeight:1 }}>✓</span>}
+        </div>
+        <span style={{ fontSize:20, flexShrink:0, lineHeight:1 }}>{t.emoji}</span>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ fontSize:13, fontWeight:700, color: t.isDone ? '#888' : '#111',
+            textDecoration: t.isDone ? 'line-through' : 'none',
+            whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{t.title}</div>
+          <div style={{ fontSize:11, color:'#999', marginTop:2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{t.detail}</div>
+        </div>
+        {t.auto && t.current > 0 && (
+          <div style={{ fontSize:10, fontWeight:800, color:t.color, background:t.color+'15', padding:'3px 8px', borderRadius:8, flexShrink:0 }}>
+            {t.fmt(t.current)}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -589,41 +728,7 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
       {!collapsed && (
         <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
           {enriched.map((t, i) => (
-            <div key={t.id} onClick={() => toggle(t)} style={{
-              display:'flex', alignItems:'center', gap:11,
-              padding:'11px 14px',
-              background: t.isDone ? t.color+'12' : '#ffffff',
-              border:`1.5px solid ${t.isDone ? t.color+'40' : '#f0f0f0'}`,
-              borderRadius:16, cursor:'pointer',
-              opacity: t.isDone ? 0.72 : 1,
-              boxShadow: t.isDone ? `0 4px 14px ${t.color}22` : '0 2px 8px rgba(0,0,0,0.04)',
-              transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
-              animation:`tabFade 0.4s ease ${i*0.06}s both`,
-            }}>
-              {/* Checkbox */}
-              <div style={{
-                width:26, height:26, borderRadius:8, flexShrink:0,
-                background: t.isDone ? `linear-gradient(135deg,${t.color},${t.color}cc)` : 'transparent',
-                border:`2px solid ${t.isDone ? 'transparent' : '#d1d5db'}`,
-                display:'flex', alignItems:'center', justifyContent:'center',
-                boxShadow: t.isDone ? `0 4px 10px ${t.color}50` : 'none',
-                transition:'all 0.25s cubic-bezier(0.34,1.56,0.64,1)',
-              }}>
-                {t.isDone && <span style={{ color:'#fff', fontSize:13, fontWeight:900, lineHeight:1 }}>✓</span>}
-              </div>
-              <span style={{ fontSize:20, flexShrink:0, lineHeight:1 }}>{t.emoji}</span>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:13, fontWeight:700, color: t.isDone ? '#888' : '#111',
-                  textDecoration: t.isDone ? 'line-through' : 'none',
-                  whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{t.title}</div>
-                <div style={{ fontSize:11, color:'#999', marginTop:2, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{t.detail}</div>
-              </div>
-              {t.auto && t.current > 0 && (
-                <div style={{ fontSize:10, fontWeight:800, color:t.color, background:t.color+'15', padding:'3px 8px', borderRadius:8, flexShrink:0 }}>
-                  {t.fmt(t.current)}
-                </div>
-              )}
-            </div>
+            <DailyTaskItem key={t.id} t={t} i={i} onToggle={toggle} />
           ))}
         </div>
       )}

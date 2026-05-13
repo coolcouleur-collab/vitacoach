@@ -762,8 +762,22 @@ export default function App() {
           0%,100% { transform: translateX(0) translateY(-50%); opacity:0.3; }
           50%      { transform: translateX(6px) translateY(-50%); opacity:0.7; }
         }
+        @keyframes particleFloat {
+          0%,100% { transform: translate(0px, 0px) scale(1); opacity: 0.4; }
+          25%      { transform: translate(3px, -7px) scale(1.6); opacity: 0.85; }
+          60%      { transform: translate(-4px, 4px) scale(0.7); opacity: 0.35; }
+        }
         * { -webkit-tap-highlight-color: transparent; }
-        ::-webkit-scrollbar { width:0; height:0; background:transparent; }
+        /* Custom Scrollbar Pro — gradient orange → violet, 5px, auto-hide */
+        ::-webkit-scrollbar { width:5px; height:5px; }
+        ::-webkit-scrollbar-track { background:transparent; border-radius:10px; }
+        ::-webkit-scrollbar-thumb {
+          background:linear-gradient(180deg, #FF6B35 0%, #a78bfa 100%);
+          border-radius:10px;
+          transition:width 0.3s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#FF9A3C,#8b5cf6); }
+        * { scrollbar-width:thin; scrollbar-color:#FF6B35 transparent; }
       `}</style>
     </div>
   )
