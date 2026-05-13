@@ -413,6 +413,28 @@ export default function App() {
   return (
     <div style={s.app}>
 
+      {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
+           Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
+           Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
+      <div style={{
+        position:'fixed', inset:0, zIndex:0, background:'#ffffff', pointerEvents:'none',
+      }}>
+        {/* background-components.tsx — Soft Yellow Glow */}
+        <div style={{
+          position:'absolute', inset:0,
+          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
+          opacity:0.6,
+          mixBlendMode:'multiply',
+        }} />
+        {/* demo.tsx — Orange Soft Glow */}
+        <div style={{
+          position:'absolute', inset:0,
+          backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
+          opacity:0.3,
+          mixBlendMode:'multiply',
+        }} />
+      </div>
+
       {/* ══ SIDEBAR (desktop) ══ */}
       {!isMobile && (
         <aside style={s.sidebar}>
@@ -1334,13 +1356,14 @@ const st = {
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const F = "'Inter', system-ui, sans-serif"
 const s = {
-  app: { display:'flex', minHeight:'100vh', background:'#fafaf9', fontFamily:F, position:'relative' },
+  app: { display:'flex', minHeight:'100vh', background:'transparent', fontFamily:F, position:'relative' },
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
     width:260, flexShrink:0,
-    background:'#ffffff',
-    borderRight:'1px solid #E8E6E2',
+    background:'rgba(255,255,255,0.82)',
+    backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
+    borderRight:'1px solid rgba(255,220,180,0.35)',
     boxShadow:'4px 0 24px rgba(0,0,0,0.05)',
     display:'flex', flexDirection:'column',
     padding:'2.8rem 1.4rem 2.4rem',
@@ -1408,18 +1431,18 @@ const s = {
   },
 
   // ── Main ─────────────────────────────────────────────────────────────────────
-  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh' },
+  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh', background:'transparent' },
   content: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', display:'flex', flexDirection:'column' },
 
   // ── Mobile header ─────────────────────────────────────────────────────────────
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'14px 18px 12px',
-    borderBottom:'1px solid rgba(0,0,0,.05)',
-    background:'rgba(255,255,252,0.95)',
+    borderBottom:'1px solid rgba(255,200,120,0.20)',
+    background:'rgba(255,255,250,0.88)',
     backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
     position:'sticky', top:0, zIndex:40,
-    boxShadow:'0 2px 20px rgba(0,0,0,.04)',
+    boxShadow:'0 2px 20px rgba(255,113,18,.06)',
   },
   backBtn: {
     width:36, height:36, borderRadius:12,
