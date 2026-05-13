@@ -15,32 +15,39 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            set -e
-            cd /home/ubuntu/vitacoach
-            echo "📦 Node $(node --version) | npm $(npm --version)"
-            git fetch origin main
-            git reset --hard origin/main
-            echo "🔍 Commit actuel: $(git log --oneline -1)"
+            LOG="/tmp/deploy_diag.txt"
+            echo "=== DEPLOY DIAG $(date) ===" > $LOG
 
-            echo "📥 npm install..."
-            npm install
+            echo "--- whoami ---" >> $LOG
+            whoami >> $LOG 2>&1
 
-            echo "🔨 Build en cours..."
-            npm run build
-            echo "✅ Build OK — bundle:"
-            ls -lh dist/assets/*.js | head -5
+            echo "--- pwd ---" >> $LOG
+            pwd >> $LOG 2>&1
 
-            echo "🔍 Config nginx..."
-            nginx -T 2>/dev/null | grep -E "^\s*(root|server_name|listen|proxy_pass)" | head -20 || true
+            echo "--- ls /home/ubuntu/ ---" >> $LOG
+            ls /home/ubuntu/ >> $LOG 2>&1 || echo "FAILED ls /home/ubuntu" >> $LOG
 
-            echo "🔄 Copie dist/ vers /var/www/html si différent..."
-            NGINX_ROOT=$(nginx -T 2>/dev/null | grep -oP 'root\s+\K[^;]+' | head -1 | xargs || echo "")
-            echo "Nginx root = '$NGINX_ROOT'"
-            if [ -n "$NGINX_ROOT" ] && [ "$NGINX_ROOT" != "/home/ubuntu/vitacoach/dist" ] && [ -d "$NGINX_ROOT" ]; then
-              cp -r dist/. "$NGINX_ROOT/"
-              echo "✅ Fichiers copiés vers $NGINX_ROOT"
-            fi
+            echo "--- ls /root/ ---" >> $LOG
+            ls /root/ >> $LOG 2>&1 || echo "FAILED ls /root" >> $LOG
 
-            pm2 restart oravia
-            nginx -s reload 2>/dev/null || true
-            echo "🚀 Déployé !"
+            echo "--- nginx sites-enabled ---" >> $LOG
+            cat /etc/nginx/sites-enabled/* >> $LOG 2>&1 || echo "FAILED nginx sites" >> $LOG
+
+            echo "--- nginx conf.d ---" >> $LOG
+            ls /etc/nginx/conf.d/ >> $LOG 2>&1 || true
+            cat /etc/nginx/conf.d/* >> $LOG 2>&1 || true
+
+            echo "--- pm2 list ---" >> $LOG
+            pm2 list >> $LOG 2>&1 || echo "FAILED pm2" >> $LOG
+
+            echo "--- node/npm versions ---" >> $LOG
+            node --version >> $LOG 2>&1
+            npm --version >> $LOG 2>&1
+
+            # Copie du log dans toutes les racines possibles
+            cp $LOG /var/www/html/deploy-diag.txt 2>/dev/null || true
+            cp $LOG /home/ubuntu/vitacoach/dist/deploy-diag.txt 2>/dev/null || true
+            cp $LOG /usr/share/nginx/html/deploy-diag.txt 2>/dev/null || true
+
+            echo "=== FIN ===" >> $LOG
+            cat $LOG
