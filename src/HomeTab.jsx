@@ -1,46 +1,66 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
-// ─── FUTURISTIC BG ────────────────────────────────────────────────────────────
+// ─── ANIMATED LIQUID BACKGROUND ──────────────────────────────────────────────
 function FuturisticBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-      {/* Base gradient — beige chaud dominant */}
+      {/* Base — beige chaud vers vert très doux */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(150deg, #FAF6EE 0%, #F9F7FF 30%, #FAF4EA 60%, #F3FBF5 100%)',
-        backgroundSize:'400% 400%',
-        animation:'meshGrad 12s ease infinite',
+        background:'linear-gradient(145deg, #FAF7EE 0%, #F8F5FF 30%, #FAF3E8 62%, #F1FAF5 100%)',
       }} />
-      {/* Grand orb beige — dominant, bas-droite */}
-      <div style={{ position:'absolute', bottom:'-15%', right:'-10%', width:520, height:520,
-        borderRadius:'50%',
-        background:'radial-gradient(circle at 35% 35%, rgba(245,236,210,0.55), rgba(240,228,195,0.28), transparent 65%)',
-        animation:'floatOrb 11s ease-in-out infinite',
-        filter:'blur(36px)', willChange:'transform' }} />
-      {/* Orb beige haut-gauche */}
-      <div style={{ position:'absolute', top:'-8%', left:'-6%', width:360, height:360,
-        borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(245,236,210,0.42), rgba(250,244,228,0.20), transparent 65%)',
-        animation:'floatOrb 8s ease-in-out infinite 2s',
-        filter:'blur(28px)', willChange:'transform' }} />
-      {/* Orb violet — accent discret haut-droite */}
-      <div style={{ position:'absolute', top:'-6%', right:'10%', width:260, height:260,
-        borderRadius:'50%',
-        background:'radial-gradient(circle at 40% 40%, rgba(216,180,254,0.18), transparent 65%)',
-        animation:'floatOrb 9s ease-in-out infinite',
-        filter:'blur(24px)', willChange:'transform' }} />
-      {/* Orb menthe — bas-gauche */}
-      <div style={{ position:'absolute', bottom:'-6%', left:'5%', width:220, height:220,
-        borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(167,243,208,0.18), transparent 65%)',
-        animation:'floatOrb 13s ease-in-out infinite reverse',
-        filter:'blur(24px)', willChange:'transform' }} />
-      {/* Dot grid — discret */}
-      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.032 }}>
+
+      {/* ── Liquid blob 1 — beige dominant, haut-gauche ── */}
+      <div style={{
+        position:'absolute', top:'-10%', left:'-8%',
+        width:520, height:520,
+        background:'radial-gradient(circle at 38% 38%, rgba(245,228,190,0.64), rgba(248,235,205,0.26), transparent 64%)',
+        filter:'blur(44px)', willChange:'transform, border-radius',
+        animation:'liquidBlob1 16s ease-in-out infinite',
+      }} />
+
+      {/* ── Liquid blob 2 — beige/or, bas-droite ── */}
+      <div style={{
+        position:'absolute', bottom:'-12%', right:'-8%',
+        width:560, height:560,
+        background:'radial-gradient(circle at 40% 38%, rgba(248,230,185,0.60), rgba(245,222,168,0.22), transparent 62%)',
+        filter:'blur(50px)', willChange:'transform, border-radius',
+        animation:'liquidBlob2 20s ease-in-out infinite reverse',
+      }} />
+
+      {/* ── Liquid blob 3 — violet discret, haut-droite ── */}
+      <div style={{
+        position:'absolute', top:'8%', right:'-5%',
+        width:320, height:320,
+        background:'radial-gradient(circle at 40% 40%, rgba(216,180,254,0.22), transparent 64%)',
+        filter:'blur(34px)', willChange:'transform, border-radius',
+        animation:'liquidBlob3 12s ease-in-out infinite',
+      }} />
+
+      {/* ── Liquid blob 4 — menthe claire, bas-gauche ── */}
+      <div style={{
+        position:'absolute', bottom:'6%', left:'5%',
+        width:290, height:290,
+        background:'radial-gradient(circle, rgba(134,239,172,0.28), rgba(110,231,183,0.14), transparent 64%)',
+        filter:'blur(32px)', willChange:'transform, border-radius',
+        animation:'liquidBlob4 14s ease-in-out infinite reverse',
+      }} />
+
+      {/* ── Liquid blob 5 — blanc pur, milieu flottant ── */}
+      <div style={{
+        position:'absolute', top:'28%', left:'22%',
+        width:230, height:230,
+        background:'radial-gradient(circle, rgba(255,255,255,0.58), transparent 66%)',
+        filter:'blur(30px)', willChange:'transform, border-radius',
+        animation:'liquidBlob3 10s ease-in-out infinite 3s',
+      }} />
+
+      {/* Dot grid discret */}
+      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.026 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.5" fill="#c4b5fd"/>
+            <circle cx="2" cy="2" r="1.4" fill="#c4b5fd"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dotGrid)"/>
@@ -397,13 +417,19 @@ const BTN_PARTICLES = [
   { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
-// ─── MAGNETIC GLOW BUTTON — Button-RgS3 style (dark bg, rotating sweep, icon spring, arrow reveal)
+// ─── GLASSY BUTTON — Framer Glassy-button style (glass morphism + icon spring + ripple)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
-  const [hovered, setHovered]   = useState(false)
-  const [pressed, setPressed]   = useState(false)
-  const [ripples, setRipples]   = useState([])
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const [ripples, setRipples] = useState([])
+  const [spot, setSpot]       = useState({ x:50, y:50 })
   const ref = useRef()
 
+  function onMove(e) {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
+  }
   function handleClick(e) {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
@@ -415,6 +441,7 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
 
   return (
     <div ref={ref}
+      onMouseMove={onMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
@@ -424,39 +451,58 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
       onClick={handleClick}
       style={{
         position:'relative', borderRadius:22, cursor:'pointer', overflow:'hidden',
-        background:'linear-gradient(158deg, #1e0f40 0%, #110826 100%)',
-        border:`1px solid ${from}50`,
+        /* ── Glass core ── */
+        background: hovered
+          ? `linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.74))`
+          : `linear-gradient(145deg, rgba(255,255,255,0.82), rgba(255,255,255,0.60))`,
+        backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+        border:`1px solid rgba(255,255,255,0.72)`,
         boxShadow: hovered
-          ? `0 14px 40px rgba(0,0,0,0.38), 0 0 26px ${from}38, inset 0 1px 0 rgba(255,255,255,0.10)`
-          : `0 4px 16px rgba(0,0,0,0.24), 0 0 10px ${from}18, inset 0 1px 0 rgba(255,255,255,0.06)`,
-        transform: pressed ? 'scale(0.92)' : hovered ? 'scale(1.07)' : 'scale(1)',
-        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.30s ease, border-color 0.30s ease',
+          ? `0 12px 36px ${from}28, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)`
+          : `0 4px 18px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)`,
+        transform: pressed ? 'scale(0.93)' : hovered ? 'scale(1.06)' : 'scale(1)',
+        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease, background 0.28s ease',
       }}>
 
-      {/* ── Rotating inner light sweep — Button-RgS3 style ── */}
+      {/* ── Glass shine — inner top gradient ── */}
+      <div style={{
+        position:'absolute', top:0, left:0, right:0, height:'50%',
+        background:'linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 100%)',
+        borderRadius:'22px 22px 0 0', pointerEvents:'none',
+      }} />
+
+      {/* ── Rotating inner light sweep ── */}
       <div style={{
         position:'absolute', inset:0, overflow:'hidden',
         borderRadius:'inherit', pointerEvents:'none',
         display:'flex', alignItems:'center', justifyContent:'center',
       }}>
         <div style={{
-          width:'280%', height:8,
-          background:`linear-gradient(90deg, transparent 0%, transparent 20%, ${from}38 44%, rgba(255,255,255,0.82) 50%, ${to}32 56%, transparent 80%, transparent 100%)`,
-          filter:'blur(6px)',
-          animation:'btnLightSpin 10s linear infinite',
-          opacity: hovered ? 0.95 : 0.35,
-          transition:'opacity 0.38s ease',
+          width:'260%', height:7,
+          background:`linear-gradient(90deg, transparent 20%, ${from}22 44%, rgba(255,255,255,0.90) 50%, ${to}18 56%, transparent 80%)`,
+          filter:'blur(5px)',
+          animation:'btnLightSpin 11s linear infinite',
+          opacity: hovered ? 0.85 : 0.40,
+          transition:'opacity 0.35s ease',
         }} />
       </div>
 
-      {/* ── Micro-particles — white on dark bg ── */}
+      {/* ── Mouse spotlight ── */}
+      <div style={{
+        position:'absolute', inset:0, pointerEvents:'none', borderRadius:'inherit',
+        background: hovered
+          ? `radial-gradient(circle 55px at ${spot.x}% ${spot.y}%, ${from}18 0%, transparent 70%)`
+          : 'transparent',
+        transition: hovered ? 'none' : 'opacity 0.35s ease',
+      }} />
+
+      {/* ── Micro-particles ── */}
       {BTN_PARTICLES.map((p, i) => (
         <div key={i} style={{
-          position:'absolute',
-          left:`${p.x}%`, top:`${p.y}%`,
+          position:'absolute', left:`${p.x}%`, top:`${p.y}%`,
           width:`${p.s}px`, height:`${p.s}px`,
-          borderRadius:'50%', background:'rgba(255,255,255,0.80)',
-          opacity: hovered ? 0.42 : 0.05,
+          borderRadius:'50%', background:from,
+          opacity: hovered ? 0.38 : 0.07,
           animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
           transition:'opacity 0.4s ease', pointerEvents:'none',
         }} />
@@ -467,7 +513,7 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
         <span key={rp.id} style={{
           position:'absolute', borderRadius:'50%', pointerEvents:'none',
           left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-          background:'rgba(255,255,255,0.28)',
+          background:`${from}40`,
           animation:'liquidRipple 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
         }} />
       ))}
@@ -476,16 +522,15 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
       <div style={{
         position:'relative', zIndex:2,
         display:'flex', flexDirection:'column', alignItems:'center',
-        padding:'18px 8px 12px',
+        padding:'16px 8px 12px',
       }}>
-        {/* Icon — spring bounce + lift on hover */}
+        {/* Icon box — solid gradient, spring lift */}
         <div style={{
           width:48, height:48, borderRadius:16,
-          background:`linear-gradient(145deg, ${from}60, ${to}48)`,
-          border:`1px solid ${from}65`,
+          background:`linear-gradient(145deg, ${from}, ${to})`,
           display:'flex', alignItems:'center', justifyContent:'center',
-          boxShadow: hovered ? `0 10px 28px ${from}72` : `0 5px 16px ${from}44`,
-          transform: hovered ? 'scale(1.16) translateY(-5px)' : pressed ? 'scale(0.90)' : 'scale(1)',
+          boxShadow: hovered ? `0 10px 28px ${from}70, inset 0 1px 0 rgba(255,255,255,0.28)` : `0 5px 16px ${from}48, inset 0 1px 0 rgba(255,255,255,0.20)`,
+          transform: hovered ? 'scale(1.14) translateY(-4px)' : pressed ? 'scale(0.91)' : 'scale(1)',
           transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
           marginBottom:9,
         }}>
@@ -494,20 +539,18 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
 
         {/* Label */}
         <span style={{
-          fontSize:10, fontWeight:800,
-          color: hovered ? '#ffffff' : 'rgba(255,255,255,0.78)',
-          letterSpacing:'0.4px',
-          transition:'color 0.2s ease',
+          fontSize:10.5, fontWeight:800, color:'#1a0a00',
+          letterSpacing:'0.3px', opacity: hovered ? 1 : 0.82,
+          transition:'opacity 0.2s ease',
         }}>{label}</span>
 
-        {/* Arrow — slides up and fades in on hover */}
+        {/* Arrow — apparaît au hover */}
         <span style={{
-          fontSize:9, fontWeight:900,
-          color: from,
+          fontSize:9, fontWeight:900, color:from,
           opacity: hovered ? 1 : 0,
-          transform: hovered ? 'translateY(0px)' : 'translateY(5px)',
-          transition:'opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
-          marginTop:2, lineHeight:1, display:'block',
+          transform: hovered ? 'translateY(0)' : 'translateY(4px)',
+          transition:'opacity 0.20s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1)',
+          marginTop:2, lineHeight:1,
         }}>→</span>
       </div>
     </div>

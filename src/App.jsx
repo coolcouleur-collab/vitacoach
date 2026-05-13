@@ -127,6 +127,7 @@ export default function App() {
   const [suggestions, setSuggestions] = useState([])
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
+  const [menuOpen, setMenuOpen] = useState(false)
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
 
@@ -425,7 +426,7 @@ export default function App() {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 252 }}>
-        <div style={{ ...s.content, padding: isMobile ? '0 0 80px' : '0 0 40px' }}>
+        <div style={{ ...s.content, padding: isMobile ? '0 0 108px' : '0 0 40px' }}>
 
           {/* Mobile header */}
           {isMobile && (
@@ -448,9 +449,91 @@ export default function App() {
                     {score}
                   </div>
                 )}
-                <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
+                {/* ── Hamburger button ── */}
+                <button onClick={() => setMenuOpen(o => !o)} style={{
+                  width:38, height:38, borderRadius:12,
+                  background:'rgba(255,255,255,0.88)', backdropFilter:'blur(12px)',
+                  border:'1px solid rgba(255,255,255,0.60)',
+                  boxShadow:'0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)',
+                  display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                  gap:5, cursor:'pointer', padding:0, flexShrink:0,
+                }}>
+                  {[0,1,2].map(i => (
+                    <span key={i} style={{
+                      display:'block', borderRadius:2, background:'#2d1a0e',
+                      transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
+                      width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 17 : menuOpen && i===2 ? 17 : i===1 ? 11 : 17,
+                      height:2,
+                      transform: menuOpen && i===0 ? 'translateY(7px) rotate(45deg)'
+                               : menuOpen && i===2 ? 'translateY(-7px) rotate(-45deg)'
+                               : 'none',
+                      opacity: menuOpen && i===1 ? 0 : 1,
+                    }} />
+                  ))}
+                </button>
               </div>
             </div>
+          )}
+
+          {/* ── Hamburger slide panel ── */}
+          {isMobile && menuOpen && (
+            <>
+              {/* Backdrop */}
+              <div onClick={() => setMenuOpen(false)} style={{
+                position:'fixed', inset:0, zIndex:150,
+                background:'rgba(15,5,30,0.28)', backdropFilter:'blur(6px)',
+                animation:'tabFade 0.22s ease both',
+              }} />
+              {/* Panel */}
+              <div style={{
+                position:'fixed', top:0, right:0, bottom:0, zIndex:151,
+                width:'76%', maxWidth:300,
+                background:'rgba(250,247,240,0.98)', backdropFilter:'blur(28px)',
+                borderLeft:'1px solid rgba(255,255,255,0.55)',
+                boxShadow:'-24px 0 64px rgba(0,0,0,0.14)',
+                display:'flex', flexDirection:'column',
+                padding:'52px 22px 32px',
+                animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
+              }}>
+                {/* Profile */}
+                <div style={{
+                  display:'flex', alignItems:'center', gap:14, marginBottom:28,
+                  paddingBottom:22, borderBottom:'1px solid rgba(0,0,0,0.07)',
+                }}>
+                  <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
+                  <div>
+                    <div style={{ fontSize:16, fontWeight:800, color:'#1a0a00' }}>{profil.nom}</div>
+                    <div style={{ fontSize:11, color:'#a89b8c', marginTop:2 }}>Niveau {level} · {xp} XP</div>
+                  </div>
+                </div>
+                {/* Nav links */}
+                {navItems.map(({ id, Icon, label }) => (
+                  <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
+                    display:'flex', alignItems:'center', gap:12, padding:'13px 16px', borderRadius:14,
+                    border:'none', background: onglet===id ? 'rgba(139,92,246,0.08)' : 'transparent',
+                    cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
+                    color: onglet===id ? '#8b5cf6' : '#4a3728', fontWeight: onglet===id ? 700 : 500,
+                    fontSize:14, marginBottom:3,
+                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(139,92,246,0.18)' : 'none',
+                  }}>
+                    <Icon color={onglet===id ? '#8b5cf6' : '#8a7265'} size={18} />
+                    {label}
+                  </button>
+                ))}
+                {/* Bottom actions */}
+                <div style={{ marginTop:'auto', display:'flex', flexDirection:'column', gap:8 }}>
+                  {!isPro && (
+                    <button style={s.btnPro} onClick={() => { passerPro(); setMenuOpen(false) }}>
+                      <FlashIcon size={14} color="#fff" /> Solenn Pro — 4.99€/mois
+                    </button>
+                  )}
+                  <button style={{ ...s.btnEdit, display:'flex', alignItems:'center', gap:6 }}
+                    onClick={() => { setProfilBackup(profil); setProfil(null); setMenuOpen(false) }}>
+                    ✏ Modifier mon profil
+                  </button>
+                </div>
+              </div>
+            </>
           )}
 
           {/* ── Tab content (keyed for fade-in animation on tab switch) ── */}
@@ -628,39 +711,58 @@ export default function App() {
 
         </div>
 
-        {/* ══ BOTTOM NAV (mobile) ══ */}
+        {/* ══ FLOATING NAVIGATION PILL (mobile) ══ */}
         {isMobile && (() => {
           const activeIdx = navItems.findIndex(n => n.id === onglet)
           return (
-            <nav style={s.bottomNav}>
-              {/* Sliding background pill — clay style */}
+            <nav style={{
+              position:'fixed', bottom:20, left:'50%', transform:'translateX(-50%)',
+              display:'inline-flex', alignItems:'center',
+              /* Beige + soupçon vert menthe — glass */
+              background:'rgba(243,249,245,0.94)',
+              backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
+              borderRadius:100,
+              border:'1px solid rgba(255,255,255,0.68)',
+              boxShadow:'0 8px 32px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)',
+              padding:'7px 8px',
+              gap:2,
+              zIndex:100,
+              whiteSpace:'nowrap',
+            }}>
+              {/* Sliding active pill */}
               <div style={{
-                position:'absolute',
-                top:6, bottom:8,
-                left:`calc(${activeIdx} * (100% / ${navItems.length}) + 5px)`,
-                width:`calc(100% / ${navItems.length} - 10px)`,
-                background:'rgba(255,255,255,0.92)',
-                borderRadius:18,
-                border:'1px solid rgba(0,0,0,0.07)',
-                boxShadow:'0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)',
-                transition:'left 0.34s cubic-bezier(0.34,1.56,0.64,1)',
-                zIndex:0,
-                pointerEvents:'none',
+                position:'absolute', top:7, bottom:7,
+                width:`calc((100% - 16px) / ${navItems.length})`,
+                left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
+                background:'rgba(139,92,246,0.11)',
+                borderRadius:100,
+                border:'1px solid rgba(139,92,246,0.20)',
+                boxShadow:'0 2px 10px rgba(139,92,246,0.14)',
+                transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
+                pointerEvents:'none', zIndex:0,
               }} />
-              {navItems.map(({ id, Icon, label }, idx) => {
+              {navItems.map(({ id, Icon, label }) => {
                 const active = onglet === id
-                const color = active ? '#8b5cf6' : '#c4b5a8'
+                const color  = active ? '#8b5cf6' : '#9e8c7c'
                 return (
                   <button key={id}
-                    style={{ ...s.navBot, color: active ? '#8b5cf6' : '#c4b5a8', zIndex:1 }}
+                    style={{
+                      position:'relative', zIndex:1,
+                      display:'flex', flexDirection:'column', alignItems:'center', gap:3,
+                      padding:'8px 18px',
+                      border:'none', background:'transparent', cursor:'pointer',
+                      fontFamily:F, color,
+                      transition:'color 0.2s ease',
+                      minWidth:60,
+                    }}
                     onClick={() => setOnglet(id)}>
                     <div style={{
-                      transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-                      transform: active ? 'scale(1.18) translateY(-1px)' : 'scale(1)'
+                      transform: active ? 'scale(1.20) translateY(-1px)' : 'scale(1)',
+                      transition:'transform 0.30s cubic-bezier(0.34,1.56,0.64,1)',
                     }}>
-                      <Icon color={color} size={22} />
+                      <Icon color={color} size={21} />
                     </div>
-                    <span style={{ fontSize:9, fontWeight: active ? 700 : 400, letterSpacing:'0.3px', marginTop:2, transition:'font-weight 0.2s' }}>
+                    <span style={{ fontSize:9, fontWeight: active ? 800 : 500, letterSpacing:'0.3px', transition:'font-weight 0.2s' }}>
                       {label}
                     </span>
                   </button>
@@ -767,6 +869,25 @@ export default function App() {
         @keyframes novaBreath {
           0%,100% { transform: scale(1) translateZ(0); opacity: 0.65; }
           50%      { transform: scale(1.14) translateZ(0); opacity: 1; }
+        }
+        @keyframes liquidBlob1 {
+          0%,100% { border-radius:62% 38% 46% 54%/60% 44% 56% 40%; transform:translate(0,0) scale(1); }
+          25%     { border-radius:50% 50% 34% 66%/54% 38% 62% 46%; transform:translate(3%,5%) scale(1.05); }
+          50%     { border-radius:38% 62% 58% 42%/46% 58% 42% 54%; transform:translate(-2%,9%) scale(0.96); }
+          75%     { border-radius:56% 44% 62% 38%/36% 62% 38% 64%; transform:translate(5%,2%) scale(1.03); }
+        }
+        @keyframes liquidBlob2 {
+          0%,100% { border-radius:54% 46% 62% 38%/46% 60% 40% 54%; transform:translate(0,0) scale(1); }
+          33%     { border-radius:38% 62% 44% 56%/62% 44% 56% 38%; transform:translate(-4%,-5%) scale(1.07); }
+          66%     { border-radius:62% 38% 54% 46%/38% 54% 46% 62%; transform:translate(3%,-7%) scale(0.93); }
+        }
+        @keyframes liquidBlob3 {
+          0%,100% { border-radius:50% 50% 50% 50%/50% 50% 50% 50%; transform:translate(0,0) scale(1); }
+          50%     { border-radius:36% 64% 60% 40%/64% 36% 64% 36%; transform:translate(-5%,8%) scale(1.13); }
+        }
+        @keyframes liquidBlob4 {
+          0%,100% { border-radius:60% 40% 60% 40%/40% 60% 40% 60%; transform:translate(0,0) scale(1); }
+          50%     { border-radius:40% 60% 38% 62%/60% 38% 62% 40%; transform:translate(7%,-6%) scale(1.10); }
         }
         @keyframes novaFloat {
           0%,100% { transform: translateY(0px) scale(1); }
