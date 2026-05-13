@@ -39,18 +39,15 @@ function FuturisticBg() {
   )
 }
 
-// ─── SCORE CIRCLE ─────────────────────────────────────────────────────────────
-function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
-  const [animated, setAnimated] = useState(false)
-  useEffect(() => { setTimeout(() => setAnimated(true), 200) }, [])
-
-  const R = 82
-  const C = 2 * Math.PI * R
-  const dash = animated ? (score / 100) * C : 0
+// ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
 
   const hour = new Date().getHours()
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
+  const glowColor = scoreColor || '#FF6B35'
 
   return (
     <div style={hc.hero}>
@@ -63,47 +60,53 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
         </div>
         <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> !</div>
 
+        {/* ── Nova Glow Ring ── */}
         <div style={hc.circleWrap}>
-          {/* Glow rings */}
+
+          {/* Aurora halos — behind everything */}
           <div style={{
-            position:'absolute', inset:-24, borderRadius:'50%',
-            background: score > 0 ? `radial-gradient(circle, ${scoreColor}28 0%, transparent 58%)` : 'none',
-            animation: score > 0 ? 'scoreGlow 3s ease-in-out infinite' : 'none',
+            position:'absolute', inset:-55, borderRadius:'50%', pointerEvents:'none',
+            background:`radial-gradient(circle at center, ${glowColor}48 0%, rgba(167,139,250,0.24) 36%, transparent 62%)`,
+            animation:'novaBreath 3.5s ease-in-out infinite', filter:'blur(12px)',
           }} />
           <div style={{
-            position:'absolute', inset:-8, borderRadius:'50%',
-            boxShadow:`0 18px 56px ${score > 0 ? scoreColor : '#ff9a3c'}40, 0 4px 16px rgba(0,0,0,0.10)`,
+            position:'absolute', inset:-28, borderRadius:'50%', pointerEvents:'none',
+            background:`radial-gradient(circle, ${glowColor}22 0%, transparent 55%)`,
+            animation:'novaBreath 3.5s ease-in-out infinite 0.9s',
           }} />
 
-          <svg width={200} height={200} viewBox="0 0 200 200" style={{ overflow:'visible' }}>
-            <defs>
-              <linearGradient id="arcG" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FF6B35" />
-                <stop offset="100%" stopColor="#FF9A3C" />
-              </linearGradient>
-              <filter id="arcGlow">
-                <feGaussianBlur stdDeviation="5" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <circle cx="100" cy="100" r={R} fill="none" stroke="rgba(255,107,53,0.10)" strokeWidth="14"/>
-            {score > 0 && (
-              <circle cx="100" cy="100" r={R} fill="none"
-                stroke="url(#arcG)" strokeWidth="14" strokeLinecap="round"
-                strokeDasharray={`${dash} ${C}`} strokeDashoffset={C * 0.25}
-                filter="url(#arcGlow)"
-                style={{ transition:'stroke-dasharray 2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-            )}
-            <text x="100" y="90" textAnchor="middle" fill="#1a0a00"
-              fontSize="44" fontWeight="900" fontFamily="Inter,sans-serif"
-              style={{ animation:'countIn 0.7s ease 0.3s both' }}>
+          {/* Spinning conic gradient ring */}
+          <div style={{
+            position:'absolute', inset:0, borderRadius:'50%', pointerEvents:'none',
+            background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 28%, #38bdf8 52%, #fbbf24 74%, #FF6B35 100%)',
+            animation:'novaSpin 6s linear infinite',
+          }}>
+            {/* Dark glass center — creates ring effect */}
+            <div style={{ position:'absolute', inset:7, borderRadius:'50%', background:'rgba(8,8,14,0.96)' }} />
+          </div>
+
+          {/* Inner fine ring */}
+          <div style={{
+            position:'absolute', inset:14, borderRadius:'50%', pointerEvents:'none',
+            border:'1px solid rgba(255,255,255,0.06)',
+          }} />
+
+          {/* Score text — non-rotating, centered */}
+          <div style={{
+            position:'absolute', inset:0, zIndex:2, pointerEvents:'none',
+            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+          }}>
+            <div style={{
+              fontSize:50, fontWeight:900, color:'#fff', lineHeight:1,
+              textShadow:`0 0 30px ${glowColor}95, 0 0 60px ${glowColor}40`,
+              animation: mounted ? 'countIn 0.8s ease 0.3s both' : 'none',
+            }}>
               {score > 0 ? score : '—'}
-            </text>
-            <text x="100" y="115" textAnchor="middle"
-              fill="#8a7265" fontSize="10" letterSpacing="2.5" fontFamily="Inter,sans-serif" fontWeight="700">
+            </div>
+            <div style={{ fontSize:9, color:'rgba(255,255,255,0.38)', letterSpacing:'2.8px', textTransform:'uppercase', fontWeight:700, marginTop:5 }}>
               SCORE FORME
-            </text>
-          </svg>
+            </div>
+          </div>
 
           {/* Metric dots */}
           {[
@@ -119,46 +122,155 @@ function ScoreCircle({ score, scoreColor, profil, metriques, onLog }) {
             const filled = m.val > 0
             return (
               <button key={m.key} onClick={onLog} style={{
-                position:'absolute', left:x-24, top:y-24, width:48, height:48,
-                borderRadius:16,
-                background: 'rgba(255,255,255,0.92)',
-                border: filled ? `2px solid ${m.color}` : '1.5px solid rgba(255,255,255,0.9)',
-                backdropFilter:'blur(10px)',
+                position:'absolute', left:x-24, top:y-24, width:48, height:48, zIndex:3,
+                borderRadius:15,
+                background: filled ? 'rgba(8,8,14,0.92)' : 'rgba(255,255,255,0.90)',
+                border:`1.5px solid ${filled ? m.color+'65' : 'rgba(255,255,255,0.65)'}`,
+                backdropFilter:'blur(14px)',
                 display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                gap:1, cursor:'pointer',
+                gap:1.5, cursor:'pointer',
                 boxShadow: filled
-                  ? `0 0 0 4px ${m.color}22, 0 6px 20px ${m.color}30, inset 0 1px 0 rgba(255,255,255,0.9)`
-                  : '0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
+                  ? `0 0 0 3px ${m.color}18, 0 0 20px ${m.color}60, inset 0 1px 0 rgba(255,255,255,0.07)`
+                  : '0 4px 14px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
                 fontFamily:"'Inter',system-ui,sans-serif",
                 transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
               }}>
                 {filled && (
                   <div style={{
-                    position:'absolute', top:-5, right:-5,
-                    width:14, height:14, borderRadius:'50%',
-                    background: m.color,
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                    boxShadow:`0 2px 6px ${m.color}60`,
-                    animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
+                    position:'absolute', top:-5, right:-5, width:14, height:14, borderRadius:'50%',
+                    background:m.color, display:'flex', alignItems:'center', justifyContent:'center',
+                    boxShadow:`0 0 8px ${m.color}`, animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
                   }}>
                     <span style={{ fontSize:8, color:'#fff', fontWeight:900, lineHeight:1 }}>✓</span>
                   </div>
                 )}
-                <span style={{ lineHeight:1, display:'flex', alignItems:'center' }}>{m.iconEl}</span>
-                {filled && (
-                  <span style={{ fontSize:8, color: m.color, fontWeight:800, lineHeight:1 }}>
-                    {m.fmt(m.val)}
-                  </span>
-                )}
+                <span style={{ display:'flex', alignItems:'center', lineHeight:1 }}>{m.iconEl}</span>
+                {filled && <span style={{ fontSize:7, color:m.color, fontWeight:800, lineHeight:1 }}>{m.fmt(m.val)}</span>}
               </button>
             )
           })}
         </div>
 
-        <button style={{...hc.logBtn, display:'flex', alignItems:'center', gap:8, justifyContent:'center'}} onClick={onLog}>
+        {/* Log button — dark glass style */}
+        <NovaLogBtn onClick={onLog} />
+      </div>
+    </div>
+  )
+}
+
+function NovaLogBtn({ onClick }) {
+  const [hovered, setHovered] = useState(false)
+  const [spot, setSpot] = useState({ x:50, y:50 })
+  const ref = useRef()
+  function onMove(e) {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
+  }
+  return (
+    <div ref={ref} onMouseMove={onMove} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ position:'relative', borderRadius:22, marginTop:2,
+        transform: hovered ? 'scale(1.04)' : 'scale(1)',
+        transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+      }}>
+      {/* Spinning conic border */}
+      <div style={{
+        position:'absolute', inset:-1.5, borderRadius:23.5,
+        background:'conic-gradient(from 0deg, #FF6B35 0%, #a78bfa 35%, #38bdf8 60%, #FF6B35 100%)',
+        animation:'novaSpin 4s linear infinite',
+        opacity: hovered ? 1 : 0.65, transition:'opacity 0.3s ease',
+      }} />
+      <button onClick={onClick} style={{
+        position:'relative', zIndex:1, borderRadius:22,
+        background:'rgba(8,8,14,0.92)', backdropFilter:'blur(12px)',
+        border:'none', cursor:'pointer', overflow:'hidden',
+        display:'flex', alignItems:'center', gap:9, padding:'14px 30px',
+        fontFamily:"'Inter',system-ui,sans-serif", fontSize:13, fontWeight:800, color:'#fff',
+        boxShadow: hovered ? '0 0 28px rgba(255,107,53,0.50)' : '0 0 12px rgba(255,107,53,0.22)',
+        transition:'box-shadow 0.25s ease',
+      }}>
+        {/* Spotlight */}
+        <div style={{
+          position:'absolute', inset:0, pointerEvents:'none',
+          background: hovered ? `radial-gradient(circle 80px at ${spot.x}% ${spot.y}%, rgba(255,107,53,0.38) 0%, transparent 72%)` : 'transparent',
+          transition: hovered ? 'none' : 'opacity 0.4s ease',
+        }} />
+        <span style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center' }}>
           <HeartIcon size={15} color="#FF6B35" />
-          Mettre à jour mes métriques
-        </button>
+        </span>
+        <span style={{ position:'relative', zIndex:1 }}>Mettre à jour mes métriques</span>
+      </button>
+    </div>
+  )
+}
+
+// ─── MAGNETIC GLOW BUTTON (Quick Actions) ─────────────────────────────────────
+function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
+  const [spot, setSpot] = useState({ x:50, y:50 })
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const ref = useRef()
+  function onMove(e) {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
+  }
+  return (
+    <div ref={ref}
+      onMouseMove={onMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onTouchStart={() => setPressed(true)}
+      onTouchEnd={() => { setPressed(false); setHovered(false) }}
+      onClick={onClick}
+      style={{
+        position:'relative', borderRadius:22, cursor:'pointer',
+        transform: pressed ? 'scale(0.90)' : hovered ? 'scale(1.06)' : 'scale(1)',
+        transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
+      }}>
+      {/* Spinning conic border */}
+      <div style={{
+        position:'absolute', inset:-1.5, borderRadius:23.5,
+        background:`conic-gradient(from 0deg, ${from} 0%, ${to} 45%, ${from} 100%)`,
+        animation:`novaSpin ${hovered ? '2s' : '4s'} linear infinite`,
+        opacity: hovered ? 1 : 0.45,
+        transition:'opacity 0.3s ease, animation-duration 0.3s ease',
+      }} />
+      {/* Dark glass body */}
+      <div style={{
+        position:'absolute', inset:1.5, borderRadius:20.5,
+        background:'rgba(8,8,14,0.90)',
+        backdropFilter:'blur(12px)',
+        overflow:'hidden',
+      }}>
+        {/* Mouse spotlight */}
+        <div style={{
+          position:'absolute', inset:0, pointerEvents:'none',
+          background: hovered
+            ? `radial-gradient(circle 65px at ${spot.x}% ${spot.y}%, ${from}50 0%, transparent 72%)`
+            : 'transparent',
+          transition: hovered ? 'none' : 'opacity 0.4s ease',
+        }} />
+      </div>
+      {/* Content */}
+      <div style={{
+        position:'relative', zIndex:2,
+        display:'flex', flexDirection:'column', alignItems:'center',
+        padding:'18px 8px 14px',
+      }}>
+        <div style={{
+          width:50, height:50, borderRadius:17,
+          background:`linear-gradient(145deg, ${from}, ${to})`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow: hovered ? `0 8px 28px ${from}80` : `0 5px 16px ${from}50`,
+          transition:'box-shadow 0.25s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+          transform: hovered ? 'scale(1.12) translateY(-2px)' : 'scale(1)',
+        }}>
+          {iconEl}
+        </div>
+        <span style={{ fontSize:11, fontWeight:800, color:'#fff', marginTop:9, letterSpacing:'0.2px' }}>{label}</span>
       </div>
     </div>
   )
@@ -611,56 +723,20 @@ const ACTIONS = [
 ]
 
 function QuickActions({ onNavigate }) {
-  const [tilts, setTilts] = useState({})
-  const [prs, setPrs] = useState(null)
-
-  function onMouseMove(i, e) {
-    const r = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width - 0.5
-    const y = (e.clientY - r.top) / r.height - 0.5
-    setTilts(prev => ({ ...prev, [i]: { x: -y*16, y: x*16 } }))
-  }
-  function onLeave(i) { setTilts(prev => ({ ...prev, [i]: { x:0, y:0 } })) }
-
   return (
     <div style={hc.actionsWrap}>
       <span style={hc.cardsTitle}>Accès rapide</span>
       <div style={hc.actionsGrid}>
-        {ACTIONS.map((a, i) => {
-          const t = tilts[i] || { x:0, y:0 }
-          const isPrs = prs === i
-          return (
-            <button key={a.tab}
-              style={{
-                ...hc.actionBtn,
-                background:'#ffffff',
-                transform: isPrs
-                  ? 'scale(0.90)'
-                  : `perspective(500px) rotateX(${t.x}deg) rotateY(${t.y}deg) translateZ(${Math.abs(t.x)+Math.abs(t.y) > 0 ? 8 : 0}px)`,
-                boxShadow:`0 6px 20px ${a.from}22, 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)`,
-                borderColor: a.from+'25',
-                transition: isPrs ? 'transform 0.12s ease' : 'transform 0.18s ease, box-shadow 0.18s ease',
-              }}
-              onMouseMove={e => onMouseMove(i, e)}
-              onMouseLeave={() => onLeave(i)}
-              onMouseDown={() => setPrs(i)}
-              onMouseUp={() => setPrs(null)}
-              onTouchStart={() => setPrs(i)}
-              onTouchEnd={() => { setPrs(null); onLeave(i) }}
-              onClick={() => onNavigate(a.tab)}>
-              <div style={{
-                ...hc.actionIcon,
-                background:`linear-gradient(145deg, ${a.from}, ${a.to})`,
-                boxShadow:`0 8px 24px ${a.from}55`,
-                transform: (tilts[i] && (Math.abs(tilts[i].x)+Math.abs(tilts[i].y)) > 2) ? 'scale(1.10) translateZ(4px)' : isPrs ? 'scale(0.9)' : 'scale(1)',
-                transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
-              }}>
-                <span style={{ display:'flex', alignItems:'center' }}>{a.iconEl}</span>
-              </div>
-              <span style={{ fontSize:11, fontWeight:800, color:'#1a0a00', marginTop:8 }}>{a.label}</span>
-            </button>
-          )
-        })}
+        {ACTIONS.map(a => (
+          <MagneticGlowBtn
+            key={a.tab}
+            label={a.label}
+            iconEl={a.iconEl}
+            from={a.from}
+            to={a.to}
+            onClick={() => onNavigate(a.tab)}
+          />
+        ))}
       </div>
     </div>
   )
@@ -670,7 +746,7 @@ function QuickActions({ onNavigate }) {
 export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onSwitchTab, onChat, streak = 0, xp = 0, level = 1 }) {
   return (
     <div style={hc.page}>
-      <ScoreCircle
+      <NovaGlowScore
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={onLog}
       />
