@@ -415,123 +415,112 @@ const BTN_PARTICLES = [
   { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
-// ─── AURORA BUTTON — yellow · orange · teal glow border (no Tailwind, pure inline)
+// ─── PILL BUTTON — fidèle au Framer Button-RgS3 (border-radius:100, balayage lumineux blanc rotatif)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
   const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
-  const [ripples, setRipples] = useState([])
+  const [pressed, setPressed]  = useState(false)
+  const [ripples, setRipples]  = useState([])
   const ref = useRef()
 
   function handleClick(e) {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
     const id = Date.now()
-    setRipples(prev => [...prev, { x: e.clientX-r.left, y: e.clientY-r.top, id }])
+    setRipples(prev => [...prev, { x: e.clientX - r.left, y: e.clientY - r.top, id }])
     setTimeout(() => setRipples(prev => prev.filter(rp => rp.id !== id)), 800)
     onClick?.()
   }
 
   return (
-    <div ref={ref}
-      style={{ position:'relative', cursor:'pointer' }}
+    <button
+      ref={ref}
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
       onTouchStart={() => setPressed(true)}
-      onTouchEnd={() => { setPressed(false); setHovered(false) }}
-      onClick={handleClick}>
-
-      {/* ── Aurora glow border — yellow → orange → teal ── */}
+      onTouchEnd={() => setPressed(false)}
+      style={{
+        /* ── Pill shape (Framer: borderRadius 100px) ── */
+        position:'relative', cursor:'pointer', overflow:'hidden',
+        display:'flex', flexDirection:'row', alignItems:'center',
+        gap:10, padding:'14px 18px',
+        borderRadius:100,
+        border:'1px solid rgba(255,255,255,0.22)',
+        background:`linear-gradient(135deg, ${from} 0%, ${to} 100%)`,
+        /* ── Shadows ── */
+        boxShadow: hovered
+          ? `0 10px 32px ${from}80, 0 2px 8px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.30)`
+          : `0 4px 18px ${from}50, 0 1px 4px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.20)`,
+        /* ── Scale spring (Framer: bounce 0.2, duration 0.4) ── */
+        transform: pressed ? 'scale(0.94)' : hovered ? 'scale(1.04)' : 'scale(1)',
+        transition:'transform 0.40s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease',
+        fontFamily:"'Inter',system-ui,sans-serif",
+        outline:'none', userSelect:'none',
+      }}
+    >
+      {/* ── Rotating white light sweep (Framer: 360° / 10s linear) ── */}
       <div style={{
-        position:'absolute', inset:-3, borderRadius:26, zIndex:0,
-        background:'linear-gradient(135deg, #FFF991 0%, #FF7112 50%, #38C1B6 100%)',
-        opacity: hovered ? 0.90 : 0.48,
-        filter: hovered ? 'blur(22px)' : 'blur(10px)',
-        transition:'opacity 0.38s ease, filter 0.38s ease',
+        position:'absolute', left:'50%', top:'50%',
+        width:'280%', height:9,
+        marginLeft:'-140%', marginTop:-4.5,
+        background:'linear-gradient(90deg, transparent 15%, rgba(255,255,255,0.55) 44%, rgba(255,255,255,0.90) 50%, rgba(255,255,255,0.55) 56%, transparent 85%)',
+        filter:'blur(10px)',
+        animation:'btnLightSpin 10s linear infinite',
+        opacity: hovered ? 1 : 0.42,
+        transition:'opacity 0.35s ease',
         pointerEvents:'none',
       }} />
 
-      {/* ── Card — white glass ── */}
+      {/* ── Top glass shine ── */}
       <div style={{
-        position:'relative', zIndex:1, borderRadius:22, overflow:'hidden',
-        background:'rgba(255,255,253,0.93)',
-        backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-        border:'1px solid rgba(255,255,255,0.88)',
-        boxShadow:'inset 0 1px 0 rgba(255,255,255,1), 0 2px 10px rgba(0,0,0,0.06)',
-        transform: pressed ? 'scale(0.93)' : hovered ? 'scale(1.06)' : 'scale(1)',
-        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-      }}>
+        position:'absolute', top:0, left:0, right:0, height:'52%',
+        background:'linear-gradient(180deg, rgba(255,255,255,0.24) 0%, transparent 100%)',
+        borderRadius:'100px 100px 0 0', pointerEvents:'none',
+      }} />
 
-        {/* Inner shine top */}
-        <div style={{
-          position:'absolute', top:0, left:0, right:0, height:'45%',
-          background:'linear-gradient(180deg, rgba(255,255,255,0.60) 0%, transparent 100%)',
-          borderRadius:'22px 22px 0 0', pointerEvents:'none',
+      {/* ── Ripple au clic ── */}
+      {ripples.map(rp => (
+        <span key={rp.id} style={{
+          position:'absolute', borderRadius:'50%', pointerEvents:'none',
+          left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
+          background:'rgba(255,255,255,0.55)',
+          animation:'liquidRipple 0.75s ease-out forwards',
         }} />
+      ))}
 
-        {/* Rotating aurora sweep inside */}
-        <div style={{
-          position:'absolute', inset:0, overflow:'hidden', borderRadius:'inherit',
-          display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none',
-        }}>
-          <div style={{
-            width:'260%', height:7,
-            background:'linear-gradient(90deg, transparent 12%, rgba(255,249,145,0.55) 36%, rgba(255,113,18,0.65) 50%, rgba(56,193,182,0.50) 64%, transparent 88%)',
-            filter:'blur(5px)',
-            animation:'btnLightSpin 10s linear infinite',
-            opacity: hovered ? 1 : 0.30,
-            transition:'opacity 0.35s ease',
-          }} />
-        </div>
-
-        {/* Liquid ripple */}
-        {ripples.map(rp => (
-          <span key={rp.id} style={{
-            position:'absolute', borderRadius:'50%', pointerEvents:'none',
-            left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-            background:'rgba(255,113,18,0.32)',
-            animation:'liquidRipple 0.75s ease-out forwards',
-          }} />
-        ))}
-
-        {/* Content */}
-        <div style={{
-          position:'relative', zIndex:2,
-          display:'flex', flexDirection:'column', alignItems:'center',
-          padding:'16px 8px 12px',
-        }}>
-          {/* Icon box — gradient from ACTIONS palette */}
-          <div style={{
-            width:48, height:48, borderRadius:16,
-            background:`linear-gradient(145deg, ${from}, ${to})`,
-            display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow: hovered
-              ? `0 10px 28px ${from}70, inset 0 1px 0 rgba(255,255,255,0.28)`
-              : `0 5px 16px ${from}50, inset 0 1px 0 rgba(255,255,255,0.20)`,
-            transform: hovered ? 'scale(1.15) translateY(-4px)' : pressed ? 'scale(0.91)' : 'scale(1)',
-            transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
-            marginBottom:9,
-          }}>
-            {iconEl}
-          </div>
-
-          <span style={{
-            fontSize:10.5, fontWeight:800, color:'#1a0a00',
-            letterSpacing:'0.3px', transition:'opacity 0.2s ease',
-          }}>{label}</span>
-
-          {/* Arrow au hover */}
-          <span style={{
-            fontSize:9, fontWeight:900, color:'#FF7112',
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? 'translateY(0)' : 'translateY(4px)',
-            transition:'opacity 0.20s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1)',
-            marginTop:2, lineHeight:1,
-          }}>→</span>
-        </div>
+      {/* ── Icône ── */}
+      <div style={{
+        position:'relative', zIndex:1,
+        width:24, height:24, flexShrink:0,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        transform: hovered ? 'scale(1.18)' : 'scale(1)',
+        transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1)',
+      }}>
+        {iconEl}
       </div>
-    </div>
+
+      {/* ── Label ── */}
+      <span style={{
+        position:'relative', zIndex:1,
+        flex:1, fontSize:12, fontWeight:800, color:'#ffffff',
+        letterSpacing:'0.15px', textAlign:'left', whiteSpace:'nowrap',
+      }}>
+        {label}
+      </span>
+
+      {/* ── Flèche (Framer: width 1→20px spring au hover) ── */}
+      <span style={{
+        position:'relative', zIndex:1,
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+        fontSize:15, fontWeight:900, color:'rgba(255,255,255,0.92)',
+        width: hovered ? 20 : 1,
+        overflow:'hidden',
+        transition:'width 0.40s cubic-bezier(0.34,1.56,0.64,1)',
+        flexShrink:0,
+      }}>→</span>
+    </button>
   )
 }
 
@@ -1203,7 +1192,7 @@ const hc = {
   cardsTitle: { fontSize:16, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.3px' },
 
   actionsWrap: { padding:'16px 18px 4px' },
-  actionsGrid: { display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:10, marginTop:12 },
+  actionsGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:12 },
   actionBtn: { border:'1.5px solid', borderRadius:22,
     padding:'18px 8px 14px', display:'flex', flexDirection:'column', alignItems:'center',
     cursor:'pointer', fontFamily:"'Inter',system-ui,sans-serif" },
