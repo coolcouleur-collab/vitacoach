@@ -174,15 +174,15 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
           onMouseEnter={() => { targetRef.current = 3 }}
           onMouseLeave={() => { targetRef.current = 1 }}
         >
-          {/* Halos aurora — respirent doucement */}
-          <div style={{ position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 30% 30%, rgba(216,180,254,0.20) 0%, transparent 52%)',
+          {/* Halos aurora — ne débordent pas vers le haut (top:0) */}
+          <div style={{ position:'absolute', top:0, left:-80, right:-80, bottom:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 30% 70%, rgba(216,180,254,0.22) 0%, transparent 52%)',
             animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)' }} />
-          <div style={{ position:'absolute', inset:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 70% 72%, rgba(167,243,208,0.18) 0%, transparent 52%)',
+          <div style={{ position:'absolute', top:0, left:-80, right:-80, bottom:-80, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 70% 80%, rgba(167,243,208,0.20) 0%, transparent 52%)',
             animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)' }} />
-          <div style={{ position:'absolute', inset:-65, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 15% 70%, rgba(250,246,236,0.65) 0%, transparent 50%)',
+          <div style={{ position:'absolute', top:0, left:-65, right:-65, bottom:-65, borderRadius:'50%', pointerEvents:'none',
+            background:'radial-gradient(ellipse at 20% 75%, rgba(255,249,145,0.50) 0%, transparent 50%)',
             animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(16px)' }} />
 
           {/* SVG Ring — animé par rAF, aucun re-render React */}
@@ -194,29 +194,24 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
-            {/* Glow flou derrière */}
+            {/* Glow flou très doux — pas de trait visible */}
             <g ref={glowRef}>
               {GLOW_ARCS.map(([a0,a1,color,w], i) => (
                 <path key={i}
                   d={arcPath(SVG_C, SVG_C, RING_R, a0, a1)}
-                  stroke={color} strokeWidth={w} fill="none" strokeLinecap="round"
-                  filter="url(#novaGlow)" />
+                  stroke={color} strokeWidth={w * 1.6} fill="none" strokeLinecap="round"
+                  filter="url(#novaGlow)" opacity="0.55" />
               ))}
             </g>
-            {/* Arcs principaux + comètes */}
+            {/* Comètes seulement — pas d'arcs/traits */}
             <g ref={ringRef}>
-              {RING_ARCS.map(([a0,a1,color,w], i) => (
-                <path key={i}
-                  d={arcPath(SVG_C, SVG_C, RING_R, a0, a1)}
-                  stroke={color} strokeWidth={w} fill="none" strokeLinecap="round" />
-              ))}
               {COMET_DOTS.map((c, i) => {
                 const rad = (c.a - 90) * Math.PI / 180
                 const cx = SVG_C + RING_R * Math.cos(rad)
                 const cy = SVG_C + RING_R * Math.sin(rad)
                 return (
                   <circle key={i} cx={cx.toFixed(2)} cy={cy.toFixed(2)} r={c.r} fill={c.fill}
-                    style={{ filter:`drop-shadow(0 0 7px ${c.glowColor})` }} />
+                    style={{ filter:`drop-shadow(0 0 9px ${c.glowColor})` }} />
                 )
               })}
             </g>
@@ -229,28 +224,26 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             pointerEvents:'none',
           }} />
 
-          {/* ── Score texte — fixe, centré ── */}
+          {/* ── Score texte — centré, sans label ── */}
           <div style={{
             position:'absolute', inset:0, zIndex:2, pointerEvents:'none',
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
           }}>
-            <div style={{
-              fontSize:50, fontWeight:900, color:'#1a0a00', lineHeight:1,
-              animation: mounted ? 'countIn 0.8s ease 0.3s both' : 'none',
-            }}>
-              {score > 0 ? score : (
-                <div style={{ display:'flex', alignItems:'center', gap:5, justifyContent:'center', marginTop:8 }}>
-                  <div style={{ width:38, height:2, background:'linear-gradient(to right, transparent, #a78bfa)', animation:'shimmerDot 2s ease-in-out infinite' }} />
-                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
-                  <div style={{ width:9, height:9, borderRadius:'50%', background:'linear-gradient(135deg,#8b5cf6,#a78bfa)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 8px rgba(139,92,246,0.5)' }} />
-                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
-                  <div style={{ width:38, height:2, background:'linear-gradient(to left, transparent, #a78bfa)', animation:'shimmerDot 2s ease-in-out infinite' }} />
-                </div>
-              )}
-            </div>
-            <div style={{ fontSize:9, color:'#8a7265', letterSpacing:'2.8px', textTransform:'uppercase', fontWeight:700, marginTop:5 }}>
-              SCORE FORME
-            </div>
+            {score > 0 ? (
+              <div style={{
+                fontSize:54, fontWeight:900, color:'#1a0a00', lineHeight:1,
+                animation: mounted ? 'countIn 0.8s ease 0.3s both' : 'none',
+              }}>
+                {score}
+              </div>
+            ) : (
+              /* Pas de score encore — 3 dots discrets */
+              <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+                <div style={{ width:8, height:8, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
+                <div style={{ width:11, height:11, borderRadius:'50%', background:'linear-gradient(135deg,#8b5cf6,#a78bfa)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 10px rgba(139,92,246,0.55)' }} />
+                <div style={{ width:8, height:8, borderRadius:'50%', background:'#a78bfa', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
+              </div>
+            )}
           </div>
 
           {/* ── Metric dots — spring bounce + glow ring au clic (gradient Framer button style) ── */}
@@ -1187,7 +1180,7 @@ const hc = {
     display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
     boxShadow:'0 0 6px rgba(52,199,89,0.7)' },
   greetName: { fontSize:26, fontWeight:900, color:'#1a0a00', letterSpacing:'-0.6px',
-    marginBottom:22, textAlign:'center' },
+    marginBottom:42, textAlign:'center' },
   greetNameAccent: { background:'linear-gradient(135deg,#8b5cf6,#a78bfa)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:248, height:248,
