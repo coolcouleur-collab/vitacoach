@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import webpush from 'web-push'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
-import { dirname } from 'path'
+import path, { dirname } from 'path'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
 
@@ -492,7 +492,6 @@ app.get('/api/check-subscription', async (req, res) => {
 })
 
 // ── Sert le frontend React (dist/) ──────────────────────────────────────────
-import path from 'path'
 app.use(express.static(path.join(__dirname, 'dist')))
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
