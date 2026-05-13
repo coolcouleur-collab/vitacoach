@@ -2,7 +2,7 @@
 
 :root {
   /* ── Couleurs — palette neutre beige/blanc ── */
-  --bg:           #F2F2F0;   /* beige neutre, pas orange */
+  --bg:           #EDE8DC;   /* beige chaud */
   --bg-card:      #FFFFFF;
   --text-strong:  #111111;
   --text-body:    #333333;

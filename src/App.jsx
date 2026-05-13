@@ -1133,7 +1133,7 @@ const st = {
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const F = "'Inter', system-ui, sans-serif"
 const s = {
-  app: { display:'flex', minHeight:'100vh', background:'#F2F2F0', fontFamily:F, position:'relative' },
+  app: { display:'flex', minHeight:'100vh', background:'#EDE8DC', fontFamily:F, position:'relative' },
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {

@@ -5,30 +5,37 @@ import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafI
 function FuturisticBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-      {/* Base gradient — blanc/crème dominant, soupçon violet + menthe */}
+      {/* Base gradient — beige chaud dominant */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(150deg, #FDFCFA 0%, #F9F7FF 32%, #FDFCFA 62%, #F3FBF5 100%)',
+        background:'linear-gradient(150deg, #FAF6EE 0%, #F9F7FF 30%, #FAF4EA 60%, #F3FBF5 100%)',
         backgroundSize:'400% 400%',
         animation:'meshGrad 12s ease infinite',
       }} />
-      {/* Orb haut-droite — violet très doux */}
-      <div style={{ position:'absolute', top:'-10%', right:'-5%', width:340, height:340,
+      {/* Grand orb beige — dominant, bas-droite */}
+      <div style={{ position:'absolute', bottom:'-15%', right:'-10%', width:520, height:520,
         borderRadius:'50%',
-        background:'radial-gradient(circle at 35% 35%, rgba(216,180,254,0.16), rgba(196,181,253,0.07), transparent 65%)',
+        background:'radial-gradient(circle at 35% 35%, rgba(245,236,210,0.55), rgba(240,228,195,0.28), transparent 65%)',
+        animation:'floatOrb 11s ease-in-out infinite',
+        filter:'blur(36px)', willChange:'transform' }} />
+      {/* Orb beige haut-gauche */}
+      <div style={{ position:'absolute', top:'-8%', left:'-6%', width:360, height:360,
+        borderRadius:'50%',
+        background:'radial-gradient(circle, rgba(245,236,210,0.42), rgba(250,244,228,0.20), transparent 65%)',
+        animation:'floatOrb 8s ease-in-out infinite 2s',
+        filter:'blur(28px)', willChange:'transform' }} />
+      {/* Orb violet — accent discret haut-droite */}
+      <div style={{ position:'absolute', top:'-6%', right:'10%', width:260, height:260,
+        borderRadius:'50%',
+        background:'radial-gradient(circle at 40% 40%, rgba(216,180,254,0.18), transparent 65%)',
         animation:'floatOrb 9s ease-in-out infinite',
-        filter:'blur(28px)', willChange:'transform' }} />
-      {/* Orb bas-gauche — menthe légère */}
-      <div style={{ position:'absolute', bottom:'-8%', left:'-6%', width:300, height:300,
+        filter:'blur(24px)', willChange:'transform' }} />
+      {/* Orb menthe — bas-gauche */}
+      <div style={{ position:'absolute', bottom:'-6%', left:'5%', width:220, height:220,
         borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(167,243,208,0.16), transparent 65%)',
+        background:'radial-gradient(circle, rgba(167,243,208,0.18), transparent 65%)',
         animation:'floatOrb 13s ease-in-out infinite reverse',
-        filter:'blur(28px)', willChange:'transform' }} />
-      {/* Orb centre — beige chaud */}
-      <div style={{ position:'absolute', top:'38%', right:'8%', width:180, height:180,
-        borderRadius:'50%',
-        background:'radial-gradient(circle, rgba(250,246,236,0.75), transparent 65%)',
-        animation:'floatOrb 7s ease-in-out infinite 1.5s', filter:'blur(12px)' }} />
+        filter:'blur(24px)', willChange:'transform' }} />
       {/* Dot grid — discret */}
       <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.032 }}>
         <defs>
@@ -52,24 +59,25 @@ function arcPath(cx, cy, r, a0, a1) {
 
 const SVG_SZ = 248, SVG_C = 124, RING_R = 112
 
-// Arcs principaux : blanc/beige dominant, violet discret, soupçon menthe
+// Arcs Nova : blanc + beige chaud + violet + menthe
 const RING_ARCS = [
-  [  0,  92, 'rgba(255,255,255,0.94)', 3.5],
-  [102, 188, 'rgba(209,196,253,0.58)', 2.5],
-  [198, 288, 'rgba(248,244,236,0.72)', 2.0],
-  [298, 354, 'rgba(167,243,208,0.68)', 2.5],
+  [  0,  90, 'rgba(255,255,255,0.95)', 3.5],   // blanc
+  [100, 185, 'rgba(245,236,210,0.88)', 3.0],   // beige doré
+  [195, 280, 'rgba(209,196,253,0.60)', 2.5],   // violet doux
+  [290, 354, 'rgba(167,243,208,0.70)', 2.5],   // menthe
 ]
-// Copies floutées derrière pour le glow
+// Glow derrière
 const GLOW_ARCS = [
-  [  0,  92, 'rgba(255,255,255,0.28)', 14],
-  [102, 188, 'rgba(209,196,253,0.20)', 12],
-  [298, 354, 'rgba(167,243,208,0.22)', 12],
+  [  0,  90, 'rgba(255,255,255,0.30)', 14],
+  [100, 185, 'rgba(245,228,175,0.28)', 14],    // beige glow
+  [195, 280, 'rgba(209,196,253,0.20)', 12],
+  [290, 354, 'rgba(167,243,208,0.22)', 12],
 ]
-// Comètes : blanc, lavande, menthe
+// Comètes : blanc, beige doré, menthe
 const COMET_DOTS = [
-  { a:   0, r: 5.5, fill:'#ffffff',              glowColor:'rgba(255,255,255,0.85)' },
-  { a: 125, r: 3.5, fill:'rgba(209,196,253,1)',  glowColor:'rgba(167,139,250,0.70)' },
-  { a: 248, r: 3.5, fill:'rgba(167,243,208,1)',  glowColor:'rgba(52,211,153,0.60)'  },
+  { a:   0, r: 5.5, fill:'#ffffff',              glowColor:'rgba(255,255,255,0.90)' },
+  { a: 130, r: 4.0, fill:'rgba(245,225,160,1)',  glowColor:'rgba(240,200,100,0.65)' }, // beige/or
+  { a: 255, r: 3.5, fill:'rgba(167,243,208,1)',  glowColor:'rgba(52,211,153,0.60)'  }, // menthe
 ]
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
@@ -189,10 +197,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             </g>
           </svg>
 
-          {/* Centre verre blanc/crème */}
+          {/* Centre verre beige/crème chaud */}
           <div style={{
             position:'absolute', inset:11, borderRadius:'50%',
-            background:'rgba(253,252,250,0.97)', backdropFilter:'blur(4px)',
+            background:'rgba(252,247,238,0.97)', backdropFilter:'blur(4px)',
             pointerEvents:'none',
           }} />
 
