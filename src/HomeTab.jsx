@@ -412,19 +412,13 @@ const BTN_PARTICLES = [
   { x:66, y:86, s:1.0, d:1.9, del:0.4 },
 ]
 
-// ─── GLASSY BUTTON — Framer Glassy-button style (glass morphism + icon spring + ripple)
+// ─── AURORA BUTTON — yellow · orange · teal glow border (no Tailwind, pure inline)
 function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
   const [ripples, setRipples] = useState([])
-  const [spot, setSpot]       = useState({ x:50, y:50 })
   const ref = useRef()
 
-  function onMove(e) {
-    const r = ref.current?.getBoundingClientRect()
-    if (!r) return
-    setSpot({ x:((e.clientX-r.left)/r.width)*100, y:((e.clientY-r.top)/r.height)*100 })
-  }
   function handleClick(e) {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
@@ -436,117 +430,103 @@ function MagneticGlowBtn({ label, iconEl, from, to, onClick }) {
 
   return (
     <div ref={ref}
-      onMouseMove={onMove}
+      style={{ position:'relative', cursor:'pointer' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => { setPressed(false); setHovered(false) }}
-      onClick={handleClick}
-      style={{
-        position:'relative', borderRadius:22, cursor:'pointer', overflow:'hidden',
-        /* ── Glass core ── */
-        background: hovered
-          ? `linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,255,255,0.74))`
-          : `linear-gradient(145deg, rgba(255,255,255,0.82), rgba(255,255,255,0.60))`,
+      onClick={handleClick}>
+
+      {/* ── Aurora glow border — yellow → orange → teal ── */}
+      <div style={{
+        position:'absolute', inset:-3, borderRadius:26, zIndex:0,
+        background:'linear-gradient(135deg, #FFF991 0%, #FF7112 50%, #38C1B6 100%)',
+        opacity: hovered ? 0.90 : 0.48,
+        filter: hovered ? 'blur(22px)' : 'blur(10px)',
+        transition:'opacity 0.38s ease, filter 0.38s ease',
+        pointerEvents:'none',
+      }} />
+
+      {/* ── Card — white glass ── */}
+      <div style={{
+        position:'relative', zIndex:1, borderRadius:22, overflow:'hidden',
+        background:'rgba(255,255,253,0.93)',
         backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-        border:`1px solid rgba(255,255,255,0.72)`,
-        boxShadow: hovered
-          ? `0 12px 36px ${from}28, 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)`
-          : `0 4px 18px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)`,
+        border:'1px solid rgba(255,255,255,0.88)',
+        boxShadow:'inset 0 1px 0 rgba(255,255,255,1), 0 2px 10px rgba(0,0,0,0.06)',
         transform: pressed ? 'scale(0.93)' : hovered ? 'scale(1.06)' : 'scale(1)',
-        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease, background 0.28s ease',
+        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
 
-      {/* ── Glass shine — inner top gradient ── */}
-      <div style={{
-        position:'absolute', top:0, left:0, right:0, height:'50%',
-        background:'linear-gradient(180deg, rgba(255,255,255,0.55) 0%, transparent 100%)',
-        borderRadius:'22px 22px 0 0', pointerEvents:'none',
-      }} />
-
-      {/* ── Rotating inner light sweep ── */}
-      <div style={{
-        position:'absolute', inset:0, overflow:'hidden',
-        borderRadius:'inherit', pointerEvents:'none',
-        display:'flex', alignItems:'center', justifyContent:'center',
-      }}>
+        {/* Inner shine top */}
         <div style={{
-          width:'260%', height:7,
-          background:`linear-gradient(90deg, transparent 20%, ${from}22 44%, rgba(255,255,255,0.90) 50%, ${to}18 56%, transparent 80%)`,
-          filter:'blur(5px)',
-          animation:'btnLightSpin 11s linear infinite',
-          opacity: hovered ? 0.85 : 0.40,
-          transition:'opacity 0.35s ease',
+          position:'absolute', top:0, left:0, right:0, height:'45%',
+          background:'linear-gradient(180deg, rgba(255,255,255,0.60) 0%, transparent 100%)',
+          borderRadius:'22px 22px 0 0', pointerEvents:'none',
         }} />
-      </div>
 
-      {/* ── Mouse spotlight ── */}
-      <div style={{
-        position:'absolute', inset:0, pointerEvents:'none', borderRadius:'inherit',
-        background: hovered
-          ? `radial-gradient(circle 55px at ${spot.x}% ${spot.y}%, ${from}18 0%, transparent 70%)`
-          : 'transparent',
-        transition: hovered ? 'none' : 'opacity 0.35s ease',
-      }} />
-
-      {/* ── Micro-particles ── */}
-      {BTN_PARTICLES.map((p, i) => (
-        <div key={i} style={{
-          position:'absolute', left:`${p.x}%`, top:`${p.y}%`,
-          width:`${p.s}px`, height:`${p.s}px`,
-          borderRadius:'50%', background:from,
-          opacity: hovered ? 0.38 : 0.07,
-          animation:`particleFloat ${p.d}s ease-in-out infinite ${p.del}s`,
-          transition:'opacity 0.4s ease', pointerEvents:'none',
-        }} />
-      ))}
-
-      {/* ── Liquid ripple ── */}
-      {ripples.map(rp => (
-        <span key={rp.id} style={{
-          position:'absolute', borderRadius:'50%', pointerEvents:'none',
-          left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
-          background:`${from}40`,
-          animation:'liquidRipple 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
-        }} />
-      ))}
-
-      {/* ── Content ── */}
-      <div style={{
-        position:'relative', zIndex:2,
-        display:'flex', flexDirection:'column', alignItems:'center',
-        padding:'16px 8px 12px',
-      }}>
-        {/* Icon box — solid gradient, spring lift */}
+        {/* Rotating aurora sweep inside */}
         <div style={{
-          width:48, height:48, borderRadius:16,
-          background:`linear-gradient(145deg, ${from}, ${to})`,
-          display:'flex', alignItems:'center', justifyContent:'center',
-          boxShadow: hovered ? `0 10px 28px ${from}70, inset 0 1px 0 rgba(255,255,255,0.28)` : `0 5px 16px ${from}48, inset 0 1px 0 rgba(255,255,255,0.20)`,
-          transform: hovered ? 'scale(1.14) translateY(-4px)' : pressed ? 'scale(0.91)' : 'scale(1)',
-          transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
-          marginBottom:9,
+          position:'absolute', inset:0, overflow:'hidden', borderRadius:'inherit',
+          display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none',
         }}>
-          {iconEl}
+          <div style={{
+            width:'260%', height:7,
+            background:'linear-gradient(90deg, transparent 12%, rgba(255,249,145,0.55) 36%, rgba(255,113,18,0.65) 50%, rgba(56,193,182,0.50) 64%, transparent 88%)',
+            filter:'blur(5px)',
+            animation:'btnLightSpin 10s linear infinite',
+            opacity: hovered ? 1 : 0.30,
+            transition:'opacity 0.35s ease',
+          }} />
         </div>
 
-        {/* Label */}
-        <span style={{
-          fontSize:10.5, fontWeight:800, color:'#1a0a00',
-          letterSpacing:'0.3px', opacity: hovered ? 1 : 0.82,
-          transition:'opacity 0.2s ease',
-        }}>{label}</span>
+        {/* Liquid ripple */}
+        {ripples.map(rp => (
+          <span key={rp.id} style={{
+            position:'absolute', borderRadius:'50%', pointerEvents:'none',
+            left:rp.x, top:rp.y, width:10, height:10, marginLeft:-5, marginTop:-5,
+            background:'rgba(255,113,18,0.32)',
+            animation:'liquidRipple 0.75s ease-out forwards',
+          }} />
+        ))}
 
-        {/* Arrow — apparaît au hover */}
-        <span style={{
-          fontSize:9, fontWeight:900, color:from,
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? 'translateY(0)' : 'translateY(4px)',
-          transition:'opacity 0.20s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1)',
-          marginTop:2, lineHeight:1,
-        }}>→</span>
+        {/* Content */}
+        <div style={{
+          position:'relative', zIndex:2,
+          display:'flex', flexDirection:'column', alignItems:'center',
+          padding:'16px 8px 12px',
+        }}>
+          {/* Icon box — gradient from ACTIONS palette */}
+          <div style={{
+            width:48, height:48, borderRadius:16,
+            background:`linear-gradient(145deg, ${from}, ${to})`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow: hovered
+              ? `0 10px 28px ${from}70, inset 0 1px 0 rgba(255,255,255,0.28)`
+              : `0 5px 16px ${from}50, inset 0 1px 0 rgba(255,255,255,0.20)`,
+            transform: hovered ? 'scale(1.15) translateY(-4px)' : pressed ? 'scale(0.91)' : 'scale(1)',
+            transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
+            marginBottom:9,
+          }}>
+            {iconEl}
+          </div>
+
+          <span style={{
+            fontSize:10.5, fontWeight:800, color:'#1a0a00',
+            letterSpacing:'0.3px', transition:'opacity 0.2s ease',
+          }}>{label}</span>
+
+          {/* Arrow au hover */}
+          <span style={{
+            fontSize:9, fontWeight:900, color:'#FF7112',
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? 'translateY(0)' : 'translateY(4px)',
+            transition:'opacity 0.20s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1)',
+            marginTop:2, lineHeight:1,
+          }}>→</span>
+        </div>
       </div>
     </div>
   )
@@ -1100,11 +1080,12 @@ function SwipeableInsights({ profil, metriques, onChat }) {
 }
 
 // ─── QUICK ACTIONS ─────────────────────────────────────────────────────────────
+// Palette : yellow #FFF991 · orange #FF7112 · teal #38C1B6
 const ACTIONS = [
-  { tab:'chat',    iconEl:<ChatIcon size={24} color="#fff" />,    label:'Coach IA', from:'#8b5cf6', to:'#a78bfa' },
-  { tab:'routine', iconEl:<CalendarIcon size={24} color="#fff" />,label:'Routine',  from:'#5856d6', to:'#8b89f5' },
-  { tab:'herbal',  iconEl:<LeafIcon size={24} color="#fff" />,    label:'Herbal',   from:'#34c759', to:'#30d158' },
-  { tab:'style',   iconEl:<SparkleIcon size={24} color="#fff" />, label:'Style',    from:'#af52de', to:'#d490f7' },
+  { tab:'chat',    iconEl:<ChatIcon size={24} color="#fff" />,    label:'Coach IA', from:'#FF7112', to:'#FF9A50' },
+  { tab:'routine', iconEl:<CalendarIcon size={24} color="#fff" />,label:'Routine',  from:'#38C1B6', to:'#6FD9D3' },
+  { tab:'herbal',  iconEl:<LeafIcon size={24} color="#fff" />,    label:'Herbal',   from:'#E8A000', to:'#FFD060' },
+  { tab:'style',   iconEl:<SparkleIcon size={24} color="#fff" />, label:'Style',    from:'#FF5500', to:'#38C1B6' },
 ]
 
 function QuickActions({ onNavigate }) {
