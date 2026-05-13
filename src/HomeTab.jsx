@@ -1,66 +1,61 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
-// ─── ANIMATED LIQUID BACKGROUND ──────────────────────────────────────────────
+// ─── ANIMATED LIQUID BACKGROUND — yellow · orange · teal ─────────────────────
 function FuturisticBg() {
   return (
-    <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-      {/* Base — beige chaud vers vert très doux */}
+    <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden', background:'#ffffff' }}>
+
+      {/* ── Soft yellow glow — center, multiply ── */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(145deg, #FAF7EE 0%, #F8F5FF 30%, #FAF3E8 62%, #F1FAF5 100%)',
+        backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
+        opacity:0.62, mixBlendMode:'multiply',
+        willChange:'transform, border-radius',
+        animation:'liquidBlob3 14s ease-in-out infinite',
       }} />
 
-      {/* ── Liquid blob 1 — beige dominant, haut-gauche ── */}
+      {/* ── Orange glow — slightly off-center, multiply ── */}
       <div style={{
-        position:'absolute', top:'-10%', left:'-8%',
-        width:520, height:520,
-        background:'radial-gradient(circle at 38% 38%, rgba(245,228,190,0.64), rgba(248,235,205,0.26), transparent 64%)',
-        filter:'blur(44px)', willChange:'transform, border-radius',
-        animation:'liquidBlob1 16s ease-in-out infinite',
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
+        opacity:0.20, mixBlendMode:'multiply',
+        willChange:'transform, border-radius',
+        animation:'liquidBlob1 18s ease-in-out infinite reverse',
       }} />
 
-      {/* ── Liquid blob 2 — beige/or, bas-droite ── */}
+      {/* ── Teal glow — haut-droite ── */}
       <div style={{
-        position:'absolute', bottom:'-12%', right:'-8%',
-        width:560, height:560,
-        background:'radial-gradient(circle at 40% 38%, rgba(248,230,185,0.60), rgba(245,222,168,0.22), transparent 62%)',
-        filter:'blur(50px)', willChange:'transform, border-radius',
-        animation:'liquidBlob2 20s ease-in-out infinite reverse',
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(56,193,182,0.55) 0%, transparent 58%)',
+        filter:'blur(72px)',
+        willChange:'transform, border-radius',
+        animation:'liquidBlob2 16s ease-in-out infinite',
       }} />
 
-      {/* ── Liquid blob 3 — violet discret, haut-droite ── */}
+      {/* ── Teal glow — bas-gauche ── */}
       <div style={{
-        position:'absolute', top:'8%', right:'-5%',
-        width:320, height:320,
-        background:'radial-gradient(circle at 40% 40%, rgba(216,180,254,0.22), transparent 64%)',
-        filter:'blur(34px)', willChange:'transform, border-radius',
-        animation:'liquidBlob3 12s ease-in-out infinite',
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(56,193,182,0.42) 0%, transparent 52%)',
+        filter:'blur(64px)',
+        willChange:'transform, border-radius',
+        animation:'liquidBlob4 20s ease-in-out infinite reverse',
       }} />
 
-      {/* ── Liquid blob 4 — menthe claire, bas-gauche ── */}
+      {/* ── Deuxième orange doux — bas-droite ── */}
       <div style={{
-        position:'absolute', bottom:'6%', left:'5%',
-        width:290, height:290,
-        background:'radial-gradient(circle, rgba(134,239,172,0.28), rgba(110,231,183,0.14), transparent 64%)',
-        filter:'blur(32px)', willChange:'transform, border-radius',
-        animation:'liquidBlob4 14s ease-in-out infinite reverse',
-      }} />
-
-      {/* ── Liquid blob 5 — blanc pur, milieu flottant ── */}
-      <div style={{
-        position:'absolute', top:'28%', left:'22%',
-        width:230, height:230,
-        background:'radial-gradient(circle, rgba(255,255,255,0.58), transparent 66%)',
-        filter:'blur(30px)', willChange:'transform, border-radius',
-        animation:'liquidBlob3 10s ease-in-out infinite 3s',
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 82% 80%, rgba(255,180,80,0.28) 0%, transparent 50%)',
+        filter:'blur(50px)',
+        willChange:'transform, border-radius',
+        animation:'liquidBlob3 11s ease-in-out infinite 2s',
       }} />
 
       {/* Dot grid discret */}
-      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.026 }}>
+      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.022 }}>
         <defs>
           <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.4" fill="#c4b5fd"/>
+            <circle cx="2" cy="2" r="1.4" fill="#38c1b6"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#dotGrid)"/>
@@ -217,10 +212,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             </g>
           </svg>
 
-          {/* Centre verre beige/crème chaud */}
+          {/* Centre verre blanc pur */}
           <div style={{
             position:'absolute', inset:11, borderRadius:'50%',
-            background:'rgba(252,247,238,0.97)', backdropFilter:'blur(4px)',
+            background:'rgba(255,255,254,0.97)', backdropFilter:'blur(4px)',
             pointerEvents:'none',
           }} />
 
@@ -613,19 +608,45 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         height:'100%', position:'relative', zIndex:1,
         transition:'box-shadow 0.3s ease',
       }}>
-        {/* Ring SVG */}
-        <div style={{ position:'relative', width:60, height:60 }}>
-          <svg width={60} height={60} viewBox="0 0 60 60"
+        {/* ── Futuristic Donut Ring ── */}
+        <div style={{ position:'relative', width:68, height:68 }}>
+          <svg width={68} height={68} viewBox="0 0 68 68"
             style={{ transform:'rotate(-90deg)', overflow:'visible' }}>
-            <circle cx="30" cy="30" r={R} fill="none" stroke={color+'18'} strokeWidth="4.5"/>
-            <circle cx="30" cy="30" r={R} fill="none"
-              stroke={color} strokeWidth="4.5" strokeLinecap="round"
+            <defs>
+              <filter id={`df${index}`} x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="2.8" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            {/* Outer decorative ring */}
+            <circle cx="34" cy="34" r={R+7} fill="none" stroke={color+'18'} strokeWidth="0.7"/>
+
+            {/* Tick marks — 24 segments around outer edge */}
+            {Array.from({length:24}).map((_, ti) => {
+              const a = (ti / 24) * Math.PI * 2
+              const ro = R+6, ri = R+4.2
+              return (
+                <line key={ti}
+                  x1={(34+ro*Math.cos(a)).toFixed(1)} y1={(34+ro*Math.sin(a)).toFixed(1)}
+                  x2={(34+ri*Math.cos(a)).toFixed(1)} y2={(34+ri*Math.sin(a)).toFixed(1)}
+                  stroke={color} strokeWidth="0.9" opacity="0.22" strokeLinecap="round"/>
+              )
+            })}
+
+            {/* Background track — dashed segmented */}
+            <circle cx="34" cy="34" r={R} fill="none"
+              stroke={color+'22'} strokeWidth="5.5"
+              strokeDasharray="3.8 2.2"/>
+
+            {/* Progress arc */}
+            <circle cx="34" cy="34" r={R} fill="none"
+              stroke={color} strokeWidth="5.5" strokeLinecap="round"
               strokeDasharray={`${dash} ${C}`}
-              style={{
-                transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)',
-                filter: done ? `drop-shadow(0 0 6px ${color})` : `drop-shadow(0 0 3px ${color}80)`,
-              }}/>
+              filter={`url(#df${index})`}
+              style={{ transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)' }}/>
           </svg>
+
           <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
             {done
               ? <span style={{ fontSize:16, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>

@@ -718,8 +718,8 @@ export default function App() {
             <nav style={{
               position:'fixed', bottom:20, left:'50%', transform:'translateX(-50%)',
               display:'inline-flex', alignItems:'center',
-              /* Beige + soupçon vert menthe — glass */
-              background:'rgba(243,249,245,0.94)',
+              /* Blanc glass — teal accent subtil */
+              background:'rgba(252,255,254,0.94)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
               borderRadius:100,
               border:'1px solid rgba(255,255,255,0.68)',
@@ -1270,7 +1270,7 @@ const st = {
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const F = "'Inter', system-ui, sans-serif"
 const s = {
-  app: { display:'flex', minHeight:'100vh', background:'#EDE8DC', fontFamily:F, position:'relative' },
+  app: { display:'flex', minHeight:'100vh', background:'#fafaf9', fontFamily:F, position:'relative' },
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
@@ -1286,10 +1286,19 @@ const s = {
   sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid #E8E6E2' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
-    background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',
+    /* ── Shiny Text sweep ── */
+    background:'linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)',
+    backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+    animation:'shimmerGrad 4s linear infinite',
   },
-  logoSub: { fontSize:11, color:'#c4b5a8', marginTop:3, letterSpacing:'0.04em', fontWeight:500 },
+  logoSub: {
+    fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600,
+    background:'linear-gradient(90deg, #38c1b6 0%, #a8e8e4 25%, #ffffff 45%, #a8e8e4 68%, #38c1b6 100%)',
+    backgroundSize:'250% 100%',
+    WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+    animation:'shimmerGrad 6s linear infinite 0.8s',
+  },
   sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
   sidebarBottom: { display:'flex', flexDirection:'column', gap:8, marginTop:'2rem', paddingTop:'2rem', borderTop:'1px solid #f0e8e0' },
   nav: {
@@ -1344,8 +1353,8 @@ const s = {
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'14px 18px 12px',
-    borderBottom:'1px solid rgba(0,0,0,.06)',
-    background:'rgba(242,242,240,.97)',
+    borderBottom:'1px solid rgba(0,0,0,.05)',
+    background:'rgba(255,255,252,0.95)',
     backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
     position:'sticky', top:0, zIndex:40,
     boxShadow:'0 2px 20px rgba(0,0,0,.04)',
