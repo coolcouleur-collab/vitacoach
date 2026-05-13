@@ -59,77 +59,193 @@ function FuturisticBg() {
   )
 }
 
-// ─── NOVA SVG RING — helpers ──────────────────────────────────────────────────
-function arcPath(cx, cy, r, a0, a1) {
-  const rad = d => (d - 90) * Math.PI / 180
-  const sx = cx + r * Math.cos(rad(a0)), sy = cy + r * Math.sin(rad(a0))
-  const ex = cx + r * Math.cos(rad(a1)), ey = cy + r * Math.sin(rad(a1))
-  return `M${sx.toFixed(2)},${sy.toFixed(2)} A${r},${r},0,${a1-a0>180?1:0},1,${ex.toFixed(2)},${ey.toFixed(2)}`
+// ─── NOVA WEBGL ORB — reconstruction du composant Framer Nova-Glow-lv7f ────────
+// Design : orb WebGL avec bruit de Simplex + palette pêche/beige/crème
+// Interaction : active=true déclenche la distorsion ondulante (quand l'utilisateur
+//               touche les émojis métriques autour du cercle)
+function NovaOrbGL({ active }) {
+  const ctnRef   = useRef(null)
+  const activeRef = useRef(active)
+  const hoverRef  = useRef(0)
+  const rafRef    = useRef(null)
+
+  useEffect(() => { activeRef.current = active }, [active])
+
+  useEffect(() => {
+    const container = ctnRef.current
+    if (!container || typeof window === 'undefined') return
+
+    // ── Vertex shader ────────────────────────────────────────────────────────
+    const VERT = `
+      precision highp float;
+      attribute vec2 position;
+      attribute vec2 uv;
+      varying vec2 vUv;
+      void main() { vUv = uv; gl_Position = vec4(position, 0.0, 1.0); }
+    `
+    // ── Fragment shader — palette pêche/crème/ambre ──────────────────────────
+    const FRAG = `
+      precision highp float;
+      uniform float iTime;
+      uniform vec3  iResolution;
+      uniform float hover;
+      uniform float hoverIntensity;
+      varying vec2  vUv;
+
+      vec3 hash33(vec3 p3) {
+        p3 = fract(p3 * vec3(0.1031, 0.11369, 0.13787));
+        p3 += dot(p3, p3.yxz + 19.19);
+        return -1.0 + 2.0 * fract(vec3(p3.x+p3.y, p3.x+p3.z, p3.y+p3.z) * p3.zyx);
+      }
+      float snoise3(vec3 p) {
+        const float K1 = 0.333333333;
+        const float K2 = 0.166666667;
+        vec3 i  = floor(p + (p.x+p.y+p.z)*K1);
+        vec3 d0 = p - (i - (i.x+i.y+i.z)*K2);
+        vec3 e  = step(vec3(0.0), d0 - d0.yzx);
+        vec3 i1 = e*(1.0-e.zxy);
+        vec3 i2 = 1.0-e.zxy*(1.0-e);
+        vec3 d1 = d0-(i1-K2); vec3 d2 = d0-(i2-K1); vec3 d3 = d0-0.5;
+        vec4 h  = max(0.6-vec4(dot(d0,d0),dot(d1,d1),dot(d2,d2),dot(d3,d3)),0.0);
+        vec4 n  = h*h*h*h*vec4(dot(d0,hash33(i)),dot(d1,hash33(i+i1)),
+                                dot(d2,hash33(i+i2)),dot(d3,hash33(i+1.0)));
+        return dot(vec4(31.316), n);
+      }
+      vec4 extractAlpha(vec3 c) {
+        float a = max(max(c.r,c.g),c.b);
+        return vec4(c/(a+1e-5), a);
+      }
+
+      /* Palette pêche / crème / ambre — sans aucun violet ni teal */
+      const vec3 c1 = vec3(0.902, 0.573, 0.353);  /* pêche ambre   #E6925A */
+      const vec3 c2 = vec3(1.000, 0.918, 0.827);  /* crème chaude  #FFEAD3 */
+      const vec3 c3 = vec3(0.502, 0.267, 0.125);  /* ambre profond #80441F */
+      const float innerR = 0.32;
+      const float noiseS = 0.65;
+
+      float l1(float I,float a,float d){ return I/(1.0+d*a); }
+      float l2(float I,float a,float d){ return I/(1.0+d*d*a); }
+
+      vec4 draw(vec2 uv) {
+        float ang = atan(uv.y, uv.x);
+        float len = length(uv);
+        float invL = len>0.0 ? 1.0/len : 0.0;
+        float n0 = snoise3(vec3(uv*noiseS, iTime*0.5))*0.5+0.5;
+        float r0 = mix(mix(innerR,1.0,0.4), mix(innerR,1.0,0.6), n0);
+        float d0 = distance(uv, (r0*invL)*uv);
+        float v0 = l1(1.0,10.0,d0);
+        v0 *= smoothstep(r0*1.05, r0, len);
+        float cl = cos(ang + iTime*2.0)*0.5+0.5;
+        float a  = iTime*-1.0;
+        vec2  pos = vec2(cos(a),sin(a))*r0;
+        float d   = distance(uv,pos);
+        float v1  = l2(1.5,5.0,d)*l1(1.0,50.0,d0);
+        float v2  = smoothstep(1.0, mix(innerR,1.0,n0*0.5), len);
+        float v3  = smoothstep(innerR, mix(innerR,1.0,0.5), len);
+        vec3  col = mix(c1,c2,cl);
+        col = mix(c3,col,v0);
+        col = (col+v1)*v2*v3;
+        return extractAlpha(clamp(col,0.0,1.0));
+      }
+
+      void main() {
+        vec2 fc  = vUv * iResolution.xy;
+        vec2 ctr = iResolution.xy * 0.5;
+        float sz = min(iResolution.x, iResolution.y);
+        vec2 uv  = (fc - ctr) / sz * 2.0;
+        /* Distorsion ondulante au toucher des émojis */
+        uv.x += hover * hoverIntensity * 0.13 * sin(uv.y*8.0 + iTime*3.2);
+        uv.y += hover * hoverIntensity * 0.13 * sin(uv.x*8.0 + iTime*3.2);
+        vec4 col = draw(uv);
+        gl_FragColor = vec4(col.rgb*col.a, col.a);
+      }
+    `
+
+    const canvas = document.createElement('canvas')
+    const gl = canvas.getContext('webgl', { alpha:true, premultipliedAlpha:false })
+    if (!gl) return
+    gl.clearColor(0,0,0,0)
+    container.appendChild(canvas)
+
+    // Compile + link
+    function mkShader(type, src) {
+      const s = gl.createShader(type)
+      gl.shaderSource(s, src); gl.compileShader(s); return s
+    }
+    const vs = mkShader(gl.VERTEX_SHADER, VERT)
+    const fs = mkShader(gl.FRAGMENT_SHADER, FRAG)
+    const prog = gl.createProgram()
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog)
+
+    // Full-screen triangle
+    const posBuf = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW)
+    const uvBuf = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0, 2,0, 0,2]), gl.STATIC_DRAW)
+
+    const posLoc  = gl.getAttribLocation(prog, 'position')
+    const uvLoc   = gl.getAttribLocation(prog, 'uv')
+    const timeLoc = gl.getUniformLocation(prog, 'iTime')
+    const resLoc  = gl.getUniformLocation(prog, 'iResolution')
+    const hovLoc  = gl.getUniformLocation(prog, 'hover')
+    const hiLoc   = gl.getUniformLocation(prog, 'hoverIntensity')
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1
+      const w = container.clientWidth, h = container.clientHeight
+      canvas.width = w*dpr; canvas.height = h*dpr
+      canvas.style.cssText = `width:${w}px;height:${h}px;display:block`
+      gl.viewport(0,0,canvas.width,canvas.height)
+    }
+    window.addEventListener('resize', resize); resize()
+
+    function frame(t) {
+      rafRef.current = requestAnimationFrame(frame)
+      // Lerp hover vers la cible (actif = 1, inactif = 0)
+      const target = activeRef.current ? 1 : 0
+      hoverRef.current += (target - hoverRef.current) * 0.07
+
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      gl.useProgram(prog)
+      gl.uniform1f(timeLoc, t * 0.001)
+      gl.uniform3f(resLoc, canvas.width, canvas.height, 1)
+      gl.uniform1f(hovLoc, hoverRef.current)
+      gl.uniform1f(hiLoc, 0.50)
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf)
+      gl.enableVertexAttribArray(posLoc)
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0)
+      gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf)
+      gl.enableVertexAttribArray(uvLoc)
+      gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 0, 0)
+      gl.drawArrays(gl.TRIANGLES, 0, 3)
+    }
+    rafRef.current = requestAnimationFrame(frame)
+
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      window.removeEventListener('resize', resize)
+      if (container.contains(canvas)) container.removeChild(canvas)
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+    }
+  }, [])
+
+  return (
+    <div ref={ctnRef} style={{
+      position:'absolute', inset:0, borderRadius:'50%', overflow:'hidden', zIndex:0,
+    }} />
+  )
 }
-
-const SVG_SZ = 248, SVG_C = 124, RING_R = 112
-
-// Arcs Nova : blanc + beige chaud + violet + menthe
-const RING_ARCS = [
-  [  0,  90, 'rgba(255,255,255,0.95)', 3.5],   // blanc
-  [100, 185, 'rgba(245,236,210,0.88)', 3.0],   // beige doré
-  [195, 280, 'rgba(209,196,253,0.60)', 2.5],   // violet doux
-  [290, 354, 'rgba(255,210,150,0.70)', 2.5],   // or chaud
-]
-// Glow derrière
-const GLOW_ARCS = [
-  [  0,  90, 'rgba(255,255,255,0.30)', 14],
-  [100, 185, 'rgba(245,228,175,0.28)', 14],    // beige glow
-  [195, 280, 'rgba(209,196,253,0.20)', 12],
-  [290, 354, 'rgba(255,200,130,0.22)', 12],
-]
-// Comètes : blanc, beige doré, menthe
-const COMET_DOTS = [
-  { a:   0, r: 5.5, fill:'#ffffff',              glowColor:'rgba(255,255,255,0.90)' },
-  { a: 130, r: 4.0, fill:'rgba(245,225,160,1)',  glowColor:'rgba(240,200,100,0.65)' }, // beige/or
-  { a: 255, r: 3.5, fill:'rgba(255,210,150,1)',  glowColor:'rgba(255,170,80,0.60)'   }, // or chaud
-]
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
 function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
-
-  // rAF refs — rotation fluide sans re-render React
-  const ringRef    = useRef(null)
-  const glowRef    = useRef(null)
-  const angleRef   = useRef(0)
-  const speedRef   = useRef(1)
-  const targetRef  = useRef(1)
-  const pausedRef  = useRef(false)
-  const lastTsRef  = useRef(null)
-  const rafRef     = useRef(null)
+  const [circleHovered, setCircleHovered] = useState(false)
 
   useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
-
-  // Sync pause sans re-render
-  useEffect(() => { pausedRef.current = !!activeMetric }, [activeMetric])
-
-  // Boucle rAF — vitesse lissée par lerp
-  useEffect(() => {
-    function tick(ts) {
-      if (!lastTsRef.current) lastTsRef.current = ts
-      const dt = Math.min(ts - lastTsRef.current, 50)
-      lastTsRef.current = ts
-      // lerp doux vers la vitesse cible
-      speedRef.current += (targetRef.current - speedRef.current) * 0.045
-      if (!pausedRef.current) {
-        // ~60°/s à speed=1 → tour complet en ~6s
-        angleRef.current = (angleRef.current + dt * 0.058 * speedRef.current) % 360
-      }
-      const xfm = `rotate(${angleRef.current.toFixed(2)},${SVG_C},${SVG_C})`
-      if (ringRef.current) ringRef.current.setAttribute('transform', xfm)
-      if (glowRef.current) glowRef.current.setAttribute('transform', xfm)
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
-  }, [])
 
   const hour = new Date().getHours()
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
@@ -154,64 +270,23 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         </div>
         <div style={hc.greetName}>{greeting}, <span style={hc.greetNameAccent}>{profil?.nom}</span> !</div>
 
-        {/* ── Nova Glow Ring ── */}
+        {/* ── Nova WebGL Orb ── */}
         <div style={hc.circleWrap}
-          onMouseEnter={() => { targetRef.current = 3 }}
-          onMouseLeave={() => { targetRef.current = 1 }}
+          onMouseEnter={() => setCircleHovered(true)}
+          onMouseLeave={() => setCircleHovered(false)}
         >
-          {/* Halos aurora — ne débordent pas vers le haut (top:0) */}
-          <div style={{ position:'absolute', top:0, left:-80, right:-80, bottom:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 30% 70%, rgba(216,180,254,0.22) 0%, transparent 52%)',
-            animation:'novaBreath 4s ease-in-out infinite', filter:'blur(22px)' }} />
-          <div style={{ position:'absolute', top:0, left:-80, right:-80, bottom:-80, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 70% 80%, rgba(255,200,130,0.20) 0%, transparent 52%)',
-            animation:'novaBreath 5.5s ease-in-out infinite 1.2s', filter:'blur(22px)' }} />
-          <div style={{ position:'absolute', top:0, left:-65, right:-65, bottom:-65, borderRadius:'50%', pointerEvents:'none',
-            background:'radial-gradient(ellipse at 20% 75%, rgba(255,249,145,0.50) 0%, transparent 50%)',
-            animation:'novaBreath 6s ease-in-out infinite 2.4s', filter:'blur(16px)' }} />
+          {/* Orb WebGL — distorsion quand circleHovered ou métrique active */}
+          <NovaOrbGL active={circleHovered || !!activeMetric} />
 
-          {/* SVG Ring — animé par rAF, aucun re-render React */}
-          <svg width={SVG_SZ} height={SVG_SZ} aria-hidden="true"
-            style={{ position:'absolute', inset:0, pointerEvents:'none', overflow:'visible' }}>
-            <defs>
-              <filter id="novaGlow" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="7" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            {/* Glow flou très doux — pas de trait visible */}
-            <g ref={glowRef}>
-              {GLOW_ARCS.map(([a0,a1,color,w], i) => (
-                <path key={i}
-                  d={arcPath(SVG_C, SVG_C, RING_R, a0, a1)}
-                  stroke={color} strokeWidth={w * 1.6} fill="none" strokeLinecap="round"
-                  filter="url(#novaGlow)" opacity="0.55" />
-              ))}
-            </g>
-            {/* Comètes seulement — pas d'arcs/traits */}
-            <g ref={ringRef}>
-              {COMET_DOTS.map((c, i) => {
-                const rad = (c.a - 90) * Math.PI / 180
-                const cx = SVG_C + RING_R * Math.cos(rad)
-                const cy = SVG_C + RING_R * Math.sin(rad)
-                return (
-                  <circle key={i} cx={cx.toFixed(2)} cy={cy.toFixed(2)} r={c.r} fill={c.fill}
-                    style={{ filter:`drop-shadow(0 0 9px ${c.glowColor})` }} />
-                )
-              })}
-            </g>
-          </svg>
-
-          {/* Centre verre blanc pur */}
+          {/* Voile blanc central radial — lisibilité du score sans fond dur */}
           <div style={{
-            position:'absolute', inset:11, borderRadius:'50%',
-            background:'rgba(255,255,254,0.97)', backdropFilter:'blur(4px)',
-            pointerEvents:'none',
+            position:'absolute', inset:0, borderRadius:'50%', pointerEvents:'none', zIndex:1,
+            background:'radial-gradient(circle at center, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.22) 36%, transparent 58%)',
           }} />
 
-          {/* ── Score texte — centré, sans label ── */}
+          {/* ── Score texte — centré, au-dessus du voile ── */}
           <div style={{
-            position:'absolute', inset:0, zIndex:2, pointerEvents:'none',
+            position:'absolute', inset:0, zIndex:3, pointerEvents:'none',
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
           }}>
             {score > 0 ? (
