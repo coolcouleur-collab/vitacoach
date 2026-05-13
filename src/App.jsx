@@ -762,6 +762,22 @@ export default function App() {
           0%,100% { transform: translateX(0) translateY(-50%); opacity:0.3; }
           50%      { transform: translateX(6px) translateY(-50%); opacity:0.7; }
         }
+        @keyframes shimmerDot {
+          0%,100% { opacity:0.5; transform:scaleX(1); }
+          50%      { opacity:1;   transform:scaleX(1.15); }
+        }
+        @keyframes pulseDot1 {
+          0%,100% { transform:scale(1);    opacity:0.7; }
+          50%      { transform:scale(1.35); opacity:1; }
+        }
+        @keyframes pulseDot2 {
+          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(255,107,53,0.4); }
+          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(255,107,53,0.7); }
+        }
+        @keyframes pulseDot3 {
+          0%,100% { transform:scale(1);    opacity:0.7; }
+          50%      { transform:scale(1.35); opacity:1; }
+        }
         @keyframes particleFloat {
           0%,100% { transform: translate(0px, 0px) scale(1); opacity: 0.4; }
           25%      { transform: translate(3px, -7px) scale(1.6); opacity: 0.85; }

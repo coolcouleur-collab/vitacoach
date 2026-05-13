@@ -161,7 +161,15 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
               fontSize:50, fontWeight:900, color:'#1a0a00', lineHeight:1,
               animation: mounted ? 'countIn 0.8s ease 0.3s both' : 'none',
             }}>
-              {score > 0 ? score : '—'}
+              {score > 0 ? score : (
+                <div style={{ display:'flex', alignItems:'center', gap:5, justifyContent:'center', marginTop:8 }}>
+                  <div style={{ width:38, height:2, background:'linear-gradient(to right, transparent, #FF6B35)', animation:'shimmerDot 2s ease-in-out infinite' }} />
+                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#FF6B35', animation:'pulseDot1 1.8s ease-in-out infinite' }} />
+                  <div style={{ width:9, height:9, borderRadius:'50%', background:'linear-gradient(135deg,#FF6B35,#FF9A3C)', animation:'pulseDot2 1.8s ease-in-out infinite 0.3s', boxShadow:'0 0 8px rgba(255,107,53,0.5)' }} />
+                  <div style={{ width:6, height:6, borderRadius:'50%', background:'#FF6B35', animation:'pulseDot3 1.8s ease-in-out infinite 0.6s' }} />
+                  <div style={{ width:38, height:2, background:'linear-gradient(to left, transparent, #FF6B35)', animation:'shimmerDot 2s ease-in-out infinite' }} />
+                </div>
+              )}
             </div>
             <div style={{ fontSize:9, color:'#8a7265', letterSpacing:'2.8px', textTransform:'uppercase', fontWeight:700, marginTop:5 }}>
               SCORE FORME
