@@ -9,6 +9,54 @@ import SanteTab, { scoreJour } from './SanteTab'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
+// ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
+function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', style = {} }) {
+  const [active, setActive] = useState(false)
+  const offTimer  = useRef(null)
+  const hovering  = useRef(false)
+
+  function handleEnter() {
+    hovering.current = true
+    clearTimeout(offTimer.current)
+    setActive(true)
+  }
+  function handleLeave() {
+    hovering.current = false
+    clearTimeout(offTimer.current)
+    setActive(false)
+  }
+  function handleClick() {
+    setActive(true)
+    clearTimeout(offTimer.current)
+    // Sur mobile (pas de mouseLeave) : arrête après 1,5 cycle
+    offTimer.current = setTimeout(() => {
+      if (!hovering.current) setActive(false)
+    }, parseFloat(animDuration) * 1500)
+  }
+
+  return (
+    <div
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onClick={handleClick}
+      style={{
+        background: gradient,
+        backgroundSize: '250% 100%',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        animation: active ? `shimmerGrad ${animDuration} linear infinite ${animDelay}` : 'none',
+        cursor: 'default',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        ...style,
+      }}
+    >
+      {text}
+    </div>
+  )
+}
+
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
 function SolennFace({ size = 34 }) {
   return (
@@ -369,8 +417,19 @@ export default function App() {
       {!isMobile && (
         <aside style={s.sidebar}>
           <div style={s.sidebarTop}>
-            <div style={s.logo}>Solenn</div>
-            <div style={s.logoSub}>re·vivre · évoluer</div>
+            <ShinyLogoText
+              text="Solenn"
+              gradient="linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)"
+              animDuration="4s"
+              style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
+            />
+            <ShinyLogoText
+              text="re·vivre · évoluer"
+              gradient="linear-gradient(90deg, #38c1b6 0%, #a8e8e4 25%, #ffffff 45%, #a8e8e4 68%, #38c1b6 100%)"
+              animDuration="6s"
+              animDelay="0.8s"
+              style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}
+            />
           </div>
 
           <nav style={s.sidebarNav}>
@@ -436,7 +495,12 @@ export default function App() {
                   <BackIcon color="#1a0a00" size={20} />
                 </button>
               ) : (
-                <div style={s.logo}>Solenn</div>
+                <ShinyLogoText
+                  text="Solenn"
+                  gradient="linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)"
+                  animDuration="4s"
+                  style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
+                />
               )}
 
               <div style={s.mobileTitle}>
@@ -1286,18 +1350,16 @@ const s = {
   sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid #E8E6E2' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
-    /* ── Shiny Text sweep ── */
+    /* Géré par ShinyLogoText — statique par défaut, shimmer au hover/tap */
     background:'linear-gradient(90deg, #8b5cf6 0%, #c4b5fd 18%, #f5f0ff 34%, #c4b5fd 50%, #8b5cf6 66%, #ddd6fe 82%, #8b5cf6 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-    animation:'shimmerGrad 4s linear infinite',
   },
   logoSub: {
     fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600,
     background:'linear-gradient(90deg, #38c1b6 0%, #a8e8e4 25%, #ffffff 45%, #a8e8e4 68%, #38c1b6 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-    animation:'shimmerGrad 6s linear infinite 0.8s',
   },
   sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
   sidebarBottom: { display:'flex', flexDirection:'column', gap:8, marginTop:'2rem', paddingTop:'2rem', borderTop:'1px solid #f0e8e0' },
