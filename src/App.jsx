@@ -1838,9 +1838,9 @@ const s = {
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,#F5D4B8,#ECC49A)', color:'rgba(160,90,30,0.85)', border:'1px solid rgba(200,123,82,0.18)',
+    background:'linear-gradient(135deg,#ECA882,#D4956A)', color:'#fff', border:'none',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 2px 10px rgba(200,123,82,.10)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 4px 14px rgba(200,123,82,.20)', textAlign:'center',
   },
   proBadge: {
     background:'rgba(245,212,184,0.35)', color:'rgba(180,100,40,0.70)',
