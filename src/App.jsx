@@ -40,11 +40,13 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
       onMouseLeave={handleLeave}
       onClick={handleClick}
       style={{
+        display: 'inline-block',
         background: gradient,
         backgroundSize: '250% 100%',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
+        color: 'transparent',
         animation: active ? `shimmerGrad ${animDuration} ease-in-out infinite ${animDelay}` : 'none',
         cursor: 'default',
         userSelect: 'none',
