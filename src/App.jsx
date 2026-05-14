@@ -586,7 +586,7 @@ export default function App() {
           <div style={s.sidebarTop}>
             <ShinyLogoText
               text="Solenn"
-              gradient="linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)"
+              gradient="linear-gradient(90deg, #ECA882 0%, #FFF8F4 20%, #F5D4B8 36%, #FFF8F4 52%, #D4956A 68%, #FCDEC8 84%, #ECA882 100%)"
               animDuration="10s"
               style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
             />
@@ -668,7 +668,7 @@ export default function App() {
               ) : (
                 <ShinyLogoText
                   text="Solenn"
-                  gradient="linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)"
+                  gradient="linear-gradient(90deg, #ECA882 0%, #FFF8F4 20%, #F5D4B8 36%, #FFF8F4 52%, #D4956A 68%, #FCDEC8 84%, #ECA882 100%)"
                   animDuration="4s"
                   style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
                 />
