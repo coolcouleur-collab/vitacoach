@@ -646,7 +646,7 @@ export default function App() {
                   <ShinyLogoText
                     text="Solenn"
                     color="rgba(232,150,42,0.55)"
-                    animDuration="18s"
+                    animDuration="8s"
                     autoPlay={true}
                     style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
                   />
@@ -1843,17 +1843,17 @@ const s = {
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,#ECA882,#D4956A)', color:'#fff', border:'none',
+    background:'linear-gradient(135deg,#F5D4B8,#ECC49A)', color:'rgba(160,90,30,0.85)', border:'1px solid rgba(200,123,82,0.18)',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 4px 14px rgba(200,123,82,.20)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 2px 10px rgba(200,123,82,.10)', textAlign:'center',
   },
   proBadge: {
-    background:'rgba(200,123,82,.08)', color:'#C87B52',
-    border:'1px solid rgba(200,123,82,.22)',
+    background:'rgba(245,212,184,0.35)', color:'rgba(180,100,40,0.70)',
+    border:'1px solid rgba(200,123,82,.15)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'transparent', color:'#8a7265', border:'1px solid #f0e8e0',
+    background:'rgba(245,235,225,0.50)', color:'rgba(160,120,80,0.65)', border:'1px solid rgba(200,150,100,0.18)',
     padding:'9px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
