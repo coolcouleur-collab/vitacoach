@@ -287,9 +287,6 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       </div>
 
       {/* ── Metrics Grid ── */}
-      <div style={{ fontSize: 10, color: '#c4b5a8', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12, marginTop: 4, fontWeight: 700 }}>
-        Métriques · Appuie pour modifier
-      </div>
       <div style={ss.grid}>
         {METRICS.map(m => {
           const val = metriques[m.key] || 0
@@ -528,12 +525,11 @@ const ss = {
     boxShadow: '0 4px 14px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   btnWater: {
-    background: 'rgba(200,123,82,0.14)',
-    backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(200,123,82,0.28)',
-    color: '#C87B52', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 800,
+    background: 'rgba(56,189,248,0.10)',
+    border: '1px solid rgba(56,189,248,0.28)',
+    color: 'rgba(56,189,248,0.90)', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
+    boxShadow: 'none',
     transition: 'transform 0.15s ease',
     letterSpacing: 0.2
   },
