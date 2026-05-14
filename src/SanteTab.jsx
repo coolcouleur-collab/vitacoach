@@ -500,12 +500,12 @@ const ss = {
   },
   btnInsights: {
     width: '100%',
-    background: 'linear-gradient(135deg, rgba(245,212,184,0.38), rgba(232,160,122,0.28), rgba(200,123,82,0.22))',
+    background: 'linear-gradient(150deg, #FFF3EC 0%, #F0D5BA 50%, #E8C4A8 100%)',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    color: '#C87B52',
-    border: '1px solid rgba(200,123,82,0.28)', padding: '12px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800,
+    color: '#9E5C35',
+    border: '1.5px solid rgba(200,123,82,0.35)', padding: '12px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
-    boxShadow: '0 0 14px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,255,255,0.65)',
+    boxShadow: '0 4px 18px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,255,255,0.85)',
     transition: 'transform 0.15s ease',
     letterSpacing: 0.3
   },
