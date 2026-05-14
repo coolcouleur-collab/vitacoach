@@ -404,16 +404,15 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
     <div style={hc.hero}>
       <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center' }}>
 
-        <div style={hc.greetBadge}>
-          <span style={hc.greetDot} />
-          {dayLabel}
-        </div>
-        <div style={hc.greetName}>
-          <div style={{ fontSize:16, fontWeight:600, color:'#9b6b50', letterSpacing:'0.3px', marginBottom:6, opacity:1 }}>
-            {greeting},
+        <div style={{ textAlign:'center', marginTop:28, marginBottom:22 }}>
+          <div style={{ fontSize:10, color:'rgba(155,107,80,0.40)', fontWeight:400, letterSpacing:'1.2px', marginBottom:10, textTransform:'lowercase' }}>
+            {dayLabel}
           </div>
-          <div style={{ fontSize:34, fontWeight:700, letterSpacing:'-1px', lineHeight:1.1 }}>
-            <span style={hc.greetNameAccent}>{profil?.nom || profil?.prenom || 'toi'}</span>
+          <div style={{ fontSize:20, fontWeight:300, color:'rgba(90,55,25,0.55)', letterSpacing:'-0.2px' }}>
+            {greeting},{' '}
+            <span style={{ fontWeight:600, color:'rgba(200,123,82,0.85)' }}>
+              {profil?.nom || profil?.prenom || 'toi'}
+            </span>
           </div>
         </div>
 
