@@ -971,11 +971,11 @@ export default function App() {
             <nav style={{
               position:'fixed', bottom:22, left:'50%', transform:'translateX(-50%)',
               display:'inline-flex', alignItems:'center',
-              background:'rgba(180,110,65,0.10)',
+              background:'rgba(255,248,244,0.55)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
               borderRadius:22,
-              border:'1px solid rgba(200,123,82,0.14)',
-              boxShadow:'0 4px 24px rgba(200,123,82,0.08), 0 1px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.70)',
+              border:'1px solid rgba(200,123,82,0.07)',
+              boxShadow:'0 2px 16px rgba(0,0,0,0.05)',
               padding:'8px 6px',
               gap:2,
               zIndex:100,
@@ -986,16 +986,16 @@ export default function App() {
                 position:'absolute', top:7, bottom:7,
                 width:`calc((100% - 16px) / ${navItems.length})`,
                 left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
-                background:'rgba(200,123,82,0.10)',
+                background:'rgba(200,123,82,0.08)',
                 borderRadius:15,
-                border:'1px solid rgba(200,123,82,0.22)',
-                boxShadow:'0 2px 10px rgba(200,123,82,0.16)',
+                border:'1px solid rgba(200,123,82,0.12)',
+                boxShadow:'none',
                 transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
                 pointerEvents:'none', zIndex:0,
               }} />
               {navItems.map(({ id, Icon, label }) => {
                 const active = onglet === id
-                const color  = active ? '#C87B52' : '#9e8c7c'
+                const color  = active ? '#C87B52' : 'rgba(140,115,95,0.50)'
                 return (
                   <button key={id}
                     style={{
