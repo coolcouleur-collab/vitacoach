@@ -661,11 +661,6 @@ export default function App() {
               </div>
 
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                {score > 0 && onglet === 'accueil' && (
-                  <div style={{ ...s.scorePill, background: 'rgba(232,150,42,0.10)', color: 'rgba(232,150,42,0.75)', border:'1px solid rgba(232,150,42,0.22)' }}>
-                    {score}
-                  </div>
-                )}
                 {/* ── Hamburger button ── */}
                 <button onClick={() => setMenuOpen(o => !o)} style={{
                   width:34, height:34, borderRadius:10,
