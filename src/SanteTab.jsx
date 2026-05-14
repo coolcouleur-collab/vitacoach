@@ -235,10 +235,13 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           <div style={{ fontWeight: 700, color: '#F97316', marginBottom: 12, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
             <LightbulbIcon size={14} color="#F97316" /> Analyse personnalisée
           </div>
-          {insights.points?.map((p, i) => (
+          {(insights.insights || insights.points || []).map((p, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
               <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{p.emoji || '•'}</span>
-              <div style={{ fontSize: 13, color: '#1a0a00', lineHeight: 1.65 }}>{p.message}</div>
+              <div>
+                {p.titre && <div style={{ fontSize: 12, fontWeight: 700, color: '#C87B52', marginBottom: 2 }}>{p.titre}</div>}
+                <div style={{ fontSize: 13, color: 'rgba(90,55,25,0.85)', lineHeight: 1.65 }}>{p.message}</div>
+              </div>
             </div>
           ))}
         </div>
