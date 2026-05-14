@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, Component } from 'react'
+import { supabase } from './supabase'
+import SplashScreen from './SplashScreen'
 import Auth from './Auth'
 import Landing from './Landing'
 import Forum from './Forum'
@@ -52,8 +54,7 @@ function SolennFace({ size = 34 }) {
       background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 4px 14px rgba(200,123,82,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
-      marginTop: 4,
+      boxShadow: '0 2px 8px rgba(200,123,82,0.18), inset 0 1px 0 rgba(255,255,255,0.25)',
     }}>
       {/* Reflet */}
       <div style={{
@@ -96,6 +97,80 @@ class MsgBoundary extends Component {
     }
     return this.props.children
   }
+}
+
+// ─── HEALTH PERMISSION MODAL ─────────────────────────────────────────────────
+function HealthPermModal({ onAllow, onLater }) {
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:1500,
+      background:'rgba(10,4,0,0.45)', backdropFilter:'blur(10px)',
+      display:'flex', alignItems:'flex-end', justifyContent:'center',
+    }}>
+      <div style={{
+        background:'linear-gradient(145deg,#FFF8F4,#ffffff)',
+        borderRadius:'28px 28px 0 0',
+        padding:'10px 26px 52px',
+        width:'100%', maxWidth:520,
+        boxShadow:'0 -12px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9)',
+        animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
+      }}>
+        <div style={{ width:44, height:5, background:'rgba(0,0,0,0.10)', borderRadius:3, margin:'12px auto 26px' }} />
+
+        <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
+          {[
+            { bg:'linear-gradient(135deg,#ff3b30,#ff6b6b)', shadow:'rgba(255,59,48,0.30)', e:'❤️' },
+            { bg:'linear-gradient(135deg,#34c759,#30d158)', shadow:'rgba(52,199,89,0.30)',  e:'🏃' },
+          ].map(({ bg, shadow, e }) => (
+            <div key={e} style={{ width:56, height:56, borderRadius:18, background:bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, boxShadow:`0 6px 20px ${shadow}` }}>{e}</div>
+          ))}
+        </div>
+
+        <div style={{ fontSize:19, fontWeight:900, color:'#1a0a00', textAlign:'center', marginBottom:8, letterSpacing:'-0.03em' }}>
+          Synchroniser mes données santé
+        </div>
+        <div style={{ fontSize:13, color:'rgba(90,55,25,0.60)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
+          Solenn peut synchroniser automatiquement tes données depuis{' '}
+          <strong style={{ color:'#C87B52' }}>Apple Santé</strong> ou{' '}
+          <strong style={{ color:'#C87B52' }}>Google Fit</strong>.
+        </div>
+
+        {[
+          { icon:'👟', label:'Activité & pas quotidiens' },
+          { icon:'🌙', label:'Sommeil & récupération' },
+          { icon:'💗', label:'Fréquence cardiaque' },
+          { icon:'⚖️', label:'Poids & composition' },
+        ].map(({ icon, label }) => (
+          <div key={label} style={{
+            display:'flex', alignItems:'center', gap:12,
+            padding:'10px 14px', borderRadius:13, marginBottom:7,
+            background:'rgba(200,123,82,0.05)', border:'1px solid rgba(200,123,82,0.10)',
+          }}>
+            <span style={{ fontSize:18 }}>{icon}</span>
+            <span style={{ fontSize:13, color:'#3a1a08', fontWeight:600, flex:1 }}>{label}</span>
+            <span style={{ fontSize:10, color:'#34c759', fontWeight:700, background:'rgba(52,199,89,0.10)', padding:'3px 8px', borderRadius:6 }}>Lecture seule</span>
+          </div>
+        ))}
+
+        <div style={{ marginTop:22, display:'flex', flexDirection:'column', gap:10 }}>
+          <button onClick={onAllow} style={{
+            padding:'16px', borderRadius:16, border:'none',
+            background:'linear-gradient(135deg,#C87B52,#9E5C35)',
+            color:'#fff', fontSize:15, fontWeight:800,
+            cursor:'pointer', fontFamily:'Poppins,sans-serif',
+            boxShadow:'0 8px 28px rgba(200,123,82,0.40)', letterSpacing:'-0.02em',
+          }}>Autoriser l'accès</button>
+          <button onClick={onLater} style={{
+            padding:'14px', borderRadius:16,
+            border:'1px solid rgba(200,123,82,0.18)',
+            background:'transparent', color:'rgba(120,80,50,0.55)',
+            fontSize:13, fontWeight:600,
+            cursor:'pointer', fontFamily:'Poppins,sans-serif',
+          }}>Plus tard</button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ─── CELEBRATION OVERLAY ─────────────────────────────────────────────────────
@@ -152,14 +227,15 @@ function ReactionBtn({ emoji, active, onClick }) {
   const [pressed, setPressed] = useState(false)
   return (
     <button
-      onClick={() => { onClick(); setPressed(true); setTimeout(() => setPressed(false), 300) }}
+      type="button"
+      onClick={e => { e.stopPropagation(); e.preventDefault(); onClick(); setPressed(true); setTimeout(() => setPressed(false), 300) }}
       style={{
-        background: active ? 'rgba(200,123,82,0.22)' : 'transparent',
-        border: active ? '1.5px solid rgba(200,123,82,0.45)' : '1.5px solid rgba(200,123,82,0.12)',
+        background: active ? 'rgba(255,255,255,0.35)' : 'transparent',
+        border: active ? '1.5px solid rgba(255,255,255,0.55)' : '1.5px solid rgba(0,0,0,0.08)',
         borderRadius: 10, padding: '3px 9px', fontSize: active ? 15 : 13,
         cursor: 'pointer', transition: 'all 0.18s cubic-bezier(0.34,1.56,0.64,1)',
         transform: pressed ? 'scale(1.35)' : active ? 'scale(1.12)' : 'scale(1)',
-        boxShadow: active ? '0 0 10px rgba(200,123,82,0.30)' : 'none',
+        boxShadow: active ? '0 2px 10px rgba(0,0,0,0.08)' : 'none',
         filter: active ? 'none' : 'grayscale(0.3) opacity(0.6)',
         outline: 'none',
       }}
@@ -181,6 +257,25 @@ const defaultMetriques = () => {
 
 function sauverMetriques(m) {
   localStorage.setItem('vitacoach_metriques', JSON.stringify({ ...m, date: new Date().toDateString() }))
+}
+
+async function syncMetriquesSupabase(userId, m) {
+  if (!userId) return
+  const today = new Date().toISOString().split('T')[0]
+  await supabase.from('user_metrics').upsert({
+    user_id: userId, date: today,
+    pas: m.pas||0, sommeil: m.sommeil||0, eau: m.eau||0,
+    fc: m.fc||0, humeur: m.humeur||0, poids: m.poids||0,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id,date' })
+}
+
+async function syncProfilSupabase(userId, profil) {
+  if (!userId) return
+  await supabase.from('user_profiles').upsert({
+    user_id: userId, profil,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' })
 }
 
 // Convertit base64url en Uint8Array pour VAPID
@@ -211,6 +306,7 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
+  const [splashDone, setSplashDone] = useState(false)
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
@@ -241,6 +337,8 @@ export default function App() {
   const [followUps, setFollowUps]   = useState([])
   const [celebrate, setCelebrate]   = useState(false)
   const celebInitRef = useRef(false)
+  const [showHealthPerm, setShowHealthPerm] = useState(false)
+  const healthPermShownRef = useRef(false)
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
   const [menuOpen, setMenuOpen] = useState(false)
@@ -309,6 +407,53 @@ export default function App() {
     }
   }, [metriques])
 
+  // ── Sync Supabase → local à la connexion ──────────────────────────────────
+  useEffect(() => {
+    if (!user?.id) return
+    const today = new Date().toISOString().split('T')[0]
+
+    // Charger le profil depuis Supabase (priorité sur localStorage)
+    supabase.from('user_profiles').select('profil').eq('user_id', user.id).maybeSingle()
+      .then(({ data }) => {
+        if (data?.profil) {
+          setProfil(data.profil)
+          localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
+        }
+      })
+
+    // Charger les métriques du jour depuis Supabase
+    supabase.from('user_metrics').select('*').eq('user_id', user.id).eq('date', today).maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          const m = {
+            date: new Date().toDateString(),
+            pas: data.pas||0, sommeil: data.sommeil||0, eau: data.eau||0,
+            fc: data.fc||0, humeur: data.humeur||0, poids: data.poids||0,
+          }
+          setMetriques(m)
+          localStorage.setItem('vitacoach_metriques', JSON.stringify(m))
+        }
+      })
+  }, [user?.id])
+
+  // Permission apps santé — affichée une seule fois au 1er lancement après profil
+  useEffect(() => {
+    if (!profil || healthPermShownRef.current) return
+    if (localStorage.getItem('vitacoach_health_perm')) return
+    healthPermShownRef.current = true
+    const t = setTimeout(() => setShowHealthPerm(true), 1800)
+    return () => clearTimeout(t)
+  }, [profil])
+
+  function allowHealth() {
+    localStorage.setItem('vitacoach_health_perm', 'granted')
+    setShowHealthPerm(false)
+  }
+  function laterHealth() {
+    localStorage.setItem('vitacoach_health_perm', 'later')
+    setShowHealthPerm(false)
+  }
+
   // Suggestions dynamiques heure + profil + streak
   useEffect(() => {
     if (!profil) return
@@ -373,6 +518,8 @@ export default function App() {
     setMetriques(prev => {
       const newM = { ...prev, [key]: val }
       sauverMetriques(newM)
+      // Sync Supabase (fire & forget)
+      syncMetriquesSupabase(user?.id, newM)
       // Sauvegarde dans l'historique 30 jours
       const today = new Date().toDateString()
       const hist = safeParse('vitacoach_history', [])
@@ -501,7 +648,7 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false)
   const [showForum, setShowForum] = useState(false)
 
-  if (showForum) return <Forum onBack={() => setShowForum(false)} user={user} />
+  if (showForum) return <Forum onBack={() => setShowForum(false)} user={user} profil={profil} />
   if (!user && !showAuth) return <Landing onCommencer={() => setShowAuth(true)} onForum={() => setShowForum(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
@@ -519,6 +666,7 @@ export default function App() {
         setProfil(p)
         setProfilBackup(null)
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
+        syncProfilSupabase(user?.id, p)
         const h2 = new Date().getHours()
         const g2 = h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
         setMessages([{ role:'assistant', content:`${g2} ${p.nom} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
@@ -543,6 +691,7 @@ export default function App() {
 
   return (
     <div style={s.app}>
+      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
 
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
@@ -636,12 +785,12 @@ export default function App() {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 252 }}>
-        <div style={{ ...s.content, padding: isMobile ? '0 0 108px' : '0 0 40px' }}>
+        <div style={{ ...s.content, padding: isMobile ? '0 0 130px' : '0 0 40px' }}>
 
           {/* Mobile header */}
           {isMobile && (() => {
             const onChat = onglet === 'chat'
-            const iconColor = 'rgba(232,150,42,0.55)'
+            const iconColor = 'rgba(200,123,82,0.55)'
             return (
             <div style={s.mobileHeader}>
               {onglet !== 'accueil' ? (
@@ -792,21 +941,28 @@ export default function App() {
               <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
+                    {/* Mascot */}
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom:14 }}>
+                      <SolennFace size={46} />
+                    </div>
+
+                    <div style={s.emptyChatTitle}>
+                      {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${profil.prenom || profil.nom} ?` : `Comment je peux t'aider ?`}
+                    </div>
+                    <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
+
                     {streak > 0 && (
-                      <div style={{ display:'flex', justifyContent:'center', marginBottom:12 }}>
-                        <span style={{ background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:12, fontWeight:700, color:'rgba(180,100,30,0.85)', display:'flex', alignItems:'center', gap:5 }}>
+                      <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
+                        <span style={{ background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(180,100,30,0.75)', display:'flex', alignItems:'center', gap:5 }}>
                           🔥 {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
                     )}
-                    <div style={s.emptyChatTitle}>
-                      {(() => { const h=new Date().getHours(); return h<12?'🌅 Bonjour':h<18?'☀️ Salut':'🌙 Bonsoir' })()} {profil?.nom} !
-                    </div>
-                    <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
+
                     <div style={s.suggestionsPile}>
                       {suggestions.map((sug, i) => (
                         <button key={i} style={s.suggestionBig} onClick={() => envoyerMessage(sug)}>
-                          {sug}
+                          <span style={{ opacity:0.45, marginRight:8, fontSize:11 }}>→</span>{sug}
                         </button>
                       ))}
                     </div>
@@ -815,6 +971,15 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
+                    {/* Avatar Solenn — visible sur le premier message d'une série IA */}
+                    {msg.role === 'assistant' && (i === 0 || messages[i-1]?.role === 'user') && (
+                      <div style={{ flexShrink:0, marginTop:4 }}>
+                        <SolennFace size={26} />
+                      </div>
+                    )}
+                    {msg.role === 'assistant' && i > 0 && messages[i-1]?.role === 'assistant' && (
+                      <div style={{ width:26, flexShrink:0 }} />
+                    )}
                     <div style={{ display:'flex', flexDirection:'column', gap:4, maxWidth: msg.role==='user' ? '76%' : isRich(msg.content) ? '90%' : '82%' }}>
                       <div style={
                         msg.role==='user'
@@ -891,28 +1056,30 @@ export default function App() {
 
           {/* ── Santé ── */}
           {onglet === 'sante' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
-              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
-                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
-                <div>
-                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8, color: isMobile ? '#C87B52' : undefined, fontSize: isMobile ? 14 : undefined, fontWeight: isMobile ? 600 : undefined }}>{!isMobile && <HeartIcon size={20} color="#ff3b30" />} {isMobile ? 'Santé' : 'Suivi Santé'}</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Tes métriques du jour</div>}
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
+              {!isMobile && (
+                <div style={s.pageHeader}>
+                  <div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#ff3b30" /> Suivi Santé</div>
+                    <div style={s.pageSubtitle}>Tes métriques du jour</div>
+                  </div>
                 </div>
-              </div>
+              )}
               <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} />
             </div>
           )}
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
-              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
-                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
-                <div>
-                  <div style={s.pageTitle}>{isMobile ? 'Routine' : '📋 Routine du jour'}</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Ton programme personnalisé</div>}
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
+              {!isMobile && (
+                <div style={s.pageHeader}>
+                  <div>
+                    <div style={s.pageTitle}>📋 Routine du jour</div>
+                    <div style={s.pageSubtitle}>Ton programme personnalisé</div>
+                  </div>
                 </div>
-              </div>
+              )}
               <RoutineModule profil={profil} metriques={metriques} />
             </div>
           )}
@@ -928,21 +1095,29 @@ export default function App() {
 
           {/* ── Style ── */}
           {onglet === 'style' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
-              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
-                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
-                <div>
-                  <div style={s.pageTitle}>{isMobile ? 'Style' : '👗 Style & Tenues'}</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>}
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
+              {!isMobile && (
+                <div style={s.pageHeader}>
+                  <div>
+                    <div style={{ ...s.pageTitle, display:'flex', alignItems:'center', gap:8 }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
+                        <path d="M12 6 L5 13 h14 L12 6Z"/>
+                        <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
+                      </svg>
+                      Style & Tenues
+                    </div>
+                    <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>
+                  </div>
                 </div>
-              </div>
+              )}
               <TenuesModule profil={profil} />
             </div>
           )}
 
           {/* ── Forum ── */}
           {onglet === 'forum' && (
-            <Forum onBack={() => setOnglet('accueil')} user={user} />
+            <Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} />
           )}
 
           </div>{/* end keyed tab wrapper */}
@@ -956,31 +1131,32 @@ export default function App() {
             <nav style={{
               position:'fixed', bottom:22, left:'50%', transform:'translateX(-50%)',
               display:'inline-flex', alignItems:'center',
-              background:'rgba(255,248,244,0.55)',
+              background:'rgba(255,248,244,0.88)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
               borderRadius:22,
-              border:'1px solid rgba(200,123,82,0.07)',
-              boxShadow:'0 2px 16px rgba(0,0,0,0.05)',
+              border:'1px solid rgba(200,123,82,0.08)',
+              boxShadow:'0 4px 24px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.9)',
               padding:'8px 6px',
               gap:2,
               zIndex:100,
               whiteSpace:'nowrap',
             }}>
-              {/* Sliding active pill */}
-              <div style={{
-                position:'absolute', top:7, bottom:7,
-                width:`calc((100% - 16px) / ${navItems.length})`,
-                left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
-                background:'rgba(200,123,82,0.08)',
-                borderRadius:15,
-                border:'1px solid rgba(200,123,82,0.12)',
-                boxShadow:'none',
-                transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
-                pointerEvents:'none', zIndex:0,
-              }} />
+              {/* Sliding active pill — masqué si onglet hors nav */}
+              {activeIdx >= 0 && (
+                <div style={{
+                  position:'absolute', top:7, bottom:7,
+                  width:`calc((100% - 16px) / ${navItems.length})`,
+                  left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
+                  background:'rgba(200,123,82,0.07)',
+                  borderRadius:15,
+                  border:'1px solid rgba(200,123,82,0.06)',
+                  transition:'left 0.45s cubic-bezier(0.25,0.46,0.45,0.94)',
+                  pointerEvents:'none', zIndex:0,
+                }} />
+              )}
               {navItems.map(({ id, Icon, label }) => {
                 const active = onglet === id
-                const color  = active ? '#C87B52' : 'rgba(140,115,95,0.50)'
+                const color  = active ? 'rgba(200,123,82,0.65)' : 'rgba(200,123,82,0.30)'
                 return (
                   <button key={id}
                     style={{
@@ -989,17 +1165,24 @@ export default function App() {
                       padding:'7px 13px',
                       border:'none', background:'transparent', cursor:'pointer',
                       fontFamily:F, color,
-                      transition:'color 0.2s ease',
+                      transition:'color 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
                       minWidth:54,
                     }}
                     onClick={() => setOnglet(id)}>
                     <div style={{
-                      transform: active ? 'scale(1.20) translateY(-1px)' : 'scale(1)',
-                      transition:'transform 0.30s cubic-bezier(0.34,1.56,0.64,1)',
+                      transform: active ? 'scale(1.18) translateY(-2px)' : 'scale(1) translateY(0px)',
+                      transition:'transform 0.40s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease',
+                      opacity: 1,
                     }}>
                       <Icon color={color} size={21} />
                     </div>
-                    <span style={{ fontSize:9, fontWeight: active ? 800 : 500, letterSpacing:'0.3px', transition:'font-weight 0.2s' }}>
+                    <span style={{
+                      fontSize:9,
+                      fontWeight: active ? 700 : 400,
+                      letterSpacing:'0.3px',
+                      transition:'font-weight 0.35s ease, opacity 0.35s ease',
+                      opacity: 1,
+                    }}>
                       {label}
                     </span>
                   </button>
@@ -1012,6 +1195,9 @@ export default function App() {
 
       {/* Celebration overlay */}
       {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
+
+      {/* Health permission modal — 1er lancement */}
+      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} />}
 
       {/* Global animations */}
       <style>{`
@@ -1223,13 +1409,26 @@ export default function App() {
 
 // ─── ROUTINE MODULE ───────────────────────────────────────────────────────────
 function RoutineModule({ profil, metriques }) {
-  const [routine, setRoutine]       = useState(null)
-  const [loading, setLoading]       = useState(false)
+  const todayKey = new Date().toDateString()
+  const savedKey = `vitacoach_routine_${todayKey}`
+
+  const [routine, setRoutine]           = useState(() => {
+    try { return JSON.parse(localStorage.getItem(savedKey)) || null } catch { return null }
+  })
+  const [loading, setLoading]           = useState(false)
   const [routineError, setRoutineError] = useState(false)
-  const [checkedSteps, setCheckedSteps] = useState({})
+  const [checkedSteps, setCheckedSteps] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(`${savedKey}_checked`)) || {} } catch { return {} }
+  })
+
+  // Auto-générer au premier chargement si pas de routine sauvegardée
+  useEffect(() => {
+    if (!routine && !loading) genererRoutine()
+  }, [])
 
   async function genererRoutine() {
     setLoading(true); setCheckedSteps({}); setRoutineError(false)
+    localStorage.removeItem(`${savedKey}_checked`)
     try {
       const res = await fetch('/api/routine', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -1237,13 +1436,20 @@ function RoutineModule({ profil, metriques }) {
       })
       const data = await res.json()
       if (data.erreur) setRoutineError(true)
-      else setRoutine(data)
+      else {
+        setRoutine(data)
+        localStorage.setItem(savedKey, JSON.stringify(data))
+      }
     } catch { setRoutineError(true) }
     setLoading(false)
   }
 
   function toggleStep(id) {
-    setCheckedSteps(prev => ({ ...prev, [id]: !prev[id] }))
+    setCheckedSteps(prev => {
+      const next = { ...prev, [id]: !prev[id] }
+      localStorage.setItem(`${savedKey}_checked`, JSON.stringify(next))
+      return next
+    })
   }
 
   const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
@@ -1260,7 +1466,7 @@ function RoutineModule({ profil, metriques }) {
           <div style={sr.titre}>Ta routine du jour</div>
         </div>
         <button style={{...sr.btnGen, display:'flex', alignItems:'center', gap:6}} onClick={genererRoutine} disabled={loading}>
-          {loading ? <><LoadingIcon size={14} color="#fff" /> Génération...</> : routine ? <><RefreshIcon size={14} color="#fff" /> Regénérer</> : <><SparkleIcon size={14} color="#fff" /> Générer</>}
+          {loading ? <><LoadingIcon size={14} color="rgba(200,123,82,0.80)" /> Génération...</> : routine ? <><RefreshIcon size={14} color="rgba(200,123,82,0.80)" /> Regénérer</> : <><SparkleIcon size={14} color="rgba(200,123,82,0.80)" /> Générer</>}
         </button>
       </div>
 
@@ -1396,12 +1602,17 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
 }
 
 const sr = {
-  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0' },
+  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0', flexWrap:'wrap', gap:10 },
   date: { fontSize:11, color:'#c4b5a8', textTransform:'capitalize', letterSpacing:0.5, fontWeight:500 },
   titre: { fontSize:20, fontWeight:800, color:'#1a0a00', marginTop:3, letterSpacing:'-0.3px' },
-  btnGen: { background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff', border:'none',
-    padding:'10px 18px', borderRadius:13, fontSize:12, fontWeight:700, cursor:'pointer',
-    boxShadow:'0 4px 16px rgba(200,123,82,0.38)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
+  btnGen: {
+    background:'rgba(200,123,82,0.10)', color:'rgba(200,123,82,0.90)',
+    border:'1.5px solid rgba(200,123,82,0.25)',
+    padding:'8px 14px', borderRadius:12, fontSize:12, fontWeight:600, cursor:'pointer',
+    flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif",
+    display:'flex', alignItems:'center', gap:5,
+    boxShadow:'none',
+  },
   progressBar: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:14,
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(0,0,0,0.04)' },
   empty: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20, padding:'48px 32px',
@@ -1674,8 +1885,7 @@ function CapsuleSlider({ tenues, loading }) {
 }
 
 function TenuesModule({ profil }) {
-  const [ouvert, setOuvert]     = useState(false)
-  const [ville, setVille]       = useState('')
+  const [ville, setVille]       = useState(() => localStorage.getItem('vitacoach_ville') || '')
   const [occasion, setOccasion] = useState('Casual')
   const [tenues, setTenues]     = useState([])
   const [meteo, setMeteo]       = useState('')
@@ -1683,14 +1893,22 @@ function TenuesModule({ profil }) {
   const [villeError, setVilleError] = useState(false)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
-  async function getTenues() {
-    if (!ville.trim()) { setVilleError(true); return }
+  // Auto-charger si ville déjà connue
+  useEffect(() => {
+    const savedVille = localStorage.getItem('vitacoach_ville')
+    if (savedVille) getTenues(savedVille)
+  }, [])
+
+  async function getTenues(villeArg) {
+    const v = (villeArg || ville).trim()
+    if (!v) { setVilleError(true); return }
     setVilleError(false)
+    localStorage.setItem('vitacoach_ville', v)
     setLoading(true); setTenues([])
     try {
       const res = await fetch('/api/tenues', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profil, ville, occasion })
+        body: JSON.stringify({ profil, ville: v, occasion })
       })
       const data = await res.json()
       setTenues(data.tenues || [])
@@ -1700,51 +1918,69 @@ function TenuesModule({ profil }) {
   }
 
   return (
-    <div style={{ paddingBottom: 20 }}>
-      {/* Trigger */}
-      <button style={st.trigger} onClick={() => setOuvert(!ouvert)}>
-        <div style={st.triggerIcon}><span style={{ fontSize: 22 }}>👗</span></div>
-        <div style={{ flex: 1, textAlign: 'left' }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#1a0a00' }}>Idées tenues du jour</div>
-          <div style={{ fontSize: 12, color: '#8a7265', marginTop: 2 }}>Capsule Slider · Adaptées à la météo</div>
+    <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
+      <style>{`
+  .tenues-ville-input { border: 1.5px solid rgba(200,123,82,0.25) !important; box-shadow: none !important; }
+  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.45); }
+  .tenues-ville-input:focus { border-color: rgba(200,123,82,0.55) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
+`}</style>
+      {/* Controls — toujours visibles */}
+      <div style={{ ...st.panel, marginBottom: 0 }}>
+        {/* Ligne 1 : champ ville */}
+        <div style={{ marginBottom: 8 }}>
+          <input
+            className="tenues-ville-input"
+            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? '#ff3b30' : undefined }}
+            placeholder="Ta ville (ex: Paris)" value={ville}
+            onChange={e => { setVille(e.target.value); setVilleError(false) }}
+            onKeyDown={e => e.key === 'Enter' && getTenues()}
+          />
         </div>
-        <span style={{ color: '#c4b5a8' }}>{ouvert ? '▲' : '▼'}</span>
-      </button>
-
-      {ouvert && (
-        <div style={st.panel}>
-          {/* Controls */}
-          <div style={st.row}>
-            <input
-              style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
-              placeholder="Ta ville (ex: Paris)" value={ville}
-              onChange={e => { setVille(e.target.value); setVilleError(false) }}
-              onKeyDown={e => e.key === 'Enter' && getTenues()}
-            />
-            <select style={st.select} value={occasion} onChange={e => setOccasion(e.target.value)}>
-              {occasions.map(o => <option key={o} value={o}>{o}</option>)}
+        {/* Ligne 2 : select + bouton */}
+        <div style={{ ...st.row, marginBottom: 4 }}>
+          <div style={{ position:'relative', flex:1 }}>
+            <select style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
+              {occasions.map(o => <option key={o} value={o} style={{ background:'#FFF6EE', color:'rgba(200,123,82,0.9)' }}>{o}</option>)}
             </select>
-            <button style={st.btn} onClick={getTenues} disabled={loading}>
-              {loading ? <LoadingIcon size={16} color="#fff" /> : <SparkleIcon size={16} color="#fff" />}
-            </button>
+            <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
+              <path d="M1 1l4.5 4.5L10 1" stroke="rgba(200,123,82,0.60)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
-          {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
-
-          {/* Météo */}
-          {meteo && (
-            <div style={{ ...st.meteoBar, display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-              <WeatherIcon size={16} color="#fbbf24" /> {meteo}
-            </div>
-          )}
-
-          {/* Capsule Slider — loading skeletons OR tenues */}
-          {(loading || tenues.length > 0) && (
-            <div style={{ marginTop: 16 }}>
-              <CapsuleSlider tenues={tenues} loading={loading} />
-            </div>
-          )}
+          <button style={st.btn} onClick={() => getTenues()} disabled={loading}>
+            {loading ? <LoadingIcon size={15} color="rgba(200,123,82,0.80)" /> : <SparkleIcon size={15} color="rgba(200,123,82,0.80)" />}
+          </button>
         </div>
-      )}
+        {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+
+        {/* Météo */}
+        {meteo && (
+          <div style={{ ...st.meteoBar, display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+            <WeatherIcon size={16} color="#fbbf24" /> {meteo}
+          </div>
+        )}
+
+        {/* Capsule Slider */}
+        {(loading || tenues.length > 0) && (
+          <div style={{ marginTop: 16 }}>
+            <CapsuleSlider tenues={tenues} loading={loading} />
+          </div>
+        )}
+
+        {/* Empty state si pas encore de ville */}
+        {!loading && tenues.length === 0 && !ville && (
+          <div style={{ textAlign:'center', padding:'32px 0 8px' }}>
+            <div style={{ marginBottom: 12, display:'flex', justifyContent:'center' }}>
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.50)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
+                <path d="M12 6 L5 13 h14 L12 6Z"/>
+                <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
+              </svg>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.75)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
+            <div style={{ fontSize: 12, color: 'rgba(155,107,80,0.55)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -1762,26 +1998,41 @@ const st = {
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: '#ffffff', border: '1px solid #f0e8e0', borderRadius: 16, padding: 14, marginTop: 4,
-    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+    background: 'rgba(255,248,242,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    border: '1px solid rgba(200,123,82,0.14)', borderRadius: 20, padding: 16, marginTop: 4,
+    boxShadow: '0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.70)',
   },
   meteoBar: {
     background: 'rgba(200,123,82,0.06)', borderRadius: 10, padding: '8px 14px',
     fontSize: 12, marginBottom: 12, color: '#C87B52', fontWeight: 600, border: '1px solid rgba(200,123,82,0.16)',
   },
-  row: { display: 'flex', gap: 8, marginBottom: 12 },
+  row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
   input: {
-    flex: 1, padding: '10px 14px', borderRadius: 12, border: '1px solid #e5e7eb',
-    background: '#f9fafb', fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
+    flex: 1, padding: '10px 14px', borderRadius: 12,
+    border: '1.5px solid rgba(200,123,82,0.25)',
+    background: '#FFF6EE',
+    fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif",
+    outline: 'none', color: 'rgba(200,123,82,0.85)',
+    WebkitAppearance: 'none', appearance: 'none',
+    boxShadow: 'none',
   },
   select: {
-    padding: '10px 12px', borderRadius: 12, border: '1px solid #e5e7eb',
-    background: '#f9fafb', fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
+    padding: '10px 30px 10px 12px', borderRadius: 12, border: '1px solid rgba(200,123,82,0.22)',
+    background: '#FFF6EE',
+    fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none',
+    color: 'rgba(200,123,82,0.85)', cursor: 'pointer',
+    appearance: 'none', WebkitAppearance: 'none',
   },
   btn: {
-    padding: '10px 16px', background: 'linear-gradient(135deg,#C87B52,#9E5C35)', color: '#fff',
-    border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: 'pointer',
-    fontFamily: "'Inter',system-ui,sans-serif", boxShadow: '0 4px 12px rgba(200,123,82,0.35)',
+    padding: '8px 14px',
+    background: 'rgba(200,123,82,0.10)',
+    color: 'rgba(200,123,82,0.90)',
+    border: '1.5px solid rgba(200,123,82,0.25)',
+    borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
+    fontFamily: "'Inter',system-ui,sans-serif",
+    boxShadow: 'none',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0,
   },
 }
 
@@ -1902,10 +2153,11 @@ const s = {
   emptyChatSub: { fontSize:13, color:'rgba(160,120,60,0.65)', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
-    background:'rgba(255,255,255,0.10)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    border:'1px solid rgba(200,123,82,0.10)', borderRadius:16,
-    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.78)', cursor:'pointer',
+    background:'rgba(255,255,255,0.22)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.16)', borderRadius:16,
+    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.82)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
+    boxShadow:'0 2px 12px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
     transition:'transform .18s, box-shadow .18s',
   },
 
@@ -1943,9 +2195,10 @@ const s = {
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'rgba(255,248,242,0.45)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+    display:'flex', gap:8, background:'rgba(255,248,242,0.85)',
     borderRadius:20, padding:'8px 8px 8px 18px',
-    border:'1px solid rgba(200,123,82,0.15)', alignItems:'center',
+    border:'1px solid rgba(200,123,82,0.18)', alignItems:'center',
+    boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
   },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'#1a0a00' },
   sendBtn: {

@@ -3,6 +3,29 @@ import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
+// ─── SOLENN FACE (local copy) ─────────────────────────────────────────────────
+function SolennFace({ size = 34 }) {
+  return (
+    <div style={{
+      width: size, height: size,
+      borderRadius: size * 0.30,
+      background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      flexShrink: 0, position: 'relative', overflow: 'hidden',
+      boxShadow: '0 4px 14px rgba(200,123,82,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
+    }}>
+      <div style={{ position:'absolute', top:3, left:4, width: size*0.50, height: size*0.30, borderRadius:'50%', background:'rgba(255,255,255,0.20)', pointerEvents:'none' }} />
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: size*0.10 }}>
+        <div style={{ display:'flex', gap: size*0.20 }}>
+          <div style={{ width:size*0.13, height:size*0.13, borderRadius:'50%', background:'#fff' }} />
+          <div style={{ width:size*0.13, height:size*0.13, borderRadius:'50%', background:'#fff' }} />
+        </div>
+        <div style={{ width:size*0.38, height:size*0.17, borderRadius:`0 0 ${size*0.22}px ${size*0.22}px`, border:`${Math.max(1.5,size*0.055)}px solid rgba(255,255,255,0.90)`, borderTop:'none' }} />
+      </div>
+    </div>
+  )
+}
+
 // ─── ANIMATED LIQUID BACKGROUND — version originale restaurée ────────────────
 function FuturisticBg() {
   return (
@@ -400,6 +423,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   ]
   const paused = circleHovered || !!activeMetric
 
+  // ── Couleur de l'arc selon le score — identique à SanteTab ──
+  const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(239,68,68,0.28)' : 'rgba(200,123,82,0.25)'
+  const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(239,68,68,0.05)' : 'rgba(200,123,82,0.05)'
+
   return (
     <div style={hc.hero}>
       <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center' }}>
@@ -424,29 +451,21 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
             <NovaOrb active={circleHovered || !!activeMetric} />
           </div>
 
-          {/* ── Arc de progression score ── */}
+          {/* ── Arc de progression score — couleur adaptative ── */}
           <svg
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none', zIndex:2, overflow:'visible' }}
             viewBox="0 0 340 340"
           >
-            <defs>
-              <linearGradient id="arcFillGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%"   stopColor="rgba(255,230,200,0.0)"/>
-                <stop offset="20%"  stopColor="#F5D4B8"/>
-                <stop offset="60%"  stopColor="#E8A07A"/>
-                <stop offset="100%" stopColor="#C87B52"/>
-              </linearGradient>
-            </defs>
             {/* Track */}
-            <circle cx="170" cy="170" r="131" fill="none" stroke="rgba(200,123,82,0.30)" strokeWidth="2.5"/>
+            <circle cx="170" cy="170" r="131" fill="none" stroke={arcTrack} strokeWidth="2.5"/>
             {/* Arc progressif */}
             <motion.circle
               cx="170" cy="170" r="131"
               fill="none"
-              stroke="url(#arcFillGrad)"
+              stroke={arcColor}
               strokeWidth="3.5"
               strokeLinecap="round"
-              style={{ filter:'drop-shadow(0 0 5px rgba(200,123,82,0.55))' }}
+              style={{ filter:`drop-shadow(0 0 6px ${arcColor}88)` }}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: (score ?? 0) / 100 }}
               transition={{ duration: 1.5, delay: 0.4, type:'spring', stiffness:45, damping:18 }}
@@ -1035,7 +1054,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         <div style={{ fontSize:14, fontWeight:500, color: val > 0 ? color : '#c4b5a8', lineHeight:1, letterSpacing:'-0.3px' }}>
           {val > 0 ? fmt(val) : '·'}
         </div>
-        <div style={{ fontSize:8, color:'#8a7265', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.8px', opacity:0.75 }}>{label}</div>
+        <div style={{ fontSize:10, color:'#8a7265', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px', opacity:0.75 }}>{label}</div>
       </div>
     </div>
   )
@@ -1074,7 +1093,7 @@ function StreakXP({ streak, xp, level }) {
   }
 
   return (
-    <div style={{ display:'flex', gap:8, padding:'0 22px 12px' }}>
+    <div style={{ display:'flex', gap:8, padding:'0 22px 16px', marginBottom:4 }}>
 
       {/* ── Streak card ── */}
       <div
@@ -1169,7 +1188,7 @@ function StreakXP({ streak, xp, level }) {
                 )
               })}
             </div>
-            <div style={{ fontSize:8.5, color:'rgba(180,95,10,0.50)', marginTop:3, fontWeight:600 }}>
+            <div style={{ fontSize:10, color:'rgba(180,95,10,0.55)', marginTop:3, fontWeight:600 }}>
               {100 - xpInLevel} XP pour le niveau {level + 1}
             </div>
           </div>
@@ -1761,14 +1780,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate }) {
           display:'flex', alignItems:'center', gap:13,
         }}
       >
-        <div style={{
-          width:38, height:38, borderRadius:12, flexShrink:0,
-          background:'linear-gradient(135deg, #C87B52 0%, #E8A07A 100%)',
-          display:'flex', alignItems:'center', justifyContent:'center',
-          boxShadow:'0 4px 12px rgba(200,123,82,0.40)',
-        }}>
-          <ChatIcon size={17} color="#fff" />
-        </div>
+        <SolennFace size={38} />
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontSize:13.5, fontWeight:800, color:'#C87B52', lineHeight:1.2 }}>Demander à Solenn</div>
           <div style={{ fontSize:11, color:'#9b6b50', marginTop:3, opacity:0.85 }}>Disponible · répond en quelques secondes</div>
@@ -1823,7 +1835,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hc = {
-  page: { display:'flex', flexDirection:'column', paddingBottom:90 },
+  page: { display:'flex', flexDirection:'column', paddingBottom:120 },
 
   hero: { position:'relative', minHeight:500, display:'flex', alignItems:'center',
     justifyContent:'center', paddingBottom:28 },

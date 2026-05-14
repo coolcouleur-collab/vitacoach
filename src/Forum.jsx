@@ -99,9 +99,10 @@ function ReplyForm({ onSubmit }) {
           {text.length}/{MAX_CHARS}
         </span>
         <button onClick={submit} disabled={!text.trim() || loading} style={{
-          background: text.trim() ? 'linear-gradient(135deg, #C87B52, #9E5C35)' : 'rgba(200,123,82,0.08)',
-          color: text.trim() ? '#fff' : 'rgba(155,100,70,0.40)',
-          border: text.trim() ? 'none' : '1px solid rgba(200,123,82,0.16)',
+          background: text.trim() ? 'rgba(255,255,255,0.25)' : 'rgba(200,123,82,0.06)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          color: text.trim() ? '#C87B52' : 'rgba(155,100,70,0.35)',
+          border: text.trim() ? '1px solid rgba(200,123,82,0.25)' : '1px solid rgba(200,123,82,0.12)',
           borderRadius: '2rem', padding: '.6rem 1.8rem',
           fontSize: 'max(1.2rem,12px)', fontWeight: 700,
           cursor: text.trim() ? 'pointer' : 'default', fontFamily: 'var(--font)',
@@ -317,11 +318,12 @@ function NewPostForm({ onSubmit, onCancel }) {
           Annuler
         </button>
         <button onClick={submit} disabled={loading} style={{
-          background: 'linear-gradient(135deg, #C87B52, #9E5C35)',
-          color: '#fff', border: 'none', borderRadius: 20,
+          background: 'rgba(255,255,255,0.25)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          color: '#C87B52', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 4px 14px rgba(200,123,82,0.35)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
           opacity: loading ? 0.7 : 1,
         }}>
           {loading ? 'Publication...' : 'Publier →'}
@@ -357,7 +359,7 @@ function Skeleton() {
 }
 
 // ─── FORUM ────────────────────────────────────────────────────────────────────
-export default function Forum({ onBack, user }) {
+export default function Forum({ onBack, user, profil }) {
   const [posts, setPosts]         = useState([])
   const [loading, setLoading]     = useState(true)
   const [showForm, setShowForm]   = useState(false)
@@ -366,7 +368,7 @@ export default function Forum({ onBack, user }) {
   const [showRules, setShowRules] = useState(false)
   const [error, setError]         = useState(null)
 
-  const authorName = user?.email?.split('@')[0] || 'Anonyme'
+  const authorName = profil?.nom || profil?.prenom || user?.email?.split('@')[0] || 'Anonyme'
   const userId     = user?.id
 
   // ── Fetch posts ──────────────────────────────────────────────────────────────
@@ -477,11 +479,12 @@ export default function Forum({ onBack, user }) {
           📜 Règles
         </button>
         <button onClick={() => setShowForm(true)} style={{
-          background: 'linear-gradient(135deg, #C87B52, #9E5C35)',
-          color: '#fff', border: 'none', borderRadius: 20,
+          background: 'rgba(255,255,255,0.22)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          color: '#C87B52', border: '1px solid rgba(200,123,82,0.22)', borderRadius: 20,
           padding: '.5rem 1.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 700,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 3px 12px rgba(200,123,82,0.32)', whiteSpace: 'nowrap',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)', whiteSpace: 'nowrap',
         }}>
           + Nouveau
         </button>
@@ -534,17 +537,23 @@ export default function Forum({ onBack, user }) {
         </div>
       )}
 
-      {/* Category filters */}
-      <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '1.4rem' }}>
+      {/* Category filters — scroll horizontal */}
+      <div style={{
+        display: 'flex', gap: '.5rem', marginBottom: '1.4rem',
+        overflowX: 'auto', WebkitOverflowScrolling: 'touch',
+        paddingBottom: 4, scrollbarWidth: 'none', msOverflowStyle: 'none',
+      }}>
         {categories.map(c => (
           <button key={c} onClick={() => setFilter(c)} style={{
             padding: '.42rem 1.1rem', borderRadius: 20,
             fontSize: 'max(1.1rem,11px)', fontWeight: 600,
             cursor: 'pointer', fontFamily: 'var(--font)',
-            background: filter === c ? 'linear-gradient(135deg, #C87B52, #9E5C35)' : 'rgba(200,123,82,0.07)',
-            color: filter === c ? '#fff' : '#9b6b50',
-            border: filter === c ? 'none' : '1px solid rgba(200,123,82,0.17)',
-            boxShadow: filter === c ? '0 3px 10px rgba(200,123,82,0.26)' : 'none',
+            flexShrink: 0,
+            background: filter === c ? 'rgba(255,255,255,0.30)' : 'rgba(200,123,82,0.06)',
+            backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+            color: filter === c ? '#C87B52' : '#9b6b50',
+            border: filter === c ? '1px solid rgba(200,123,82,0.28)' : '1px solid rgba(200,123,82,0.13)',
+            boxShadow: filter === c ? 'inset 0 1px 0 rgba(255,255,255,0.8)' : 'none',
             transition: 'all .18s ease',
           }}>
             {c}
@@ -571,10 +580,10 @@ export default function Forum({ onBack, user }) {
       {loading ? <Skeleton /> : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
           <div style={{ fontSize: '2.8rem', marginBottom: '1rem', color: '#C87B52', opacity: 0.55 }}>✦</div>
-          <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: '#3a1a08', marginBottom: '.5rem' }}>
+          <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: '#C87B52', marginBottom: '.5rem' }}>
             {search ? 'Aucun résultat' : "Aucune discussion pour l'instant"}
           </div>
-          <div style={{ fontSize: 'max(1.3rem,13px)', color: 'rgba(155,100,70,0.55)', lineHeight: 1.75 }}>
+          <div style={{ fontSize: 'max(1.3rem,13px)', color: 'rgba(200,123,82,0.55)', lineHeight: 1.75 }}>
             {search ? "Essaie d'autres mots-clés." : 'Sois le premier à lancer une discussion !'}
           </div>
         </div>

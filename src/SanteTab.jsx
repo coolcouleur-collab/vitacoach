@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
 
 function ScaleIcon({ color = '#34c759', size = 18 }) {
@@ -145,12 +145,19 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const [insights, setInsights]           = useState(null)
   const [loadingInsights, setLoadingInsights] = useState(false)
   const [showApple, setShowApple]         = useState(false)
+  const [displayScore, setDisplayScore]   = useState(0)
+  const animRef    = useRef(null)
+  const prevScoreRef = useRef(0)
 
-  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : '#C87B52'
-  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.12)'
+  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : 'rgba(200,123,82,0.90)'
+  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.10)'
   const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
+  const labelColor = scoreColor
   const circumference = 2 * Math.PI * 52
-  const dash = (score / 100) * circumference
+  const dash  = (score / 100) * circumference
+  const angle = (score / 100) * 2 * Math.PI
+  const tipX  = 60 + 52 * Math.cos(angle)
+  const tipY  = 60 + 52 * Math.sin(angle)
 
   function openEdit(key) {
     setEditMode(key)
@@ -181,10 +188,48 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
     setLoadingInsights(false)
   }
 
+  // ── Count-up animation ───────────────────────────────────────────────────────
+  useEffect(() => {
+    const from = prevScoreRef.current
+    const to   = score || 0
+    if (from === to) { setDisplayScore(to); return }
+    if (animRef.current) cancelAnimationFrame(animRef.current)
+    const duration = 900
+    const start    = performance.now()
+    function step(now) {
+      const t      = Math.min((now - start) / duration, 1)
+      const eased  = 1 - Math.pow(1 - t, 3)              // easeOutCubic
+      setDisplayScore(Math.round(from + (to - from) * eased))
+      if (t < 1) { animRef.current = requestAnimationFrame(step) }
+      else { prevScoreRef.current = to }
+    }
+    animRef.current = requestAnimationFrame(step)
+    return () => { if (animRef.current) cancelAnimationFrame(animRef.current) }
+  }, [score])
+
   const editMetric = METRICS.find(m => m.key === editMode)
+
+  // Poids : delta vs hier
+  const yesterday  = new Date(Date.now() - 86400000).toDateString()
+  const prevPoids  = history?.find(h => h.date === yesterday)?.poids || 0
 
   return (
     <div style={{ paddingBottom: 20 }}>
+      <style>{`
+        @keyframes scoreBreath {
+          0%, 100% { opacity: 0.45; }
+          50%       { opacity: 0.85; }
+        }
+        @keyframes tipPulse {
+          0%, 100% { opacity: 0.85; }
+          50%       { opacity: 1;    }
+        }
+        @keyframes tipRing {
+          0%   { r: 5;  opacity: 0.7; }
+          50%  { r: 8;  opacity: 0;   }
+          100% { r: 5;  opacity: 0;   }
+        }
+      `}</style>
 
       {/* ── Score Card ── */}
       <div style={ss.scoreCard}>
@@ -196,26 +241,47 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 <stop offset="100%" stopColor={scoreColor} />
               </linearGradient>
             </defs>
-            <circle cx="60" cy="60" r="52" fill="none" stroke={scoreTrack} strokeWidth="10" />
+            {/* breathing track */}
+            <circle cx="60" cy="60" r="52" fill="none" stroke={scoreTrack} strokeWidth="10"
+              style={{ animation: 'scoreBreath 3.2s ease-in-out infinite' }}
+            />
+            {/* arc */}
             <circle cx="60" cy="60" r="52" fill="none"
               stroke="url(#scoreGrad)" strokeWidth="10" strokeLinecap="round"
               strokeDasharray={`${dash} ${circumference}`}
               style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 5px ${scoreColor}40)` }}
             />
+            {/* glowing tip dot */}
+            {score > 0 && (
+              <>
+                {/* expanding ring */}
+                <circle cx={tipX} cy={tipY} r="5" fill="none"
+                  stroke={scoreColor} strokeWidth="2"
+                  style={{ animation: 'tipRing 2s ease-out infinite', transformOrigin: `${tipX}px ${tipY}px` }}
+                />
+                {/* solid core */}
+                <circle cx={tipX} cy={tipY} r="5" fill={scoreColor}
+                  style={{ filter: `drop-shadow(0 0 6px ${scoreColor})`, animation: 'tipPulse 2s ease-in-out infinite' }}
+                />
+              </>
+            )}
           </svg>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{score || '—'}</div>
+            <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>
+              {score > 0 ? displayScore : '—'}
+            </div>
             <div style={{ fontSize: 9, color: '#c4b5a8', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
+            <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.38)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
+              {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+            </div>
           </div>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
             fontSize: 20, fontWeight: 900, marginBottom: 4,
-            color: scoreColor,
+            color: labelColor,
           }}>{scoreLabel}</div>
-          <div style={{ fontSize: 12, color: '#8a7265', lineHeight: 1.6, marginBottom: 14 }}>
-            Score santé du jour · Mets à jour tes métriques pour l'améliorer
-          </div>
+          <div style={{ marginBottom: 14 }} />
           <button
             style={ss.btnInsights}
             onClick={getInsights}
@@ -224,7 +290,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
-            <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>{loadingInsights ? 'Analyse...' : 'Analyse IA personnalisée'}</span>
+            <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>
+              {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
+            </span>
           </button>
         </div>
       </div>
@@ -341,11 +409,22 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 {val > 0 ? m.fmt(val) : '–'}
                 {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}66`, marginLeft: 4 }}>{m.unit}</span>}
               </div>
-              <div style={{ fontSize: 11, color: '#8a7265', marginBottom: 10, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ fontSize: 11, color: '#8a7265', marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
                 {m.key === 'humeur' && val > 0 && <span style={{ fontSize: 14, lineHeight: 1 }}>{['','😢','😕','😐','🙂','😊'][val]}</span>}
               </div>
-              {m.key !== 'poids' && (
+              {m.key === 'poids' && val > 0 && prevPoids > 0 && (() => {
+                const delta  = parseFloat((val - prevPoids).toFixed(1))
+                const up     = delta > 0
+                const same   = delta === 0
+                return (
+                  <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 8,
+                    color: same ? '#8a7265' : up ? '#f59e0b' : '#22c55e' }}>
+                    {same ? '= même poids' : `${up ? '▲ +' : '▼ '}${Math.abs(delta)} kg vs hier`}
+                  </div>
+                )
+              })()}
+              {m.key !== 'poids' && m.key !== 'fc' && (
                 <div style={{ height: 3, background: `${m.color}18`, borderRadius: 99, overflow: 'visible', position: 'relative', marginTop: 4 }}>
                   <div style={{
                     height: '100%', width: `${pct}%`,
@@ -374,44 +453,43 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Historique 7 jours ── */}
       <HistoriqueSection history={history} />
 
-      {/* ── Apple Health ── */}
-      <div style={ss.appleSection}>
-        <button style={ss.appleTrigger} onClick={() => setShowApple(v => !v)}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(200,123,82,0.4))' }}><HeartIcon size={24} color="#C87B52" /></span>
-          <div style={{ flex: 1, textAlign: 'left' }}>
-            <div style={{ fontWeight: 800, color: 'rgba(200,123,82,0.90)', fontSize: 13 }}>Connecter mes apps santé</div>
-            <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.55)', marginTop: 2 }}>Apple Santé, Google Fit · bientôt disponible</div>
-          </div>
-          <span style={{
-            color: '#C87B52', fontSize: 10, fontWeight: 800,
-            background: 'rgba(200,123,82,0.10)', padding: '4px 8px', borderRadius: 8,
-            border: '1px solid rgba(200,123,82,0.20)'
-          }}>{showApple ? '▲ Moins' : '▼ Plus'}</span>
-        </button>
-        {showApple && (
-          <div style={ss.appleBody}>
-            {[
-              { n:1, txt: <>Ouvre l'app <strong style={{color:'rgba(200,123,82,0.90)'}}>Santé</strong> sur ton iPhone</> },
-              { n:2, txt: <>Va dans <strong style={{color:'rgba(200,123,82,0.90)'}}>Profil</strong> (en haut à droite) → <strong style={{color:'rgba(200,123,82,0.90)'}}>Exporter les données de santé</strong></> },
-              { n:3, txt: <>En attendant, rentre tes métriques manuellement ci-dessus</> },
-            ].map(({ n, txt }) => (
-              <div key={n} style={ss.appleStep}>
-                <div style={ss.appleStepNum}>{n}</div>
-                <div style={{ fontSize: 13, color: 'rgba(200,123,82,0.55)', lineHeight: 1.6 }}>{txt}</div>
-              </div>
-            ))}
+      {/* ── Apps Santé — statut compact ── */}
+      {(() => {
+        const perm = localStorage.getItem('vitacoach_health_perm')
+        const granted = perm === 'granted'
+        return (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            background: 'rgba(255,252,250,0.28)',
+            backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+            border: `1px solid ${granted ? 'rgba(52,199,89,0.18)' : 'rgba(200,123,82,0.10)'}`,
+            borderRadius: 22, padding: '14px 18px',
+            boxShadow: '0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)',
+          }}>
             <div style={{
-              marginTop: 14, padding: '12px 16px',
-              background: 'linear-gradient(135deg, rgba(200,123,82,0.09), rgba(200,123,82,0.04))',
-              borderRadius: 14, border: '1px solid rgba(200,123,82,0.22)',
-              fontSize: 12, color: '#C87B52', fontWeight: 700,
-              boxShadow: '0 4px 12px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.8)'
+              width: 40, height: 40, borderRadius: 13, flexShrink: 0,
+              background: granted ? 'rgba(52,199,89,0.12)' : 'rgba(200,123,82,0.12)',
+              border: `1.5px solid ${granted ? 'rgba(52,199,89,0.25)' : 'rgba(200,123,82,0.22)'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
             }}>
-              <span style={{display:'flex',alignItems:'center',gap:6}}><PhoneIcon size={13} color="#C87B52" /> Synchronisation automatique Apple Santé & Google Fit — bientôt disponible</span>
+              {granted ? '✅' : '❤️'}
             </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: granted ? 'rgba(52,199,89,0.90)' : 'rgba(200,123,82,0.90)' }}>
+                {granted ? 'Apps santé autorisées' : 'Connexion apps santé'}
+              </div>
+              <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.50)', marginTop: 2 }}>
+                {granted ? "Sync auto disponible avec l'app native" : 'Apple Santé · Google Fit · bientôt disponible'}
+              </div>
+            </div>
+            {granted && (
+              <span style={{ fontSize: 10, color: '#34c759', fontWeight: 700, background: 'rgba(52,199,89,0.10)', padding: '3px 8px', borderRadius: 6, border: '1px solid rgba(52,199,89,0.20)', flexShrink: 0 }}>
+                Autorisé
+              </span>
+            )}
           </div>
-        )}
-      </div>
+        )
+      })()}
 
       {/* ── Edit Modal ── */}
       {editMode && editMetric && (
@@ -425,7 +503,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 30, margin: '0 auto 12px',
               boxShadow: `0 6px 20px ${editMetric.color}25, inset 0 1px 0 rgba(255,255,255,0.8)`
-            }}>{editMetric.icon}</div>
+            }}>{editMetric.iconEl}</div>
             <div style={{ fontSize: 18, fontWeight: 900, color: '#1a0a00', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
@@ -510,8 +588,8 @@ const ss = {
   },
   insightsCard: {
     background: 'rgba(255,252,250,0.28)',
-    border: '1px solid rgba(200,123,82,0.18)',
-    borderLeft: '4px solid #C87B52',
+    border: '1px solid rgba(139,92,246,0.18)',
+    borderLeft: '4px solid rgba(139,92,246,0.50)',
     borderRadius: 22, padding: '16px 18px', marginBottom: 14,
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
     boxShadow: '0 8px 24px rgba(200,123,82,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'

@@ -1,15 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react'
+import FxSlider from './FxSlider'
+import LiquidImage from './LiquidImage'
 import './tokens.css'
 
-// ─── BACKGROUND BLOBS ────────────────────────────────────────────────────────
+// ─── BACKGROUND FX-SLIDER ────────────────────────────────────────────────────
+const BANDS = [
+  { gradient: 'linear-gradient(105deg, transparent 0%, rgba(200,123,82,0.11) 40%, rgba(232,150,42,0.07) 65%, transparent 100%)', top:'-5%',  h:'60%', dur:'30s', delay:'0s'   },
+  { gradient: 'linear-gradient(98deg,  transparent 0%, rgba(255,190,120,0.08) 35%, rgba(200,123,82,0.09) 60%, transparent 100%)', top:'35%',  h:'55%', dur:'38s', delay:'-12s' },
+  { gradient: 'linear-gradient(102deg, transparent 0%, rgba(232,150,42,0.06) 40%, rgba(200,123,82,0.08) 70%, transparent 100%)', top:'65%',  h:'50%', dur:'26s', delay:'-20s' },
+]
+
 function LandingBg() {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '-8%',  left: '-6%',  width: '72rem', height: '72rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,123,82,0.20) 0%, transparent 65%)', animation: 'floatOrb 16s ease-in-out infinite' }} />
-      <div style={{ position: 'absolute', top: '18%',  right: '-8%', width: '64rem', height: '64rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(15,66,35,0.13) 0%, transparent 65%)',   animation: 'floatOrb 20s ease-in-out infinite reverse' }} />
-      <div style={{ position: 'absolute', top: '55%',  left: '25%',  width: '80rem', height: '80rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,150,42,0.10) 0%, transparent 60%)', animation: 'floatOrb 14s ease-in-out infinite .5s' }} />
-      <div style={{ position: 'absolute', top: '70%',  left: '-4%',  width: '50rem', height: '50rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,123,82,0.12) 0%, transparent 60%)', animation: 'floatOrb 18s ease-in-out infinite reverse .8s' }} />
-      <div style={{ position: 'absolute', bottom: '-5%', right: '10%', width: '60rem', height: '60rem', borderRadius: '50%', background: 'radial-gradient(circle, rgba(15,66,35,0.09) 0%, transparent 60%)',   animation: 'floatOrb 22s ease-in-out infinite .2s' }} />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden', background: 'linear-gradient(165deg, #FFFAF5 0%, #FFF3E8 50%, #FFFAF5 100%)' }}>
+      {/* Bandes coulissantes — 3 seulement pour les perfs */}
+      {BANDS.map((b, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: b.top, left: '-15%',
+          width: '130%', height: b.h,
+          background: b.gradient,
+          filter: 'blur(40px)',
+          borderRadius: '40%',
+          animation: `sliderBand ${b.dur} ${b.delay} ease-in-out infinite alternate`,
+        }} />
+      ))}
+      {/* Orbes */}
+      <div style={{ position:'absolute', top:'-10%', left:'-8%', width:'65rem', height:'65rem', borderRadius:'50%', background:'radial-gradient(circle, rgba(200,123,82,0.13) 0%, transparent 65%)', animation:'floatOrb 18s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', top:'15%', right:'-6%', width:'52rem', height:'52rem', borderRadius:'50%', background:'radial-gradient(circle, rgba(15,66,35,0.06) 0%, transparent 65%)', animation:'floatOrb 24s ease-in-out infinite reverse' }} />
+      <div style={{ position:'absolute', top:'55%', left:'28%', width:'68rem', height:'68rem', borderRadius:'50%', background:'radial-gradient(circle, rgba(232,150,42,0.07) 0%, transparent 60%)', animation:'floatOrb 20s ease-in-out infinite 1s' }} />
     </div>
   )
 }
@@ -342,6 +361,27 @@ function Hero({ onCommencer }) {
 
       {/* Right: Chat mock */}
       <div style={{ position: 'relative', zIndex: 1, animation: 'heroIn .8s .28s var(--ease) both' }}>
+
+        {/* ── LiquidImage — orbe cuivré derrière le mock ── */}
+        <LiquidImage
+          width={480}
+          height={480}
+          intensity={1.1}
+          speed={0.7}
+          gradient={['#C87B52','#F0B060','#E8962A','#9E5C35','#C87B52']}
+          style={{
+            position: 'absolute',
+            top: '50%', left: '50%',
+            transform: 'translate(-50%, -52%)',
+            width: '26rem', height: '26rem',
+            borderRadius: '50%',
+            opacity: 0.42,
+            zIndex: -1,
+            pointerEvents: 'none',
+            filter: 'blur(2px)',
+          }}
+        />
+
         <ChatMock />
         {/* Float badge 1 */}
         <div style={{
@@ -400,6 +440,422 @@ function StatsBar() {
         ))}
       </div>
     </div>
+  )
+}
+
+// ─── FX SLIDER ────────────────────────────────────────────────────────────────
+const FX_SLIDES = [
+  {
+    num: '01', tag: 'Coaching IA',
+    title: ['Ton coach', 'personnel 24/7'],
+    sub: 'Solenn analyse ton profil complet et répond instantanément à toutes tes questions santé.',
+    color: '#C87B52', accent: '#E8962A',
+    bg: 'linear-gradient(145deg,#1a0800 0%,#3d1a08 50%,#5a2810 100%)',
+    visual: '🤖', stat: '< 2s', statLabel: 'Temps de réponse',
+    items: ['Profil complet mémorisé', 'Disponible 24 h / 24', 'Réponses personnalisées'],
+  },
+  {
+    num: '02', tag: 'Nutrition',
+    title: ['Manger juste,', 'pour toi'],
+    sub: 'Repas adaptés à tes intolérances, allergies et objectifs. Calculé pour ton corps, pas une moyenne.',
+    color: '#34c759', accent: '#4cd964',
+    bg: 'linear-gradient(145deg,#021008 0%,#0a3018 50%,#14582a 100%)',
+    visual: '🥗', stat: '100%', statLabel: 'Personnalisé',
+    items: ['Halal · Vegan · Keto', 'Carences & allergies', 'Recettes sur-mesure'],
+  },
+  {
+    num: '03', tag: 'Sommeil',
+    title: ['Récupère', 'comme un pro'],
+    sub: 'Protocoles sommeil sur-mesure. Cohérence cardiaque, adaptogènes, routine soir optimisée.',
+    color: '#818cf8', accent: '#a5b4fc',
+    bg: 'linear-gradient(145deg,#03030f 0%,#08082a 50%,#121244 100%)',
+    visual: '🌙', stat: '+1.8h', statLabel: 'Sommeil gagné',
+    items: ['Cohérence cardiaque', 'Mélatonine naturelle', 'Analyse du rythme'],
+  },
+  {
+    num: '04', tag: 'Bien-être naturel',
+    title: ['Plantes &', 'nature'],
+    sub: 'Ashwagandha, valériane, ginseng — recommandés selon ton profil exact, jamais génériques.',
+    color: '#2d9e5f', accent: '#34c759',
+    bg: 'linear-gradient(145deg,#020d05 0%,#063514 50%,#0a4d1e 100%)',
+    visual: '🌿', stat: '50+', statLabel: 'Plantes référencées',
+    items: ['Adaptogènes ciblés', 'Phytothérapie', 'Aromathérapie'],
+  },
+  {
+    num: '05', tag: 'Style & Météo',
+    title: ['Tenues selon', 'ta météo'],
+    sub: 'Combinaisons de ta garde-robe générées chaque matin selon la météo de ta ville et l\'occasion.',
+    color: '#C87B52', accent: '#F0B060',
+    bg: 'linear-gradient(145deg,#0f0400 0%,#281204 50%,#3d1e08 100%)',
+    visual: '👗', stat: '7j/7', statLabel: 'Mis à jour',
+    items: ['Météo en temps réel', 'Style personnalisé', 'Toutes occasions'],
+  },
+]
+
+function playFxSound(type) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext
+    if (!AC) return
+    const ctx = new AC()
+    if (type === 'hover') {
+      const o = ctx.createOscillator(), g = ctx.createGain()
+      o.connect(g); g.connect(ctx.destination)
+      o.type = 'sine'
+      o.frequency.setValueAtTime(1400, ctx.currentTime)
+      o.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.05)
+      g.gain.setValueAtTime(0.03, ctx.currentTime)
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
+      o.start(); o.stop(ctx.currentTime + 0.05)
+    } else if (type === 'click') {
+      const o = ctx.createOscillator(), g = ctx.createGain()
+      o.connect(g); g.connect(ctx.destination)
+      o.type = 'sine'
+      o.frequency.setValueAtTime(700, ctx.currentTime)
+      o.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.10)
+      g.gain.setValueAtTime(0.08, ctx.currentTime)
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.10)
+      o.start(); o.stop(ctx.currentTime + 0.10)
+    } else if (type === 'transition') {
+      const bufSz = Math.floor(ctx.sampleRate * 0.22)
+      const buf = ctx.createBuffer(1, bufSz, ctx.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < bufSz; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / bufSz)
+      const noise = ctx.createBufferSource(); noise.buffer = buf
+      const filt = ctx.createBiquadFilter()
+      filt.type = 'bandpass'; filt.frequency.value = 600; filt.Q.value = 0.8
+      const g = ctx.createGain()
+      g.gain.setValueAtTime(0.12, ctx.currentTime)
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22)
+      noise.connect(filt); filt.connect(g); g.connect(ctx.destination)
+      noise.start(); noise.stop(ctx.currentTime + 0.22)
+      const o2 = ctx.createOscillator(), g2 = ctx.createGain()
+      o2.connect(g2); g2.connect(ctx.destination)
+      o2.frequency.setValueAtTime(280, ctx.currentTime)
+      o2.frequency.exponentialRampToValueAtTime(560, ctx.currentTime + 0.18)
+      g2.gain.setValueAtTime(0.05, ctx.currentTime)
+      g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18)
+      o2.start(); o2.stop(ctx.currentTime + 0.18)
+    }
+  } catch (_) {}
+}
+
+function CinematicSlider() {
+  const [cur,     setCur]     = useState(0)
+  const [prev,    setPrev]    = useState(null)
+  const [animKey, setAnimKey] = useState(0)
+  const [dir,     setDir]     = useState('next')
+  const [soundOn, setSoundOn] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const containerRef = useRef(null)
+
+  const SLIDE = FX_SLIDES[cur]
+  const N     = FX_SLIDES.length
+
+  // auto-advance — resets every time cur changes; pauses on hover
+  useEffect(() => {
+    if (hovered) return
+    const id = setTimeout(() => navigate((cur + 1) % N, 'next'), 5200)
+    return () => clearTimeout(id)
+  }, [cur, hovered])
+
+  function navigate(idx, direction) {
+    if (idx === cur) return
+    if (soundOn) playFxSound('transition')
+    setPrev(cur)
+    setDir(direction)
+    setCur(idx)
+    setAnimKey(k => k + 1)
+    setTimeout(() => setPrev(null), 750)
+  }
+
+  return (
+    <section style={{ padding: '0 var(--padgrid) 10rem', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: '128rem', margin: '0 auto' }}>
+
+        {/* ── Container ── */}
+        <div
+          ref={containerRef}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={{
+            position: 'relative',
+            borderRadius: 28,
+            overflow: 'hidden',
+            height: 'clamp(440px, 60vh, 600px)',
+            display: 'grid',
+            gridTemplateColumns: '22rem 1fr 22rem',
+            boxShadow: `0 4rem 10rem rgba(0,0,0,0.32), 0 1rem 3rem ${SLIDE.accent}1a`,
+            transition: 'box-shadow 0.6s ease',
+          }}
+        >
+          {/* ── BG layers: prev (static) + current (clip-path wipe) ── */}
+          {prev !== null && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 0, background: FX_SLIDES[prev].bg }} />
+          )}
+          <div key={animKey} style={{
+            position: 'absolute', inset: 0, zIndex: 1,
+            background: SLIDE.bg,
+            animation: `fx${dir === 'next' ? 'WipeIn' : 'WipeInLeft'} 0.72s cubic-bezier(0.76,0,0.24,1) both`,
+          }} />
+
+          {/* ── Subtle noise grain overlay ── */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', opacity: 0.03,
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
+          }} />
+
+          {/* ═══ LEFT — clickable slide list (Kind of Blue style) ═══ */}
+          <div style={{
+            position: 'relative', zIndex: 10,
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: '3.6rem 2.8rem',
+            borderRight: '1px solid rgba(255,255,255,0.06)',
+          }}>
+            {/* Label */}
+            <div style={{
+              fontSize: '0.95rem', fontWeight: 700, letterSpacing: '0.22em',
+              color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase',
+              marginBottom: '2.4rem',
+            }}>
+              Fonctionnalités
+            </div>
+
+            {/* Slide list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+              {FX_SLIDES.map((sl, i) => {
+                const isActive = i === cur
+                return (
+                  <button
+                    key={i}
+                    onClick={() => { if (soundOn) playFxSound('click'); navigate(i, i > cur ? 'next' : 'prev') }}
+                    onMouseEnter={() => { if (soundOn) playFxSound('hover') }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '1.2rem',
+                      padding: '0.85rem 1rem',
+                      background: isActive ? 'rgba(255,255,255,0.07)' : 'transparent',
+                      border: 'none',
+                      borderRadius: 10,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'background 0.25s ease',
+                    }}
+                  >
+                    {/* Bullet */}
+                    <div style={{
+                      width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
+                      background: isActive ? sl.accent : 'transparent',
+                      border: isActive ? 'none' : '1.5px solid rgba(255,255,255,0.22)',
+                      boxShadow: isActive ? `0 0 10px ${sl.accent}cc` : 'none',
+                      transition: 'background 0.3s, box-shadow 0.3s, border 0.3s',
+                    }} />
+                    {/* Title */}
+                    <span style={{
+                      fontSize: 'clamp(1.25rem,1.1vw,1.45rem)',
+                      fontWeight: isActive ? 700 : 400,
+                      color: isActive ? '#fff' : 'rgba(255,255,255,0.30)',
+                      fontFamily: 'var(--font)',
+                      letterSpacing: '-0.01em',
+                      lineHeight: 1.25,
+                      transition: 'color 0.3s, font-weight 0.2s',
+                    }}>
+                      {sl.tag}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Sound toggle — tucked at bottom */}
+            <div style={{ marginTop: 'auto', paddingTop: '2.8rem' }}>
+              <button
+                onClick={() => setSoundOn(s => !s)}
+                title={soundOn ? 'Couper le son' : 'Activer le son'}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '0.7rem',
+                  padding: '0.5rem 0',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: soundOn ? SLIDE.accent : 'rgba(255,255,255,0.22)',
+                  fontSize: '1.15rem',
+                  fontFamily: 'var(--font)',
+                  fontWeight: 500,
+                  letterSpacing: '0.04em',
+                  transition: 'color 0.25s',
+                }}
+              >
+                <span style={{ fontSize: '1.3rem' }}>{soundOn ? '🔊' : '🔇'}</span>
+                <span style={{ fontSize: '1.05rem' }}>{soundOn ? 'Son activé' : 'Son coupé'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* ═══ CENTER — big italic title + emoji + stat ═══ */}
+          <div style={{
+            position: 'relative', zIndex: 10,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: '4rem 3rem',
+            gap: '2rem',
+          }}>
+            {/* Emoji glow */}
+            <div key={`vis-${animKey}`} style={{ animation: 'fxVisualIn 0.65s cubic-bezier(0.34,1.56,0.64,1) both' }}>
+              <div style={{
+                fontSize: '5.6rem', lineHeight: 1,
+                filter: `drop-shadow(0 0 3.2rem ${SLIDE.accent}60)`,
+                textAlign: 'center',
+              }}>
+                {SLIDE.visual}
+              </div>
+            </div>
+
+            {/* Big italic title */}
+            <div key={`title-${animKey}`} style={{ animation: 'fxTextIn 0.55s 0.08s cubic-bezier(0.34,1.56,0.64,1) both', textAlign: 'center' }}>
+              <h2 style={{
+                margin: 0,
+                fontSize: 'clamp(3.6rem,4.2vw,5.6rem)',
+                fontWeight: 900,
+                fontStyle: 'italic',
+                color: '#fff',
+                lineHeight: 1.0,
+                letterSpacing: '-0.055em',
+                fontFamily: 'var(--font)',
+                textTransform: 'uppercase',
+              }}>
+                {SLIDE.title[0]}<br />{SLIDE.title[1]}
+              </h2>
+            </div>
+
+            {/* Stat pill */}
+            <div key={`stat-${animKey}`} style={{
+              animation: 'fxTextIn 0.5s 0.18s cubic-bezier(0.34,1.56,0.64,1) both',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem',
+            }}>
+              <div style={{
+                fontSize: 'clamp(2.2rem,2.6vw,3rem)',
+                fontWeight: 900,
+                color: SLIDE.accent,
+                letterSpacing: '-0.04em',
+                lineHeight: 1,
+                transition: 'color 0.4s',
+              }}>
+                {SLIDE.stat}
+              </div>
+              <div style={{
+                fontSize: '1.0rem', fontWeight: 600,
+                color: 'rgba(255,255,255,0.35)',
+                letterSpacing: '0.16em', textTransform: 'uppercase',
+              }}>
+                {SLIDE.statLabel}
+              </div>
+            </div>
+
+            {/* Thin horizontal rule */}
+            <div style={{
+              width: '4rem', height: 1.5,
+              background: `linear-gradient(90deg,transparent,${SLIDE.accent}60,transparent)`,
+              transition: 'background 0.4s',
+            }} />
+
+            {/* Short description */}
+            <div key={`sub-${animKey}`} style={{ animation: 'fxTextIn 0.5s 0.26s cubic-bezier(0.34,1.56,0.64,1) both', textAlign: 'center' }}>
+              <p style={{
+                margin: 0, fontSize: '1.25rem',
+                color: 'rgba(255,255,255,0.48)',
+                lineHeight: 1.7,
+                maxWidth: '32rem',
+              }}>
+                {SLIDE.sub}
+              </p>
+            </div>
+          </div>
+
+          {/* ═══ RIGHT — items list (Kind of Blue tag list style) ═══ */}
+          <div style={{
+            position: 'relative', zIndex: 10,
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: '3.6rem 2.8rem',
+            borderLeft: '1px solid rgba(255,255,255,0.06)',
+          }}>
+            {/* Label */}
+            <div style={{
+              fontSize: '0.95rem', fontWeight: 700, letterSpacing: '0.22em',
+              color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase',
+              marginBottom: '2.4rem',
+            }}>
+              Points clés
+            </div>
+
+            {/* Items — staggered entrance per slide change */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+              {SLIDE.items.map((item, i) => (
+                <div
+                  key={`${animKey}-${i}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '1.2rem',
+                    padding: '0.85rem 1rem',
+                    background: i === 0 ? 'rgba(255,255,255,0.07)' : 'transparent',
+                    borderRadius: 10,
+                    animation: `fxTextIn 0.45s ${0.06 + i * 0.10}s cubic-bezier(0.34,1.56,0.64,1) both`,
+                  }}
+                >
+                  {/* Bullet */}
+                  <div style={{
+                    width: 7, height: 7, borderRadius: '50%', flexShrink: 0,
+                    background: i === 0 ? SLIDE.accent : 'transparent',
+                    border: i === 0 ? 'none' : '1.5px solid rgba(255,255,255,0.22)',
+                    boxShadow: i === 0 ? `0 0 10px ${SLIDE.accent}cc` : 'none',
+                    transition: 'background 0.4s',
+                  }} />
+                  {/* Text */}
+                  <span style={{
+                    fontSize: 'clamp(1.25rem,1.1vw,1.45rem)',
+                    fontWeight: i === 0 ? 700 : 400,
+                    color: i === 0 ? '#fff' : 'rgba(255,255,255,0.30)',
+                    fontFamily: 'var(--font)',
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.25,
+                  }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Nav arrows — bottom */}
+            <div style={{ marginTop: 'auto', paddingTop: '2.8rem', display: 'flex', gap: '0.8rem' }}>
+              {[
+                { lbl: '←', fn: () => navigate((cur - 1 + N) % N, 'prev') },
+                { lbl: '→', fn: () => navigate((cur + 1) % N, 'next') },
+              ].map(({ lbl, fn }) => (
+                <button key={lbl}
+                  onClick={() => { if (soundOn) playFxSound('click'); fn() }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.14)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'; if (soundOn) playFxSound('hover') }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)' }}
+                  style={{
+                    width: 40, height: 40, borderRadius: '50%',
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    background: 'rgba(255,255,255,0.05)',
+                    color: '#fff', fontSize: '1.4rem', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.2s ease', fontFamily: 'var(--font)',
+                  }}
+                >{lbl}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Bottom progress bar ── */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, zIndex: 20, background: 'rgba(255,255,255,0.05)' }}>
+            <div style={{
+              height: '100%',
+              width: `${((cur + 1) / N) * 100}%`,
+              background: `linear-gradient(90deg,${SLIDE.color},${SLIDE.accent})`,
+              transition: 'width 0.65s cubic-bezier(0.76,0,0.24,1), background 0.4s',
+              boxShadow: `0 0 8px ${SLIDE.accent}80`,
+            }} />
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -685,6 +1141,27 @@ export default function Landing({ onCommencer, onForum }) {
         @keyframes floatOrb { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-3rem) scale(1.02); } }
         @keyframes heroIn { from { opacity:0; transform:translateY(3.2rem); } to { opacity:1; transform:translateY(0); } }
         @keyframes typingDot { 0%,80%,100% { transform:scale(.6); opacity:.3; } 40% { transform:scale(1); opacity:1; } }
+        @keyframes sliderBand {
+          0%   { transform: translateX(0%)   scaleY(1);    opacity: 0.8; }
+          50%  { transform: translateX(12%)  scaleY(1.08); opacity: 1;   }
+          100% { transform: translateX(22%)  scaleY(0.94); opacity: 0.7; }
+        }
+        @keyframes fxWipeIn {
+          from { clip-path: inset(0 100% 0 0); }
+          to   { clip-path: inset(0 0% 0 0); }
+        }
+        @keyframes fxWipeInLeft {
+          from { clip-path: inset(0 0 0 100%); }
+          to   { clip-path: inset(0 0 0 0%); }
+        }
+        @keyframes fxVisualIn {
+          from { opacity: 0; transform: scale(0.68) translateY(2.8rem); }
+          to   { opacity: 1; transform: scale(1)    translateY(0); }
+        }
+        @keyframes fxTextIn {
+          from { opacity: 0; transform: translateY(2rem); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
 
       <LandingBg />
@@ -697,30 +1174,112 @@ export default function Landing({ onCommencer, onForum }) {
       {/* ── STATS ── */}
       <StatsBar />
 
-      {/* ── FEATURES GRID ── */}
-      <section id="features" style={{ padding: '10rem var(--padgrid)' }}>
-        <div style={{ maxWidth: '128rem', margin: '0 auto' }}>
-          <SectionHead
-            tag="Fonctionnalités"
-            title={<>Tout ce dont tu as besoin,<br /><span style={{ background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>en un seul endroit</span></>}
-            sub="Six domaines clés de ta vie, couverts par une IA qui te connaît vraiment."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 32rem), 1fr))', gap: '2rem' }}>
-            {FEATURES.map((f, i) => <FeatureCard key={i} f={f} delay={i * 0.08} />)}
+      {/* ── CINEMATIC SLIDER ── */}
+      <CinematicSlider />
+
+      {/* ── FEATURES CAROUSEL (draggable) ── */}
+      <section id="features" style={{ padding: '10rem 0' }}>
+        <div style={{ maxWidth: '128rem', margin: '0 auto', paddingBottom: '1.6rem' }}>
+          <div style={{ padding: '0 var(--padgrid)' }}>
+            <SectionHead
+              tag="Fonctionnalités"
+              title={<>Tout ce dont tu as besoin,<br /><span style={{ background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>en un seul endroit</span></>}
+              sub="Six domaines clés de ta vie, couverts par une IA qui te connaît vraiment."
+            />
           </div>
+        </div>
+        <div style={{ paddingLeft: 'var(--padgrid)' }}>
+          <FxSlider
+            items={FEATURES}
+            itemWidth={360}
+            gap={20}
+            height={490}
+            radius={24}
+            snap
+            showProgress
+            style={{ overflow: 'visible' }}
+            renderItem={(f) => (
+              <div style={{
+                height: '100%', boxSizing: 'border-box',
+                background: 'rgba(255,255,255,0.72)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                border: '1.5px solid rgba(255,255,255,0.72)',
+                borderTop: `3px solid ${f.color}`,
+                borderRadius: 22,
+                padding: '2.8rem 2.4rem',
+                display: 'flex', flexDirection: 'column', gap: '1.4rem',
+                boxShadow: '0 .4rem 1.6rem rgba(0,0,0,.04)',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  fontSize: '3.4rem', lineHeight: 1,
+                  filter: 'drop-shadow(0 4px 10px rgba(0,0,0,.08))',
+                  display: 'inline-block',
+                }}>{f.emoji}</div>
+                <div>
+                  <div style={{ fontSize: 'max(1rem,10px)', fontWeight: 700, color: f.color, textTransform: 'uppercase', letterSpacing: '.18em', marginBottom: '.6rem' }}>{f.tag}</div>
+                  <h3 style={{ margin: 0, fontSize: 'max(1.8rem,16px)', fontWeight: 800, color: 'var(--text-strong)', letterSpacing: '-0.02em', lineHeight: 1.2 }}>{f.title}</h3>
+                </div>
+                <p style={{ margin: 0, fontSize: 'var(--body)', color: 'var(--text-muted)', lineHeight: 1.65, flex: 1 }}>{f.desc}</p>
+                <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+                  {f.pills.map(p => (
+                    <span key={p} style={{ padding: '.3rem .9rem', borderRadius: 'var(--br)', background: `${f.color}0e`, border: `1px solid ${f.color}22`, fontSize: 'max(1.1rem,11px)', fontWeight: 600, color: f.color }}>{p}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          />
         </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section style={{ padding: '10rem var(--padgrid)', background: 'rgba(15,66,35,.025)', borderTop: '1px solid var(--border-soft)', borderBottom: '1px solid var(--border-soft)' }}>
-        <div style={{ maxWidth: '128rem', margin: '0 auto' }}>
+      <section style={{ padding: '10rem 0', background: 'rgba(15,66,35,.025)', borderTop: '1px solid var(--border-soft)', borderBottom: '1px solid var(--border-soft)' }}>
+        <div style={{ padding: '0 var(--padgrid) 1.6rem' }}>
           <SectionHead
             tag="Témoignages"
             title={<>Ils ont transformé<br /><span style={{ background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>leur quotidien</span></>}
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(28rem,1fr))', gap: '2.4rem' }}>
-            {TESTIS.map((t, i) => <TestiCard key={i} t={t} delay={i * 0.1} />)}
-          </div>
+        </div>
+        <div style={{ paddingLeft: 'var(--padgrid)' }}>
+          <FxSlider
+            items={TESTIS}
+            itemWidth={400}
+            gap={24}
+            height={280}
+            radius={24}
+            snap
+            showProgress
+            style={{ overflow: 'visible' }}
+            renderItem={(t) => (
+              <div style={{
+                height: '100%', boxSizing: 'border-box',
+                background: 'rgba(255,255,255,0.62)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                border: '1.5px solid rgba(255,255,255,0.72)',
+                borderRadius: 22,
+                padding: '2.8rem 3.2rem',
+                display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                boxShadow: '0 .4rem 2rem rgba(0,0,0,.04)',
+                overflow: 'hidden',
+              }}>
+                <div>
+                  <div style={{ display: 'flex', gap: '.3rem', marginBottom: '1.4rem' }}>
+                    {'★★★★★'.split('').map((s, i) => <span key={i} style={{ color: '#fbbf24', fontSize: '1.6rem' }}>{s}</span>)}
+                  </div>
+                  <p style={{ margin: 0, fontSize: 'var(--p3)', color: 'var(--text-body)', lineHeight: 1.75, fontStyle: 'italic' }}>
+                    "{t.text}"
+                  </p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', marginTop: '2rem' }}>
+                  <div style={{ width: '3.8rem', height: '3.8rem', borderRadius: '50%', flexShrink: 0, background: 'linear-gradient(135deg,var(--accent),var(--accent-2))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 800, color: '#fff' }}>{t.name.charAt(0)}</div>
+                  <div>
+                    <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 700, color: 'var(--text-strong)' }}>{t.name}</div>
+                    <div style={{ fontSize: 'max(1.1rem,11px)', color: 'var(--accent)', fontWeight: 600 }}>{t.tag}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          />
         </div>
       </section>
 
