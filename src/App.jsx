@@ -724,9 +724,9 @@ export default function App() {
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'rgba(255,250,244,0.55)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
-                borderLeft:'1px solid rgba(200,123,82,0.12)',
-                boxShadow:'-12px 0 40px rgba(0,0,0,0.08)',
+                background:'rgba(255,252,248,0.94)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+                borderLeft:'1px solid rgba(200,123,82,0.10)',
+                boxShadow:'-12px 0 40px rgba(0,0,0,0.06)',
                 display:'flex', flexDirection:'column',
                 padding:'52px 22px 32px',
                 animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
