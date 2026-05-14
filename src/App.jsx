@@ -673,7 +673,7 @@ export default function App() {
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <ShinyLogoText
                     text="Solenn"
-                    gradient="linear-gradient(90deg, #E8962A 0%, #E8962A 36%, #FFF6E8 46%, #FFFDF5 50%, #FFF6E8 54%, #E8962A 64%, #E8962A 100%)"
+                    gradient="linear-gradient(90deg, rgba(232,150,42,0.55) 0%, rgba(232,150,42,0.55) 36%, #FFF6E8 46%, #FFFDF5 50%, #FFF6E8 54%, rgba(232,150,42,0.55) 64%, rgba(232,150,42,0.55) 100%)"
                     animDuration="18s"
                     autoPlay={true}
                     style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
