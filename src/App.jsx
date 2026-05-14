@@ -724,7 +724,7 @@ export default function App() {
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'rgba(255,252,248,0.94)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+                background:'rgba(255,252,248,0.18)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
                 borderLeft:'1px solid rgba(200,123,82,0.10)',
                 boxShadow:'-12px 0 40px rgba(0,0,0,0.06)',
                 display:'flex', flexDirection:'column',
@@ -738,7 +738,7 @@ export default function App() {
                 }}>
                   <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
                   <div>
-                    <div style={{ fontSize:16, fontWeight:800, color:'#1a0a00' }}>{profil.nom}</div>
+                    <div style={{ fontSize:16, fontWeight:800, color:'rgba(90,55,25,0.80)' }}>{profil.nom}</div>
                     <div style={{ fontSize:11, color:'#a89b8c', marginTop:2 }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
@@ -748,7 +748,7 @@ export default function App() {
                     display:'flex', alignItems:'center', gap:12, padding:'13px 16px', borderRadius:14,
                     border:'none', background: onglet===id ? 'rgba(200,123,82,0.08)' : 'transparent',
                     cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
-                    color: onglet===id ? '#C87B52' : '#4a3728', fontWeight: onglet===id ? 700 : 500,
+                    color: onglet===id ? '#C87B52' : 'rgba(120,85,55,0.60)', fontWeight: onglet===id ? 700 : 500,
                     fontSize:14, marginBottom:3,
                     boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(200,123,82,0.18)' : 'none',
                   }}>
