@@ -112,6 +112,56 @@ class MsgBoundary extends Component {
   }
 }
 
+// ─── CELEBRATION OVERLAY ─────────────────────────────────────────────────────
+function CelebrationOverlay({ score, onDone }) {
+  const [out, setOut] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => { setOut(true); setTimeout(onDone, 420) }, 2700)
+    return () => clearTimeout(t)
+  }, [])
+  const sparks = Array.from({ length: 16 }, (_, i) => ({
+    id: i,
+    e: ['✨','🔥','⭐','💫','🌟','🎊','🎉','🌈'][i % 8],
+    x: 4 + (i * 6) % 92,
+    delay: (i * 0.09) % 0.65,
+    dur: 1.2 + (i * 0.11) % 1.0,
+  }))
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:9999, pointerEvents:'none',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      opacity: out ? 0 : 1, transition:'opacity 0.42s ease',
+    }}>
+      {sparks.map(s => (
+        <div key={s.id} style={{
+          position:'absolute', left:`${s.x}%`, top:'-5%', fontSize:22,
+          animation:`celebFall ${s.dur}s ${s.delay}s ease-in forwards`,
+        }}>{s.e}</div>
+      ))}
+      <div style={{
+        background:'rgba(255,253,250,0.97)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
+        borderRadius:28, padding:'36px 52px', textAlign:'center',
+        boxShadow:'0 28px 80px rgba(200,123,82,0.30), 0 8px 24px rgba(0,0,0,0.07)',
+        border:'1.5px solid rgba(200,123,82,0.22)',
+        animation:'celebPop 0.55s cubic-bezier(0.34,1.56,0.64,1) both',
+      }}>
+        <div style={{ fontSize:54, marginBottom:10, lineHeight:1 }}>
+          {score >= 90 ? '🌟' : '🎉'}
+        </div>
+        <div style={{ fontSize:50, fontWeight:900, color:'#C87B52', lineHeight:1, letterSpacing:'-2px' }}>
+          {score}<span style={{ fontSize:18, color:'#c4b5a8', fontWeight:400 }}>/100</span>
+        </div>
+        <div style={{ fontSize:15, fontWeight:700, color:'#9E5C35', marginTop:9 }}>
+          {score >= 90 ? 'Journée parfaite ! 🏆' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
+        </div>
+        <div style={{ fontSize:11, color:'rgba(160,110,70,0.55)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
+          Score santé du jour
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ReactionBtn({ emoji, active, onClick }) {
   const [pressed, setPressed] = useState(false)
   return (
@@ -203,6 +253,8 @@ export default function App() {
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
   const [followUps, setFollowUps]   = useState([])
+  const [celebrate, setCelebrate]   = useState(false)
+  const celebInitRef = useRef(false)
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
   const [menuOpen, setMenuOpen] = useState(false)
@@ -261,7 +313,17 @@ export default function App() {
     }
   }, [])
 
-  // Suggestions dynamiques heure + profil
+  // Célébration quand score atteint 80+ (une fois par jour)
+  useEffect(() => {
+    if (!celebInitRef.current) { celebInitRef.current = true; return }
+    const today = new Date().toDateString()
+    if (score >= 80 && localStorage.getItem('vitacoach_celebrated') !== today) {
+      localStorage.setItem('vitacoach_celebrated', today)
+      setTimeout(() => setCelebrate(true), 400)
+    }
+  }, [metriques])
+
+  // Suggestions dynamiques heure + profil + streak
   useEffect(() => {
     if (!profil) return
     const h = new Date().getHours()
@@ -269,27 +331,36 @@ export default function App() {
     const obj0 = profil.objectifs?.[0] || ''
     const wantsWeight = /poids|mincir|maigrir/i.test(obj0)
     const wantsEnergy = /énergie|fatigue|sport/i.test(obj0)
-    if (h < 10)      setSuggestions([
+
+    let base
+    if (h < 10)      base = [
       `${isVege ? 'Petit-déj végé rapide ?' : 'Que manger ce matin ?'}`,
       wantsEnergy ? 'Routine matinale énergie ?' : 'Comment bien démarrer ma journée ?',
       'Mon score santé est comment ?'
-    ])
-    else if (h < 14) setSuggestions([
+    ]
+    else if (h < 14) base = [
       wantsWeight ? 'Repas de midi léger et rassasiant ?' : 'Idée repas de midi ?',
       'Comment rester concentré cet après-midi ?',
       'Stretch rapide 5 min ?'
-    ])
-    else if (h < 19) setSuggestions([
+    ]
+    else if (h < 19) base = [
       'Je suis épuisé, que faire ?',
       wantsWeight ? 'Collation sans culpabilité ?' : 'Collation saine ?',
       'Comment gérer mon stress maintenant ?'
-    ])
-    else             setSuggestions([
+    ]
+    else             base = [
       'Routine du soir pour bien dormir ?',
       isVege ? 'Dîner végé rapide ?' : 'Que manger ce soir ?',
       'Comment me décompresser ?'
-    ])
-  }, [profil])
+    ]
+
+    // Streak en danger : soir + streak actif + aucune métrique loggée aujourd'hui
+    const notLogged = !metriques.pas && !metriques.sommeil && !metriques.eau
+    if (streak > 0 && h >= 19 && notLogged)
+      setSuggestions([`🔥 Mon streak de ${streak} jour${streak > 1 ? 's' : ''} est en danger !`, ...base.slice(0, 2)])
+    else
+      setSuggestions(base)
+  }, [profil, streak, metriques])
 
   // Génère les chips de suivi contextuel après chaque réponse IA
   function genFollowUps(reply) {
@@ -954,6 +1025,9 @@ export default function App() {
         })()}
       </main>
 
+      {/* Celebration overlay */}
+      {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
+
       {/* Global animations */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
@@ -1100,6 +1174,15 @@ export default function App() {
           0%   { background-position: 200% 0; }
           50%  { background-position: -200% 0; }
           100% { background-position: 200% 0; }
+        }
+        @keyframes celebFall {
+          0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(110vh)  rotate(640deg); opacity: 0; }
+        }
+        @keyframes celebPop {
+          0%   { transform: scale(0.45) rotate(-6deg); opacity: 0; }
+          60%  { transform: scale(1.07) rotate(2deg);  opacity: 1; }
+          100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
         }
         @keyframes swipeHint {
           0%,100% { transform: translateX(0) translateY(-50%); opacity:0.3; }
