@@ -10,7 +10,7 @@ import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumI
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
-function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', style = {} }) {
+function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', autoPlay = false, style = {} }) {
   const [active, setActive] = useState(false)
   const offTimer  = useRef(null)
   const hovering  = useRef(false)
@@ -26,13 +26,15 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
     setActive(false)
   }
   function handleClick() {
+    if (autoPlay) return
     setActive(true)
     clearTimeout(offTimer.current)
-    // Sur mobile (pas de mouseLeave) : arrête après 1 cycle complet
     offTimer.current = setTimeout(() => {
       if (!hovering.current) setActive(false)
     }, parseFloat(animDuration) * 1000)
   }
+
+  const isAnimated = autoPlay || active
 
   return (
     <div
@@ -42,12 +44,12 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
       style={{
         display: 'inline-block',
         background: gradient,
-        backgroundSize: '250% 100%',
+        backgroundSize: '300% 100%',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
         color: 'transparent',
-        animation: active ? `shimmerGrad ${animDuration} ease-in-out infinite ${animDelay}` : 'none',
+        animation: isAnimated ? `shimmerGrad ${animDuration} ease-in-out infinite ${animDelay}` : 'none',
         cursor: 'default',
         userSelect: 'none',
         WebkitUserSelect: 'none',
@@ -670,8 +672,9 @@ export default function App() {
               ) : (
                 <ShinyLogoText
                   text="Solenn"
-                  gradient="linear-gradient(90deg, #ECA882 0%, #FFF8F4 20%, #F5D4B8 36%, #FFF8F4 52%, #D4956A 68%, #FCDEC8 84%, #ECA882 100%)"
-                  animDuration="4s"
+                  gradient="linear-gradient(90deg, #D4956A 0%, #D4956A 38%, #FFF8F4 47%, #FFFCF8 50%, #FFF8F4 53%, #D4956A 62%, #D4956A 100%)"
+                  animDuration="11s"
+                  autoPlay={true}
                   style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
                 />
               )}
