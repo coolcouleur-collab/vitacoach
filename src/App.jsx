@@ -973,11 +973,11 @@ export default function App() {
               display:'inline-flex', alignItems:'center',
               background:'rgba(180,110,65,0.10)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
-              borderRadius:100,
+              borderRadius:22,
               border:'1px solid rgba(200,123,82,0.14)',
               boxShadow:'0 4px 24px rgba(200,123,82,0.08), 0 1px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.70)',
-              padding:'10px 8px',
-              gap:4,
+              padding:'8px 6px',
+              gap:2,
               zIndex:100,
               whiteSpace:'nowrap',
             }}>
@@ -987,7 +987,7 @@ export default function App() {
                 width:`calc((100% - 16px) / ${navItems.length})`,
                 left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
                 background:'rgba(200,123,82,0.10)',
-                borderRadius:100,
+                borderRadius:15,
                 border:'1px solid rgba(200,123,82,0.22)',
                 boxShadow:'0 2px 10px rgba(200,123,82,0.16)',
                 transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
@@ -1001,11 +1001,11 @@ export default function App() {
                     style={{
                       position:'relative', zIndex:1,
                       display:'flex', flexDirection:'column', alignItems:'center', gap:3,
-                      padding:'8px 18px',
+                      padding:'7px 13px',
                       border:'none', background:'transparent', cursor:'pointer',
                       fontFamily:F, color,
                       transition:'color 0.2s ease',
-                      minWidth:60,
+                      minWidth:54,
                     }}
                     onClick={() => setOnglet(id)}>
                     <div style={{
