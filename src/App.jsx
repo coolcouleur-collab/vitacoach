@@ -661,7 +661,7 @@ export default function App() {
           {/* Mobile header */}
           {isMobile && (() => {
             const onChat = onglet === 'chat'
-            const iconColor = onChat ? 'rgba(150,100,40,0.70)' : 'rgba(120,70,40,0.70)'
+            const iconColor = 'rgba(232,150,42,0.55)'
             return (
             <div style={s.mobileHeader}>
               {onglet !== 'accueil' ? (
