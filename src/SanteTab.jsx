@@ -200,11 +200,11 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <circle cx="60" cy="60" r="52" fill="none"
               stroke="url(#scoreGrad)" strokeWidth="10" strokeLinecap="round"
               strokeDasharray={`${dash} ${circumference}`}
-              style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 10px ${scoreColor}90)` }}
+              style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 5px ${scoreColor}40)` }}
             />
           </svg>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1, textShadow: `0 2px 12px ${scoreColor}50` }}>{score || '—'}</div>
+            <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{score || '—'}</div>
             <div style={{ fontSize: 9, color: '#c4b5a8', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
           </div>
         </div>
@@ -503,14 +503,13 @@ const ss = {
   },
   btnInsights: {
     width: '100%',
-    background: 'linear-gradient(150deg, #FFF3EC 0%, #F0D5BA 50%, #E8C4A8 100%)',
-    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    color: 'rgba(232,150,42,0.80)',
-    border: '1.5px solid rgba(232,150,42,0.22)', padding: '12px 16px', borderRadius: 14, fontSize: 12, fontWeight: 700,
+    background: 'rgba(232,150,42,0.07)',
+    color: 'rgba(200,123,82,0.75)',
+    border: '1px solid rgba(232,150,42,0.18)', padding: '11px 16px', borderRadius: 12, fontSize: 12, fontWeight: 600,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
-    boxShadow: '0 4px 18px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,255,255,0.85)',
+    boxShadow: 'none',
     transition: 'transform 0.15s ease',
-    letterSpacing: 0.3
+    letterSpacing: 0.2
   },
   insightsCard: {
     background: 'rgba(255,252,250,0.28)',
