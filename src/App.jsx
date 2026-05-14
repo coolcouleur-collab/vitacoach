@@ -400,12 +400,12 @@ export default function App() {
   const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
 
   const sectionTitles = {
-    chat:'Coach IA', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style', forum:'Forum'
+    chat:'Solenn', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style', forum:'Forum'
   }
 
   const navItems = [
     { id:'accueil', Icon: HomeIcon,   label:'Accueil' },
-    { id:'chat',    Icon: ChatIcon,   label:'Coach' },
+    { id:'chat',    Icon: ChatIcon,   label:'Solenn' },
     { id:'sante',   Icon: HeartIcon,  label:'Santé' },
     { id:'forum',   Icon: ForumIcon,  label:'Forum' },
   ]
@@ -510,11 +510,15 @@ export default function App() {
         <div style={{ ...s.content, padding: isMobile ? '0 0 108px' : '0 0 40px' }}>
 
           {/* Mobile header */}
-          {isMobile && (
+          {isMobile && (() => {
+            const onChat = onglet === 'chat'
+            const iconColor = onChat ? 'rgba(150,100,40,0.70)' : 'rgba(120,70,40,0.70)'
+            return (
             <div style={s.mobileHeader}>
               {onglet !== 'accueil' ? (
-                <button style={s.backBtn} onClick={() => setOnglet('accueil')}>
-                  <BackIcon color="#1a0a00" size={20} />
+                <button style={{ background:'none', border:'none', padding:'6px', cursor:'pointer', display:'flex', alignItems:'center', flexShrink:0 }}
+                  onClick={() => setOnglet('accueil')}>
+                  <BackIcon color={iconColor} size={18} />
                 </button>
               ) : (
                 <ShinyLogoText
@@ -537,21 +541,19 @@ export default function App() {
                 )}
                 {/* ── Hamburger button ── */}
                 <button onClick={() => setMenuOpen(o => !o)} style={{
-                  width:38, height:38, borderRadius:12,
-                  background:'rgba(255,255,255,0.88)', backdropFilter:'blur(12px)',
-                  border:'1px solid rgba(255,255,255,0.60)',
-                  boxShadow:'0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)',
+                  width:34, height:34, borderRadius:10,
+                  background:'none', border:'none', boxShadow:'none',
                   display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                   gap:5, cursor:'pointer', padding:0, flexShrink:0,
                 }}>
                   {[0,1,2].map(i => (
                     <span key={i} style={{
-                      display:'block', borderRadius:2, background:'#2d1a0e',
+                      display:'block', borderRadius:2, background: iconColor,
                       transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
-                      width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 17 : menuOpen && i===2 ? 17 : i===1 ? 11 : 17,
-                      height:2,
-                      transform: menuOpen && i===0 ? 'translateY(7px) rotate(45deg)'
-                               : menuOpen && i===2 ? 'translateY(-7px) rotate(-45deg)'
+                      width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 16 : menuOpen && i===2 ? 16 : i===1 ? 10 : 16,
+                      height:1.5,
+                      transform: menuOpen && i===0 ? 'translateY(6.5px) rotate(45deg)'
+                               : menuOpen && i===2 ? 'translateY(-6.5px) rotate(-45deg)'
                                : 'none',
                       opacity: menuOpen && i===1 ? 0 : 1,
                     }} />
@@ -559,7 +561,8 @@ export default function App() {
                 </button>
               </div>
             </div>
-          )}
+            )
+          })()}
 
           {/* ── Hamburger slide panel ── */}
           {isMobile && menuOpen && (
@@ -574,9 +577,9 @@ export default function App() {
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'rgba(250,247,240,0.98)', backdropFilter:'blur(28px)',
-                borderLeft:'1px solid rgba(255,255,255,0.55)',
-                boxShadow:'-24px 0 64px rgba(0,0,0,0.14)',
+                background:'rgba(255,250,244,0.55)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+                borderLeft:'1px solid rgba(200,123,82,0.12)',
+                boxShadow:'-12px 0 40px rgba(0,0,0,0.08)',
                 display:'flex', flexDirection:'column',
                 padding:'52px 22px 32px',
                 animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
@@ -633,6 +636,7 @@ export default function App() {
               score={score}
               scoreColor={scoreColor}
               onLog={() => setOnglet('sante')}
+              onUpdate={mettreAJourMetrique}
               onSwitchTab={setOnglet}
               onChat={envoyerMessage}
               streak={streak}
@@ -644,23 +648,20 @@ export default function App() {
           {/* ── Chat ── */}
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
-              {/* Page header */}
-              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
-                {isMobile && (
-                  <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}>
-                    <BackIcon color="#8a7265" size={18} />
-                  </button>
-                )}
-                <div>
-                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <ChatIcon size={20} color="#C87B52" />} Coach IA</div>
-                  {!isMobile && <div style={s.pageSubtitle}>Pose n'importe quelle question à Solenn</div>}
+              <div className="aurora-bg" />
+              {/* Page header — desktop only */}
+              {!isMobile && (
+                <div style={s.pageHeader}>
+                  <div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><ChatIcon size={20} color="#C87B52" /> Coach IA</div>
+                    <div style={s.pageSubtitle}>Pose n'importe quelle question à Solenn</div>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
-                    <div style={s.emptyChatIcon}><SolennFace size={56} /></div>
                     <div style={s.emptyChatTitle}>Je suis Solenn, ton coach de vie</div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     <div style={s.suggestionsPile}>
@@ -675,7 +676,6 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {msg.role==='assistant' && <SolennFace size={34} />}
                     <div style={
                       msg.role==='user'
                         ? s.userBubble
@@ -695,7 +695,6 @@ export default function App() {
 
                 {loading && (
                   <div style={s.botMsg}>
-                    <SolennFace size={34} />
                     <div style={s.botBubble}>
                       <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
                         {[0, 0.18, 0.36].map((d,i) => (
@@ -730,7 +729,7 @@ export default function App() {
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
                     placeholder="Pose une question à Solenn..." />
                   <button style={s.sendBtn} onClick={() => envoyerMessage()}>
-                    <SendIcon color="#fff" size={17} />
+                    <SendIcon color="#C87B52" size={20} />
                   </button>
                 </div>
               </div>
@@ -743,7 +742,7 @@ export default function App() {
               <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
                 {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
                 <div>
-                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}>{!isMobile && <HeartIcon size={20} color="#ff3b30" />} Suivi Santé</div>
+                  <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8, color: isMobile ? '#C87B52' : undefined, fontSize: isMobile ? 14 : undefined, fontWeight: isMobile ? 600 : undefined }}>{!isMobile && <HeartIcon size={20} color="#ff3b30" />} {isMobile ? 'Santé' : 'Suivi Santé'}</div>
                   {!isMobile && <div style={s.pageSubtitle}>Tes métriques du jour</div>}
                 </div>
               </div>
@@ -802,16 +801,15 @@ export default function App() {
           const activeIdx = navItems.findIndex(n => n.id === onglet)
           return (
             <nav style={{
-              position:'fixed', bottom:20, left:'50%', transform:'translateX(-50%)',
+              position:'fixed', bottom:22, left:'50%', transform:'translateX(-50%)',
               display:'inline-flex', alignItems:'center',
-              /* Blanc glass — teal accent subtil */
-              background:'rgba(252,255,254,0.94)',
+              background:'rgba(180,110,65,0.10)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
               borderRadius:100,
-              border:'1px solid rgba(255,255,255,0.68)',
-              boxShadow:'0 8px 32px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)',
-              padding:'7px 8px',
-              gap:2,
+              border:'1px solid rgba(200,123,82,0.14)',
+              boxShadow:'0 4px 24px rgba(200,123,82,0.08), 0 1px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.70)',
+              padding:'10px 8px',
+              gap:4,
               zIndex:100,
               whiteSpace:'nowrap',
             }}>
@@ -861,7 +859,7 @@ export default function App() {
 
       {/* Global animations */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
         @keyframes oravBlink {
           0%, 85%, 100% { transform: scaleY(1); }
           91% { transform: scaleY(0.07); }
@@ -874,6 +872,22 @@ export default function App() {
         @keyframes floatOrb {
           0%,100% { transform:translateY(0) scale(1); }
           50%      { transform:translateY(-18px) scale(1.03); }
+        }
+        @keyframes aurora {
+          0%   { background-position: 0% 50%; }
+          25%  { background-position: 50% 0%; }
+          50%  { background-position: 100% 50%; }
+          75%  { background-position: 50% 100%; }
+          100% { background-position: 0% 50%; }
+        }
+        .aurora-bg {
+          position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          background: linear-gradient(135deg,
+            #FFD49A 0%, #F5C8AA 18%, #FFF4E0 36%,
+            #E8B87A 52%, #D4C4A0 68%, #FAE8CC 84%, #FFD49A 100%);
+          background-size: 400% 400%;
+          animation: aurora 14s ease infinite;
+          opacity: 0.90;
         }
         @keyframes twinkle {
           from { opacity:0.1; transform:scale(0.7); }
@@ -1684,18 +1698,16 @@ const s = {
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'14px 18px 12px',
-    borderBottom:'1px solid rgba(255,200,120,0.20)',
-    background:'rgba(255,255,250,0.88)',
-    backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
+    borderBottom:'1px solid rgba(200,123,82,0.08)',
+    background:'transparent',
     position:'sticky', top:0, zIndex:40,
-    boxShadow:'0 2px 20px rgba(200,123,82,.06)',
   },
   backBtn: {
     width:36, height:36, borderRadius:12,
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  mobileTitle: { fontSize:15, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.02em', flex:1, textAlign:'center' },
+  mobileTitle: { fontSize:14, fontWeight:600, color:'#C87B52', letterSpacing:'0.01em', flex:1, textAlign:'center', opacity:0.85 },
   scorePill: { borderRadius:20, padding:'4px 10px', fontSize:11, fontWeight:700 },
 
   // ── Page header ───────────────────────────────────────────────────────────────
@@ -1710,18 +1722,19 @@ const s = {
   pageSubtitle: { fontSize:12, color:'#c4b5a8', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
-  chatWrap: { display:'flex', flexDirection:'column', flex:1, padding:'0 2rem', paddingTop:'2rem' },
-  chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10 },
+  chatWrap: { display:'flex', flexDirection:'column', flex:1, padding:'0 2rem', paddingTop:'2rem', position:'relative', overflow:'hidden' },
+  chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
-  emptyChatTitle: { fontSize:18, fontWeight:800, color:'#1a0a00', marginBottom:6, letterSpacing:'-0.03em' },
-  emptyChatSub: { fontSize:13, color:'#c4b5a8', marginBottom:32, lineHeight:1.7 },
+  emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(100,65,25,0.88)', marginBottom:6, letterSpacing:'-0.03em' },
+  emptyChatSub: { fontSize:13, color:'rgba(160,120,60,0.65)', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
-    background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:16,
-    padding:'13px 18px', fontSize:13, color:'#1a0a00', cursor:'pointer',
+    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(190,130,70,0.22)', borderRadius:16,
+    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.88)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
-    boxShadow:'0 2px 12px rgba(0,0,0,.04)', transition:'transform .18s, box-shadow .18s',
+    transition:'transform .18s, box-shadow .18s',
   },
 
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
@@ -1733,10 +1746,11 @@ const s = {
     boxShadow:'0 8px 28px rgba(200,123,82,.38), inset 0 1px 0 rgba(255,255,255,.2)',
   },
   botBubble: {
-    background:'#ffffff', border:'1px solid #f0e8e0', color:'#1a0a00',
+    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(190,130,70,0.22)', color:'rgba(80,50,20,0.88)',
     padding:'13px 18px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
-    fontSize:14, lineHeight:1.75, whiteSpace:'pre-wrap',
-    boxShadow:'0 4px 20px rgba(0,0,0,.06)',
+    fontSize:14.5, lineHeight:1.80, whiteSpace:'pre-wrap',
+    fontFamily:"'Lora', Georgia, serif",
   },
   botBubbleRich: {
     background:'transparent', color:'#1a0a00',
@@ -1744,25 +1758,25 @@ const s = {
   },
   botAvatar: { fontSize:16, color:'#C87B52', marginTop:10, flexShrink:0, fontWeight:900 },
 
-  suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap' },
+  suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
-    background:'#ffffff', border:'1px solid rgba(200,123,82,.20)', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'#C87B52', cursor:'pointer',
-    fontFamily:F, fontWeight:600, boxShadow:'0 1px 6px rgba(0,0,0,.04)',
+    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    border:'1px solid rgba(190,130,70,0.22)', borderRadius:20,
+    padding:'7px 14px', fontSize:12, color:'rgba(160,100,40,0.90)', cursor:'pointer',
+    fontFamily:F, fontWeight:600,
   },
 
-  inputRow: { paddingBottom:10 },
+  inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'#ffffff', borderRadius:20,
-    padding:'8px 8px 8px 18px', border:'1px solid #f0e8e0', alignItems:'center',
-    boxShadow:'0 4px 24px rgba(0,0,0,.06)',
+    display:'flex', gap:8, background:'rgba(255,248,242,0.45)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+    borderRadius:20, padding:'8px 8px 8px 18px',
+    border:'1px solid rgba(200,123,82,0.15)', alignItems:'center',
   },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'#1a0a00' },
   sendBtn: {
-    background:'linear-gradient(135deg,#C87B52,#9E5C35)', border:'none',
-    width:42, height:42, borderRadius:14, cursor:'pointer',
+    background:'transparent', border:'none',
+    width:36, height:36, borderRadius:12, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-    boxShadow:'0 4px 16px rgba(200,123,82,.40)',
   },
 
   // ── Bottom nav ────────────────────────────────────────────────────────────────

@@ -11,8 +11,8 @@ function ScaleIcon({ color = '#34c759', size = 20 }) {
 }
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#8b5cf6" />,   unit: '',      goal: 10000, color: '#8b5cf6', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
-  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#a78bfa" />,  unit: 'h',    goal: 8,     color: '#a78bfa', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#F59E0B" />,   unit: '',      goal: 10000, color: '#F59E0B', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
+  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#60A5FA" />,  unit: 'h',    goal: 8,     color: '#60A5FA', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
   { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#38bdf8" />, unit: ' v.',  goal: 8,     color: '#38bdf8', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
   { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#ff3b30" />, unit: ' bpm', goal: 70,    color: '#ff3b30', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
   { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#fbbf24" />,  unit: '/5',   goal: 5,     color: '#fbbf24', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
@@ -82,16 +82,17 @@ function Sparkline({ history, metricKey, color, goal }) {
 function HistoriqueSection({ history }) {
   const [open, setOpen] = useState(false)
   const metricsToShow = [
-    { key:'pas',     label:'Pas',     color:'#8b5cf6', goal:10000 },
-    { key:'sommeil', label:'Sommeil', color:'#a78bfa', goal:8 },
-    { key:'eau',     label:'Eau',     color:'#38bdf8', goal:8 },
-    { key:'humeur',  label:'Humeur',  color:'#fbbf24', goal:5 },
+    { key:'pas',     label:'Pas',     color:'#C87B52', goal:10000 },
+    { key:'sommeil', label:'Sommeil', color:'#B06840', goal:8 },
+    { key:'eau',     label:'Eau',     color:'#D4956A', goal:8 },
+    { key:'humeur',  label:'Humeur',  color:'#9E5C35', goal:5 },
   ]
   return (
     <div style={{
-      background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:22,
+      background:'rgba(255,246,238,0.82)', border:'1.5px solid rgba(200,123,82,0.18)', borderRadius:22,
       overflow:'hidden', marginBottom:14,
-      boxShadow:'0 4px 20px rgba(0,0,0,0.05)',
+      backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+      boxShadow:'0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)',
     }}>
       <button
         style={{ width:'100%', background:'transparent', border:'none', padding:'16px 18px',
@@ -99,17 +100,17 @@ function HistoriqueSection({ history }) {
         onClick={() => setOpen(v => !v)}
       >
         <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
-          background:'linear-gradient(135deg,rgba(139,92,246,0.15),rgba(255,154,60,0.10))',
-          border:'1.5px solid rgba(139,92,246,0.25)',
+          background:'rgba(200,123,82,0.12)',
+          border:'1.5px solid rgba(200,123,82,0.22)',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:800, color:'#1a0a00' }}>Historique 7 jours</div>
           <div style={{ fontSize:11, color:'#8a7265', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
-          fontSize:10, fontWeight:700, color:'#8b5cf6',
-          background:'rgba(139,92,246,0.10)', padding:'4px 10px', borderRadius:8,
-          border:'1px solid rgba(139,92,246,0.20)',
+          fontSize:10, fontWeight:700, color:'#C87B52',
+          background:'rgba(200,123,82,0.10)', padding:'4px 10px', borderRadius:8,
+          border:'1px solid rgba(200,123,82,0.20)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
       </button>
@@ -145,7 +146,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const [loadingInsights, setLoadingInsights] = useState(false)
   const [showApple, setShowApple]         = useState(false)
 
-  const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
+  const scoreColor = '#C87B52'
   const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
   const circumference = 2 * Math.PI * 52
   const dash = (score / 100) * circumference
@@ -203,9 +204,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
             fontSize: 20, fontWeight: 900, marginBottom: 4,
-            background: `linear-gradient(135deg, ${scoreColor}, #F97316)`,
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
+            color: '#C87B52',
           }}>{scoreLabel}</div>
           <div style={{ fontSize: 12, color: '#8a7265', lineHeight: 1.6, marginBottom: 14 }}>
             Score santé du jour · Mets à jour tes métriques pour l'améliorer
@@ -241,25 +240,25 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Quick Water Bar ── */}
       <div style={ss.waterBar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 4px rgba(56,189,248,0.4))' }}><WaterIcon size={24} color="#38bdf8" /></span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 4px rgba(200,123,82,0.35))' }}><WaterIcon size={24} color="#C87B52" /></span>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} style={{
                   flex: 1, height: 14, borderRadius: 7,
                   background: i < (metriques.eau || 0)
-                    ? 'linear-gradient(180deg, #7dd3fc, #38bdf8)'
-                    : 'rgba(56,189,248,0.12)',
+                    ? 'linear-gradient(180deg, #E8A07A, #C87B52)'
+                    : 'rgba(200,123,82,0.10)',
                   boxShadow: i < (metriques.eau || 0)
-                    ? '0 3px 8px rgba(56,189,248,0.45), inset 0 1px 0 rgba(255,255,255,0.6)'
+                    ? '0 3px 8px rgba(200,123,82,0.30), inset 0 1px 0 rgba(255,255,255,0.5)'
                     : 'none',
                   transition: 'all 0.3s ease',
-                  border: i < (metriques.eau || 0) ? 'none' : '1px solid rgba(56,189,248,0.2)'
+                  border: i < (metriques.eau || 0) ? 'none' : '1px solid rgba(200,123,82,0.15)'
                 }} />
               ))}
             </div>
-            <div style={{ fontSize: 13, color: '#0ea5e9', fontWeight: 800, letterSpacing: -0.3 }}>
-              {metriques.eau || 0}<span style={{ fontSize: 11, fontWeight: 500, color: '#7dd3fc' }}> / 8 verres</span>
+            <div style={{ fontSize: 13, color: '#C87B52', fontWeight: 800, letterSpacing: -0.3 }}>
+              {metriques.eau || 0}<span style={{ fontSize: 11, fontWeight: 500, color: '#D4956A' }}> / 8 verres</span>
             </div>
           </div>
         </div>
@@ -288,11 +287,14 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div key={m.key}
               style={{
                 ...ss.metricCard,
-                background: `linear-gradient(160deg, ${m.color}12, ${m.color}06)`,
-                borderTop: `4px solid ${m.color}`,
+                background: `rgba(255,252,248,0.55)`,
+                backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+                borderTop: `3px solid rgba(200,123,82,0.45)`,
+                border: `1px solid rgba(200,123,82,0.14)`,
+                borderTopWidth: 3,
                 boxShadow: done
-                  ? `0 8px 24px ${m.color}35, 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)`
-                  : `0 8px 24px ${m.color}18, 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8)`,
+                  ? `0 6px 20px rgba(200,123,82,0.18), inset 0 1px 0 rgba(255,255,255,0.85)`
+                  : `0 4px 14px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75)`,
               }}
               onClick={() => openEdit(m.key)}
               onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
@@ -311,31 +313,32 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 )}
                 {!done && (
                   <span style={{
-                    fontSize: 9, color: m.color,
-                    background: `${m.color}15`,
-                    padding: '3px 8px', borderRadius: 8, fontWeight: 600,
-                    border: `1px solid ${m.color}25`
-                  }}>Modifier</span>
+                    fontSize: 9, color: 'rgba(160,110,70,0.70)',
+                    background: 'transparent',
+                    padding: '2px 0', fontWeight: 500,
+                    letterSpacing: '0.3px'
+                  }}>modifier</span>
                 )}
               </div>
               <div style={{
                 fontSize: 32, fontWeight: 900,
-                color: done ? m.color : '#1a0a00',
+                color: done ? '#C87B52' : '#3a2010',
                 lineHeight: 1, marginBottom: 3,
-                textShadow: done ? `0 2px 10px ${m.color}40` : 'none'
+                textShadow: done ? '0 2px 10px rgba(200,123,82,0.35)' : 'none'
               }}>
                 {val > 0 ? m.fmt(val) : '—'}
                 {val > 0 && <span style={{ fontSize: 11, fontWeight: 500, color: '#c4b5a8', marginLeft: 3 }}>{m.unit}</span>}
               </div>
               <div style={{ fontSize: 11, color: '#8a7265', marginBottom: 10, fontWeight: 600 }}>{m.label}</div>
               {m.key !== 'poids' && (
-                <div style={{ height: 8, background: `${m.color}15`, borderRadius: 4, overflow: 'hidden' }}>
+                <div style={{ height: 6, background: 'rgba(200,123,82,0.10)', borderRadius: 4, overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', width: `${pct}%`,
-                    background: `linear-gradient(90deg, ${m.color}99, ${m.color})`,
+                    background: done
+                      ? 'linear-gradient(90deg, #C87B52, #E8A07A)'
+                      : 'linear-gradient(90deg, rgba(200,123,82,0.5), rgba(200,123,82,0.8))',
                     borderRadius: 4,
                     transition: 'width 0.6s ease',
-                    boxShadow: done ? `0 0 8px ${m.color}80` : 'none'
                   }} />
                 </div>
               )}
@@ -353,15 +356,15 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Apple Health ── */}
       <div style={ss.appleSection}>
         <button style={ss.appleTrigger} onClick={() => setShowApple(v => !v)}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(52,199,89,0.4))' }}><HeartIcon size={24} color="#34c759" /></span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(200,123,82,0.4))' }}><HeartIcon size={24} color="#C87B52" /></span>
           <div style={{ flex: 1, textAlign: 'left' }}>
-            <div style={{ fontWeight: 800, color: '#1a0a00', fontSize: 13 }}>Apple Santé & HealthKit</div>
-            <div style={{ fontSize: 11, color: '#8a7265', marginTop: 2 }}>Synchronisation native iOS</div>
+            <div style={{ fontWeight: 800, color: '#1a0a00', fontSize: 13 }}>Connecter mes apps santé</div>
+            <div style={{ fontSize: 11, color: '#8a7265', marginTop: 2 }}>Apple Santé, Google Fit · bientôt disponible</div>
           </div>
           <span style={{
-            color: '#34c759', fontSize: 10, fontWeight: 800,
-            background: 'rgba(52,199,89,0.12)', padding: '4px 8px', borderRadius: 8,
-            border: '1px solid rgba(52,199,89,0.25)'
+            color: '#C87B52', fontSize: 10, fontWeight: 800,
+            background: 'rgba(200,123,82,0.10)', padding: '4px 8px', borderRadius: 8,
+            border: '1px solid rgba(200,123,82,0.20)'
           }}>{showApple ? '▲ Moins' : '▼ Plus'}</span>
         </button>
         {showApple && (
@@ -378,12 +381,12 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             ))}
             <div style={{
               marginTop: 14, padding: '12px 16px',
-              background: 'linear-gradient(135deg, rgba(52,199,89,0.10), rgba(52,199,89,0.05))',
-              borderRadius: 14, border: '1px solid rgba(52,199,89,0.25)',
-              fontSize: 12, color: '#34c759', fontWeight: 700,
-              boxShadow: '0 4px 12px rgba(52,199,89,0.12), inset 0 1px 0 rgba(255,255,255,0.8)'
+              background: 'linear-gradient(135deg, rgba(200,123,82,0.09), rgba(200,123,82,0.04))',
+              borderRadius: 14, border: '1px solid rgba(200,123,82,0.22)',
+              fontSize: 12, color: '#C87B52', fontWeight: 700,
+              boxShadow: '0 4px 12px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.8)'
             }}>
-              <span style={{display:'flex',alignItems:'center',gap:6}}><PhoneIcon size={13} color="#34c759" /> App iOS native avec HealthKit automatique — bientôt disponible</span>
+              <span style={{display:'flex',alignItems:'center',gap:6}}><PhoneIcon size={13} color="#C87B52" /> Synchronisation automatique Apple Santé & Google Fit — bientôt disponible</span>
             </div>
           </div>
         )}
@@ -471,38 +474,40 @@ const ss = {
     border: '1px solid rgba(249,115,22,0.15)',
     borderRadius: 26, padding: '22px 20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
-    boxShadow: '0 12px 40px rgba(139,92,246,0.20), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: '0 12px 40px rgba(200,123,82,0.14), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   btnInsights: {
     width: '100%',
-    background: 'linear-gradient(145deg, #F97316, #8b5cf6)',
+    background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
     color: '#fff',
     border: 'none', padding: '12px 16px', borderRadius: 14, fontSize: 12, fontWeight: 800,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
-    boxShadow: '0 8px 24px rgba(249,115,22,0.40), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow: '0 8px 24px rgba(200,123,82,0.38), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition: 'transform 0.15s ease',
     letterSpacing: 0.3
   },
   insightsCard: {
-    background: 'linear-gradient(145deg, rgba(139,92,246,0.06), rgba(255,154,60,0.04))',
-    border: '1px solid rgba(139,92,246,0.18)',
-    borderLeft: '4px solid #F97316',
+    background: 'rgba(255,248,242,0.72)',
+    border: '1px solid rgba(200,123,82,0.18)',
+    borderLeft: '4px solid #C87B52',
     borderRadius: 22, padding: '16px 18px', marginBottom: 14,
-    boxShadow: '0 8px 24px rgba(139,92,246,0.10), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
+    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+    boxShadow: '0 8px 24px rgba(200,123,82,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   waterBar: {
-    background: 'linear-gradient(145deg, rgba(56,189,248,0.10), rgba(125,211,252,0.06))',
-    border: '1px solid rgba(56,189,248,0.25)',
+    background: 'rgba(255,252,248,0.55)',
+    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    border: '1px solid rgba(200,123,82,0.14)',
     borderRadius: 24, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
-    boxShadow: '0 10px 32px rgba(56,189,248,0.18), 0 4px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: '0 4px 14px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   btnWater: {
-    background: 'linear-gradient(145deg, #38bdf8, #0ea5e9)',
+    background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
     border: 'none',
     color: '#fff', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 800,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
-    boxShadow: '0 6px 18px rgba(56,189,248,0.45), 0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.3)',
+    boxShadow: '0 6px 18px rgba(200,123,82,0.38), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition: 'transform 0.15s ease',
     letterSpacing: 0.2
   },
@@ -514,24 +519,25 @@ const ss = {
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',
   },
   appleSection: {
-    background: 'linear-gradient(145deg, rgba(52,199,89,0.08), rgba(52,199,89,0.04))',
-    border: '1px solid rgba(52,199,89,0.22)',
+    background: 'rgba(255,252,248,0.55)',
+    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    border: '1px solid rgba(200,123,82,0.18)',
     borderRadius: 22, overflow: 'hidden',
-    boxShadow: '0 10px 32px rgba(52,199,89,0.12), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: '0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)'
   },
   appleTrigger: {
     width: '100%', background: 'transparent', border: 'none', padding: '16px 18px',
     display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', fontFamily: 'Poppins,sans-serif'
   },
-  appleBody: { padding: '4px 18px 18px', borderTop: '1px solid rgba(52,199,89,0.15)' },
+  appleBody: { padding: '4px 18px 18px', borderTop: '1px solid rgba(200,123,82,0.12)' },
   appleStep: { display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 10, paddingTop: 10 },
   appleStepNum: {
     width: 30, height: 30, borderRadius: '50%',
-    background: 'linear-gradient(145deg, rgba(52,199,89,0.25), rgba(52,199,89,0.12))',
-    border: '1.5px solid rgba(52,199,89,0.35)',
+    background: 'linear-gradient(145deg, rgba(200,123,82,0.20), rgba(200,123,82,0.10))',
+    border: '1.5px solid rgba(200,123,82,0.30)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12,
-    fontWeight: 900, color: '#34c759', flexShrink: 0, marginTop: 1,
-    boxShadow: '0 3px 10px rgba(52,199,89,0.20), inset 0 1px 0 rgba(255,255,255,0.6)'
+    fontWeight: 900, color: '#C87B52', flexShrink: 0, marginTop: 1,
+    boxShadow: '0 3px 10px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.6)'
   },
   modalOverlay: {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)',

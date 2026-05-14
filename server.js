@@ -14,12 +14,21 @@ const app = express()
 const groq   = new Groq({ apiKey: process.env.GROQ_API_KEY })
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-// Web Push VAPID
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL || 'mailto:contact@meet-solenn.com',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-)
+// Web Push VAPID (optional — skip if keys not configured)
+try {
+  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+    webpush.setVapidDetails(
+      process.env.VAPID_EMAIL || 'mailto:contact@meet-solenn.com',
+      process.env.VAPID_PUBLIC_KEY,
+      process.env.VAPID_PRIVATE_KEY
+    )
+    console.log('Web Push VAPID: ✅ configuré')
+  } else {
+    console.log('Web Push VAPID: ⚠️ clés manquantes, notifications désactivées')
+  }
+} catch (e) {
+  console.warn('Web Push VAPID: ⚠️ erreur init —', e.message)
+}
 
 // Stockage en mémoire des subscriptions (remplacer par DB en prod)
 const pushSubscriptions = new Map()
@@ -194,32 +203,60 @@ app.post('/api/tenues', async (req, res) => {
   const { profil, ville, occasion } = req.body
 
   let meteo = 'météo inconnue'
+  let meteoDisplay = ''
   try {
-    const weatherRes = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=fr`
-    )
-    const w = weatherRes.data
-    meteo = `${Math.round(w.main.temp)}°C, ${w.weather[0].description}, humidité ${w.main.humidity}%`
+    const [currentRes, forecastRes] = await Promise.all([
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=fr`, { timeout: 6000 }),
+      axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${ville}&cnt=8&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=fr`, { timeout: 6000 })
+    ])
+    const w = currentRes.data
+    const list = forecastRes.data.list
+
+    const getMorning = list.find(f => { const h = new Date(f.dt * 1000).getHours(); return h >= 6 && h <= 9 })
+    const getMidday  = list.find(f => { const h = new Date(f.dt * 1000).getHours(); return h >= 11 && h <= 14 })
+    const getEvening = list.find(f => { const h = new Date(f.dt * 1000).getHours(); return h >= 17 && h <= 20 })
+
+    const tempMin = Math.round(Math.min(...list.map(f => f.main.temp_min)))
+    const tempMax = Math.round(Math.max(...list.map(f => f.main.temp_max)))
+    const rainProb = Math.round(Math.max(...list.slice(0, 5).map(f => (f.pop || 0) * 100)))
+    const wind = Math.round(w.wind.speed * 3.6)
+
+    const tMorning = getMorning ? Math.round(getMorning.main.temp) : Math.round(w.main.temp) - 2
+    const tMidday  = getMidday  ? Math.round(getMidday.main.temp)  : Math.round(w.main.temp) + 3
+    const tEvening = getEvening ? Math.round(getEvening.main.temp) : Math.round(w.main.temp)
+
+    meteo = `Ville: ${ville}
+- Actuellement: ${Math.round(w.main.temp)}°C, ${w.weather[0].description}
+- Matin (7h): ~${tMorning}°C  |  Midi: ~${tMidday}°C  |  Soir (18h): ~${tEvening}°C
+- Amplitude journée: ${tempMin}°C → ${tempMax}°C (ΔT = ${tempMax - tempMin}°C)
+- Pluie: ${rainProb}%  |  Vent: ${wind} km/h  |  Humidité: ${w.main.humidity}%`
+
+    meteoDisplay = `${Math.round(w.main.temp)}°C, ${w.weather[0].description} · ${tMorning}→${tMidday}°C · pluie ${rainProb}%`
   } catch {
     meteo = 'météo non disponible'
+    meteoDisplay = 'météo non disponible'
   }
 
-  const prompt = `Tu es un styliste expert et personnel.
-Profil de l'utilisateur :
-- Style préféré: ${profil.styleDetails || profil.styles?.join(', ')}
+  const prompt = `Tu es un styliste expert, tendance et personnel.
+Profil :
+- Style: ${profil.styleDetails || profil.styles?.join(', ') || 'polyvalent'}
 - Mensurations: ${profil.mensurations || 'non renseigné'}
 
-Météo aujourd'hui à ${ville}: ${meteo}
+${meteo}
 Occasion: ${occasion}
 
-Propose 6 tenues avec des styles VARIÉS (ex: minimaliste, tendance, classique, streetwear, bohème, sportif chic). Réponds UNIQUEMENT en JSON valide :
+⚠️ PENSE LAYERING : si l'amplitude journée dépasse 5°C, propose des tenues en couches (manteau léger à enlever, veste sur pull, etc.) pour s'adapter au fil de la journée.
+⚠️ Si pluie > 40%, intègre imperméable ou semelles imperméables.
+⚠️ Les styles doivent être VARIÉS ET TENDANCE 2024-2025 : quiet luxury, streetwear parisien, casual chic, Y2K revisité, office slay, athleisure premium.
+
+Propose 6 tenues. Réponds UNIQUEMENT en JSON valide :
 {
   "tenues": [
     {
-      "titre": "Nom de la tenue",
-      "description": "Description complète : haut, bas, chaussures, accessoires",
-      "pourquoi": "Pourquoi ce choix selon la météo et l'occasion",
-      "imagePrompt": "fashion outfit photo, [describe the full outfit in English for image generation], professional photography, white background, full body shot"
+      "titre": "Nom tendance de la tenue",
+      "description": "3 pièces max séparées par ' · ' : ex: Manteau crème · Jean slim · Sneakers blanches",
+      "pourquoi": "1 phrase courte sur l'adaptation météo/occasion",
+      "imagePrompt": "[style_keyword] [outfit_keyword1] [outfit_keyword2] street fashion editorial photography"
     }
   ]
 }`
@@ -236,67 +273,117 @@ Propose 6 tenues avec des styles VARIÉS (ex: minimaliste, tendance, classique, 
     const text = response.choices[0].message.content
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const data = JSON.parse(jsonMatch[0])
-    res.json({ tenues: data.tenues, meteo })
+    res.json({ tenues: data.tenues, meteo: meteoDisplay || meteo })
   } catch {
-    res.json({ tenues: [], meteo, erreur: 'Erreur de parsing' })
+    res.json({ tenues: [], meteo: meteoDisplay || meteo, erreur: 'Erreur de parsing' })
   }
 })
 
-// Recherche images mode via Pexels
+// Recherche images mode
 app.get('/api/image', async (req, res) => {
-  // Helper : LoremFlickr garanti, sans auth
-  function loremFlickrUrl(prompt) {
-    const safeKeyword = (prompt || 'fashion')
-      .replace(/[^a-zA-Z\s]/g, ' ')
-      .split(' ')
-      .filter(w => w.length > 3)
-      .slice(0, 2)
-      .join(',') || 'fashion'
-    return `https://loremflickr.com/400/560/${safeKeyword},fashion/all`
+  const lock = req.query.lock != null ? Number(req.query.lock) : 0
+  const rawPrompt = req.query.prompt || 'fashion outfit'
+  const rawTitre = req.query.titre || ''
+
+  // ── Construire la requête à partir des pièces réelles de la tenue ────────────
+  // Priorité : imagePrompt (contient les vêtements concrets) > titre (style)
+  function styleToQuery(titre, imagePrompt) {
+    // 1. Extraire les mots-clés vêtements/couleurs du imagePrompt
+    const stopWords = new Set([
+      'street','fashion','editorial','photography','outfit','style','photo',
+      'woman','man','wearing','with','and','the','for','full','body','shot',
+      'professional','white','background','look','chic','elegant'
+    ])
+    const colors = new Set(['black','white','beige','grey','gray','brown','navy','cream',
+      'camel','olive','khaki','burgundy','red','blue','green','yellow','pink','orange'])
+
+    const words = (imagePrompt || '')
+      .toLowerCase()
+      .replace(/[^a-z\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !stopWords.has(w))
+
+    // Garder couleurs + items de vêtements (mots substantiels hors style générique)
+    const clothingItems = words.slice(0, 6)
+
+    if (clothingItems.length >= 2) {
+      // "ootd" (outfit of the day) force Unsplash à retourner des photos
+      // de personnes en pied — évite les close-ups de sacs/accessoires
+      return `woman ${clothingItems.slice(0,4).join(' ')} ootd full body street style`
+    }
+
+    // 2. Fallback sur le titre si imagePrompt trop vague
+    const t = (titre || '').toLowerCase()
+    if (t.match(/quiet.?luxury|luxe/))       return 'woman luxury minimal coat ootd full body street style'
+    if (t.match(/streetwear|street/))         return 'woman streetwear urban ootd full body street photography'
+    if (t.match(/y2k/))                       return 'woman Y2K fashion ootd full body trendy aesthetic'
+    if (t.match(/office|bureau|slay/))        return 'woman blazer power dressing ootd full body street style'
+    if (t.match(/athleisure|sport/))          return 'woman athleisure sporty ootd full body street style'
+    if (t.match(/boho|boheme/))               return 'woman bohemian boho ootd full body street style'
+    if (t.match(/minimal/))                   return 'woman minimalist clean ootd full body street style'
+    if (t.match(/casual/))                    return 'woman casual chic ootd full body effortless street style'
+    if (t.match(/vintage|retro/))             return 'woman vintage retro ootd full body fashion'
+    if (t.match(/trench|imperméable/))        return 'woman trench coat ootd full body rainy street style'
+    return 'woman fashion ootd full body street style trendy outfit'
   }
 
-  // Pas de clé Pexels → fallback immédiat
+  // ── Source 1 : Unsplash (qualité éditoriale, pas de clé requise) ───────────
+  async function unsplashUrl(prompt, lock, titre) {
+    const query = styleToQuery(titre, prompt)
+    // sig unique par carte → image différente garantie
+    const seed = (lock * 137 + 42) % 9999
+    const url = `https://source.unsplash.com/400x560/?${encodeURIComponent(query)}&sig=${seed}`
+    const resp = await axios.get(url, { timeout: 6000, maxRedirects: 5 })
+    return resp.request?.res?.responseUrl || resp.config?.url || url
+  }
+
+  // ── Fallback keywords basiques ─────────────────────────────────────────────
+  function fashionKeywords(prompt) {
+    const words = (prompt || '').toLowerCase().split(/\s+/)
+    const styleWords = ['streetwear','minimal','chic','elegant','casual','bohemian','sporty','vintage','luxury','formal','blazer','denim','leather','knit','trench','coat','dress']
+    const found = words.filter(w => styleWords.includes(w))
+    return found.length ? found.slice(0,3) : ['fashion','editorial','style']
+  }
+
+  // ── Source 2 : LoremFlickr (fallback garanti) ──────────────────────────────
+  function loremFlickrUrl(prompt, lock) {
+    const kw = fashionKeywords(prompt).slice(0, 2).join(',') || 'fashion'
+    return `https://loremflickr.com/400/560/${kw},fashion/all?lock=${lock}`
+  }
+
+  // Pas de clé Pexels → Unsplash d'abord, LoremFlickr en fallback
   if (!process.env.PEXELS_API_KEY) {
-    return res.json({ url: loremFlickrUrl(req.query.prompt) })
+    try {
+      const url = await unsplashUrl(rawPrompt, lock, rawTitre)
+      return res.json({ url })
+    } catch {
+      return res.json({ url: loremFlickrUrl(rawPrompt, lock) })
+    }
   }
 
   try {
-    const prompt = req.query.prompt
-    // On extrait les mots clés importants pour Pexels
-    const keywords = prompt
-      .replace(/[^a-zA-Z\s]/g, ' ')
-      .split(' ')
-      .filter(w => w.length > 3)
-      .slice(0, 4)
-      .join(' ') + ' fashion outfit'
-
-    console.log('🔍 Recherche Pexels:', keywords)
+    const query = styleToQuery(rawTitre, rawPrompt)
+    console.log('🔍 Recherche Pexels:', query)
     const response = await axios.get(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(keywords)}&per_page=15&orientation=portrait`,
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&orientation=portrait`,
       { headers: { Authorization: process.env.PEXELS_API_KEY }, timeout: 8000 }
     )
     const photos = response.data.photos
     if (photos && photos.length > 0) {
-      const photo = photos[Math.floor(Math.random() * Math.min(8, photos.length))]
+      const photo = photos[lock % photos.length]
       res.json({ url: photo.src.large })
     } else {
-      // Fallback recherche générique mode
-      const fallback = await axios.get(
-        `https://api.pexels.com/v1/search?query=fashion+outfit+style&per_page=15&orientation=portrait`,
-        { headers: { Authorization: process.env.PEXELS_API_KEY }, timeout: 8000 }
-      )
-      const photos2 = fallback.data.photos
-      if (photos2?.length > 0) {
-        res.json({ url: photos2[Math.floor(Math.random() * photos2.length)].src.large })
-      } else {
-        // Fallback garanti : LoremFlickr (Creative Commons, no auth needed)
-        res.json({ url: loremFlickrUrl(req.query.prompt) })
-      }
+      const url = await unsplashUrl(rawPrompt, lock, rawTitre)
+      res.json({ url })
     }
   } catch (e) {
     console.log('❌ Erreur Pexels:', e.message)
-    // Fallback garanti : LoremFlickr (Creative Commons, no auth needed)
-    res.json({ url: loremFlickrUrl(req.query.prompt) })
+    try {
+      const url = await unsplashUrl(rawPrompt, lock, rawTitre)
+      res.json({ url })
+    } catch {
+      res.json({ url: loremFlickrUrl(rawPrompt, lock) })
+    }
   }
 })
 
