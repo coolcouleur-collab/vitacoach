@@ -407,7 +407,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
         <div style={{ textAlign:'center', marginTop:28, marginBottom:22, width:'100%' }}>
           <div style={{ fontSize:15, letterSpacing:'0.2px', textAlign:'center', width:'100%' }}>
             <span style={{ fontWeight:200, color:'rgba(180,130,90,0.45)' }}>hello, </span>
-            <span style={{ fontWeight:500, color:'rgba(200,123,82,0.68)' }}>{profil?.nom || profil?.prenom || 'toi'}</span>
+            {(profil?.nom || profil?.prenom)
+              ? <span style={{ fontWeight:500, color:'rgba(200,123,82,0.68)' }}>{profil.nom || profil.prenom}</span>
+              : <span style={{ fontWeight:200, color:'rgba(180,130,90,0.45)' }}>toi</span>
+            }
           </div>
         </div>
 
