@@ -37,12 +37,12 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
   const isAnimated = autoPlay || active
 
   return (
-    <div
+    <span
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}
       style={{
-        display: 'inline-block',
+        display: 'inline',
         background: gradient,
         backgroundSize: '300% 100%',
         WebkitBackgroundClip: 'text',
@@ -57,7 +57,7 @@ function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', 
       }}
     >
       {text}
-    </div>
+    </span>
   )
 }
 
@@ -670,13 +670,18 @@ export default function App() {
                   <BackIcon color={iconColor} size={18} />
                 </button>
               ) : (
-                <ShinyLogoText
-                  text="Solenn"
-                  gradient="linear-gradient(90deg, #D4956A 0%, #D4956A 38%, #FFF8F4 47%, #FFFCF8 50%, #FFF8F4 53%, #D4956A 62%, #D4956A 100%)"
-                  animDuration="11s"
-                  autoPlay={true}
-                  style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
-                />
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <ShinyLogoText
+                    text="Solenn"
+                    gradient="linear-gradient(90deg, #D4956A 0%, #D4956A 38%, #FFF8F4 47%, #FFFCF8 50%, #FFF8F4 53%, #D4956A 62%, #D4956A 100%)"
+                    animDuration="11s"
+                    autoPlay={true}
+                    style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
+                  />
+                  <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(180,130,90,0.45)', letterSpacing:'0.6px' }}>
+                    Ton évolution, guidée.
+                  </span>
+                </div>
               )}
 
               <div style={s.mobileTitle}>
