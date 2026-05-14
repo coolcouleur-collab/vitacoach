@@ -596,13 +596,21 @@ app.get('/api/check-subscription', async (req, res) => {
   }
 })
 
-// ── Sert le frontend React (dist/) ──────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'dist')))
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-})
+// ── Sert le frontend React (dist/) — seulement en local ─────────────────────
+if (!process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname, 'dist')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+  })
+}
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`✅ Serveur Solenn démarré sur port ${PORT}`)
-})
+// Export pour Vercel serverless
+export default app
+
+// Listen seulement en local
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`✅ Serveur Solenn démarré sur port ${PORT}`)
+  })
+}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { supabase } from './supabase'
 import './tokens.css'
 
 // ─── Moderation ───────────────────────────────────────────────────────────────
@@ -25,16 +26,10 @@ function checkContent(text) {
   return { ok: true }
 }
 
-function loadPosts() {
-  try { return JSON.parse(localStorage.getItem('solenn_forum') || '[]') } catch { return [] }
-}
-function savePosts(posts) {
-  localStorage.setItem('solenn_forum', JSON.stringify(posts))
-}
-
 const CATEGORIES = ['Général', 'Nutrition', 'Bien-être', 'Santé naturelle', 'Sport', 'Motivation', 'Question']
 
 function timeAgo(iso) {
+  if (!iso) return ''
   const diff = Math.floor((Date.now() - new Date(iso)) / 1000)
   if (diff < 60) return "à l'instant"
   if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`
@@ -42,7 +37,7 @@ function timeAgo(iso) {
   return `il y a ${Math.floor(diff / 86400)} j`
 }
 
-// ─── Avatar ──────────────────────────────────────────────────────────────────
+// ─── Avatar ───────────────────────────────────────────────────────────────────
 function Avatar({ name, size = 34 }) {
   return (
     <div style={{
@@ -74,16 +69,19 @@ const inputBase = {
 function ReplyForm({ onSubmit }) {
   const [text, setText] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function submit() {
+  async function submit() {
     const trimmed = text.trim()
     if (!trimmed) return
     if (trimmed.length > MAX_CHARS) { setError(`Maximum ${MAX_CHARS} caractères.`); return }
     const check = checkContent(trimmed)
     if (!check.ok) { setError('Message contient un mot interdit.'); return }
-    onSubmit(trimmed)
+    setLoading(true)
+    await onSubmit(trimmed)
     setText('')
     setError('')
+    setLoading(false)
   }
 
   return (
@@ -100,7 +98,7 @@ function ReplyForm({ onSubmit }) {
         <span style={{ fontSize: 'max(1.1rem,11px)', color: text.length > MAX_CHARS ? '#e05555' : 'rgba(155,100,70,0.50)' }}>
           {text.length}/{MAX_CHARS}
         </span>
-        <button onClick={submit} disabled={!text.trim()} style={{
+        <button onClick={submit} disabled={!text.trim() || loading} style={{
           background: text.trim() ? 'linear-gradient(135deg, #C87B52, #9E5C35)' : 'rgba(200,123,82,0.08)',
           color: text.trim() ? '#fff' : 'rgba(155,100,70,0.40)',
           border: text.trim() ? 'none' : '1px solid rgba(200,123,82,0.16)',
@@ -110,7 +108,7 @@ function ReplyForm({ onSubmit }) {
           boxShadow: text.trim() ? '0 4px 12px rgba(200,123,82,0.28)' : 'none',
           transition: 'all .18s ease',
         }}>
-          Répondre
+          {loading ? '...' : 'Répondre'}
         </button>
       </div>
       {error && <div style={{ fontSize: 'max(1.1rem,11px)', color: '#e05555', marginTop: '.4rem' }}>{error}</div>}
@@ -119,9 +117,10 @@ function ReplyForm({ onSubmit }) {
 }
 
 // ─── Post card ────────────────────────────────────────────────────────────────
-function PostCard({ post, onReply, onLike, authorName }) {
+function PostCard({ post, onReply, onLike, userId }) {
   const [open, setOpen] = useState(false)
-  const liked = post.likedBy?.includes(authorName)
+  const liked = post.liked_by?.some(l => l.user_id === userId)
+  const likesCount = post.liked_by?.length || 0
 
   return (
     <div style={{
@@ -146,7 +145,7 @@ function PostCard({ post, onReply, onLike, authorName }) {
               {post.category}
             </span>
             <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(155,100,70,0.50)' }}>
-              {timeAgo(post.createdAt)}
+              {timeAgo(post.created_at)}
             </span>
           </div>
           <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 800, color: '#2a0e00', marginTop: '.3rem', lineHeight: 1.3 }}>
@@ -171,7 +170,7 @@ function PostCard({ post, onReply, onLike, authorName }) {
         }}>
           <span style={{ fontSize: '1.2rem', color: liked ? '#C87B52' : 'rgba(155,100,70,0.40)' }}>♥</span>
           <span style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 600, color: liked ? '#C87B52' : 'rgba(155,100,70,0.50)' }}>
-            {post.likes || 0}
+            {likesCount}
           </span>
         </button>
         <button onClick={() => setOpen(o => !o)} style={{
@@ -194,7 +193,7 @@ function PostCard({ post, onReply, onLike, authorName }) {
           {post.replies?.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.9rem', marginBottom: '1.2rem' }}>
               {post.replies.map((r, i) => (
-                <div key={i} style={{
+                <div key={r.id || i} style={{
                   display: 'flex', gap: '.9rem', padding: '1rem 1.2rem',
                   background: 'rgba(255,246,238,0.55)',
                   borderRadius: 14,
@@ -204,7 +203,7 @@ function PostCard({ post, onReply, onLike, authorName }) {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center', marginBottom: '.25rem' }}>
                       <span style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: '#3a1a08' }}>{r.author}</span>
-                      <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(155,100,70,0.45)' }}>{timeAgo(r.createdAt)}</span>
+                      <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(155,100,70,0.45)' }}>{timeAgo(r.created_at)}</span>
                     </div>
                     <p style={{ fontSize: 'max(1.2rem,12px)', color: '#5a3520', lineHeight: 1.65 }}>{r.body}</p>
                   </div>
@@ -225,16 +224,19 @@ function NewPostForm({ onSubmit, onCancel }) {
   const [body, setBody] = useState('')
   const [category, setCategory] = useState('Général')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function submit() {
+  async function submit() {
     if (!title.trim()) { setError('Ajoute un titre.'); return }
     if (title.length > MAX_TITLE) { setError(`Titre trop long.`); return }
     if (!body.trim()) { setError('Écris ton message.'); return }
     if (body.length > MAX_CHARS) { setError(`Message trop long.`); return }
     if (!checkContent(title).ok) { setError('Le titre contient un mot interdit.'); return }
     if (!checkContent(body).ok) { setError('Le message contient un mot interdit.'); return }
-    onSubmit({ title: title.trim(), body: body.trim(), category })
+    setLoading(true)
+    await onSubmit({ title: title.trim(), body: body.trim(), category })
     setTitle(''); setBody(''); setError('')
+    setLoading(false)
   }
 
   return (
@@ -314,62 +316,137 @@ function NewPostForm({ onSubmit, onCancel }) {
         }}>
           Annuler
         </button>
-        <button onClick={submit} style={{
+        <button onClick={submit} disabled={loading} style={{
           background: 'linear-gradient(135deg, #C87B52, #9E5C35)',
           color: '#fff', border: 'none', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
           boxShadow: '0 4px 14px rgba(200,123,82,0.35)',
+          opacity: loading ? 0.7 : 1,
         }}>
-          Publier →
+          {loading ? 'Publication...' : 'Publier →'}
         </button>
       </div>
     </div>
   )
 }
 
+// ─── Loading skeleton ─────────────────────────────────────────────────────────
+function Skeleton() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+      {[1, 2, 3].map(i => (
+        <div key={i} style={{
+          background: 'rgba(255,248,242,0.60)', borderRadius: 20,
+          padding: '1.8rem', border: '1.5px solid rgba(200,123,82,0.10)',
+          animation: 'pulse 1.5s ease infinite',
+        }}>
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 11, background: 'rgba(200,123,82,0.12)' }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ height: 12, background: 'rgba(200,123,82,0.10)', borderRadius: 6, width: '40%', marginBottom: 8 }} />
+              <div style={{ height: 16, background: 'rgba(200,123,82,0.10)', borderRadius: 6, width: '75%' }} />
+            </div>
+          </div>
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 6, marginBottom: 8 }} />
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 6, width: '80%' }} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── FORUM ────────────────────────────────────────────────────────────────────
 export default function Forum({ onBack, user }) {
-  const [posts, setPosts] = useState(() => loadPosts())
-  const [showForm, setShowForm] = useState(false)
-  const [filter, setFilter] = useState('Tous')
-  const [search, setSearch] = useState('')
+  const [posts, setPosts]         = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [showForm, setShowForm]   = useState(false)
+  const [filter, setFilter]       = useState('Tous')
+  const [search, setSearch]       = useState('')
   const [showRules, setShowRules] = useState(false)
+  const [error, setError]         = useState(null)
 
   const authorName = user?.email?.split('@')[0] || 'Anonyme'
+  const userId     = user?.id
 
-  useEffect(() => { savePosts(posts) }, [posts])
+  // ── Fetch posts ──────────────────────────────────────────────────────────────
+  const fetchPosts = useCallback(async () => {
+    setError(null)
+    const { data, error: err } = await supabase
+      .from('forum_posts')
+      .select(`
+        *,
+        replies:forum_replies ( id, author, body, created_at ),
+        liked_by:forum_likes ( user_id )
+      `)
+      .order('created_at', { ascending: false })
 
-  function addPost({ title, body, category }) {
-    const post = {
-      id: Date.now().toString(), author: authorName,
-      title, body, category,
-      createdAt: new Date().toISOString(),
-      likes: 0, likedBy: [], replies: [],
+    if (err) { setError("Impossible de charger le forum."); setLoading(false); return }
+    setPosts(data || [])
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchPosts()
+
+    // Temps réel — refetch à chaque changement
+    const channel = supabase
+      .channel('forum-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_posts' },   fetchPosts)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_replies' }, fetchPosts)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_likes' },   fetchPosts)
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
+  }, [fetchPosts])
+
+  // ── Add post ─────────────────────────────────────────────────────────────────
+  async function addPost({ title, body, category }) {
+    const { data, err } = await supabase
+      .from('forum_posts')
+      .insert({ user_id: userId, author: authorName, title, body, category })
+      .select()
+
+    if (!err && data?.[0]) {
+      setPosts(prev => [{ ...data[0], replies: [], liked_by: [] }, ...prev])
     }
-    setPosts(prev => [post, ...prev])
     setShowForm(false)
   }
 
-  function addReply(postId, body) {
-    setPosts(prev => prev.map(p =>
-      p.id !== postId ? p : {
-        ...p,
-        replies: [...(p.replies || []), { author: authorName, body, createdAt: new Date().toISOString() }],
-      }
-    ))
+  // ── Add reply ─────────────────────────────────────────────────────────────────
+  async function addReply(postId, body) {
+    const { data, error: err } = await supabase
+      .from('forum_replies')
+      .insert({ post_id: postId, user_id: userId, author: authorName, body })
+      .select()
+
+    if (!err && data?.[0]) {
+      setPosts(prev => prev.map(p => p.id !== postId ? p : {
+        ...p, replies: [...(p.replies || []), data[0]],
+      }))
+    }
   }
 
-  function toggleLike(postId) {
-    setPosts(prev => prev.map(p => {
-      if (p.id !== postId) return p
-      const liked = p.likedBy?.includes(authorName)
-      return {
-        ...p,
-        likes: liked ? p.likes - 1 : (p.likes || 0) + 1,
-        likedBy: liked ? p.likedBy.filter(u => u !== authorName) : [...(p.likedBy || []), authorName],
-      }
+  // ── Toggle like ───────────────────────────────────────────────────────────────
+  async function toggleLike(postId) {
+    if (!userId) return
+    const post  = posts.find(p => p.id === postId)
+    if (!post) return
+    const liked = post.liked_by?.some(l => l.user_id === userId)
+
+    // Optimistic update
+    setPosts(prev => prev.map(p => p.id !== postId ? p : {
+      ...p,
+      liked_by: liked
+        ? p.liked_by.filter(l => l.user_id !== userId)
+        : [...(p.liked_by || []), { user_id: userId }],
     }))
+
+    if (liked) {
+      await supabase.from('forum_likes').delete().match({ post_id: postId, user_id: userId })
+    } else {
+      await supabase.from('forum_likes').insert({ post_id: postId, user_id: userId })
+    }
   }
 
   const categories = ['Tous', ...CATEGORIES]
@@ -381,16 +458,13 @@ export default function Forum({ onBack, user }) {
     <div style={{ fontFamily: 'var(--font)', padding: '0 16px 120px' }}>
       <style>{`
         @keyframes fadeUp { from{opacity:0;transform:translateY(1.4rem)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.55} }
         .forum-in { animation: fadeUp .3s ease both; }
         .forum-search::placeholder { color: rgba(155,100,70,0.42) !important; }
       `}</style>
 
       {/* ── Top action bar ── */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: '1rem',
-        marginBottom: '1.4rem', paddingTop: '4px',
-      }}>
-        {/* Subtitle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.4rem', paddingTop: '4px' }}>
         <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: 'rgba(155,100,70,0.55)', fontWeight: 500 }}>
           Communauté · entraide · bienveillance
         </div>
@@ -478,8 +552,23 @@ export default function Forum({ onBack, user }) {
         ))}
       </div>
 
+      {/* Error */}
+      {error && (
+        <div style={{
+          background: 'rgba(224,85,85,0.08)', border: '1px solid rgba(224,85,85,0.20)',
+          color: '#c0392b', borderRadius: 16, padding: '1.2rem 1.6rem',
+          fontSize: 'max(1.3rem,13px)', marginBottom: '1.4rem', textAlign: 'center',
+        }}>
+          ⚠️ {error}
+          <button onClick={fetchPosts} style={{
+            marginLeft: '1rem', background: 'none', border: 'none',
+            color: '#C87B52', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)',
+          }}>Réessayer</button>
+        </div>
+      )}
+
       {/* Posts */}
-      {filtered.length === 0 ? (
+      {loading ? <Skeleton /> : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
           <div style={{ fontSize: '2.8rem', marginBottom: '1rem', color: '#C87B52', opacity: 0.55 }}>✦</div>
           <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: '#3a1a08', marginBottom: '.5rem' }}>
@@ -493,7 +582,7 @@ export default function Forum({ onBack, user }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
           {filtered.map((post, i) => (
             <div key={post.id} style={{ animation: `fadeUp ${0.18 + i * 0.04}s ease both` }}>
-              <PostCard post={post} onReply={addReply} onLike={toggleLike} authorName={authorName} />
+              <PostCard post={post} onReply={addReply} onLike={toggleLike} userId={userId} />
             </div>
           ))}
         </div>
