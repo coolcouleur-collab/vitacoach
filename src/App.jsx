@@ -112,6 +112,27 @@ class MsgBoundary extends Component {
   }
 }
 
+function ReactionBtn({ emoji, active, onClick }) {
+  const [pressed, setPressed] = useState(false)
+  return (
+    <button
+      onClick={() => { onClick(); setPressed(true); setTimeout(() => setPressed(false), 300) }}
+      style={{
+        background: active ? 'rgba(200,123,82,0.22)' : 'transparent',
+        border: active ? '1.5px solid rgba(200,123,82,0.45)' : '1.5px solid rgba(200,123,82,0.12)',
+        borderRadius: 10, padding: '3px 9px', fontSize: active ? 15 : 13,
+        cursor: 'pointer', transition: 'all 0.18s cubic-bezier(0.34,1.56,0.64,1)',
+        transform: pressed ? 'scale(1.35)' : active ? 'scale(1.12)' : 'scale(1)',
+        boxShadow: active ? '0 0 10px rgba(200,123,82,0.30)' : 'none',
+        filter: active ? 'none' : 'grayscale(0.3) opacity(0.6)',
+        outline: 'none',
+      }}
+    >
+      {emoji}
+    </button>
+  )
+}
+
 // ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
 const defaultMetriques = () => {
   const today = new Date().toDateString()
@@ -165,7 +186,14 @@ export default function App() {
       // Purge tous les vieux messages de limite (jamais utiles dans l'historique)
       return h.filter(m => !m.content?.includes('messages gratuits'))
     }
-    if (p) return [{ role:'assistant', content:`Bon retour ${p.nom} ! Comment puis-je t'aider aujourd'hui ?` }]
+    if (p) {
+      const h = new Date().getHours()
+      const greet = h < 12 ? 'Bonjour' : h < 18 ? 'Salut' : 'Bonsoir'
+      const s = safeParse('vitacoach_metriques', {})
+      const sc = typeof window !== 'undefined' ? (parseInt(localStorage.getItem('vitacoach_last_score')) || 0) : 0
+      const scoreMsg = sc > 0 ? ` Ton score santé hier était de ${sc}/100.` : ''
+      return [{ role:'assistant', content:`${greet} ${p.nom} !${scoreMsg} Qu'est-ce que je peux faire pour toi aujourd'hui ?` }]
+    }
     return []
   })
   const [input, setInput]       = useState('')
@@ -173,6 +201,8 @@ export default function App() {
   const [onglet, setOnglet]     = useState('accueil')
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
+  const [reactions, setReactions]   = useState({})
+  const [followUps, setFollowUps]   = useState([])
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
   const [menuOpen, setMenuOpen] = useState(false)
@@ -231,15 +261,56 @@ export default function App() {
     }
   }, [])
 
-  // Suggestions contextuelles
+  // Suggestions dynamiques heure + profil
   useEffect(() => {
     if (!profil) return
     const h = new Date().getHours()
-    if (h < 10)       setSuggestions(["Comment bien démarrer ma journée ?", "Que manger ce matin ?", "Comment booster mon énergie ?"])
-    else if (h < 14)  setSuggestions(["Idée repas de midi ?", "Comment rester concentré ?", "Stretch rapide pour le bureau ?"])
-    else if (h < 18)  setSuggestions(["Je suis fatigué, que faire ?", "Collation saine ?", "Comment gérer mon stress ?"])
-    else              setSuggestions(["Routine du soir pour bien dormir ?", "Que manger ce soir ?", "Comment me décompresser ?"])
+    const isVege = profil.regimes?.some(r => /végé|vegan|vegetar/i.test(r))
+    const obj0 = profil.objectifs?.[0] || ''
+    const wantsWeight = /poids|mincir|maigrir/i.test(obj0)
+    const wantsEnergy = /énergie|fatigue|sport/i.test(obj0)
+    if (h < 10)      setSuggestions([
+      `${isVege ? 'Petit-déj végé rapide ?' : 'Que manger ce matin ?'}`,
+      wantsEnergy ? 'Routine matinale énergie ?' : 'Comment bien démarrer ma journée ?',
+      'Mon score santé est comment ?'
+    ])
+    else if (h < 14) setSuggestions([
+      wantsWeight ? 'Repas de midi léger et rassasiant ?' : 'Idée repas de midi ?',
+      'Comment rester concentré cet après-midi ?',
+      'Stretch rapide 5 min ?'
+    ])
+    else if (h < 19) setSuggestions([
+      'Je suis épuisé, que faire ?',
+      wantsWeight ? 'Collation sans culpabilité ?' : 'Collation saine ?',
+      'Comment gérer mon stress maintenant ?'
+    ])
+    else             setSuggestions([
+      'Routine du soir pour bien dormir ?',
+      isVege ? 'Dîner végé rapide ?' : 'Que manger ce soir ?',
+      'Comment me décompresser ?'
+    ])
   }, [profil])
+
+  // Génère les chips de suivi contextuel après chaque réponse IA
+  function genFollowUps(reply) {
+    const r = (reply || '').toLowerCase()
+    if (/repas|manger|nutrition|recette|calorie|dîner|déjeuner|petit-déj/.test(r))
+      return ['Et pour le dîner ?', 'Plan repas semaine ?', 'Les meilleurs snacks ?']
+    if (/sommeil|dormir|nuit|insomnie|fatigue/.test(r))
+      return ['Ma routine du soir ?', 'Pourquoi je dors mal ?', 'Sieste efficace ?']
+    if (/sport|exercice|entraîn|muscul|cardio|running/.test(r))
+      return ['Programme débutant ?', 'Récupération musculaire ?', 'Sport sans salle ?']
+    if (/stress|anxiété|angoisse|anxieux|pression/.test(r))
+      return ['Technique anti-stress rapide ?', 'Méditation pour débutant ?', 'Améliorer mon énergie ?']
+    if (/peau|acné|hydrat|cosmétique|soin/.test(r))
+      return ['Routine soin du visage ?', 'Aliments bons pour la peau ?']
+    if (/plante|tisane|herbe|naturel|remède/.test(r))
+      return ['Autres plantes pour moi ?', 'Tisane du soir ?']
+    const h = new Date().getHours()
+    if (h < 12) return ['Routine matinale ?', 'Booster mon énergie ?']
+    if (h < 18) return ['Gérer la fatigue ?', 'Collation saine ?']
+    return ['Routine du soir ?', 'Bien dormir ce soir ?']
+  }
 
   function mettreAJourMetrique(key, val) {
     setMetriques(prev => {
@@ -360,6 +431,7 @@ export default function App() {
       })
       const data = await resp.json()
       setMessages(prev => [...prev, { role:'assistant', content:data.reply }])
+      setFollowUps(genFollowUps(data.reply))
     } catch {
       setMessages(prev => [...prev, { role:'assistant', content:'Une erreur est survenue. Réessaie.' }])
     } finally {
@@ -390,7 +462,9 @@ export default function App() {
         setProfil(p)
         setProfilBackup(null)
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
-        setMessages([{ role:'assistant', content:`Bienvenue ${p.nom} ! Je suis Solenn, ton coach de vie personnel. Comment puis-je t'aider aujourd'hui ?` }])
+        const h2 = new Date().getHours()
+        const g2 = h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
+        setMessages([{ role:'assistant', content:`${g2} ${p.nom} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
       }} />
     )
   }
@@ -662,7 +736,16 @@ export default function App() {
               <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
-                    <div style={s.emptyChatTitle}>Je suis Solenn, ton coach de vie</div>
+                    {streak > 0 && (
+                      <div style={{ display:'flex', justifyContent:'center', marginBottom:12 }}>
+                        <span style={{ background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:12, fontWeight:700, color:'rgba(180,100,30,0.85)', display:'flex', alignItems:'center', gap:5 }}>
+                          🔥 {streak} jour{streak > 1 ? 's' : ''} de suite
+                        </span>
+                      </div>
+                    )}
+                    <div style={s.emptyChatTitle}>
+                      {(() => { const h=new Date().getHours(); return h<12?'🌅 Bonjour':h<18?'☀️ Salut':'🌙 Bonsoir' })()} {profil?.nom} !
+                    </div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     <div style={s.suggestionsPile}>
                       {suggestions.map((sug, i) => (
@@ -676,19 +759,33 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    <div style={
-                      msg.role==='user'
-                        ? s.userBubble
-                        : isRich(msg.content) ? s.botBubbleRich : s.botBubble
-                    }>
-                      {msg.role==='user'
-                        ? msg.content
-                        : (
-                          <MsgBoundary fallback={msg.content}>
-                            <ResponseRenderer content={msg.content} />
-                          </MsgBoundary>
-                        )
-                      }
+                    <div style={{ display:'flex', flexDirection:'column', gap:4, maxWidth: msg.role==='user' ? '76%' : isRich(msg.content) ? '90%' : '82%' }}>
+                      <div style={
+                        msg.role==='user'
+                          ? s.userBubble
+                          : isRich(msg.content) ? s.botBubbleRich : s.botBubble
+                      }>
+                        {msg.role==='user'
+                          ? msg.content
+                          : (
+                            <MsgBoundary fallback={msg.content}>
+                              <ResponseRenderer content={msg.content} />
+                            </MsgBoundary>
+                          )
+                        }
+                      </div>
+                      {msg.role === 'assistant' && (
+                        <div style={{ display:'flex', gap:5, paddingLeft:4 }}>
+                          {['👍','💡','❤️'].map(emoji => (
+                            <ReactionBtn
+                              key={emoji}
+                              emoji={emoji}
+                              active={reactions[i] === emoji}
+                              onClick={() => setReactions(prev => ({ ...prev, [i]: prev[i]===emoji ? null : emoji }))}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -710,11 +807,11 @@ export default function App() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Suggestions after messages */}
-              {suggestions.length > 0 && messages.length >= 1 && messages.length <= 3 && (
-                <div style={s.suggestionsRow}>
-                  {suggestions.map((sug, i) => (
-                    <button key={i} style={s.suggestion} onClick={() => envoyerMessage(sug)}>
+              {/* Follow-up chips contextuelles après chaque réponse */}
+              {followUps.length > 0 && !loading && (
+                <div style={{ ...s.suggestionsRow, marginTop:4 }}>
+                  {followUps.map((sug, i) => (
+                    <button key={i} style={s.suggestion} onClick={() => { envoyerMessage(sug); setFollowUps([]) }}>
                       {sug}
                     </button>
                   ))}
@@ -729,7 +826,7 @@ export default function App() {
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
                     placeholder="Pose une question à Solenn..." />
                   <button style={s.sendBtn} onClick={() => envoyerMessage()}>
-                    <SendIcon color="#C87B52" size={20} />
+                    <SendIcon color="rgba(200,123,82,0.55)" size={20} />
                   </button>
                 </div>
               </div>
@@ -884,10 +981,10 @@ export default function App() {
           position: absolute; inset: 0; z-index: 0; pointer-events: none;
           background: linear-gradient(135deg,
             #FFD49A 0%, #F5C8AA 18%, #FFF4E0 36%,
-            #E8B87A 52%, #D4C4A0 68%, #FAE8CC 84%, #FFD49A 100%);
+            #E8B87A 52%, #EED4B0 68%, #FAE8CC 84%, #FFD49A 100%);
           background-size: 400% 400%;
           animation: aurora 14s ease infinite;
-          opacity: 0.90;
+          opacity: 0.72;
         }
         @keyframes twinkle {
           from { opacity:0.1; transform:scale(0.7); }
@@ -1730,9 +1827,9 @@ const s = {
   emptyChatSub: { fontSize:13, color:'rgba(160,120,60,0.65)', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
-    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    border:'1px solid rgba(190,130,70,0.22)', borderRadius:16,
-    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.88)', cursor:'pointer',
+    background:'rgba(255,255,255,0.10)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.10)', borderRadius:16,
+    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.78)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
     transition:'transform .18s, box-shadow .18s',
   },
@@ -1740,29 +1837,32 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'linear-gradient(145deg,#C87B52,#9E5C35)', color:'#fff',
+    background:'rgba(200,123,82,0.28)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.22)',
+    color:'rgba(90,50,15,0.85)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
-    boxShadow:'0 8px 28px rgba(200,123,82,.38), inset 0 1px 0 rgba(255,255,255,.2)',
+    boxShadow:'inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
-    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    border:'1px solid rgba(190,130,70,0.22)', color:'rgba(80,50,20,0.88)',
+    background:'rgba(255,255,255,0.10)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.10)', color:'rgba(90,60,30,0.78)',
     padding:'13px 18px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
-    fontSize:14.5, lineHeight:1.80, whiteSpace:'pre-wrap',
-    fontFamily:"'Lora', Georgia, serif",
+    fontSize:14, lineHeight:1.72, whiteSpace:'pre-wrap',
+    fontFamily:'Poppins, sans-serif',
   },
   botBubbleRich: {
-    background:'transparent', color:'#1a0a00',
-    padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.75,
+    background:'transparent', color:'rgba(90,60,30,0.78)',
+    padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.72,
+    fontFamily:'Poppins, sans-serif',
   },
   botAvatar: { fontSize:16, color:'#C87B52', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
-    background:'rgba(230,195,150,0.30)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-    border:'1px solid rgba(190,130,70,0.22)', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'rgba(160,100,40,0.90)', cursor:'pointer',
+    background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    border:'1px solid rgba(200,123,82,0.18)', borderRadius:20,
+    padding:'7px 14px', fontSize:12, color:'rgba(100,65,25,0.80)', cursor:'pointer',
     fontFamily:F, fontWeight:600,
   },
 

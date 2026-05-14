@@ -165,7 +165,6 @@ function BookingCard({ data }) {
 
 // ─── Regular card ─────────────────────────────────────────────────────────────
 function RichCard({ item, accent, index }) {
-  const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
   const color = item.color || accent
 
@@ -173,61 +172,49 @@ function RichCard({ item, accent, index }) {
     <div
       style={{
         position:'relative',
-        background:`linear-gradient(145deg, ${color}10, ${color}04)`,
-        border:`1.5px solid ${color}22`,
-        borderLeft:`4px solid ${color}`,
-        borderRadius:20,
-        padding:'16px 18px 16px 16px',
-        display:'flex', gap:14, alignItems:'flex-start',
-        transform: pressed ? 'scale(0.965)' : hovered ? 'scale(1.015)' : 'scale(1)',
-        boxShadow: hovered
-          ? `0 16px 40px ${color}28, 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.95)`
-          : `0 6px 20px ${color}14, 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.85)`,
-        transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease',
-        cursor:'default',
-        animation:`slideUp 0.35s ${index * 0.07}s ease both`,
+        background:'rgba(255,255,255,0.20)',
+        backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+        border:`1px solid ${color}28`,
+        borderLeft:`3px solid ${color}99`,
+        borderRadius:18,
+        padding:'14px 16px',
+        display:'flex', gap:12, alignItems:'flex-start',
+        transform: pressed ? 'scale(0.97)' : 'scale(1)',
+        boxShadow:`0 4px 16px ${color}12, inset 0 1px 0 rgba(255,255,255,0.6)`,
+        transition:'transform 0.15s ease',
+        animation:`slideUp 0.3s ${index * 0.06}s ease both`,
         overflow:'hidden',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => setPressed(false)}
     >
-      {/* Shimmer */}
-      <div style={{ position:'absolute', inset:0, background:`radial-gradient(circle at 90% 10%, ${color}10, transparent 60%)`, pointerEvents:'none' }} />
-      {/* Number */}
-      <div style={{ position:'absolute', top:10, right:12, fontSize:10, fontWeight:800, color:`${color}55`, letterSpacing:'0.5px' }}>
-        {String(index + 1).padStart(2, '0')}
-      </div>
-
       {/* Icon tile */}
       <div style={{
-        width:50, height:50, borderRadius:16, flexShrink:0,
-        background:`linear-gradient(145deg, ${color}30, ${color}16)`,
-        border:`1.5px solid ${color}35`,
-        display:'flex', alignItems:'center', justifyContent:'center', fontSize:22,
-        boxShadow:`0 6px 14px ${color}25, inset 0 1px 0 rgba(255,255,255,0.7)`,
-        transform: hovered ? 'scale(1.08) rotate(-4deg)' : 'scale(1)',
-        transition:'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+        width:42, height:42, borderRadius:14, flexShrink:0,
+        background:`rgba(255,255,255,0.30)`,
+        border:`1px solid ${color}30`,
+        display:'flex', alignItems:'center', justifyContent:'center', fontSize:20,
+        boxShadow:`0 3px 10px ${color}20`,
       }}>
         {item.icon || '→'}
       </div>
 
       {/* Text */}
-      <div style={{ flex:1, minWidth:0, paddingRight:16 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap', marginBottom:5 }}>
-          <span style={{ fontSize:14, fontWeight:800, color:'#1a0a00', lineHeight:1.25 }}>{item.title}</span>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap', marginBottom:4 }}>
+          <span style={{ fontSize:13, fontWeight:700, color:`${color}dd`, lineHeight:1.25 }}>{item.title}</span>
           {item.badge && (
-            <span style={{ fontSize:10, fontWeight:700, color:color, background:`${color}18`, border:`1px solid ${color}25`, borderRadius:8, padding:'2px 9px', letterSpacing:'0.3px', flexShrink:0, whiteSpace:'nowrap' }}>
+            <span style={{ fontSize:10, fontWeight:600, color:`${color}cc`, background:`${color}15`, border:`1px solid ${color}22`, borderRadius:7, padding:'2px 8px', flexShrink:0 }}>
               {item.badge}
             </span>
           )}
         </div>
-        {item.desc && <div style={{ fontSize:12.5, color:'#6b5042', lineHeight:1.65, marginBottom:item.sub ? 6 : 0 }}>{item.desc}</div>}
+        {item.desc && <div style={{ fontSize:12, color:'rgba(120,90,70,0.75)', lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
         {item.sub && (
-          <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:color, fontWeight:700, background:`${color}10`, borderRadius:6, padding:'3px 8px' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:`${color}cc`, fontWeight:600, background:`${color}12`, borderRadius:6, padding:'3px 8px' }}>
             {item.sub}
           </div>
         )}
@@ -240,10 +227,10 @@ function RichCard({ item, accent, index }) {
 function TypeHeader({ cfg, count }) {
   return (
     <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14, animation:'fadeIn 0.3s ease both' }}>
-      <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:cfg.gradient, borderRadius:20, padding:'7px 16px', boxShadow:`0 6px 20px ${cfg.accent}30` }}>
-        <span style={{ fontSize:13, fontWeight:800, color:'#fff', letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:`1px solid ${cfg.accent}30`, borderRadius:20, padding:'7px 16px' }}>
+        <span style={{ fontSize:13, fontWeight:700, color:`${cfg.accent}dd`, letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
       </div>
-      {count > 0 && <span style={{ fontSize:11, color:'#c4b5a8', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
+      {count > 0 && <span style={{ fontSize:11, color:'rgba(160,120,80,0.55)', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
     </div>
   )
 }
@@ -296,7 +283,7 @@ export default function ResponseRenderer({ content }) {
       {items.length > 0 && <TypeHeader cfg={cfg} count={items.length} />}
 
       {data.intro && (
-        <p style={{ margin:'0 0 14px', fontSize:13.5, color:'#6b5042', lineHeight:1.65, padding:'10px 14px', background:`${cfg.accent}08`, borderLeft:`3px solid ${cfg.accent}40`, borderRadius:'0 10px 10px 0', animation:'fadeIn 0.3s ease both' }}>
+        <p style={{ margin:'0 0 14px', fontSize:13, color:'rgba(120,90,70,0.80)', lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
           {data.intro}
         </p>
       )}
@@ -308,9 +295,9 @@ export default function ResponseRenderer({ content }) {
       )}
 
       {data.outro && (
-        <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'12px 14px', background:`linear-gradient(135deg, ${cfg.accent}08, ${cfg.accent}04)`, border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
-          <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={16} color={cfg.accent} /></span>
-          <span style={{ fontSize:12.5, color:'#6b5042', lineHeight:1.6, fontStyle:'italic' }}>{data.outro}</span>
+        <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'11px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
+          <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={15} color={`${cfg.accent}99`} /></span>
+          <span style={{ fontSize:12, color:'rgba(120,90,70,0.72)', lineHeight:1.6 }}>{data.outro}</span>
         </div>
       )}
 
