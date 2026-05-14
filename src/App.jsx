@@ -10,23 +10,31 @@ import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumI
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
-function ShinyLogoText({ text, color = 'rgba(232,150,42,0.55)', animDuration = '18s', autoPlay = false, style = {} }) {
+function ShinyLogoText({ text, color = 'rgba(232,150,42,0.55)', gradient = null, animDuration = '8s', autoPlay = false, style = {} }) {
   return (
     <span style={{
       position: 'relative',
       display: 'inline-block',
       overflow: 'hidden',
-      color,
       userSelect: 'none',
       WebkitUserSelect: 'none',
       ...style,
     }}>
-      {text}
+      {/* Texte avec gradient ou couleur unie */}
+      <span style={gradient ? {
+        display: 'inline',
+        background: gradient,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+      } : { color }}>
+        {text}
+      </span>
       {/* Reflet miroir qui glisse */}
       <span style={{
         position: 'absolute', top: 0, left: '-100%',
         width: '45%', height: '100%',
-        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)',
+        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.50) 50%, transparent 100%)',
         transform: 'skewX(-18deg)',
         animation: autoPlay ? `mirrorSweep ${animDuration} ease-in-out infinite` : 'none',
         pointerEvents: 'none',
@@ -564,7 +572,7 @@ export default function App() {
           <div style={s.sidebarTop}>
             <ShinyLogoText
               text="Solenn"
-              color="rgba(232,150,42,0.55)"
+              gradient="linear-gradient(90deg, #E8962A, #F5C06A, #E8962A)"
               autoPlay={true}
               style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
             />
@@ -645,7 +653,7 @@ export default function App() {
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <ShinyLogoText
                     text="Solenn"
-                    color="rgba(232,150,42,0.55)"
+                    gradient="linear-gradient(90deg, #E8962A, #F5C06A, #E8962A)"
                     animDuration="8s"
                     autoPlay={true}
                     style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
