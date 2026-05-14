@@ -1856,9 +1856,9 @@ const s = {
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff', border:'none',
+    background:'linear-gradient(135deg,#ECA882,#D4956A)', color:'#fff', border:'none',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 6px 20px rgba(200,123,82,.35)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 4px 14px rgba(200,123,82,.20)', textAlign:'center',
   },
   proBadge: {
     background:'rgba(200,123,82,.08)', color:'#C87B52',
