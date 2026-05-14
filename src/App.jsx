@@ -10,53 +10,27 @@ import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumI
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
-function ShinyLogoText({ text, gradient, animDuration = '4s', animDelay = '0s', autoPlay = false, style = {} }) {
-  const [active, setActive] = useState(false)
-  const offTimer  = useRef(null)
-  const hovering  = useRef(false)
-
-  function handleEnter() {
-    hovering.current = true
-    clearTimeout(offTimer.current)
-    setActive(true)
-  }
-  function handleLeave() {
-    hovering.current = false
-    clearTimeout(offTimer.current)
-    setActive(false)
-  }
-  function handleClick() {
-    if (autoPlay) return
-    setActive(true)
-    clearTimeout(offTimer.current)
-    offTimer.current = setTimeout(() => {
-      if (!hovering.current) setActive(false)
-    }, parseFloat(animDuration) * 1000)
-  }
-
-  const isAnimated = autoPlay || active
-
+function ShinyLogoText({ text, color = 'rgba(232,150,42,0.55)', animDuration = '18s', autoPlay = false, style = {} }) {
   return (
-    <span
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      onClick={handleClick}
-      style={{
-        display: 'inline',
-        background: gradient,
-        backgroundSize: '300% 100%',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        color: 'transparent',
-        animation: isAnimated ? `shimmerGrad ${animDuration} ease-in-out infinite ${animDelay}` : 'none',
-        cursor: 'default',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        ...style,
-      }}
-    >
+    <span style={{
+      position: 'relative',
+      display: 'inline-block',
+      overflow: 'hidden',
+      color,
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      ...style,
+    }}>
       {text}
+      {/* Reflet miroir qui glisse */}
+      <span style={{
+        position: 'absolute', top: 0, left: '-100%',
+        width: '45%', height: '100%',
+        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)',
+        transform: 'skewX(-18deg)',
+        animation: autoPlay ? `mirrorSweep ${animDuration} ease-in-out infinite` : 'none',
+        pointerEvents: 'none',
+      }} />
     </span>
   )
 }
@@ -590,15 +564,13 @@ export default function App() {
           <div style={s.sidebarTop}>
             <ShinyLogoText
               text="Solenn"
-              gradient="linear-gradient(90deg, #ECA882 0%, #FFF8F4 20%, #F5D4B8 36%, #FFF8F4 52%, #D4956A 68%, #FCDEC8 84%, #ECA882 100%)"
-              animDuration="10s"
+              color="rgba(232,150,42,0.55)"
+              autoPlay={true}
               style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
             />
             <ShinyLogoText
               text="re·vivre · évoluer"
-              gradient="linear-gradient(90deg, #D4844A 0%, #F5C8AA 25%, #ffffff 45%, #F5C8AA 68%, #D4844A 100%)"
-              animDuration="14s"
-              animDelay="0s"
+              color="rgba(212,132,74,0.45)"
               style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}
             />
           </div>
@@ -673,7 +645,7 @@ export default function App() {
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <ShinyLogoText
                     text="Solenn"
-                    gradient="linear-gradient(90deg, rgba(232,150,42,0.55) 0%, rgba(232,150,42,0.55) 36%, #FFF6E8 46%, #FFFDF5 50%, #FFF6E8 54%, rgba(232,150,42,0.55) 64%, rgba(232,150,42,0.55) 100%)"
+                    color="rgba(232,150,42,0.55)"
                     animDuration="18s"
                     autoPlay={true}
                     style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
@@ -690,7 +662,7 @@ export default function App() {
 
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 {score > 0 && onglet === 'accueil' && (
-                  <div style={{ ...s.scorePill, background: scoreColor+'15', color: scoreColor, border:`1px solid ${scoreColor}30` }}>
+                  <div style={{ ...s.scorePill, background: 'rgba(232,150,42,0.10)', color: 'rgba(232,150,42,0.75)', border:'1px solid rgba(232,150,42,0.22)' }}>
                     {score}
                   </div>
                 )}
@@ -1184,6 +1156,13 @@ export default function App() {
           0%   { background-position: 200% 0; }
           50%  { background-position: -200% 0; }
           100% { background-position: 200% 0; }
+        }
+        @keyframes mirrorSweep {
+          0%   { left: -100%; opacity: 0; }
+          8%   { opacity: 1; }
+          38%  { left: 160%; opacity: 1; }
+          42%  { opacity: 0; }
+          100% { left: 160%; opacity: 0; }
         }
         @keyframes celebFall {
           0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
