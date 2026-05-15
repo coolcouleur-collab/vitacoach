@@ -3,25 +3,23 @@ import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
 
-// ─── SOLENN FACE (local copy) ─────────────────────────────────────────────────
+// ─── SOLENN FACE (liquid morph — cohérent avec App.jsx) ──────────────────────
 function SolennFace({ size = 34 }) {
   return (
-    <div style={{
+    <div className="liquid-avatar" style={{
       width: size, height: size,
-      borderRadius: size * 0.30,
-      background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
+      background: 'rgba(220,140,70,0.38)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 4px 14px rgba(200,123,82,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
+      flexShrink: 0,
+      isolation: 'isolate',
+      transform: 'translateZ(0)',
     }}>
-      <div style={{ position:'absolute', top:3, left:4, width: size*0.50, height: size*0.30, borderRadius:'50%', background:'rgba(255,255,255,0.20)', pointerEvents:'none' }} />
-      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: size*0.10 }}>
-        <div style={{ display:'flex', gap: size*0.20 }}>
-          <div style={{ width:size*0.13, height:size*0.13, borderRadius:'50%', background:'#fff' }} />
-          <div style={{ width:size*0.13, height:size*0.13, borderRadius:'50%', background:'#fff' }} />
-        </div>
-        <div style={{ width:size*0.38, height:size*0.17, borderRadius:`0 0 ${size*0.22}px ${size*0.22}px`, border:`${Math.max(1.5,size*0.055)}px solid rgba(255,255,255,0.90)`, borderTop:'none' }} />
-      </div>
+      <span style={{
+        fontSize: size * 0.44, fontWeight: 700,
+        color: 'rgba(255,230,190,0.92)',
+        fontFamily: 'Poppins, sans-serif', lineHeight: 1,
+        letterSpacing: '-0.02em', userSelect: 'none',
+      }}>S</span>
     </div>
   )
 }
@@ -433,10 +431,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
         <div style={{ textAlign:'center', marginTop:28, marginBottom:22, width:'100%' }}>
           <div style={{ fontSize:15, letterSpacing:'0.2px', textAlign:'center', width:'100%' }}>
-            <span style={{ fontWeight:200, color:'rgba(180,130,90,0.45)' }}>hello, </span>
+            <span style={{ fontWeight:200, color:'rgba(218,138,52,0.72)' }}>hello, </span>
             {(profil?.nom || profil?.prenom)
-              ? <span style={{ fontWeight:500, color:'rgba(200,123,82,0.68)' }}>{profil.nom || profil.prenom}</span>
-              : <span style={{ fontWeight:200, color:'rgba(180,130,90,0.45)' }}>toi</span>
+              ? <span style={{ fontWeight:500, color:'rgba(218,138,52,0.72)' }}>{profil.nom || profil.prenom}</span>
+              : <span style={{ fontWeight:200, color:'rgba(218,138,52,0.72)' }}>toi</span>
             }
           </div>
         </div>
@@ -960,7 +958,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
     setTilt({ rx:-dy*14, ry:dx*14 })
   }
 
-  const R = 24
+  const R = 14
   const C = 2 * Math.PI * R
   const pct = Math.min((val / goal) * 100, 100)
   const dash = anim ? (pct / 100) * C : 0
@@ -974,7 +972,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       onMouseLeave={() => { setGlowing(false); setTilt({ rx:0, ry:0 }) }}
       style={{
         flex:1, position:'relative',
-        padding:'1.5px', borderRadius:26,
+        padding:'1.5px', borderRadius:20,
         /* Glow border couleur du sujet — statique + suit le curseur */
         background: glowing
           ? `radial-gradient(circle 220px at ${glowPos.x}% ${glowPos.y}%, ${color}70, ${color}30 42%, ${color}14 68%)`
@@ -992,46 +990,46 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       <div style={{
         background:`linear-gradient(145deg, ${color}07, rgba(255,246,238,0.72))`,
         backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-        borderRadius:24.5, padding:'14px 8px 12px',
+        borderRadius:18, padding:'8px 4px 7px',
         boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.65)`,
-        display:'flex', flexDirection:'column', alignItems:'center', gap:6,
-        height:'100%', position:'relative', zIndex:1,
+        display:'flex', flexDirection:'column', alignItems:'center', gap:3,
+        position:'relative', zIndex:1,
         transition:'box-shadow 0.3s ease',
       }}>
         {/* ── Futuristic Donut Ring ── */}
-        <div style={{ position:'relative', width:68, height:68 }}>
-          <svg width={68} height={68} viewBox="0 0 68 68"
+        <div style={{ position:'relative', width:44, height:44 }}>
+          <svg width={44} height={44} viewBox="0 0 44 44"
             style={{ transform:'rotate(-90deg)', overflow:'visible' }}>
             <defs>
               <filter id={`df${index}`} x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="2.8" result="b"/>
+                <feGaussianBlur stdDeviation="2.2" result="b"/>
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
 
             {/* Outer decorative ring */}
-            <circle cx="34" cy="34" r={R+7} fill="none" stroke={color+'18'} strokeWidth="0.7"/>
+            <circle cx="22" cy="22" r={R+4} fill="none" stroke={color+'18'} strokeWidth="0.6"/>
 
-            {/* Tick marks — 24 segments around outer edge */}
-            {Array.from({length:24}).map((_, ti) => {
-              const a = (ti / 24) * Math.PI * 2
-              const ro = R+6, ri = R+4.2
+            {/* Tick marks */}
+            {Array.from({length:20}).map((_, ti) => {
+              const a = (ti / 20) * Math.PI * 2
+              const ro = R+3, ri = R+2
               return (
                 <line key={ti}
-                  x1={(34+ro*Math.cos(a)).toFixed(1)} y1={(34+ro*Math.sin(a)).toFixed(1)}
-                  x2={(34+ri*Math.cos(a)).toFixed(1)} y2={(34+ri*Math.sin(a)).toFixed(1)}
-                  stroke={color} strokeWidth="0.9" opacity="0.22" strokeLinecap="round"/>
+                  x1={(22+ro*Math.cos(a)).toFixed(1)} y1={(22+ro*Math.sin(a)).toFixed(1)}
+                  x2={(22+ri*Math.cos(a)).toFixed(1)} y2={(22+ri*Math.sin(a)).toFixed(1)}
+                  stroke={color} strokeWidth="0.7" opacity="0.22" strokeLinecap="round"/>
               )
             })}
 
-            {/* Background track — dashed segmented */}
-            <circle cx="34" cy="34" r={R} fill="none"
-              stroke={color+'0A'} strokeWidth="5.5"
-              strokeDasharray="3.8 2.2"/>
+            {/* Background track */}
+            <circle cx="22" cy="22" r={R} fill="none"
+              stroke={color+'0A'} strokeWidth="4"
+              strokeDasharray="2.5 1.8"/>
 
             {/* Progress arc */}
-            <circle cx="34" cy="34" r={R} fill="none"
-              stroke={color} strokeWidth="5.5" strokeLinecap="round"
+            <circle cx="22" cy="22" r={R} fill="none"
+              stroke={color} strokeWidth="4" strokeLinecap="round"
               strokeDasharray={`${dash} ${C}`}
               filter={`url(#df${index})`}
               style={{ transition:'stroke-dasharray 1.5s cubic-bezier(0.34,1.56,0.64,1)' }}/>
@@ -1039,22 +1037,22 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 
           <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
             {done
-              ? <span style={{ fontSize:16, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>
+              ? <span style={{ fontSize:11, color, fontWeight:900, animation:'badgePop 0.4s ease' }}>✓</span>
               : iconEl}
           </div>
           {done && (
             <div style={{
-              position:'absolute', inset:-6, borderRadius:'50%',
+              position:'absolute', inset:-4, borderRadius:'50%',
               border:`2px solid ${color}40`,
               animation:'scoreGlow 2s ease-in-out infinite',
               pointerEvents:'none',
             }} />
           )}
         </div>
-        <div style={{ fontSize:14, fontWeight:500, color: val > 0 ? color : '#c4b5a8', lineHeight:1, letterSpacing:'-0.3px' }}>
-          {val > 0 ? fmt(val) : '·'}
+        <div style={{ fontSize:12, fontWeight:600, color: val > 0 ? color : '#c4b5a8', lineHeight:1, letterSpacing:'-0.3px' }}>
+          {val > 0 ? fmt(val) : '—'}
         </div>
-        <div style={{ fontSize:10, color:'#8a7265', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.6px', opacity:0.75 }}>{label}</div>
+        <div style={{ fontSize:8, color:'#8a7265', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.5px', opacity:0.7 }}>{label}</div>
       </div>
     </div>
   )
@@ -1068,7 +1066,7 @@ function MetricRings({ metriques }) {
     { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
-    <div style={{ display:'flex', gap:10, padding:'14px 18px' }}>
+    <div style={{ display:'flex', gap:6, padding:'8px 14px' }}>
       {items.map((it, i) => <MetricRing key={i} {...it} index={i} />)}
     </div>
   )
@@ -1245,12 +1243,12 @@ function DailyTaskItem({ t, i, onToggle }) {
       {/* Texte */}
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{
-          fontSize:13.5, fontWeight:800, color: t.isDone ? '#9b6b50' : '#C87B52',
+          fontSize:13.5, fontWeight:800, color: t.isDone ? 'rgba(155,107,80,0.50)' : 'rgba(200,123,82,0.70)',
           textDecoration: t.isDone ? 'line-through' : 'none',
           whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
         }}>{t.title}</div>
         <div style={{
-          fontSize:11, color:'#9b6b50', marginTop:2, opacity:0.85,
+          fontSize:11, color:'rgba(155,107,80,0.58)', marginTop:2,
           whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
         }}>{t.detail}</div>
       </div>
@@ -1262,7 +1260,9 @@ function DailyTaskItem({ t, i, onToggle }) {
           </div>
         : <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
             stroke={t.isDone ? t.color : 'rgba(212,170,90,0.50)'} strokeWidth="2.5"
-            strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}>
+            strokeLinecap="round" strokeLinejoin="round"
+            className="arrow-anim"
+            style={{ flexShrink:0 }}>
             <polyline points="9 18 15 12 9 6"/>
           </svg>
       }
@@ -1303,7 +1303,7 @@ function generateDailyTasks(profil, metriques) {
     {
       id:'nutrition', emoji:'🥗', color:'#34c759',
       title: regime === 'végétarien' ? 'Protéines végétales' : regime === 'vegan' ? 'Équilibre vegan' : regime === 'sans gluten' ? 'Repas sans gluten' : 'Repas équilibrés',
-      detail:'3 repas — légumes · protéines · glucides lents',
+      detail:'3 repas / légumes · protéines · glucides lents',
       goal:3, auto:false, fmt: v => `${v}/3 repas`,
     },
     {
@@ -1351,8 +1351,8 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
     <div style={{ padding:'8px 18px 12px' }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
         <div>
-          <div style={{ fontSize:16, fontWeight:900, color:'#C87B52', letterSpacing:'-0.3px' }}>7 tâches du jour</div>
-          <div style={{ fontSize:12, color:'#9b6b50', marginTop:1 }}>{doneCount}/{tasks.length} accomplies</div>
+          <div style={{ fontSize:15, fontWeight:600, color:'rgba(218,138,52,0.72)', letterSpacing:'-0.1px' }}>7 tâches du jour</div>
+          <div style={{ fontSize:12, color:'rgba(218,138,52,0.50)', marginTop:1 }}>{doneCount}/{tasks.length} accomplies</div>
         </div>
         <div style={{ position:'relative', width:30, height:30, flexShrink:0 }}>
           {/* Gradient orbit ring — rotating SVG */}
@@ -1365,9 +1365,9 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
             <defs>
               <linearGradient id="orbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%"   stopColor="rgba(255,210,190,0.0)"/>
-                <stop offset="25%"  stopColor="rgba(255,190,168,0.88)"/>
-                <stop offset="50%"  stopColor="rgba(215,125,95,0.98)"/>
-                <stop offset="75%"  stopColor="rgba(255,190,168,0.88)"/>
+                <stop offset="25%"  stopColor="rgba(218,138,52,0.22)"/>
+                <stop offset="50%"  stopColor="rgba(218,138,52,0.32)"/>
+                <stop offset="75%"  stopColor="rgba(218,138,52,0.22)"/>
                 <stop offset="100%" stopColor="rgba(255,210,190,0.0)"/>
               </linearGradient>
             </defs>
@@ -1388,15 +1388,15 @@ function DailyTasks({ profil, metriques, onSwitchTab }) {
               animate={{ rotate: collapsed ? 0 : 45 }}
               transition={{ type:'spring', stiffness:420, damping:26 }}
             >
-              <line x1="6" y1="1" x2="6" y2="11" stroke="#C87B52" strokeWidth="1.6" strokeLinecap="round"/>
-              <line x1="1" y1="6" x2="11" y2="6" stroke="#C87B52" strokeWidth="1.6" strokeLinecap="round"/>
+              <line x1="6" y1="1" x2="6" y2="11" stroke="rgba(218,138,52,0.46)" strokeWidth="1.6" strokeLinecap="round"/>
+              <line x1="1" y1="6" x2="11" y2="6" stroke="rgba(218,138,52,0.46)" strokeWidth="1.6" strokeLinecap="round"/>
             </motion.svg>
           </motion.button>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div style={{ position:'relative', height:3, borderRadius:10, background:'rgba(200,123,82,0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
+      <div style={{ position:'relative', height:3, borderRadius:10, background:'rgba(218,138,52,0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
@@ -1529,8 +1529,7 @@ function InsightsCarousel({ profil, metriques, onChat }) {
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
         <span style={hc.cardsTitle}>Insights du jour</span>
-        <span style={{ fontSize:11, color:'#C87B52', fontWeight:700,
-          background:'rgba(200,123,82,0.10)', padding:'3px 12px', borderRadius:20 }}>
+        <span style={{ fontSize:11, color:'rgba(218,138,52,0.42)', fontWeight:500 }}>
           {activeIndex + 1} / {cardCount}
         </span>
       </div>
@@ -1583,11 +1582,11 @@ function InsightsCarousel({ profil, metriques, onChat }) {
                   </div>
                   {/* Text — active card only */}
                   {isActive && <div style={{ padding:'10px 16px 14px' }}>
-                    <div style={{ fontSize:14, fontWeight:800, color:'#C87B52',
+                    <div style={{ fontSize:14, fontWeight:800, color:'rgba(218,138,52,0.92)',
                       letterSpacing:'-0.02em', marginBottom:5, lineHeight:1.3 }}>
                       {card.title}
                     </div>
-                    <div style={{ fontSize:12, color:'#8b5e45', lineHeight:1.65,
+                    <div style={{ fontSize:12, color:'rgba(218,138,52,0.55)', lineHeight:1.65,
                       marginBottom:10,
                       overflow:'hidden', display:'-webkit-box',
                       WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
@@ -1603,21 +1602,21 @@ function InsightsCarousel({ profil, metriques, onChat }) {
                         style={{
                           alignSelf:'flex-start',
                           boxShadow:`
-                            0 0 0 1.5px rgba(200,123,82,0.38),
+                            0 0 0 1.5px rgba(218,138,52,0.35),
                             0 -1px 0 0 rgba(255,255,255,0.65),
-                            0 1px 0 0 rgba(158,92,53,0.25),
-                            0 4px 14px rgba(200,123,82,0.16)
+                            0 1px 0 0 rgba(218,138,52,0.20),
+                            0 4px 14px rgba(218,138,52,0.12)
                           `
                         }}
                         onClick={e => handleAction(e, card.action)}
                       >
                         <div style={{
                           padding:'7px 18px',
-                          fontSize:11, fontWeight:700, color:'#C87B52',
+                          fontSize:11, fontWeight:700, color:'rgba(218,138,52,0.88)',
                           fontFamily:"'Inter',system-ui,sans-serif", whiteSpace:'nowrap',
                           position:'relative', zIndex:3,
                         }}>
-                          {card.action} →
+                          {card.action} <span className="arrow-anim">→</span>
                         </div>
                       </GlassyButtonWrap>
                     )}
@@ -1713,7 +1712,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate }) {
     <div style={{ padding:'14px 18px 0' }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
         <span style={hc.cardsTitle}>Pour toi maintenant</span>
-        <span style={{ fontSize:10, color:'#9b6b50', fontWeight:500, opacity:0.7 }}>
+        <span style={{ fontSize:10, color:'rgba(218,138,52,0.50)', fontWeight:500 }}>
           {h < 12 ? 'Matin' : h < 18 ? 'Après-midi' : h < 22 ? 'Soirée' : 'Nuit'}
         </span>
       </div>
@@ -1750,11 +1749,12 @@ function ContextualShortcuts({ profil, metriques, onNavigate }) {
               {s.icon}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontSize:13.5, fontWeight:800, color:'#C87B52', lineHeight:1.2 }}>{s.label}</div>
-              <div style={{ fontSize:11, color:'#9b6b50', marginTop:3, opacity:0.85 }}>{s.sub}</div>
+              <div style={{ fontSize:13.5, fontWeight:800, color:'rgba(218,138,52,0.90)', lineHeight:1.2 }}>{s.label}</div>
+              <div style={{ fontSize:11, color:'rgba(218,138,52,0.52)', marginTop:3 }}>{s.sub}</div>
             </div>
             <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
               stroke={s.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              className="arrow-anim"
               style={{ opacity:0.85, flexShrink:0 }}>
               <polyline points="9 18 15 12 9 6"/>
             </svg>
@@ -1773,21 +1773,22 @@ function ContextualShortcuts({ profil, metriques, onNavigate }) {
           marginTop:8, marginBottom:28,
           padding:'13px 16px', minHeight:68,
           borderRadius:20, cursor:'pointer',
-          background:'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(232,160,122,0.10) 60%, rgba(200,123,82,0.07) 100%)',
-          border:'1.5px solid rgba(200,123,82,0.36)',
-          boxShadow:'0 6px 22px rgba(200,123,82,0.16), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.80)',
+          background:'linear-gradient(135deg, rgba(218,138,52,0.18) 0%, rgba(218,138,52,0.08) 60%, rgba(218,138,52,0.05) 100%)',
+          border:'1.5px solid rgba(218,138,52,0.32)',
+          boxShadow:'0 6px 22px rgba(218,138,52,0.14), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.80)',
           backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >
         <SolennFace size={38} />
         <div style={{ flex:1, minWidth:0 }}>
-          <div style={{ fontSize:13.5, fontWeight:800, color:'#C87B52', lineHeight:1.2 }}>Demander à Solenn</div>
-          <div style={{ fontSize:11, color:'#9b6b50', marginTop:3, opacity:0.85 }}>Disponible · répond en quelques secondes</div>
+          <div style={{ fontSize:13.5, fontWeight:800, color:'rgba(218,138,52,0.90)', lineHeight:1.2 }}>Demander à Solenn</div>
+          <div style={{ fontSize:11, color:'rgba(218,138,52,0.55)', marginTop:3 }}>Disponible · répond en quelques secondes</div>
         </div>
         <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-          stroke="#C87B52" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-          style={{ opacity:0.85, flexShrink:0 }}>
+          stroke="rgba(218,138,52,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          className="arrow-anim"
+          style={{ flexShrink:0 }}>
           <polyline points="9 18 15 12 9 6"/>
         </svg>
       </motion.div>
@@ -1867,7 +1868,7 @@ const hc = {
 
   cardsWrap: { padding:'8px 18px 8px' },
   cardsHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
-  cardsTitle: { fontSize:16, fontWeight:900, color:'#C87B52', letterSpacing:'-0.3px' },
+  cardsTitle: { fontSize:15, fontWeight:600, color:'rgba(218,138,52,0.72)', letterSpacing:'-0.1px' },
 
   actionsWrap: { padding:'16px 18px 4px' },
   actionsGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginTop:12 },

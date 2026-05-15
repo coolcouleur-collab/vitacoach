@@ -51,8 +51,8 @@ function Sparkline({ history, metricKey, color, goal }) {
   const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
   const hasData = last7.some(d => d.val > 0)
   if (!hasData) return (
-    <div style={{ fontSize:10, color:'#c4b5a8', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
-      Pas encore de données — commence à logger !
+    <div style={{ fontSize:10, color:'rgba(218,138,52,0.50)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
+      Pas encore de données
     </div>
   )
   return (
@@ -104,13 +104,13 @@ function HistoriqueSection({ history }) {
           border:'1.5px solid rgba(200,123,82,0.22)',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
         <div style={{ flex:1, textAlign:'left' }}>
-          <div style={{ fontSize:13, fontWeight:800, color:'rgba(200,123,82,0.90)' }}>Historique 7 jours</div>
-          <div style={{ fontSize:11, color:'rgba(200,123,82,0.55)', marginTop:1 }}>Progression de tes métriques</div>
+          <div style={{ fontSize:13, fontWeight:600, color:'rgba(218,138,52,0.72)' }}>Historique 7 jours</div>
+          <div style={{ fontSize:11, color:'rgba(218,138,52,0.45)', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
-          fontSize:10, fontWeight:700, color:'#C87B52',
-          background:'rgba(200,123,82,0.10)', padding:'4px 10px', borderRadius:8,
-          border:'1px solid rgba(200,123,82,0.20)',
+          fontSize:10, fontWeight:700, color:'rgba(218,138,52,0.60)',
+          background:'rgba(218,138,52,0.08)', padding:'4px 10px', borderRadius:8,
+          border:'1px solid rgba(218,138,52,0.16)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
       </button>
@@ -149,8 +149,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const animRef    = useRef(null)
   const prevScoreRef = useRef(0)
 
-  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : 'rgba(200,123,82,0.90)'
-  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.10)'
+  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : 'rgba(218,138,52,0.72)'
+  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(218,138,52,0.10)'
   const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
   const labelColor = scoreColor
   const circumference = 2 * Math.PI * 52
@@ -409,7 +409,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 {val > 0 ? m.fmt(val) : '–'}
                 {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}66`, marginLeft: 4 }}>{m.unit}</span>}
               </div>
-              <div style={{ fontSize: 11, color: '#8a7265', marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ fontSize: 11, color: 'rgba(218,138,52,0.55)', marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
                 {m.key === 'humeur' && val > 0 && <span style={{ fontSize: 14, lineHeight: 1 }}>{['','😢','😕','😐','🙂','😊'][val]}</span>}
               </div>
@@ -578,9 +578,9 @@ const ss = {
   },
   btnInsights: {
     width: '100%',
-    background: 'rgba(232,150,42,0.07)',
-    color: 'rgba(200,123,82,0.75)',
-    border: '1px solid rgba(232,150,42,0.18)', padding: '11px 16px', borderRadius: 12, fontSize: 12, fontWeight: 600,
+    background: 'rgba(218,138,52,0.07)',
+    color: 'rgba(218,138,52,0.68)',
+    border: '1px solid rgba(218,138,52,0.20)', padding: '11px 16px', borderRadius: 12, fontSize: 12, fontWeight: 600,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
     boxShadow: 'none',
     transition: 'transform 0.15s ease',

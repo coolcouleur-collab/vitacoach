@@ -7,7 +7,7 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqYmZleHhocnhjdm1vbHB3dXZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NDUwODMsImV4cCI6MjA5MDUyMTA4M30.kNdebBhFovcKqdCqpmfHkNmzsV9a5Vw9QWpgzwOlXOk'
 )
 
-export default function Auth({ onConnecte }) {
+export default function Auth({ onConnecte, onBack }) {
   const [mode, setMode]         = useState('connexion')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
@@ -32,13 +32,43 @@ export default function Auth({ onConnecte }) {
 
   return (
     <div style={s.page}>
+      <style>{`
+        @keyframes authFadeUp {
+          from { opacity:0; transform:translateY(18px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes authGlow {
+          0%,100% { box-shadow: 0 4px 16px rgba(200,123,82,0.25); transform: scale(1) rotate(0deg); }
+          25%      { box-shadow: 0 6px 28px rgba(200,123,82,0.55); transform: scale(1.08) rotate(-4deg); }
+          75%      { box-shadow: 0 6px 28px rgba(200,123,82,0.55); transform: scale(1.08) rotate(4deg); }
+        }
+        @keyframes authShimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
+        }
+        @keyframes authTagline {
+          from { opacity:0; letter-spacing:0.25em; }
+          to   { opacity:1; letter-spacing:0.04em; }
+        }
+        @keyframes arrowNudge {
+          0%, 100% { transform: translateX(0); }
+          60%      { transform: translateX(5px); }
+        }
+        .btn-arrow { animation: arrowNudge 1.8s ease-in-out infinite; }
+        input::placeholder { color: rgba(158,92,53,0.40); }
+      `}</style>
       <div style={s.blob1} /><div style={s.blob2} />
+      {onBack && (
+        <button onClick={onBack} style={s.backBtn}>←</button>
+      )}
       <div style={s.card}>
         <div style={s.logoWrap}>
-          <div style={s.logoIcon}>E</div>
-          <div style={s.logoText}>Solenn</div>
+          <div style={{ ...s.logoIcon, animation:'authGlow 3.2s ease-in-out infinite, authFadeUp 0.6s ease both' }}>S</div>
+          <div style={{
+            ...s.logoText,
+            animation:'authFadeUp 0.6s 0.15s ease both',
+          }}>Solenn</div>
         </div>
-        <div style={s.tagline}>Ton coach de vie personnel</div>
 
         <div style={s.tabs}>
           {['connexion','inscription'].map(m => (
@@ -48,16 +78,28 @@ export default function Auth({ onConnecte }) {
           ))}
         </div>
 
-        {[['email','Email','email','ton@email.com',email,setEmail],
-          ['password','Mot de passe','password','••••••••',password,setPassword]
-        ].map(([id,lb,type,ph,val,set]) => (
-          <div key={id} style={s.field}>
-            <label style={s.label}>{lb}</label>
-            <input style={s.input} type={type} placeholder={ph} value={val}
-              onChange={e => set(e.target.value)}
+        <div style={s.field}>
+          <label style={s.label}>Email</label>
+          <input style={s.input} type="email" placeholder="@" value={email}
+            onChange={e => setEmail(e.target.value)}
+            onKeyDown={e => e.key==='Enter' && soumettre()} />
+        </div>
+
+        <div style={{...s.field, position:'relative'}}>
+          <label style={s.label}>Mot de passe</label>
+          <div style={{position:'relative'}}>
+            <svg style={{position:'absolute', left:4, top:'50%', transform:'translateY(-50%)',
+              opacity:0.30, pointerEvents:'none', color:'rgba(158,92,53,1)'}}
+              width="13" height="13" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input style={{...s.input, paddingLeft:24}} type="password" placeholder=""
+              value={password} onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key==='Enter' && soumettre()} />
           </div>
-        ))}
+        </div>
 
         {message && (
           <div style={{ ...s.msg,
@@ -69,63 +111,87 @@ export default function Auth({ onConnecte }) {
         )}
 
         <button style={{ ...s.btn, opacity: loading ? 0.7 : 1 }}
-          onClick={soumettre} disabled={loading}>
-          <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>
+          onClick={soumettre} disabled={loading}
+          onMouseEnter={e => {
+            e.currentTarget.style.borderColor = 'rgba(212,149,106,0.50)'
+            e.currentTarget.style.background = 'rgba(200,123,82,0.05)'
+            const arrow = e.currentTarget.querySelector('.btn-arrow')
+            if (arrow) { arrow.style.animation = 'none'; arrow.style.transform = 'translateX(6px)' }
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.borderColor = 'transparent'
+            e.currentTarget.style.background = 'transparent'
+            const arrow = e.currentTarget.querySelector('.btn-arrow')
+            if (arrow) { arrow.style.animation = ''; arrow.style.transform = '' }
+          }}>
+          <span style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
             {loading
-              ? <><LoadingIcon size={16} color="#fff" /> Chargement...</>
+              ? <><LoadingIcon size={16} color="#C87B52" /> Chargement...</>
               : mode==='connexion'
-                ? 'Se connecter →'
-                : <><FlashIcon size={14} color="#fff" /> Créer mon compte</>}
+                ? <>Retrouver Solenn <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>
+                : <>Rejoindre Solenn <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>}
           </span>
         </button>
 
-        <div style={s.footer}>
-          En continuant tu acceptes nos{' '}
-          <span style={{ color:'#FF4500', fontWeight:600 }}>conditions d'utilisation</span>
-        </div>
+        {mode === 'inscription' && (
+          <div style={s.footer}>
+            Sans carte bancaire · En créant un compte tu acceptes nos{' '}
+            <span style={{ color:'rgba(212,149,106,0.75)', fontWeight:600 }}>conditions d'utilisation</span>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'#FFF8F4', display:'flex', alignItems:'center',
+  page: { minHeight:'100vh', background:'#EDD8CC', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     position:'relative', overflow:'hidden' },
   blob1: { position:'fixed', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(200,123,82,0.13) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(200,123,82,0.18) 0%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'fixed', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(255,69,0,0.1) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(200,123,82,0.12) 0%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' },
-  card: { position:'relative', zIndex:1, width:'100%', maxWidth:420, background:'#ffffff',
-    borderRadius:28, padding:'40px 36px',
-    boxShadow:'0 8px 48px rgba(0,0,0,0.08)', animation:'slideUp 0.45s ease' },
+  card: { position:'relative', zIndex:1, width:'100%', maxWidth:380,
+    background:'transparent', padding:'0 8px', animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:6 },
   logoIcon: { width:36, height:36, borderRadius:12,
-    background:'linear-gradient(135deg,#C87B52,#9E5C35)',
+    background:'linear-gradient(135deg,#DFA882,#C87B52)',
     display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
   logoText: { fontSize:26, fontWeight:900, letterSpacing:'-0.5px',
-    background:'linear-gradient(135deg,#C87B52,#9E5C35)',
-    WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
-  tagline: { textAlign:'center', fontSize:13, color:'#9ca3af', marginBottom:28 },
-  tabs: { display:'flex', marginBottom:24, background:'#FFF8F4', borderRadius:14, padding:4, gap:4 },
-  tab: { flex:1, padding:'10px', background:'transparent', border:'none', cursor:'pointer',
-    fontSize:13, fontFamily:'Poppins, sans-serif', color:'#9ca3af', borderRadius:10, fontWeight:500 },
-  tabActive: { flex:1, padding:'10px', background:'#ffffff', border:'none', cursor:'pointer',
-    fontSize:13, fontFamily:'Poppins, sans-serif', color:'#1a0a00', borderRadius:10, fontWeight:700,
-    boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    color:'#D4956A',
+    opacity: 0.52 },
+  tagline: { textAlign:'center', fontSize:13, color:'rgba(158,92,53,0.55)', marginBottom:36 },
+  tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
+    borderBottom:'1px solid rgba(200,123,82,0.20)' },
+  tab: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
+    fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(158,92,53,0.45)', fontWeight:500,
+    borderBottom:'2px solid transparent', marginBottom:'-1px' },
+  tabActive: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
+    fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(212,149,106,0.75)', fontWeight:700,
+    borderBottom:'2px solid rgba(212,149,106,0.60)', marginBottom:'-1px' },
   field: { marginBottom:16 },
-  label: { display:'block', marginBottom:6, fontWeight:600, fontSize:11,
-    color:'#6b7280', letterSpacing:'1px', textTransform:'uppercase' },
-  input: { width:'100%', padding:'13px 16px', borderRadius:14, border:'1px solid #e5e7eb',
-    background:'#f9fafb', fontSize:14, fontFamily:'Poppins, sans-serif',
-    boxSizing:'border-box', outline:'none', color:'#1a0a00', transition:'border-color 0.2s' },
+  label: { display:'block', marginBottom:4, fontWeight:600, fontSize:11,
+    color:'rgba(158,92,53,0.60)', letterSpacing:'1px', textTransform:'uppercase' },
+  input: { width:'100%', padding:'12px 4px', border:'none', borderBottom:'1.5px solid rgba(200,123,82,0.35)',
+    background:'transparent', fontSize:15, fontFamily:'Poppins, sans-serif',
+    boxSizing:'border-box', outline:'none', color:'rgba(158,92,53,0.85)', transition:'border-color 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
-  btn: { width:'100%', padding:'15px', background:'linear-gradient(135deg,#C87B52,#9E5C35)',
-    color:'white', border:'none', borderRadius:16, fontSize:15, fontWeight:800,
+  btn: { width:'auto', padding:'7px 28px', background:'transparent', display:'block', margin:'12px auto 0',
+    color:'rgba(212,149,106,0.75)', border:'1.5px solid transparent', borderRadius:'4rem', fontSize:15, fontWeight:600,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 6px 24px rgba(200,123,82,0.38)', letterSpacing:'0.3px', marginTop:4 },
-  footer: { marginTop:20, textAlign:'center', fontSize:11, color:'#d1d5db', lineHeight:1.6 },
+    letterSpacing:'0.04em', marginTop:0,
+    transition:'border-color 0.3s ease, background 0.2s' },
+  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:'rgba(212,149,106,0.45)', letterSpacing:'0.02em' },
+  footer: { marginTop:20, textAlign:'center', fontSize:11, color:'rgba(212,149,106,0.45)', lineHeight:1.6 },
+  backBtn: {
+    position:'fixed', top:24, left:24, zIndex:10,
+    background:'transparent', border:'none', cursor:'pointer',
+    color:'rgba(158,92,53,0.70)', fontSize:20, fontWeight:500,
+    fontFamily:'Poppins, sans-serif', padding:'8px 14px',
+    borderRadius:12, transition:'color 0.2s, background 0.2s',
+  },
 }
 

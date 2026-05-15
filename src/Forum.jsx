@@ -42,10 +42,10 @@ function Avatar({ name, size = 34 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: size * 0.32,
-      background: 'linear-gradient(135deg, #C87B52, #9E5C35)',
+      background: 'linear-gradient(135deg, rgba(218,138,52,0.70), rgba(190,112,30,0.80))',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.42, fontWeight: 800, color: '#fff', flexShrink: 0,
-      boxShadow: '0 2px 8px rgba(200,123,82,0.28)',
+      fontSize: size * 0.42, fontWeight: 800, color: 'rgba(255,245,225,0.92)', flexShrink: 0,
+      boxShadow: '0 2px 8px rgba(218,138,52,0.22)',
     }}>
       {(name || '?').charAt(0).toUpperCase()}
     </div>
@@ -61,7 +61,7 @@ const inputBase = {
   backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,14px)',
-  color: '#3a1a08', lineHeight: 1.6,
+  color: 'rgba(218,138,52,0.88)', lineHeight: 1.6,
   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
 }
 
@@ -101,7 +101,7 @@ function ReplyForm({ onSubmit }) {
         <button onClick={submit} disabled={!text.trim() || loading} style={{
           background: text.trim() ? 'rgba(255,255,255,0.25)' : 'rgba(200,123,82,0.06)',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          color: text.trim() ? '#C87B52' : 'rgba(155,100,70,0.35)',
+          color: text.trim() ? 'rgba(218,138,52,0.80)' : 'rgba(218,138,52,0.30)',
           border: text.trim() ? '1px solid rgba(200,123,82,0.25)' : '1px solid rgba(200,123,82,0.12)',
           borderRadius: '2rem', padding: '.6rem 1.8rem',
           fontSize: 'max(1.2rem,12px)', fontWeight: 700,
@@ -139,24 +139,24 @@ function PostCard({ post, onReply, onLike, userId }) {
           <div style={{ display: 'flex', gap: '.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <span style={{ fontWeight: 700, fontSize: 'max(1.3rem,13px)', color: '#3a1a08' }}>{post.author}</span>
             <span style={{
-              fontSize: 'max(1rem,10px)', fontWeight: 700, color: '#C87B52',
+              fontSize: 'max(1rem,10px)', fontWeight: 700, color: 'rgba(218,138,52,0.72)',
               background: 'rgba(200,123,82,0.10)', padding: '.2rem .75rem',
               borderRadius: 20, border: '1px solid rgba(200,123,82,0.20)',
             }}>
               {post.category}
             </span>
-            <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(155,100,70,0.50)' }}>
+            <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(218,138,52,0.50)' }}>
               {timeAgo(post.created_at)}
             </span>
           </div>
-          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 800, color: '#2a0e00', marginTop: '.3rem', lineHeight: 1.3 }}>
+          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 800, color: 'rgba(218,138,52,0.92)', marginTop: '.3rem', lineHeight: 1.3 }}>
             {post.title}
           </h3>
         </div>
       </div>
 
       {/* Body */}
-      <p style={{ fontSize: 'max(1.3rem,13px)', color: '#5a3520', lineHeight: 1.75, marginBottom: '1.2rem' }}>
+      <p style={{ fontSize: 'max(1.3rem,13px)', color: 'rgba(218,138,52,0.72)', lineHeight: 1.75, marginBottom: '1.2rem' }}>
         {post.body}
       </p>
 
@@ -169,8 +169,8 @@ function PostCard({ post, onReply, onLike, userId }) {
           borderRadius: 20, padding: '.45rem 1rem',
           cursor: 'pointer', fontFamily: 'var(--font)', transition: 'all .18s ease',
         }}>
-          <span style={{ fontSize: '1.2rem', color: liked ? '#C87B52' : 'rgba(155,100,70,0.40)' }}>♥</span>
-          <span style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 600, color: liked ? '#C87B52' : 'rgba(155,100,70,0.50)' }}>
+          <span style={{ fontSize: '1.2rem', color: liked ? 'rgba(218,138,52,0.80)' : 'rgba(218,138,52,0.35)' }}>♥</span>
+          <span style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 600, color: liked ? 'rgba(218,138,52,0.80)' : 'rgba(218,138,52,0.45)' }}>
             {likesCount}
           </span>
         </button>
@@ -182,7 +182,7 @@ function PostCard({ post, onReply, onLike, userId }) {
           cursor: 'pointer', fontFamily: 'var(--font)', transition: 'all .18s ease',
         }}>
           <span style={{ fontSize: '1.2rem' }}>💬</span>
-          <span style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 600, color: 'rgba(155,100,70,0.60)' }}>
+          <span style={{ fontSize: 'max(1.2rem,12px)', fontWeight: 600, color: 'rgba(218,138,52,0.58)' }}>
             {post.replies?.length || 0} réponse{post.replies?.length !== 1 ? 's' : ''}
           </span>
         </button>
@@ -204,9 +204,9 @@ function PostCard({ post, onReply, onLike, userId }) {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center', marginBottom: '.25rem' }}>
                       <span style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: '#3a1a08' }}>{r.author}</span>
-                      <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(155,100,70,0.45)' }}>{timeAgo(r.created_at)}</span>
+                      <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(218,138,52,0.45)' }}>{timeAgo(r.created_at)}</span>
                     </div>
-                    <p style={{ fontSize: 'max(1.2rem,12px)', color: '#5a3520', lineHeight: 1.65 }}>{r.body}</p>
+                    <p style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(218,138,52,0.72)', lineHeight: 1.65 }}>{r.body}</p>
                   </div>
                 </div>
               ))}
@@ -249,8 +249,8 @@ function NewPostForm({ onSubmit, onCancel }) {
       backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
       marginBottom: '2rem',
     }}>
-      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: '#2a0e00', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem' }}>
-        <span style={{ color: '#C87B52', fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
+      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: 'rgba(218,138,52,0.92)', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem' }}>
+        <span style={{ color: 'rgba(218,138,52,0.72)', fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
       </div>
 
       <input
@@ -272,8 +272,8 @@ function NewPostForm({ onSubmit, onCancel }) {
             padding: '.4rem 1.1rem', borderRadius: 20,
             fontSize: 'max(1.1rem,11px)', fontWeight: 700,
             cursor: 'pointer', fontFamily: 'var(--font)',
-            background: category === c ? 'linear-gradient(135deg, #C87B52, #9E5C35)' : 'rgba(200,123,82,0.08)',
-            color: category === c ? '#fff' : '#9b6b50',
+            background: category === c ? 'linear-gradient(135deg, rgba(218,138,52,0.70), rgba(190,112,30,0.80))' : 'rgba(218,138,52,0.08)',
+            color: category === c ? 'rgba(255,245,225,0.92)' : 'rgba(218,138,52,0.55)',
             border: category === c ? 'none' : '1px solid rgba(200,123,82,0.18)',
             boxShadow: category === c ? '0 3px 10px rgba(200,123,82,0.28)' : 'none',
             transition: 'all .18s ease',
@@ -310,7 +310,7 @@ function NewPostForm({ onSubmit, onCancel }) {
 
       <div style={{ display: 'flex', gap: '.8rem', justifyContent: 'flex-end' }}>
         <button onClick={onCancel} style={{
-          background: 'rgba(200,123,82,0.08)', color: 'rgba(155,100,70,0.75)',
+          background: 'rgba(200,123,82,0.08)', color: 'rgba(218,138,52,0.62)',
           border: '1px solid rgba(200,123,82,0.18)', borderRadius: 20,
           padding: '.7rem 1.8rem', fontSize: 'max(1.2rem,12px)', fontWeight: 600,
           cursor: 'pointer', fontFamily: 'var(--font)',
@@ -320,7 +320,7 @@ function NewPostForm({ onSubmit, onCancel }) {
         <button onClick={submit} disabled={loading} style={{
           background: 'rgba(255,255,255,0.25)',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          color: '#C87B52', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
+          color: 'rgba(218,138,52,0.72)', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
@@ -462,29 +462,29 @@ export default function Forum({ onBack, user, profil }) {
         @keyframes fadeUp { from{opacity:0;transform:translateY(1.4rem)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.55} }
         .forum-in { animation: fadeUp .3s ease both; }
-        .forum-search::placeholder { color: rgba(155,100,70,0.42) !important; }
+        .forum-search::placeholder { color: rgba(218,138,52,0.42) !important; }
       `}</style>
 
       {/* ── Top action bar ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.4rem', paddingTop: '4px' }}>
-        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: 'rgba(155,100,70,0.55)', fontWeight: 500 }}>
+        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: 'rgba(218,138,52,0.55)', fontWeight: 500 }}>
           Communauté · entraide · bienveillance
         </div>
         <button onClick={() => setShowRules(r => !r)} style={{
-          background: showRules ? 'rgba(200,123,82,0.12)' : 'rgba(200,123,82,0.07)',
-          border: '1px solid rgba(200,123,82,0.20)', borderRadius: 20,
+          background: showRules ? 'rgba(218,138,52,0.14)' : 'rgba(218,138,52,0.09)',
+          border: '1px solid rgba(218,138,52,0.28)', borderRadius: 20,
           padding: '.45rem 1rem', fontSize: 'max(1.1rem,11px)', fontWeight: 600,
-          color: '#9b6b50', cursor: 'pointer', fontFamily: 'var(--font)', whiteSpace: 'nowrap',
+          color: 'rgba(218,138,52,0.80)', cursor: 'pointer', fontFamily: 'var(--font)', whiteSpace: 'nowrap',
         }}>
           📜 Règles
         </button>
         <button onClick={() => setShowForm(true)} style={{
-          background: 'rgba(255,255,255,0.22)',
+          background: 'linear-gradient(135deg, rgba(218,138,52,0.55), rgba(190,112,30,0.62))',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          color: '#C87B52', border: '1px solid rgba(200,123,82,0.22)', borderRadius: 20,
+          color: 'rgba(255,245,225,0.95)', border: '1px solid rgba(218,138,52,0.35)', borderRadius: 20,
           padding: '.5rem 1.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 700,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)', whiteSpace: 'nowrap',
+          boxShadow: '0 3px 12px rgba(218,138,52,0.22)', whiteSpace: 'nowrap',
         }}>
           + Nouveau
         </button>
@@ -508,7 +508,7 @@ export default function Forum({ onBack, user, profil }) {
           backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
           boxShadow: '0 5px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.82)',
         }}>
-          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: '#C87B52', marginBottom: '1rem' }}>
+          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: 'rgba(218,138,52,0.72)', marginBottom: '1rem' }}>
             📜 Règlement du forum
           </div>
           {[
@@ -520,10 +520,10 @@ export default function Forum({ onBack, user, profil }) {
             ['Pas de spam', 'Ne publie pas le même message plusieurs fois.'],
           ].map(([t, d]) => (
             <div key={t} style={{ display: 'flex', gap: '.9rem', padding: '.65rem 0', borderTop: '1px solid rgba(200,123,82,0.11)' }}>
-              <span style={{ color: '#C87B52', fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
+              <span style={{ color: 'rgba(218,138,52,0.72)', fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: '#3a1a08', marginBottom: '.15rem' }}>{t}</div>
-                <div style={{ fontSize: 'max(1.1rem,11px)', color: 'rgba(90,53,32,0.70)', lineHeight: 1.6 }}>{d}</div>
+                <div style={{ fontSize: 'max(1.1rem,11px)', color: 'rgba(218,138,52,0.68)', lineHeight: 1.6 }}>{d}</div>
               </div>
             </div>
           ))}
@@ -571,16 +571,16 @@ export default function Forum({ onBack, user, profil }) {
           ⚠️ {error}
           <button onClick={fetchPosts} style={{
             marginLeft: '1rem', background: 'none', border: 'none',
-            color: '#C87B52', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)',
+            color: 'rgba(218,138,52,0.72)', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)',
           }}>Réessayer</button>
         </div>
       )}
 
       {/* Posts */}
       {loading ? <Skeleton /> : filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
-          <div style={{ fontSize: '2.8rem', marginBottom: '1rem', color: '#C87B52', opacity: 0.55 }}>✦</div>
-          <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: '#C87B52', marginBottom: '.5rem' }}>
+        <div style={{ textAlign: 'center', padding: '5rem 2rem', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+          <div style={{ fontSize: '2.8rem', marginBottom: '1rem', color: 'rgba(218,138,52,0.72)', opacity: 0.55 }}>✦</div>
+          <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 800, color: 'rgba(218,138,52,0.72)', marginBottom: '.5rem' }}>
             {search ? 'Aucun résultat' : "Aucune discussion pour l'instant"}
           </div>
           <div style={{ fontSize: 'max(1.3rem,13px)', color: 'rgba(200,123,82,0.55)', lineHeight: 1.75 }}>

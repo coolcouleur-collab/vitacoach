@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const h     = parseInt(heure.split(':')[0])
   const moment = h < 10 ? 'le matin' : h < 13 ? 'en matinée' : h < 17 ? "l'après-midi" : h < 20 ? 'en soirée' : 'la nuit'
 
-  const systemPrompt = `Tu es Oravia, coach de vie personnel premium et bienveillant, expert en bien-être holistique.
+  const systemPrompt = `Tu es Solenn, coach de vie personnel premium et bienveillant, expert en bien-être holistique.
 
 Domaines d'expertise : nutrition, sommeil, gestion du stress, style vestimentaire, fitness, remèdes naturels, plantes médicinales, gestion du temps, productivité et équilibre de vie. Tu connais les médecines traditionnelles mais les mentionnes subtilement, seulement quand pertinent, avec les contre-indications importantes.
 
@@ -49,24 +49,48 @@ ${metriques ? `
 • Conseils toujours personnalisés : profil + métriques + moment de la journée
 • Si des métriques sont faibles, mentionne-le naturellement ("je vois que tu n'as pas encore beaucoup marché...")
 • Utilise des emojis pour structurer visuellement tes réponses
-• Titres clairs, réponses concrètes et actionnables
+• Titres clairs, réponses concrètes et actionnables — chaque phrase doit avoir du sens
 • Chaleureux, motivant, précis — tu es un vrai coach, pas un chatbot générique
+• ZÉRO phrase vague ou pseudo-spirituelle : interdit "je te sens", "je ressens", "ton énergie", "vibration", "alignement"
+• Si tu ne sais pas, dis-le clairement plutôt qu'inventer une réponse floue
 • Toujours en français
 • Pour tout symptôme médical grave : recommande de consulter un professionnel de santé
-• STRICTEMENT limité au domaine santé, bien-être, nutrition, style, gestion du temps — ne dévie pas`
+• STRICTEMENT limité au domaine santé, bien-être, nutrition, style, gestion du temps — ne dévie pas
+• N'utilise JAMAIS de markdown (pas de **, *, ##, ---, []()). Structure avec des emojis et retours à la ligne uniquement.`
 
   const messagesAPI = [
     { role:'system', content:systemPrompt },
-    ...historique.filter(m => m.role==='user' || m.role==='assistant').slice(-8),
+    ...historique
+      .filter(m => (m.role === 'user' || m.role === 'assistant') && m.content)
+      .slice(-8),
     { role:'user', content:message }
   ]
 
-  const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
-    messages: messagesAPI,
-    temperature: 0.72,
-    max_tokens: 1100
-  })
+  try {
+    const stream = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages: messagesAPI,
+      temperature: 0.72,
+      max_tokens: 900,
+      stream: true,
+    })
 
-  res.json({ reply: response.choices[0].message.content })
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('X-Accel-Buffering', 'no')
+    if (res.flushHeaders) res.flushHeaders()
+
+    for await (const chunk of stream) {
+      const token = chunk.choices[0]?.delta?.content
+      if (token) res.write(`data: ${JSON.stringify(token)}\n\n`)
+    }
+    res.write('data: [DONE]\n\n')
+    res.end()
+
+  } catch (err) {
+    console.error('Groq error:', err)
+    if (!res.headersSent) res.status(500).json({ error: err.message || 'Erreur API' })
+    else res.end()
+  }
 }

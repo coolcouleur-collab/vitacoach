@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect, Component } from 'react'
-import { supabase } from './supabase'
-import SplashScreen from './SplashScreen'
 import Auth from './Auth'
 import Landing from './Landing'
-import GlowLoader from './GlowLoader'
 import Forum from './Forum'
 import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
@@ -49,23 +46,38 @@ function ShinyLogoText({ text, color = 'rgba(232,150,42,0.55)', gradient = null,
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
 function SolennFace({ size = 34 }) {
   return (
-    <div className="liquid-avatar" style={{
+    <div style={{
       width: size, height: size,
-      background: 'rgba(220,140,70,0.38)',
+      borderRadius: size * 0.30,
+      background: 'linear-gradient(145deg, #C87B52, #9E5C35)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
-      isolation: 'isolate',
-      transform: 'translateZ(0)',
+      flexShrink: 0, position: 'relative', overflow: 'hidden',
+      boxShadow: '0 4px 14px rgba(200,123,82,0.42), inset 0 1px 0 rgba(255,255,255,0.25)',
+      marginTop: 4,
     }}>
-      <span style={{
-        fontSize: size * 0.44,
-        fontWeight: 700,
-        color: 'rgba(255,230,190,0.92)',
-        fontFamily: 'Poppins, sans-serif',
-        lineHeight: 1,
-        letterSpacing: '-0.02em',
-        userSelect: 'none',
-      }}>S</span>
+      {/* Reflet */}
+      <div style={{
+        position:'absolute', top:3, left:4,
+        width: size * 0.50, height: size * 0.30,
+        borderRadius:'50%',
+        background:'rgba(255,255,255,0.20)',
+        pointerEvents:'none',
+      }} />
+      {/* Visage */}
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap: size * 0.10 }}>
+        {/* Yeux */}
+        <div style={{ display:'flex', gap: size * 0.20 }}>
+          <div style={{ width: size*0.13, height: size*0.13, borderRadius:'50%', background:'#fff', animation:'oravBlink 4s ease-in-out infinite' }} />
+          <div style={{ width: size*0.13, height: size*0.13, borderRadius:'50%', background:'#fff', animation:'oravBlink 4s ease-in-out infinite 0.07s' }} />
+        </div>
+        {/* Sourire */}
+        <div style={{
+          width: size * 0.38, height: size * 0.17,
+          borderRadius: `0 0 ${size*0.22}px ${size*0.22}px`,
+          border: `${Math.max(1.5, size*0.055)}px solid rgba(255,255,255,0.90)`,
+          borderTop: 'none',
+        }} />
+      </div>
     </div>
   )
 }
@@ -217,8 +229,8 @@ function ReactionBtn({ emoji, active, onClick }) {
       type="button"
       onClick={e => { e.stopPropagation(); e.preventDefault(); onClick(); setPressed(true); setTimeout(() => setPressed(false), 300) }}
       style={{
-        background: active ? 'rgba(255,240,200,0.22)' : 'transparent',
-        border: active ? '1.5px solid rgba(255,240,200,0.72)' : '1.5px solid rgba(255,240,200,0.28)',
+        background: active ? 'rgba(255,255,255,0.35)' : 'transparent',
+        border: active ? '1.5px solid rgba(255,255,255,0.55)' : '1.5px solid rgba(0,0,0,0.08)',
         borderRadius: 10, padding: '3px 9px', fontSize: active ? 15 : 13,
         cursor: 'pointer', transition: 'all 0.18s cubic-bezier(0.34,1.56,0.64,1)',
         transform: pressed ? 'scale(1.35)' : active ? 'scale(1.12)' : 'scale(1)',
@@ -244,25 +256,6 @@ const defaultMetriques = () => {
 
 function sauverMetriques(m) {
   localStorage.setItem('vitacoach_metriques', JSON.stringify({ ...m, date: new Date().toDateString() }))
-}
-
-async function syncMetriquesSupabase(userId, m) {
-  if (!userId) return
-  const today = new Date().toISOString().split('T')[0]
-  await supabase.from('user_metrics').upsert({
-    user_id: userId, date: today,
-    pas: m.pas||0, sommeil: m.sommeil||0, eau: m.eau||0,
-    fc: m.fc||0, humeur: m.humeur||0, poids: m.poids||0,
-    updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id,date' })
-}
-
-async function syncProfilSupabase(userId, profil) {
-  if (!userId) return
-  await supabase.from('user_profiles').upsert({
-    user_id: userId, profil,
-    updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id' })
 }
 
 // Convertit base64url en Uint8Array pour VAPID
@@ -293,7 +286,6 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
-  const [splashDone, setSplashDone] = useState(false)
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
@@ -322,10 +314,6 @@ export default function App() {
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
   const [followUps, setFollowUps]   = useState([])
-  const [copiedIdx, setCopiedIdx]   = useState(null)
-  const [kbOffset,  setKbOffset]    = useState(0)
-  const [showScrollBtn, setShowScrollBtn] = useState(false)
-  const chatBoxRef = useRef(null)
   const [celebrate, setCelebrate]   = useState(false)
   const celebInitRef = useRef(false)
   const [showHealthPerm, setShowHealthPerm] = useState(false)
@@ -364,21 +352,6 @@ export default function App() {
   }, [])
   const isMobile = windowWidth < 768
 
-  // Clavier virtuel iOS — pousse la barre d'input vers le haut
-  useEffect(() => {
-    if (!window.visualViewport) return
-    const update = () => {
-      const off = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop
-      setKbOffset(Math.max(0, off))
-    }
-    window.visualViewport.addEventListener('resize', update)
-    window.visualViewport.addEventListener('scroll', update)
-    return () => {
-      window.visualViewport.removeEventListener('resize', update)
-      window.visualViewport.removeEventListener('scroll', update)
-    }
-  }, [])
-
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
   // Scroll to last message when user navigates back to chat tab
   useEffect(() => {
@@ -407,41 +380,11 @@ export default function App() {
   useEffect(() => {
     if (!celebInitRef.current) { celebInitRef.current = true; return }
     const today = new Date().toDateString()
-    const sc = scoreJour(metriques)
-    if (sc >= 80 && localStorage.getItem('vitacoach_celebrated') !== today) {
+    if (score >= 80 && localStorage.getItem('vitacoach_celebrated') !== today) {
       localStorage.setItem('vitacoach_celebrated', today)
       setTimeout(() => setCelebrate(true), 400)
     }
   }, [metriques])
-
-  // ── Sync Supabase → local à la connexion ──────────────────────────────────
-  useEffect(() => {
-    if (!user?.id) return
-    const today = new Date().toISOString().split('T')[0]
-
-    // Charger le profil depuis Supabase (priorité sur localStorage)
-    supabase.from('user_profiles').select('profil').eq('user_id', user.id).maybeSingle()
-      .then(({ data }) => {
-        if (data?.profil) {
-          setProfil(data.profil)
-          localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
-        }
-      })
-
-    // Charger les métriques du jour depuis Supabase
-    supabase.from('user_metrics').select('*').eq('user_id', user.id).eq('date', today).maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          const m = {
-            date: new Date().toDateString(),
-            pas: data.pas||0, sommeil: data.sommeil||0, eau: data.eau||0,
-            fc: data.fc||0, humeur: data.humeur||0, poids: data.poids||0,
-          }
-          setMetriques(m)
-          localStorage.setItem('vitacoach_metriques', JSON.stringify(m))
-        }
-      })
-  }, [user?.id])
 
   // Permission apps santé — affichée une seule fois au 1er lancement après profil
   useEffect(() => {
@@ -525,8 +468,6 @@ export default function App() {
     setMetriques(prev => {
       const newM = { ...prev, [key]: val }
       sauverMetriques(newM)
-      // Sync Supabase (fire & forget)
-      syncMetriquesSupabase(user?.id, newM)
       // Sauvegarde dans l'historique 30 jours
       const today = new Date().toDateString()
       const hist = safeParse('vitacoach_history', [])
@@ -630,70 +571,24 @@ export default function App() {
       isSendingRef.current = false
       return
     }
-    setMessages(prev => [...prev, { role:'user', content: msg }])
+    const userMsg = { role:'user', content: msg }
+    setMessages(prev => [...prev, userMsg])
     setInput('')
     setLoading(true)
     if (!isPro) incrementMsgCount()
-
     try {
       const resp = await fetch('/api/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques })
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-10), metriques })
       })
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-
-      // ── Streaming SSE ──────────────────────────────────────────────────────
-      const reader  = resp.body.getReader()
-      const decoder = new TextDecoder()
-      let buf      = ''
-      let reply    = ''
-      let started  = false
-
-      outer: while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-
-        buf += decoder.decode(value, { stream: true })
-        const lines = buf.split('\n')
-        buf = lines.pop() ?? ''
-
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue
-          const raw = line.slice(6).trim()
-          if (raw === '[DONE]') break outer
-          try {
-            const token = JSON.parse(raw)
-            if (!token) continue
-            reply += token
-            if (!started) {
-              // Premier token → masquer "réfléchit…" et ajouter la bulle
-              setMessages(prev => [...prev, { role: 'assistant', content: reply }])
-              setLoading(false)
-              started = true
-            } else {
-              setMessages(prev => {
-                const copy = [...prev]
-                const last = copy[copy.length - 1]
-                if (last?.role === 'assistant') copy[copy.length - 1] = { ...last, content: reply }
-                return copy
-              })
-            }
-          } catch { /* token non parsable, on ignore */ }
-        }
-      }
-
-      if (!started) {
-        // Flux vide — message de fallback
-        setMessages(prev => [...prev, { role: 'assistant', content: "Désolée, je n'ai pas pu répondre. Réessaie !" }])
-        setLoading(false)
-      }
-      if (reply) setFollowUps(genFollowUps(reply))
-
+      const data = await resp.json()
+      setMessages(prev => [...prev, { role:'assistant', content:data.reply }])
+      setFollowUps(genFollowUps(data.reply))
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Une erreur est survenue. Réessaie.' }])
-      setLoading(false)
+      setMessages(prev => [...prev, { role:'assistant', content:'Une erreur est survenue. Réessaie.' }])
     } finally {
-      isSendingRef.current = false   // libère le verrou
+      setLoading(false)
+      isSendingRef.current = false      // libère le verrou
     }
   }
 
@@ -706,13 +601,10 @@ export default function App() {
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
   if (!user) return (
-    <Auth
-      onConnecte={u => {
-        setUser(u)
-        localStorage.setItem('vitacoach_user', JSON.stringify(u))
-      }}
-      onBack={() => setShowAuth(false)}
-    />
+    <Auth onConnecte={u => {
+      setUser(u)
+      localStorage.setItem('vitacoach_user', JSON.stringify(u))
+    }} />
   )
 
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
@@ -722,7 +614,6 @@ export default function App() {
         setProfil(p)
         setProfilBackup(null)
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
-        syncProfilSupabase(user?.id, p)
         const h2 = new Date().getHours()
         const g2 = h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
         setMessages([{ role:'assistant', content:`${g2} ${p.nom} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
@@ -747,13 +638,12 @@ export default function App() {
 
   return (
     <div style={s.app}>
-      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
 
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
            Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
       <div style={{
-        position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
+        position:'fixed', inset:0, zIndex:0, background:'#ffffff', pointerEvents:'none',
       }}>
         {/* background-components.tsx — Soft Yellow Glow */}
         <div style={{
@@ -771,17 +661,16 @@ export default function App() {
         }} />
       </div>
 
-      {/* ══ AURORA — plein écran fixe, actif uniquement sur l'onglet chat ══ */}
-      {onglet === 'chat' && <div className="aurora-bg" style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none' }} />}
-
       {/* ══ SIDEBAR (desktop) ══ */}
       {!isMobile && (
         <aside style={s.sidebar}>
           <div style={s.sidebarTop}>
-            <span style={{
-              fontSize:22, fontWeight:900, letterSpacing:'-0.04em',
-              color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
-            }}>Solenn</span>
+            <ShinyLogoText
+              text="Solenn"
+              gradient="linear-gradient(90deg, #E8962A, #F5C06A, #E8962A)"
+              autoPlay={true}
+              style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
+            />
             <ShinyLogoText
               text="re·vivre · évoluer"
               color="rgba(212,132,74,0.45)"
@@ -842,12 +731,12 @@ export default function App() {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 252 }}>
-        <div style={{ ...s.content, padding: isMobile ? '0 0 130px' : '0 0 40px' }}>
+        <div style={{ ...s.content, padding: isMobile ? '0 0 108px' : '0 0 40px' }}>
 
           {/* Mobile header */}
           {isMobile && (() => {
             const onChat = onglet === 'chat'
-            const iconColor = 'rgba(218,138,52,0.58)'
+            const iconColor = 'rgba(200,123,82,0.55)'
             return (
             <div style={s.mobileHeader}>
               {onglet !== 'accueil' ? (
@@ -857,23 +746,21 @@ export default function App() {
                 </button>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{
-                    fontSize:22, fontWeight:900, letterSpacing:'-0.04em',
-                    color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
-                  }}>Solenn</span>
-                  <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(218,138,52,0.72)', letterSpacing:'0.6px' }}>
+                  <ShinyLogoText
+                    text="Solenn"
+                    gradient="linear-gradient(90deg, #E8962A, #F5C06A, #E8962A)"
+                    animDuration="8s"
+                    autoPlay={true}
+                    style={{ fontSize:20, fontWeight:900, letterSpacing:'-0.04em' }}
+                  />
+                  <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(180,130,90,0.45)', letterSpacing:'0.6px' }}>
                     Ton évolution, guidée.
                   </span>
                 </div>
               )}
 
               <div style={s.mobileTitle}>
-                {onglet === 'accueil' ? '' : onglet === 'chat'
-                  ? <span style={{
-                      fontSize:16, fontWeight:700, letterSpacing:'0.01em',
-                      color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
-                    }}>Solenn</span>
-                  : sectionTitles[onglet] || ''}
+                {onglet === 'accueil' ? '' : sectionTitles[onglet] || ''}
               </div>
 
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
@@ -915,9 +802,9 @@ export default function App() {
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'rgba(255,250,244,0.55)', backdropFilter:'blur(28px) saturate(1.6)', WebkitBackdropFilter:'blur(28px) saturate(1.6)',
-                borderLeft:'1px solid rgba(218,138,52,0.20)',
-                boxShadow:'-12px 0 40px rgba(218,138,52,0.10)',
+                background:'rgba(255,252,248,0.18)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+                borderLeft:'1px solid rgba(200,123,82,0.10)',
+                boxShadow:'-12px 0 40px rgba(0,0,0,0.06)',
                 display:'flex', flexDirection:'column',
                 padding:'52px 22px 32px',
                 animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
@@ -925,25 +812,25 @@ export default function App() {
                 {/* Profile */}
                 <div style={{
                   display:'flex', alignItems:'center', gap:14, marginBottom:28,
-                  paddingBottom:22, borderBottom:'1px solid rgba(218,138,52,0.14)',
+                  paddingBottom:22, borderBottom:'1px solid rgba(0,0,0,0.07)',
                 }}>
                   <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
                   <div>
-                    <div style={{ fontSize:16, fontWeight:800, color:'rgba(198,118,28,0.82)' }}>{profil.nom}</div>
-                    <div style={{ fontSize:11, color:'rgba(190,140,70,0.32)', marginTop:2 }}>Niveau {level} · {xp} XP</div>
+                    <div style={{ fontSize:16, fontWeight:800, color:'rgba(90,55,25,0.55)' }}>{profil.nom}</div>
+                    <div style={{ fontSize:11, color:'#a89b8c', marginTop:2 }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
                 {/* Nav links */}
                 {navItems.map(({ id, Icon, label }) => (
                   <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
                     display:'flex', alignItems:'center', gap:12, padding:'13px 16px', borderRadius:14,
-                    border:'none', background: onglet===id ? 'rgba(218,138,52,0.10)' : 'transparent',
+                    border:'none', background: onglet===id ? 'rgba(200,123,82,0.08)' : 'transparent',
                     cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
-                    color: onglet===id ? '#DA8A34' : 'rgba(188,130,50,0.48)', fontWeight: onglet===id ? 700 : 500,
+                    color: onglet===id ? '#C87B52' : 'rgba(120,85,55,0.42)', fontWeight: onglet===id ? 700 : 500,
                     fontSize:14, marginBottom:3,
-                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(218,138,52,0.22)' : 'none',
+                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(200,123,82,0.18)' : 'none',
                   }}>
-                    <Icon color={onglet===id ? '#DA8A34' : 'rgba(185,130,55,0.55)'} size={18} />
+                    <Icon color={onglet===id ? '#C87B52' : '#8a7265'} size={18} />
                     {label}
                   </button>
                 ))}
@@ -986,12 +873,18 @@ export default function App() {
           {/* ── Chat ── */}
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
+              <div className="aurora-bg" />
+              {/* Page header — desktop only */}
+              {!isMobile && (
+                <div style={s.pageHeader}>
+                  <div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><ChatIcon size={20} color="#C87B52" /> Coach IA</div>
+                    <div style={s.pageSubtitle}>Pose n'importe quelle question à Solenn</div>
+                  </div>
+                </div>
+              )}
 
-              <div ref={chatBoxRef} style={s.chatBox}
-                onScroll={e => {
-                  const el = e.currentTarget
-                  setShowScrollBtn(el.scrollHeight - el.scrollTop - el.clientHeight > 120)
-                }}>
+              <div style={s.chatBox}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
                     {/* Mascot */}
@@ -999,9 +892,7 @@ export default function App() {
                       <SolennFace size={46} />
                     </div>
 
-                    <div style={s.emptyChatTitle}>
-                      {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${profil.prenom || profil.nom} ?` : `Comment je peux t'aider ?`}
-                    </div>
+                    <div style={s.emptyChatTitle}>Comment je peux t'aider ?</div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
 
                     {streak > 0 && (
@@ -1014,7 +905,7 @@ export default function App() {
 
                     <div style={s.suggestionsPile}>
                       {suggestions.map((sug, i) => (
-                        <button key={i} className="sugg-animated" style={{ ...s.suggestionBig, animationDelay:`${i*0.07}s` }} onClick={() => envoyerMessage(sug)}>
+                        <button key={i} style={s.suggestionBig} onClick={() => envoyerMessage(sug)}>
                           <span style={{ opacity:0.45, marginRight:8, fontSize:11 }}>→</span>{sug}
                         </button>
                       ))}
@@ -1024,15 +915,6 @@ export default function App() {
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {/* Avatar Solenn — visible sur le premier message d'une série IA */}
-                    {msg.role === 'assistant' && (i === 0 || messages[i-1]?.role === 'user') && (
-                      <div style={{ flexShrink:0, marginTop:4, paddingLeft:3 }}>
-                        <SolennFace size={30} />
-                      </div>
-                    )}
-                    {msg.role === 'assistant' && i > 0 && messages[i-1]?.role === 'assistant' && (
-                      <div style={{ width:26, flexShrink:0 }} />
-                    )}
                     <div style={{ display:'flex', flexDirection:'column', gap:4, maxWidth: msg.role==='user' ? '76%' : isRich(msg.content) ? '90%' : '82%' }}>
                       <div style={
                         msg.role==='user'
@@ -1049,7 +931,7 @@ export default function App() {
                         }
                       </div>
                       {msg.role === 'assistant' && (
-                        <div style={{ display:'flex', gap:5, paddingLeft:4, alignItems:'center' }}>
+                        <div style={{ display:'flex', gap:5, paddingLeft:4 }}>
                           {['👍','💡','❤️'].map(emoji => (
                             <ReactionBtn
                               key={emoji}
@@ -1058,22 +940,6 @@ export default function App() {
                               onClick={() => setReactions(prev => ({ ...prev, [i]: prev[i]===emoji ? null : emoji }))}
                             />
                           ))}
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(msg.content).then(() => {
-                                setCopiedIdx(i)
-                                setTimeout(() => setCopiedIdx(null), 1800)
-                              })
-                            }}
-                            style={{
-                              background: copiedIdx === i ? 'rgba(52,199,89,0.12)' : 'transparent',
-                              border: 'none', cursor:'pointer', padding:'4px 7px', borderRadius:8,
-                              fontSize:11, color: copiedIdx === i ? '#34c759' : 'rgba(160,100,40,0.45)',
-                              fontFamily:'Poppins, sans-serif', fontWeight:600,
-                              transition:'all 0.2s',
-                            }}>
-                            {copiedIdx === i ? '✓ copié' : '⎘'}
-                          </button>
                         </div>
                       )}
                     </div>
@@ -1081,64 +947,42 @@ export default function App() {
                 ))}
 
                 {loading && (
-                  <div style={{ ...s.botMsg }}>
-                    <div style={{ flexShrink:0, marginTop:4 }}>
-                      <SolennFace size={30} />
-                    </div>
-                    <div style={{ padding:'10px 6px', display:'flex', alignItems:'center' }}>
-                      <GlowLoader count={5} size={6} color="#C87B52" glowStyle="soft" speed={1.1} gap={5} />
+                  <div style={s.botMsg}>
+                    <div style={s.botBubble}>
+                      <span style={{ display:'inline-flex', gap:5, alignItems:'center' }}>
+                        {[0, 0.18, 0.36].map((d,i) => (
+                          <span key={i} style={{ width:7, height:7, borderRadius:'50%',
+                            background:'linear-gradient(135deg,#C87B52,#E8A07A)',
+                            display:'inline-block',
+                            animation:`typing 0.8s ${d}s ease-in-out infinite alternate` }} />
+                        ))}
+                      </span>
                     </div>
                   </div>
                 )}
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Follow-up chips — scroll horizontal */}
+              {/* Follow-up chips contextuelles après chaque réponse */}
               {followUps.length > 0 && !loading && (
-                <div style={{ display:'flex', gap:7, marginBottom:10, overflowX:'auto', flexWrap:'nowrap', paddingBottom:2, position:'relative', zIndex:1, scrollbarWidth:'none' }}>
+                <div style={{ ...s.suggestionsRow, marginTop:4 }}>
                   {followUps.map((sug, i) => (
-                    <button key={i} style={{ ...s.suggestion, flexShrink:0 }} onClick={() => { envoyerMessage(sug); setFollowUps([]) }}>
+                    <button key={i} style={s.suggestion} onClick={() => { envoyerMessage(sug); setFollowUps([]) }}>
                       {sug}
                     </button>
                   ))}
                 </div>
               )}
 
-              <div style={{ ...s.inputRow, marginBottom: isMobile && kbOffset > 0 ? kbOffset : 0 }}>
-                {/* Scroll-to-bottom */}
-                {showScrollBtn && (
-                  <button onClick={() => messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })}
-                    style={{ position:'absolute', bottom:74, right:16, zIndex:10,
-                      width:32, height:32, borderRadius:'50%', border:'1px solid rgba(200,123,82,0.25)',
-                      background:'rgba(255,248,242,0.85)', backdropFilter:'blur(12px)',
-                      cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
-                      boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
-                )}
-                {messages.length > 0 && (
-                  <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:6 }}>
-                    <button
-                      onClick={() => { setMessages([]); setFollowUps([]); setReactions({}) }}
-                      style={{ display:'flex', alignItems:'center', gap:5,
-                        background:'rgba(255,248,242,0.60)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-                        border:'1px solid rgba(218,138,52,0.30)', borderRadius:20,
-                        padding:'4px 12px 4px 9px', cursor:'pointer',
-                        fontSize:12, color:'rgba(188,118,28,0.80)',
-                        fontFamily:'Inter, system-ui, sans-serif', fontWeight:500,
-                        transition:'all 0.2s', lineHeight:1 }}
-                      onMouseEnter={e => { e.currentTarget.style.background='rgba(255,240,220,0.92)'; e.currentTarget.style.color='rgba(170,100,15,0.96)'; e.currentTarget.style.borderColor='rgba(218,138,52,0.55)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background='rgba(255,248,242,0.60)'; e.currentTarget.style.color='rgba(188,118,28,0.80)'; e.currentTarget.style.borderColor='rgba(218,138,52,0.30)' }}>
-                      <span style={{ fontSize:13, opacity:0.80 }}>✦</span> Nouveau
-                    </button>
-                  </div>
-                )}
+              <div style={s.inputRow}>
                 <div style={s.inputBox}>
-                  <input className="chat-input" style={s.inputChat}
+                  <input style={s.inputChat}
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
                     placeholder="Pose une question à Solenn..." />
-                  <button style={s.sendBtn} onClick={() => { navigator.vibrate?.(8); envoyerMessage() }}>
-                    <SendIcon color="rgba(218,138,52,0.58)" size={20} />
+                  <button style={s.sendBtn} onClick={() => envoyerMessage()}>
+                    <SendIcon color="rgba(200,123,82,0.55)" size={20} />
                   </button>
                 </div>
               </div>
@@ -1147,7 +991,7 @@ export default function App() {
 
           {/* ── Santé ── */}
           {onglet === 'sante' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
@@ -1162,15 +1006,14 @@ export default function App() {
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div>
-                    <div style={s.pageTitle}>📋 Routine du jour</div>
-                    <div style={s.pageSubtitle}>Ton programme personnalisé</div>
-                  </div>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Routine' : '📋 Routine du jour'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Ton programme personnalisé</div>}
                 </div>
-              )}
+              </div>
               <RoutineModule profil={profil} metriques={metriques} />
             </div>
           )}
@@ -1186,22 +1029,14 @@ export default function App() {
 
           {/* ── Style ── */}
           {onglet === 'style' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div>
-                    <div style={{ ...s.pageTitle, display:'flex', alignItems:'center', gap:8 }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
-                        <path d="M12 6 L5 13 h14 L12 6Z"/>
-                        <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
-                      </svg>
-                      Style & Tenues
-                    </div>
-                    <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>
-                  </div>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0' }}>
+              <div style={isMobile ? s.tabHeaderMobile : s.pageHeader}>
+                {isMobile && <button style={s.backBtnInline} onClick={() => setOnglet('accueil')}><BackIcon color="#8a7265" size={18} /></button>}
+                <div>
+                  <div style={s.pageTitle}>{isMobile ? 'Style' : '👗 Style & Tenues'}</div>
+                  {!isMobile && <div style={s.pageSubtitle}>Suggestions adaptées à la météo</div>}
                 </div>
-              )}
+              </div>
               <TenuesModule profil={profil} />
             </div>
           )}
@@ -1222,32 +1057,31 @@ export default function App() {
             <nav style={{
               position:'fixed', bottom:22, left:'50%', transform:'translateX(-50%)',
               display:'inline-flex', alignItems:'center',
-              background:'rgba(255,248,244,0.88)',
+              background:'rgba(255,248,244,0.55)',
               backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
               borderRadius:22,
-              border:'1px solid rgba(218,138,52,0.14)',
-              boxShadow:'0 4px 24px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.9)',
+              border:'1px solid rgba(200,123,82,0.07)',
+              boxShadow:'0 2px 16px rgba(0,0,0,0.05)',
               padding:'8px 6px',
               gap:2,
               zIndex:100,
               whiteSpace:'nowrap',
             }}>
-              {/* Sliding active pill — masqué si onglet hors nav */}
-              {activeIdx >= 0 && (
-                <div style={{
-                  position:'absolute', top:7, bottom:7,
-                  width:`calc((100% - 16px) / ${navItems.length})`,
-                  left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
-                  background:'rgba(218,138,52,0.10)',
-                  borderRadius:15,
-                  border:'1px solid rgba(218,138,52,0.10)',
-                  transition:'left 0.45s cubic-bezier(0.25,0.46,0.45,0.94)',
-                  pointerEvents:'none', zIndex:0,
-                }} />
-              )}
+              {/* Sliding active pill */}
+              <div style={{
+                position:'absolute', top:7, bottom:7,
+                width:`calc((100% - 16px) / ${navItems.length})`,
+                left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
+                background:'rgba(200,123,82,0.08)',
+                borderRadius:15,
+                border:'1px solid rgba(200,123,82,0.12)',
+                boxShadow:'none',
+                transition:'left 0.40s cubic-bezier(0.34,1.56,0.64,1)',
+                pointerEvents:'none', zIndex:0,
+              }} />
               {navItems.map(({ id, Icon, label }) => {
                 const active = onglet === id
-                const color  = active ? 'rgba(218,138,52,0.72)' : 'rgba(218,138,52,0.38)'
+                const color  = active ? '#C87B52' : 'rgba(140,115,95,0.50)'
                 return (
                   <button key={id}
                     style={{
@@ -1256,24 +1090,17 @@ export default function App() {
                       padding:'7px 13px',
                       border:'none', background:'transparent', cursor:'pointer',
                       fontFamily:F, color,
-                      transition:'color 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
+                      transition:'color 0.2s ease',
                       minWidth:54,
                     }}
                     onClick={() => setOnglet(id)}>
                     <div style={{
-                      transform: active ? 'scale(1.18) translateY(-2px)' : 'scale(1) translateY(0px)',
-                      transition:'transform 0.40s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease',
-                      opacity: 1,
+                      transform: active ? 'scale(1.20) translateY(-1px)' : 'scale(1)',
+                      transition:'transform 0.30s cubic-bezier(0.34,1.56,0.64,1)',
                     }}>
                       <Icon color={color} size={21} />
                     </div>
-                    <span style={{
-                      fontSize:9,
-                      fontWeight: active ? 700 : 400,
-                      letterSpacing:'0.3px',
-                      transition:'font-weight 0.35s ease, opacity 0.35s ease',
-                      opacity: 1,
-                    }}>
+                    <span style={{ fontSize:9, fontWeight: active ? 800 : 500, letterSpacing:'0.3px', transition:'font-weight 0.2s' }}>
                       {label}
                     </span>
                   </button>
@@ -1313,16 +1140,13 @@ export default function App() {
           75%  { background-position: 50% 100%; }
           100% { background-position: 0% 50%; }
         }
-        @keyframes auroraFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 0.72; }
-        }
         .aurora-bg {
+          position: absolute; inset: 0; z-index: 0; pointer-events: none;
           background: linear-gradient(135deg,
             #FFD49A 0%, #F5C8AA 18%, #FFF4E0 36%,
             #E8B87A 52%, #EED4B0 68%, #FAE8CC 84%, #FFD49A 100%);
           background-size: 400% 400%;
-          animation: aurora 14s ease infinite, auroraFadeIn 0.5s ease both;
+          animation: aurora 14s ease infinite;
           opacity: 0.72;
         }
         @keyframes twinkle {
@@ -1440,13 +1264,6 @@ export default function App() {
           50%  { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
-        @keyframes liquidMorph {
-          0%   { border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%; }
-          25%  { border-radius: 45% 55% 40% 60% / 60% 40% 55% 45%; }
-          50%  { border-radius: 55% 45% 65% 35% / 40% 55% 45% 60%; }
-          75%  { border-radius: 40% 60% 45% 55% / 55% 45% 60% 40%; }
-          100% { border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%; }
-        }
         @keyframes mirrorSweep {
           0%   { left: -100%; opacity: 0; }
           8%   { opacity: 1; }
@@ -1510,26 +1327,13 @@ export default function App() {
 
 // ─── ROUTINE MODULE ───────────────────────────────────────────────────────────
 function RoutineModule({ profil, metriques }) {
-  const todayKey = new Date().toDateString()
-  const savedKey = `vitacoach_routine_${todayKey}`
-
-  const [routine, setRoutine]           = useState(() => {
-    try { return JSON.parse(localStorage.getItem(savedKey)) || null } catch { return null }
-  })
-  const [loading, setLoading]           = useState(false)
+  const [routine, setRoutine]       = useState(null)
+  const [loading, setLoading]       = useState(false)
   const [routineError, setRoutineError] = useState(false)
-  const [checkedSteps, setCheckedSteps] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(`${savedKey}_checked`)) || {} } catch { return {} }
-  })
-
-  // Auto-générer au premier chargement si pas de routine sauvegardée
-  useEffect(() => {
-    if (!routine && !loading) genererRoutine()
-  }, [])
+  const [checkedSteps, setCheckedSteps] = useState({})
 
   async function genererRoutine() {
     setLoading(true); setCheckedSteps({}); setRoutineError(false)
-    localStorage.removeItem(`${savedKey}_checked`)
     try {
       const res = await fetch('/api/routine', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -1537,20 +1341,13 @@ function RoutineModule({ profil, metriques }) {
       })
       const data = await res.json()
       if (data.erreur) setRoutineError(true)
-      else {
-        setRoutine(data)
-        localStorage.setItem(savedKey, JSON.stringify(data))
-      }
+      else setRoutine(data)
     } catch { setRoutineError(true) }
     setLoading(false)
   }
 
   function toggleStep(id) {
-    setCheckedSteps(prev => {
-      const next = { ...prev, [id]: !prev[id] }
-      localStorage.setItem(`${savedKey}_checked`, JSON.stringify(next))
-      return next
-    })
+    setCheckedSteps(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
   const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
@@ -1567,7 +1364,7 @@ function RoutineModule({ profil, metriques }) {
           <div style={sr.titre}>Ta routine du jour</div>
         </div>
         <button style={{...sr.btnGen, display:'flex', alignItems:'center', gap:6}} onClick={genererRoutine} disabled={loading}>
-          {loading ? <><LoadingIcon size={14} color="rgba(200,123,82,0.80)" /> Génération...</> : routine ? <><RefreshIcon size={14} color="rgba(200,123,82,0.80)" /> Regénérer</> : <><SparkleIcon size={14} color="rgba(200,123,82,0.80)" /> Générer</>}
+          {loading ? <><LoadingIcon size={14} color="#fff" /> Génération...</> : routine ? <><RefreshIcon size={14} color="#fff" /> Regénérer</> : <><SparkleIcon size={14} color="#fff" /> Générer</>}
         </button>
       </div>
 
@@ -1703,17 +1500,12 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
 }
 
 const sr = {
-  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0', flexWrap:'wrap', gap:10 },
+  header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0' },
   date: { fontSize:11, color:'#c4b5a8', textTransform:'capitalize', letterSpacing:0.5, fontWeight:500 },
   titre: { fontSize:20, fontWeight:800, color:'#1a0a00', marginTop:3, letterSpacing:'-0.3px' },
-  btnGen: {
-    background:'rgba(200,123,82,0.10)', color:'rgba(200,123,82,0.90)',
-    border:'1.5px solid rgba(200,123,82,0.25)',
-    padding:'8px 14px', borderRadius:12, fontSize:12, fontWeight:600, cursor:'pointer',
-    flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif",
-    display:'flex', alignItems:'center', gap:5,
-    boxShadow:'none',
-  },
+  btnGen: { background:'linear-gradient(135deg,#C87B52,#9E5C35)', color:'#fff', border:'none',
+    padding:'10px 18px', borderRadius:13, fontSize:12, fontWeight:700, cursor:'pointer',
+    boxShadow:'0 4px 16px rgba(200,123,82,0.38)', flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif" },
   progressBar: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:14,
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(0,0,0,0.04)' },
   empty: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20, padding:'48px 32px',
@@ -1847,7 +1639,15 @@ function CapsuleSlider({ tenues, loading }) {
   const count = loading ? 6 : tenues.length
   const clamp = v => Math.max(0, Math.min(count - 1, v))
 
-  // Keyboard navigation — géré via onKeyDown sur le container, pas window
+  // Keyboard navigation
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'ArrowLeft') setActive(a => clamp(a - 1))
+      if (e.key === 'ArrowRight') setActive(a => clamp(a + 1))
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [count])
 
   // Reset active index when tenues change
   useEffect(() => { setActive(0) }, [tenues.length])
@@ -1978,7 +1778,8 @@ function CapsuleSlider({ tenues, loading }) {
 }
 
 function TenuesModule({ profil }) {
-  const [ville, setVille]       = useState(() => localStorage.getItem('vitacoach_ville') || '')
+  const [ouvert, setOuvert]     = useState(false)
+  const [ville, setVille]       = useState('')
   const [occasion, setOccasion] = useState('Casual')
   const [tenues, setTenues]     = useState([])
   const [meteo, setMeteo]       = useState('')
@@ -1986,22 +1787,14 @@ function TenuesModule({ profil }) {
   const [villeError, setVilleError] = useState(false)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
-  // Auto-charger si ville déjà connue
-  useEffect(() => {
-    const savedVille = localStorage.getItem('vitacoach_ville')
-    if (savedVille) getTenues(savedVille)
-  }, [])
-
-  async function getTenues(villeArg) {
-    const v = (villeArg || ville).trim()
-    if (!v) { setVilleError(true); return }
+  async function getTenues() {
+    if (!ville.trim()) { setVilleError(true); return }
     setVilleError(false)
-    localStorage.setItem('vitacoach_ville', v)
     setLoading(true); setTenues([])
     try {
       const res = await fetch('/api/tenues', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profil, ville: v, occasion })
+        body: JSON.stringify({ profil, ville, occasion })
       })
       const data = await res.json()
       setTenues(data.tenues || [])
@@ -2011,69 +1804,51 @@ function TenuesModule({ profil }) {
   }
 
   return (
-    <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
-      <style>{`
-  .tenues-ville-input { border: 1.5px solid rgba(200,123,82,0.25) !important; box-shadow: none !important; }
-  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.45); }
-  .tenues-ville-input:focus { border-color: rgba(200,123,82,0.55) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
-`}</style>
-      {/* Controls — toujours visibles */}
-      <div style={{ ...st.panel, marginBottom: 0 }}>
-        {/* Ligne 1 : champ ville */}
-        <div style={{ marginBottom: 8 }}>
-          <input
-            className="tenues-ville-input"
-            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? '#ff3b30' : undefined }}
-            placeholder="Ta ville (ex: Paris)" value={ville}
-            onChange={e => { setVille(e.target.value); setVilleError(false) }}
-            onKeyDown={e => e.key === 'Enter' && getTenues()}
-          />
+    <div style={{ paddingBottom: 20 }}>
+      {/* Trigger */}
+      <button style={st.trigger} onClick={() => setOuvert(!ouvert)}>
+        <div style={st.triggerIcon}><span style={{ fontSize: 22 }}>👗</span></div>
+        <div style={{ flex: 1, textAlign: 'left' }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#1a0a00' }}>Idées tenues du jour</div>
+          <div style={{ fontSize: 12, color: '#8a7265', marginTop: 2 }}>Capsule Slider · Adaptées à la météo</div>
         </div>
-        {/* Ligne 2 : select + bouton */}
-        <div style={{ ...st.row, marginBottom: 4 }}>
-          <div style={{ position:'relative', flex:1 }}>
-            <select style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
-              {occasions.map(o => <option key={o} value={o} style={{ background:'#FFF6EE', color:'rgba(200,123,82,0.9)' }}>{o}</option>)}
+        <span style={{ color: '#c4b5a8' }}>{ouvert ? '▲' : '▼'}</span>
+      </button>
+
+      {ouvert && (
+        <div style={st.panel}>
+          {/* Controls */}
+          <div style={st.row}>
+            <input
+              style={{ ...st.input, borderColor: villeError ? '#ff3b30' : undefined }}
+              placeholder="Ta ville (ex: Paris)" value={ville}
+              onChange={e => { setVille(e.target.value); setVilleError(false) }}
+              onKeyDown={e => e.key === 'Enter' && getTenues()}
+            />
+            <select style={st.select} value={occasion} onChange={e => setOccasion(e.target.value)}>
+              {occasions.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
-            <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
-              <path d="M1 1l4.5 4.5L10 1" stroke="rgba(200,123,82,0.60)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <button style={st.btn} onClick={getTenues} disabled={loading}>
+              {loading ? <LoadingIcon size={16} color="#fff" /> : <SparkleIcon size={16} color="#fff" />}
+            </button>
           </div>
-          <button style={st.btn} onClick={() => getTenues()} disabled={loading}>
-            {loading ? <LoadingIcon size={15} color="rgba(200,123,82,0.80)" /> : <SparkleIcon size={15} color="rgba(200,123,82,0.80)" />}
-          </button>
-        </div>
-        {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+          {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
 
-        {/* Météo */}
-        {meteo && (
-          <div style={{ ...st.meteoBar, display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-            <WeatherIcon size={16} color="#fbbf24" /> {meteo}
-          </div>
-        )}
-
-        {/* Capsule Slider */}
-        {(loading || tenues.length > 0) && (
-          <div style={{ marginTop: 16 }}>
-            <CapsuleSlider tenues={tenues} loading={loading} />
-          </div>
-        )}
-
-        {/* Empty state si pas encore de ville */}
-        {!loading && tenues.length === 0 && !ville && (
-          <div style={{ textAlign:'center', padding:'32px 0 8px' }}>
-            <div style={{ marginBottom: 12, display:'flex', justifyContent:'center' }}>
-              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.50)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
-                <path d="M12 6 L5 13 h14 L12 6Z"/>
-                <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
-              </svg>
+          {/* Météo */}
+          {meteo && (
+            <div style={{ ...st.meteoBar, display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+              <WeatherIcon size={16} color="#fbbf24" /> {meteo}
             </div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.75)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
-            <div style={{ fontSize: 12, color: 'rgba(155,107,80,0.55)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
-          </div>
-        )}
-      </div>
+          )}
+
+          {/* Capsule Slider — loading skeletons OR tenues */}
+          {(loading || tenues.length > 0) && (
+            <div style={{ marginTop: 16 }}>
+              <CapsuleSlider tenues={tenues} loading={loading} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -2091,41 +1866,26 @@ const st = {
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: 'rgba(255,248,242,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-    border: '1px solid rgba(200,123,82,0.14)', borderRadius: 20, padding: 16, marginTop: 4,
-    boxShadow: '0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.70)',
+    background: '#ffffff', border: '1px solid #f0e8e0', borderRadius: 16, padding: 14, marginTop: 4,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
   meteoBar: {
     background: 'rgba(200,123,82,0.06)', borderRadius: 10, padding: '8px 14px',
     fontSize: 12, marginBottom: 12, color: '#C87B52', fontWeight: 600, border: '1px solid rgba(200,123,82,0.16)',
   },
-  row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
+  row: { display: 'flex', gap: 8, marginBottom: 12 },
   input: {
-    flex: 1, padding: '10px 14px', borderRadius: 12,
-    border: '1.5px solid rgba(200,123,82,0.25)',
-    background: '#FFF6EE',
-    fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif",
-    outline: 'none', color: 'rgba(200,123,82,0.85)',
-    WebkitAppearance: 'none', appearance: 'none',
-    boxShadow: 'none',
+    flex: 1, padding: '10px 14px', borderRadius: 12, border: '1px solid #e5e7eb',
+    background: '#f9fafb', fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
   },
   select: {
-    padding: '10px 30px 10px 12px', borderRadius: 12, border: '1px solid rgba(200,123,82,0.22)',
-    background: '#FFF6EE',
-    fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none',
-    color: 'rgba(200,123,82,0.85)', cursor: 'pointer',
-    appearance: 'none', WebkitAppearance: 'none',
+    padding: '10px 12px', borderRadius: 12, border: '1px solid #e5e7eb',
+    background: '#f9fafb', fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none', color: '#1a0a00',
   },
   btn: {
-    padding: '8px 14px',
-    background: 'rgba(200,123,82,0.10)',
-    color: 'rgba(200,123,82,0.90)',
-    border: '1.5px solid rgba(200,123,82,0.25)',
-    borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
-    fontFamily: "'Inter',system-ui,sans-serif",
-    boxShadow: 'none',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0,
+    padding: '10px 16px', background: 'linear-gradient(135deg,#C87B52,#9E5C35)', color: '#fff',
+    border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: 'pointer',
+    fontFamily: "'Inter',system-ui,sans-serif", boxShadow: '0 4px 12px rgba(200,123,82,0.35)',
   },
 }
 
@@ -2137,10 +1897,10 @@ const s = {
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
     width:260, flexShrink:0,
-    background:'rgba(255,242,232,0.72)',
-    backdropFilter:'blur(32px) saturate(1.6)', WebkitBackdropFilter:'blur(32px) saturate(1.6)',
-    borderRight:'1px solid rgba(200,123,82,0.18)',
-    boxShadow:'4px 0 32px rgba(200,123,82,0.10)',
+    background:'rgba(255,255,255,0.82)',
+    backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
+    borderRight:'1px solid rgba(255,220,180,0.35)',
+    boxShadow:'4px 0 24px rgba(0,0,0,0.05)',
     display:'flex', flexDirection:'column',
     padding:'2.8rem 1.4rem 2.4rem',
     position:'fixed', top:0, left:0, height:'100vh',
@@ -2190,9 +1950,9 @@ const s = {
   profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,rgba(218,138,52,0.45),rgba(190,112,30,0.50))', color:'rgba(255,245,225,0.80)', border:'none',
+    background:'linear-gradient(135deg,#ECA882,#D4956A)', color:'#fff', border:'none',
     padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 4px 14px rgba(218,138,52,0.12)', textAlign:'center',
+    fontWeight:700, boxShadow:'0 4px 14px rgba(200,123,82,.20)', textAlign:'center',
   },
   proBadge: {
     background:'rgba(245,212,184,0.35)', color:'rgba(180,100,40,0.70)',
@@ -2200,7 +1960,7 @@ const s = {
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:'rgba(188,118,28,0.44)', border:'1px solid rgba(218,138,52,0.14)',
+    background:'rgba(245,235,225,0.50)', color:'rgba(160,120,80,0.65)', border:'1px solid rgba(200,150,100,0.18)',
     padding:'9px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
@@ -2223,7 +1983,7 @@ const s = {
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  mobileTitle: { fontSize:14, fontWeight:700, color:'#DA8A34', letterSpacing:'0.01em', flex:1, textAlign:'center', opacity:0.92 },
+  mobileTitle: { fontSize:14, fontWeight:600, color:'#C87B52', letterSpacing:'0.01em', flex:1, textAlign:'center', opacity:0.85 },
   scorePill: { borderRadius:20, padding:'4px 10px', fontSize:11, fontWeight:700 },
 
   // ── Page header ───────────────────────────────────────────────────────────────
@@ -2238,9 +1998,7 @@ const s = {
   pageSubtitle: { fontSize:12, color:'#c4b5a8', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
-  chatWrap: {
-    display:'flex', flexDirection:'column', flex:1, padding:'2rem 1.4rem 0 1.8rem', position:'relative',
-  },
+  chatWrap: { display:'flex', flexDirection:'column', flex:1, padding:'0 2rem', paddingTop:'2rem', position:'relative', overflow:'hidden' },
   chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
@@ -2249,8 +2007,8 @@ const s = {
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
     background:'rgba(255,255,255,0.22)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    border:'1px solid rgba(218,138,52,0.20)', borderRadius:16,
-    padding:'13px 18px', fontSize:13, color:'rgba(185,112,25,0.86)', cursor:'pointer',
+    border:'1px solid rgba(200,123,82,0.16)', borderRadius:16,
+    padding:'13px 18px', fontSize:13, color:'rgba(100,65,25,0.82)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
     boxShadow:'0 2px 12px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
     transition:'transform .18s, box-shadow .18s',
@@ -2259,46 +2017,42 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'rgba(255,180,130,0.05)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-    border:'1px solid rgba(240,160,90,0.12)',
-    color:'rgba(140,75,30,0.88)',
+    background:'rgba(200,123,82,0.28)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.22)',
+    color:'rgba(90,50,15,0.85)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
-    boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
+    boxShadow:'inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
-    background:'rgba(255,248,238,0.07)', backdropFilter:'blur(22px)', WebkitBackdropFilter:'blur(22px)',
-    border:'1px solid rgba(232,150,60,0.10)',
-    color:'rgba(188,112,28,0.90)',
-    padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
-    fontSize:14, lineHeight:1.78, whiteSpace:'pre-wrap',
+    background:'rgba(255,255,255,0.10)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    border:'1px solid rgba(200,123,82,0.10)', color:'rgba(90,60,30,0.78)',
+    padding:'13px 18px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
+    fontSize:14, lineHeight:1.72, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 6px 28px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.40)',
   },
   botBubbleRich: {
-    background:'transparent', color:'rgba(183,108,24,0.84)',
+    background:'transparent', color:'rgba(90,60,30,0.78)',
     padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.72,
     fontFamily:'Poppins, sans-serif',
   },
-  botAvatar: { fontSize:16, color:'#DA8A34', marginTop:10, flexShrink:0, fontWeight:900 },
+  botAvatar: { fontSize:16, color:'#C87B52', marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
     background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-    border:'1px solid rgba(218,138,52,0.22)', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'rgba(185,112,25,0.88)', cursor:'pointer',
+    border:'1px solid rgba(200,123,82,0.18)', borderRadius:20,
+    padding:'7px 14px', fontSize:12, color:'rgba(100,65,25,0.80)', cursor:'pointer',
     fontFamily:F, fontWeight:600,
   },
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'rgba(255,248,242,0.28)',
-    backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+    display:'flex', gap:8, background:'rgba(255,248,242,0.45)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
     borderRadius:20, padding:'8px 8px 8px 18px',
-    border:'1px solid rgba(200,123,82,0.18)', alignItems:'center',
-    boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.45)',
+    border:'1px solid rgba(200,123,82,0.15)', alignItems:'center',
   },
-  inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'rgba(140,75,30,0.80)' },
+  inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'#1a0a00' },
   sendBtn: {
     background:'transparent', border:'none',
     width:36, height:36, borderRadius:12, cursor:'pointer',
@@ -2318,5 +2072,5 @@ const s = {
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
     fontFamily:F, color:'#c4b5a8', position:'relative', transition:'color .2s',
   },
-  navBotActive: { color:'#DA8A34' },
+  navBotActive: { color:'#C87B52' },
 }

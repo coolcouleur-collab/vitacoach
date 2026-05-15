@@ -102,11 +102,15 @@ PERSONNALITÉ :
 - Ton ton : chaleureux mais sans fioriture, comme un ami proche très bien informé
 
 RÈGLES DE RÉPONSE :
-- Max 3-4 phrases pour le texte pur — chaque phrase doit apporter quelque chose
-- Pas d'intro creuse ("Bien sûr !", "Absolument !", "Bonne question !")
-- 1 conseil concret et actionnable, ancré dans le profil de l'utilisateur
-- Si quelqu'un est dans le doute ou stressé, commence par valider avant de conseiller
+- Max 3-4 phrases pour le texte pur — chaque phrase doit apporter quelque chose de concret
+- Pas d'intro creuse ("Bien sûr !", "Absolument !", "Bonne question !", "Je t'entends", "Je te sens", "Je ressens que...")
+- ZÉRO phrase vague ou pseudo-spirituelle qui ne veut rien dire — chaque mot doit avoir du sens
+- 1 conseil concret et actionnable, ancré dans le profil réel de l'utilisateur
+- Si tu ne sais pas, dis-le simplement plutôt que d'inventer une réponse vague
+- Si quelqu'un est dans le doute ou stressé, commence par valider BRIÈVEMENT avant de conseiller
 - Tu parles en français, tu tutoies
+- N'utilise JAMAIS de markdown (pas de **, *, ##). Structure avec des emojis uniquement.
+- INTERDIT : "je te sens", "je ressens", "ton énergie", "vibration", "alignement", tout jargon new-age sans substance
 
 FORMAT 1 — RÉSERVATION : quand l'utilisateur veut sortir/réserver/aller quelque part
 |||JSON|||
@@ -124,16 +128,39 @@ FORMAT 3 — TOUT LE RESTE : texte pur, 3 phrases max, empathique si besoin, tou
 
   const messagesAPI = [
     { role: 'system', content: systemPrompt },
-    ...historique.filter(m => m.role === 'user' || m.role === 'assistant').slice(-8),
+    ...historique.filter(m => (m.role === 'user' || m.role === 'assistant') && m.content).slice(-14),
     { role: 'user', content: message }
   ]
 
-  const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
-    messages: messagesAPI
-  })
+  try {
+    const stream = await groq.chat.completions.create({
+      model: (message.length > 80 || /programme|plan |routine|recette|détail|complet|semaine|explique|compare|liste|symptôme/i.test(message))
+        ? 'llama-3.3-70b-versatile'
+        : 'llama-3.1-8b-instant',
+      messages: messagesAPI,
+      temperature: 0.72,
+      max_tokens: 900,
+      stream: true,
+    })
 
-  res.json({ reply: response.choices[0].message.content })
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('X-Accel-Buffering', 'no')
+    res.flushHeaders()
+
+    for await (const chunk of stream) {
+      const token = chunk.choices[0]?.delta?.content
+      if (token) res.write(`data: ${JSON.stringify(token)}\n\n`)
+    }
+    res.write('data: [DONE]\n\n')
+    res.end()
+
+  } catch (err) {
+    console.error('Groq chat error:', err.message)
+    if (!res.headersSent) res.status(500).json({ error: err.message })
+    else res.end()
+  }
 })
 
 // IA qui analyse et enrichit le profil

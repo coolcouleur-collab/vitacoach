@@ -86,19 +86,16 @@ export default function FxSlider({
     })
   }, [snap, itemWidth, gap, x, minX, maxX])
 
-  // flèches clavier
-  useEffect(() => {
-    const onKey = (e) => {
-      if (!containerRef.current?.contains(document.activeElement)) return
-      const step = itemWidth + gap
-      if (e.key === "ArrowRight") {
-        animate(x, Math.max(minX, x.get() - step), { duration: 0.6, ease: EASE })
-      } else if (e.key === "ArrowLeft") {
-        animate(x, Math.min(maxX, x.get() + step), { duration: 0.6, ease: EASE })
-      }
+  // flèches clavier — listener sur le container uniquement (pas window)
+  const onKeyDown = useCallback((e) => {
+    const step = itemWidth + gap
+    if (e.key === "ArrowRight") {
+      e.preventDefault()
+      animate(x, Math.max(minX, x.get() - step), { duration: 0.6, ease: EASE })
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault()
+      animate(x, Math.min(maxX, x.get() + step), { duration: 0.6, ease: EASE })
     }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
   }, [x, itemWidth, gap, minX, maxX])
 
   // scroll wheel → drag horizontal
@@ -119,8 +116,8 @@ export default function FxSlider({
   return (
     <div
       ref={containerRef}
-      tabIndex={0}
       className={className}
+      onKeyDown={onKeyDown}
       style={{
         position: "relative",
         width: "100%",

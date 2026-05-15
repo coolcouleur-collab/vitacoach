@@ -92,3 +92,42 @@ body {
 }
 
 ::-webkit-scrollbar { width: 0; background: transparent; }
+
+.chat-input::placeholder { color: rgba(160,90,35,0.40); }
+
+@keyframes suggFadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.sugg-animated { animation: suggFadeUp 0.35s ease both; }
+
+@keyframes arrowPulse {
+  0%, 100% { transform: translateX(0px); opacity: 0.75; }
+  50%       { transform: translateX(4px); opacity: 1; }
+}
+.arrow-anim { animation: arrowPulse 1.8s ease-in-out infinite; display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-avatar       { animation: none !important; border-radius: 50% !important; }
+  .aurora-bg           { animation: none !important; }
+  .sugg-animated       { animation: none !important; }
+}
+
+@keyframes liquidMorph {
+  0%   { border-radius: 62% 38% 58% 42% / 48% 62% 38% 52%; }
+  20%  { border-radius: 40% 60% 35% 65% / 65% 35% 60% 40%; }
+  40%  { border-radius: 58% 42% 68% 32% / 36% 58% 42% 64%; }
+  60%  { border-radius: 38% 62% 42% 58% / 58% 40% 62% 38%; }
+  80%  { border-radius: 52% 48% 38% 62% / 42% 64% 36% 58%; }
+  100% { border-radius: 62% 38% 58% 42% / 48% 62% 38% 52%; }
+}
+
+@keyframes liquidGlow {
+  0%,100% { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.50); }
+  50%     { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.95); }
+}
+
+.liquid-avatar {
+  animation: liquidMorph 4s ease-in-out infinite, liquidGlow 3s ease-in-out infinite;
+  will-change: border-radius, box-shadow;
+}
