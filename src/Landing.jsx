@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import LiquidImage from './LiquidImage'
+import SpiralBg from './SpiralBg'
 import './tokens.css'
-
-// ─── BACKGROUND FIXE ─────────────────────────────────────────────────────────
-function LandingBg() {
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 0,
-      pointerEvents: 'none',
-      background: '#EDD8CC',
-    }} />
-  )
-}
 
 // ─── WAITER (loader overlay) ──────────────────────────────────────────────────
 function Waiter({ done }) {
@@ -172,20 +162,20 @@ function CinematicSlider({ onCommencer }) {
           overflow: 'hidden',
           width: '100%',
           height: '100vh',
-          background: '#EDD8CC',
+          background: 'transparent',
           display: 'grid',
-          gridTemplateColumns: '28rem 1fr 28rem',
+          gridTemplateColumns: '1fr',
           gridTemplateRows: '1fr',
           alignItems: 'stretch',
         }}
       >
-        {/* ── LiquidImage — fond animé WebGL ── */}
+        {/* ── LiquidImage ── */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <LiquidImage
             gradient={['#EDD8CC', '#CCA898', '#E8CABB', '#C4A090']}
             intensity={0.6}
             speed={0.5}
-            style={{ width: '100%', height: '100%', opacity: 0.9 }}
+            style={{ width: '100%', height: '100%', opacity: 0.62 }}
           />
         </div>
 
@@ -205,173 +195,140 @@ function CinematicSlider({ onCommencer }) {
           backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' fill=\'%23C8B898\'/%3E%3C/svg%3E")',
         }} />
 
-        {/* ═══ LEFT — liste flottante ═══ */}
+
+        {/* ── Commencer — top right ── */}
+        {onCommencer && (
+          <button
+            onClick={onCommencer}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,248,235,1)'; e.currentTarget.style.borderColor = 'rgba(255,245,225,1)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,248,235,1)'; e.currentTarget.style.borderColor = 'rgba(255,245,225,0.80)' }}
+            style={{
+              position: 'absolute', top: '2.4rem', right: '3rem', zIndex: 20,
+              background: 'transparent',
+              border: '2.5px solid rgba(255,245,225,0.80)',
+              borderRadius: '3rem',
+              color: 'rgba(255,248,235,1)',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(1.3rem,1.1vw,1.6rem)',
+              fontWeight: 300, cursor: 'pointer',
+              padding: '0.8rem 2.4rem',
+              letterSpacing: '0.06em',
+              transition: 'color 0.3s, border-color 0.3s',
+            }}
+          >
+            Commencer →
+          </button>
+        )}
+
+        {/* ═══ CENTER — titre pur ═══ */}
         <div style={{
-          position: 'relative', zIndex: 10,
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          padding: '8rem 5rem',
+          position: 'absolute',
+          top: '50%', left: '0',
+          right: '0',
+          transform: 'translateY(-50%)',
+          zIndex: 10,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          pointerEvents: 'none',
+          width: '100%',
         }}>
-          {FX_SLIDES.map((sl, i) => {
-            const isActive = i === cur
-            return (
-              <button
-                key={i}
-                onClick={() => { if (soundOn) playFxSound('click'); navigate(i, i > cur ? 'next' : 'prev') }}
-                onMouseEnter={() => { if (soundOn) playFxSound('hover') }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '1.1rem',
-                  padding: '0.7rem 0',
-                  background: 'transparent', border: 'none',
-                  cursor: 'pointer', textAlign: 'left',
-                }}
-              >
-                <span style={{
-                  fontSize: '1.4rem', lineHeight: 1, flexShrink: 0,
-                  color: isActive ? 'rgba(212,149,106,0.80)' : 'transparent',
-                  transition: 'color 0.25s', userSelect: 'none',
-                }}>•</span>
-                <span style={{
-                  fontSize: isActive ? 'clamp(1.6rem,1.5vw,2rem)' : 'clamp(1.3rem,1.2vw,1.6rem)',
-                  fontWeight: isActive ? 700 : 400,
-                  color: isActive ? 'rgba(212,149,106,0.80)' : 'rgba(158,92,53,0.38)',
-                  fontFamily: 'var(--font)',
-                  letterSpacing: '-0.01em',
-                  lineHeight: 1.3,
-                  transition: 'color 0.3s, font-size 0.25s',
-                }}>
-                  {sl.tag}
-                </span>
-              </button>
-            )
-          })}
+          <svg
+            viewBox="0 0 580 110"
+            preserveAspectRatio="xMidYMid meet"
+            style={{
+              width: 'clamp(380px, 55vw, 780px)',
+              height: 'auto',
+              overflow: 'visible',
+              animation: 'solennReveal 0.8s 0.15s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}
+          >
+            <defs>
+              <linearGradient id="solennGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <animate attributeName="x1" values="-150%;0%;-150%" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="x2" values="-50%;100%;-50%" dur="4s" repeatCount="indefinite" />
+                <stop offset="0%"   stopColor="#FFF0D8" stopOpacity="0.72" />
+                <stop offset="30%"  stopColor="#FFF8EC" stopOpacity="0.80" />
+                <stop offset="50%"  stopColor="#FFFFFF" stopOpacity="0.85" />
+                <stop offset="70%"  stopColor="#FFF8EC" stopOpacity="0.80" />
+                <stop offset="100%" stopColor="#FFF0D8" stopOpacity="0.72" />
+              </linearGradient>
+            </defs>
+            <text
+              x="50%" y="82"
+              textAnchor="middle"
+              fill="url(#solennGrad)"
+              fontFamily="'Cormorant Garamond', Georgia, serif"
+              fontSize="96"
+              fontWeight="300"
+              fontStyle="italic"
+              letterSpacing="-2"
+            >
+              Solenn
+            </text>
+          </svg>
+
+        </div>
+
+        {/* ── Filmstrip navigation — bas ── */}
+        <div style={{
+          position: 'absolute', bottom: '2.4rem', left: 0, right: 0, zIndex: 20,
+          display: 'flex', justifyContent: 'center', alignItems: 'center',
+          gap: '0.2rem', padding: '0 1rem',
+          overflowX: 'auto', WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none', msOverflowStyle: 'none',
+          scrollSnapType: 'x mandatory',
+        }}>
           <button
             onClick={() => setSoundOn(s => !s)}
             style={{
-              marginTop: '2.4rem', background: 'none', border: 'none', cursor: 'pointer',
-              color: soundOn ? 'var(--accent)' : 'rgba(158,92,53,0.45)',
-              fontSize: '1.4rem', padding: 0, transition: 'color 0.25s', alignSelf: 'flex-start',
+              flexShrink: 0,
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: soundOn ? 'rgba(218,138,52,0.75)' : 'rgba(200,140,80,0.35)',
+              fontSize: '1.2rem', padding: '0.4rem 0.6rem',
+              transition: 'color 0.25s',
             }}
           >{soundOn ? '🔊' : '🔇'}</button>
-        </div>
 
-        {/* ═══ CENTER — grand titre cinématique ═══ */}
-        <div style={{
-          position: 'relative', zIndex: 10,
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          padding: '4rem 2rem',
-          textAlign: 'center',
-          gap: '2.4rem',
-        }}>
-          <h2 key={`title-${animKey}`} style={{
-            margin: 0,
-            fontSize: 'clamp(3rem,4vw,5.5rem)',
-            fontWeight: 200,
-            fontStyle: 'italic',
-            fontFamily: 'Georgia, "Times New Roman", serif',
-            color: 'rgba(212,149,106,0.80)',
-            lineHeight: 1.0,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            textShadow: 'none',
-            animation: 'fxTextIn 0.65s 0.08s cubic-bezier(0.34,1.56,0.64,1) both',
-          }}>
-            {SLIDE.title[0]}<br />{SLIDE.title[1]}
-          </h2>
-
-          <p key={`sub-${animKey}`} style={{
-            margin: 0,
-            fontSize: 'clamp(1.3rem,1.2vw,1.6rem)',
-            color: 'rgba(158,92,53,0.75)',
-            fontFamily: 'var(--font)',
-            lineHeight: 1.6,
-            maxWidth: '28rem',
-            animation: 'fxTextIn 0.55s 0.22s cubic-bezier(0.34,1.56,0.64,1) both',
-          }}>
-            {SLIDE.sub}
-          </p>
-
-          {onCommencer && (
-            <button onClick={onCommencer} style={{
-              background: 'linear-gradient(135deg, #DFA882, #C87B52)',
-              border: 'none',
-              borderRadius: 'var(--br)',
-              color: '#fff', fontFamily: 'var(--font)',
-              fontSize: 'clamp(1.3rem,1.1vw,1.5rem)',
-              fontWeight: 700, cursor: 'pointer',
-              padding: '1.2rem 3.2rem',
-              letterSpacing: '0.04em',
-              boxShadow: '0 .8rem 2.8rem rgba(200,123,82,.25)',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 1.2rem 3.6rem rgba(200,123,82,.38)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 .8rem 2.8rem rgba(200,123,82,.25)' }}
-            >
-              Commencer gratuitement →
-            </button>
-          )}
-
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            {[
-              { lbl: '←', fn: () => navigate((cur - 1 + N) % N, 'prev') },
-              { lbl: '→', fn: () => navigate((cur + 1) % N, 'next') },
-            ].map(({ lbl, fn }) => (
-              <button key={lbl}
-                onClick={() => { if (soundOn) playFxSound('click'); fn() }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,123,82,0.12)'; e.currentTarget.style.borderColor = 'rgba(200,123,82,0.40)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(17,17,17,0.06)'; e.currentTarget.style.borderColor = 'rgba(17,17,17,0.18)' }}
-                style={{
-                  width: 44, height: 44, borderRadius: '50%',
-                  border: '1px solid rgba(17,17,17,0.18)',
-                  background: 'rgba(17,17,17,0.06)',
-                  color: 'var(--accent)', fontSize: '1.5rem', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 0.2s', fontFamily: 'var(--font)',
-                }}
-              >{lbl}</button>
-            ))}
-          </div>
-        </div>
-
-        {/* ═══ RIGHT — points clés ═══ */}
-        <div style={{
-          position: 'relative', zIndex: 10,
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          alignItems: 'flex-end',
-          padding: '8rem 5rem',
-        }}>
-          {SLIDE.items.map((item, i) => (
-            <div
-              key={`${animKey}-${i}`}
+          {FX_SLIDES.map((sl, i) => (
+            <button
+              key={i}
+              onClick={() => { if (soundOn) playFxSound('click'); navigate(i, i > cur ? 'next' : 'prev') }}
+              onMouseEnter={e => {
+                if (soundOn) playFxSound('hover')
+                if (i !== cur) { e.currentTarget.style.color = 'rgba(255,248,235,1)'; e.currentTarget.style.borderColor = 'rgba(255,245,225,0.80)' }
+              }}
+              onMouseLeave={e => {
+                if (i !== cur) { e.currentTarget.style.color = 'rgba(255,248,235,0.92)'; e.currentTarget.style.borderColor = 'transparent' }
+              }}
               style={{
-                display: 'flex', alignItems: 'center', gap: '1.1rem',
-                padding: '0.7rem 0',
-                justifyContent: 'flex-end',
-                animation: `fxTextIn 0.45s ${0.08 + i * 0.12}s cubic-bezier(0.34,1.56,0.64,1) both`,
+                flexShrink: 0,
+                padding: '0.5rem 1.1rem',
+                background: 'transparent',
+                border: `2.5px solid ${i === cur ? 'rgba(255,245,225,0.82)' : 'transparent'}`,
+                borderRadius: '3rem',
+                color: i === cur ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.92)',
+                fontSize: 'clamp(1rem,2.2vw,1.3rem)',
+                fontWeight: i === cur ? 400 : 300,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic',
+                cursor: 'pointer',
+                letterSpacing: '0.04em',
+                whiteSpace: 'nowrap',
+                textShadow: i === cur ? '0 0 20px rgba(255,220,150,0.35)' : 'none',
+                transition: 'all 0.3s',
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
               }}
             >
-              <span style={{
-                fontSize: i === 0 ? 'clamp(1.6rem,1.5vw,2rem)' : 'clamp(1.3rem,1.2vw,1.6rem)',
-                fontWeight: i === 0 ? 700 : 400,
-                color: i === 0 ? 'rgba(212,149,106,0.80)' : 'rgba(158,92,53,0.38)',
-                fontFamily: 'var(--font)',
-                letterSpacing: '-0.01em',
-                textAlign: 'right',
-                lineHeight: 1.3,
-              }}>
-                {item}
-              </span>
-              <span style={{
-                fontSize: '1.4rem', lineHeight: 1, flexShrink: 0,
-                color: i === 0 ? 'rgba(212,149,106,0.80)' : 'transparent',
-                userSelect: 'none',
-              }}>•</span>
-            </div>
+              <span style={{ opacity: 0.45, fontSize: '0.78em' }}>{sl.num}</span>
+              {sl.tag}
+            </button>
           ))}
         </div>
 
         {/* ── Progress bar ── */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, zIndex: 20, background: 'rgba(255,255,255,0.15)' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, zIndex: 20, background: 'rgba(255,255,255,0.08)' }}>
           <div style={{
             height: '100%',
             width: `${((cur + 1) / N) * 100}%`,
@@ -395,9 +352,9 @@ export default function Landing({ onCommencer }) {
   }, [])
 
   return (
-    <div style={{ background: 'transparent', minHeight: '100vh', fontFamily: 'var(--font)', position: 'relative', zIndex: 1 }}>
+    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', height: '100vh', overflow: 'hidden', fontFamily: 'var(--font)', position: 'relative', zIndex: 1 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
           from { clip-path: inset(0 100% 0 0); }
@@ -411,9 +368,27 @@ export default function Landing({ onCommencer }) {
           from { opacity: 0; transform: translateY(2rem); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes solennReveal {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatOrb {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%     { transform: translate(30px,-20px) scale(1.04); }
+          66%     { transform: translate(-20px,15px) scale(0.97); }
+        }
       `}</style>
 
-      <LandingBg />
+      <SpiralBg style={{ position: 'absolute' }} />
+      <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(218,138,52,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+        pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
+      <div style={{ position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+        pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' }} />
+      <div style={{ position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
+        pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' }} />
       <Waiter done={loaded} />
       <CinematicSlider onCommencer={onCommencer} />
     </div>

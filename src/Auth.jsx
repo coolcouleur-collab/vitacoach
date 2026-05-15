@@ -1,6 +1,8 @@
 ﻿import React, { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { FlashIcon, LoadingIcon } from './Icons'
+import SpiralBg from './SpiralBg'
+import LiquidImage from './LiquidImage'
 
 const supabase = createClient(
   'https://ejbfexxhrxcvmolpwuvg.supabase.co',
@@ -55,9 +57,23 @@ export default function Auth({ onConnecte, onBack }) {
           60%      { transform: translateX(5px); }
         }
         .btn-arrow { animation: arrowNudge 1.8s ease-in-out infinite; }
+        @keyframes floatOrb {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%     { transform: translate(30px,-20px) scale(1.04); }
+          66%     { transform: translate(-20px,15px) scale(0.97); }
+        }
         input::placeholder { color: rgba(158,92,53,0.40); }
       `}</style>
-      <div style={s.blob1} /><div style={s.blob2} />
+      <SpiralBg />
+      <div style={s.liquidWrap}>
+        <LiquidImage
+          gradient={['#EDD8CC', '#CCA898', '#E8CABB', '#C4A090']}
+          intensity={0.5}
+          speed={0.4}
+          style={{ width: '100%', height: '100%', opacity: 0.22 }}
+        />
+      </div>
+      <div style={s.blob1} /><div style={s.blob2} /><div style={s.blob3} />
       {onBack && (
         <button onClick={onBack} style={s.backBtn}>←</button>
       )}
@@ -145,17 +161,26 @@ export default function Auth({ onConnecte, onBack }) {
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'#EDD8CC', display:'flex', alignItems:'center',
+  page: { minHeight:'100vh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     position:'relative', overflow:'hidden' },
   blob1: { position:'fixed', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(200,123,82,0.18) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(218,138,52,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'fixed', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(200,123,82,0.12) 0%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' },
+  liquidWrap: { position:'fixed', inset:0, zIndex:0, pointerEvents:'none' },
+  blob3: { position:'fixed', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
+    background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
+    pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' },
   card: { position:'relative', zIndex:1, width:'100%', maxWidth:380,
-    background:'transparent', padding:'0 8px', animation:'slideUp 0.45s ease' },
+    background:'rgba(4,1,0,0.48)',
+    borderRadius: 20,
+    padding:'20px 16px',
+    backdropFilter:'blur(10px)',
+    WebkitBackdropFilter:'blur(10px)',
+    animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:6 },
   logoIcon: { width:36, height:36, borderRadius:12,
     background:'linear-gradient(135deg,#DFA882,#C87B52)',

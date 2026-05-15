@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import SpiralBg from './SpiralBg'
 
 const KEYFRAMES = `
   @keyframes splashShimmer {
@@ -34,6 +35,7 @@ export default function SplashScreen({ onDone }) {
         pointerEvents: exiting ? 'none' : 'all',
       }}
     >
+      <SpiralBg light duration={5000} style={{ zIndex: -1 }} />
       <style>{KEYFRAMES}</style>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
