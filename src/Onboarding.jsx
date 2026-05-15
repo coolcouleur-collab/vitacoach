@@ -5,16 +5,13 @@ import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, Fire
 function BgBlobs() {
   return (
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden',
-      background:'linear-gradient(160deg,#FFF8F2 0%,#FDEEE0 50%,#FFF4EC 100%)'}}>
+      background:'linear-gradient(160deg,#FEFDFB 0%,#FDF9F5 50%,#FEFDFB 100%)'}}>
       <div style={{position:'absolute',top:'-18%',left:'-12%',width:680,height:680,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.11) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.05) 0%,transparent 70%)',
         animation:'floatOrb 10s ease-in-out infinite'}}/>
       <div style={{position:'absolute',bottom:'-12%',right:'-10%',width:780,height:780,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.08) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.03) 0%,transparent 70%)',
         animation:'floatOrb 14s ease-in-out infinite reverse'}}/>
-      <div style={{position:'absolute',top:'38%',right:'18%',width:420,height:420,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.06) 0%,transparent 70%)',
-        animation:'floatOrb 8s ease-in-out infinite'}}/>
     </div>
   )
 }
@@ -491,23 +488,11 @@ export default function Onboarding({ onTermine }) {
         <span style={s.logoText}>Solenn</span>
       </div>
 
-      {/* Dots */}
-      <div style={s.dotsRow}>
-        {visibleQs.map((vq, i) => (
-          <div key={vq.id} style={{
-            width: i === visibleIdx ? 12 : 7, height: i === visibleIdx ? 12 : 7,
-            borderRadius:'50%',
-            background: i < visibleIdx
-              ? 'linear-gradient(135deg,rgba(218,138,52,0.80),rgba(190,112,30,0.90))'
-              : i === visibleIdx
-                ? 'linear-gradient(135deg,rgba(218,138,52,0.90),rgba(218,168,52,0.95))'
-                : 'rgba(218,138,52,0.16)',
-            transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-            animation: i === visibleIdx ? 'dotPulse 1.8s ease-in-out infinite' : 'none',
-            flexShrink:0,
-          }}/>
-        ))}
-        <div style={s.stepPill}>{visibleIdx + 1} / {visibleQs.length}</div>
+      {/* Compteur minimaliste */}
+      <div style={s.stepCounter}>
+        <span style={s.stepCurrent}>{visibleIdx + 1}</span>
+        <span style={s.stepSep}> / </span>
+        <span style={s.stepTotal}>{visibleQs.length}</span>
       </div>
 
       {/* Écran question */}
@@ -627,11 +612,11 @@ const s = {
   page: { minHeight:'100vh', background:'transparent', fontFamily:'Poppins, sans-serif',
     display:'flex', flexDirection:'column', position:'relative', overflowX:'hidden' },
 
-  progressWrap: { position:'fixed', top:0, left:0, right:0, height:4,
-    background:'rgba(218,138,52,0.10)', zIndex:100 },
+  progressWrap: { position:'fixed', top:0, left:0, right:0, height:2,
+    background:'rgba(218,138,52,0.07)', zIndex:100 },
   progressBar: { height:'100%',
-    background:'linear-gradient(90deg,rgba(218,138,52,0.70) 0%,rgba(218,168,52,0.90) 60%,rgba(218,138,52,0.70) 100%)',
-    transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:3 },
+    background:'linear-gradient(90deg,rgba(218,138,52,0.45) 0%,rgba(218,168,52,0.60) 100%)',
+    transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:2 },
 
   backBtn: { position:'fixed', top:22, left:20, zIndex:100,
     background:'rgba(255,255,255,0.75)', border:'1.5px solid rgba(218,138,52,0.18)',
@@ -644,13 +629,16 @@ const s = {
   logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.04em',
     color:'rgba(218,138,52,0.72)', mixBlendMode:'multiply' },
 
-  dotsRow: { position:'fixed', top:72, left:'50%', transform:'translateX(-50%)', zIndex:100,
-    display:'flex', alignItems:'center', gap:6, flexWrap:'nowrap', maxWidth:'90vw', overflow:'hidden' },
-  stepPill: { marginLeft:10, padding:'3px 12px', borderRadius:20,
-    background:'rgba(218,138,52,0.08)', border:'1.5px solid rgba(218,138,52,0.24)',
-    fontSize:11, fontWeight:700, color:'rgba(218,138,52,0.70)', letterSpacing:'0.3px', flexShrink:0 },
+  stepCounter: { position:'fixed', top:26, right:22, zIndex:100,
+    display:'flex', alignItems:'baseline', gap:1 },
+  stepCurrent: { fontSize:13, fontWeight:700, color:'rgba(218,138,52,0.55)',
+    fontFamily:'Poppins, sans-serif', letterSpacing:'-0.2px' },
+  stepSep: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.28)',
+    fontFamily:'Poppins, sans-serif', margin:'0 1px' },
+  stepTotal: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.28)',
+    fontFamily:'Poppins, sans-serif' },
 
-  screen: { flex:1, display:'flex', flexDirection:'column', padding:'118px 24px 24px',
+  screen: { flex:1, display:'flex', flexDirection:'column', padding:'96px 24px 24px',
     maxWidth:600, width:'100%', margin:'0 auto', position:'relative', zIndex:1 },
 
   questionWrap: { marginBottom:28 },
