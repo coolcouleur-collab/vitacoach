@@ -495,9 +495,10 @@ export default function Onboarding({ onTermine }) {
         input[type='number'] { -moz-appearance:textfield; }
         input[type='time']::-webkit-calendar-picker-indicator { opacity:0; }
         input:focus, textarea:focus { outline:none; }
-        .clay-text-input::placeholder { color:rgba(218,138,52,0.35) !important; }
-        .clay-text-input:focus { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10),0 6px 24px rgba(218,138,52,0.08) !important; }
-        .clay-time-input::placeholder { color:rgba(218,138,52,0.35) !important; }
+        .clay-text-input::placeholder   { color:rgba(218,138,52,0.35) !important; }
+        .clay-text-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10),0 6px 24px rgba(218,138,52,0.08) !important; }
+        .clay-number-input::placeholder { color:rgba(218,138,52,0.35) !important; }
+        .clay-time-input::placeholder   { color:rgba(218,138,52,0.35) !important; }
         .clay-time-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10) !important; }
         .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
         .cta-btn:active  { transform:scale(0.97) !important; }
@@ -579,7 +580,7 @@ export default function Onboarding({ onTermine }) {
               <button className="num-btn" style={s.numBtn}
                 onClick={() => setInputVal(v => String(Math.max(q.min||1,(parseInt(v)||0)-1)))}>−</button>
               <div className="num-input-wrap" style={s.numberBox}>
-                <input style={s.numberInput} type="number" value={inputVal}
+                <input className="clay-number-input" style={s.numberInput} type="number" value={inputVal}
                   onChange={e => setInputVal(e.target.value)}
                   placeholder={q.placeholder||'0'} min={q.min} max={q.max}/>
                 {q.unit && <span style={s.unit}>{q.unit}</span>}
