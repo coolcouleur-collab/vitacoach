@@ -489,12 +489,7 @@ export default function Onboarding({ onTermine }) {
         @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(218,138,52,0.08),0 0 0 16px rgba(218,138,52,0.04)} 50%{box-shadow:0 0 0 12px rgba(218,138,52,0.13),0 0 0 22px rgba(218,138,52,0.06)} }
         @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(218,138,52,0.18),0 8px 32px rgba(218,138,52,0.10)} 50%{box-shadow:0 0 0 6px rgba(218,138,52,0.30),0 8px 32px rgba(218,138,52,0.18)} }
         @keyframes logoShimmer  { 0%,70%,100%{opacity:1} 80%{opacity:0.55} 85%{opacity:1} 90%{opacity:0.65} 95%{opacity:1} }
-        @keyframes logoSweep    { 0%{left:-100%} 100%{left:200%} }
-        .solenn-logo { position:relative; display:inline-block; overflow:hidden; animation:logoShimmer 5s ease-in-out infinite; }
-        .solenn-logo::after { content:''; position:absolute; top:0; left:-100%; width:40%; height:100%;
-          background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.55) 50%,transparent 100%);
-          transform:skewX(-18deg);
-          animation:logoSweep 5s ease-in-out infinite; }
+        .solenn-logo { display:inline-block; animation:logoShimmer 5s ease-in-out infinite; }
         input[type='number']::-webkit-outer-spin-button,
         input[type='number']::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
         input[type='number'] { -moz-appearance:textfield; }
@@ -647,7 +642,7 @@ export default function Onboarding({ onTermine }) {
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const s = {
   page: { minHeight:'100vh', background:'transparent', fontFamily:'Poppins, sans-serif',
-    display:'flex', flexDirection:'column', position:'relative', overflowX:'hidden' },
+    display:'flex', flexDirection:'column', alignItems:'center', position:'relative', overflowX:'hidden' },
 
   progressWrap: { position:'fixed', top:0, left:0, right:0, height:2,
     background:'rgba(218,138,52,0.07)', zIndex:100 },
@@ -664,7 +659,7 @@ const s = {
 
   logoTop: { position:'fixed', top:22, left:'50%', transform:'translateX(-50%)', zIndex:100 },
   logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.04em',
-    color:'rgba(218,138,52,0.72)', mixBlendMode:'multiply' },
+    color:'rgba(218,138,52,0.72)' },
 
   stepCounter: { position:'fixed', top:26, right:22, zIndex:100,
     display:'flex', alignItems:'baseline', gap:1 },
@@ -676,7 +671,7 @@ const s = {
     fontFamily:'Poppins, sans-serif' },
 
   screen: { flex:1, display:'flex', flexDirection:'column', padding:'96px 24px 24px',
-    maxWidth:600, width:'100%', margin:'0 auto', position:'relative', zIndex:1 },
+    maxWidth:600, width:'100%', position:'relative', zIndex:1 },
 
   questionWrap: { marginBottom:28 },
   question: { fontSize:'clamp(22px,5vw,32px)', fontWeight:800, lineHeight:1.22,
@@ -738,7 +733,7 @@ const s = {
     outline:'none', textAlign:'center', fontWeight:900, padding:0 },
   unit: { fontSize:18, color:'rgba(218,138,52,0.50)', fontWeight:600 },
 
-  bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%', margin:'0 auto',
+  bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
   ctaBtn: { padding:'0 24px', height:58,
     background:'linear-gradient(145deg,rgba(218,138,52,0.82),rgba(190,112,30,0.88))',
