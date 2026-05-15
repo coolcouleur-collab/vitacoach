@@ -678,7 +678,7 @@ const s = {
   stepTotal: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.25)',
     fontFamily:'Poppins, sans-serif' },
 
-  screen: { flex:1, display:'flex', flexDirection:'column', padding:'96px 24px 24px',
+  screen: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'72px 24px 24px',
     maxWidth:600, width:'100%', position:'relative', zIndex:1 },
 
   questionWrap: { marginBottom:28 },
@@ -719,7 +719,7 @@ const s = {
     boxShadow:'0 2px 10px rgba(218,138,52,0.15)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
-  inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:16 },
+  inputWrap: { display:'flex', flexDirection:'column', alignItems:'center', gap:16 },
   textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
     border:'1.5px solid rgba(255,255,255,0.40)', background:'transparent',
     fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
