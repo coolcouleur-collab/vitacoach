@@ -488,12 +488,21 @@ export default function Onboarding({ onTermine }) {
         @keyframes dotPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(218,138,52,0.50);transform:scale(1.15)} 50%{box-shadow:0 0 0 7px rgba(218,138,52,0);transform:scale(1.2)} }
         @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(218,138,52,0.08),0 0 0 16px rgba(218,138,52,0.04)} 50%{box-shadow:0 0 0 12px rgba(218,138,52,0.13),0 0 0 22px rgba(218,138,52,0.06)} }
         @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(218,138,52,0.18),0 8px 32px rgba(218,138,52,0.10)} 50%{box-shadow:0 0 0 6px rgba(218,138,52,0.30),0 8px 32px rgba(218,138,52,0.18)} }
+        @keyframes logoShimmer  { 0%,70%,100%{opacity:1} 80%{opacity:0.55} 85%{opacity:1} 90%{opacity:0.65} 95%{opacity:1} }
+        @keyframes logoSweep    { 0%{left:-100%} 100%{left:200%} }
+        .solenn-logo { position:relative; display:inline-block; overflow:hidden; animation:logoShimmer 5s ease-in-out infinite; }
+        .solenn-logo::after { content:''; position:absolute; top:0; left:-100%; width:40%; height:100%;
+          background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.55) 50%,transparent 100%);
+          transform:skewX(-18deg);
+          animation:logoSweep 5s ease-in-out infinite; }
         input[type='number']::-webkit-outer-spin-button,
         input[type='number']::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
         input[type='number'] { -moz-appearance:textfield; }
         input[type='time']::-webkit-calendar-picker-indicator { opacity:0; }
         input:focus, textarea:focus { outline:none; }
+        .clay-text-input::placeholder { color:rgba(218,138,52,0.35) !important; }
         .clay-text-input:focus { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10),0 6px 24px rgba(218,138,52,0.08) !important; }
+        .clay-time-input::placeholder { color:rgba(218,138,52,0.35) !important; }
         .clay-time-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10) !important; }
         .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
         .cta-btn:active  { transform:scale(0.97) !important; }
@@ -513,7 +522,7 @@ export default function Onboarding({ onTermine }) {
 
       {/* Logo */}
       <div style={s.logoTop}>
-        <span style={s.logoText}>Solenn</span>
+        <span className="solenn-logo" style={s.logoText}>Solenn</span>
       </div>
 
       {/* Compteur minimaliste */}
