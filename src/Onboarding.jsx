@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, FireIcon, GiftIcon, LeafIcon } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
@@ -7,36 +7,39 @@ function BgBlobs() {
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden',
       background:'linear-gradient(160deg,#FFF8F2 0%,#FDEEE0 50%,#FFF4EC 100%)'}}>
       <div style={{position:'absolute',top:'-18%',left:'-12%',width:680,height:680,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.13) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.11) 0%,transparent 70%)',
         animation:'floatOrb 10s ease-in-out infinite'}}/>
       <div style={{position:'absolute',bottom:'-12%',right:'-10%',width:780,height:780,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(232,150,42,0.10) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.08) 0%,transparent 70%)',
         animation:'floatOrb 14s ease-in-out infinite reverse'}}/>
       <div style={{position:'absolute',top:'38%',right:'18%',width:420,height:420,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.08) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.06) 0%,transparent 70%)',
         animation:'floatOrb 8s ease-in-out infinite'}}/>
-      <div style={{position:'absolute',top:'60%',left:'5%',width:320,height:320,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(158,92,53,0.09) 0%,transparent 70%)',
-        animation:'floatOrb 12s ease-in-out infinite reverse'}}/>
     </div>
   )
 }
 
-// ─── QUESTIONS (avec branches conditionnelles) ────────────────────────────────
+// ─── QUESTIONS ────────────────────────────────────────────────────────────────
 const QUESTIONS = [
   {
+    id:'nom', type:'text',
+    question:'Comment tu t\'appelles ?',
+    subtitle:'Le prénom que Solenn utilisera pour toi',
+    placeholder:'Ton prénom',
+  },
+  {
     id:'objectif', type:'cards',
-    question:'Quel est ton principal objectif ?',
+    question:(a) => `Quel est ton objectif principal, ${a.nom || ''} ?`,
     subtitle:'On va personnaliser toute ton expérience autour de ça',
     options:[
-      {iconEl:<FlashIcon size={20} color="#E8962A" />,  label:"Plus d'énergie"},
-      {iconEl:<LeafIcon size={20} color="#C87B52" />,   label:'Mieux dormir'},
-      {iconEl:<FoodIcon size={20} color="#34c759" />,   label:'Manger sainement'},
-      {iconEl:<MuscleIcon size={20} color="#C87B52" />, label:'Prendre du muscle'},
-      {iconEl:<MeditateIcon size={20} color="#9E5C35" />,label:'Réduire le stress'},
-      {iconEl:<RunIcon size={20} color="#38bdf8" />,    label:'Perdre du poids'},
-      {iconEl:<RunIcon size={20} color="#C87B52" />,    label:'Courir un marathon'},
-      {iconEl:<BrainIcon size={20} color="#E8962A" />,  label:'Productivité maximale'},
+      {iconEl:<FlashIcon size={20} color="rgba(218,138,52,0.85)" />,  label:"Plus d'énergie"},
+      {iconEl:<LeafIcon size={20} color="rgba(218,138,52,0.75)" />,   label:'Mieux dormir'},
+      {iconEl:<FoodIcon size={20} color="#34c759" />,                 label:'Manger sainement'},
+      {iconEl:<MuscleIcon size={20} color="rgba(218,138,52,0.85)" />, label:'Prendre du muscle'},
+      {iconEl:<MeditateIcon size={20} color="#818cf8" />,             label:'Réduire le stress'},
+      {iconEl:<RunIcon size={20} color="#38bdf8" />,                  label:'Perdre du poids'},
+      {iconEl:<RunIcon size={20} color="rgba(218,138,52,0.75)" />,    label:'Courir un marathon'},
+      {iconEl:<BrainIcon size={20} color="rgba(218,138,52,0.85)" />,  label:'Productivité maximale'},
     ],
     multi: true
   },
@@ -52,11 +55,11 @@ const QUESTIONS = [
     question:"Quel est ton niveau d'activité physique ?",
     subtitle:'Sois honnête, on ne juge pas :)',
     options:[
-      {iconEl:<LeafIcon size={20} color="#9ca3af" />,    label:'Sédentaire',       sub:'Bureau, peu de sport'},
-      {iconEl:<RunIcon size={20} color="#38bdf8" />,     label:'Légèrement actif', sub:'Marche quotidienne'},
-      {iconEl:<MuscleIcon size={20} color="#C87B52" />,  label:'Modérément actif', sub:'Sport 2-3x/semaine'},
-      {iconEl:<FireIcon size={20} color="#E8962A" />,    label:'Très actif',       sub:'Sport 4-5x/semaine'},
-      {iconEl:<FlashIcon size={20} color="#fbbf24" />,   label:'Sportif intensif', sub:'Entraînement quotidien'},
+      {iconEl:<LeafIcon size={20} color="#9ca3af" />,                    label:'Sédentaire',       sub:'Bureau, peu de sport'},
+      {iconEl:<RunIcon size={20} color="#38bdf8" />,                     label:'Légèrement actif', sub:'Marche quotidienne'},
+      {iconEl:<MuscleIcon size={20} color="rgba(218,138,52,0.80)" />,    label:'Modérément actif', sub:'Sport 2-3x/semaine'},
+      {iconEl:<FireIcon size={20} color="rgba(218,138,52,0.90)" />,      label:'Très actif',       sub:'Sport 4-5x/semaine'},
+      {iconEl:<FlashIcon size={20} color="#fbbf24" />,                   label:'Sportif intensif', sub:'Entraînement quotidien'},
     ],
     multi: false
   },
@@ -68,50 +71,65 @@ const QUESTIONS = [
              'Sans lactose','Méditerranéen','Jeûne intermittent','Halal','Casher','Paléo'],
     multi: true
   },
-
-  // ── BRANCHE SANTÉ ──────────────────────────────────────────────────────────
   {
     id:'sante_yn', type:'cards',
-    question:'As-tu des problèmes de santé ou des maladies ?',
+    question:'As-tu des problèmes de santé ?',
     subtitle:'Pour que nos conseils soient totalement adaptés et sans risque pour toi',
     options:[
-      {iconEl:<MeditateIcon size={20} color="#C87B52" />, label:'Oui', sub:"J'ai des conditions médicales"},
-      {iconEl:<GiftIcon size={20} color="#34c759" />,     label:'Non', sub:'Je suis en bonne santé'},
+      {iconEl:<MeditateIcon size={20} color="rgba(218,138,52,0.80)" />, label:'Oui', sub:"J'ai des conditions médicales"},
+      {iconEl:<GiftIcon size={20} color="#34c759" />,                   label:'Non', sub:'Je suis en bonne santé'},
     ],
     multi: false
   },
-  // Affiché seulement si sante_yn === 'Oui'
   {
     id:'sante_conditions', type:'chips',
     question:'Quelles conditions as-tu ?',
-    subtitle:'Sélectionne tout ce qui te correspond — plusieurs choix possibles',
+    subtitle:'Plusieurs choix possibles — on adaptera chaque conseil',
     condition: (a) => a.sante_yn === 'Oui',
     options:[
       'Diabète type 1','Diabète type 2','Hypertension','Hypotension',
       'Hypothyroïdie','Hyperthyroïdie','Asthme','Cholestérol élevé',
-      "Dépression / Anxiété",'Endométriose','SOPK','Maladie cœliaque',
+      'Dépression / Anxiété','Endométriose','SOPK','Maladie cœliaque',
       'Arthrite / Arthrose','Carence en fer','Carence en Vit. D',
       'Maladie de Crohn','Psoriasis','Autre'
     ],
-    multi: true,
-    skip: true
+    multi: true, skip: true
   },
-  // Affiché seulement si sante_yn === 'Oui'
   {
     id:'sante_detail', type:'textarea',
-    question:'Décris ta situation de santé en détail',
-    subtitle:'Plus tu es précis, meilleurs seront nos conseils — nom exact, médicaments, depuis quand...',
-    placeholder:'Ex: Diabète type 2 depuis 3 ans, sous Metformine 1g/jour. Hypothyroïdie traitée par Lévothyrox 50µg depuis 2021. Carence en Vit. D confirmée par prise de sang il y a 6 mois...',
+    question:'Décris ta situation en détail',
+    subtitle:'Plus tu es précis, meilleurs seront nos conseils',
+    placeholder:'Ex: Diabète type 2 depuis 3 ans, sous Metformine 1g/jour. Carence en Vit. D confirmée...',
     condition: (a) => a.sante_yn === 'Oui',
     skip: true
   },
-  // ──────────────────────────────────────────────────────────────────────────
-
+  {
+    id:'taille', type:'number',
+    question:'Quelle est ta taille ?',
+    subtitle:'Pour calculer ton IMC et adapter tes objectifs',
+    placeholder:'170',
+    unit:'cm', min:130, max:230,
+    skip: true
+  },
+  {
+    id:'poids', type:'number',
+    question:'Quel est ton poids ?',
+    subtitle:'Utilisé uniquement pour personnaliser tes conseils nutritionnels',
+    placeholder:'65',
+    unit:'kg', min:30, max:250,
+    skip: true
+  },
   {
     id:'reveil', type:'time',
     question:'À quelle heure tu te lèves ?',
     subtitle:'Pour une routine calée sur ton rythme naturel',
     default: '07:00'
+  },
+  {
+    id:'coucher', type:'time',
+    question:'Et à quelle heure tu te couches ?',
+    subtitle:'Pour optimiser tes conseils sommeil et récupération',
+    default: '23:00'
   },
   {
     id:'profession', type:'text',
@@ -129,15 +147,9 @@ const QUESTIONS = [
              'Bohème','Vintage','Luxe','Athleisure'],
     multi: true
   },
-  {
-    id:'nom', type:'text',
-    question:"Comment on t'appelle ?",
-    subtitle:"Le prénom que Solenn utilisera pour toi",
-    placeholder:'Ton prénom',
-  },
 ]
 
-// ─── NAVIGATION UTILITIES ────────────────────────────────────────────────────
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
 function getVisibleQs(answers) {
   return QUESTIONS.filter(q => !q.condition || q.condition(answers))
 }
@@ -147,7 +159,7 @@ function getNextStep(currentStep, answers) {
     if (!QUESTIONS[next].condition || QUESTIONS[next].condition(answers)) return next
     next++
   }
-  return null // fin du quiz
+  return null
 }
 function getPrevStep(currentStep, answers) {
   let prev = currentStep - 1
@@ -158,6 +170,131 @@ function getPrevStep(currentStep, answers) {
   return null
 }
 
+// ─── REVEAL SCREEN ────────────────────────────────────────────────────────────
+function RevealScreen({ answers, onEnter }) {
+  const [visible, setVisible] = useState(false)
+  const [btnVisible, setBtnVisible] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 120)
+    setTimeout(() => setBtnVisible(true), 900)
+  }, [])
+
+  const nom = answers.nom || 'toi'
+  const objectifs = Array.isArray(answers.objectif) ? answers.objectif : answers.objectif ? [answers.objectif] : []
+
+  const tags = [
+    answers.activite,
+    ...(Array.isArray(answers.alimentation) ? answers.alimentation.slice(0,2) : []),
+    answers.profession,
+  ].filter(Boolean).slice(0, 4)
+
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:200,
+      background:'linear-gradient(160deg,#FFF8F2 0%,#FDEEE0 50%,#FFF4EC 100%)',
+      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+      padding:'40px 28px',
+      fontFamily:'Poppins, sans-serif',
+    }}>
+      <BgBlobs />
+
+      <div style={{
+        position:'relative', zIndex:1, width:'100%', maxWidth:400,
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(32px)',
+        transition:'opacity 0.7s ease, transform 0.7s cubic-bezier(0.34,1.56,0.64,1)',
+        display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
+      }}>
+
+        {/* Avatar orb */}
+        <div style={{
+          width:88, height:88, borderRadius:'50%',
+          background:'linear-gradient(135deg,rgba(218,138,52,0.35),rgba(190,112,30,0.25))',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          marginBottom:24,
+          boxShadow:'0 0 0 8px rgba(218,138,52,0.08), 0 0 0 16px rgba(218,138,52,0.04)',
+          animation:'revealPulse 2.8s ease-in-out infinite',
+        }}>
+          <span style={{
+            fontSize:38, fontWeight:800, color:'rgba(218,138,52,0.80)',
+            fontFamily:'Poppins, sans-serif', letterSpacing:'-0.02em',
+          }}>
+            {nom.charAt(0).toUpperCase()}
+          </span>
+        </div>
+
+        {/* Title */}
+        <div style={{fontSize:13, fontWeight:600, color:'rgba(218,138,52,0.55)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
+          Profil créé
+        </div>
+        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(218,138,52,0.90)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
+          Bonjour, {nom} !
+        </h1>
+        <p style={{fontSize:15, color:'rgba(218,138,52,0.55)', marginBottom:32, lineHeight:1.6}}>
+          Solenn connaît ton profil et est prête à t'accompagner.
+        </p>
+
+        {/* Objectifs */}
+        {objectifs.length > 0 && (
+          <div style={{marginBottom:20, width:'100%'}}>
+            <div style={{fontSize:11, fontWeight:700, color:'rgba(218,138,52,0.45)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
+              Tes objectifs
+            </div>
+            <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
+              {objectifs.map(o => (
+                <span key={o} style={{
+                  padding:'7px 16px', borderRadius:20,
+                  background:'rgba(218,138,52,0.09)',
+                  border:'1px solid rgba(218,138,52,0.22)',
+                  fontSize:12, fontWeight:600, color:'rgba(218,138,52,0.80)',
+                }}>
+                  {o}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div style={{display:'flex', flexWrap:'wrap', gap:7, justifyContent:'center', marginBottom:40}}>
+            {tags.map(t => (
+              <span key={t} style={{
+                padding:'5px 12px', borderRadius:20,
+                background:'rgba(218,138,52,0.05)',
+                border:'1px solid rgba(218,138,52,0.14)',
+                fontSize:11, fontWeight:500, color:'rgba(218,138,52,0.55)',
+              }}>
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <button
+          onClick={onEnter}
+          style={{
+            width:'100%', height:58,
+            background:'linear-gradient(145deg,rgba(218,138,52,0.85),rgba(190,112,30,0.90))',
+            color:'rgba(255,245,225,0.96)', border:'none', borderRadius:22,
+            fontSize:17, fontWeight:800, cursor:'pointer',
+            fontFamily:'Poppins, sans-serif',
+            boxShadow:'0 12px 36px rgba(218,138,52,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
+            opacity: btnVisible ? 1 : 0,
+            transform: btnVisible ? 'translateY(0)' : 'translateY(14px)',
+            transition:'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
+            letterSpacing:'0.3px',
+          }}
+        >
+          Entrer dans Solenn ✦
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine }) {
   const [step, setStep]           = useState(0)
@@ -165,10 +302,11 @@ export default function Onboarding({ onTermine }) {
   const [direction, setDirection] = useState('forward')
   const [animKey, setAnimKey]     = useState(0)
   const [inputVal, setInputVal]   = useState('')
+  const [showReveal, setShowReveal] = useState(false)
 
   const q = QUESTIONS[step]
+  const questionText = typeof q.question === 'function' ? q.question(answers) : q.question
 
-  // Progress calculé sur les questions visibles
   const visibleQs  = getVisibleQs(answers)
   const visibleIdx = visibleQs.findIndex(vq => vq.id === q.id)
   const progress   = visibleQs.length > 0 ? ((visibleIdx + 1) / visibleQs.length) * 100 : 0
@@ -204,7 +342,7 @@ export default function Onboarding({ onTermine }) {
       newAnswers = { ...answers, [q.id]: inputVal }
       setAnswers(newAnswers)
     } else if (q.type === 'time') {
-      newAnswers = { ...answers, [q.id]: inputVal || q.default || '07:00' }
+      newAnswers = { ...answers, [q.id]: inputVal || q.default }
       setAnswers(newAnswers)
     }
     advance(newAnswers)
@@ -219,7 +357,6 @@ export default function Onboarding({ onTermine }) {
     setInputVal('')
   }
 
-  // Clic sur une carte : multi = toggle, single = sélection + auto-avance
   function handleCardClick(val) {
     if (q.multi) {
       setAnswers(a => {
@@ -229,7 +366,6 @@ export default function Onboarding({ onTermine }) {
     } else {
       const newAnswers = { ...answers, [q.id]: val }
       setAnswers(newAnswers)
-      // Auto-avance après 220 ms (laisse le temps de voir la sélection)
       setTimeout(() => advance(newAnswers), 220)
     }
   }
@@ -271,13 +407,14 @@ export default function Onboarding({ onTermine }) {
     const profil = {
       nom:        a.nom        || 'Ami',
       age:        a.age        || '',
-      taille: '', poids: '',
+      taille:     a.taille     || '',
+      poids:      a.poids      || '',
       objectifs:  Array.isArray(a.objectif) ? a.objectif : a.objectif ? [a.objectif] : [],
       activite:   a.activite   || 'Modérément actif',
       regimes:    Array.isArray(a.alimentation) ? a.alimentation : [],
       alimentaireDetails: '',
       reveil:     a.reveil     || '07:00',
-      coucher:    '23:00',
+      coucher:    a.coucher    || '23:00',
       profession: a.profession || '',
       styles:     Array.isArray(a.style) ? a.style : [],
       styleDetails:'', mensurations:'',
@@ -289,7 +426,9 @@ export default function Onboarding({ onTermine }) {
       maladiesDetails: hasHealth ? (a.sante_detail || '') : '',
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
-    onTermine(profil)
+    setShowReveal(true)
+    // onTermine appelé depuis RevealScreen
+    window._solennProfil = profil
   }
 
   const isLast  = getNextStep(step, answers) === null
@@ -297,105 +436,88 @@ export default function Onboarding({ onTermine }) {
     animation: `${direction === 'forward' ? 'slideInRight' : 'slideInLeft'} 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both`
   }
 
+  if (showReveal) {
+    return (
+      <RevealScreen
+        answers={answers}
+        onEnter={() => {
+          const profil = window._solennProfil
+          if (profil) onTermine(profil)
+        }}
+      />
+    )
+  }
+
   return (
     <div style={s.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
-
-        @keyframes slideInRight {
-          from { opacity:0; transform:translateX(60px); }
-          to   { opacity:1; transform:translateX(0); }
-        }
-        @keyframes slideInLeft {
-          from { opacity:0; transform:translateX(-60px); }
-          to   { opacity:1; transform:translateX(0); }
-        }
-        @keyframes popIn {
-          0%   { transform:scale(0.88); opacity:0; }
-          60%  { transform:scale(1.06); }
-          100% { transform:scale(1);    opacity:1; }
-        }
-        @keyframes floatOrb {
-          0%,100% { transform: translateY(0px) scale(1); }
-          33%     { transform: translateY(-28px) scale(1.04); }
-          66%     { transform: translateY(14px) scale(0.97); }
-        }
-        @keyframes pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(200,123,82,0.55); transform: scale(1.15); }
-          50%     { box-shadow: 0 0 0 8px rgba(200,123,82,0); transform: scale(1.2); }
-        }
-        @keyframes ringGlow {
-          0%,100% { box-shadow: 0 0 0 3px rgba(200,123,82,0.20), 0 8px 32px rgba(200,123,82,0.12); }
-          50%     { box-shadow: 0 0 0 6px rgba(200,123,82,0.35), 0 8px 32px rgba(200,123,82,0.20); }
-        }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(60px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideInLeft  { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes popIn        { 0%{transform:scale(0.88);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
+        @keyframes floatOrb     { 0%,100%{transform:translateY(0px) scale(1)} 33%{transform:translateY(-28px) scale(1.04)} 66%{transform:translateY(14px) scale(0.97)} }
+        @keyframes dotPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(218,138,52,0.50);transform:scale(1.15)} 50%{box-shadow:0 0 0 7px rgba(218,138,52,0);transform:scale(1.2)} }
+        @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(218,138,52,0.08),0 0 0 16px rgba(218,138,52,0.04)} 50%{box-shadow:0 0 0 12px rgba(218,138,52,0.13),0 0 0 22px rgba(218,138,52,0.06)} }
+        @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(218,138,52,0.18),0 8px 32px rgba(218,138,52,0.10)} 50%{box-shadow:0 0 0 6px rgba(218,138,52,0.30),0 8px 32px rgba(218,138,52,0.18)} }
         input[type='number']::-webkit-outer-spin-button,
-        input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type='number'] { -moz-appearance: textfield; }
-        input[type='time']::-webkit-calendar-picker-indicator { opacity: 0; }
-        input:focus, textarea:focus { outline: none; }
-        .clay-text-input:focus {
-          border-color: #C87B52 !important;
-          box-shadow: 0 0 0 4px rgba(200,123,82,0.15), 0 8px 32px rgba(200,123,82,0.12) !important;
-        }
-        .clay-time-input:focus {
-          border-color: #C87B52 !important;
-          box-shadow: 0 0 0 4px rgba(200,123,82,0.15) !important;
-        }
-        .num-input-wrap { animation: ringGlow 2.4s ease-in-out infinite; }
-        .cta-btn:active { transform: scale(0.97) !important; }
-        .back-btn:hover { background: #fff1ec !important; border-color: #C87B52 !important; color: #C87B52 !important; }
-        .clay-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(200,123,82,0.12), inset 0 1px 0 rgba(255,255,255,0.9) !important; }
-        .clay-chip:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(200,123,82,0.15) !important; }
-        .num-btn:hover { transform: scale(1.08); box-shadow: 0 8px 24px rgba(200,123,82,0.45) !important; }
+        input[type='number']::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+        input[type='number'] { -moz-appearance:textfield; }
+        input[type='time']::-webkit-calendar-picker-indicator { opacity:0; }
+        input:focus, textarea:focus { outline:none; }
+        .clay-text-input:focus { border-color:rgba(218,138,52,0.70) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.12),0 8px 32px rgba(218,138,52,0.10) !important; }
+        .clay-time-input:focus  { border-color:rgba(218,138,52,0.70) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.12) !important; }
+        .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
+        .cta-btn:active  { transform:scale(0.97) !important; }
+        .back-btn:hover  { background:rgba(218,138,52,0.08) !important; border-color:rgba(218,138,52,0.40) !important; }
+        .clay-card:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(218,138,52,0.10),inset 0 1px 0 rgba(255,255,255,0.9) !important; }
+        .clay-chip:hover { transform:scale(1.04); box-shadow:0 4px 14px rgba(218,138,52,0.13) !important; }
+        .num-btn:hover   { transform:scale(1.08); box-shadow:0 8px 24px rgba(218,138,52,0.40) !important; }
       `}</style>
 
       <BgBlobs />
 
-      {/* ── Barre de progression ── */}
+      {/* Barre de progression */}
       <div style={s.progressWrap}>
         <div style={{...s.progressBar, width:`${progress}%`}} />
       </div>
 
-      {/* ── Bouton retour ── */}
+      {/* Bouton retour */}
       {step > 0 && (
         <button className="back-btn" style={s.backBtn} onClick={goBack}>←</button>
       )}
 
-      {/* ── Logo ── */}
+      {/* Logo */}
       <div style={s.logoTop}>
-        <span style={s.logoIcon}>S</span>
         <span style={s.logoText}>Solenn</span>
       </div>
 
-      {/* ── Dots de progression ── */}
+      {/* Dots */}
       <div style={s.dotsRow}>
         {visibleQs.map((vq, i) => (
           <div key={vq.id} style={{
-            width:  i === visibleIdx ? 12 : 7,
-            height: i === visibleIdx ? 12 : 7,
-            borderRadius: '50%',
+            width: i === visibleIdx ? 12 : 7, height: i === visibleIdx ? 12 : 7,
+            borderRadius:'50%',
             background: i < visibleIdx
-              ? 'linear-gradient(135deg,#C87B52,#9E5C35)'
+              ? 'linear-gradient(135deg,rgba(218,138,52,0.80),rgba(190,112,30,0.90))'
               : i === visibleIdx
-                ? 'linear-gradient(135deg,#C87B52,#E8962A)'
-                : 'rgba(200,123,82,0.18)',
-            transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-            animation: i === visibleIdx ? 'pulse 1.8s ease-in-out infinite' : 'none',
-            flexShrink: 0,
-          }} />
+                ? 'linear-gradient(135deg,rgba(218,138,52,0.90),rgba(218,168,52,0.95))'
+                : 'rgba(218,138,52,0.16)',
+            transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+            animation: i === visibleIdx ? 'dotPulse 1.8s ease-in-out infinite' : 'none',
+            flexShrink:0,
+          }}/>
         ))}
         <div style={s.stepPill}>{visibleIdx + 1} / {visibleQs.length}</div>
       </div>
 
-      {/* ── Écran question ── */}
+      {/* Écran question */}
       <div key={animKey} style={{...s.screen, ...animStyle}}>
-
         <div style={s.questionWrap}>
-          <div style={s.question}>{q.question}</div>
+          <div style={s.question}>{questionText}</div>
           <div style={s.qSubtitle}>{q.subtitle}</div>
         </div>
 
-        {/* ── Cards ── */}
+        {/* Cards */}
         {q.type === 'cards' && (
           <div style={s.cardsGrid}>
             {q.options.map(opt => {
@@ -405,7 +527,7 @@ export default function Onboarding({ onTermine }) {
                   style={{...s.card, ...(sel ? s.cardSel : {})}}
                   onClick={() => handleCardClick(opt.label)}>
                   <div style={{...s.cardIconWrap, ...(sel ? s.cardIconWrapSel : {})}}>
-                    <span style={{...s.cardIcon, display:'flex', alignItems:'center', justifyContent:'center'}}>{opt.iconEl || opt.icon}</span>
+                    <span style={{display:'flex',alignItems:'center',justifyContent:'center'}}>{opt.iconEl}</span>
                   </div>
                   <div style={s.cardLabel}>{opt.label}</div>
                   {opt.sub && <div style={s.cardSub}>{opt.sub}</div>}
@@ -416,7 +538,7 @@ export default function Onboarding({ onTermine }) {
           </div>
         )}
 
-        {/* ── Chips ── */}
+        {/* Chips */}
         {q.type === 'chips' && (
           <div style={s.chipsWrap}>
             {q.options.map(opt => {
@@ -425,7 +547,7 @@ export default function Onboarding({ onTermine }) {
                 <button key={opt} className="clay-chip"
                   style={{...s.chip, ...(sel ? s.chipSel : {})}}
                   onClick={() => toggleChip(opt)}>
-                  {sel && <span style={{marginRight:6, fontSize:11}}>✓</span>}
+                  {sel && <span style={{marginRight:5, fontSize:11}}>✓</span>}
                   {opt}
                 </button>
               )
@@ -433,72 +555,66 @@ export default function Onboarding({ onTermine }) {
           </div>
         )}
 
-        {/* ── Nombre ── */}
+        {/* Nombre */}
         {q.type === 'number' && (
           <div style={s.inputWrap}>
             <div style={s.numberRow}>
               <button className="num-btn" style={s.numBtn}
-                onClick={() => setInputVal(v => String(Math.max(q.min||1, (parseInt(v)||0)-1)))}>−</button>
+                onClick={() => setInputVal(v => String(Math.max(q.min||1,(parseInt(v)||0)-1)))}>−</button>
               <div className="num-input-wrap" style={s.numberBox}>
                 <input style={s.numberInput} type="number" value={inputVal}
                   onChange={e => setInputVal(e.target.value)}
-                  placeholder={q.placeholder || '0'} min={q.min} max={q.max} />
+                  placeholder={q.placeholder||'0'} min={q.min} max={q.max}/>
                 {q.unit && <span style={s.unit}>{q.unit}</span>}
               </div>
               <button className="num-btn" style={s.numBtn}
-                onClick={() => setInputVal(v => String(Math.min(q.max||999, (parseInt(v)||0)+1)))}>+</button>
+                onClick={() => setInputVal(v => String(Math.min(q.max||999,(parseInt(v)||0)+1)))}>+</button>
             </div>
           </div>
         )}
 
-        {/* ── Texte court ── */}
+        {/* Texte */}
         {q.type === 'text' && (
           <div style={s.inputWrap}>
             <input className="clay-text-input" style={s.textInput} type="text"
               value={inputVal} onChange={e => setInputVal(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && canContinue() && goNext()}
-              placeholder={q.placeholder || ''} autoFocus />
+              onKeyDown={e => e.key==='Enter' && canContinue() && goNext()}
+              placeholder={q.placeholder||''} autoFocus/>
           </div>
         )}
 
-        {/* ── Textarea (santé détail) ── */}
+        {/* Textarea */}
         {q.type === 'textarea' && (
           <div style={s.inputWrap}>
             <textarea className="clay-text-input"
-              style={{
-                ...s.textInput,
-                height:170, resize:'none',
-                textAlign:'left', fontSize:14, fontWeight:500,
-                lineHeight:1.65, paddingTop:20, paddingBottom:16,
-              }}
+              style={{...s.textInput, height:170, resize:'none', textAlign:'left',
+                fontSize:14, fontWeight:500, lineHeight:1.65, paddingTop:20}}
               value={inputVal} onChange={e => setInputVal(e.target.value)}
-              placeholder={q.placeholder || ''} autoFocus />
+              placeholder={q.placeholder||''} autoFocus/>
           </div>
         )}
 
-        {/* ── Heure ── */}
+        {/* Heure */}
         {q.type === 'time' && (
           <div style={s.inputWrap}>
             <input className="clay-time-input"
               style={{...s.textInput, fontSize:38, fontWeight:800, textAlign:'center', letterSpacing:6, padding:'22px 24px'}}
-              type="time" value={inputVal || q.default || '07:00'}
-              onChange={e => setInputVal(e.target.value)} />
+              type="time" value={inputVal||q.default||'07:00'}
+              onChange={e => setInputVal(e.target.value)}/>
           </div>
         )}
-
       </div>
 
-      {/* ── Bottom CTA ── */}
+      {/* Bottom CTA */}
       <div style={s.bottom}>
         {q.skip && (
           <button style={s.skipBtn} onClick={skipStep}>Passer cette étape</button>
         )}
-        {/* Pas de bouton Continuer pour les cartes à choix unique (auto-avance) */}
         {(q.type !== 'cards' || q.multi) && (
           <button className="cta-btn"
-            style={{...s.ctaBtn, opacity: canContinue() ? 1 : 0.42, cursor: canContinue() ? 'pointer' : 'default'}}
+            style={{...s.ctaBtn, opacity:canContinue()?1:0.38, cursor:canContinue()?'pointer':'default'}}
             onClick={goNext} disabled={!canContinue()}>
-            {isLast ? 'Lancer Solenn' : 'Continuer →'}
+            {isLast ? 'Voir mon profil ✦' : 'Continuer →'}
           </button>
         )}
       </div>
@@ -508,115 +624,104 @@ export default function Onboarding({ onTermine }) {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const s = {
-  page: { minHeight:'100vh', background:'transparent', fontFamily:'Poppins, sans-serif', color:'#1a0a00',
+  page: { minHeight:'100vh', background:'transparent', fontFamily:'Poppins, sans-serif',
     display:'flex', flexDirection:'column', position:'relative', overflowX:'hidden' },
 
-  progressWrap: { position:'fixed', top:0, left:0, right:0, height:5,
-    background:'rgba(200,123,82,0.12)', zIndex:100 },
+  progressWrap: { position:'fixed', top:0, left:0, right:0, height:4,
+    background:'rgba(218,138,52,0.10)', zIndex:100 },
   progressBar: { height:'100%',
-    background:'linear-gradient(90deg,#C87B52 0%,#E8962A 60%,#C87B52 100%)',
+    background:'linear-gradient(90deg,rgba(218,138,52,0.70) 0%,rgba(218,168,52,0.90) 60%,rgba(218,138,52,0.70) 100%)',
     transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:3 },
 
   backBtn: { position:'fixed', top:22, left:20, zIndex:100,
-    background:'rgba(255,255,255,0.80)', border:'1.5px solid rgba(200,123,82,0.18)', color:'#a07060',
-    width:42, height:42, borderRadius:14, cursor:'pointer', fontSize:18,
-    fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
-    boxShadow:'0 4px 16px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.9)',
+    background:'rgba(255,255,255,0.75)', border:'1.5px solid rgba(218,138,52,0.18)',
+    color:'rgba(218,138,52,0.65)', width:42, height:42, borderRadius:14, cursor:'pointer',
+    fontSize:18, fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center',
+    justifyContent:'center', boxShadow:'0 4px 16px rgba(218,138,52,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
     transition:'all 0.2s', outline:'none' },
 
-  logoTop: { position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', zIndex:100,
-    display:'flex', alignItems:'center', gap:5 },
-  logoIcon: { fontSize:18, background:'linear-gradient(135deg,#C87B52,#9E5C35)',
-    WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
-  logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.5px',
-    background:'linear-gradient(135deg,#C87B52,#E8962A)',
-    WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
+  logoTop: { position:'fixed', top:22, left:'50%', transform:'translateX(-50%)', zIndex:100 },
+  logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.04em',
+    color:'rgba(218,138,52,0.72)', mixBlendMode:'multiply' },
 
   dotsRow: { position:'fixed', top:72, left:'50%', transform:'translateX(-50%)', zIndex:100,
     display:'flex', alignItems:'center', gap:6, flexWrap:'nowrap', maxWidth:'90vw', overflow:'hidden' },
   stepPill: { marginLeft:10, padding:'3px 12px', borderRadius:20,
-    background:'rgba(200,123,82,0.10)',
-    border:'1.5px solid rgba(200,123,82,0.28)', fontSize:11, fontWeight:800,
-    color:'#C87B52', letterSpacing:'0.3px', flexShrink:0 },
+    background:'rgba(218,138,52,0.08)', border:'1.5px solid rgba(218,138,52,0.24)',
+    fontSize:11, fontWeight:700, color:'rgba(218,138,52,0.70)', letterSpacing:'0.3px', flexShrink:0 },
 
   screen: { flex:1, display:'flex', flexDirection:'column', padding:'118px 24px 24px',
     maxWidth:600, width:'100%', margin:'0 auto', position:'relative', zIndex:1 },
 
   questionWrap: { marginBottom:28 },
-  question: { fontSize:'clamp(22px,5vw,34px)', fontWeight:800, lineHeight:1.22,
-    letterSpacing:'-0.5px', marginBottom:10, color:'#1a0a00' },
-  qSubtitle: { fontSize:14, color:'rgba(200,123,82,0.65)', lineHeight:1.55, fontWeight:500 },
+  question: { fontSize:'clamp(22px,5vw,32px)', fontWeight:800, lineHeight:1.22,
+    letterSpacing:'-0.5px', marginBottom:10, color:'rgba(218,138,52,0.92)' },
+  qSubtitle: { fontSize:14, color:'rgba(218,138,52,0.50)', lineHeight:1.55, fontWeight:500 },
 
-  cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(150px,1fr))',
-    gap:12, flex:1 },
-  card: { background:'rgba(255,255,255,0.75)', border:'1px solid rgba(200,123,82,0.14)', borderRadius:22,
+  cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(148px,1fr))', gap:11, flex:1, alignItems:'start', alignContent:'start' },
+  card: { background:'rgba(255,255,255,0.75)', border:'1px solid rgba(218,138,52,0.12)', borderRadius:22,
     padding:'18px 14px', cursor:'pointer', textAlign:'left', position:'relative',
-    transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-    fontFamily:'Poppins, sans-serif', display:'flex', flexDirection:'column', gap:8,
-    color:'#1a0a00', outline:'none',
-    boxShadow:'0 4px 16px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.9)' },
-  cardSel: {
-    background:'linear-gradient(145deg,rgba(200,123,82,0.12),rgba(232,150,42,0.07))',
-    border:'1.5px solid #C87B52',
-    boxShadow:'0 8px 28px rgba(200,123,82,0.25), inset 0 1px 0 rgba(255,255,255,0.8)',
-    transform:'scale(1.03)',
-    animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
+    transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)', fontFamily:'Poppins, sans-serif',
+    display:'flex', flexDirection:'column', gap:8, outline:'none',
+    boxShadow:'0 4px 16px rgba(218,138,52,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' },
+  cardSel: { background:'linear-gradient(145deg,rgba(218,138,52,0.10),rgba(218,168,52,0.06))',
+    border:'1.5px solid rgba(218,138,52,0.55)',
+    boxShadow:'0 8px 28px rgba(218,138,52,0.20), inset 0 1px 0 rgba(255,255,255,0.8)',
+    transform:'scale(1.03)', animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
-    justifyContent:'center', background:'rgba(200,123,82,0.06)', transition:'all 0.2s' },
-  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(200,123,82,0.18),rgba(232,150,42,0.12))', borderRadius:14 },
-  cardIcon: { lineHeight:1, transition:'font-size 0.2s' },
-  cardLabel: { fontSize:13, fontWeight:700, color:'#1a0a00', lineHeight:1.3 },
-  cardSub: { fontSize:11, color:'rgba(200,123,82,0.60)', lineHeight:1.3, fontWeight:500 },
-  cardCheck: { position:'absolute', top:10, right:10, width:22, height:22,
-    borderRadius:'50%', background:'linear-gradient(135deg,#C87B52,#9E5C35)',
+    justifyContent:'center', background:'rgba(218,138,52,0.06)', transition:'all 0.2s' },
+  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(218,138,52,0.16),rgba(218,168,52,0.10))', borderRadius:14 },
+  cardLabel: { fontSize:13, fontWeight:700, color:'rgba(218,138,52,0.88)', lineHeight:1.3 },
+  cardSub:   { fontSize:11, color:'rgba(218,138,52,0.48)', lineHeight:1.3, fontWeight:500 },
+  cardCheck: { position:'absolute', top:10, right:10, width:22, height:22, borderRadius:'50%',
+    background:'linear-gradient(135deg,rgba(218,138,52,0.80),rgba(190,112,30,0.90))',
     display:'flex', alignItems:'center', justifyContent:'center',
-    fontSize:11, fontWeight:800, color:'white',
-    boxShadow:'0 3px 10px rgba(200,123,82,0.45)', animation:'popIn 0.2s ease' },
+    fontSize:11, fontWeight:800, color:'rgba(255,245,225,0.95)',
+    boxShadow:'0 3px 10px rgba(218,138,52,0.35)', animation:'popIn 0.2s ease' },
 
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
-  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(200,123,82,0.18)',
+  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(218,138,52,0.16)',
     background:'rgba(255,255,255,0.75)', cursor:'pointer', fontSize:13,
-    fontFamily:'Poppins, sans-serif', color:'#7a5c50',
+    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.60)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', fontWeight:600, outline:'none',
-    boxShadow:'0 3px 10px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' },
-  chipSel: { border:'1.5px solid #C87B52',
-    background:'linear-gradient(135deg,rgba(200,123,82,0.12),rgba(232,150,42,0.07))',
-    color:'#9E5C35', fontWeight:700,
-    boxShadow:'0 6px 18px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,255,255,0.6)',
+    boxShadow:'0 3px 10px rgba(218,138,52,0.05), inset 0 1px 0 rgba(255,255,255,0.9)' },
+  chipSel: { border:'1.5px solid rgba(218,138,52,0.55)',
+    background:'linear-gradient(135deg,rgba(218,138,52,0.10),rgba(218,168,52,0.06))',
+    color:'rgba(218,138,52,0.88)', fontWeight:700,
+    boxShadow:'0 6px 18px rgba(218,138,52,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
-  inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
-    alignItems:'center', gap:16 },
+  inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:16 },
   textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
-    border:'1.5px solid rgba(200,123,82,0.22)', background:'rgba(255,255,255,0.82)', fontSize:22,
-    fontFamily:'Poppins, sans-serif', color:'#1a0a00', outline:'none',
-    textAlign:'center', fontWeight:700,
-    boxShadow:'0 6px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+    border:'1.5px solid rgba(218,138,52,0.20)', background:'rgba(255,255,255,0.82)',
+    fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
+    outline:'none', textAlign:'center', fontWeight:700,
+    boxShadow:'0 6px 24px rgba(218,138,52,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
     transition:'border-color 0.2s, box-shadow 0.2s', boxSizing:'border-box' },
 
   numberRow: { display:'flex', alignItems:'center', gap:20 },
   numBtn: { width:62, height:62, borderRadius:'50%', border:'none',
-    background:'linear-gradient(145deg,#C87B52,#9E5C35)',
-    color:'white', fontSize:28, fontWeight:700, cursor:'pointer',
+    background:'linear-gradient(145deg,rgba(218,138,52,0.80),rgba(190,112,30,0.88))',
+    color:'rgba(255,245,225,0.95)', fontSize:28, fontWeight:700, cursor:'pointer',
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
-    boxShadow:'0 8px 24px rgba(200,123,82,0.40), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow:'0 8px 24px rgba(218,138,52,0.35), inset 0 1px 0 rgba(255,255,255,0.20)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none', lineHeight:1 },
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
-    padding:'12px 20px', background:'rgba(255,255,255,0.82)', border:'1.5px solid rgba(200,123,82,0.22)' },
-  numberInput: { width:120, border:'none', background:'transparent',
-    fontSize:52, fontFamily:'Poppins, sans-serif', color:'#1a0a00',
+    padding:'12px 20px', background:'rgba(255,255,255,0.82)', border:'1.5px solid rgba(218,138,52,0.20)' },
+  numberInput: { width:120, border:'none', background:'transparent', fontSize:52,
+    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.90)',
     outline:'none', textAlign:'center', fontWeight:900, padding:0 },
-  unit: { fontSize:18, color:'rgba(200,123,82,0.60)', fontWeight:600 },
+  unit: { fontSize:18, color:'rgba(218,138,52,0.50)', fontWeight:600 },
 
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%', margin:'0 auto',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
   ctaBtn: { padding:'0 24px', height:58,
-    background:'linear-gradient(145deg,#C87B52,#9E5C35)',
-    color:'white', border:'none', borderRadius:22, fontSize:17, fontWeight:800,
+    background:'linear-gradient(145deg,rgba(218,138,52,0.82),rgba(190,112,30,0.88))',
+    color:'rgba(255,245,225,0.96)', border:'none', borderRadius:22, fontSize:17, fontWeight:800,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 12px 36px rgba(200,123,82,0.42), 0 4px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)',
+    boxShadow:'0 12px 36px rgba(218,138,52,0.35), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.18)',
     transition:'opacity 0.2s, transform 0.15s', letterSpacing:'0.3px', outline:'none' },
-  skipBtn: { background:'transparent', border:'none', color:'rgba(200,123,82,0.55)',
+  skipBtn: { background:'transparent', border:'none', color:'rgba(218,138,52,0.42)',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
     textDecoration:'underline', padding:'4px', textAlign:'center', fontWeight:500 },
 }
