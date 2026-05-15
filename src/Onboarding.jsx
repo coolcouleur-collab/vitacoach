@@ -5,12 +5,12 @@ import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, Fire
 function BgBlobs() {
   return (
     <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden',
-      background:'linear-gradient(160deg,#FEFDFB 0%,#FDF9F5 50%,#FEFDFB 100%)'}}>
+      background:'linear-gradient(160deg,#FAF5EE 0%,#F4EAE0 50%,#FAF5EE 100%)'}}>
       <div style={{position:'absolute',top:'-18%',left:'-12%',width:680,height:680,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.05) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.09) 0%,transparent 70%)',
         animation:'floatOrb 10s ease-in-out infinite'}}/>
       <div style={{position:'absolute',bottom:'-12%',right:'-10%',width:780,height:780,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.03) 0%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(218,138,52,0.06) 0%,transparent 70%)',
         animation:'floatOrb 14s ease-in-out infinite reverse'}}/>
     </div>
   )
@@ -461,8 +461,8 @@ export default function Onboarding({ onTermine }) {
         input[type='number'] { -moz-appearance:textfield; }
         input[type='time']::-webkit-calendar-picker-indicator { opacity:0; }
         input:focus, textarea:focus { outline:none; }
-        .clay-text-input:focus { border-color:rgba(218,138,52,0.70) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.12),0 8px 32px rgba(218,138,52,0.10) !important; }
-        .clay-time-input:focus  { border-color:rgba(218,138,52,0.70) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.12) !important; }
+        .clay-text-input:focus { border-color:rgba(100,65,25,0.40) !important; box-shadow:0 0 0 4px rgba(100,65,25,0.07),0 6px 24px rgba(100,65,25,0.08) !important; }
+        .clay-time-input:focus  { border-color:rgba(100,65,25,0.40) !important; box-shadow:0 0 0 4px rgba(100,65,25,0.07) !important; }
         .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
         .cta-btn:active  { transform:scale(0.97) !important; }
         .back-btn:hover  { background:rgba(218,138,52,0.08) !important; border-color:rgba(218,138,52,0.40) !important; }
@@ -627,15 +627,15 @@ const s = {
 
   logoTop: { position:'fixed', top:22, left:'50%', transform:'translateX(-50%)', zIndex:100 },
   logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.04em',
-    color:'rgba(218,138,52,0.72)', mixBlendMode:'multiply' },
+    color:'rgba(180,105,30,0.65)', mixBlendMode:'multiply' },
 
   stepCounter: { position:'fixed', top:26, right:22, zIndex:100,
     display:'flex', alignItems:'baseline', gap:1 },
-  stepCurrent: { fontSize:13, fontWeight:700, color:'rgba(218,138,52,0.55)',
+  stepCurrent: { fontSize:13, fontWeight:600, color:'rgba(60,35,10,0.38)',
     fontFamily:'Poppins, sans-serif', letterSpacing:'-0.2px' },
-  stepSep: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.28)',
+  stepSep: { fontSize:11, fontWeight:400, color:'rgba(60,35,10,0.22)',
     fontFamily:'Poppins, sans-serif', margin:'0 1px' },
-  stepTotal: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.28)',
+  stepTotal: { fontSize:11, fontWeight:400, color:'rgba(60,35,10,0.22)',
     fontFamily:'Poppins, sans-serif' },
 
   screen: { flex:1, display:'flex', flexDirection:'column', padding:'96px 24px 24px',
@@ -643,11 +643,11 @@ const s = {
 
   questionWrap: { marginBottom:28 },
   question: { fontSize:'clamp(22px,5vw,32px)', fontWeight:800, lineHeight:1.22,
-    letterSpacing:'-0.5px', marginBottom:10, color:'rgba(218,138,52,0.92)' },
-  qSubtitle: { fontSize:14, color:'rgba(218,138,52,0.50)', lineHeight:1.55, fontWeight:500 },
+    letterSpacing:'-0.5px', marginBottom:10, color:'rgba(60,35,10,0.78)' },
+  qSubtitle: { fontSize:14, color:'rgba(60,35,10,0.40)', lineHeight:1.55, fontWeight:500 },
 
   cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(148px,1fr))', gap:11, flex:1, alignItems:'start', alignContent:'start' },
-  card: { background:'rgba(255,255,255,0.75)', border:'1px solid rgba(218,138,52,0.12)', borderRadius:22,
+  card: { background:'rgba(255,255,255,0.65)', border:'1px solid rgba(100,65,25,0.10)', borderRadius:22,
     padding:'18px 14px', cursor:'pointer', textAlign:'left', position:'relative',
     transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)', fontFamily:'Poppins, sans-serif',
     display:'flex', flexDirection:'column', gap:8, outline:'none',
@@ -659,8 +659,8 @@ const s = {
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
     justifyContent:'center', background:'rgba(218,138,52,0.06)', transition:'all 0.2s' },
   cardIconWrapSel: { background:'linear-gradient(135deg,rgba(218,138,52,0.16),rgba(218,168,52,0.10))', borderRadius:14 },
-  cardLabel: { fontSize:13, fontWeight:700, color:'rgba(218,138,52,0.88)', lineHeight:1.3 },
-  cardSub:   { fontSize:11, color:'rgba(218,138,52,0.48)', lineHeight:1.3, fontWeight:500 },
+  cardLabel: { fontSize:13, fontWeight:700, color:'rgba(60,35,10,0.72)', lineHeight:1.3 },
+  cardSub:   { fontSize:11, color:'rgba(60,35,10,0.38)', lineHeight:1.3, fontWeight:500 },
   cardCheck: { position:'absolute', top:10, right:10, width:22, height:22, borderRadius:'50%',
     background:'linear-gradient(135deg,rgba(218,138,52,0.80),rgba(190,112,30,0.90))',
     display:'flex', alignItems:'center', justifyContent:'center',
@@ -668,23 +668,23 @@ const s = {
     boxShadow:'0 3px 10px rgba(218,138,52,0.35)', animation:'popIn 0.2s ease' },
 
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
-  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(218,138,52,0.16)',
-    background:'rgba(255,255,255,0.75)', cursor:'pointer', fontSize:13,
-    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.60)',
+  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(100,65,25,0.14)',
+    background:'rgba(255,255,255,0.65)', cursor:'pointer', fontSize:13,
+    fontFamily:'Poppins, sans-serif', color:'rgba(60,35,10,0.52)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', fontWeight:600, outline:'none',
-    boxShadow:'0 3px 10px rgba(218,138,52,0.05), inset 0 1px 0 rgba(255,255,255,0.9)' },
-  chipSel: { border:'1.5px solid rgba(218,138,52,0.55)',
-    background:'linear-gradient(135deg,rgba(218,138,52,0.10),rgba(218,168,52,0.06))',
-    color:'rgba(218,138,52,0.88)', fontWeight:700,
-    boxShadow:'0 6px 18px rgba(218,138,52,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
+    boxShadow:'0 2px 8px rgba(100,65,25,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' },
+  chipSel: { border:'1.5px solid rgba(218,138,52,0.45)',
+    background:'rgba(218,138,52,0.08)',
+    color:'rgba(60,35,10,0.80)', fontWeight:700,
+    boxShadow:'0 4px 14px rgba(218,138,52,0.14), inset 0 1px 0 rgba(255,255,255,0.6)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
   inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:16 },
   textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
-    border:'1.5px solid rgba(218,138,52,0.20)', background:'rgba(255,255,255,0.82)',
-    fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
+    border:'1.5px solid rgba(100,65,25,0.16)', background:'rgba(255,255,255,0.70)',
+    fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(60,35,10,0.78)',
     outline:'none', textAlign:'center', fontWeight:700,
-    boxShadow:'0 6px 24px rgba(218,138,52,0.07), inset 0 1px 0 rgba(255,255,255,0.9)',
+    boxShadow:'0 4px 18px rgba(100,65,25,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
     transition:'border-color 0.2s, box-shadow 0.2s', boxSizing:'border-box' },
 
   numberRow: { display:'flex', alignItems:'center', gap:20 },
@@ -697,9 +697,9 @@ const s = {
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
     padding:'12px 20px', background:'rgba(255,255,255,0.82)', border:'1.5px solid rgba(218,138,52,0.20)' },
   numberInput: { width:120, border:'none', background:'transparent', fontSize:52,
-    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.90)',
+    fontFamily:'Poppins, sans-serif', color:'rgba(60,35,10,0.75)',
     outline:'none', textAlign:'center', fontWeight:900, padding:0 },
-  unit: { fontSize:18, color:'rgba(218,138,52,0.50)', fontWeight:600 },
+  unit: { fontSize:18, color:'rgba(60,35,10,0.38)', fontWeight:600 },
 
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%', margin:'0 auto',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
@@ -709,7 +709,7 @@ const s = {
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
     boxShadow:'0 12px 36px rgba(218,138,52,0.35), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.18)',
     transition:'opacity 0.2s, transform 0.15s', letterSpacing:'0.3px', outline:'none' },
-  skipBtn: { background:'transparent', border:'none', color:'rgba(218,138,52,0.42)',
+  skipBtn: { background:'transparent', border:'none', color:'rgba(60,35,10,0.30)',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
     textDecoration:'underline', padding:'4px', textAlign:'center', fontWeight:500 },
 }
