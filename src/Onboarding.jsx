@@ -4,11 +4,42 @@ import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, Fire
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
   return (
-    <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden',
-      background:'transparent'}}>
-      <div style={{position:'absolute',top:'-18%',left:'-12%',width:680,height:680,borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.07) 0%,transparent 70%)',
-        animation:'floatOrb 10s ease-in-out infinite'}}/>
+    <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
+      {/* Jaune doux — haut-centre, multiply */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
+        opacity:0.62, mixBlendMode:'multiply',
+        animation:'liquidBlob3 14s ease-in-out infinite',
+      }}/>
+      {/* Orange léger — bas-gauche, multiply */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
+        opacity:0.20, mixBlendMode:'multiply',
+        animation:'liquidBlob1 18s ease-in-out infinite reverse',
+      }}/>
+      {/* Pêche chaud haut-droite */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.45) 0%, transparent 58%)',
+        filter:'blur(72px)',
+        animation:'liquidBlob2 16s ease-in-out infinite',
+      }}/>
+      {/* Ambre bas-gauche */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(212,132,74,0.32) 0%, transparent 52%)',
+        filter:'blur(64px)',
+        animation:'liquidBlob4 20s ease-in-out infinite reverse',
+      }}/>
+      {/* Chaleur bas-droite */}
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 82% 80%, rgba(255,180,80,0.28) 0%, transparent 50%)',
+        filter:'blur(50px)',
+        animation:'liquidBlob3 11s ease-in-out infinite 2s',
+      }}/>
     </div>
   )
 }
@@ -450,6 +481,10 @@ export default function Onboarding({ onTermine }) {
         @keyframes slideInLeft  { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
         @keyframes popIn        { 0%{transform:scale(0.88);opacity:0} 60%{transform:scale(1.06)} 100%{transform:scale(1);opacity:1} }
         @keyframes floatOrb     { 0%,100%{transform:translateY(0px) scale(1)} 33%{transform:translateY(-28px) scale(1.04)} 66%{transform:translateY(14px) scale(0.97)} }
+        @keyframes liquidBlob1  { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,5%) scale(1.06)} 66%{transform:translate(-2%,-3%) scale(0.96)} }
+        @keyframes liquidBlob2  { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-4%,3%) scale(1.08)} 70%{transform:translate(2%,-5%) scale(0.94)} }
+        @keyframes liquidBlob3  { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
+        @keyframes liquidBlob4  { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(-3%,4%) scale(1.07)} 75%{transform:translate(4%,-2%) scale(0.95)} }
         @keyframes dotPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(218,138,52,0.50);transform:scale(1.15)} 50%{box-shadow:0 0 0 7px rgba(218,138,52,0);transform:scale(1.2)} }
         @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(218,138,52,0.08),0 0 0 16px rgba(218,138,52,0.04)} 50%{box-shadow:0 0 0 12px rgba(218,138,52,0.13),0 0 0 22px rgba(218,138,52,0.06)} }
         @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(218,138,52,0.18),0 8px 32px rgba(218,138,52,0.10)} 50%{box-shadow:0 0 0 6px rgba(218,138,52,0.30),0 8px 32px rgba(218,138,52,0.18)} }
