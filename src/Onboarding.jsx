@@ -301,19 +301,21 @@ function RevealScreen({ answers, onEnter }) {
         <button
           onClick={onEnter}
           style={{
-            width:'100%', height:58,
-            background:'linear-gradient(145deg,rgba(218,138,52,0.85),rgba(190,112,30,0.90))',
-            color:'rgba(255,245,225,0.96)', border:'none', borderRadius:22,
-            fontSize:17, fontWeight:800, cursor:'pointer',
+            width:'100%', height:52,
+            background:'transparent',
+            color:'rgba(218,138,52,0.78)', border:'1.5px solid rgba(218,138,52,0.32)', borderRadius:30,
+            fontSize:15, fontWeight:600, cursor:'pointer',
             fontFamily:'Poppins, sans-serif',
-            boxShadow:'0 12px 36px rgba(218,138,52,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
+            display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+            boxShadow:'none',
             opacity: btnVisible ? 1 : 0,
             transform: btnVisible ? 'translateY(0)' : 'translateY(14px)',
             transition:'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
-            letterSpacing:'0.3px',
+            letterSpacing:'0.2px', outline:'none',
           }}
         >
-          Entrer dans Solenn ✦
+          Entrer dans Solenn
+          <span className="arrow-anim" style={{display:'inline-block', fontSize:18}}>→</span>
         </button>
       </div>
     </div>
