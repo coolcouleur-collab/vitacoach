@@ -56,25 +56,18 @@ export default function SplashScreen({ onDone }) {
           animate={{ scale: 1,    opacity: 1 }}
           transition={{ duration: 0.70, ease: EASE_SPRING, delay: 0.06 }}
           style={{
-            width: 90, height: 90, borderRadius: 28,
-            background: 'linear-gradient(145deg, #D4895A 0%, #9E5C35 100%)',
+            width: 88, height: 88, borderRadius: '50%',
+            background: 'linear-gradient(135deg, rgba(218,138,52,0.28), rgba(190,112,30,0.18))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 14px 48px rgba(200,123,82,0.34), inset 0 1px 0 rgba(255,255,255,0.22)',
+            boxShadow: '0 0 0 10px rgba(218,138,52,0.07), 0 0 0 20px rgba(218,138,52,0.04)',
             position: 'relative', overflow: 'hidden',
             marginBottom: 24,
           }}
         >
-          {/* inner shine */}
-          <div style={{
-            position: 'absolute', top: 6, left: 9,
-            width: '52%', height: '28%', borderRadius: '50%',
-            background: 'rgba(255,255,255,0.20)', pointerEvents: 'none',
-          }} />
           <span style={{
-            fontSize: 46, fontWeight: 900, color: '#fff',
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontSize: 44, fontWeight: 900, color: 'rgba(218,138,52,0.90)',
+            fontFamily: "'Poppins', 'Inter', system-ui, sans-serif",
             letterSpacing: '-2px',
-            textShadow: '0 2px 10px rgba(0,0,0,0.14)',
           }}>S</span>
         </motion.div>
 

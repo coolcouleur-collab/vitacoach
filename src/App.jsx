@@ -95,31 +95,31 @@ function HealthPermModal({ onAllow, onLater }) {
       display:'flex', alignItems:'flex-end', justifyContent:'center',
     }}>
       <div style={{
-        background:'linear-gradient(145deg,#FFF8F4,#ffffff)',
+        background:'linear-gradient(160deg, #FFFAF5 0%, #FFF3E8 100%)',
         borderRadius:'28px 28px 0 0',
         padding:'10px 26px 52px',
         width:'100%', maxWidth:520,
         boxShadow:'0 -12px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9)',
         animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
-        <div style={{ width:44, height:5, background:'rgba(0,0,0,0.10)', borderRadius:3, margin:'12px auto 26px' }} />
+        <div style={{ width:44, height:5, background:'rgba(218,138,52,0.15)', borderRadius:3, margin:'12px auto 26px' }} />
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
-            { bg:'linear-gradient(135deg,#ff3b30,#ff6b6b)', shadow:'rgba(255,59,48,0.30)', e:'❤️' },
-            { bg:'linear-gradient(135deg,#34c759,#30d158)', shadow:'rgba(52,199,89,0.30)',  e:'🏃' },
+            { bg:'rgba(218,138,52,0.18)', shadow:'rgba(218,138,52,0.25)', e:'❤️' },
+            { bg:'rgba(218,138,52,0.12)', shadow:'rgba(218,138,52,0.18)',  e:'🏃' },
           ].map(({ bg, shadow, e }) => (
             <div key={e} style={{ width:56, height:56, borderRadius:18, background:bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, boxShadow:`0 6px 20px ${shadow}` }}>{e}</div>
           ))}
         </div>
 
-        <div style={{ fontSize:19, fontWeight:900, color:'#1a0a00', textAlign:'center', marginBottom:8, letterSpacing:'-0.03em' }}>
+        <div style={{ fontSize:19, fontWeight:900, color:'rgba(218,138,52,0.90)', textAlign:'center', marginBottom:8, letterSpacing:'-0.03em' }}>
           Synchroniser mes données santé
         </div>
-        <div style={{ fontSize:13, color:'rgba(90,55,25,0.60)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
+        <div style={{ fontSize:13, color:'rgba(218,138,52,0.55)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
           Solenn peut synchroniser automatiquement tes données depuis{' '}
-          <strong style={{ color:'#C87B52' }}>Apple Santé</strong> ou{' '}
-          <strong style={{ color:'#C87B52' }}>Google Fit</strong>.
+          <strong style={{ color:'rgba(218,138,52,0.85)' }}>Apple Santé</strong> ou{' '}
+          <strong style={{ color:'rgba(218,138,52,0.85)' }}>Google Fit</strong>.
         </div>
 
         {[
@@ -131,26 +131,27 @@ function HealthPermModal({ onAllow, onLater }) {
           <div key={label} style={{
             display:'flex', alignItems:'center', gap:12,
             padding:'10px 14px', borderRadius:13, marginBottom:7,
-            background:'rgba(200,123,82,0.05)', border:'1px solid rgba(200,123,82,0.10)',
+            background:'rgba(218,138,52,0.06)', border:'1px solid rgba(218,138,52,0.14)',
           }}>
             <span style={{ fontSize:18 }}>{icon}</span>
-            <span style={{ fontSize:13, color:'#3a1a08', fontWeight:600, flex:1 }}>{label}</span>
+            <span style={{ fontSize:13, color:'rgba(218,138,52,0.85)', fontWeight:600, flex:1 }}>{label}</span>
             <span style={{ fontSize:10, color:'#34c759', fontWeight:700, background:'rgba(52,199,89,0.10)', padding:'3px 8px', borderRadius:6 }}>Lecture seule</span>
           </div>
         ))}
 
         <div style={{ marginTop:22, display:'flex', flexDirection:'column', gap:10 }}>
           <button onClick={onAllow} style={{
-            padding:'16px', borderRadius:16, border:'none',
-            background:'linear-gradient(135deg,#C87B52,#9E5C35)',
-            color:'#fff', fontSize:15, fontWeight:800,
+            padding:'16px', borderRadius:30, border:'1.5px solid rgba(218,138,52,0.35)',
+            background:'transparent',
+            color:'rgba(218,138,52,0.80)', fontSize:15, fontWeight:600,
             cursor:'pointer', fontFamily:'Poppins,sans-serif',
-            boxShadow:'0 8px 28px rgba(200,123,82,0.40)', letterSpacing:'-0.02em',
-          }}>Autoriser l'accès</button>
+            boxShadow:'none', letterSpacing:'-0.02em',
+            display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+          }}>Autoriser l'accès <span className="arrow-anim" style={{ fontSize:17 }}>→</span></button>
           <button onClick={onLater} style={{
             padding:'14px', borderRadius:16,
-            border:'1px solid rgba(200,123,82,0.18)',
-            background:'transparent', color:'rgba(120,80,50,0.55)',
+            border:'1px solid rgba(218,138,52,0.18)',
+            background:'transparent', color:'rgba(218,138,52,0.42)',
             fontSize:13, fontWeight:600,
             cursor:'pointer', fontFamily:'Poppins,sans-serif',
           }}>Plus tard</button>
