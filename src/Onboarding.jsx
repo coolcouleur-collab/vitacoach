@@ -517,6 +517,11 @@ export default function Onboarding({ onTermine }) {
       </div>
 
 
+      {/* Bouton retour */}
+      {getPrevStep(step, answers) !== null && (
+        <button className="back-btn" style={s.backBtn} onClick={goBack}>‹</button>
+      )}
+
       {/* Logo */}
       <div style={s.logoTop}>
         <span className="solenn-logo" style={s.logoText}>Solenn</span>
@@ -658,11 +663,11 @@ const s = {
     background:'linear-gradient(90deg,rgba(218,138,52,0.45) 0%,rgba(218,168,52,0.60) 100%)',
     transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:2 },
 
-  backBtn: { position:'fixed', top:22, left:20, zIndex:100,
-    background:'rgba(255,255,255,0.75)', border:'1.5px solid rgba(218,138,52,0.18)',
-    color:'rgba(218,138,52,0.65)', width:42, height:42, borderRadius:14, cursor:'pointer',
-    fontSize:18, fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center',
-    justifyContent:'center', boxShadow:'0 4px 16px rgba(218,138,52,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+  backBtn: { position:'fixed', top:20, left:16, zIndex:100,
+    background:'transparent', border:'1.5px solid rgba(218,138,52,0.28)',
+    color:'rgba(218,138,52,0.60)', width:40, height:40, borderRadius:12, cursor:'pointer',
+    fontSize:22, fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center',
+    justifyContent:'center', lineHeight:1,
     transition:'all 0.2s', outline:'none' },
 
   logoTop: { position:'fixed', top:22, left:'50%', transform:'translateX(-50%)', zIndex:100 },
