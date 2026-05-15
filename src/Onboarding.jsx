@@ -510,10 +510,6 @@ export default function Onboarding({ onTermine }) {
         <div style={{...s.progressBar, width:`${progress}%`}} />
       </div>
 
-      {/* Bouton retour */}
-      {step > 0 && (
-        <button className="back-btn" style={s.backBtn} onClick={goBack}>←</button>
-      )}
 
       {/* Logo */}
       <div style={s.logoTop}>
@@ -679,14 +675,14 @@ const s = {
   qSubtitle: { fontSize:14, color:'rgba(218,138,52,0.45)', lineHeight:1.55, fontWeight:500 },
 
   cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(148px,1fr))', gap:11, flex:1, alignItems:'start', alignContent:'start' },
-  card: { background:'rgba(255,255,255,0.72)', border:'1px solid rgba(255,255,255,0.60)', borderRadius:22,
+  card: { background:'transparent', border:'1px solid rgba(255,255,255,0.35)', borderRadius:22,
     padding:'18px 14px', cursor:'pointer', textAlign:'left', position:'relative',
     transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)', fontFamily:'Poppins, sans-serif',
     display:'flex', flexDirection:'column', gap:8, outline:'none',
-    boxShadow:'0 4px 20px rgba(180,100,30,0.10), inset 0 1px 0 rgba(255,255,255,0.95)' },
-  cardSel: { background:'rgba(255,255,255,0.88)',
-    border:'1.5px solid rgba(218,138,52,0.45)',
-    boxShadow:'0 8px 28px rgba(218,138,52,0.18), inset 0 1px 0 rgba(255,255,255,0.95)',
+    boxShadow:'none' },
+  cardSel: { background:'rgba(255,255,255,0.22)',
+    border:'1.5px solid rgba(218,138,52,0.55)',
+    boxShadow:'0 4px 18px rgba(218,138,52,0.15)',
     transform:'scale(1.03)', animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
     justifyContent:'center', background:'rgba(218,138,52,0.08)', transition:'all 0.2s' },
@@ -700,23 +696,23 @@ const s = {
     boxShadow:'0 3px 10px rgba(218,138,52,0.35)', animation:'popIn 0.2s ease' },
 
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
-  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(255,255,255,0.55)',
-    background:'rgba(255,255,255,0.68)', cursor:'pointer', fontSize:13,
-    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.75)',
+  chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(255,255,255,0.35)',
+    background:'transparent', cursor:'pointer', fontSize:13,
+    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.78)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', fontWeight:600, outline:'none',
-    boxShadow:'0 2px 10px rgba(180,100,30,0.08), inset 0 1px 0 rgba(255,255,255,0.90)' },
-  chipSel: { border:'1.5px solid rgba(218,138,52,0.50)',
-    background:'rgba(255,255,255,0.90)',
-    color:'rgba(218,138,52,0.92)', fontWeight:700,
-    boxShadow:'0 4px 14px rgba(218,138,52,0.18), inset 0 1px 0 rgba(255,255,255,0.95)',
+    boxShadow:'none' },
+  chipSel: { border:'1.5px solid rgba(218,138,52,0.60)',
+    background:'rgba(255,255,255,0.22)',
+    color:'rgba(218,138,52,0.95)', fontWeight:700,
+    boxShadow:'0 2px 10px rgba(218,138,52,0.15)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
   inputWrap: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', gap:16 },
   textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
-    border:'1.5px solid rgba(255,255,255,0.60)', background:'rgba(255,255,255,0.72)',
+    border:'1.5px solid rgba(255,255,255,0.40)', background:'transparent',
     fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
     outline:'none', textAlign:'center', fontWeight:700,
-    boxShadow:'0 4px 18px rgba(180,100,30,0.10), inset 0 1px 0 rgba(255,255,255,0.95)',
+    boxShadow:'none',
     transition:'border-color 0.2s, box-shadow 0.2s', boxSizing:'border-box' },
 
   numberRow: { display:'flex', alignItems:'center', gap:20 },
@@ -727,7 +723,7 @@ const s = {
     boxShadow:'0 8px 24px rgba(218,138,52,0.35), inset 0 1px 0 rgba(255,255,255,0.20)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none', lineHeight:1 },
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
-    padding:'12px 20px', background:'rgba(255,255,255,0.72)', border:'1.5px solid rgba(255,255,255,0.60)' },
+    padding:'12px 20px', background:'transparent', border:'1.5px solid rgba(255,255,255,0.40)' },
   numberInput: { width:120, border:'none', background:'transparent', fontSize:52,
     fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
     outline:'none', textAlign:'center', fontWeight:900, padding:0 },
