@@ -501,7 +501,8 @@ export default function Onboarding({ onTermine }) {
         .clay-time-input::placeholder   { color:rgba(218,138,52,0.35) !important; }
         .clay-time-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10) !important; }
         .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
-        .cta-btn:active  { transform:scale(0.97) !important; }
+        .cta-btn:hover  { background:rgba(218,138,52,0.07) !important; border-color:rgba(218,138,52,0.55) !important; }
+        .cta-btn:active { transform:scale(0.97) !important; }
         .back-btn:hover  { background:rgba(218,138,52,0.08) !important; border-color:rgba(218,138,52,0.40) !important; }
         .clay-card:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(218,138,52,0.10),inset 0 1px 0 rgba(255,255,255,0.9) !important; }
         .clay-chip:hover { transform:scale(1.04); box-shadow:0 4px 14px rgba(218,138,52,0.13) !important; }
@@ -630,9 +631,15 @@ export default function Onboarding({ onTermine }) {
         )}
         {(q.type !== 'cards' || q.multi) && (
           <button className="cta-btn"
-            style={{...s.ctaBtn, opacity:canContinue()?1:0.38, cursor:canContinue()?'pointer':'default'}}
+            style={{...s.ctaBtn, opacity:canContinue()?1:0.28, cursor:canContinue()?'pointer':'default'}}
             onClick={goNext} disabled={!canContinue()}>
-            {isLast ? 'Voir mon profil ✦' : 'Continuer →'}
+            {isLast
+              ? <span>Voir mon profil <span style={{letterSpacing:'0.05em'}}>✦</span></span>
+              : <span style={{display:'flex',alignItems:'center',gap:10}}>
+                  Continuer
+                  <span className={canContinue() ? 'arrow-anim' : ''} style={{display:'inline-block',fontSize:18}}>→</span>
+                </span>
+            }
           </button>
         )}
       </div>
@@ -736,12 +743,14 @@ const s = {
 
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
-  ctaBtn: { padding:'0 24px', height:58,
-    background:'linear-gradient(145deg,rgba(218,138,52,0.82),rgba(190,112,30,0.88))',
-    color:'rgba(255,245,225,0.96)', border:'none', borderRadius:22, fontSize:17, fontWeight:800,
+  ctaBtn: { padding:'0 32px', height:52, width:'100%',
+    background:'transparent',
+    color:'rgba(218,138,52,0.78)', border:'1.5px solid rgba(218,138,52,0.32)', borderRadius:30,
+    fontSize:15, fontWeight:600,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 12px 36px rgba(218,138,52,0.35), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.18)',
-    transition:'opacity 0.2s, transform 0.15s', letterSpacing:'0.3px', outline:'none' },
+    display:'flex', alignItems:'center', justifyContent:'center', gap:10,
+    boxShadow:'none',
+    transition:'all 0.2s', letterSpacing:'0.2px', outline:'none' },
   skipBtn: { background:'transparent', border:'none', color:'rgba(218,138,52,0.45)',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
     textDecoration:'underline', padding:'4px', textAlign:'center', fontWeight:500 },
