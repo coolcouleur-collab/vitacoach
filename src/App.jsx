@@ -699,20 +699,30 @@ export default function App() {
   }
 
   // ── LANDING / FORUM ────────────────────────────────────────────────────────
-  const [showAuth, setShowAuth] = useState(false)
+  const [showAuth, setShowAuth] = useState(() => sessionStorage.getItem('solenn_page') === 'auth')
   const [showForum, setShowForum] = useState(false)
 
+  function goToAuth() {
+    sessionStorage.setItem('solenn_page', 'auth')
+    setShowAuth(true)
+  }
+  function goToLanding() {
+    sessionStorage.removeItem('solenn_page')
+    setShowAuth(false)
+  }
+
   if (showForum) return <Forum onBack={() => setShowForum(false)} user={user} profil={profil} />
-  if (!user && !showAuth) return <Landing onCommencer={() => setShowAuth(true)} onForum={() => setShowForum(true)} />
+  if (!user && !showAuth && !isMobile) return <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
   if (!user) return (
     <Auth
       onConnecte={u => {
+        sessionStorage.removeItem('solenn_page')
         setUser(u)
         localStorage.setItem('vitacoach_user', JSON.stringify(u))
       }}
-      onBack={() => setShowAuth(false)}
+      onBack={goToLanding}
     />
   )
 
