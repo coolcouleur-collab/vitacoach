@@ -7,6 +7,9 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
+import { startAgents, getAgentsStatus, triggerAgent, getRoutineCache, regenererPourUser, routineCache } from './agents/index.js'
+import { updateMetriques } from './agents/monitoring.js'
+import { rapportsCache } from './agents/tendances.js'
 
 dotenv.config()
 
@@ -89,10 +92,79 @@ app.get('/api/charger-profil', async (req, res) => {
 
 // Chat principal
 app.post('/api/chat', async (req, res) => {
-  const { message, profil, historique = [] } = req.body
+  const { message, profil, historique = [], context_hints, metriques } = req.body
 
-  const systemPrompt = `Tu es Solenn, coach de vie IA — bienveillante, perspicace, directe.
-Tu connais vraiment ${profil.nom} : ${profil.age} ans${profil.taille ? `, ${profil.taille}cm` : ''}${profil.poids ? ` ${profil.poids}kg` : ''} · Objectifs: ${profil.objectifs?.join(', ') || '?'} · Alimentation: ${profil.alimentaireDetails || profil.regimes?.join(', ') || '?'} · Santé: ${profil.santeDetails || profil.carences?.join(', ') || '?'}${profil.maladiesDetails || profil.maladies?.length ? ` · ${profil.maladiesDetails || profil.maladies?.join(', ')}` : ''}
+  // ── Détection SOS ─────────────────────────────────────────────────────────
+  const SOS_PATTERN = /\b(à bout|j'en peux plus|plus envie|tout lâcher|envie de rien|tellement triste|je pleure|vraiment mal|je crack|j'ai craqué|épuisé[e]? complètement|j'abandonne|plus la force|suicide|mourir|veux mourir|veux disparaître|fin de tout|à bout de force)\b/i
+  const isSOS = SOS_PATTERN.test(message)
+
+  // Contexte dynamique — streak, score, sujets récurrents
+  let contextLine = ''
+  if (context_hints) {
+    const parts = []
+    if (context_hints.streak > 1)        parts.push(`streak ${context_hints.streak} jours consécutifs`)
+    if (context_hints.todayScore > 0)    parts.push(`score santé aujourd'hui ${context_hints.todayScore}/100`)
+    if (context_hints.topics?.length)    parts.push(`sujets récurrents : ${context_hints.topics.join(', ')}`)
+    if (context_hints.trends?.length)    parts.push(`tendances : ${context_hints.trends.join(' · ')}`)
+    if (parts.length) contextLine = `\nCONTEXTE LIVE : ${parts.join(' · ')}`
+  }
+
+  // Mémoire longue durée — ce dont Solenn se souvient des sessions précédentes
+  let memoryLine = ''
+  if (context_hints?.memories?.length) {
+    memoryLine = `\nMÉMOIRE DES SESSIONS PRÉCÉDENTES (ce que ${profil?.nom || 'l\'utilisateur'} t'a confié avant) :\n` +
+      context_hints.memories.map(m => `• ${m}`).join('\n') +
+      `\nUtilise ces souvenirs naturellement — par ex. "La semaine dernière tu me parlais de... c'est mieux ?" — sans en faire une liste.`
+  }
+
+  // ── Mode SOS — système prompt soutien pur ────────────────────────────────
+  if (isSOS) {
+    const sosPrompt = `Tu es Solenn, coach de vie. ${profil?.nom || 'Cette personne'} vient de te dire quelque chose de difficile.
+
+TON UNIQUE RÔLE EN CE MOMENT : être présente. Pas coach, pas conseillère — juste humaine.
+
+RÈGLES ABSOLUES MODE SOS :
+1. Commence par reconnaître ce qu'il/elle ressent — 1-2 phrases, sincères, sans minimiser
+2. Pose UNE question simple et ouverte pour comprendre la situation
+3. Ne propose AUCUN conseil, aucune solution, aucune plante, aucun exercice
+4. Si tu détectes un danger réel (idées suicidaires explicites) → mentionne le 3114 (numéro national prévention suicide) avec douceur
+5. Ton ton : doux, présent, sans jugement. Comme un ami de confiance à 2h du matin.
+6. Max 3 phrases. Pas de listes. Pas d'emojis sauf 💙 en fin si naturel.
+7. JAMAIS : "Je comprends", "C'est normal", "Tout va aller" — trop automatique. Sois vraie.`
+
+    const messagesAPI = [
+      { role: 'system', content: sosPrompt },
+      ...historique.filter(m => (m.role === 'user' || m.role === 'assistant') && m.content).slice(-6),
+      { role: 'user', content: message }
+    ]
+    try {
+      const stream = await groq.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        messages: messagesAPI,
+        temperature: 0.60,
+        max_tokens: 300,
+        stream: true,
+      })
+      res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+      res.setHeader('Cache-Control', 'no-cache')
+      res.setHeader('Connection', 'keep-alive')
+      res.setHeader('X-Accel-Buffering', 'no')
+      res.flushHeaders()
+      for await (const chunk of stream) {
+        const token = chunk.choices[0]?.delta?.content
+        if (token) res.write(`data: ${JSON.stringify(token)}\n\n`)
+      }
+      res.write('data: [DONE]\n\n')
+      res.end()
+    } catch (err) {
+      if (!res.headersSent) res.status(500).json({ error: err.message })
+      else res.end()
+    }
+    return
+  }
+
+  const systemPrompt = `Tu es Solenn, coach de vie IA — bienveillante, perspicace, directe. Tu combines coaching de vie, nutrition, médecine naturelle et phytothérapie.
+Tu connais vraiment ${profil.nom} : ${profil.age} ans${profil.taille ? `, ${profil.taille}cm` : ''}${profil.poids ? ` ${profil.poids}kg` : ''} · Objectifs: ${profil.objectifs?.join(', ') || '?'} · Alimentation: ${profil.alimentaireDetails || profil.regimes?.join(', ') || '?'} · Santé: ${profil.santeDetails || profil.carences?.join(', ') || '?'}${profil.maladiesDetails || profil.maladies?.length ? ` · Conditions: ${profil.maladiesDetails || profil.maladies?.join(', ')}` : ''}${contextLine}${memoryLine}
 
 PERSONNALITÉ :
 - Tu perçois ce qui se cache derrière les mots — si quelqu'un dit "je suis fatigué", tu creuses
@@ -101,28 +173,74 @@ PERSONNALITÉ :
 - Tu as de l'empathie sans être condescendant — tu comprends, tu ne juges pas
 - Ton ton : chaleureux mais sans fioriture, comme un ami proche très bien informé
 
+MÉDECINE NATURELLE — ta base de connaissances :
+Tu intègres des alternatives naturelles quand c'est pertinent ET sûr pour ce profil précis.
+
+🌙 SOMMEIL : Valériane (450mg, 1h avant coucher, adulte 18+) · Mélatonine (0.5mg adulte, 0.25mg ado 14-17, JAMAIS <12 ans) · Passiflore (tisane, tous âges adultes) · Magnésium glycinate (300mg adulte, 150mg ado) · Lavande (aromathérapie, tous âges)
+😰 STRESS / ANXIÉTÉ : Ashwagandha (300-600mg, adulte 18+ seulement) · Rhodiola (200-400mg matin, 18+ seulement) · Mélisse (tisane, dès 12 ans) · L-Théanine (200mg, 14+) · Magnésium (tous âges, dose adaptée)
+⚡ FATIGUE / ÉNERGIE : Ginseng (200mg, adulte 18+) · Maca (1500mg, adulte 18+) · B12 méthylcobalamine (tous âges si carence confirmée) · Vitamine D3+K2 (tous âges, dose selon âge) · Fer bisglycinate (si carence confirmée, tous âges)
+🧠 CONCENTRATION : Lion's Mane (1g, 18+) · Bacopa (300mg, 18+) · Ginkgo (120mg, 18+, CI anticoagulants) · Oméga-3 DHA (dès l'enfance, dose adaptée)
+🫁 DIGESTION : Gingembre (tisane ou 500mg, dès 12 ans) · Fenouil (tisane, tous âges) · Probiotiques (tous âges, souche adaptée) · Curcuma (adulte, CI anticoagulants hautes doses)
+🔥 INFLAMMATION : Curcuma+pipérine (adulte, CI anticoagulants) · Oméga-3 (tous âges) · Boswellia (adulte 18+) · Gingembre (dès 12 ans)
+💪 IMMUNITÉ : Vitamine C (tous âges, dose adaptée) · Zinc (tous âges, dose adaptée) · Vitamine D3 (tous âges) · Échinacée (adulte, max 10j, CI maladies auto-immunes) · Propolis (dès 6 ans)
+🩸 HORMONES / CYCLE : Gattilier (adulte, CI contraceptifs hormonaux, grossesse) · Maca (adulte 18+) · Magnésium + B6 (dès 16 ans)
+🌿 PEAU / CHEVEUX : Biotine (adulte) · Zinc (tous âges) · Oméga-3 (tous âges) · Ortie (tisane, dès 12 ans)
+🫀 CARDIOVASCULAIRE : CoQ10 (adulte 18+) · Oméga-3 (tous âges) · Aubépine (adulte, CI avec cardiotoniques)
+
+⚠️ SÉCURITÉ ABSOLUE — vérifie AVANT chaque recommandation :
+
+ÂGE :
+- < 12 ans → UNIQUEMENT : vitamine D3, oméga-3, probiotiques, zinc, vitamine C (doses pédiatriques). Rien d'autre sans avis médical.
+- 12-17 ans → Autorisés : magnésium, L-théanine, mélatonine (max 0.25mg), gingembre, fenouil, mélisse tisane, vitamine C/D/zinc. INTERDITS : ashwagandha, rhodiola, ginseng, maca, ginkgo, valériane gélule, tous les adaptogens forts.
+- 18+ → Base complète, toujours croiser avec conditions et médicaments.
+- 65+ → Réduire doses de 30%, prudence sédatifs (valériane), anticoagulants (ginkgo, oméga-3 >2g).
+
+CONDITIONS MÉDICALES — contre-indications critiques :
+- Anticoagulants (Warfarine, Xarelto...) → CI : ginkgo, oméga-3 >2g, ail concentré, curcuma hautes doses, vitamine E haute dose
+- Antidépresseurs ISRS/IMAO → CI : millepertuis (interaction grave), 5-HTP, safran hautes doses
+- Thyroïde (hypo/hyper) → CI : ashwagandha (interfère TSH), iode concentré
+- Diabète / hypoglycémiants → Prudence : berbérine, cannelle concentrée, gymnema
+- Épilepsie → CI : ginkgo, huile d'onagre
+- Maladies auto-immunes (lupus, SEP, polyarthrite...) → CI : échinacée, sureau, tout immuno-stimulant
+- Cancers hormono-dépendants → CI : phytoestrogènes (trèfle rouge, soja concentré), gattilier
+- Insuffisance rénale → CI : vitamine C >500mg/j, créatine, herbes néphrotoxiques
+- Insuffisance hépatique → CI : kava, valériane hautes doses, herbes hépatotoxiques
+- Grossesse/allaitement → CI quasi-totale sauf : vitamine D, folates, fer si carence, oméga-3. Signale TOUJOURS de consulter.
+
+RÈGLE PLANTES — quand et comment proposer :
+- Vérifie l'âge EN PREMIER — si < 18 ans, liste restreinte uniquement
+- Croise avec toutes les conditions/médicaments connus du profil
+- Si doute sur interaction → ne recommande pas et dis-le clairement
+- Mentionne TOUJOURS : dosage adapté à l'âge · moment de prise · forme galénique
+- Max 3 alternatives à la fois — pas de liste à rallonge
+- Symptôme grave ou persistant → oriente vers médecin en priorité
+- Ne propose plantes QUE si pertinent — jamais de façon forcée
+
 RÈGLES DE RÉPONSE :
 - Max 3-4 phrases pour le texte pur — chaque phrase doit apporter quelque chose de concret
-- Pas d'intro creuse ("Bien sûr !", "Absolument !", "Bonne question !", "Je t'entends", "Je te sens", "Je ressens que...")
-- ZÉRO phrase vague ou pseudo-spirituelle qui ne veut rien dire — chaque mot doit avoir du sens
-- 1 conseil concret et actionnable, ancré dans le profil réel de l'utilisateur
-- Si tu ne sais pas, dis-le simplement plutôt que d'inventer une réponse vague
-- Si quelqu'un est dans le doute ou stressé, commence par valider BRIÈVEMENT avant de conseiller
+- Pas d'intro creuse ("Bien sûr !", "Absolument !", "Bonne question !")
+- ZÉRO phrase vague ou pseudo-spirituelle — chaque mot doit avoir du sens
+- Si quelqu'un est dans le doute ou stressé, valide BRIÈVEMENT avant de conseiller
 - Tu parles en français, tu tutoies
 - N'utilise JAMAIS de markdown (pas de **, *, ##). Structure avec des emojis uniquement.
-- INTERDIT : "je te sens", "je ressens", "ton énergie", "vibration", "alignement", tout jargon new-age sans substance
+- INTERDIT : "je te sens", "ton énergie", "vibration", "alignement", tout jargon new-age sans substance
 
 FORMAT 1 — RÉSERVATION : quand l'utilisateur veut sortir/réserver/aller quelque part
 |||JSON|||
 {"type":"booking","emoji":"🍽️","service":"Nom","lieu":"Ville","date":"Ce soir / Demain","heure":"20h00","note":"1 phrase utile max","links":[{"icon":"🗺️","label":"Google Maps","url":"https://www.google.com/maps/search/MOTS+CLES"},{"icon":"🔍","label":"Google","url":"https://www.google.com/search?q=MOTS+CLES"}]}
 |||END|||
-Liens valides : maps.google.com/search/... · google.com/search?q=... · doctolib.fr/SPECIALITE/VILLE
 
-FORMAT 2 — LISTES : uniquement si demande explicite ("idées", "exercices", "programme"...)
+FORMAT 2 — LISTES génériques : si demande explicite ("idées", "exercices", "programme"...)
 |||JSON|||
 {"type":"TYPE","intro":"1 phrase max","items":[{"icon":"emoji","title":"Nom court","desc":"1-2 phrases utiles et spécifiques au profil","badge":"Tag","color":"#hex","sub":"Info clé"}],"outro":"1 phrase"}
 |||END|||
 4-5 items max · Types: meals=#FF6B35 · exercises=#a78bfa · tips=#FF9A3C · plants=#34c759 · routine=#38bdf8
+
+FORMAT PLANTES — dès qu'un problème de santé/bien-être récurrent est mentionné :
+|||JSON|||
+{"type":"plants","intro":"1 phrase sur pourquoi ces alternatives sont adaptées à ce profil précis","items":[{"icon":"🌿","title":"Nom plante/complément","desc":"Bénéfice principal + pourquoi adapté à CE profil spécifiquement","badge":"Catégorie","color":"#34c759","sub":"Dosage · Moment · Forme"}],"outro":"1 précaution ou conseil d'usage"}
+|||END|||
+3-4 alternatives max · Toujours ancré dans le profil (age, carences, objectifs, maladies connues)
 
 FORMAT 3 — TOUT LE RESTE : texte pur, 3 phrases max, empathique si besoin, toujours concret et ancré dans le profil.`
 
@@ -134,12 +252,12 @@ FORMAT 3 — TOUT LE RESTE : texte pur, 3 phrases max, empathique si besoin, tou
 
   try {
     const stream = await groq.chat.completions.create({
-      model: (message.length > 80 || /programme|plan |routine|recette|détail|complet|semaine|explique|compare|liste|symptôme/i.test(message))
+      model: (message.length > 60 || /programme|plan |routine|recette|détail|complet|semaine|explique|compare|liste|symptôme|douleur|sommeil|stress|fatigue|anxieux|anxiété|digestion|plante|naturel|complément|vitamine|carence|mal |j'ai|je me sens|j'en peux/i.test(message))
         ? 'llama-3.3-70b-versatile'
         : 'llama-3.1-8b-instant',
       messages: messagesAPI,
       temperature: 0.72,
-      max_tokens: 900,
+      max_tokens: 1200,
       stream: true,
     })
 
@@ -520,9 +638,13 @@ app.get('/api/vapid-public-key', (req, res) => {
 
 // ── Sauvegarder subscription push ────────────────────────────────────────────
 app.post('/api/push-subscribe', (req, res) => {
-  const { subscription, userId } = req.body
+  const { subscription, userId, profil, streak, score } = req.body
   if (!subscription?.endpoint) return res.status(400).json({ error: 'Subscription invalide' })
-  pushSubscriptions.set(userId || subscription.endpoint, subscription)
+  // Stocker subscription + metadata profil pour notifications personnalisées
+  pushSubscriptions.set(userId || subscription.endpoint, {
+    ...subscription,
+    _meta: { profil, streak: streak || 0, score: score || 0, subscribedAt: Date.now() }
+  })
   console.log(`Push subscription sauvegardee (total: ${pushSubscriptions.size})`)
   res.json({ ok: true })
 })
@@ -537,11 +659,53 @@ app.post('/api/push-unsubscribe', (req, res) => {
 // ── Envoyer notif a un utilisateur ───────────────────────────────────────────
 app.post('/api/push-send', async (req, res) => {
   const { userId, title, body, url, tag } = req.body
-  const sub = pushSubscriptions.get(userId)
-  if (!sub) return res.status(404).json({ error: 'Subscription introuvable' })
+  const entry = pushSubscriptions.get(userId)
+  if (!entry) return res.status(404).json({ error: 'Subscription introuvable' })
   try {
+    const { _meta, ...sub } = entry
     await webpush.sendNotification(sub, JSON.stringify({ title, body, url: url || '/', tag }))
     res.json({ ok: true })
+  } catch (e) {
+    if (e.statusCode === 410) pushSubscriptions.delete(userId)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Notif personnalisée IA pour un utilisateur ────────────────────────────────
+app.post('/api/smart-notif', async (req, res) => {
+  const { userId } = req.body
+  const entry = pushSubscriptions.get(userId)
+  if (!entry) return res.status(404).json({ error: 'Subscription introuvable' })
+
+  const meta = entry._meta || {}
+  const nom = meta.profil?.nom || 'toi'
+  const objectif = meta.profil?.objectifs?.[0] || 'bien-être'
+  const streak = meta.streak || 0
+  const score  = meta.score  || 0
+  const hour   = new Date().getHours()
+
+  const contextDesc = [
+    `utilisateur : ${nom}`,
+    `objectif principal : ${objectif}`,
+    streak > 0 ? `streak actif : ${streak} jours` : 'pas encore de streak',
+    score > 0  ? `score d'hier : ${score}/100`     : 'pas encore de données',
+    `heure : ${hour}h`,
+  ].join(', ')
+
+  try {
+    const resp = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages: [
+        { role:'system', content:'Tu génères une notification push courte et personnalisée pour une app de coaching santé. 1 ligne max (60 chars). Chaleureux, concret, motivant. Pas de guillemets.' },
+        { role:'user',   content: `Contexte : ${contextDesc}. Génère le corps de la notification.` }
+      ],
+      max_tokens: 60, temperature: 0.75,
+    })
+    const body = resp.choices[0].message.content.trim().replace(/^"|"$/g, '')
+    // Extraction sub sans _meta pour webpush
+    const { _meta, ...sub } = entry
+    await webpush.sendNotification(sub, JSON.stringify({ title: 'Solenn', body, url: '/', tag: 'smart' }))
+    res.json({ ok: true, body })
   } catch (e) {
     if (e.statusCode === 410) pushSubscriptions.delete(userId)
     res.status(500).json({ error: e.message })
@@ -553,8 +717,8 @@ app.post('/api/push-broadcast', async (req, res) => {
   const { title, body, url, tag } = req.body
   const payload = JSON.stringify({ title, body, url: url || '/', tag })
   let ok = 0, fail = 0
-  for (const [id, sub] of pushSubscriptions) {
-    try { await webpush.sendNotification(sub, payload); ok++ }
+  for (const [id, entry] of pushSubscriptions) {
+    try { const { _meta, ...sub } = entry; await webpush.sendNotification(sub, payload); ok++ }
     catch (e) { if (e.statusCode === 410) pushSubscriptions.delete(id); fail++ }
   }
   res.json({ ok, fail, total: pushSubscriptions.size })
@@ -604,6 +768,88 @@ app.get('/api/check-subscription', async (req, res) => {
   }
 })
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ENDPOINTS SOUS-AGENTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Status de tous les agents ────────────────────────────────────────────────
+app.get('/api/agents-status', (req, res) => {
+  res.json({
+    agents: getAgentsStatus(),
+    subscriptions: pushSubscriptions.size,
+    routinesEnCache: [...pushSubscriptions.keys()].filter(id => !!getRoutineCache(id)).length,
+  })
+})
+
+// ── Déclencher un agent manuellement (debug/admin) ───────────────────────────
+app.post('/api/agents-trigger', async (req, res) => {
+  const { agent, moment } = req.body
+  if (!agent) return res.status(400).json({ error: 'agent requis' })
+  try {
+    const result = await triggerAgent(agent, pushSubscriptions, { moment })
+    res.json({ ok: true, agent, result })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Routine pré-générée depuis le cache ──────────────────────────────────────
+app.get('/api/routine-cache', (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  const entry = routineCache.get(userId)
+  const routine = (entry && Date.now() < entry.expiresAt) ? entry.routine : null
+  if (routine) {
+    res.json({ cached: true, routine, generatedAt: entry.generatedAt })
+  } else {
+    res.json({ cached: false })
+  }
+})
+
+// ── Forcer la régénération de la routine d'un user ───────────────────────────
+app.post('/api/routine-regenerer', async (req, res) => {
+  const { userId, profil: profilBody, metriques: metriquesBody } = req.body
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    // Si l'user n'est pas dans pushSubscriptions, on injecte son profil à la volée
+    if (profilBody && !pushSubscriptions.has(userId)) {
+      pushSubscriptions.set(userId, {
+        endpoint: null, keys: null,
+        _meta: { profil: profilBody, metriques: metriquesBody || {} },
+      })
+    } else if (profilBody && pushSubscriptions.has(userId)) {
+      // Mettre à jour le profil dans le meta existant
+      const entry = pushSubscriptions.get(userId)
+      entry._meta = { ...(entry._meta || {}), profil: profilBody, metriques: metriquesBody || entry._meta?.metriques || {} }
+    }
+    const routine = await regenererPourUser(userId, pushSubscriptions)
+    if (!routine) return res.status(404).json({ error: 'Profil incomplet — impossible de générer' })
+    res.json({ ok: true, routine, generatedAt: new Date().toISOString() })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Rapport hebdomadaire depuis le cache ─────────────────────────────────────
+app.get('/api/rapport-hebdo', (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  const rapport = rapportsCache.get(userId)
+  if (rapport) {
+    res.json({ cached: true, rapport })
+  } else {
+    res.json({ cached: false, message: 'Aucun rapport disponible — prochain rapport dimanche 18h' })
+  }
+})
+
+// ── Mise à jour des métriques (alimente le monitoring agent) ─────────────────
+app.post('/api/metriques-update', (req, res) => {
+  const { userId, metriques } = req.body
+  if (!userId || !metriques) return res.status(400).json({ error: 'userId et metriques requis' })
+  updateMetriques(pushSubscriptions, userId, metriques)
+  res.json({ ok: true })
+})
+
 // ── Sert le frontend React (dist/) — seulement en local ─────────────────────
 if (!process.env.VERCEL) {
   app.use(express.static(path.join(__dirname, 'dist')))
@@ -611,6 +857,66 @@ if (!process.env.VERCEL) {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'))
   })
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HISTORIQUE CONVERSATIONS (solenn_chats)
+// Table Supabase : user_id uuid, session_date text, messages jsonb, updated_at
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Sauvegarder les messages du jour
+app.post('/api/chat-save', async (req, res) => {
+  const { userId, messages } = req.body
+  if (!userId || !messages) return res.status(400).json({ error: 'userId et messages requis' })
+  try {
+    const sessionDate = new Date().toDateString()
+    const { error } = await supabase
+      .from('solenn_chats')
+      .upsert(
+        { user_id: userId, session_date: sessionDate, messages, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id,session_date' }
+      )
+    if (error) return res.status(500).json({ error: error.message })
+    res.json({ ok: true })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Charger l'historique des sessions
+app.get('/api/chat-history', async (req, res) => {
+  const { userId, limit = 20 } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data, error } = await supabase
+      .from('solenn_chats')
+      .select('session_date, messages, updated_at')
+      .eq('user_id', userId)
+      .order('session_date', { ascending: false })
+      .limit(parseInt(limit))
+    if (error) return res.status(500).json({ error: error.message })
+    res.json({ sessions: data || [] })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Charger une session spécifique
+app.get('/api/chat-session', async (req, res) => {
+  const { userId, date } = req.query
+  if (!userId || !date) return res.status(400).json({ error: 'userId et date requis' })
+  try {
+    const { data, error } = await supabase
+      .from('solenn_chats')
+      .select('messages')
+      .eq('user_id', userId)
+      .eq('session_date', date)
+      .single()
+    if (error) return res.status(404).json({ messages: [] })
+    res.json({ messages: data.messages || [] })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
 
 // Export pour Vercel serverless
 export default app
@@ -620,5 +926,7 @@ if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
     console.log(`✅ Serveur Solenn démarré sur port ${PORT}`)
+    // Démarrer les sous-agents autonomes
+    startAgents(pushSubscriptions)
   })
 }

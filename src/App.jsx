@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect, Component } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo, Component } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
+import { playFx } from './sfx'
 import SplashScreen from './SplashScreen'
 import Auth from './Auth'
 import Landing from './Landing'
@@ -8,7 +10,11 @@ import Forum from './Forum'
 import Onboarding from './Onboarding'
 import HomeTab from './HomeTab'
 import HerbalTab from './HerbalTab'
-import SanteTab, { scoreJour } from './SanteTab'
+import SanteTab from './SanteTab'
+import MorningCheckin from './MorningCheckin'
+import RoutineTab from './RoutineTab'
+import SettingsSheet from './SettingsSheet'
+import ChatHistory from './ChatHistory'
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
@@ -51,7 +57,7 @@ function SolennFace({ size = 34 }) {
   return (
     <div className="liquid-avatar" style={{
       width: size, height: size,
-      background: 'rgba(220,140,70,0.38)',
+      background: 'rgba(220,140,70,0.08)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0,
       isolation: 'isolate',
@@ -77,7 +83,7 @@ class MsgBoundary extends Component {
   render() {
     if (this.state.crashed) {
       return (
-        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'#1a0a00' }}>
+        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'rgba(55,22,5,0.90)' }}>
           {this.props.fallback}
         </span>
       )
@@ -91,35 +97,46 @@ function HealthPermModal({ onAllow, onLater }) {
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:1500,
-      background:'rgba(10,4,0,0.45)', backdropFilter:'blur(10px)',
+      background:'rgba(20,8,0,0.11)', backdropFilter:'blur(6px)',
+      WebkitBackdropFilter:'blur(10px)',
       display:'flex', alignItems:'flex-end', justifyContent:'center',
     }}>
       <div style={{
-        background:'linear-gradient(160deg, #FFFAF5 0%, #FFF3E8 100%)',
+        background:'rgba(255,235,200,0.14)',
+        backdropFilter:'blur(28px)',
+        WebkitBackdropFilter:'blur(28px)',
         borderRadius:'28px 28px 0 0',
+        border:'1px solid rgba(255,220,160,0.25)',
+        borderBottom:'none',
         padding:'10px 26px 52px',
         width:'100%', maxWidth:520,
-        boxShadow:'0 -12px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9)',
+        boxShadow:'0 -20px 60px rgba(200,100,40,0.15), inset 0 1px 0 rgba(255,255,255,0.15)',
         animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
-        <div style={{ width:44, height:5, background:'rgba(218,138,52,0.15)', borderRadius:3, margin:'12px auto 26px' }} />
+        <div style={{ width:44, height:5, background:'rgba(255,220,160,0.30)', borderRadius:3, margin:'12px auto 26px' }} />
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
-            { bg:'rgba(218,138,52,0.18)', shadow:'rgba(218,138,52,0.25)', e:'❤️' },
-            { bg:'rgba(218,138,52,0.12)', shadow:'rgba(218,138,52,0.18)',  e:'🏃' },
-          ].map(({ bg, shadow, e }) => (
-            <div key={e} style={{ width:56, height:56, borderRadius:18, background:bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, boxShadow:`0 6px 20px ${shadow}` }}>{e}</div>
+            { bg:'rgba(200,100,40,0.12)', e:'❤️' },
+            { bg:'rgba(200,100,40,0.08)', e:'🏃' },
+          ].map(({ bg, e }) => (
+            <div key={e} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>{e}</div>
           ))}
         </div>
 
-        <div style={{ fontSize:19, fontWeight:900, color:'rgba(218,138,52,0.90)', textAlign:'center', marginBottom:8, letterSpacing:'-0.03em' }}>
+        <div style={{
+          fontFamily:"'Poppins', system-ui, sans-serif",
+          fontWeight:600,
+          fontSize:'clamp(1.4rem, 2vw, 1.7rem)',
+          color:'rgba(255,248,235,1)',
+          textAlign:'center', marginBottom:8, letterSpacing:'-0.01em',
+        }}>
           Synchroniser mes données santé
         </div>
-        <div style={{ fontSize:13, color:'rgba(218,138,52,0.55)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
-          Solenn peut synchroniser automatiquement tes données depuis{' '}
-          <strong style={{ color:'rgba(218,138,52,0.85)' }}>Apple Santé</strong> ou{' '}
-          <strong style={{ color:'rgba(218,138,52,0.85)' }}>Google Fit</strong>.
+        <div style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.62)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
+          Solenn synchronise automatiquement depuis{' '}
+          <strong style={{ color:'rgba(255,248,235,0.90)' }}>Apple Santé</strong> ou{' '}
+          <strong style={{ color:'rgba(255,248,235,0.90)' }}>Google Fit</strong>.
         </div>
 
         {[
@@ -131,29 +148,35 @@ function HealthPermModal({ onAllow, onLater }) {
           <div key={label} style={{
             display:'flex', alignItems:'center', gap:12,
             padding:'10px 14px', borderRadius:13, marginBottom:7,
-            background:'rgba(218,138,52,0.06)', border:'1px solid rgba(218,138,52,0.14)',
+            background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.18)',
           }}>
             <span style={{ fontSize:18 }}>{icon}</span>
-            <span style={{ fontSize:13, color:'rgba(218,138,52,0.85)', fontWeight:600, flex:1 }}>{label}</span>
-            <span style={{ fontSize:10, color:'#34c759', fontWeight:700, background:'rgba(52,199,89,0.10)', padding:'3px 8px', borderRadius:6 }}>Lecture seule</span>
+            <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:500, flex:1 }}>{label}</span>
+            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:6, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
           </div>
         ))}
 
         <div style={{ marginTop:22, display:'flex', flexDirection:'column', gap:10 }}>
           <button onClick={onAllow} style={{
-            padding:'16px', borderRadius:30, border:'1.5px solid rgba(218,138,52,0.35)',
-            background:'transparent',
-            color:'rgba(218,138,52,0.80)', fontSize:15, fontWeight:600,
-            cursor:'pointer', fontFamily:'Poppins,sans-serif',
-            boxShadow:'none', letterSpacing:'-0.02em',
+            padding:'0.85rem 2.5rem', borderRadius:'2rem',
+            border:'1px solid rgba(255,220,160,0.75)',
+            background:'rgba(200,100,40,0.18)',
+            color:'rgba(255,248,235,1)',
+            fontFamily:"'Poppins', system-ui, sans-serif",
+            fontWeight:600,
+            fontSize:'clamp(1.2rem, 1.3vw, 1.4rem)',
+            letterSpacing:'0.04em', cursor:'pointer',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-          }}>Autoriser l'accès <span className="arrow-anim" style={{ fontSize:17 }}>→</span></button>
+            transition:'background 0.25s, border-color 0.25s',
+          }}>Autoriser l'accès →</button>
           <button onClick={onLater} style={{
-            padding:'14px', borderRadius:16,
-            border:'1px solid rgba(218,138,52,0.18)',
-            background:'transparent', color:'rgba(218,138,52,0.42)',
-            fontSize:13, fontWeight:600,
-            cursor:'pointer', fontFamily:'Poppins,sans-serif',
+            padding:'12px', borderRadius:'2rem',
+            border:'1px solid rgba(255,220,160,0.45)',
+            background:'rgba(255,220,160,0.08)',
+            color:'rgba(255,248,235,0.88)',
+            fontFamily:'Poppins, sans-serif',
+            fontSize:13, fontWeight:500,
+            cursor:'pointer',
           }}>Plus tard</button>
         </div>
       </div>
@@ -203,7 +226,7 @@ function CelebrationOverlay({ score, onDone }) {
         <div style={{ fontSize:15, fontWeight:700, color:'#9E5C35', marginTop:9 }}>
           {score >= 90 ? 'Journée parfaite ! 🏆' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
         </div>
-        <div style={{ fontSize:11, color:'rgba(160,110,70,0.55)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
+        <div style={{ fontSize:11, color:'rgba(160,110,70,0.70)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
           Score santé du jour
         </div>
       </div>
@@ -216,16 +239,19 @@ function ReactionBtn({ emoji, active, onClick }) {
   return (
     <button
       type="button"
-      onClick={e => { e.stopPropagation(); e.preventDefault(); onClick(); setPressed(true); setTimeout(() => setPressed(false), 300) }}
+      onClick={e => { e.stopPropagation(); e.preventDefault(); onClick(); setPressed(true); setTimeout(() => setPressed(false), 350) }}
       style={{
-        background: active ? 'rgba(255,240,200,0.22)' : 'transparent',
-        border: active ? '1.5px solid rgba(255,240,200,0.72)' : '1.5px solid rgba(255,240,200,0.28)',
-        borderRadius: 10, padding: '3px 9px', fontSize: active ? 15 : 13,
-        cursor: 'pointer', transition: 'all 0.18s cubic-bezier(0.34,1.56,0.64,1)',
-        transform: pressed ? 'scale(1.35)' : active ? 'scale(1.12)' : 'scale(1)',
-        boxShadow: active ? '0 2px 10px rgba(0,0,0,0.08)' : 'none',
-        filter: active ? 'none' : 'grayscale(0.3) opacity(0.6)',
+        background: active ? 'rgba(200,123,82,0.15)' : 'transparent',
+        border: active ? '1.5px solid rgba(200,123,82,0.60)' : '1.5px solid rgba(200,123,82,0.18)',
+        borderRadius: 10, padding: '3px 9px',
+        fontSize: 14,
+        cursor: 'pointer',
+        transition: 'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+        transform: pressed ? 'scale(1.40)' : active ? 'scale(1.10)' : 'scale(1)',
+        boxShadow: active ? '0 2px 10px rgba(200,123,82,0.20)' : 'none',
+        filter: active ? 'none' : 'opacity(0.45)',
         outline: 'none',
+        lineHeight: 1,
       }}
     >
       {emoji}
@@ -274,9 +300,151 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...raw].map(c => c.charCodeAt(0)))
 }
 
+// ─── DYNAMIC NAV ─────────────────────────────────────────────────────────────
+const NAV_ITEMS = [
+  { id:'accueil', label:'Accueil',  Icon: HomeIcon },
+  { id:'chat',    label:'Solenn',   Icon: ChatIcon },
+  { id:'routine', label:'Routine',  Icon: RoutineIcon },
+  { id:'sante',   label:'Santé',    Icon: HeartIcon },
+  { id:'forum',   label:'Forum',    Icon: ForumIcon },
+]
+
+function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
+  const [open, setOpen] = React.useState(false)
+  const ref = React.useRef(null)
+  const active = NAV_ITEMS.find(i => i.id === onglet) || NAV_ITEMS[0]
+
+  const isNight = preset === 'night' && onglet === 'accueil'
+  // Couleurs adaptées au mode nuit / jour
+  const pillBg    = isNight ? 'rgba(10,22,58,0.60)'      : 'rgba(120,55,10,0.24)'
+  const txtHigh   = isNight ? 'rgba(160,200,255,0.92)'   : 'rgba(255,238,228,0.90)'
+  const txtMid    = isNight ? 'rgba(160,200,255,0.88)'   : 'rgba(255,238,228,0.88)'
+  const txtDim    = isNight ? 'rgba(160,200,255,0.42)'   : 'rgba(255,238,228,0.35)'
+  const divider   = isNight ? 'rgba(160,200,255,0.18)'   : 'rgba(255,238,228,0.18)'
+  const activeBg  = isNight ? 'rgba(160,200,255,0.14)'   : 'rgba(255,238,228,0.14)'
+
+  React.useEffect(() => {
+    if (!open) return
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    const t = setTimeout(() => window.addEventListener('click', handler), 80)
+    return () => { clearTimeout(t); window.removeEventListener('click', handler) }
+  }, [open])
+
+  const spring = { type:'spring', damping:32, stiffness:280, mass:0.6 }
+  const contentSpring = { type:'spring', damping:28, stiffness:260, mass:0.5 }
+
+  return (
+    <motion.nav
+      ref={ref}
+      layout
+      layoutTransition={spring}
+      onClick={!open ? () => setOpen(true) : undefined}
+      style={{
+        position:'fixed', bottom:26, left:16, right:16,
+        marginLeft:'auto', marginRight:'auto',
+        width:'fit-content',
+        maxWidth:'calc(100vw - 32px)',
+        zIndex:100, cursor: open ? 'default' : 'pointer',
+        background: pillBg,
+        backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
+        border:'1px solid rgba(255,255,255,0.12)',
+        borderRadius:28,
+        boxShadow:'0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.12)',
+        display:'flex', alignItems:'center',
+        overflow:'hidden',
+        padding: open ? '8px 6px' : '11px 18px',
+        whiteSpace:'nowrap',
+      }}
+      transition={spring}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {/* ── Fermé ── */}
+        {!open && (
+          <motion.div key="closed"
+            initial={{ opacity:0, scale:0.94 }}
+            animate={{ opacity:1, scale:1, transition:{ delay:0.08, duration:0.22, ease:[0.22,1,0.36,1] } }}
+            exit={{ opacity:0, scale:0.94, transition:{ duration:0.12, ease:[0.4,0,1,1] } }}
+            style={{ display:'flex', alignItems:'center', gap:10 }}
+          >
+            <active.Icon color={txtHigh} size={19} />
+            <span style={{ fontSize:13, fontWeight:500, color:txtMid, fontFamily:F }}>
+              {active.label}
+            </span>
+            <div style={{ width:1, height:14, background:divider, margin:'0 4px' }} />
+            <div style={{ display:'flex', gap:3, alignItems:'center' }}>
+              {[0,1,2].map(i => <div key={i} style={{ width:3.5, height:3.5, borderRadius:'50%', background:txtDim }} />)}
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── Ouvert ── */}
+        {open && (
+          <motion.div key="open"
+            initial={{ opacity:0 }}
+            animate={{ opacity:1, transition:{ duration:0.18, ease:'easeOut' } }}
+            exit={{ opacity:0, transition:{ duration:0.1 } }}
+            style={{ display:'flex', alignItems:'center', gap:1 }}
+          >
+            {NAV_ITEMS.map((item, i) => {
+              const isActive = onglet === item.id
+              return (
+                <motion.button key={item.id}
+                  initial={{ opacity:0, filter:'blur(10px)' }}
+                  animate={{ opacity:1, filter:'blur(0px)', transition:{ delay: 0.06 + i * 0.04, duration:0.22, ease:[0.22,1,0.36,1] } }}
+                  onClick={() => { setOnglet(item.id); setOpen(false) }}
+                  style={{
+                    background: isActive ? activeBg : 'transparent',
+                    border:'none', cursor:'pointer', borderRadius:14,
+                    padding:'6px 10px', fontFamily:F,
+                    display:'flex', flexDirection:'column', alignItems:'center', gap:3,
+                    position:'relative',
+                  }}
+                >
+                  <item.Icon color={isActive ? txtHigh : txtDim} size={15} />
+                  <span style={{ fontSize:8.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.25px', color: isActive ? txtHigh : txtDim }}>
+                    {item.label}
+                  </span>
+                  {item.id === 'forum' && forumUnread > 0 && (
+                    <span style={{ position:'absolute', top:4, right:8, background:'#FF303C', color:'#fff', fontSize:8, fontWeight:800, borderRadius:20, minWidth:13, height:13, lineHeight:'13px', display:'flex', alignItems:'center', justifyContent:'center', padding:'0 2px' }}>
+                      {forumUnread > 9 ? '9+' : forumUnread}
+                    </span>
+                  )}
+                </motion.button>
+              )
+            })}
+
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  )
+}
+
+// Copie locale de scoreJour — SanteTab ne l'exporte plus (Fast Refresh incompatible)
+function scoreJour(m) {
+  let s = 0
+  if (m.pas  >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
+  if (m.sommeil >= 7.5) s += 25; else if (m.sommeil >= 6) s += 18; else if (m.sommeil >= 5) s += 10; else if (m.sommeil > 0) s += 5
+  if (m.eau >= 8) s += 20; else if (m.eau >= 6) s += 15; else if (m.eau >= 4) s += 10; else if (m.eau > 0) s += 5
+  if (m.humeur === 5) s += 20; else if (m.humeur === 4) s += 15; else if (m.humeur === 3) s += 10; else if (m.humeur > 0) s += 5
+  if (m.fc >= 50 && m.fc <= 80) s += 15; else if (m.fc > 0 && m.fc <= 100) s += 8
+  return Math.min(s, 100)
+}
+
+// ─── PRESET HEURE (sunrise 6-9, day 9-18, sunset 18-21, night 21-6) ──────────
+function getOceanPreset(hour) {
+  if (hour >= 6  && hour < 9)  return 'sunrise'
+  if (hour >= 9  && hour < 18) return 'day'
+  if (hour >= 18 && hour < 21) return 'sunset'
+  return 'night'
+}
+
 // ─── APP ══════════════════════════════════════════════════════════════════════
 export default function App() {
   const FREE_LIMIT = 5
+
+  const appPreset = getOceanPreset(new Date().getHours())
+  const isSunrise = appPreset === 'sunrise'
 
   const getMsgCount = () => {
     const today = new Date().toDateString()
@@ -294,7 +462,7 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
-  const [splashDone, setSplashDone] = useState(false)
+  const [splashDone] = useState(true)
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
@@ -307,12 +475,48 @@ export default function App() {
       return h.filter(m => !m.content?.includes('messages gratuits'))
     }
     if (p) {
-      const h = new Date().getHours()
-      const greet = h < 12 ? 'Bonjour' : h < 18 ? 'Salut' : 'Bonsoir'
-      const s = safeParse('vitacoach_metriques', {})
-      const sc = typeof window !== 'undefined' ? (parseInt(localStorage.getItem('vitacoach_last_score')) || 0) : 0
-      const scoreMsg = sc > 0 ? ` Ton score santé hier était de ${sc}/100.` : ''
-      return [{ role:'assistant', content:`${greet} ${p.nom} !${scoreMsg} Qu'est-ce que je peux faire pour toi aujourd'hui ?` }]
+      const hr = new Date().getHours()
+      const greet = hr < 6 ? 'Bonsoir' : hr < 12 ? 'Bonjour' : hr < 18 ? 'Salut' : 'Bonsoir'
+      const nom = p.nom ? p.nom.charAt(0).toUpperCase() + p.nom.slice(1).toLowerCase() : ''
+      // Streak depuis l'historique
+      const hist = safeParse('vitacoach_history', [])
+      const sorted = [...hist].sort((a,b) => new Date(b.date) - new Date(a.date))
+      const todayStr = new Date().toDateString()
+      const yStr = new Date(Date.now() - 86400000).toDateString()
+      let streakC = 0
+      if (sorted.length > 0 && (sorted[0].date === todayStr || sorted[0].date === yStr)) {
+        let expected = sorted[0].date
+        for (const e of sorted) {
+          if (e.date === expected) {
+            streakC++
+            const d = new Date(expected); d.setDate(d.getDate() - 1); expected = d.toDateString()
+          } else break
+        }
+      }
+      // Score d'hier
+      const yEntry = hist.find(e => e.date === yStr)
+      const yScore = yEntry ? scoreJour(yEntry) : 0
+      // Objectif principal
+      const obj0 = (p.objectifs?.[0] || '').toLowerCase()
+      const wantsEnergy = /énergie|fatigue|sport/.test(obj0)
+      const wantsSleep  = /sommeil|dormir/.test(obj0)
+      const wantsWeight = /poids|mincir|maigrir/.test(obj0)
+      // Construire le message
+      const parts = [`${greet} ${nom} !`]
+      if (streakC >= 7)       parts.push(`🔥 ${streakC} jours de suite — tu es vraiment sur une lancée.`)
+      else if (streakC >= 3)  parts.push(`🔥 ${streakC} jours consécutifs — ta régularité paie vraiment.`)
+      else if (streakC === 2) parts.push(`2 jours de suite, tu prends de bonnes habitudes.`)
+      if (yScore >= 80)           parts.push(`Hier tu étais au top (${yScore}/100) — continue comme ça.`)
+      else if (yScore > 0 && yScore < 50) parts.push(`Hier c'était une journée difficile (${yScore}/100), aujourd'hui c'est une nouvelle page.`)
+      if (hr >= 5 && hr < 10) {
+        if (wantsEnergy)      parts.push(`Parfait moment pour booster ton énergie du matin.`)
+        else if (wantsWeight) parts.push(`Belle matinée pour bien démarrer ton alimentation.`)
+      } else if (hr >= 21) {
+        if (wantsSleep)       parts.push(`N'oublie pas ta routine du soir pour bien dormir.`)
+        else                  parts.push(`Comment s'est passée ta journée ?`)
+      }
+      parts.push(`Qu'est-ce que je peux faire pour toi ?`)
+      return [{ role:'assistant', content: parts.join(' ') }]
     }
     return []
   })
@@ -333,12 +537,33 @@ export default function App() {
   const healthPermShownRef = useRef(false)
   const [history, setHistory]     = useState(() => safeParse('vitacoach_history', []))
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
+
+  // ── Morning check-in ────────────────────────────────────────────────────────
+  const [showCheckin, setShowCheckin] = useState(() => {
+    const hr = new Date().getHours()
+    const lastCheckin = localStorage.getItem('vitacoach_checkin_date')
+    const todayStr = new Date().toDateString()
+    return hr >= 6 && hr < 11 && lastCheckin !== todayStr
+  })
+
+  // ── Célébrations mémorables ──────────────────────────────────────────────────
+  const [milestone, setMilestone]       = useState(null)   // { emoji, titre, texte }
+  const milestoneShownRef               = useRef(false)
+
+  // ── Mode SOS ─────────────────────────────────────────────────────────────────
+  const [sosMode, setSosMode]           = useState(false)
+  const sosResetRef                     = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const [showChatHistory, setShowChatHistory] = useState(false)
+  const [forumFormOpen, setForumFormOpen] = useState(false)
+  const [forumUnread, setForumUnread]     = useState(0)
+  const contentRef = useRef(null)
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
 
-  // ── Calculs gamification ──────────────────────────────────────────────────
-  const streak = (() => {
+  // ── Calculs gamification — mémoïsés, ne recalculent que si history/messages changent ──
+  const streak = useMemo(() => {
     if (!history || history.length === 0) return 0
     const sorted = [...history].sort((a,b) => new Date(b.date) - new Date(a.date))
     const today = new Date().toDateString()
@@ -352,9 +577,24 @@ export default function App() {
       } else break
     }
     return count
-  })()
-  const xp    = history.length * 15 + messages.filter(m => m.role === 'user').length * 5
+  }, [history])
+
+  const xp    = useMemo(() =>
+    history.length * 15 + messages.filter(m => m.role === 'user').length * 5
+  , [history, messages])
+
   const level = Math.floor(xp / 100) + 1
+
+  // ─── Son global sur tous les boutons (event delegation) ──────────────────
+  useEffect(() => {
+    function onTap(e) {
+      const el = e.target.closest('button, [role="button"]')
+      if (!el || el.disabled) return
+      playFx('tap')
+    }
+    document.addEventListener('pointerdown', onTap, { passive: true })
+    return () => document.removeEventListener('pointerdown', onTap)
+  }, [])
 
   // Responsive
   const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1024)
@@ -414,6 +654,24 @@ export default function App() {
       setTimeout(() => setCelebrate(true), 400)
     }
   }, [metriques])
+
+  // ── Micro-célébrations streak milestones ─────────────────────────────────
+  useEffect(() => {
+    if (!profil || streak === 0) return
+    const today = new Date().toDateString()
+    const key = `vitacoach_streak_cel_${today}_${streak}`
+    if (localStorage.getItem(key)) return
+    const milestones = {
+      3:  '✨ 3 jours de suite — tu prends de vraies habitudes. Fière de toi.',
+      7:  "🔥 7 jours consécutifs ! Une semaine entière — c'est un vrai changement qui s'installe.",
+      14: '💎 14 jours ! Deux semaines de constance, c\'est vraiment impressionnant.',
+      30: '🏆 30 jours ! Un mois de régularité. Tu n\'es plus la même qu\'au début.',
+    }
+    if (milestones[streak]) {
+      localStorage.setItem(key, '1')
+      setTimeout(() => setMessages(prev => [...prev, { role:'assistant', content: milestones[streak] }]), 900)
+    }
+  }, [streak, profil])
 
   // ── Sync Supabase → local à la connexion ──────────────────────────────────
   useEffect(() => {
@@ -522,6 +780,106 @@ export default function App() {
     return ['Routine du soir ?', 'Bien dormir ce soir ?']
   }
 
+  // ── Mémoire longue durée ────────────────────────────────────────────────────
+  function sauverMemoire(userMsg, reply) {
+    const m = userMsg.toLowerCase()
+    let topic = null
+    if (/sommeil|dormir|insomni/.test(m))          topic = 'sommeil'
+    else if (/stress|anxiété|anxieux|pression/.test(m)) topic = 'stress'
+    else if (/douleur|mal (au|à la|aux)/.test(m))  topic = 'douleur'
+    else if (/poids|kilos|maigrir|mincir/.test(m)) topic = 'poids'
+    else if (/sport|exercice|entraîn|muscul/.test(m)) topic = 'fitness'
+    else if (/nutrition|manger|repas|recette/.test(m)) topic = 'nutrition'
+    else if (/fatigue|énergie|épuisé/.test(m))     topic = 'énergie'
+    else if (/humeur|moral|déprim|triste/.test(m)) topic = 'humeur'
+    else if (/peau|cheveux|acné/.test(m))           topic = 'beauté'
+    else if (/plante|naturel|complément/.test(m))   topic = 'naturo'
+    if (!topic) return
+    const memories = safeParse('vitacoach_memories', [])
+    const mem = { ts: Date.now(), date: new Date().toDateString(), topic, userMsg: userMsg.slice(0, 120), reply: reply.replace(/\|\|\|JSON\|\|\|[\s\S]*?\|\|\|END\|\|\|/g, '').trim().slice(0, 150) }
+    localStorage.setItem('vitacoach_memories', JSON.stringify([mem, ...memories].slice(0, 25)))
+  }
+
+  // ── Détection SOS ────────────────────────────────────────────────────────────
+  function detectSOS(msg) {
+    const sos = /\b(à bout|j'en peux plus|plus envie|tout lâcher|envie de rien|tellement triste|je pleure|vraiment mal|je crack|j'ai craqué|épuisé[e]? complètement|j'abandonne|plus la force|suicide|mourir|veux mourir|veux disparaître)\b/i
+    if (sos.test(msg)) {
+      setSosMode(true)
+      clearTimeout(sosResetRef.current)
+      sosResetRef.current = setTimeout(() => setSosMode(false), 10 * 60 * 1000) // reset après 10min
+    }
+  }
+
+  // ── Milestones célébrés ──────────────────────────────────────────────────────
+  const MILESTONES = [
+    { id: 'streak7',   check: () => streak >= 7,    emoji: '🔥', titre: '7 jours de suite !',      texte: `${profil?.nom}, 7 jours consécutifs — c'est une vraie habitude qui se construit. Continue comme ça.` },
+    { id: 'streak30',  check: () => streak >= 30,   emoji: '🏆', titre: 'Un mois de régularité !', texte: `30 jours. Tu as transformé des intentions en routine réelle. C'est rare et précieux.` },
+    { id: 'steps10k',  check: () => metriques.pas >= 10000, emoji: '👟', titre: '10 000 pas !',   texte: `Objectif pas atteint aujourd'hui — ton corps te remercie.` },
+    { id: 'score100',  check: () => scoreJour(metriques) >= 95, emoji: '⭐', titre: 'Score parfait !', texte: `Presque 100/100 aujourd'hui — sommeil, eau, mouvement, humeur : tout est là.` },
+    { id: 'sleep8',    check: () => metriques.sommeil >= 8, emoji: '😴', titre: '8h de sommeil !', texte: `8h de sommeil enregistrées — ton cerveau consolide, ton corps récupère.` },
+    { id: 'water8',    check: () => metriques.eau >= 8, emoji: '💧', titre: 'Hydratation parfaite !', texte: `8 verres d'eau aujourd'hui — c'est exactement ce qu'il faut.` },
+  ]
+
+  function checkMilestones() {
+    if (milestoneShownRef.current) return
+    const shown = safeParse('vitacoach_milestones_shown', [])
+    const todayStr = new Date().toDateString()
+    for (const m of MILESTONES) {
+      const key = `${m.id}_${todayStr}`
+      if (!shown.includes(key) && m.check()) {
+        milestoneShownRef.current = true
+        setMilestone(m)
+        localStorage.setItem('vitacoach_milestones_shown', JSON.stringify([...shown, key].slice(-50)))
+        setTimeout(() => { setMilestone(null); milestoneShownRef.current = false }, 5000)
+        break
+      }
+    }
+  }
+
+  // ── Tendances semaine sur semaine ────────────────────────────────────────────
+  function getTrends() {
+    if (!history || history.length < 4) return null
+    const now = Date.now()
+    const DAY = 86400000
+    const thisW  = history.filter(h => (now - new Date(h.date).getTime()) <= 7 * DAY)
+    const lastW  = history.filter(h => { const d = now - new Date(h.date).getTime(); return d > 7*DAY && d <= 14*DAY })
+    if (!thisW.length || !lastW.length) return null
+    const avg = (arr, k) => arr.reduce((s, h) => s + (h[k] || 0), 0) / arr.length
+    const delta = (k) => {
+      const d = avg(thisW, k) - avg(lastW, k)
+      return Math.abs(d) > 0.05 ? { delta: Math.round(d * 10) / 10, better: d > 0 } : null
+    }
+    return { sommeil: delta('sommeil'), pas: delta('pas'), humeur: delta('humeur'), eau: delta('eau') }
+  }
+
+  // ── Contexte enrichi pour l'IA ──────────────────────────────────────────────
+  function buildContextHints() {
+    const userText = messages.filter(m => m.role === 'user').slice(-8).map(m => m.content).join(' ')
+    const topics = []
+    if (/sommeil|dormir|insomni|fatigue/.test(userText))   topics.push('sommeil_concern')
+    if (/stress|anxiété|anxieux|pression/.test(userText))  topics.push('stress_pattern')
+    if (/poids|maigrir|mincir|kilos?/.test(userText))      topics.push('weight_goal')
+    if (/sport|exercice|entraîn|muscul/.test(userText))    topics.push('fitness_focus')
+    if (/repas|manger|nutrition|recette/.test(userText))   topics.push('nutrition_focus')
+
+    // Mémoire longue durée
+    const memories = safeParse('vitacoach_memories', [])
+    const recentMems = memories.slice(0, 6).map(m => {
+      const daysAgo = Math.round((Date.now() - m.ts) / 86400000)
+      const quand = daysAgo === 0 ? "aujourd'hui" : daysAgo === 1 ? 'hier' : `il y a ${daysAgo}j`
+      return `${quand} – ${m.topic}: "${m.userMsg.slice(0, 80)}"`
+    })
+
+    // Tendances
+    const trends = getTrends()
+    const trendLines = trends ? Object.entries(trends).filter(([,v]) => v).map(([k, v]) => {
+      const labels = { sommeil: 'sommeil', pas: 'pas', humeur: 'humeur', eau: 'hydratation' }
+      return `${labels[k]} ${v.better ? '↑' : '↓'} ${Math.abs(v.delta)} cette semaine vs la semaine dernière`
+    }) : []
+
+    return { topics, streak, todayScore: scoreJour(metriques), memories: recentMems, trends: trendLines }
+  }
+
   function mettreAJourMetrique(key, val) {
     setMetriques(prev => {
       const newM = { ...prev, [key]: val }
@@ -565,19 +923,29 @@ export default function App() {
         applicationServerKey: appServerKey,
       })
 
-      // Envoie la subscription au serveur
+      // Envoie la subscription au serveur avec métadonnées profil
       await fetch('/api/push-subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subscription: sub.toJSON(), userId: profil?.nom || 'user' })
+        body: JSON.stringify({
+          subscription: sub.toJSON(),
+          userId: user?.id || profil?.nom || 'user',
+          profil: { nom: profil?.nom, objectifs: profil?.objectifs },
+          streak,
+          score: scoreJour(metriques),
+        })
       })
 
       setNotifEnabled(true)
       localStorage.setItem('vitacoach_notif', JSON.stringify(true))
 
-      // Notif de bienvenue immédiate
+      // Notif de bienvenue personnalisée
+      const todayScore = scoreJour(metriques)
+      const nomFmt = profil?.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : 'toi'
+      const streakMsg = streak > 1 ? ` ${streak} jours de streak actif 🔥` : ''
+      const scoreHint = todayScore > 0 ? ` Score d'aujourd'hui : ${todayScore}/100.` : ''
       reg.showNotification('Solenn activé !', {
-        body: `Salut ${profil?.nom} ! Tu recevras tes rappels santé quotidiens.`,
+        body: `Salut ${nomFmt} !${streakMsg}${scoreHint} Tes rappels quotidiens sont prêts.`,
         icon: '/icon-192.png',
         tag: 'welcome',
       })
@@ -635,11 +1003,12 @@ export default function App() {
     setInput('')
     setLoading(true)
     if (!isPro) incrementMsgCount()
+    detectSOS(msg)
 
     try {
       const resp = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques })
+        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() })
       })
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
 
@@ -688,7 +1057,24 @@ export default function App() {
         setMessages(prev => [...prev, { role: 'assistant', content: "Désolée, je n'ai pas pu répondre. Réessaie !" }])
         setLoading(false)
       }
-      if (reply) setFollowUps(genFollowUps(reply))
+      if (reply) {
+        setFollowUps(genFollowUps(reply))
+        sauverMemoire(msg, reply)
+        checkMilestones()
+        // Sauvegarde Supabase de la conversation (fire & forget)
+        if (user?.id) {
+          setTimeout(() => {
+            setMessages(current => {
+              fetch('/api/chat-save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, messages: current }),
+              }).catch(() => {})
+              return current
+            })
+          }, 500)
+        }
+      }
 
     } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Une erreur est survenue. Réessaie.' }])
@@ -736,12 +1122,14 @@ export default function App() {
         syncProfilSupabase(user?.id, p)
         const h2 = new Date().getHours()
         const g2 = h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
-        setMessages([{ role:'assistant', content:`${g2} ${p.nom} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
+        const nomFmt = p.nom ? p.nom.charAt(0).toUpperCase() + p.nom.slice(1).toLowerCase() : ''
+        setMessages([{ role:'assistant', content:`${g2} ${nomFmt} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
       }} />
     )
   }
 
   // ── MAIN APP ════════════════════════════════════════════════════════════════
+  const [homePreset, setHomePreset] = useState('day')
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
 
@@ -758,7 +1146,128 @@ export default function App() {
 
   return (
     <div style={s.app}>
-      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
+      {/* ── Morning Check-in ── */}
+      <AnimatePresence>
+        {showCheckin && profil && (
+          <MorningCheckin
+            profil={profil}
+            onDone={({ sommeil, humeur, intention }) => {
+              localStorage.setItem('vitacoach_checkin_date', new Date().toDateString())
+              setShowCheckin(false)
+              // Mise à jour métriques
+              if (sommeil) mettreAJourMetrique('sommeil', sommeil)
+              if (humeur)  mettreAJourMetrique('humeur', humeur)
+              // Envoyer à Solenn avec contexte check-in
+              const intentionTxt = intention ? ` Mon intention du jour : ${intention}.` : ''
+              const msg = `Check-in matin : j'ai dormi ${sommeil}h, humeur ${humeur}/5.${intentionTxt} Donne-moi un focus pour aujourd'hui.`
+              setOnglet('chat')
+              setTimeout(() => envoyerMessage(msg), 400)
+            }}
+            onSkip={() => {
+              localStorage.setItem('vitacoach_checkin_date', new Date().toDateString())
+              setShowCheckin(false)
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Milestone Célébration ── */}
+      <AnimatePresence>
+        {milestone && (
+          <motion.div
+            key="milestone"
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+            transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+            style={{
+              position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
+              zIndex: 900, background: 'linear-gradient(135deg, #FFF8F0, #FFF2E0)',
+              border: '1.5px solid rgba(200,123,82,0.30)',
+              borderRadius: 22, padding: '16px 24px', minWidth: 280, maxWidth: 340,
+              boxShadow: '0 12px 40px rgba(200,123,82,0.25), 0 4px 12px rgba(0,0,0,0.10)',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: 38, marginBottom: 6 }}>{milestone.emoji}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
+              {milestone.titre}
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(100,50,10,0.65)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.5 }}>
+              {milestone.texte}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── SOS Mode indicator ── */}
+      {sosMode && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+            background: 'linear-gradient(90deg, rgba(80,120,200,0.15), rgba(100,140,220,0.10))',
+            borderBottom: '1px solid rgba(100,140,220,0.20)',
+            padding: '10px 20px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}
+        >
+          <span style={{ fontSize: 12, color: 'rgba(80,120,200,0.90)', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+            💙 Solenn est là pour toi — prends le temps qu'il faut
+          </span>
+          <button onClick={() => setSosMode(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.4, marginLeft: 4 }}>✕</button>
+        </motion.div>
+      )}
+
+
+      {/* ── Settings Sheet ── */}
+      <AnimatePresence>
+        {showSettings && profil && (
+          <SettingsSheet
+            profil={profil}
+            preset={homePreset}
+            notifsEnabled={notifEnabled}
+            onClose={() => setShowSettings(false)}
+            onEditProfil={() => { setShowSettings(false); setProfilBackup(profil); setProfil(null) }}
+            onPresetChange={p => { setHomePreset(p); setShowSettings(false) }}
+            onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}
+            onResetMemoire={() => {
+              localStorage.removeItem('vitacoach_memories')
+              setShowSettings(false)
+            }}
+            onExportData={() => {
+              const data = {
+                profil,
+                metriques,
+                history: safeParse('vitacoach_history', []),
+                memories: safeParse('vitacoach_memories', []),
+                exportedAt: new Date().toISOString(),
+              }
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url; a.download = `solenn-data-${new Date().toISOString().split('T')[0]}.json`
+              a.click(); URL.revokeObjectURL(url)
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Chat History Sheet ── */}
+      <AnimatePresence>
+        {showChatHistory && user?.id && (
+          <ChatHistory
+            userId={user.id}
+            supabase={supabase}
+            onClose={() => setShowChatHistory(false)}
+            onLoadSession={msgs => {
+              setMessages(msgs)
+              setShowChatHistory(false)
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
@@ -791,11 +1300,11 @@ export default function App() {
           <div style={s.sidebarTop}>
             <span style={{
               fontSize:22, fontWeight:900, letterSpacing:'-0.04em',
-              color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
+              color:'rgba(200,123,82,0.65)', mixBlendMode:'multiply',
             }}>Solenn</span>
             <ShinyLogoText
               text="re·vivre · évoluer"
-              color="rgba(212,132,74,0.45)"
+              color="rgba(212,132,74,0.65)"
               style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}
             />
           </div>
@@ -803,7 +1312,7 @@ export default function App() {
           <nav style={s.sidebarNav}>
             {navItems.map(({ id, Icon, label }) => {
               const active = onglet === id
-              const color = active ? '#C87B52' : '#8a7265'
+              const color = active ? '#C87B52' : 'rgba(200,123,82,0.48)'
               return (
                 <button key={id} style={active ? s.navActive : s.nav}
                   onClick={() => setOnglet(id)}>
@@ -829,14 +1338,14 @@ export default function App() {
               </div>
             </div>
             {!isPro && (
-              <button style={s.btnPro} onClick={passerPro}><FlashIcon size={14} color="#fff" /> Solenn Pro — 4.99€/mois</button>
+              <button style={s.btnPro} onClick={passerPro}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 4.99€/mois</button>
             )}
             {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
             <button
               style={{
                 ...s.btnEdit,
                 background: notifEnabled ? 'rgba(52,199,89,0.10)' : 'rgba(0,0,0,0.04)',
-                color: notifEnabled ? '#34c759' : '#8a7265',
+                color: notifEnabled ? '#34c759' : 'rgba(200,123,82,0.65)',
                 border: notifEnabled ? '1px solid rgba(52,199,89,0.25)' : '1px solid rgba(0,0,0,0.08)',
                 display:'flex', alignItems:'center', gap:6,
               }}
@@ -853,41 +1362,119 @@ export default function App() {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 252 }}>
-        <div style={{ ...s.content, padding: isMobile ? '0 0 130px' : '0 0 40px' }}>
+        <div ref={contentRef} style={{ ...s.content, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY: isMobile ? 'auto' : 'unset', overflowX:'hidden', WebkitOverflowScrolling:'touch' }}>
 
-          {/* Mobile header */}
-          {isMobile && (() => {
+          {/* Mobile header — transparent sur Accueil, plein sur les autres onglets */}
+          {isMobile && onglet === 'accueil' && (
+            <div style={{
+              position:'fixed', top:0, left:0, right:0, zIndex:50,
+              padding:'10px 18px',
+              display:'flex', justifyContent:'space-between', alignItems:'center',
+            }}>
+              {/* Logo */}
+              {(() => {
+                const logoColor = {
+                  sunrise: 'rgba(255,232,195,0.90)',
+                  day:     'rgba(255,238,228,0.62)',
+                  sunset:  'rgba(255,218,180,0.52)',
+                  night:   'rgba(160,200,255,0.90)',
+                }[homePreset] ?? 'rgba(255,238,228,0.62)'
+                const subColor = {
+                  sunrise: 'rgba(255,218,170,0.72)',
+                  day:     'rgba(255,238,228,0.68)',
+                  sunset:  'rgba(255,200,155,0.42)',
+                  night:   'rgba(160,200,255,0.65)',
+                }[homePreset] ?? 'rgba(255,238,228,0.68)'
+                return (
+                <div style={{ pointerEvents:'none', position:'relative' }}>
+                  <span style={{
+                    fontSize:28, fontWeight:400,
+                    fontFamily:"'Cormorant Garamond', Georgia, serif",
+                    fontStyle:'italic', letterSpacing:'-0.01em',
+                    color: logoColor,
+                    textShadow:'0 1px 8px rgba(0,0,0,0.45)',
+                    lineHeight:1, display:'block',
+                  }}>Solenn</span>
+                  <span style={{
+                    fontSize:8.5, fontWeight:400, letterSpacing:'0.5px', display:'block', marginTop:2,
+                    fontFamily:"'Poppins',system-ui,sans-serif",
+                    color: subColor,
+                    textShadow:'0 1px 6px rgba(0,0,0,0.40)',
+                  }}>Ton évolution, guidée.</span>
+                </div>
+                )
+              })()}
+              {/* Hamburger */}
+              <button onClick={() => setMenuOpen(o => !o)} style={{
+                width:34, height:34, borderRadius:10,
+                background:'none', border:'none', boxShadow:'none',
+                display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                gap:5, cursor:'pointer', padding:0,
+              }}>
+                {[0,1,2].map(i => (
+                  <span key={i} style={{
+                    display:'block', borderRadius:2,
+                    background: ({ sunrise:'rgba(255,232,195,0.85)', day:'rgba(255,238,228,0.75)', sunset:'rgba(255,218,180,0.45)', night:'rgba(160,200,255,0.80)' }[homePreset] ?? 'rgba(255,238,228,0.75)'),
+                    filter:'drop-shadow(0 1px 5px rgba(0,0,0,0.45))',
+                    transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
+                    width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 16 : menuOpen && i===2 ? 16 : i===1 ? 10 : 16,
+                    height:1.5,
+                    transform: menuOpen && i===0 ? 'translateY(6.5px) rotate(45deg)'
+                             : menuOpen && i===2 ? 'translateY(-6.5px) rotate(-45deg)'
+                             : 'none',
+                    opacity: menuOpen && i===1 ? 0 : 1,
+                  }} />
+                ))}
+              </button>
+            </div>
+          )}
+          {isMobile && onglet !== 'accueil' && (() => {
             const onChat = onglet === 'chat'
-            const iconColor = 'rgba(218,138,52,0.58)'
+            const iconColor = 'rgba(200,123,82,0.58)'
             return (
             <div style={s.mobileHeader}>
-              {onglet !== 'accueil' ? (
-                <button style={{ background:'none', border:'none', padding:'6px', cursor:'pointer', display:'flex', alignItems:'center', flexShrink:0 }}
-                  onClick={() => setOnglet('accueil')}>
-                  <BackIcon color={iconColor} size={18} />
-                </button>
-              ) : (
-                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{
-                    fontSize:22, fontWeight:900, letterSpacing:'-0.04em',
-                    color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
-                  }}>Solenn</span>
-                  <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(218,138,52,0.72)', letterSpacing:'0.6px' }}>
-                    Ton évolution, guidée.
-                  </span>
-                </div>
-              )}
-
-              <div style={s.mobileTitle}>
-                {onglet === 'accueil' ? '' : onglet === 'chat'
-                  ? <span style={{
-                      fontSize:16, fontWeight:700, letterSpacing:'0.01em',
-                      color:'rgba(218,138,52,0.46)', mixBlendMode:'multiply',
-                    }}>Solenn</span>
-                  : sectionTitles[onglet] || ''}
+              {/* Logo — identique sur tous les onglets */}
+              <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
+                <style>{`
+                  @keyframes headerShimmer {
+                    0%   { background-position: -200% center; }
+                    100% { background-position:  200% center; }
+                  }
+                `}</style>
+                <span style={{
+                  fontSize:30, fontWeight:400,
+                  fontFamily:"'Cormorant Garamond', Georgia, serif",
+                  fontStyle:'italic', letterSpacing:'-0.01em',
+                  background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
+                  backgroundSize:'200% auto',
+                  WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                  animation:'headerShimmer 3s linear infinite',
+                  lineHeight:1,
+                }}>Solenn</span>
+                <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(200,123,82,0.70)', letterSpacing:'0.5px',
+                  fontFamily:"'Poppins',system-ui,sans-serif" }}>
+                  Ton évolution, guidée.
+                </span>
               </div>
 
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                {/* ── Nouveau chat (visible seulement sur onglet chat avec messages) ── */}
+                {onglet === 'chat' && messages.length > 0 && (
+                  <button
+                    onClick={() => { setMessages([]); setFollowUps([]); setReactions({}) }}
+                    title="Nouvelle conversation"
+                    style={{
+                      width:34, height:34, borderRadius:10,
+                      background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      cursor:'pointer', fontSize:15, color:'rgba(200,123,82,0.70)',
+                      transition:'all .15s ease',
+                    }}
+                    onMouseDown={e => e.currentTarget.style.transform='scale(0.92)'}
+                    onMouseUp={e => e.currentTarget.style.transform='scale(1)'}
+                    onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+                  >✦</button>
+                )}
                 {/* ── Hamburger button ── */}
                 <button onClick={() => setMenuOpen(o => !o)} style={{
                   width:34, height:34, borderRadius:10,
@@ -919,16 +1506,17 @@ export default function App() {
               {/* Backdrop */}
               <div onClick={() => setMenuOpen(false)} style={{
                 position:'fixed', inset:0, zIndex:150,
-                background:'rgba(15,5,30,0.28)', backdropFilter:'blur(6px)',
+                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(6px)',
                 animation:'tabFade 0.22s ease both',
               }} />
               {/* Panel */}
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'rgba(255,250,244,0.55)', backdropFilter:'blur(28px) saturate(1.6)', WebkitBackdropFilter:'blur(28px) saturate(1.6)',
-                borderLeft:'1px solid rgba(218,138,52,0.20)',
-                boxShadow:'-12px 0 40px rgba(218,138,52,0.10)',
+                background:'linear-gradient(160deg, rgba(255,243,220,0.28) 0%, rgba(255,224,175,0.20) 100%)',
+                backdropFilter:'blur(40px)', WebkitBackdropFilter:'blur(40px)',
+                borderLeft:'1px solid rgba(210,145,40,0.09)',
+                boxShadow:'none',
                 display:'flex', flexDirection:'column',
                 padding:'52px 22px 32px',
                 animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
@@ -936,38 +1524,89 @@ export default function App() {
                 {/* Profile */}
                 <div style={{
                   display:'flex', alignItems:'center', gap:14, marginBottom:28,
-                  paddingBottom:22, borderBottom:'1px solid rgba(218,138,52,0.14)',
+                  paddingBottom:22, borderBottom:'1px solid rgba(190,120,20,0.09)',
                 }}>
-                  <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
+                  {/* Monogramme utilisateur */}
+                  <div style={{ position:'relative', width:38, height:38, flexShrink:0 }}>
+                    {/* Anneau tournant */}
+                    <motion.svg
+                      width="38" height="38"
+                      style={{ position:'absolute', inset:0, pointerEvents:'none' }}
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+                    >
+                      <defs>
+                        <linearGradient id="menuOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%"   stopColor="rgba(255,238,228,0.0)"/>
+                          <stop offset="30%"  stopColor="rgba(255,238,228,0.20)"/>
+                          <stop offset="55%"  stopColor="rgba(255,238,228,0.42)"/>
+                          <stop offset="80%"  stopColor="rgba(255,238,228,0.16)"/>
+                          <stop offset="100%" stopColor="rgba(255,238,228,0.0)"/>
+                        </linearGradient>
+                      </defs>
+                      <circle cx="19" cy="19" r="17.5" fill="none" stroke="url(#menuOrbitGrad)" strokeWidth="1.5"/>
+                    </motion.svg>
+                    {/* Fond + initiale */}
+                    <div style={{
+                      width:38, height:38, borderRadius:'50%',
+                      background:'rgba(255,238,228,0.07)',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                    }}>
+                      <span style={{ fontSize:16, fontWeight:600, color:'rgba(255,238,228,0.88)', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>
+                        {(profil.nom || profil.prenom || '').charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
                   <div>
-                    <div style={{ fontSize:16, fontWeight:800, color:'rgba(198,118,28,0.82)' }}>{profil.nom}</div>
-                    <div style={{ fontSize:11, color:'rgba(190,140,70,0.32)', marginTop:2 }}>Niveau {level} · {xp} XP</div>
+                    <div style={{ fontSize:18, fontWeight:500, color:'rgba(255,238,228,0.92)', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', letterSpacing:'0.01em' }}>
+                      {profil.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : ''}
+                    </div>
+                    <div style={{ fontSize:11, color:'rgba(255,238,228,0.48)', marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
                 {/* Nav links */}
                 {navItems.map(({ id, Icon, label }) => (
                   <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
-                    display:'flex', alignItems:'center', gap:12, padding:'13px 16px', borderRadius:14,
-                    border:'none', background: onglet===id ? 'rgba(218,138,52,0.10)' : 'transparent',
+                    display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
+                    border:'none',
+                    background: onglet===id ? 'rgba(190,115,18,0.08)' : 'transparent',
                     cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
-                    color: onglet===id ? '#DA8A34' : 'rgba(188,130,50,0.48)', fontWeight: onglet===id ? 700 : 500,
+                    color: onglet===id ? 'rgba(255,238,228,0.92)' : 'rgba(255,238,228,0.62)',
+                    fontWeight: onglet===id ? 600 : 400,
                     fontSize:14, marginBottom:3,
-                    boxShadow: onglet===id ? 'inset 0 0 0 1px rgba(218,138,52,0.22)' : 'none',
                   }}>
-                    <Icon color={onglet===id ? '#DA8A34' : 'rgba(185,130,55,0.55)'} size={18} />
+                    <Icon color={onglet===id ? 'rgba(255,238,228,0.88)' : 'rgba(255,238,228,0.44)'} size={18} />
                     {label}
                   </button>
                 ))}
                 {/* Bottom actions */}
-                <div style={{ marginTop:'auto', display:'flex', flexDirection:'column', gap:8 }}>
+                <div style={{ marginTop:'auto', display:'flex', flexDirection:'column', gap:2, borderTop:'1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
                   {!isPro && (
-                    <button style={s.btnPro} onClick={() => { passerPro(); setMenuOpen(false) }}>
-                      <FlashIcon size={14} color="#fff" /> Solenn Pro — 4.99€/mois
+                    <button onClick={() => { passerPro(); setMenuOpen(false) }} style={{
+                      display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
+                      border:'none', background:'transparent', cursor:'pointer',
+                      fontFamily:F, width:'100%', textAlign:'left',
+                      color:'rgba(255,238,228,0.84)', fontWeight:400, fontSize:14,
+                    }}>
+                      <StarIcon size={18} color="rgba(255,238,228,0.82)" /> Passer à Pro
                     </button>
                   )}
-                  <button style={{ ...s.btnEdit, display:'flex', alignItems:'center', gap:6 }}
-                    onClick={() => { setProfilBackup(profil); setProfil(null); setMenuOpen(false) }}>
-                    ✏ Modifier mon profil
+                  <button onClick={() => { setShowSettings(true); setMenuOpen(false) }} style={{
+                    display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
+                    border:'none', background:'transparent', cursor:'pointer',
+                    fontFamily:F, width:'100%', textAlign:'left',
+                    color:'rgba(255,238,228,0.70)', fontWeight:400, fontSize:14,
+                  }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,238,228,0.55)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Paramètres
+                  </button>
+                  <button onClick={() => { setProfilBackup(profil); setProfil(null); setMenuOpen(false) }} style={{
+                    display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
+                    border:'none', background:'transparent', cursor:'pointer',
+                    fontFamily:F, width:'100%', textAlign:'left',
+                    color:'rgba(255,238,228,0.55)', fontWeight:400, fontSize:14,
+                  }}>
+                    <SparkleIcon size={18} color="rgba(255,238,228,0.46)" /> Modifier mon profil
                   </button>
                 </div>
               </div>
@@ -991,12 +1630,31 @@ export default function App() {
               streak={streak}
               xp={xp}
               level={level}
+              history={history}
+              onPresetChange={setHomePreset}
             />
           )}
 
           {/* ── Chat ── */}
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
+
+              {/* Bouton historique chat */}
+              {user?.id && (
+                <div style={{ position:'absolute', top:12, right:16, zIndex:10 }}>
+                  <button onClick={() => setShowChatHistory(true)} title="Historique" style={{
+                    background:'rgba(255,255,255,0.12)', backdropFilter:'blur(10px)',
+                    border:'1px solid rgba(200,123,82,0.18)', borderRadius:10,
+                    padding:'6px 10px', cursor:'pointer', display:'flex', alignItems:'center', gap:5,
+                    fontSize:11, fontWeight:600, color:'rgba(200,123,82,0.75)', fontFamily:'Poppins,sans-serif',
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    Historique
+                  </button>
+                </div>
+              )}
 
               <div ref={chatBoxRef} style={s.chatBox}
                 onScroll={e => {
@@ -1011,7 +1669,7 @@ export default function App() {
                     </div>
 
                     <div style={s.emptyChatTitle}>
-                      {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${profil.prenom || profil.nom} ?` : `Comment je peux t'aider ?`}
+                      {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${((profil.prenom || profil.nom) || '').charAt(0).toUpperCase() + ((profil.prenom || profil.nom) || '').slice(1).toLowerCase()} ?` : `Comment je peux t'aider ?`}
                     </div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
 
@@ -1076,14 +1734,21 @@ export default function App() {
                                 setTimeout(() => setCopiedIdx(null), 1800)
                               })
                             }}
+                            title="Copier"
                             style={{
                               background: copiedIdx === i ? 'rgba(52,199,89,0.12)' : 'transparent',
-                              border: 'none', cursor:'pointer', padding:'4px 7px', borderRadius:8,
-                              fontSize:11, color: copiedIdx === i ? '#34c759' : 'rgba(160,100,40,0.45)',
-                              fontFamily:'Poppins, sans-serif', fontWeight:600,
+                              border: 'none', cursor:'pointer', padding:'4px 6px', borderRadius:8,
+                              display:'flex', alignItems:'center', justifyContent:'center',
+                              color: copiedIdx === i ? '#34c759' : 'rgba(160,100,40,0.55)',
                               transition:'all 0.2s',
                             }}>
-                            {copiedIdx === i ? '✓ copié' : '⎘'}
+                            {copiedIdx === i
+                              ? <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#34c759" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                              : <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            }
                           </button>
                         </div>
                       )}
@@ -1125,23 +1790,6 @@ export default function App() {
                       cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
                       boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
                 )}
-                {messages.length > 0 && (
-                  <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:6 }}>
-                    <button
-                      onClick={() => { setMessages([]); setFollowUps([]); setReactions({}) }}
-                      style={{ display:'flex', alignItems:'center', gap:5,
-                        background:'rgba(255,248,242,0.60)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-                        border:'1px solid rgba(218,138,52,0.30)', borderRadius:20,
-                        padding:'4px 12px 4px 9px', cursor:'pointer',
-                        fontSize:12, color:'rgba(188,118,28,0.80)',
-                        fontFamily:'Inter, system-ui, sans-serif', fontWeight:500,
-                        transition:'all 0.2s', lineHeight:1 }}
-                      onMouseEnter={e => { e.currentTarget.style.background='rgba(255,240,220,0.92)'; e.currentTarget.style.color='rgba(170,100,15,0.96)'; e.currentTarget.style.borderColor='rgba(218,138,52,0.55)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background='rgba(255,248,242,0.60)'; e.currentTarget.style.color='rgba(188,118,28,0.80)'; e.currentTarget.style.borderColor='rgba(218,138,52,0.30)' }}>
-                      <span style={{ fontSize:13, opacity:0.80 }}>✦</span> Nouveau
-                    </button>
-                  </div>
-                )}
                 <div style={s.inputBox}>
                   <input className="chat-input" style={s.inputChat}
                     value={input}
@@ -1149,7 +1797,7 @@ export default function App() {
                     onKeyDown={e => e.key==='Enter' && envoyerMessage()}
                     placeholder="Pose une question à Solenn..." />
                   <button style={s.sendBtn} onClick={() => { navigator.vibrate?.(8); envoyerMessage() }}>
-                    <SendIcon color="rgba(218,138,52,0.58)" size={20} />
+                    <SendIcon color="rgba(200,123,82,0.58)" size={20} />
                   </button>
                 </div>
               </div>
@@ -1217,82 +1865,74 @@ export default function App() {
             </div>
           )}
 
+          {/* ── Routine ── */}
+          {onglet === 'routine' && (
+            <RoutineTab userId={user?.id} profil={profil} />
+          )}
+
           {/* ── Forum ── */}
           {onglet === 'forum' && (
-            <Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} />
+            <Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} showForm={forumFormOpen} setShowForm={setForumFormOpen} onUnreadCount={setForumUnread} />
           )}
 
           </div>{/* end keyed tab wrapper */}
 
         </div>
 
-        {/* ══ FLOATING NAVIGATION PILL (mobile) ══ */}
-        {isMobile && (() => {
-          const activeIdx = navItems.findIndex(n => n.id === onglet)
-          return (
-            <nav style={{
-              position:'fixed', bottom:22, left:'50%', transform:'translateX(-50%)',
-              display:'inline-flex', alignItems:'center',
-              background:'rgba(255,248,244,0.88)',
-              backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
-              borderRadius:22,
-              border:'1px solid rgba(218,138,52,0.14)',
-              boxShadow:'0 4px 24px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.9)',
-              padding:'8px 6px',
-              gap:2,
-              zIndex:100,
-              whiteSpace:'nowrap',
-            }}>
-              {/* Sliding active pill — masqué si onglet hors nav */}
-              {activeIdx >= 0 && (
-                <div style={{
-                  position:'absolute', top:7, bottom:7,
-                  width:`calc((100% - 16px) / ${navItems.length})`,
-                  left:`calc(8px + ${activeIdx} * (100% - 16px) / ${navItems.length})`,
-                  background:'rgba(218,138,52,0.10)',
-                  borderRadius:15,
-                  border:'1px solid rgba(218,138,52,0.10)',
-                  transition:'left 0.45s cubic-bezier(0.25,0.46,0.45,0.94)',
-                  pointerEvents:'none', zIndex:0,
-                }} />
-              )}
-              {navItems.map(({ id, Icon, label }) => {
-                const active = onglet === id
-                const color  = active ? 'rgba(218,138,52,0.72)' : 'rgba(218,138,52,0.38)'
-                return (
-                  <button key={id}
-                    style={{
-                      position:'relative', zIndex:1,
-                      display:'flex', flexDirection:'column', alignItems:'center', gap:3,
-                      padding:'7px 13px',
-                      border:'none', background:'transparent', cursor:'pointer',
-                      fontFamily:F, color,
-                      transition:'color 0.35s cubic-bezier(0.25,0.46,0.45,0.94)',
-                      minWidth:54,
-                    }}
-                    onClick={() => setOnglet(id)}>
-                    <div style={{
-                      transform: active ? 'scale(1.18) translateY(-2px)' : 'scale(1) translateY(0px)',
-                      transition:'transform 0.40s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease',
-                      opacity: 1,
-                    }}>
-                      <Icon color={color} size={21} />
-                    </div>
-                    <span style={{
-                      fontSize:9,
-                      fontWeight: active ? 700 : 400,
-                      letterSpacing:'0.3px',
-                      transition:'font-weight 0.35s ease, opacity 0.35s ease',
-                      opacity: 1,
-                    }}>
-                      {label}
-                    </span>
-                  </button>
-                )
-              })}
-            </nav>
-          )
-        })()}
+        {/* ══ FORUM FAB (hors div scrollable) ══ */}
+        {isMobile && onglet === 'forum' && (
+          <button
+            onClick={() => {
+              const opening = !forumFormOpen
+              setForumFormOpen(opening)
+              if (opening) {
+                setTimeout(() => {
+                  if (contentRef.current && contentRef.current.scrollTop > 0) {
+                    contentRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+                  } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                }, 50)
+              }
+            }}
+            aria-label="Nouvelle discussion"
+            style={{
+              position: 'fixed', bottom: 106, right: 18,
+              width: 52, height: 52, borderRadius: '50%',
+              background: 'linear-gradient(135deg, rgba(200,123,82,0.42), rgba(190,112,30,0.48))',
+              border: '1px solid rgba(255,220,170,0.22)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.18)',
+              zIndex: 200,
+              transition: 'transform .15s cubic-bezier(.34,1.56,.64,1)',
+            }}
+            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.88)'}
+            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            {/* Barre horizontale */}
+            <span style={{
+              position: 'absolute',
+              width: 18, height: 2, borderRadius: 2,
+              background: 'rgba(255,245,225,0.95)',
+              transform: forumFormOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+              transition: 'transform .38s cubic-bezier(.34,1.56,.64,1)',
+            }} />
+            {/* Barre verticale */}
+            <span style={{
+              position: 'absolute',
+              width: 18, height: 2, borderRadius: 2,
+              background: 'rgba(255,245,225,0.95)',
+              transform: forumFormOpen ? 'rotate(-45deg)' : 'rotate(90deg)',
+              transition: 'transform .38s cubic-bezier(.34,1.56,.64,1)',
+            }} />
+          </button>
+        )}
+
+        {/* ══ DYNAMIC NAV (mobile) ══ */}
+        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={homePreset} />}
       </main>
 
       {/* Celebration overlay */}
@@ -1504,16 +2144,9 @@ export default function App() {
           100% { background-position: -200% 0; }
         }
         * { -webkit-tap-highlight-color: transparent; }
-        /* Custom Scrollbar Pro — gradient violet, 5px, auto-hide */
-        ::-webkit-scrollbar { width:5px; height:5px; }
-        ::-webkit-scrollbar-track { background:transparent; border-radius:10px; }
-        ::-webkit-scrollbar-thumb {
-          background:linear-gradient(180deg, #C87B52 0%, #E8A07A 100%);
-          border-radius:10px;
-          transition:width 0.3s ease;
-        }
-        ::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#E8A07A,#C87B52); }
-        * { scrollbar-width:thin; scrollbar-color:#C87B52 transparent; }
+        /* Scrollbar cachée sur mobile — scroll tactile suffisant */
+        ::-webkit-scrollbar { display:none; width:0; height:0; }
+        * { scrollbar-width:none; }
       `}</style>
     </div>
   )
@@ -1585,8 +2218,8 @@ function RoutineModule({ profil, metriques }) {
       {stepsTotal > 0 && (
         <div style={sr.progressBar}>
           <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-            <span style={{ fontSize:12, fontWeight:700, color:'#1a0a00' }}>Progression</span>
-            <span style={{ fontSize:12, color:'#C87B52', fontWeight:700 }}>{doneTotal}/{stepsTotal}</span>
+            <span style={{ fontSize:11, fontWeight:400, color:'rgba(160,100,50,0.60)', letterSpacing:'0.04em' }}>Progression</span>
+            <span style={{ fontSize:11, color:'rgba(200,123,82,0.70)', fontWeight:500 }}>{doneTotal}/{stepsTotal}</span>
           </div>
           <div style={{ height:6, background:'#f0e8e0', borderRadius:4, overflow:'hidden' }}>
             <div style={{ height:'100%', width:`${stepsTotal>0?(doneTotal/stepsTotal)*100:0}%`,
@@ -1599,15 +2232,15 @@ function RoutineModule({ profil, metriques }) {
         <div style={{ ...sr.empty, background:'#fff5f5', border:'1px solid #ffcdd2', borderRadius:16, padding:24 }}>
           <div style={{ fontSize:32, marginBottom:10, color:'#c62828' }}>!</div>
           <div style={{ fontSize:14, color:'#c62828', fontWeight:600, marginBottom:8 }}>La génération a échoué</div>
-          <div style={{ fontSize:12, color:'#8a7265' }}>Vérifie ta connexion et réessaie</div>
+          <div style={{ fontSize:12, color:'rgba(155,100,58,0.72)' }}>Vérifie ta connexion et réessaie</div>
         </div>
       )}
 
       {!routine && !loading && !routineError && (
         <div style={sr.empty}>
           <div style={{ marginBottom:14 }}><RoutineIcon size={48} color="#c4b5a8" /></div>
-          <div style={{ fontSize:15, color:'#1a0a00', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
-          <div style={{ fontSize:12, color:'#8a7265' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
+          <div style={{ fontSize:15, color:'rgba(55,22,5,0.90)', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
+          <div style={{ fontSize:12, color:'rgba(155,100,58,0.72)' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
         </div>
       )}
 
@@ -1615,8 +2248,8 @@ function RoutineModule({ profil, metriques }) {
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {routine.motivation && (
             <div style={sr.motivCard}>
-              <div style={{ marginBottom:8 }}><SparkleIcon size={20} color="#C87B52" /></div>
-              <div style={{ fontSize:14, fontWeight:600, color:'#C87B52', lineHeight:1.65 }}>{routine.motivation}</div>
+              <div style={{ marginBottom:6 }}><SparkleIcon size={14} color="rgba(200,123,82,0.55)" /></div>
+              <div style={{ fontSize:12, fontWeight:400, color:'rgba(160,95,40,0.65)', lineHeight:1.65, fontStyle:'italic' }}>{routine.motivation}</div>
             </div>
           )}
           {routine.matin && (
@@ -1638,7 +2271,7 @@ function RoutineModule({ profil, metriques }) {
                 <span style={{ fontSize:20 }}>{routine.astuce.emoji}</span>
                 <span style={{ ...sr.cardTitre, color:'#C87B52' }}>{routine.astuce.titre}</span>
               </div>
-              <div style={{ fontSize:13, color:'#8a7265', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
+              <div style={{ fontSize:13, color:'rgba(155,100,58,0.72)', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
             </div>
           )}
         </div>
@@ -1649,16 +2282,16 @@ function RoutineModule({ profil, metriques }) {
 
 function NutritionCard({ nutrition }) {
   return (
-    <div style={{ ...sr.card, borderTop:'3px solid #34c759' }}>
+    <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(52,199,89,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(52,199,89,0.18)' }}>
       <div style={sr.cardHeader}>
-        <span style={{ fontSize:20, display:'flex', alignItems:'center' }}><FoodIcon size={20} color="#34c759" /></span>
-        <span style={{ ...sr.cardTitre, color:'#34c759' }}>{nutrition.titre}</span>
+        <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#34c759" /></span>
+        <span style={{ ...sr.cardTitre, color:'rgba(30,140,60,0.85)', fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
-          <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={16} color="#8a7265" /></span>
-          <div style={{ fontSize:13, color:'#8a7265', lineHeight:1.5 }}>
-            <strong style={{ color:'#1a0a00' }}>{r.moment}</strong> — {r.suggestion}
+          <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(52,199,89,0.55)" /></span>
+          <div style={{ fontSize:12, color:'rgba(155,100,58,0.65)', lineHeight:1.5 }}>
+            <strong style={{ color:'rgba(80,40,10,0.80)', fontWeight:500 }}>{r.moment}</strong> — {r.suggestion}
           </div>
         </div>
       ))}
@@ -1675,18 +2308,22 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
   const doneCount = etapes?.filter((_, i) => checked[`${id}_${i}`]).length || 0
   const total = etapes?.length || 0
   return (
-    <div style={{ ...sr.card, borderTop:`3px solid ${accent}` }}>
+    <div style={{
+      ...sr.card,
+      background: `linear-gradient(145deg, ${accent}09, rgba(255,246,238,0.60))`,
+      border: `1px solid ${accent}22`,
+    }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <span style={{ fontSize:20, display:'flex', alignItems:'center' }}>{iconEl || icon}</span>
+          <span style={{ fontSize:18, display:'flex', alignItems:'center' }}>{iconEl || icon}</span>
           <div>
-            <div style={{ ...sr.cardTitre, color: accent }}>{titre}</div>
-            {heure && <div style={{ fontSize:11, color:'#c4b5a8', marginTop:1 }}>{heure}</div>}
+            <div style={{ ...sr.cardTitre, color: accent, fontWeight:600, fontSize:13 }}>{titre}</div>
+            {heure && <div style={{ fontSize:10, color:`${accent}70`, marginTop:1 }}>{heure}</div>}
           </div>
         </div>
         {total > 0 && (
-          <div style={{ fontSize:11, color: doneCount===total ? accent : '#c4b5a8', fontWeight:700,
-            background: doneCount===total ? accent+'15' : '#f8f4f0', padding:'2px 8px', borderRadius:6 }}>
+          <div style={{ fontSize:10, color: doneCount===total ? accent : `${accent}60`, fontWeight:500,
+            background: doneCount===total ? accent+'15' : `${accent}08`, padding:'2px 8px', borderRadius:6 }}>
             {doneCount}/{total}
           </div>
         )}
@@ -1694,17 +2331,17 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
       {etapes?.map((e, i) => {
         const done = checked[`${id}_${i}`]
         return (
-          <div key={i} style={{ ...sr.etapeRow, opacity: done ? 0.55 : 1 }} onClick={() => onToggle(`${id}_${i}`)}>
-            <div style={{ width:24, height:24, borderRadius:8, flexShrink:0, cursor:'pointer',
-              border: `1.5px solid ${done ? accent : '#e5ddd5'}`,
-              background: done ? accent+'18' : '#ffffff',
+          <div key={i} style={{ ...sr.etapeRow, opacity: done ? 0.50 : 1 }} onClick={() => onToggle(`${id}_${i}`)}>
+            <div style={{ width:22, height:22, borderRadius:7, flexShrink:0, cursor:'pointer',
+              border: `1.5px solid ${done ? accent : accent+'30'}`,
+              background: done ? accent+'18' : 'rgba(255,248,242,0.60)',
               display:'flex', alignItems:'center', justifyContent:'center' }}>
-              {done && <span style={{ fontSize:12, color:accent }}>✓</span>}
+              {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
             </div>
             <span style={{ fontSize:18, minWidth:26, flexShrink:0 }}>{e.emoji}</span>
             <div>
-              <div style={{ fontWeight:600, fontSize:13, color:'#1a0a00', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
-              <div style={{ fontSize:12, color:'#8a7265', marginTop:2 }}>{e.detail || e.description}</div>
+              <div style={{ fontWeight:500, fontSize:13, color:'rgba(80,40,10,0.85)', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
+              <div style={{ fontSize:11, color:'rgba(155,100,58,0.60)', marginTop:2 }}>{e.detail || e.description}</div>
             </div>
           </div>
         )
@@ -1715,26 +2352,26 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
 
 const sr = {
   header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0', flexWrap:'wrap', gap:10 },
-  date: { fontSize:11, color:'#c4b5a8', textTransform:'capitalize', letterSpacing:0.5, fontWeight:500 },
-  titre: { fontSize:20, fontWeight:800, color:'#1a0a00', marginTop:3, letterSpacing:'-0.3px' },
+  date: { fontSize:11, color:'rgba(180,110,50,0.65)', textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
+  titre: { fontSize:17, fontWeight:500, color:'rgba(100,55,20,0.80)', marginTop:2, letterSpacing:'-0.1px' },
   btnGen: {
     background:'rgba(200,123,82,0.10)', color:'rgba(200,123,82,0.90)',
     border:'1.5px solid rgba(200,123,82,0.25)',
     padding:'8px 14px', borderRadius:12, fontSize:12, fontWeight:600, cursor:'pointer',
-    flexShrink:0, fontFamily:"'Inter',system-ui,sans-serif",
+    flexShrink:0, fontFamily:"'Poppins',system-ui,sans-serif",
     display:'flex', alignItems:'center', gap:5,
     boxShadow:'none',
   },
-  progressBar: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:14,
-    padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(0,0,0,0.04)' },
-  empty: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:20, padding:'48px 32px',
-    textAlign:'center', boxShadow:'0 4px 20px rgba(0,0,0,0.05)' },
-  motivCard: { background:'rgba(0,0,0,0.025)',
-    border:'1px solid #E8E6E2', borderRadius:18, padding:20, textAlign:'center' },
-  card: { background:'#ffffff', border:'1px solid #f0e8e0', borderRadius:18, padding:'16px 16px',
-    boxShadow:'0 2px 12px rgba(0,0,0,0.05)' },
+  progressBar: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(200,123,82,0.12)', borderRadius:14,
+    padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(200,123,82,0.05)' },
+  empty: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(200,123,82,0.12)', borderRadius:20, padding:'48px 32px',
+    textAlign:'center', boxShadow:'0 4px 20px rgba(200,123,82,0.06)' },
+  motivCard: { background:'rgba(255,246,238,0.28)',
+    border:'1px solid rgba(200,123,82,0.08)', borderRadius:16, padding:'14px 18px', textAlign:'center' },
+  card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(200,123,82,0.10)', borderRadius:18, padding:'14px 16px',
+    boxShadow:'none' },
   cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
-  cardTitre: { fontSize:14, fontWeight:700, color:'#1a0a00' },
+  cardTitre: { fontSize:14, fontWeight:700, color:'rgba(55,22,5,0.90)' },
   etapeRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'9px 0',
     borderTop:'1px solid #f8f4f0', cursor:'pointer' },
   repasRow: { display:'flex', gap:10, alignItems:'center', padding:'6px 0',
@@ -2017,15 +2654,19 @@ function TenuesModule({ profil }) {
       const data = await res.json()
       setTenues(data.tenues || [])
       setMeteo(data.meteo)
-    } catch {}
-    setLoading(false)
+    } catch (err) {
+      console.error('Erreur tenues:', err)
+      setTenues([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
       <style>{`
   .tenues-ville-input { border: 1.5px solid rgba(200,123,82,0.25) !important; box-shadow: none !important; }
-  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.45); }
+  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.55); }
   .tenues-ville-input:focus { border-color: rgba(200,123,82,0.55) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
 `}</style>
       {/* Controls — toujours visibles */}
@@ -2081,7 +2722,7 @@ function TenuesModule({ profil }) {
               </svg>
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.75)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
-            <div style={{ fontSize: 12, color: 'rgba(155,107,80,0.55)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
+            <div style={{ fontSize: 12, color: 'rgba(155,107,80,0.70)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
           </div>
         )}
       </div>
@@ -2141,7 +2782,7 @@ const st = {
 }
 
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
-const F = "'Inter', system-ui, sans-serif"
+const F = "'Poppins', system-ui, sans-serif"
 const s = {
   app: { display:'flex', minHeight:'100vh', background:'transparent', fontFamily:F, position:'relative' },
 
@@ -2157,7 +2798,7 @@ const s = {
     position:'fixed', top:0, left:0, height:'100vh',
     zIndex:50, overflowY:'auto',
   },
-  sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid #E8E6E2' },
+  sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
     /* Géré par ShinyLogoText — statique par défaut, shimmer au hover/tap */
@@ -2172,11 +2813,11 @@ const s = {
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
   sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
-  sidebarBottom: { display:'flex', flexDirection:'column', gap:8, marginTop:'2rem', paddingTop:'2rem', borderTop:'1px solid #f0e8e0' },
+  sidebarBottom: { display:'flex', flexDirection:'column', gap:8, marginTop:'2rem', paddingTop:'2rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
-    color:'#8a7265', fontWeight:500, textAlign:'left', width:'100%', fontSize:13,
+    color:'rgba(200,123,82,0.70)', fontWeight:500, textAlign:'left', width:'100%', fontSize:13,
     transition:'background .2s, color .2s',
   },
   navActive: {
@@ -2188,8 +2829,8 @@ const s = {
   },
   profileCard: {
     display:'flex', alignItems:'center', gap:10,
-    background:'rgba(0,0,0,0.025)',
-    border:'1px solid #E8E6E2', borderRadius:14, padding:'12px 14px',
+    background:'rgba(200,123,82,0.06)',
+    border:'1px solid rgba(200,123,82,0.14)', borderRadius:14, padding:'12px 14px',
   },
   avatar: {
     width:36, height:36, borderRadius:10,
@@ -2198,12 +2839,16 @@ const s = {
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',
   },
-  profileName: { fontSize:13, fontWeight:700, color:'#1a0a00', marginBottom:1 },
+  profileName: { fontSize:13, fontWeight:700, color:'rgba(55,22,5,0.90)', marginBottom:1 },
   profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
   btnPro: {
-    background:'linear-gradient(135deg,rgba(218,138,52,0.45),rgba(190,112,30,0.50))', color:'rgba(255,245,225,0.80)', border:'none',
-    padding:'11px 14px', borderRadius:12, cursor:'pointer', fontSize:12, fontFamily:F,
-    fontWeight:700, boxShadow:'0 4px 14px rgba(218,138,52,0.12)', textAlign:'center',
+    background:'transparent', color:'rgba(200,123,82,0.70)',
+    border:'none', borderBottom:'1px solid rgba(200,123,82,0.25)',
+    padding:'10px 0', borderRadius:0, cursor:'pointer',
+    fontSize:11, fontFamily:F, fontWeight:300,
+    letterSpacing:'0.18em', textTransform:'uppercase',
+    textAlign:'left', display:'flex', alignItems:'center', gap:6,
+    transition:'color 0.2s ease, border-color 0.2s ease',
   },
   proBadge: {
     background:'rgba(245,212,184,0.35)', color:'rgba(180,100,40,0.70)',
@@ -2211,23 +2856,24 @@ const s = {
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:'rgba(188,118,28,0.44)', border:'1px solid rgba(218,138,52,0.14)',
+    background:'rgba(245,235,215,0.22)', color:'rgba(188,118,28,0.65)', border:'1px solid rgba(200,123,82,0.14)',
     padding:'9px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
   },
 
   // ── Main ─────────────────────────────────────────────────────────────────────
-  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh', background:'transparent' },
+  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh', background:'transparent', overflow:'hidden' },
   content: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', display:'flex', flexDirection:'column' },
 
   // ── Mobile header ─────────────────────────────────────────────────────────────
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
-    padding:'14px 18px 12px',
-    borderBottom:'1px solid rgba(200,123,82,0.08)',
+    padding:'8px 18px 8px',
+    borderBottom:'1px solid rgba(200,123,82,0.06)',
     background:'transparent',
-    position:'sticky', top:0, zIndex:40,
+    backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
+    position:'fixed', top:0, left:0, right:0, zIndex:50,
   },
   backBtn: {
     width:36, height:36, borderRadius:12,
@@ -2245,7 +2891,7 @@ const s = {
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  pageTitle: { fontSize:18, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.03em', marginBottom:2 },
+  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(55,22,5,0.90)', letterSpacing:'-0.03em', marginBottom:2 },
   pageSubtitle: { fontSize:12, color:'#c4b5a8', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
@@ -2260,7 +2906,7 @@ const s = {
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
     background:'rgba(255,255,255,0.22)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    border:'1px solid rgba(218,138,52,0.20)', borderRadius:16,
+    border:'1px solid rgba(200,123,82,0.20)', borderRadius:16,
     padding:'13px 18px', fontSize:13, color:'rgba(185,112,25,0.86)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
     boxShadow:'0 2px 12px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
@@ -2270,21 +2916,21 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'rgba(255,180,130,0.05)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-    border:'1px solid rgba(240,160,90,0.12)',
-    color:'rgba(140,75,30,0.88)',
+    background:'rgba(255,180,130,0.07)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+    border:'1px solid rgba(200,123,82,0.28)',
+    color:'rgba(100,55,20,0.85)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
     boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
-    background:'rgba(255,248,238,0.07)', backdropFilter:'blur(22px)', WebkitBackdropFilter:'blur(22px)',
-    border:'1px solid rgba(232,150,60,0.10)',
-    color:'rgba(188,112,28,0.90)',
+    background:'rgba(255,248,238,0.05)', backdropFilter:'blur(22px)', WebkitBackdropFilter:'blur(22px)',
+    border:'1px solid rgba(200,123,82,0.20)',
+    color:'rgba(180,100,40,0.80)',
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
     fontSize:14, lineHeight:1.78, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',
-    boxShadow:'0 6px 28px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.40)',
+    boxShadow:'0 4px 20px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.25)',
   },
   botBubbleRich: {
     background:'transparent', color:'rgba(183,108,24,0.84)',
@@ -2296,9 +2942,9 @@ const s = {
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
     background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-    border:'1px solid rgba(218,138,52,0.22)', borderRadius:20,
+    border:'1px solid rgba(200,123,82,0.22)', borderRadius:20,
     padding:'7px 14px', fontSize:12, color:'rgba(185,112,25,0.88)', cursor:'pointer',
-    fontFamily:F, fontWeight:600,
+    fontFamily:F, fontWeight:300,
   },
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },

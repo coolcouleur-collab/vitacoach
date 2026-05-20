@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#F0A060"/>
+      <stop offset="100%" stop-color="#C87B52"/>
+    </radialGradient>
+  </defs>
+  <!-- Background cream -->
+  <rect width="32" height="32" fill="#FFF8F4" rx="6"/>
+  <!-- Orange circle -->
+  <circle cx="16" cy="16" r="13" fill="url(#bg)"/>
+  <!-- S letter in white -->
+  <text x="16" y="21.5" font-family="Georgia, serif" font-size="16" font-weight="700" font-style="italic"
+        text-anchor="middle" fill="white" letter-spacing="-0.5">S</text>
+</svg>

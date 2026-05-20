@@ -49,7 +49,7 @@ function isLand(map, lat, lon) {
 }
 
 // ─── composant ───────────────────────────────────────────────────────────────
-export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 'orange' }) {
+export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 'orange', halo = true }) {
   const mountRef = useRef(null)
 
   useEffect(() => {
@@ -180,13 +180,13 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
       `}</style>
 
       {/* Halo solaire derrière le globe */}
-      <div style={{
+      {halo && <div style={{
         position: 'absolute',
         inset: '-18%',
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(220,155,60,0.22) 0%, rgba(210,130,40,0.10) 40%, transparent 70%)',
         pointerEvents: 'none',
-      }} />
+      }} />}
 
       {/* Globe canvas */}
       <div

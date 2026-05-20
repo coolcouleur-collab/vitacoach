@@ -194,7 +194,7 @@ const s = {
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     position:'relative', overflow:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(218,138,52,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
