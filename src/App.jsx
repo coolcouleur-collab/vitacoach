@@ -286,7 +286,7 @@ async function syncMetriquesSupabase(userId, m) {
 
 async function syncProfilSupabase(userId, profil) {
   if (!userId) return
-  await supabase.from('user_profiles').upsert({
+  await supabase.from('profils').upsert({
     user_id: userId, profil,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
@@ -699,11 +699,16 @@ export default function App() {
     const today = new Date().toISOString().split('T')[0]
 
     // Charger le profil depuis Supabase (priorité sur localStorage)
-    supabase.from('user_profiles').select('profil').eq('user_id', user.id).maybeSingle()
+    supabase.from('profils').select('profil').eq('user_id', user.id).maybeSingle()
       .then(({ data }) => {
         if (data?.profil) {
           setProfil(data.profil)
           localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
+          // Sync isPro depuis Supabase (mis à jour par le webhook Stripe)
+          if (data.profil.isPro === true) {
+            setIsPro(true)
+            localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+          }
         }
       })
 
