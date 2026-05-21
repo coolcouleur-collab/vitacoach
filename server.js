@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
-import { startAgents, getAgentsStatus, triggerAgent, getRoutineCache, regenererPourUser, routineCache } from './agents/index.js'
+import { startAgents, getAgentsStatus, triggerAgent, getRoutineCache, regenererPourUser, routineCache, runDesignAudit, DESIGN_TOKENS } from './agents/index.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 
@@ -916,6 +916,25 @@ app.get('/api/chat-session', async (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message })
   }
+})
+
+// ─── Design Advisor ───────────────────────────────────────────────────────────
+// GET /api/design-review — Lance l'agent design et retourne ses recommandations
+// ⚠️ Ne modifie rien — analyse uniquement, validation manuelle requise
+app.get('/api/design-review', async (req, res) => {
+  try {
+    console.log('[DesignAdvisor] 🎨 Lancement audit design...')
+    const rapport = await runDesignAudit()
+    res.json(rapport)
+  } catch (e) {
+    console.error('[DesignAdvisor] Erreur:', e.message)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// GET /api/design-tokens — Retourne la palette de référence Solenn
+app.get('/api/design-tokens', (req, res) => {
+  res.json(DESIGN_TOKENS)
 })
 
 // Export pour Vercel serverless

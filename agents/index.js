@@ -20,6 +20,7 @@ import { runMonitoring }    from './monitoring.js'
 import { runNotifications } from './notifications.js'
 import { runTendances }     from './tendances.js'
 import { runRoutineAuto, getRoutineCache, regenererPourUser, routineCache } from './routine-auto.js'
+import { runDesignAudit, DESIGN_TOKENS } from './design-advisor.js'
 
 // ─── État des agents (pour le dashboard /api/agents-status) ──────────────────
 const agentsStatus = {
@@ -128,10 +129,12 @@ export async function triggerAgent(agentName, pushSubscriptions, options = {}) {
       return runTendances(pushSubscriptions)
     case 'routine-auto':
       return runRoutineAuto(pushSubscriptions)
+    case 'design':
+      return runDesignAudit()
     default:
       throw new Error(`Agent inconnu: ${agentName}`)
   }
 }
 
 // ─── Re-exports utilitaires ───────────────────────────────────────────────────
-export { getRoutineCache, regenererPourUser, routineCache }
+export { getRoutineCache, regenererPourUser, routineCache, runDesignAudit, DESIGN_TOKENS }
