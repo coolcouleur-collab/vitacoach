@@ -640,9 +640,29 @@ export default function App() {
     if (p.get('subscribed') === 'true') {
       setIsPro(true)
       localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+      const sessionId = p.get('session_id')
+      if (sessionId) localStorage.setItem('vitacoach_stripe_session', sessionId)
       window.history.replaceState({}, '', '/')
     }
   }, [])
+  useEffect(() => {
+    if (!user?.id) return
+    const sessionId = localStorage.getItem('vitacoach_stripe_session')
+    if (!sessionId) return
+    fetch(`/api/check-subscription?sessionId=${sessionId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.active) {
+          setIsPro(true)
+          localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+        } else if (!data.active && isPro) {
+          // Abonnement annulé
+          setIsPro(false)
+          localStorage.setItem('vitacoach_pro', JSON.stringify(false))
+        }
+      })
+      .catch(() => {})
+  }, [user?.id])
 
   // Célébration quand score atteint 80+ (une fois par jour)
   useEffect(() => {
@@ -990,6 +1010,17 @@ export default function App() {
     if (isSendingRef.current) return     // verrou : un seul envoi à la fois
     isSendingRef.current = true
 
+    // Warning à 1 message de la limite
+    if (!isPro && getMsgCount() === FREE_LIMIT - 1) {
+      // On laisse passer mais on avertit
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `💛 Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 4,99€/mois, résiliable à tout moment.`
+        }])
+      }, 800)
+    }
+
     if (!isPro && getMsgCount() >= FREE_LIMIT) {
       setMessages(prev => {
         const last = prev[prev.length - 1]
@@ -1229,6 +1260,9 @@ export default function App() {
             profil={profil}
             preset={homePreset}
             notifsEnabled={notifEnabled}
+            isPro={isPro}
+            onPasserPro={passerPro}
+            msgsRestants={isPro ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
             onClose={() => setShowSettings(false)}
             onEditProfil={() => { setShowSettings(false); setProfilBackup(profil); setProfil(null) }}
             onPresetChange={p => { setHomePreset(p); setShowSettings(false) }}

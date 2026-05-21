@@ -281,6 +281,9 @@ export default function SettingsSheet({
   profil = {},
   preset = 'day',
   notifsEnabled = false,
+  isPro = false,
+  onPasserPro,
+  msgsRestants = null,
   onClose,
   onEditProfil,
   onPresetChange,
@@ -499,7 +502,173 @@ export default function SettingsSheet({
               </div>
             </Card>
 
-            {/* ── 2. APPARENCE ────────────────────────────────────────── */}
+            {/* ── 2. MON ABONNEMENT ────────────────────────────────── */}
+            <SectionTitle>Mon Abonnement</SectionTitle>
+            {isPro ? (
+              /* Card Pro */
+              <Card style={{
+                background: 'linear-gradient(135deg, rgba(232,150,42,0.08) 0%, rgba(200,123,82,0.08) 100%)',
+                border: '1px solid rgba(232,150,42,0.28)',
+              }}>
+                {/* Badge Pro */}
+                <div style={{ marginBottom: 14 }}>
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                    background: 'rgba(232,150,42,0.12)',
+                    border: '1px solid rgba(232,150,42,0.30)',
+                    borderRadius: 20,
+                    padding: '5px 12px',
+                    fontFamily: C.font,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#E8962A',
+                  }}>
+                    ✨ Solenn Pro
+                  </span>
+                </div>
+                {/* Avantages */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+                  {['Messages illimités', 'Rapport hebdo personnalisé', 'Challenges 21 jours · Agents nutrition'].map((txt, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{
+                        width: 18, height: 18,
+                        borderRadius: '50%',
+                        background: 'rgba(60,180,80,0.14)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 11, flexShrink: 0,
+                      }}>
+                        ✓
+                      </span>
+                      <span style={{ fontFamily: C.font, fontSize: 13, fontWeight: 500, color: C.text }}>
+                        {txt}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                {/* Footer */}
+                <div style={{
+                  fontFamily: C.font,
+                  fontSize: 12,
+                  color: C.textMuted,
+                  fontWeight: 500,
+                  borderTop: `1px solid rgba(232,150,42,0.18)`,
+                  paddingTop: 10,
+                }}>
+                  Merci de faire partie de l'aventure 💛
+                </div>
+              </Card>
+            ) : (
+              /* Card upgrade */
+              <Card>
+                {/* En-tête */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <span style={{ fontFamily: C.font, fontSize: 14, fontWeight: 700, color: C.text }}>
+                    Plan Gratuit
+                  </span>
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    background: 'rgba(200,123,82,0.12)',
+                    border: `1px solid rgba(200,123,82,0.30)`,
+                    borderRadius: 20,
+                    padding: '3px 10px',
+                    fontFamily: C.font,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: C.accent,
+                  }}>
+                    5 msg/jour
+                  </span>
+                </div>
+                {/* Barre de progression */}
+                {msgsRestants !== null && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{
+                      height: 6,
+                      borderRadius: 3,
+                      background: 'rgba(200,123,82,0.14)',
+                      overflow: 'hidden',
+                      marginBottom: 5,
+                    }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${Math.max(0, Math.min(100, (msgsRestants / 5) * 100))}%`,
+                        borderRadius: 3,
+                        background: `linear-gradient(90deg, ${C.accent} 0%, #E8962A 100%)`,
+                        transition: 'width 0.4s ease',
+                      }} />
+                    </div>
+                    <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
+                      {msgsRestants} message{msgsRestants !== 1 ? 's' : ''} restant{msgsRestants !== 1 ? 's' : ''} aujourd'hui
+                    </div>
+                  </div>
+                )}
+                {/* Avantages Pro barrés */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 16 }}>
+                  {['Messages illimités', 'Rapport hebdo', 'Challenges 21 jours'].map((txt, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{
+                        width: 18, height: 18,
+                        borderRadius: '50%',
+                        background: 'rgba(26,10,0,0.06)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 11, flexShrink: 0, color: C.textLight,
+                      }}>
+                        ✓
+                      </span>
+                      <span style={{
+                        fontFamily: C.font,
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: C.textLight,
+                        textDecoration: 'line-through',
+                      }}>
+                        {txt}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                {/* Bouton upgrade */}
+                <button
+                  onClick={onPasserPro}
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    borderRadius: 16,
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
+                    color: '#fff',
+                    fontFamily: C.font,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    outline: 'none',
+                    WebkitTapHighlightColor: 'transparent',
+                    boxShadow: '0 4px 18px rgba(200,123,82,0.38), 0 1px 4px rgba(200,100,40,0.18)',
+                    marginBottom: 8,
+                    transition: 'opacity 0.15s ease, transform 0.12s ease',
+                  }}
+                  onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
+                  onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
+                >
+                  ⭐ Passer à Solenn Pro · 4,99€/mois
+                </button>
+                {/* Sous-texte */}
+                <div style={{
+                  fontFamily: C.font,
+                  fontSize: 11,
+                  color: C.textMuted,
+                  fontWeight: 500,
+                  textAlign: 'center',
+                }}>
+                  Résiliable à tout moment
+                </div>
+              </Card>
+            )}
+
+            {/* ── 3. APPARENCE ────────────────────────────────────────── */}
             <SectionTitle>Apparence</SectionTitle>
             <Card>
               <div style={{ display: 'flex', gap: 8 }}>

@@ -55,6 +55,54 @@ const supabase = supabaseUrl && supabaseKey
   ? createClient(supabaseUrl, supabaseKey)
   : null
 
+// Stripe webhook — raw body requis (avant express.json())
+app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature']
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+
+  if (!webhookSecret) return res.json({ received: true }) // pas encore configuré
+
+  let event
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret)
+  } catch (err) {
+    console.error('[Webhook] Signature invalide:', err.message)
+    return res.status(400).send(`Webhook Error: ${err.message}`)
+  }
+
+  console.log('[Webhook] Event:', event.type)
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object
+    const userId = session.metadata?.userId
+    if (userId && supabase) {
+      await supabase.from('profils')
+        .update({ profil: supabase.rpc('jsonb_set_key', { /* fallback ci-dessous */ }) })
+        .eq('user_id', userId)
+      // Fallback simple : marquer isPro dans profil JSONB
+      const { data: existing } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+      const updatedProfil = { ...(existing?.profil || {}), isPro: true, proSince: new Date().toISOString(), stripeSessionId: session.id }
+      await supabase.from('profils').upsert({ user_id: userId, profil: updatedProfil }, { onConflict: 'user_id' })
+      console.log('[Webhook] User', userId, '→ Pro ✅')
+    }
+  }
+
+  if (event.type === 'customer.subscription.deleted') {
+    const sub = event.data.object
+    // Retrouver le user par customer ID
+    if (supabase) {
+      const { data: rows } = await supabase.from('profils').select('user_id, profil').contains('profil', { stripeCustomerId: sub.customer })
+      for (const row of rows || []) {
+        const updatedProfil = { ...(row.profil || {}), isPro: false, proEnd: new Date().toISOString() }
+        await supabase.from('profils').update({ profil: updatedProfil }).eq('user_id', row.user_id)
+        console.log('[Webhook] User', row.user_id, '→ Pro annulé')
+      }
+    }
+  }
+
+  res.json({ received: true })
+})
+
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -775,6 +823,18 @@ app.get('/api/check-subscription', async (req, res) => {
     res.json({ active: session.payment_status === 'paid' || session.status === 'complete' })
   } catch {
     res.json({ active: false })
+  }
+})
+
+// GET /api/verify-pro?userId=... → vérifie le statut Pro dans profils
+app.get('/api/verify-pro', async (req, res) => {
+  const { userId } = req.query
+  if (!userId || !supabase) return res.json({ isPro: false })
+  try {
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+    res.json({ isPro: data?.profil?.isPro === true, proSince: data?.profil?.proSince || null })
+  } catch {
+    res.json({ isPro: false })
   }
 })
 

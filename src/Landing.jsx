@@ -158,6 +158,77 @@ function CinematicSlider({ onCommencer }) {
 
 
 
+        {/* ── PRICING PILL ── */}
+        <div style={{
+          position: 'absolute', bottom: '11rem', left: '50%',
+          transform: 'translateX(-50%)', zIndex: 20,
+          background: 'rgba(200,123,82,0.10)',
+          border: '1px solid rgba(200,123,82,0.25)',
+          borderRadius: 20,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          display: 'flex', flexDirection: 'row', alignItems: 'stretch',
+          gap: 0,
+          padding: 0,
+          overflow: 'hidden',
+          animation: 'panelIn 0.5s 0.8s cubic-bezier(0.34,1.56,0.64,1) both',
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 24px rgba(130,70,15,0.14)',
+        }}>
+          {/* Colonne Gratuit */}
+          <div style={{
+            padding: '14px 18px',
+            display: 'flex', flexDirection: 'column', gap: 5,
+            minWidth: 160,
+          }}>
+            <span style={{
+              fontSize: 10, fontFamily: 'Poppins, sans-serif', fontWeight: 700,
+              color: '#C87B52', letterSpacing: '0.18em',
+              textTransform: 'uppercase', marginBottom: 4,
+            }}>
+              GRATUIT
+            </span>
+            {['5 messages/jour', 'Profil santé personnalisé', 'Routines quotidiennes'].map(item => (
+              <div key={item} style={{
+                fontSize: 11, fontFamily: 'Poppins, sans-serif', fontWeight: 400,
+                color: 'rgba(255,240,210,0.88)', lineHeight: 1.5,
+              }}>
+                {item}
+              </div>
+            ))}
+          </div>
+
+          {/* Séparateur vertical */}
+          <div style={{
+            width: 1, alignSelf: 'stretch',
+            background: 'rgba(200,123,82,0.25)',
+          }} />
+
+          {/* Colonne Pro */}
+          <div style={{
+            padding: '14px 18px',
+            display: 'flex', flexDirection: 'column', gap: 5,
+            minWidth: 180,
+            background: 'rgba(200,123,82,0.15)',
+          }}>
+            <span style={{
+              fontSize: 10, fontFamily: 'Poppins, sans-serif', fontWeight: 700,
+              color: '#E8962A', letterSpacing: '0.18em',
+              textTransform: 'uppercase', marginBottom: 4,
+            }}>
+              PRO · 4,99€/mois
+            </span>
+            {['Messages illimités ✨', 'Rapport hebdo · Défis 21j', 'Agents nutrition · Météo'].map(item => (
+              <div key={item} style={{
+                fontSize: 11, fontFamily: 'Poppins, sans-serif', fontWeight: 400,
+                color: 'rgba(255,240,210,0.88)', lineHeight: 1.5,
+              }}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ── Commencer — centré ── */}
         {onCommencer && (
           <button
