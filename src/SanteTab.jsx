@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
+
+// hex → rgba helper
+function h2r(hex, a) {
+  const r = parseInt(hex.slice(1,3),16)
+  const g = parseInt(hex.slice(3,5),16)
+  const b = parseInt(hex.slice(5,7),16)
+  return `rgba(${r},${g},${b},${a})`
+}
 
 function ScaleIcon({ color = '#34c759', size = 18 }) {
   return (
@@ -27,7 +36,7 @@ const HUMEUR_ICONS = [null,
   <HappyIcon size={20} color="#10b981" />,
 ]
 
-export function scoreJour(m) {
+function scoreJour(m) {
   let s = 0
   if (m.pas  >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
   if (m.sommeil >= 7.5) s += 25; else if (m.sommeil >= 6) s += 18; else if (m.sommeil >= 5) s += 10; else if (m.sommeil > 0) s += 5
@@ -51,7 +60,7 @@ function Sparkline({ history, metricKey, color, goal }) {
   const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
   const hasData = last7.some(d => d.val > 0)
   if (!hasData) return (
-    <div style={{ fontSize:10, color:'rgba(218,138,52,0.50)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
+    <div style={{ fontSize:10, color:'rgba(200,123,82,0.65)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
       Pas encore de données
     </div>
   )
@@ -82,10 +91,10 @@ function Sparkline({ history, metricKey, color, goal }) {
 function HistoriqueSection({ history }) {
   const [open, setOpen] = useState(false)
   const metricsToShow = [
-    { key:'pas',     label:'Pas',     color:'#C87B52', goal:10000 },
-    { key:'sommeil', label:'Sommeil', color:'#B06840', goal:8 },
-    { key:'eau',     label:'Eau',     color:'#D4956A', goal:8 },
-    { key:'humeur',  label:'Humeur',  color:'#9E5C35', goal:5 },
+    { key:'pas',     label:'Pas',     color:'#F59E0B', goal:10000 },
+    { key:'sommeil', label:'Sommeil', color:'#8B5CF6', goal:8 },
+    { key:'eau',     label:'Eau',     color:'#38bdf8', goal:8 },
+    { key:'humeur',  label:'Humeur',  color:'#fbbf24', goal:5 },
   ]
   return (
     <div style={{
@@ -104,13 +113,13 @@ function HistoriqueSection({ history }) {
           border:'1.5px solid rgba(200,123,82,0.22)',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
         <div style={{ flex:1, textAlign:'left' }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'rgba(218,138,52,0.72)' }}>Historique 7 jours</div>
-          <div style={{ fontSize:11, color:'rgba(218,138,52,0.45)', marginTop:1 }}>Progression de tes métriques</div>
+          <div style={{ fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.72)' }}>Historique 7 jours</div>
+          <div style={{ fontSize:11, color:'rgba(200,123,82,0.62)', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
-          fontSize:10, fontWeight:700, color:'rgba(218,138,52,0.60)',
-          background:'rgba(218,138,52,0.08)', padding:'4px 10px', borderRadius:8,
-          border:'1px solid rgba(218,138,52,0.16)',
+          fontSize:10, fontWeight:700, color:'rgba(200,123,82,0.60)',
+          background:'rgba(200,123,82,0.08)', padding:'4px 10px', borderRadius:8,
+          border:'1px solid rgba(200,123,82,0.16)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
       </button>
@@ -139,6 +148,157 @@ function HistoriqueSection({ history }) {
   )
 }
 
+// ─── CAROUSEL CARD ────────────────────────────────────────────────────────────
+function CarouselCard({ item, index, trackX, cardW, gap }) {
+  const ACCENTS = ['#C87B52', '#38bdf8', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899']
+  const accent  = ACCENTS[index % ACCENTS.length]
+  const slotW   = cardW + gap
+
+  // Parallax: inner content shifts slightly relative to card motion
+  const contentX = useTransform(trackX, v => (v + index * slotW) * 0.12)
+
+  const msg      = item.message || ''
+  const numMatch = msg.match(/(\d+[\s,.]?\d*\s*(?:kg|h|min|bpm|verres?|pas|%|kcal|heures?)?)/i)
+  const bigStat  = numMatch ? numMatch[0].trim() : null
+  const sentences = msg.split(/(?<=[.!?])\s+/).filter(Boolean)
+  const punchline = sentences[0] || ''
+  const action    = sentences[1] || ''
+
+  return (
+    <div className="lg-card" style={{
+      width: cardW, flexShrink: 0, borderRadius: 22, overflow: 'hidden',
+      background: 'rgba(255,255,255,0.13)',
+      backdropFilter: 'blur(28px) saturate(1.8)',
+      WebkitBackdropFilter: 'blur(28px) saturate(1.8)',
+      boxShadow: `0 8px 32px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(255,255,255,0.18)`,
+      userSelect: 'none',
+    }}>
+      <motion.div style={{ x: contentX, padding: '20px 20px', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 3 }}>
+        <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 8 }}>{item.emoji || '✦'}</div>
+        {item.titre && (
+          <div style={{ fontSize: 9, fontWeight: 700, color: h2r(accent, 0.70), letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>
+            {item.titre}
+          </div>
+        )}
+        {bigStat && (
+          <div style={{ fontSize: 38, fontWeight: 900, color: accent, lineHeight: 1, letterSpacing: '-1.5px', marginBottom: 4, fontVariantNumeric: 'tabular-nums' }}>
+            {bigStat}
+          </div>
+        )}
+        <div style={{
+          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(25,10,0,0.82)', lineHeight: 1.4,
+          marginBottom: action ? 10 : 0,
+          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          {bigStat ? punchline.replace(numMatch[0], '').trim() : punchline}
+        </div>
+        {action && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            background: h2r(accent, 0.10), border: `1px solid ${h2r(accent, 0.22)}`,
+            borderRadius: 99, padding: '5px 12px',
+            fontSize: 10.5, fontWeight: 700, color: accent, letterSpacing: '0.03em',
+            alignSelf: 'flex-start', maxWidth: '100%', overflow: 'hidden',
+          }}>
+            <span style={{ flexShrink: 0 }}>↗</span>
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {action.replace(/[.!?]$/, '')}
+            </span>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  )
+}
+
+// ─── INSIGHTS CAROUSEL ────────────────────────────────────────────────────────
+function InsightsCarousel({ insights, onClose }) {
+  const items   = insights.insights || insights.points || []
+  const ACCENTS = ['#C87B52', '#38bdf8', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899']
+  const [activeIdx, setActiveIdx] = useState(0)
+  const containerRef = useRef(null)
+  const [cardW, setCardW] = useState(260)
+  const GAP = 14
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setCardW(containerRef.current.offsetWidth - 30)
+    }
+  }, [])
+
+  const rawX  = useMotionValue(0)
+  const slotW = cardW + GAP
+  const maxDrag = -((items.length - 1) * slotW)
+
+  function snapTo(i) {
+    const clamped = Math.max(0, Math.min(i, items.length - 1))
+    animate(rawX, -(clamped * slotW), { type: 'spring', damping: 28, stiffness: 220, mass: 0.8 })
+    setActiveIdx(clamped)
+  }
+
+  function onDragEnd(_, info) {
+    let newIdx = activeIdx
+    if (Math.abs(info.velocity.x) > 400) {
+      newIdx = info.velocity.x < 0
+        ? Math.min(activeIdx + 1, items.length - 1)
+        : Math.max(activeIdx - 1, 0)
+    } else {
+      newIdx = Math.max(0, Math.min(Math.round(-rawX.get() / slotW), items.length - 1))
+    }
+    snapTo(newIdx)
+  }
+
+  return (
+    <div>
+      {/* ── Header : pills + compteur + fermeture ── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, padding: '0 16px' }}>
+        <div style={{ display: 'flex', gap: 5 }}>
+          {items.map((_, i) => (
+            <div key={i} onClick={() => snapTo(i)} style={{
+              height: 4, borderRadius: 99, cursor: 'pointer',
+              width: i === activeIdx ? 22 : 7,
+              background: i <= activeIdx ? ACCENTS[i % ACCENTS.length] : 'rgba(200,123,82,0.15)',
+              transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+            }} />
+          ))}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 10, color: 'rgba(200,123,82,0.45)', fontWeight: 600, letterSpacing: '0.05em' }}>
+            {activeIdx + 1} / {items.length}
+          </span>
+          <button onClick={onClose} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: 'rgba(200,123,82,0.35)', fontSize: 14, lineHeight: 1,
+            padding: '3px 6px', borderRadius: 6, fontFamily: 'inherit',
+          }}>✕</button>
+        </div>
+      </div>
+
+      {/* ── Piste draggable ── */}
+      <div ref={containerRef} style={{ overflow: 'hidden', paddingLeft: 16 }}>
+        <motion.div
+          drag="x"
+          style={{ display: 'flex', gap: GAP, x: rawX, cursor: 'grab' }}
+          dragConstraints={{ left: maxDrag, right: 0 }}
+          dragElastic={0.05}
+          dragMomentum={false}
+          onDragEnd={onDragEnd}
+          whileTap={{ cursor: 'grabbing' }}
+        >
+          {items.map((item, i) => (
+            <CarouselCard key={i} item={item} index={i} trackX={rawX} cardW={cardW} gap={GAP} />
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── Hint glisse ── */}
+      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(200,123,82,0.30)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
+        ← glisse →
+      </div>
+    </div>
+  )
+}
+
 export default function SanteTab({ metriques, profil, onUpdate, score, history = [] }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
@@ -149,8 +309,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const animRef    = useRef(null)
   const prevScoreRef = useRef(0)
 
-  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : 'rgba(218,138,52,0.72)'
-  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(218,138,52,0.10)'
+  const scoreColor = score >= 80 ? '#22c55e' : score >= 60 ? '#38bdf8' : score >= 40 ? '#f59e0b' : score > 0 ? '#ef4444' : 'rgba(200,123,82,0.72)'
+  const scoreTrack = score >= 80 ? 'rgba(34,197,94,0.12)' : score >= 60 ? 'rgba(56,189,248,0.12)' : score >= 40 ? 'rgba(245,158,11,0.12)' : score > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.10)'
   const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
   const labelColor = scoreColor
   const circumference = 2 * Math.PI * 52
@@ -184,8 +344,12 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       })
       const data = await res.json()
       setInsights(data)
-    } catch {}
-    setLoadingInsights(false)
+    } catch (err) {
+      console.error('health-insights error:', err)
+      setInsights({ insights: [{ emoji: '⚠️', titre: 'Erreur', message: 'Impossible de générer l\'analyse. Vérifie ta connexion ou réessaie.' }] })
+    } finally {
+      setLoadingInsights(false)
+    }
   }
 
   // ── Count-up animation ───────────────────────────────────────────────────────
@@ -214,8 +378,14 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const prevPoids  = history?.find(h => h.date === yesterday)?.poids || 0
 
   return (
-    <div style={{ paddingBottom: 20 }}>
+    <div style={{ paddingBottom: 20, paddingTop: 16 }}>
       <style>{`
+        @keyframes iaGlow {
+          0%,100% { box-shadow: 0 0 0 0px rgba(249,115,22,0), 0 4px 18px rgba(249,115,22,0.12), inset 0 1px 0 rgba(255,255,255,0.90); }
+          50%     { box-shadow: 0 0 0 5px rgba(249,115,22,0.12), 0 4px 26px rgba(249,115,22,0.32), inset 0 1px 0 rgba(255,255,255,0.90); }
+        }
+        .ia-glow { animation: iaGlow 2.8s ease-in-out infinite; }
+
         @keyframes scoreBreath {
           0%, 100% { opacity: 0.45; }
           50%       { opacity: 0.85; }
@@ -229,89 +399,104 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           50%  { r: 8;  opacity: 0;   }
           100% { r: 5;  opacity: 0;   }
         }
+
+        /* ── Liquid Glass Card ── */
+        .lg-card { position: relative; isolation: isolate; }
+
+        /* Highlight interne haut-gauche — simule la réfraction lumineuse */
+        .lg-card::before {
+          content: '';
+          position: absolute; inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(145deg,
+            rgba(255,255,255,0.52) 0%,
+            rgba(255,255,255,0.06) 45%,
+            rgba(255,255,255,0.12) 100%
+          );
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* Bordure chromatique iridescente */
+        .lg-card::after {
+          content: '';
+          position: absolute; inset: 0;
+          border-radius: inherit;
+          padding: 1px;
+          background: linear-gradient(130deg,
+            rgba(255,120,90,0.55)  0%,
+            rgba(255,210,70,0.38) 18%,
+            rgba(70,240,150,0.42) 38%,
+            rgba(80,145,255,0.52) 62%,
+            rgba(210,75,255,0.42) 82%,
+            rgba(255,120,90,0.55) 100%
+          );
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: destination-out;
+          mask-composite: exclude;
+          pointer-events: none;
+          z-index: 2;
+        }
       `}</style>
 
       {/* ── Score Card ── */}
-      <div style={ss.scoreCard}>
-        <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
-          <svg viewBox="0 0 120 120" style={{ width: 120, height: 120, transform: 'rotate(-90deg)' }}>
-            <defs>
-              <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={`${scoreColor}55`} />
-                <stop offset="100%" stopColor={scoreColor} />
-              </linearGradient>
-            </defs>
-            {/* breathing track */}
-            <circle cx="60" cy="60" r="52" fill="none" stroke={scoreTrack} strokeWidth="10"
-              style={{ animation: 'scoreBreath 3.2s ease-in-out infinite' }}
-            />
-            {/* arc */}
-            <circle cx="60" cy="60" r="52" fill="none"
-              stroke="url(#scoreGrad)" strokeWidth="10" strokeLinecap="round"
-              strokeDasharray={`${dash} ${circumference}`}
-              style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 5px ${scoreColor}40)` }}
-            />
-            {/* glowing tip dot */}
-            {score > 0 && (
-              <>
-                {/* expanding ring */}
-                <circle cx={tipX} cy={tipY} r="5" fill="none"
-                  stroke={scoreColor} strokeWidth="2"
-                  style={{ animation: 'tipRing 2s ease-out infinite', transformOrigin: `${tipX}px ${tipY}px` }}
-                />
-                {/* solid core */}
-                <circle cx={tipX} cy={tipY} r="5" fill={scoreColor}
-                  style={{ filter: `drop-shadow(0 0 6px ${scoreColor})`, animation: 'tipPulse 2s ease-in-out infinite' }}
-                />
-              </>
-            )}
-          </svg>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>
-              {score > 0 ? displayScore : '—'}
-            </div>
-            <div style={{ fontSize: 9, color: '#c4b5a8', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
-            <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.38)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
-              {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+
+      {score > 0 && (
+        <div style={ss.scoreCard}>
+          <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
+            <svg viewBox="0 0 120 120" style={{ width: 120, height: 120, transform: 'rotate(-90deg)' }}>
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor={`${scoreColor}55`} />
+                  <stop offset="100%" stopColor={scoreColor} />
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="52" fill="none" stroke={scoreTrack} strokeWidth="10"
+                style={{ animation: 'scoreBreath 3.2s ease-in-out infinite' }} />
+              <circle cx="60" cy="60" r="52" fill="none"
+                stroke="url(#scoreGrad)" strokeWidth="10" strokeLinecap="round"
+                strokeDasharray={`${dash} ${circumference}`}
+                style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 5px ${scoreColor}40)` }} />
+              <circle cx={tipX} cy={tipY} r="5" fill="none" stroke={scoreColor} strokeWidth="2"
+                style={{ animation: 'tipRing 2s ease-out infinite', transformOrigin: `${tipX}px ${tipY}px` }} />
+              <circle cx={tipX} cy={tipY} r="5" fill={scoreColor}
+                style={{ filter: `drop-shadow(0 0 6px ${scoreColor})`, animation: 'tipPulse 2s ease-in-out infinite' }} />
+            </svg>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{displayScore}</div>
+              <div style={{ fontSize: 9, color: '#c4b5a8', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
+              <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.62)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
+                {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+              </div>
             </div>
           </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 20, fontWeight: 900, color: labelColor }}>{scoreLabel}</div>
+          </div>
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{
-            fontSize: 20, fontWeight: 900, marginBottom: 4,
-            color: labelColor,
-          }}>{scoreLabel}</div>
-          <div style={{ marginBottom: 14 }} />
-          <button
-            style={ss.btnInsights}
-            onClick={getInsights}
-            disabled={loadingInsights}
-            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            <span style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center'}}>
-              {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
-            </span>
-          </button>
-        </div>
+      )}
+
+      {/* ── Bouton Analyse IA ── */}
+      <div style={{ padding: '8px 0 28px', display:'flex', justifyContent:'center' }}>
+        <button
+          className="ia-glow"
+          style={ss.btnInsights}
+          onClick={getInsights}
+          disabled={loadingInsights}
+          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
+          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          <span style={{ display:'flex', alignItems:'center', gap:6, justifyContent:'center' }}>
+            {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
+          </span>
+        </button>
       </div>
 
       {/* ── AI Insights ── */}
       {insights && (
         <div style={ss.insightsCard}>
-          <div style={{ fontWeight: 700, color: '#F97316', marginBottom: 12, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <LightbulbIcon size={14} color="#F97316" /> Analyse personnalisée
-          </div>
-          {(insights.insights || insights.points || []).map((p, i) => (
-            <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{p.emoji || '•'}</span>
-              <div>
-                {p.titre && <div style={{ fontSize: 12, fontWeight: 700, color: '#C87B52', marginBottom: 2 }}>{p.titre}</div>}
-                <div style={{ fontSize: 13, color: 'rgba(90,55,25,0.85)', lineHeight: 1.65 }}>{p.message}</div>
-              </div>
-            </div>
-          ))}
+          <InsightsCarousel insights={insights} onClose={() => setInsights(null)} />
         </div>
       )}
 
@@ -365,14 +550,13 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div key={m.key}
               style={{
                 ...ss.metricCard,
-                background: `rgba(255,255,255,0.30)`,
+                background: `linear-gradient(145deg, rgba(255,255,255,0.82) 0%, ${m.color}12 100%)`,
                 backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-                borderTop: `2px solid rgba(200,123,82,0.25)`,
-                border: `1px solid rgba(200,123,82,0.10)`,
-                borderTopWidth: 2,
+                border: `1px solid ${m.color}40`,
+                borderTop: `2.5px solid ${m.color}`,
                 boxShadow: done
-                  ? `0 4px 16px rgba(200,123,82,0.12), inset 0 1px 0 rgba(255,255,255,0.80)`
-                  : `0 2px 10px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.70)`,
+                  ? `0 6px 20px ${m.color}28, 0 2px 6px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.90)`
+                  : `0 4px 14px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.85)`,
               }}
               onClick={() => openEdit(m.key)}
               onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
@@ -380,36 +564,34 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                <span style={{ display:'flex', alignItems:'center', filter: done ? `drop-shadow(0 2px 4px ${m.color}60)` : 'none' }}>{m.iconEl}</span>
+                <div style={{
+                  width: 34, height: 34, borderRadius: 10, flexShrink: 0,
+                  background: `${m.color}22`,
+                  border: `1.5px solid ${m.color}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: done ? `0 2px 8px ${m.color}40` : `0 1px 4px ${m.color}20`,
+                }}>{m.iconEl}</div>
                 {done && (
                   <span style={{
                     fontSize: 9, color: '#fff',
                     background: m.color,
                     padding: '3px 8px', borderRadius: 8, fontWeight: 800,
                     boxShadow: `0 2px 8px ${m.color}50`
-                  }}>✓ OK</span>
-                )}
-                {!done && (
-                  <span style={{
-                    fontSize: 9, color: 'rgba(160,110,70,0.70)',
-                    background: 'transparent',
-                    padding: '2px 0', fontWeight: 500,
-                    letterSpacing: '0.3px'
-                  }}>modifier</span>
+                  }}>✓</span>
                 )}
               </div>
               <div style={{
                 fontSize: val > 0 ? 32 : 22,
                 fontWeight: val > 0 ? 800 : 300,
-                color: val > 0 ? `${m.color}99` : 'rgba(180,160,145,0.55)',
+                color: val > 0 ? `${m.color}ee` : h2r(m.color, 0.45),
                 lineHeight: 1, marginBottom: 3,
-                textShadow: val > 0 ? `0 2px 10px ${m.color}20` : 'none',
+                textShadow: val > 0 ? `0 2px 12px ${m.color}40` : 'none',
                 letterSpacing: val > 0 ? 'normal' : 2,
               }}>
                 {val > 0 ? m.fmt(val) : '–'}
-                {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}66`, marginLeft: 4 }}>{m.unit}</span>}
+                {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}bb`, marginLeft: 4 }}>{m.unit}</span>}
               </div>
-              <div style={{ fontSize: 11, color: 'rgba(218,138,52,0.55)', marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ fontSize: 11, color: `${m.color}`, marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
                 {m.key === 'humeur' && val > 0 && <span style={{ fontSize: 14, lineHeight: 1 }}>{['','😢','😕','😐','🙂','😊'][val]}</span>}
               </div>
@@ -425,14 +607,14 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 )
               })()}
               {m.key !== 'poids' && m.key !== 'fc' && (
-                <div style={{ height: 3, background: `${m.color}18`, borderRadius: 99, overflow: 'visible', position: 'relative', marginTop: 4 }}>
+                <div style={{ height: 5, background: h2r(m.color, 0.28), borderRadius: 99, overflow: 'visible', position: 'relative', marginTop: 6 }}>
                   <div style={{
                     height: '100%', width: `${pct}%`,
-                    background: `linear-gradient(90deg, ${m.color}66, ${m.color})`,
+                    background: `linear-gradient(90deg, ${m.color}99, ${m.color})`,
                     borderRadius: 99,
                     transition: 'width 0.7s cubic-bezier(.34,1.56,.64,1)',
                     position: 'relative',
-                    boxShadow: `0 0 6px ${m.color}60`,
+                    boxShadow: `0 0 8px ${m.color}70`,
                   }}>
                     {pct > 5 && (
                       <div style={{
@@ -453,40 +635,36 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Historique 7 jours ── */}
       <HistoriqueSection history={history} />
 
-      {/* ── Apps Santé — statut compact ── */}
+      {/* ── Conseils personnalisés ── */}
       {(() => {
-        const perm = localStorage.getItem('vitacoach_health_perm')
-        const granted = perm === 'granted'
+        const eau     = metriques.eau     || 0
+        const sommeil = metriques.sommeil || 0
+        const pas     = metriques.pas     || 0
+
+        const tips = []
+        if (eau < 4)      tips.push('💧 Bois plus d\'eau — objectif 8 verres par jour')
+        if (sommeil < 6)  tips.push('😴 Tu dors peu — vise 7-8h pour récupérer')
+        if (pas < 3000)   tips.push('🚶 Bouge plus — 10 min de marche changent tout')
+        if (tips.length === 0) tips.push('✅ Tes habitudes sont bonnes — continue !')
+
         return (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 14,
-            background: 'rgba(255,252,250,0.28)',
-            backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-            border: `1px solid ${granted ? 'rgba(52,199,89,0.18)' : 'rgba(200,123,82,0.10)'}`,
-            borderRadius: 22, padding: '14px 18px',
-            boxShadow: '0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)',
-          }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: 13, flexShrink: 0,
-              background: granted ? 'rgba(52,199,89,0.12)' : 'rgba(200,123,82,0.12)',
-              border: `1.5px solid ${granted ? 'rgba(52,199,89,0.25)' : 'rgba(200,123,82,0.22)'}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
-            }}>
-              {granted ? '✅' : '❤️'}
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '0.3px' }}>
+              💡 Conseils personnalisés
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: granted ? 'rgba(52,199,89,0.90)' : 'rgba(200,123,82,0.90)' }}>
-                {granted ? 'Apps santé autorisées' : 'Connexion apps santé'}
-              </div>
-              <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.50)', marginTop: 2 }}>
-                {granted ? "Sync auto disponible avec l'app native" : 'Apple Santé · Google Fit · bientôt disponible'}
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {tips.map((tip, i) => (
+                <div key={i} style={{
+                  background: 'rgba(200,123,82,0.06)',
+                  border: '1px solid rgba(200,123,82,0.12)',
+                  borderRadius: 14, padding: '10px 14px',
+                  fontSize: 12, color: '#C87B52',
+                  fontFamily: 'Poppins,sans-serif', fontWeight: 500, lineHeight: 1.5,
+                }}>
+                  {tip}
+                </div>
+              ))}
             </div>
-            {granted && (
-              <span style={{ fontSize: 10, color: '#34c759', fontWeight: 700, background: 'rgba(52,199,89,0.10)', padding: '3px 8px', borderRadius: 6, border: '1px solid rgba(52,199,89,0.20)', flexShrink: 0 }}>
-                Autorisé
-              </span>
-            )}
           </div>
         )
       })()}
@@ -569,30 +747,35 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
 const ss = {
   scoreCard: {
-    background: 'rgba(255,255,255,0.32)',
+    background: 'rgba(255,255,255,0.06)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
-    border: '1px solid rgba(200,123,82,0.13)',
-    borderRadius: 26, padding: '22px 20px',
+    border: '1px solid rgba(200,123,82,0.06)',
+    borderRadius: 26, padding: '20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
-    boxShadow: '0 8px 32px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)'
+    boxShadow: 'none', overflow: 'visible',
   },
   btnInsights: {
-    width: '100%',
-    background: 'rgba(218,138,52,0.07)',
-    color: 'rgba(218,138,52,0.68)',
-    border: '1px solid rgba(218,138,52,0.20)', padding: '11px 16px', borderRadius: 12, fontSize: 12, fontWeight: 600,
+    width: 'auto',
+    background: 'rgba(255,255,255,0.70)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    color: 'rgba(234,88,12,0.95)',
+    border: '1px solid rgba(249,115,22,0.30)',
+    padding: '11px 34px',
+    borderRadius: 100,
+    fontSize: 11.5,
+    fontWeight: 600,
+    letterSpacing: '0.06em',
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif',
-    boxShadow: 'none',
+    inset: '0 1px 0 rgba(255,255,255,0.95)',
     transition: 'transform 0.15s ease',
-    letterSpacing: 0.2
   },
   insightsCard: {
-    background: 'rgba(255,252,250,0.28)',
-    border: '1px solid rgba(139,92,246,0.18)',
-    borderLeft: '4px solid rgba(139,92,246,0.50)',
-    borderRadius: 22, padding: '16px 18px', marginBottom: 14,
-    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    boxShadow: '0 8px 24px rgba(200,123,82,0.09), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
+    background: 'rgba(255,252,250,0.32)',
+    border: '1px solid rgba(200,123,82,0.12)',
+    borderRadius: 22, padding: '14px 0 12px', marginBottom: 14,
+    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    boxShadow: '0 8px 28px rgba(200,123,82,0.08), 0 3px 10px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.85)'
   },
   waterBar: {
     background: 'rgba(255,255,255,0.30)',
@@ -611,9 +794,8 @@ const ss = {
     transition: 'transform 0.15s ease',
     letterSpacing: 0.2
   },
-  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 },
+  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14, padding: '0 2px' },
   metricCard: {
-    border: '1px solid rgba(0,0,0,0.06)',
     borderRadius: 24, padding: '16px',
     cursor: 'pointer',
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',

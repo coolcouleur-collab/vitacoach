@@ -1918,7 +1918,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
 }
 
 // ─── CONTEXTUAL SHORTCUTS ──────────────────────────────────────────────────────
-function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false }) {
+function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0 }) {
   const tc = isNight ? nightText : warmText
   const h = new Date().getHours()
 
@@ -2012,7 +2012,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false })
         whileTap={{ scale:0.97 }}
         className="chat-glow"
         style={{
-          marginTop:8, marginBottom:28,
+          marginTop:8, marginBottom:8,
           padding:'13px 16px', minHeight:68,
           borderRadius:20, cursor:'pointer',
           background: isNight
@@ -2034,6 +2034,58 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false })
           style={{ flexShrink:0 }}>
           <polyline points="9 18 15 12 9 6"/>
         </svg>
+      </motion.div>
+
+      {/* ── Ta progression cette semaine ── */}
+      <motion.div
+        initial={{ opacity:0, y:14 }}
+        animate={{ opacity:1, y:0 }}
+        transition={{ delay:0.30, type:'spring', stiffness:280, damping:24 }}
+        style={{
+          marginTop:0, marginBottom:28,
+          padding:16,
+          borderRadius:20,
+          background: isNight
+            ? 'linear-gradient(135deg, rgba(255,165,80,0.10) 0%, rgba(255,120,40,0.06) 100%)'
+            : 'linear-gradient(135deg, rgba(255,165,80,0.18) 0%, rgba(200,123,82,0.10) 60%, rgba(200,123,82,0.05) 100%)',
+          backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+          border: isNight ? '1.5px solid rgba(255,165,80,0.22)' : '1.5px solid rgba(200,123,82,0.28)',
+          boxShadow: isNight
+            ? '0 6px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,100,0.06)'
+            : '0 6px 22px rgba(200,123,82,0.14), inset 0 1px 0 rgba(255,255,255,0.70)',
+          display:'flex', alignItems:'center', gap:14,
+        }}
+      >
+        <div style={{
+          width:52, height:52, borderRadius:16, flexShrink:0,
+          background: score > 50
+            ? 'linear-gradient(135deg, rgba(255,149,0,0.30), rgba(255,100,0,0.18))'
+            : 'linear-gradient(135deg, rgba(200,123,82,0.30), rgba(200,123,82,0.18))',
+          border: `1.5px solid ${score > 50 ? 'rgba(255,149,0,0.40)' : 'rgba(200,123,82,0.35)'}`,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          flexDirection:'column',
+          boxShadow: score > 50 ? '0 4px 14px rgba(255,149,0,0.28)' : '0 4px 14px rgba(200,123,82,0.22)',
+        }}>
+          <span style={{ fontSize:22, lineHeight:1 }}>{score > 50 ? '🔥' : '💪'}</span>
+        </div>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
+            <span style={{
+              fontSize:28, fontWeight:700, lineHeight:1,
+              color: score > 50 ? '#ff9500' : '#C87B52',
+              fontFamily:"'Poppins',system-ui,sans-serif",
+              letterSpacing:'-0.02em',
+            }}>{score}</span>
+            <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
+          </div>
+          <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
+            Score bien-être du jour
+          </div>
+          <div style={{ fontSize:13, fontWeight:500, color:tc(0.88),
+            fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>
+            {score > 50 ? 'Continue comme ça !' : 'Chaque jour compte'}
+          </div>
+        </div>
       </motion.div>
     </div>
   )
@@ -2215,7 +2267,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           onSwitchTab('chat'); onChat(action)
         }}
       />
-      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} />
+      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} />
 
       {/* Metric bottom sheet */}
       <AnimatePresence>

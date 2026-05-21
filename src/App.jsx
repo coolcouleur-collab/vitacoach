@@ -1138,10 +1138,11 @@ export default function App() {
   }
 
   const navItems = [
-    { id:'accueil', Icon: HomeIcon,   label:'Accueil' },
-    { id:'chat',    Icon: ChatIcon,   label:'Solenn' },
-    { id:'sante',   Icon: HeartIcon,  label:'Santé' },
-    { id:'forum',   Icon: ForumIcon,  label:'Forum' },
+    { id:'accueil', Icon: HomeIcon,    label:'Accueil' },
+    { id:'chat',    Icon: ChatIcon,    label:'Solenn' },
+    { id:'routine', Icon: RoutineIcon, label:'Routine' },
+    { id:'sante',   Icon: HeartIcon,   label:'Santé' },
+    { id:'forum',   Icon: ForumIcon,   label:'Forum' },
   ]
 
   return (
@@ -1298,15 +1299,26 @@ export default function App() {
       {!isMobile && (
         <aside style={s.sidebar}>
           <div style={s.sidebarTop}>
+            <style>{`
+              @keyframes dotPulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50%       { opacity: 0.55; transform: scale(1.35); }
+              }
+            `}</style>
             <span style={{
-              fontSize:22, fontWeight:900, letterSpacing:'-0.04em',
+              fontSize:30, fontWeight:400, letterSpacing:'-0.05em',
+              fontFamily:"'Cormorant Garamond', Georgia, serif",
+              fontStyle:'italic',
               color:'rgba(200,123,82,0.65)', mixBlendMode:'multiply',
             }}>Solenn</span>
-            <ShinyLogoText
-              text="re·vivre · évoluer"
-              color="rgba(212,132,74,0.65)"
-              style={{ fontSize:11, marginTop:3, letterSpacing:'0.06em', fontWeight:600 }}
-            />
+            <span style={{
+              fontSize:9, fontWeight:400, color:'rgba(200,123,82,0.75)',
+              letterSpacing:'0.4px', marginTop:2,
+              fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic',
+              display:'block',
+            }}>
+              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>,</span> guidée.
+            </span>
           </div>
 
           <nav style={s.sidebarNav}>
@@ -1440,20 +1452,24 @@ export default function App() {
                     0%   { background-position: -200% center; }
                     100% { background-position:  200% center; }
                   }
+                  @keyframes dotPulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50%       { opacity: 0.55; transform: scale(1.35); }
+                  }
                 `}</style>
                 <span style={{
                   fontSize:30, fontWeight:400,
                   fontFamily:"'Cormorant Garamond', Georgia, serif",
-                  fontStyle:'italic', letterSpacing:'-0.01em',
+                  fontStyle:'italic', letterSpacing:'-0.05em',
                   background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
                   backgroundSize:'200% auto',
                   WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                   animation:'headerShimmer 3s linear infinite',
                   lineHeight:1,
                 }}>Solenn</span>
-                <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(200,123,82,0.70)', letterSpacing:'0.5px',
-                  fontFamily:"'Poppins',system-ui,sans-serif" }}>
-                  Ton évolution, guidée.
+                <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(200,123,82,0.75)', letterSpacing:'0.5px',
+                  fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
+                  Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>,</span> guidée.
                 </span>
               </div>
 
@@ -2928,13 +2944,13 @@ const s = {
     border:'1px solid rgba(200,123,82,0.20)',
     color:'rgba(180,100,40,0.80)',
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
-    fontSize:14, lineHeight:1.78, whiteSpace:'pre-wrap',
+    fontSize:14, lineHeight:1.65, fontWeight:400, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',
     boxShadow:'0 4px 20px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.25)',
   },
   botBubbleRich: {
     background:'transparent', color:'rgba(183,108,24,0.84)',
-    padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.72,
+    padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.65, fontWeight:400,
     fontFamily:'Poppins, sans-serif',
   },
   botAvatar: { fontSize:16, color:'#DA8A34', marginTop:10, flexShrink:0, fontWeight:900 },

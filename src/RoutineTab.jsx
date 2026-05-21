@@ -25,19 +25,48 @@ function RefreshSVG({ spinning = false }) {
 
 function CheckSVG({ checked }) {
   return (
-    <div style={{
-      width: 22, height: 22, borderRadius: 7, flexShrink: 0,
-      border: checked ? 'none' : '2px solid rgba(200,123,82,0.35)',
-      background: checked ? 'linear-gradient(135deg,#C87B52,#E8962A)' : 'rgba(200,123,82,0.06)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      transition: 'all 0.2s ease',
-    }}>
-      {checked && (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-          <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )}
-    </div>
+    <motion.div
+      animate={checked ? {
+        background: 'linear-gradient(135deg,#C87B52,#E8962A)',
+        boxShadow: '0 2px 8px rgba(200,123,82,0.40)',
+        border: 'none',
+      } : {
+        background: 'rgba(200,123,82,0.06)',
+        boxShadow: '0 0px 0px rgba(200,123,82,0)',
+        border: '2px solid rgba(200,123,82,0.35)',
+      }}
+      transition={{ duration: 0.2 }}
+      style={{
+        width: 22, height: 22, borderRadius: 10, flexShrink: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+    >
+      <AnimatePresence>
+        {checked && (
+          <motion.div
+            key="check"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <motion.path
+                d="M5 13l4 4L19 7"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }
 
