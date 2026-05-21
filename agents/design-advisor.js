@@ -67,18 +67,37 @@ const DESIGN_TOKENS = {
 }
 
 // ─── Lecture des fichiers source ──────────────────────────────────────────────
+// Cherche src/ à plusieurs endroits selon l'environnement (local vs Render)
+function resolveSrc() {
+  const candidates = [
+    path.join(__dirname, '..', 'src'),                         // agents/../src
+    path.join(process.cwd(), 'src'),                           // cwd/src
+    path.join(path.dirname(__dirname), 'src'),                 // parent/src
+  ]
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p
+  }
+  return null
+}
+
 function lireFichiers() {
+  const srcDir = resolveSrc()
+  if (!srcDir) {
+    console.warn('[DesignAdvisor] ⚠️ Dossier src/ introuvable — audit sans fichiers locaux')
+    return {}
+  }
   const fichiers = {}
   const cibles = [
     'App.jsx', 'HomeTab.jsx', 'SanteTab.jsx', 'RoutineTab.jsx',
     'Forum.jsx', 'MorningCheckin.jsx', 'SettingsSheet.jsx', 'ChatHistory.jsx',
   ]
   for (const f of cibles) {
-    const p = path.join(SRC, f)
+    const p = path.join(srcDir, f)
     if (fs.existsSync(p)) {
       fichiers[f] = fs.readFileSync(p, 'utf-8')
     }
   }
+  console.log(`[DesignAdvisor] ${Object.keys(fichiers).length} fichiers lus depuis ${srcDir}`)
   return fichiers
 }
 

@@ -7,7 +7,14 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
-import { startAgents, getAgentsStatus, triggerAgent, getRoutineCache, regenererPourUser, routineCache, runDesignAudit, DESIGN_TOKENS } from './agents/index.js'
+import {
+  startAgents, getAgentsStatus, triggerAgent,
+  getRoutineCache, regenererPourUser, routineCache,
+  runDesignAudit, DESIGN_TOKENS,
+  genererRapportUser, creerChallenge,
+  genererContexteMeteo, genererConseilsNutrition,
+  extraireMoments, sauvegarderMoments,
+} from './agents/index.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 
@@ -919,8 +926,6 @@ app.get('/api/chat-session', async (req, res) => {
 })
 
 // ─── Design Advisor ───────────────────────────────────────────────────────────
-// GET /api/design-review — Lance l'agent design et retourne ses recommandations
-// ⚠️ Ne modifie rien — analyse uniquement, validation manuelle requise
 app.get('/api/design-review', async (req, res) => {
   try {
     console.log('[DesignAdvisor] 🎨 Lancement audit design...')
@@ -928,13 +933,159 @@ app.get('/api/design-review', async (req, res) => {
     res.json(rapport)
   } catch (e) {
     console.error('[DesignAdvisor] Erreur:', e.message)
+    res.status(500).json({ error: e.message, detail: 'Vérifier GROQ_API_KEY et que le dossier src/ est accessible' })
+  }
+})
+
+app.get('/api/design-tokens', (req, res) => res.json(DESIGN_TOKENS))
+
+// ─── Mémoire Longue ───────────────────────────────────────────────────────────
+app.get('/api/memoire', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+    res.json({ memoire: data?.profil?.memoire_longue || null })
+  } catch (e) {
     res.status(500).json({ error: e.message })
   }
 })
 
-// GET /api/design-tokens — Retourne la palette de référence Solenn
-app.get('/api/design-tokens', (req, res) => {
-  res.json(DESIGN_TOKENS)
+// ─── Rapport Hebdo ────────────────────────────────────────────────────────────
+// GET  /api/rapport-hebdo?userId=... → dernière rapport sauvegardé
+// POST /api/rapport-hebdo            → génère un rapport immédiatement
+app.get('/api/rapport-hebdo', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data } = await supabase
+      .from('rapports_hebdo')
+      .select('rapport, semaine, created_at')
+      .eq('user_id', userId)
+      .order('semaine', { ascending: false })
+      .limit(1)
+      .single()
+    res.json(data?.rapport ? { rapport: data.rapport, semaine: data.semaine } : { rapport: null })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.post('/api/rapport-hebdo', async (req, res) => {
+  const { userId } = req.body
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const rapport = await genererRapportUser(userId)
+    const semaine = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    await supabase.from('rapports_hebdo').upsert({ user_id: userId, semaine, rapport, created_at: new Date().toISOString() }, { onConflict: 'user_id,semaine' })
+    res.json({ rapport })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ─── Challenges ───────────────────────────────────────────────────────────────
+// GET  /api/challenge?userId=...   → challenge actif
+// POST /api/challenge-create       → créer un nouveau challenge
+// POST /api/challenge-progress     → marquer un jour comme complété
+app.get('/api/challenge', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data } = await supabase
+      .from('challenges')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('actif', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+    res.json({ challenge: data || null })
+  } catch (e) {
+    res.json({ challenge: null })
+  }
+})
+
+app.post('/api/challenge-create', async (req, res) => {
+  const { userId, duree = 21 } = req.body
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    // Désactiver l'ancien challenge si existant
+    await supabase.from('challenges').update({ actif: false }).eq('user_id', userId).eq('actif', true)
+    const result = await creerChallenge(userId, duree)
+    res.json({ succes: true, challenge: result })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.post('/api/challenge-progress', async (req, res) => {
+  const { userId, jour, complete } = req.body
+  if (!userId || jour == null) return res.status(400).json({ error: 'userId et jour requis' })
+  try {
+    const { data } = await supabase
+      .from('challenges')
+      .select('id, progression')
+      .eq('user_id', userId)
+      .eq('actif', true)
+      .single()
+    if (!data) return res.status(404).json({ error: 'Aucun challenge actif' })
+
+    const progression = [...(data.progression || [])]
+    progression[jour - 1] = complete
+    await supabase.from('challenges').update({ progression }).eq('id', data.id)
+    res.json({ succes: true, progression })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ─── Météo ────────────────────────────────────────────────────────────────────
+app.get('/api/meteo', async (req, res) => {
+  const { ville = 'Paris', pays = 'FR' } = req.query
+  try {
+    const ctx = await genererContexteMeteo(ville, pays)
+    res.json(ctx || { error: 'Météo non disponible (OPENWEATHER_API_KEY manquante ?)' })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ─── Nutrition ────────────────────────────────────────────────────────────────
+app.get('/api/nutrition-conseil', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    // Retourner les insights déjà calculés (dans profil)
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+    const insights = data?.profil?.nutrition_insights || null
+    res.json({ insights })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+app.post('/api/nutrition-conseil', async (req, res) => {
+  const { userId } = req.body
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const insights = await genererConseilsNutrition(userId)
+    res.json({ insights })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ─── Moments & Anniversaires ──────────────────────────────────────────────────
+app.get('/api/moments', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+    res.json({ moments: data?.profil?.moments_importants || [] })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
 })
 
 // Export pour Vercel serverless

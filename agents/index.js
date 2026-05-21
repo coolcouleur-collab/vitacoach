@@ -16,11 +16,17 @@
  */
 
 import cron from 'node-cron'
-import { runMonitoring }    from './monitoring.js'
-import { runNotifications } from './notifications.js'
-import { runTendances }     from './tendances.js'
+import { runMonitoring }          from './monitoring.js'
+import { runNotifications }       from './notifications.js'
+import { runTendances }           from './tendances.js'
 import { runRoutineAuto, getRoutineCache, regenererPourUser, routineCache } from './routine-auto.js'
 import { runDesignAudit, DESIGN_TOKENS } from './design-advisor.js'
+import { runMemoireLongue }       from './memoire.js'
+import { runRapportHebdo, genererRapportUser } from './rapport-hebdo.js'
+import { runChallengeCheck, creerChallenge }   from './challenge.js'
+import { runMeteoRoutine, genererContexteMeteo } from './meteo-routine.js'
+import { runNutritionnel, genererConseilsNutrition } from './nutritionnel.js'
+import { runMomentsCheck, extraireMoments, sauvegarderMoments } from './moments.js'
 
 // ─── État des agents (pour le dashboard /api/agents-status) ──────────────────
 const agentsStatus = {
@@ -28,6 +34,12 @@ const agentsStatus = {
   notifications: { dernierRun: null, derniersResultats: null, actif: false },
   tendances:     { dernierRun: null, derniersResultats: null, actif: false },
   routineAuto:   { dernierRun: null, derniersResultats: null, actif: false },
+  memoire:       { dernierRun: null, derniersResultats: null, actif: false },
+  rapportHebdo:  { dernierRun: null, derniersResultats: null, actif: false },
+  challenge:     { dernierRun: null, derniersResultats: null, actif: false },
+  meteo:         { dernierRun: null, derniersResultats: null, actif: false },
+  nutritionnel:  { dernierRun: null, derniersResultats: null, actif: false },
+  moments:       { dernierRun: null, derniersResultats: null, actif: false },
 }
 
 function logRun(agent, resultats) {
@@ -106,11 +118,83 @@ export function startAgents(pushSubscriptions) {
     }
   }, { timezone: 'Europe/Paris' })
 
-  console.log('✅ [Agents] 4 agents actifs : Monitoring · Notifications · Tendances · RoutineAuto')
-  console.log('   📅 Monitoring  : toutes les 2h (8h→22h)')
-  console.log('   📅 Notifs      : 07:00 · 12:30 · 19:30')
-  console.log('   📅 Tendances   : dimanche 18:00')
-  console.log('   📅 RoutineAuto : 05:30 quotidien')
+  // ── Agent 5 : Mémoire Longue — dimanche 06:00 ────────────────────────────
+  cron.schedule('0 6 * * 0', async () => {
+    console.log('[Agents] Mémoire Longue → déclenchement')
+    try {
+      const res = await runMemoireLongue()
+      logRun('memoire', res)
+    } catch (e) {
+      console.error('[Agents] Mémoire erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 6 : Rapport Hebdo — dimanche 19:00 ─────────────────────────────
+  cron.schedule('0 19 * * 0', async () => {
+    console.log('[Agents] Rapport Hebdo → déclenchement')
+    try {
+      const res = await runRapportHebdo(pushSubscriptions)
+      logRun('rapportHebdo', res)
+    } catch (e) {
+      console.error('[Agents] RapportHebdo erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 7 : Challenge Check — quotidien 08:30 ───────────────────────────
+  cron.schedule('30 8 * * *', async () => {
+    console.log('[Agents] Challenge Check → déclenchement')
+    try {
+      const res = await runChallengeCheck(pushSubscriptions)
+      logRun('challenge', res)
+    } catch (e) {
+      console.error('[Agents] Challenge erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 8 : Météo-Routine — quotidien 05:15 (avant routine-auto) ────────
+  cron.schedule('15 5 * * *', async () => {
+    console.log('[Agents] Météo-Routine → déclenchement')
+    try {
+      const res = await runMeteoRoutine()
+      logRun('meteo', res)
+    } catch (e) {
+      console.error('[Agents] Météo erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 9 : Nutritionnel — vendredi 17:00 ───────────────────────────────
+  cron.schedule('0 17 * * 5', async () => {
+    console.log('[Agents] Nutritionnel → déclenchement')
+    try {
+      const res = await runNutritionnel(pushSubscriptions)
+      logRun('nutritionnel', res)
+    } catch (e) {
+      console.error('[Agents] Nutritionnel erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 10 : Moments — quotidien 06:15 ─────────────────────────────────
+  cron.schedule('15 6 * * *', async () => {
+    console.log('[Agents] Moments & Anniversaires → déclenchement')
+    try {
+      const res = await runMomentsCheck(pushSubscriptions)
+      logRun('moments', res)
+    } catch (e) {
+      console.error('[Agents] Moments erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
+  console.log('✅ [Agents] 10 agents actifs')
+  console.log('   📅 Monitoring    : toutes les 2h (8h→22h)')
+  console.log('   📅 Notifs        : 07:00 · 12:30 · 19:30')
+  console.log('   📅 Tendances     : dimanche 18:00')
+  console.log('   📅 RoutineAuto   : 05:30 quotidien')
+  console.log('   🧠 Mémoire       : dimanche 06:00')
+  console.log('   📊 RapportHebdo  : dimanche 19:00')
+  console.log('   🏆 Challenge     : quotidien 08:30')
+  console.log('   🌤️  Météo         : quotidien 05:15')
+  console.log('   🥗 Nutritionnel  : vendredi 17:00')
+  console.log('   📅 Moments       : quotidien 06:15')
 }
 
 // ─── API : status de tous les agents ─────────────────────────────────────────
@@ -131,10 +215,28 @@ export async function triggerAgent(agentName, pushSubscriptions, options = {}) {
       return runRoutineAuto(pushSubscriptions)
     case 'design':
       return runDesignAudit()
+    case 'memoire':
+      return runMemoireLongue()
+    case 'rapport-hebdo':
+      return runRapportHebdo(pushSubscriptions)
+    case 'challenge':
+      return runChallengeCheck(pushSubscriptions)
+    case 'meteo':
+      return runMeteoRoutine(options)
+    case 'nutritionnel':
+      return runNutritionnel(pushSubscriptions)
+    case 'moments':
+      return runMomentsCheck(pushSubscriptions)
     default:
       throw new Error(`Agent inconnu: ${agentName}`)
   }
 }
 
 // ─── Re-exports utilitaires ───────────────────────────────────────────────────
-export { getRoutineCache, regenererPourUser, routineCache, runDesignAudit, DESIGN_TOKENS }
+export {
+  getRoutineCache, regenererPourUser, routineCache,
+  runDesignAudit, DESIGN_TOKENS,
+  genererRapportUser, creerChallenge,
+  genererContexteMeteo, genererConseilsNutrition,
+  extraireMoments, sauvegarderMoments,
+}
