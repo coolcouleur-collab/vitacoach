@@ -1294,6 +1294,46 @@ app.post('/api/demo-request', async (req, res) => {
       statut: 'nouveau'
     }).catch(e => console.warn('[B2B Demo] Supabase insert failed (table may not exist yet):', e.message))
   }
+  // Email de notification interne (vers contact@meet-solenn.com)
+  // On utilise un simple log formaté pour l'instant + future intégration Resend/SendGrid
+  console.log(`
+📧 NOUVELLE DEMANDE DÉMO B2B
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Nom       : ${nom}
+📬 Email     : ${email}
+🏢 Entreprise: ${entreprise}
+👥 Taille    : ${taille}
+📅 Date      : ${new Date().toLocaleString('fr-FR')}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`)
+
+  // Si RESEND_API_KEY configuré → envoyer un vrai email
+  if (process.env.RESEND_API_KEY) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Solenn Business <noreply@meet-solenn.com>',
+          to: ['contact@meet-solenn.com'],
+          subject: `🏢 Nouvelle démo B2B — ${entreprise} (${taille} employés)`,
+          html: `<h2>Nouvelle demande de démo</h2>
+            <p><strong>Nom :</strong> ${nom}</p>
+            <p><strong>Email :</strong> ${email}</p>
+            <p><strong>Entreprise :</strong> ${entreprise}</p>
+            <p><strong>Taille :</strong> ${taille}</p>
+            <p><em>Reçu le ${new Date().toLocaleString('fr-FR')}</em></p>`,
+        }),
+      })
+      console.log('[B2B Demo] Email envoyé via Resend ✓')
+    } catch (emailErr) {
+      console.warn('[B2B Demo] Email failed:', emailErr.message)
+    }
+  }
+
   res.json({ succes: true, message: 'Demande reçue — vous serez contacté sous 24h' })
 })
 
@@ -1325,6 +1365,19 @@ app.get('/api/business/dashboard', async (req, res) => {
     ]
   })
 })
+
+// ── Keep-alive — évite le cold start Render free tier ────────────────────────
+app.get('/ping', (req, res) => res.send('pong'))
+
+// Auto-ping toutes les 10 min pour garder le service chaud
+if (!process.env.VERCEL && process.env.API_BASE_URL) {
+  setInterval(async () => {
+    try {
+      await fetch(`${process.env.API_BASE_URL}/ping`)
+      console.log('[Keep-alive] ping ✓')
+    } catch {}
+  }, 10 * 60 * 1000) // 10 minutes
+}
 
 // ═════════════════════════════════════════════════════════════════════════════
 // CATCH-ALL SPA — doit être LE DERNIER bloc, après toutes les routes /api/

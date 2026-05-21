@@ -300,15 +300,39 @@ export default function ConnexionsSante({ userId }) {
   const [loadingSync,  setLoadingSync]  = useState(null)
   const [modalOura,    setModalOura]    = useState(false)
   const [toast,        setToast]        = useState(null)
+  // 'ok' | 'error' | null — banner OAuth pleine largeur
+  const [oauthBanner,  setOauthBanner]  = useState(null)
+  const [syncing,      setSyncing]      = useState(false)
 
   useEffect(() => {
     if (userId) chargerIntegrations()
-    // Gérer le retour OAuth (withings)
+
+    // ── Retour OAuth Withings ──────────────────────────────────────────────
     const params = new URLSearchParams(window.location.search)
     if (params.get('integration') === 'withings') {
-      if (params.get('status') === 'ok') showToast('✅ Withings connecté avec succès !')
-      else showToast('❌ Connexion Withings échouée')
+      const statut = params.get('status')
       window.history.replaceState({}, '', window.location.pathname)
+
+      if (statut === 'ok') {
+        setOauthBanner('ok')
+        // Déclencher sync automatique
+        if (userId) {
+          setSyncing(true)
+          fetch('/api/sync-now', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ userId, provider: 'withings' }),
+          }).finally(() => setSyncing(false))
+        }
+        // Recharger la liste après 2 s
+        setTimeout(() => {
+          chargerIntegrations()
+          setOauthBanner(null)
+        }, 5000)
+      } else {
+        setOauthBanner('error')
+        setTimeout(() => setOauthBanner(null), 6000)
+      }
     }
   }, [userId])
 
@@ -371,6 +395,94 @@ export default function ConnexionsSante({ userId }) {
 
   return (
     <div style={{ padding: '0 0 8px' }}>
+
+      {/* ── Banner OAuth Withings ───────────────────────────────────────── */}
+      <AnimatePresence>
+        {oauthBanner === 'ok' && (
+          <motion.div
+            key="banner-ok"
+            initial={{ opacity: 0, y: -16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0,   scale: 1    }}
+            exit={{    opacity: 0, y: -10, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+            style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, rgba(34,197,94,0.18), rgba(16,185,129,0.12))',
+              border:       '1.5px solid rgba(34,197,94,0.40)',
+              borderRadius: 16,
+              padding:      '14px 18px',
+              marginBottom: 16,
+              display:      'flex',
+              alignItems:   'center',
+              gap:          12,
+              boxShadow:    '0 4px 20px rgba(34,197,94,0.15)',
+              fontFamily:   'Poppins, sans-serif',
+            }}
+          >
+            <span style={{ fontSize: 26, flexShrink: 0 }}>✅</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#15803d', lineHeight: 1.3 }}>
+                Withings connecté !
+              </div>
+              <div style={{ fontSize: 12, color: '#166534', marginTop: 2, opacity: 0.85 }}>
+                {syncing ? '⏳ Synchronisation en cours…' : 'Synchronisation lancée — données disponibles dans quelques secondes.'}
+              </div>
+            </div>
+            <button
+              onClick={() => setOauthBanner(null)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 18, color: '#15803d', opacity: 0.6, padding: '0 4px',
+                flexShrink: 0,
+              }}
+              aria-label="Fermer"
+            >×</button>
+          </motion.div>
+        )}
+
+        {oauthBanner === 'error' && (
+          <motion.div
+            key="banner-error"
+            initial={{ opacity: 0, y: -16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0,   scale: 1    }}
+            exit={{    opacity: 0, y: -10, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+            style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, rgba(239,68,68,0.14), rgba(220,38,38,0.09))',
+              border:       '1.5px solid rgba(239,68,68,0.35)',
+              borderRadius: 16,
+              padding:      '14px 18px',
+              marginBottom: 16,
+              display:      'flex',
+              alignItems:   'center',
+              gap:          12,
+              boxShadow:    '0 4px 20px rgba(239,68,68,0.12)',
+              fontFamily:   'Poppins, sans-serif',
+            }}
+          >
+            <span style={{ fontSize: 26, flexShrink: 0 }}>❌</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#b91c1c', lineHeight: 1.3 }}>
+                Erreur de connexion Withings
+              </div>
+              <div style={{ fontSize: 12, color: '#991b1b', marginTop: 2, opacity: 0.85 }}>
+                Réessaye depuis le bouton ci-dessous, ou vérifie ton compte Withings.
+              </div>
+            </div>
+            <button
+              onClick={() => setOauthBanner(null)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 18, color: '#b91c1c', opacity: 0.6, padding: '0 4px',
+                flexShrink: 0,
+              }}
+              aria-label="Fermer"
+            >×</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div style={{ fontSize: 13, fontWeight: 700, color: C.texte2, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 14 }}>
         Appareils & Services
       </div>
@@ -412,13 +524,28 @@ export default function ConnexionsSante({ userId }) {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+            key="toast"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0,  scale: 1     }}
+            exit={{    opacity: 0, y: 16, scale: 0.95  }}
+            transition={{ type: 'spring', stiffness: 360, damping: 26 }}
             style={{
-              position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
-              background: 'rgba(10,22,51,0.88)', backdropFilter: 'blur(20px)',
-              color: '#fff', borderRadius: 12, padding: '12px 20px',
-              fontSize: 14, fontWeight: 500, zIndex: 300, whiteSpace: 'nowrap',
-              boxShadow: '0 8px 24px rgba(10,22,51,0.30)',
+              position:       'fixed',
+              bottom:         100,
+              left:           '50%',
+              transform:      'translateX(-50%)',
+              background:     'rgba(10,22,51,0.92)',
+              backdropFilter: 'blur(24px)',
+              color:          '#fff',
+              borderRadius:   16,
+              padding:        '13px 22px',
+              fontSize:       14,
+              fontWeight:     600,
+              fontFamily:     'Poppins, sans-serif',
+              zIndex:         300,
+              whiteSpace:     'nowrap',
+              boxShadow:      '0 8px 32px rgba(10,22,51,0.35)',
+              border:         '1px solid rgba(255,255,255,0.10)',
             }}
           >
             {toast}

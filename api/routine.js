@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   const midiFin     = fmt(reveilH + 5, reveilM)
   const soirDebut   = fmt(coucherH - 2, coucherM)
 
-  const prompt = `Tu es Oravia, coach de vie expert en bien-être holistique, herbalisme et médecines traditionnelles.
+  const prompt = `Tu es Solenn, coach de vie expert en bien-être holistique, herbalisme et médecines traditionnelles.
 
 Génère une routine quotidienne COMPLÈTE et ULTRA-PERSONNALISÉE pour aujourd'hui (${today}).
 
