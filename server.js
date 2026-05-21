@@ -15,6 +15,7 @@ import {
   genererContexteMeteo, genererConseilsNutrition,
   extraireMoments, sauvegarderMoments,
 } from './agents/index.js'
+import { runSyncSante, syncWithings, syncOura, refreshWithingsToken } from './agents/sync-sante.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 
@@ -920,6 +921,147 @@ app.get('/api/chat-session', async (req, res) => {
       .single()
     if (error) return res.status(404).json({ messages: [] })
     res.json({ messages: data.messages || [] })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ═════════════════════════════════════════════════════════════════════════════
+// INTÉGRATIONS SANTÉ — Withings · Oura · Garmin
+// ═════════════════════════════════════════════════════════════════════════════
+
+// GET /api/integrations?userId=... — liste les intégrations connectées
+app.get('/api/integrations', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  const { data } = await supabase
+    .from('integrations_sante')
+    .select('provider, actif, connected_at, last_sync_at, last_error')
+    .eq('user_id', userId)
+    .eq('actif', true)
+  res.json({ integrations: data || [] })
+})
+
+// POST /api/sync-now — sync immédiate d'un provider pour un user
+app.post('/api/sync-now', async (req, res) => {
+  const { userId, provider } = req.body
+  if (!userId || !provider) return res.status(400).json({ error: 'userId et provider requis' })
+  const { data: integ } = await supabase
+    .from('integrations_sante')
+    .select('*').eq('user_id', userId).eq('provider', provider).single()
+  if (!integ) return res.status(404).json({ error: 'Intégration non trouvée' })
+  try {
+    let result
+    if (provider === 'withings') result = await syncWithings(userId, integ)
+    else if (provider === 'oura') result = await syncOura(userId, integ)
+    else return res.status(400).json({ error: `Provider ${provider} non supporté` })
+    await supabase.from('integrations_sante')
+      .update({ last_sync_at: new Date().toISOString() })
+      .eq('user_id', userId).eq('provider', provider)
+    res.json(result)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// DELETE /api/disconnect?userId=...&provider=... — déconnecte une intégration
+app.delete('/api/disconnect', async (req, res) => {
+  const { userId, provider } = req.query
+  await supabase.from('integrations_sante')
+    .update({ actif: false, access_token: null, refresh_token: null })
+    .eq('user_id', userId).eq('provider', provider)
+  res.json({ succes: true })
+})
+
+// ── WITHINGS OAuth 2.0 ────────────────────────────────────────────────────────
+// GET /api/connect/withings?userId=... → redirect vers Withings
+app.get('/api/connect/withings', (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).send('userId manquant')
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id:     process.env.WITHINGS_CLIENT_ID,
+    redirect_uri:  `${process.env.API_BASE_URL}/api/connect/withings/callback`,
+    scope:         'user.metrics,user.sleepevents,user.activity',
+    state:         userId,
+  })
+  res.redirect(`https://account.withings.com/oauth2_user/authorize2?${params}`)
+})
+
+// GET /api/connect/withings/callback → échange le code contre un token
+app.get('/api/connect/withings/callback', async (req, res) => {
+  const { code, state: userId } = req.query
+  if (!code || !userId) return res.status(400).send('Paramètres manquants')
+  try {
+    const { data } = await axios.post('https://wbsapi.withings.net/v2/oauth2',
+      new URLSearchParams({
+        action:        'requesttoken',
+        client_id:     process.env.WITHINGS_CLIENT_ID,
+        client_secret: process.env.WITHINGS_CLIENT_SECRET,
+        grant_type:    'authorization_code',
+        code,
+        redirect_uri:  `${process.env.API_BASE_URL}/api/connect/withings/callback`,
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    )
+    const body = data?.body
+    if (!body?.access_token) throw new Error('Token invalide')
+    await supabase.from('integrations_sante').upsert({
+      user_id:       userId,
+      provider:      'withings',
+      access_token:  body.access_token,
+      refresh_token: body.refresh_token,
+      expires_at:    new Date(Date.now() + body.expires_in * 1000).toISOString(),
+      scope:         body.scope,
+      actif:         true,
+      connected_at:  new Date().toISOString(),
+    }, { onConflict: 'user_id,provider' })
+    // Première sync immédiate
+    syncWithings(userId, { access_token: body.access_token }).catch(() => {})
+    // Rediriger vers l'app
+    res.redirect(`${process.env.VITE_APP_URL || 'https://meet-solenn.com'}/?integration=withings&status=ok`)
+  } catch (e) {
+    console.error('[Withings callback]', e.message)
+    res.redirect(`${process.env.VITE_APP_URL || 'https://meet-solenn.com'}/?integration=withings&status=error`)
+  }
+})
+
+// ── OURA Personal Access Token ────────────────────────────────────────────────
+// POST /api/connect/oura { userId, token } → sauvegarde le PAT
+app.post('/api/connect/oura', async (req, res) => {
+  const { userId, token } = req.body
+  if (!userId || !token) return res.status(400).json({ error: 'userId et token requis' })
+  try {
+    // Vérifier que le token est valide
+    const { data: test } = await axios.get('https://api.ouraring.com/v2/usercollection/personal_info', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    await supabase.from('integrations_sante').upsert({
+      user_id:      userId,
+      provider:     'oura',
+      access_token: token,
+      actif:        true,
+      connected_at: new Date().toISOString(),
+      metadata:     { email: test?.data?.email },
+    }, { onConflict: 'user_id,provider' })
+    // Première sync
+    syncOura(userId, { access_token: token }).catch(() => {})
+    res.json({ succes: true, email: test?.data?.email })
+  } catch (e) {
+    res.status(400).json({ error: 'Token Oura invalide' })
+  }
+})
+
+// ── GARMIN OAuth (à venir) ────────────────────────────────────────────────────
+app.get('/api/connect/garmin', (req, res) => {
+  res.json({ message: 'Garmin OAuth 1.0a — disponible prochainement', disponible: false })
+})
+
+// ── Sync globale (tous les users, tous les providers) ─────────────────────────
+app.post('/api/sync-all', async (req, res) => {
+  try {
+    const result = await runSyncSante()
+    res.json(result)
   } catch (e) {
     res.status(500).json({ error: e.message })
   }

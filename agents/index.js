@@ -27,6 +27,7 @@ import { runChallengeCheck, creerChallenge }   from './challenge.js'
 import { runMeteoRoutine, genererContexteMeteo } from './meteo-routine.js'
 import { runNutritionnel, genererConseilsNutrition } from './nutritionnel.js'
 import { runMomentsCheck, extraireMoments, sauvegarderMoments } from './moments.js'
+import { runSyncSante } from './sync-sante.js'
 
 // ─── État des agents (pour le dashboard /api/agents-status) ──────────────────
 const agentsStatus = {
@@ -40,6 +41,7 @@ const agentsStatus = {
   meteo:         { dernierRun: null, derniersResultats: null, actif: false },
   nutritionnel:  { dernierRun: null, derniersResultats: null, actif: false },
   moments:       { dernierRun: null, derniersResultats: null, actif: false },
+  syncSante:     { dernierRun: null, derniersResultats: null, actif: false },
 }
 
 function logRun(agent, resultats) {
@@ -195,6 +197,18 @@ export function startAgents(pushSubscriptions) {
   console.log('   🌤️  Météo         : quotidien 05:15')
   console.log('   🥗 Nutritionnel  : vendredi 17:00')
   console.log('   📅 Moments       : quotidien 06:15')
+  console.log('   🔄 SyncSanté     : toutes les 3h (9·12·15·18·21)')
+
+  // ── Agent 11 : Sync Santé — toutes les 3h ────────────────────────────────
+  cron.schedule('0 9,12,15,18,21 * * *', async () => {
+    console.log('[Agents] Sync Santé → déclenchement')
+    try {
+      const res = await runSyncSante()
+      logRun('syncSante', res)
+    } catch (e) {
+      console.error('[Agents] SyncSanté erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
 }
 
 // ─── API : status de tous les agents ─────────────────────────────────────────
@@ -227,6 +241,8 @@ export async function triggerAgent(agentName, pushSubscriptions, options = {}) {
       return runNutritionnel(pushSubscriptions)
     case 'moments':
       return runMomentsCheck(pushSubscriptions)
+    case 'sync-sante':
+      return runSyncSante()
     default:
       throw new Error(`Agent inconnu: ${agentName}`)
   }
