@@ -626,7 +626,8 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
   useEffect(() => { const t = setTimeout(() => setMounted(true), 200); return () => clearTimeout(t) }, [])
 
-  const hour   = new Date().getHours()
+  const _urlPreset = new URLSearchParams(window.location.search).get('preset')
+  const hour   = _urlPreset === 'sunrise' ? 7 : _urlPreset === 'day' ? 11 : _urlPreset === 'sunset' ? 19 : _urlPreset === 'night' ? 23 : new Date().getHours()
   const preset = getOceanPreset(hour)
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
@@ -2213,7 +2214,9 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
   function handleLog(key) { setInitialMetric(key || 'eau'); setShowSheet(true) }
 
-  const currentPreset   = getOceanPreset(new Date().getHours())
+  const _urlP = new URLSearchParams(window.location.search).get('preset')
+  const _h    = _urlP === 'sunrise' ? 7 : _urlP === 'day' ? 11 : _urlP === 'sunset' ? 19 : _urlP === 'night' ? 23 : new Date().getHours()
+  const currentPreset = getOceanPreset(_h)
 
   // Remonte le preset actif vers App.jsx (pour colorer le logo)
   useEffect(() => { onPresetChange?.(currentPreset) }, [currentPreset])
