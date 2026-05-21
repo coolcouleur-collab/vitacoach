@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom/client'
 import Lenis from 'lenis'
 import App from './App'
+import BusinessLanding from './BusinessLanding'
 import './tokens.css'
 
 // ── Error boundary global — affiche l'erreur au lieu de page blanche
@@ -30,10 +31,13 @@ function raf(time) {
 }
 requestAnimationFrame(raf)
 
+// Routing minimal — /business → BusinessLanding, tout le reste → App
+const isBusiness = window.location.pathname.startsWith('/business')
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RootBoundary>
-      <App />
+      {isBusiness ? <BusinessLanding /> : <App />}
     </RootBoundary>
   </React.StrictMode>
 )

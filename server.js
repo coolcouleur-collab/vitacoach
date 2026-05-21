@@ -1281,6 +1281,51 @@ app.get('/api/moments', async (req, res) => {
   }
 })
 
+// ── B2B : Demande de démo ─────────────────────────────────────────────────────
+app.post('/api/demo-request', async (req, res) => {
+  const { nom, email, entreprise, taille } = req.body
+  if (!nom || !email || !entreprise) return res.status(400).json({ error: 'Champs requis manquants' })
+  console.log(`[B2B Demo] ${nom} — ${entreprise} (${taille}) — ${email}`)
+  // Sauvegarder dans Supabase si disponible
+  if (supabase) {
+    await supabase.from('demo_requests').upsert({
+      nom, email, entreprise, taille,
+      created_at: new Date().toISOString(),
+      statut: 'nouveau'
+    }).catch(e => console.warn('[B2B Demo] Supabase insert failed (table may not exist yet):', e.message))
+  }
+  res.json({ succes: true, message: 'Demande reçue — vous serez contacté sous 24h' })
+})
+
+// ── B2B : Dashboard RH (données mock) ────────────────────────────────────────
+app.get('/api/business/dashboard', async (req, res) => {
+  const { orgId, token } = req.query
+  // TODO: vérifier le token org en base
+  res.json({
+    org: { nom: 'Votre Entreprise', plan: 'business', employes: 48 },
+    kpis: {
+      score_moyen: 72,
+      actifs_semaine: 38,
+      taux_engagement: 79,
+      sommeil_moyen: 6.8,
+      alertes: 3,
+    },
+    historique_scores: [65, 67, 70, 68, 72, 74, 71, 72],
+    departements: [
+      { nom: 'Marketing', employes: 12, score: 78, tendance: '+4', statut: 'bien' },
+      { nom: 'Tech', employes: 18, score: 74, tendance: '+2', statut: 'bien' },
+      { nom: 'Commercial', employes: 10, score: 61, tendance: '-3', statut: 'attention' },
+      { nom: 'RH', employes: 5, score: 80, tendance: '+6', statut: 'bien' },
+      { nom: 'Finance', employes: 8, score: 55, tendance: '-8', statut: 'alerte' },
+    ],
+    alertes: [
+      { type: 'stress', departement: 'Commercial', message: '3 collaborateurs signalent un niveau de stress élevé cette semaine', action: 'Organiser un atelier gestion du stress' },
+      { type: 'sommeil', departement: 'Finance', message: 'Moyenne sommeil < 6h sur 5 jours consécutifs', action: 'Proposer le programme sommeil Solenn' },
+      { type: 'energie', departement: 'Commercial', message: 'Score énergie en baisse depuis 3 semaines', action: 'Activer les routines matinales personnalisées' },
+    ]
+  })
+})
+
 // ═════════════════════════════════════════════════════════════════════════════
 // CATCH-ALL SPA — doit être LE DERNIER bloc, après toutes les routes /api/
 // Active uniquement quand dist/ existe (npm run build en local)
