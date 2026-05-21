@@ -840,17 +840,7 @@ app.post('/api/routine-regenerer', async (req, res) => {
   }
 })
 
-// ── Rapport hebdomadaire depuis le cache ─────────────────────────────────────
-app.get('/api/rapport-hebdo', (req, res) => {
-  const { userId } = req.query
-  if (!userId) return res.status(400).json({ error: 'userId requis' })
-  const rapport = rapportsCache.get(userId)
-  if (rapport) {
-    res.json({ cached: true, rapport })
-  } else {
-    res.json({ cached: false, message: 'Aucun rapport disponible — prochain rapport dimanche 18h' })
-  }
-})
+// ── Rapport hebdomadaire (cache → Supabase → vide) — route déplacée plus bas
 
 // ── Mise à jour des métriques (alimente le monitoring agent) ─────────────────
 app.post('/api/metriques-update', (req, res) => {
@@ -860,18 +850,7 @@ app.post('/api/metriques-update', (req, res) => {
   res.json({ ok: true })
 })
 
-// ── Sert le frontend React (dist/) — seulement en local avec dist/ présent ──
-if (!process.env.VERCEL) {
-  const distIndex = path.join(__dirname, 'dist', 'index.html')
-  if (fs.existsSync(distIndex)) {
-    app.use(express.static(path.join(__dirname, 'dist')))
-    app.get('*', (req, res) => {
-      // Ne pas intercepter les routes /api/ — laisser Express continuer
-      if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route API non trouvée' })
-      res.sendFile(distIndex)
-    })
-  }
-}
+// (catch-all SPA déplacé à la fin du fichier — après toutes les routes /api/)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HISTORIQUE CONVERSATIONS (solenn_chats)
@@ -1102,20 +1081,24 @@ app.get('/api/memoire', async (req, res) => {
 })
 
 // ─── Rapport Hebdo ────────────────────────────────────────────────────────────
-// GET  /api/rapport-hebdo?userId=... → dernière rapport sauvegardé
+// GET  /api/rapport-hebdo?userId=... → cache mémoire → Supabase → vide
 // POST /api/rapport-hebdo            → génère un rapport immédiatement
 app.get('/api/rapport-hebdo', async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
+  // 1. Cache mémoire (rapport généré ce dimanche par le cron)
+  const fromCache = rapportsCache.get(userId)
+  if (fromCache) return res.json({ rapport: fromCache, source: 'cache' })
+  // 2. Supabase (rapport sauvegardé les semaines précédentes)
   try {
     const { data } = await supabase
       .from('rapports_hebdo')
-      .select('rapport, semaine, created_at')
+      .select('rapport, semaine')
       .eq('user_id', userId)
       .order('semaine', { ascending: false })
       .limit(1)
       .single()
-    res.json(data?.rapport ? { rapport: data.rapport, semaine: data.semaine } : { rapport: null })
+    res.json(data?.rapport ? { rapport: data.rapport, semaine: data.semaine, source: 'db' } : { rapport: null })
   } catch (e) {
     res.status(500).json({ error: e.message })
   }
@@ -1238,14 +1221,39 @@ app.get('/api/moments', async (req, res) => {
   }
 })
 
+// ═════════════════════════════════════════════════════════════════════════════
+// CATCH-ALL SPA — doit être LE DERNIER bloc, après toutes les routes /api/
+// Active uniquement quand dist/ existe (npm run build en local)
+// Sur Render : dist/ n'existe pas → ce bloc est ignoré → les routes /api/ fonctionnent
+// ═════════════════════════════════════════════════════════════════════════════
+if (!process.env.VERCEL) {
+  const distIndex = path.join(__dirname, 'dist', 'index.html')
+  if (fs.existsSync(distIndex)) {
+    console.log('📦 dist/ détecté — serving SPA en mode production locale')
+    app.use(express.static(path.join(__dirname, 'dist')))
+    app.get('*', (req, res) => res.sendFile(distIndex))
+  } else {
+    console.log('📡 Mode API pure — pas de dist/ → toutes les routes /api/ actives')
+  }
+}
+
 // Export pour Vercel serverless
 export default app
 
-// Listen seulement en local
+// ─── Listen (Render / local) ──────────────────────────────────────────────────
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
     console.log(`✅ Serveur Solenn démarré sur port ${PORT}`)
+    // Log toutes les routes enregistrées (debug Render)
+    const routes = app._router?.stack
+      ?.filter(r => r.route)
+      ?.map(r => `${Object.keys(r.route.methods).join(',').toUpperCase()} ${r.route.path}`)
+      ?.sort() || []
+    if (routes.length) {
+      console.log(`📋 ${routes.length} routes enregistrées :`)
+      routes.forEach(r => console.log(`   ${r}`))
+    }
     // Démarrer les sous-agents autonomes
     startAgents(pushSubscriptions)
   })
