@@ -602,16 +602,9 @@ function OceanSceneBg({ preset: key }) {
         filter:'blur(5px)', zIndex:4,
       }} />
 
-      {/* Water-surface ripples — transparent overlay, no background color */}
+      {/* Water-surface ripples — supprimées (trop visibles sur fond sombre) */}
       <div style={{ position:'absolute', left:0, right:0, bottom:0, height:'30%', zIndex:4 }}>
-        {[8,22,38,56,72].map((t, i) => (
-          <div key={i} style={{
-            position:'absolute', left:'8%', right:'8%',
-            top:`${t}%`, height:1,
-            background:'rgba(255,255,255,0.12)', borderRadius:1,
-            animation:`oceanRipple ${3.4 + i * 0.8}s ease-in-out infinite ${i * 0.65}s`,
-          }} />
-        ))}
+        {[]}
         {/* Sun/moon reflection streak */}
         <div style={{
           position:'absolute', top:0, bottom:0,
