@@ -1865,7 +1865,7 @@ export default function App() {
                   </div>
                 </div>
               )}
-              <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} />
+              <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} />
             </div>
           )}
 

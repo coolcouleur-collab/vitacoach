@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
+import RapportHebdo from './RapportHebdo'
+import Challenge21j from './Challenge21j'
 
 // hex → rgba helper
 function h2r(hex, a) {
@@ -300,7 +302,7 @@ function InsightsCarousel({ insights, onClose }) {
   )
 }
 
-export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId }) {
+export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -680,6 +682,26 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         </div>
         <ConnexionsSante userId={userId} />
       </div>
+
+      {/* ── Rapport Hebdomadaire ── */}
+      {userId && (
+        <div style={{ padding: '0 16px 8px' }}>
+          <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
+            📊 Rapport hebdomadaire
+          </div>
+          <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
+        </div>
+      )}
+
+      {/* ── Challenge 21 jours ── */}
+      {userId && (
+        <div style={{ padding: '0 16px 24px' }}>
+          <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
+            🏆 Challenge 21 jours
+          </div>
+          <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
+        </div>
+      )}
 
       {/* ── Edit Modal ── */}
       {editMode && editMetric && (
