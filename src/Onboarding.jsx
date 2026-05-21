@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { FlashIcon, FoodIcon, MuscleIcon, MeditateIcon, RunIcon, BrainIcon, FireIcon, GiftIcon, LeafIcon } from './Icons'
+import SpiralBg from './SpiralBg'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -57,14 +58,14 @@ const QUESTIONS = [
     question:(a) => `Quel est ton objectif principal, ${a.nom || ''} ?`,
     subtitle:'On va personnaliser toute ton expérience autour de ça',
     options:[
-      {iconEl:<FlashIcon size={20} color="rgba(218,138,52,0.85)" />,  label:"Plus d'énergie"},
-      {iconEl:<LeafIcon size={20} color="rgba(218,138,52,0.75)" />,   label:'Mieux dormir'},
+      {iconEl:<FlashIcon size={20} color="rgba(200,123,82,0.85)" />,  label:"Plus d'énergie"},
+      {iconEl:<LeafIcon size={20} color="rgba(200,123,82,0.75)" />,   label:'Mieux dormir'},
       {iconEl:<FoodIcon size={20} color="#34c759" />,                 label:'Manger sainement'},
-      {iconEl:<MuscleIcon size={20} color="rgba(218,138,52,0.85)" />, label:'Prendre du muscle'},
+      {iconEl:<MuscleIcon size={20} color="rgba(200,123,82,0.85)" />, label:'Prendre du muscle'},
       {iconEl:<MeditateIcon size={20} color="#818cf8" />,             label:'Réduire le stress'},
       {iconEl:<RunIcon size={20} color="#38bdf8" />,                  label:'Perdre du poids'},
-      {iconEl:<RunIcon size={20} color="rgba(218,138,52,0.75)" />,    label:'Courir un marathon'},
-      {iconEl:<BrainIcon size={20} color="rgba(218,138,52,0.85)" />,  label:'Productivité maximale'},
+      {iconEl:<RunIcon size={20} color="rgba(200,123,82,0.75)" />,    label:'Courir un marathon'},
+      {iconEl:<BrainIcon size={20} color="rgba(200,123,82,0.85)" />,  label:'Productivité maximale'},
     ],
     multi: true
   },
@@ -82,8 +83,8 @@ const QUESTIONS = [
     options:[
       {iconEl:<LeafIcon size={20} color="#9ca3af" />,                    label:'Sédentaire',       sub:'Bureau, peu de sport'},
       {iconEl:<RunIcon size={20} color="#38bdf8" />,                     label:'Légèrement actif', sub:'Marche quotidienne'},
-      {iconEl:<MuscleIcon size={20} color="rgba(218,138,52,0.80)" />,    label:'Modérément actif', sub:'Sport 2-3x/semaine'},
-      {iconEl:<FireIcon size={20} color="rgba(218,138,52,0.90)" />,      label:'Très actif',       sub:'Sport 4-5x/semaine'},
+      {iconEl:<MuscleIcon size={20} color="rgba(200,123,82,0.80)" />,    label:'Modérément actif', sub:'Sport 2-3x/semaine'},
+      {iconEl:<FireIcon size={20} color="rgba(200,123,82,0.90)" />,      label:'Très actif',       sub:'Sport 4-5x/semaine'},
       {iconEl:<FlashIcon size={20} color="#fbbf24" />,                   label:'Sportif intensif', sub:'Entraînement quotidien'},
     ],
     multi: false
@@ -101,7 +102,7 @@ const QUESTIONS = [
     question:'As-tu des problèmes de santé ?',
     subtitle:'Pour que nos conseils soient totalement adaptés et sans risque pour toi',
     options:[
-      {iconEl:<MeditateIcon size={20} color="rgba(218,138,52,0.80)" />, label:'Oui', sub:"J'ai des conditions médicales"},
+      {iconEl:<MeditateIcon size={20} color="rgba(200,123,82,0.80)" />, label:'Oui', sub:"J'ai des conditions médicales"},
       {iconEl:<GiftIcon size={20} color="#34c759" />,                   label:'Non', sub:'Je suis en bonne santé'},
     ],
     multi: false
@@ -235,14 +236,14 @@ function RevealScreen({ answers, onEnter }) {
         {/* Avatar orb */}
         <div style={{
           width:88, height:88, borderRadius:'50%',
-          background:'linear-gradient(135deg,rgba(218,138,52,0.35),rgba(190,112,30,0.25))',
+          background:'linear-gradient(135deg,rgba(200,123,82,0.35),rgba(190,112,30,0.25))',
           display:'flex', alignItems:'center', justifyContent:'center',
           marginBottom:24,
-          boxShadow:'0 0 0 8px rgba(218,138,52,0.08), 0 0 0 16px rgba(218,138,52,0.04)',
+          boxShadow:'0 0 0 8px rgba(200,123,82,0.08), 0 0 0 16px rgba(200,123,82,0.04)',
           animation:'revealPulse 2.8s ease-in-out infinite',
         }}>
           <span style={{
-            fontSize:38, fontWeight:800, color:'rgba(218,138,52,0.80)',
+            fontSize:38, fontWeight:800, color:'rgba(200,123,82,0.80)',
             fontFamily:'Poppins, sans-serif', letterSpacing:'-0.02em',
           }}>
             {nom.charAt(0).toUpperCase()}
@@ -250,29 +251,29 @@ function RevealScreen({ answers, onEnter }) {
         </div>
 
         {/* Title */}
-        <div style={{fontSize:13, fontWeight:600, color:'rgba(218,138,52,0.55)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
+        <div style={{fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.70)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
           Profil créé
         </div>
-        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(218,138,52,0.90)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
+        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(200,123,82,0.90)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
           Bonjour, {nom} !
         </h1>
-        <p style={{fontSize:15, color:'rgba(218,138,52,0.55)', marginBottom:32, lineHeight:1.6}}>
+        <p style={{fontSize:15, color:'rgba(200,123,82,0.70)', marginBottom:32, lineHeight:1.6}}>
           Solenn connaît ton profil et est prête à t'accompagner.
         </p>
 
         {/* Objectifs */}
         {objectifs.length > 0 && (
           <div style={{marginBottom:20, width:'100%'}}>
-            <div style={{fontSize:11, fontWeight:700, color:'rgba(218,138,52,0.45)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
+            <div style={{fontSize:11, fontWeight:700, color:'rgba(200,123,82,0.62)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
               Tes objectifs
             </div>
             <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
               {objectifs.map(o => (
                 <span key={o} style={{
                   padding:'7px 16px', borderRadius:20,
-                  background:'rgba(218,138,52,0.09)',
-                  border:'1px solid rgba(218,138,52,0.22)',
-                  fontSize:12, fontWeight:600, color:'rgba(218,138,52,0.80)',
+                  background:'rgba(200,123,82,0.09)',
+                  border:'1px solid rgba(200,123,82,0.22)',
+                  fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.80)',
                 }}>
                   {o}
                 </span>
@@ -287,9 +288,9 @@ function RevealScreen({ answers, onEnter }) {
             {tags.map(t => (
               <span key={t} style={{
                 padding:'5px 12px', borderRadius:20,
-                background:'rgba(218,138,52,0.05)',
-                border:'1px solid rgba(218,138,52,0.14)',
-                fontSize:11, fontWeight:500, color:'rgba(218,138,52,0.55)',
+                background:'rgba(200,123,82,0.05)',
+                border:'1px solid rgba(200,123,82,0.14)',
+                fontSize:11, fontWeight:500, color:'rgba(200,123,82,0.70)',
               }}>
                 {t}
               </span>
@@ -303,7 +304,7 @@ function RevealScreen({ answers, onEnter }) {
           style={{
             width:'100%', height:52,
             background:'transparent',
-            color:'rgba(218,138,52,0.78)', border:'1.5px solid rgba(218,138,52,0.32)', borderRadius:30,
+            color:'rgba(200,123,82,0.78)', border:'1.5px solid rgba(200,123,82,0.32)', borderRadius:30,
             fontSize:15, fontWeight:600, cursor:'pointer',
             fontFamily:'Poppins, sans-serif',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
@@ -477,6 +478,7 @@ export default function Onboarding({ onTermine }) {
 
   return (
     <div style={s.page}>
+      <SpiralBg light />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         @keyframes slideInRight { from{opacity:0;transform:translateX(60px)} to{opacity:1;transform:translateX(0)} }
@@ -487,9 +489,9 @@ export default function Onboarding({ onTermine }) {
         @keyframes liquidBlob2  { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-4%,3%) scale(1.08)} 70%{transform:translate(2%,-5%) scale(0.94)} }
         @keyframes liquidBlob3  { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
         @keyframes liquidBlob4  { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(-3%,4%) scale(1.07)} 75%{transform:translate(4%,-2%) scale(0.95)} }
-        @keyframes dotPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(218,138,52,0.50);transform:scale(1.15)} 50%{box-shadow:0 0 0 7px rgba(218,138,52,0);transform:scale(1.2)} }
-        @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(218,138,52,0.08),0 0 0 16px rgba(218,138,52,0.04)} 50%{box-shadow:0 0 0 12px rgba(218,138,52,0.13),0 0 0 22px rgba(218,138,52,0.06)} }
-        @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(218,138,52,0.18),0 8px 32px rgba(218,138,52,0.10)} 50%{box-shadow:0 0 0 6px rgba(218,138,52,0.30),0 8px 32px rgba(218,138,52,0.18)} }
+        @keyframes dotPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(200,123,82,0.50);transform:scale(1.15)} 50%{box-shadow:0 0 0 7px rgba(200,123,82,0);transform:scale(1.2)} }
+        @keyframes revealPulse  { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
+        @keyframes ringGlow     { 0%,100%{box-shadow:0 0 0 3px rgba(200,123,82,0.18),0 8px 32px rgba(200,123,82,0.10)} 50%{box-shadow:0 0 0 6px rgba(200,123,82,0.30),0 8px 32px rgba(200,123,82,0.18)} }
         @keyframes logoShimmer  { 0%,70%,100%{opacity:1} 80%{opacity:0.55} 85%{opacity:1} 90%{opacity:0.65} 95%{opacity:1} }
         .solenn-logo { display:inline-block; animation:logoShimmer 5s ease-in-out infinite; }
         input[type='number']::-webkit-outer-spin-button,
@@ -497,18 +499,18 @@ export default function Onboarding({ onTermine }) {
         input[type='number'] { -moz-appearance:textfield; }
         input[type='time']::-webkit-calendar-picker-indicator { opacity:0; }
         input:focus, textarea:focus { outline:none; }
-        .clay-text-input::placeholder   { color:rgba(218,138,52,0.35) !important; }
-        .clay-text-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10),0 6px 24px rgba(218,138,52,0.08) !important; }
-        .clay-number-input::placeholder { color:rgba(218,138,52,0.35) !important; }
-        .clay-time-input::placeholder   { color:rgba(218,138,52,0.35) !important; }
-        .clay-time-input:focus  { border-color:rgba(218,138,52,0.60) !important; box-shadow:0 0 0 4px rgba(218,138,52,0.10) !important; }
+        .clay-text-input::placeholder   { color:rgba(200,123,82,0.50) !important; }
+        .clay-text-input:focus  { border-color:rgba(200,123,82,0.60) !important; box-shadow:0 0 0 4px rgba(200,123,82,0.10),0 6px 24px rgba(200,123,82,0.08) !important; }
+        .clay-number-input::placeholder { color:rgba(200,123,82,0.50) !important; }
+        .clay-time-input::placeholder   { color:rgba(200,123,82,0.50) !important; }
+        .clay-time-input:focus  { border-color:rgba(200,123,82,0.60) !important; box-shadow:0 0 0 4px rgba(200,123,82,0.10) !important; }
         .num-input-wrap { animation:ringGlow 2.4s ease-in-out infinite; }
-        .cta-btn:hover  { background:rgba(218,138,52,0.07) !important; border-color:rgba(218,138,52,0.55) !important; }
+        .cta-btn:hover  { background:rgba(200,123,82,0.07) !important; border-color:rgba(200,123,82,0.55) !important; }
         .cta-btn:active { transform:scale(0.97) !important; }
-        .back-btn:hover  { background:rgba(218,138,52,0.08) !important; border-color:rgba(218,138,52,0.40) !important; }
-        .clay-card:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(218,138,52,0.10),inset 0 1px 0 rgba(255,255,255,0.9) !important; }
-        .clay-chip:hover { transform:scale(1.04); box-shadow:0 4px 14px rgba(218,138,52,0.13) !important; }
-        .num-btn:hover   { transform:scale(1.08); box-shadow:0 8px 24px rgba(218,138,52,0.40) !important; }
+        .back-btn:hover  { background:rgba(200,123,82,0.08) !important; border-color:rgba(200,123,82,0.40) !important; }
+        .clay-card:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(200,123,82,0.10),inset 0 1px 0 rgba(255,255,255,0.9) !important; }
+        .clay-chip:hover { transform:scale(1.04); box-shadow:0 4px 14px rgba(200,123,82,0.13) !important; }
+        .num-btn:hover   { transform:scale(1.08); box-shadow:0 8px 24px rgba(200,123,82,0.40) !important; }
       `}</style>
 
       <BgBlobs />
@@ -660,29 +662,29 @@ const s = {
     display:'flex', flexDirection:'column', alignItems:'center', position:'relative', overflowX:'hidden' },
 
   progressWrap: { position:'fixed', top:0, left:0, right:0, height:2,
-    background:'rgba(218,138,52,0.07)', zIndex:100 },
+    background:'rgba(200,123,82,0.07)', zIndex:100 },
   progressBar: { height:'100%',
-    background:'linear-gradient(90deg,rgba(218,138,52,0.45) 0%,rgba(218,168,52,0.60) 100%)',
+    background:'linear-gradient(90deg,rgba(200,123,82,0.45) 0%,rgba(218,168,52,0.60) 100%)',
     transition:'width 0.45s cubic-bezier(0.34,1.56,0.64,1)', borderRadius:2 },
 
   backBtn: { position:'fixed', top:20, left:16, zIndex:100,
-    background:'transparent', border:'1.5px solid rgba(218,138,52,0.28)',
-    color:'rgba(218,138,52,0.60)', width:40, height:40, borderRadius:12, cursor:'pointer',
+    background:'transparent', border:'1.5px solid rgba(200,123,82,0.28)',
+    color:'rgba(200,123,82,0.60)', width:40, height:40, borderRadius:12, cursor:'pointer',
     fontSize:22, fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center',
     justifyContent:'center', lineHeight:1,
     transition:'all 0.2s', outline:'none' },
 
   logoTop: { position:'fixed', top:22, left:'50%', transform:'translateX(-50%)', zIndex:100 },
   logoText: { fontSize:19, fontWeight:900, letterSpacing:'-0.04em',
-    color:'rgba(218,138,52,0.72)' },
+    color:'rgba(200,123,82,0.72)' },
 
   stepCounter: { position:'fixed', top:26, right:22, zIndex:100,
     display:'flex', alignItems:'baseline', gap:1 },
-  stepCurrent: { fontSize:13, fontWeight:600, color:'rgba(218,138,52,0.48)',
+  stepCurrent: { fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.65)',
     fontFamily:'Poppins, sans-serif', letterSpacing:'-0.2px' },
-  stepSep: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.25)',
+  stepSep: { fontSize:11, fontWeight:400, color:'rgba(200,123,82,0.58)',
     fontFamily:'Poppins, sans-serif', margin:'0 1px' },
-  stepTotal: { fontSize:11, fontWeight:400, color:'rgba(218,138,52,0.25)',
+  stepTotal: { fontSize:11, fontWeight:400, color:'rgba(200,123,82,0.58)',
     fontFamily:'Poppins, sans-serif' },
 
   screen: { flex:1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'72px 24px 24px',
@@ -690,8 +692,8 @@ const s = {
 
   questionWrap: { marginBottom:28 },
   question: { fontSize:'clamp(22px,5vw,32px)', fontWeight:800, lineHeight:1.22,
-    letterSpacing:'-0.5px', marginBottom:10, color:'rgba(218,138,52,0.82)' },
-  qSubtitle: { fontSize:14, color:'rgba(218,138,52,0.45)', lineHeight:1.55, fontWeight:500 },
+    letterSpacing:'-0.5px', marginBottom:10, color:'rgba(200,123,82,0.82)' },
+  qSubtitle: { fontSize:14, color:'rgba(200,123,82,0.62)', lineHeight:1.55, fontWeight:500 },
 
   cardsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(148px,1fr))', gap:11, flex:1, alignItems:'start', alignContent:'start' },
   card: { background:'transparent', border:'1px solid rgba(255,255,255,0.35)', borderRadius:22,
@@ -700,65 +702,65 @@ const s = {
     display:'flex', flexDirection:'column', gap:8, outline:'none',
     boxShadow:'none' },
   cardSel: { background:'rgba(255,255,255,0.22)',
-    border:'1.5px solid rgba(218,138,52,0.55)',
-    boxShadow:'0 4px 18px rgba(218,138,52,0.15)',
+    border:'1.5px solid rgba(200,123,82,0.55)',
+    boxShadow:'0 4px 18px rgba(200,123,82,0.15)',
     transform:'scale(1.03)', animation:'popIn 0.25s cubic-bezier(0.34,1.56,0.64,1)' },
   cardIconWrap: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center',
-    justifyContent:'center', background:'rgba(218,138,52,0.08)', transition:'all 0.2s' },
-  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(218,138,52,0.18),rgba(218,168,52,0.12))', borderRadius:14 },
-  cardLabel: { fontSize:13, fontWeight:700, color:'rgba(218,138,52,0.90)', lineHeight:1.3 },
-  cardSub:   { fontSize:11, color:'rgba(218,138,52,0.52)', lineHeight:1.3, fontWeight:500 },
+    justifyContent:'center', background:'rgba(200,123,82,0.08)', transition:'all 0.2s' },
+  cardIconWrapSel: { background:'linear-gradient(135deg,rgba(200,123,82,0.18),rgba(218,168,52,0.12))', borderRadius:14 },
+  cardLabel: { fontSize:13, fontWeight:700, color:'rgba(200,123,82,0.90)', lineHeight:1.3 },
+  cardSub:   { fontSize:11, color:'rgba(200,123,82,0.65)', lineHeight:1.3, fontWeight:500 },
   cardCheck: { position:'absolute', top:10, right:10, width:22, height:22, borderRadius:'50%',
-    background:'linear-gradient(135deg,rgba(218,138,52,0.80),rgba(190,112,30,0.90))',
+    background:'linear-gradient(135deg,rgba(200,123,82,0.80),rgba(190,112,30,0.90))',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:11, fontWeight:800, color:'rgba(255,245,225,0.95)',
-    boxShadow:'0 3px 10px rgba(218,138,52,0.35)', animation:'popIn 0.2s ease' },
+    boxShadow:'0 3px 10px rgba(200,123,82,0.35)', animation:'popIn 0.2s ease' },
 
   chipsWrap: { display:'flex', flexWrap:'wrap', gap:10, flex:1, alignContent:'flex-start' },
   chip: { padding:'12px 20px', borderRadius:40, border:'1px solid rgba(255,255,255,0.35)',
     background:'transparent', cursor:'pointer', fontSize:13,
-    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.78)',
+    fontFamily:'Poppins, sans-serif', color:'rgba(200,123,82,0.78)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', fontWeight:600, outline:'none',
     boxShadow:'none' },
-  chipSel: { border:'1.5px solid rgba(218,138,52,0.60)',
+  chipSel: { border:'1.5px solid rgba(200,123,82,0.60)',
     background:'rgba(255,255,255,0.22)',
-    color:'rgba(218,138,52,0.95)', fontWeight:700,
-    boxShadow:'0 2px 10px rgba(218,138,52,0.15)',
+    color:'rgba(200,123,82,0.95)', fontWeight:700,
+    boxShadow:'0 2px 10px rgba(200,123,82,0.15)',
     animation:'popIn 0.22s cubic-bezier(0.34,1.56,0.64,1)' },
 
   inputWrap: { display:'flex', flexDirection:'column', alignItems:'center', gap:16 },
   textInput: { width:'100%', maxWidth:440, padding:'20px 24px', borderRadius:20,
     border:'1.5px solid rgba(255,255,255,0.40)', background:'transparent',
-    fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
+    fontSize:22, fontFamily:'Poppins, sans-serif', color:'rgba(200,123,82,0.88)',
     outline:'none', textAlign:'center', fontWeight:700,
     boxShadow:'none',
     transition:'border-color 0.2s, box-shadow 0.2s', boxSizing:'border-box' },
 
   numberRow: { display:'flex', alignItems:'center', gap:20 },
   numBtn: { width:62, height:62, borderRadius:'50%', border:'none',
-    background:'linear-gradient(145deg,rgba(218,138,52,0.80),rgba(190,112,30,0.88))',
+    background:'linear-gradient(145deg,rgba(200,123,82,0.80),rgba(190,112,30,0.88))',
     color:'rgba(255,245,225,0.95)', fontSize:28, fontWeight:700, cursor:'pointer',
     fontFamily:'Poppins, sans-serif', display:'flex', alignItems:'center', justifyContent:'center',
-    boxShadow:'0 8px 24px rgba(218,138,52,0.35), inset 0 1px 0 rgba(255,255,255,0.20)',
+    boxShadow:'0 8px 24px rgba(200,123,82,0.35), inset 0 1px 0 rgba(255,255,255,0.20)',
     transition:'all 0.18s cubic-bezier(0.34,1.56,0.64,1)', outline:'none', lineHeight:1 },
   numberBox: { display:'flex', alignItems:'center', gap:8, borderRadius:20,
     padding:'12px 20px', background:'transparent', border:'1.5px solid rgba(255,255,255,0.40)' },
   numberInput: { width:120, border:'none', background:'transparent', fontSize:52,
-    fontFamily:'Poppins, sans-serif', color:'rgba(218,138,52,0.88)',
+    fontFamily:'Poppins, sans-serif', color:'rgba(200,123,82,0.88)',
     outline:'none', textAlign:'center', fontWeight:900, padding:0 },
-  unit: { fontSize:18, color:'rgba(218,138,52,0.50)', fontWeight:600 },
+  unit: { fontSize:18, color:'rgba(200,123,82,0.65)', fontWeight:600 },
 
   bottom: { padding:'16px 24px 44px', maxWidth:600, width:'100%',
     display:'flex', flexDirection:'column', gap:12, position:'relative', zIndex:1 },
   ctaBtn: { padding:'0 32px', height:52, width:'100%',
     background:'transparent',
-    color:'rgba(218,138,52,0.78)', border:'1.5px solid rgba(218,138,52,0.32)', borderRadius:30,
+    color:'rgba(200,123,82,0.78)', border:'1.5px solid rgba(200,123,82,0.32)', borderRadius:30,
     fontSize:15, fontWeight:600,
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
     display:'flex', alignItems:'center', justifyContent:'center', gap:10,
     boxShadow:'none',
     transition:'all 0.2s', letterSpacing:'0.2px', outline:'none' },
-  skipBtn: { background:'transparent', border:'none', color:'rgba(218,138,52,0.45)',
+  skipBtn: { background:'transparent', border:'none', color:'rgba(200,123,82,0.62)',
     fontSize:13, cursor:'pointer', fontFamily:'Poppins, sans-serif',
     textDecoration:'underline', padding:'4px', textAlign:'center', fontWeight:500 },
 }

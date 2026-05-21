@@ -3,7 +3,7 @@ import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon } from './Icon
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const CATS = [
-  { id:'plantes',    label:'Plantes',    color:'#34c759' },
+  { id:'plantes',    label:'Plantes',    color:'#22c55e' },
   { id:'tisanes',    label:'Tisanes',    color:'#38bdf8' },
   { id:'chinoise',   label:'Méd. chin.', color:'#8b5cf6' },
   { id:'holistique', label:'Holistique', color:'#a78bfa' },
@@ -11,34 +11,34 @@ const CATS = [
 
 const DATA = {
   plantes: [
-    { nom:'Ashwagandha',   tag:'Adaptogène',      color:'#34c759', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
-    { nom:'Curcuma',       tag:'Anti-inflammatoire', color:'#ff9500', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
+    { nom:'Ashwagandha',   tag:'Adaptogène',      color:'#22c55e', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
+    { nom:'Curcuma',       tag:'Anti-inflammatoire', color:'#E8962A', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
     { nom:'Gingembre',     tag:'Digestif',        color:'#8b5cf6', benefice:'Stimule la digestion et booste l\'immunité naturellement', usage:'Frais ou tisane, 2–3 g/jour', detail:'Anti-nausée cliniquement prouvé. Réduit les douleurs musculaires post-entraînement et stimule la thermogenèse (brûle les graisses).' },
     { nom:'Rhodiola Rosea',tag:'Énergie',         color:'#a78bfa', benefice:'Combat la fatigue physique et améliore la concentration', usage:'200–400 mg le matin, à jeun', detail:'Plante des montagnes arctiques utilisée par les cosmonautes soviétiques. Réduit le stress oxydatif et améliore les fonctions cognitives sous pression.' },
     { nom:'Valériane',     tag:'Sommeil',         color:'#5856d6', benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
     { nom:'Ginkgo Biloba', tag:'Mémoire',         color:'#0ea5e9', benefice:'Améliore la circulation cérébrale et la mémoire', usage:'120–240 mg/jour avec un repas', detail:'Un des suppléments les plus étudiés au monde. Augmente le flux sanguin vers le cerveau et protège les neurones du stress oxydatif.' },
-    { nom:'Chardon-marie', tag:'Foie',            color:'#34c759', benefice:'Régénère et détoxifie les cellules hépatiques', usage:'140 mg de silymarine, 3× par jour', detail:'La silymarine bloque les toxines et stimule la régénération cellulaire hépatique. Incontournable après antibiotiques, alcool ou médicaments.' },
+    { nom:'Chardon-marie', tag:'Foie',            color:'#22c55e', benefice:'Régénère et détoxifie les cellules hépatiques', usage:'140 mg de silymarine, 3× par jour', detail:'La silymarine bloque les toxines et stimule la régénération cellulaire hépatique. Incontournable après antibiotiques, alcool ou médicaments.' },
     { nom:'Ortie',         tag:'Minéraux',        color:'#30d158', benefice:'Reminéralise l\'organisme et combat la fatigue de fond', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, silice et vitamines K et C. Excellent dépuratif. Aide contre l\'anémie, les douleurs articulaires et la chute de cheveux.' },
   ],
   tisanes: [
     { nom:'Camomille',       tag:'Apaisante',   color:'#fbbf24', benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
-    { nom:'Menthe poivrée',  tag:'Digestive',   color:'#34c759', benefice:'Soulage les ballonnements et les douleurs intestinales', usage:'Après les repas, 2 tasses/jour max', detail:'Le menthol relâche la musculature lisse digestive. Cliniquement efficace contre le SII. Éviter en cas de reflux gastro-œsophagien.' },
+    { nom:'Menthe poivrée',  tag:'Digestive',   color:'#22c55e', benefice:'Soulage les ballonnements et les douleurs intestinales', usage:'Après les repas, 2 tasses/jour max', detail:'Le menthol relâche la musculature lisse digestive. Cliniquement efficace contre le SII. Éviter en cas de reflux gastro-œsophagien.' },
     { nom:'Hibiscus',        tag:'Cardio',      color:'#ff2d55', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
-    { nom:'Rooibos',         tag:'Antioxydant', color:'#ff9500', benefice:'Zéro caféine — riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
+    { nom:'Rooibos',         tag:'Antioxydant', color:'#E8962A', benefice:'Zéro caféine — riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
     { nom:'Tilleul',         tag:'Stress',      color:'#86efac', benefice:'Relâche les tensions nerveuses et musculaires', usage:'1–2 tasses en fin d\'après-midi', detail:'Flavonoïdes sédatifs légers utilisés depuis le Moyen-Âge. Efficace contre les maux de tête de tension, l\'anxiété et l\'hypertension légère.' },
     { nom:'Gingembre-citron',tag:'Immunité',    color:'#ffd60a', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
   ],
   chinoise: [
     { nom:'Acupuncture',     tag:'Méridiens',  color:'#8b5cf6', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
     { nom:'Reishi',          tag:'Longévité',  color:'#92400e', benefice:'"Champignon de l\'immortalité" — immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
-    { nom:'Ginseng Panax',   tag:'Vitalité',   color:'#ff9500', benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
-    { nom:'Moxibustion',     tag:'Chaleur',    color:'#ff3b30', benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
-    { nom:'Astragale',       tag:'Immunité',   color:'#34c759', benefice:'Renforce l\'immunité en profondeur et ralentit le vieillissement', usage:'500 mg, 2× par jour, cure de 3 mois', detail:'Allonge les télomères (marqueurs du vieillissement cellulaire). Utilisé en complément de la chimiothérapie pour réduire les effets secondaires.' },
+    { nom:'Ginseng Panax',   tag:'Vitalité',   color:'#E8962A', benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
+    { nom:'Moxibustion',     tag:'Chaleur',    color:'#ef4444', benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
+    { nom:'Astragale',       tag:'Immunité',   color:'#22c55e', benefice:'Renforce l\'immunité en profondeur et ralentit le vieillissement', usage:'500 mg, 2× par jour, cure de 3 mois', detail:'Allonge les télomères (marqueurs du vieillissement cellulaire). Utilisé en complément de la chimiothérapie pour réduire les effets secondaires.' },
     { nom:'Qi Gong',         tag:'Énergie',    color:'#5856d6', benefice:'Harmonise corps, souffle et esprit par le mouvement', usage:'20 min le matin à jeun, quotidiennement', detail:'+800 études scientifiques. Réduit la tension artérielle, renforce l\'immunité et améliore l\'équilibre mental. Idéal pour tous les âges.' },
   ],
   holistique: [
     { nom:'Cohérence cardiaque', tag:'Système nerveux', color:'#ff2d55', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
-    { nom:'Bain de forêt',       tag:'Shinrin-yoku', color:'#34c759', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
+    { nom:'Bain de forêt',       tag:'Shinrin-yoku', color:'#22c55e', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
     { nom:'Thérapie par le froid',tag:'Dopamine',   color:'#38bdf8', benefice:'Dopamine +250%, inflammation réduite, volonté renforcée', usage:'Douche froide 30s → 3 min progressivement', detail:'La noradrénaline monte de 300% (Wim Hof Institute). Réduit l\'inflammation chronique, améliore la récupération musculaire et renforce la résilience mentale.' },
     { nom:'Earthing',            tag:'Électrons',   color:'#92400e', benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
     { nom:'Méditation MBSR',     tag:'Neuroplasticité', color:'#a78bfa', benefice:'Recâble le cerveau en 8 semaines — Harvard prouvé', usage:'10–20 min/jour, app ou guidance', detail:'L\'étude Harvard : augmentation de la matière grise après 8 semaines. L\'amygdale (siège de la peur) réduit de façon mesurable. MBSR = Mindfulness-Based Stress Reduction.' },
@@ -48,7 +48,7 @@ const DATA = {
 
 // ─── HERO BACKGROUND (aurora animated, like HomeTab) ─────────────────────────
 function HeroBg({ color }) {
-  const c = color || '#34c759'
+  const c = color || '#22c55e'
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden', borderRadius:'inherit' }}>
       {/* Animated aurora gradient */}
@@ -62,17 +62,17 @@ function HeroBg({ color }) {
       <div style={{
         position:'absolute', top:'-20%', right:'-6%', width:260, height:260,
         borderRadius:'50%', background:`radial-gradient(circle, ${c}40 0%, transparent 65%)`,
-        animation:'floatOrb 8s ease-in-out infinite', filter:'blur(4px)',
+        animation:'floatOrb 8s ease-in-out infinite', filter:'blur(8px)',
       }} />
       <div style={{
         position:'absolute', bottom:'-12%', left:'-5%', width:200, height:200,
         borderRadius:'50%', background:`radial-gradient(circle, ${c}28 0%, transparent 65%)`,
-        animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(4px)',
+        animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(8px)',
       }} />
       <div style={{
         position:'absolute', top:'35%', left:'18%', width:120, height:120,
         borderRadius:'50%', background:`radial-gradient(circle, rgba(255,255,255,0.45) 0%, transparent 65%)`,
-        animation:'floatOrb 6s ease-in-out infinite', filter:'blur(2px)',
+        animation:'floatOrb 6s ease-in-out infinite', filter:'blur(8px)',
       }} />
     </div>
   )
@@ -82,12 +82,12 @@ function HeroBg({ color }) {
 function AIRecoCard({ r, onChat, index }) {
   const [open, setOpen]       = useState(false)
   const [pressed, setPressed] = useState(false)
-  const c = '#34c759'
+  const c = '#22c55e'
 
   return (
     <div
       style={{
-        background:`${c}0c`, border:`1.5px solid ${c}25`, borderRadius:18,
+        background:`${c}0c`, border:`1.5px solid ${c}25`, borderRadius:20,
         overflow:'hidden',
         transform: pressed ? 'scale(0.985)' : 'scale(1)',
         transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
@@ -109,7 +109,7 @@ function AIRecoCard({ r, onChat, index }) {
             <span style={{ fontSize:13, fontWeight:700, color:'#1a0a00' }}>{r.nom}</span>
             {r.tag && (
               <span style={{
-                fontSize:9, fontWeight:800, padding:'2px 8px', borderRadius:6,
+                fontSize:9, fontWeight:800, padding:'2px 8px', borderRadius:12,
                 background:`${c}18`, color:c, border:`1px solid ${c}28`,
                 textTransform:'uppercase', letterSpacing:'0.4px',
               }}>{r.tag}</span>
@@ -151,7 +151,7 @@ function AIRecoCard({ r, onChat, index }) {
             <div style={{
               display:'flex', gap:9, alignItems:'flex-start',
               background:'rgba(139,92,246,0.06)', border:'1px solid rgba(139,92,246,0.16)',
-              borderRadius:10, padding:'10px 12px', marginBottom:8,
+              borderRadius:12, padding:'10px 12px', marginBottom:8,
             }}>
               <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color="#8b5cf6" /></span>
               <div>
@@ -167,7 +167,7 @@ function AIRecoCard({ r, onChat, index }) {
           {r.precaution && (
             <div style={{
               fontSize:11.5, color:'#d97706',
-              background:'rgba(251,191,36,0.08)', borderRadius:10,
+              background:'rgba(251,191,36,0.08)', borderRadius:12,
               padding:'8px 11px', marginBottom:8,
               border:'1px solid rgba(251,191,36,0.22)', lineHeight:1.55,
             }}>
@@ -179,7 +179,7 @@ function AIRecoCard({ r, onChat, index }) {
           {r.synergie && (
             <div style={{
               fontSize:11.5, color:'#0ea5e9',
-              background:'rgba(14,165,233,0.07)', borderRadius:10,
+              background:'rgba(14,165,233,0.07)', borderRadius:12,
               padding:'8px 11px', marginBottom:10,
               border:'1px solid rgba(14,165,233,0.18)', lineHeight:1.55,
             }}>
@@ -270,7 +270,7 @@ function AIReco({ profil, onChat }) {
         )}
 
         {err && (
-          <div style={{ fontSize:11, color:'#ff3b30', marginTop:10, fontWeight:600 }}>
+          <div style={{ fontSize:11, color:'#ef4444', marginTop:10, fontWeight:600 }}>
             Erreur de connexion. Réessaie.
           </div>
         )}
@@ -310,7 +310,7 @@ function HerbItem({ item, onChat }) {
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4, flexWrap:'wrap' }}>
             <span style={{ fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' }}>{item.nom}</span>
             <span style={{
-              fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:8,
+              fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:12,
               background: `${item.color}22`, color: item.color,
               border: `1px solid ${item.color}30`, letterSpacing:'0.4px', textTransform:'uppercase',
             }}>
@@ -397,7 +397,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
   const [cat, setCat] = useState('plantes')
   const items = DATA[cat] || []
   const activeCat = CATS.find(c => c.id === cat)
-  const activeColor = activeCat?.color || '#34c759'
+  const activeColor = activeCat?.color || '#22c55e'
 
   return (
     <div style={hb.page}>
@@ -408,7 +408,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
         <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
           {/* Clay leaf icon */}
           <div style={{
-            width:64, height:64, borderRadius:22,
+            width:64, height:64, borderRadius:20,
             background:`linear-gradient(135deg, ${activeColor}, ${activeColor}bb)`,
             display:'flex', alignItems:'center', justifyContent:'center',
             boxShadow:`0 8px 28px ${activeColor}50, 0 2px 6px ${activeColor}30, inset 0 1px 0 rgba(255,255,255,0.35)`,
@@ -429,7 +429,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
             display:'inline-flex', alignItems:'center', gap:6,
             background:'rgba(255,255,255,0.65)', backdropFilter:'blur(8px)',
             border:`1px solid ${activeColor}28`,
-            borderRadius:24, padding:'5px 14px',
+            borderRadius:20, padding:'5px 14px',
             fontSize:11, color:'#6b5c52', fontWeight:600,
             boxShadow:`0 2px 10px ${activeColor}15`,
           }}>
@@ -449,7 +449,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
             <button
               key={c.id}
               style={{
-                flexShrink:0, padding:'10px 20px', borderRadius:24,
+                flexShrink:0, padding:'10px 20px', borderRadius:20,
                 border: active ? `1.5px solid ${c.color}` : '1.5px solid #f0e8e0',
                 fontSize:12, fontWeight:700,
                 cursor:'pointer', fontFamily:'Poppins,sans-serif',
@@ -517,7 +517,7 @@ const hb = {
   aiBox: {
     position:'relative',
     margin:'14px 16px 4px',
-    borderRadius:24,
+    borderRadius:20,
     padding:'16px 16px',
     border:'1.5px solid rgba(139,92,246,0.22)',
     background:'rgba(255,255,255,0.7)',
@@ -565,7 +565,7 @@ const hb = {
     boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)',
   },
   aiAskBtn: {
-    width:32, height:32, borderRadius:10, flexShrink:0,
+    width:32, height:32, borderRadius:12, flexShrink:0,
     background:'rgba(139,92,246,0.12)', border:'1.5px solid rgba(139,92,246,0.24)',
     color:'#8b5cf6', fontSize:14, fontWeight:900, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center',

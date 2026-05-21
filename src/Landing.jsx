@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import LiquidImage from './LiquidImage'
 import SpiralBg from './SpiralBg'
 import GlobeBg from './GlobeBg'
+import { playFx as playFxSound } from './sfx'
 import './tokens.css'
 
 // ─── SPLASH (entrée minimaliste) ─────────────────────────────────────────────
@@ -28,7 +29,7 @@ function Splash({ done }) {
       `}</style>
       <div style={{
         position: 'absolute', top: '-15%', left: '-10%', width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(218,138,52,0.35) 0%, rgba(200,100,40,0.14) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(200,123,82,0.35) 0%, rgba(200,100,40,0.14) 45%, transparent 70%)',
         pointerEvents: 'none', animation: 'splashBlob 8s ease-in-out infinite',
       }} />
       <div style={{
@@ -77,53 +78,7 @@ const FX_SLIDES = [
   },
 ]
 
-// ─── FX SOUND ─────────────────────────────────────────────────────────────────
-function playFxSound(type) {
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext
-    if (!AC) return
-    const ctx = new AC()
-    if (type === 'hover') {
-      const o = ctx.createOscillator(), g = ctx.createGain()
-      o.connect(g); g.connect(ctx.destination)
-      o.type = 'sine'
-      o.frequency.setValueAtTime(1400, ctx.currentTime)
-      o.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.05)
-      g.gain.setValueAtTime(0.03, ctx.currentTime)
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
-      o.start(); o.stop(ctx.currentTime + 0.05)
-    } else if (type === 'click') {
-      const o = ctx.createOscillator(), g = ctx.createGain()
-      o.connect(g); g.connect(ctx.destination)
-      o.type = 'sine'
-      o.frequency.setValueAtTime(700, ctx.currentTime)
-      o.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.10)
-      g.gain.setValueAtTime(0.08, ctx.currentTime)
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.10)
-      o.start(); o.stop(ctx.currentTime + 0.10)
-    } else if (type === 'transition') {
-      const bufSz = Math.floor(ctx.sampleRate * 0.22)
-      const buf = ctx.createBuffer(1, bufSz, ctx.sampleRate)
-      const d = buf.getChannelData(0)
-      for (let i = 0; i < bufSz; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / bufSz)
-      const noise = ctx.createBufferSource(); noise.buffer = buf
-      const filt = ctx.createBiquadFilter()
-      filt.type = 'bandpass'; filt.frequency.value = 600; filt.Q.value = 0.8
-      const g = ctx.createGain()
-      g.gain.setValueAtTime(0.12, ctx.currentTime)
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22)
-      noise.connect(filt); filt.connect(g); g.connect(ctx.destination)
-      noise.start(); noise.stop(ctx.currentTime + 0.22)
-      const o2 = ctx.createOscillator(), g2 = ctx.createGain()
-      o2.connect(g2); g2.connect(ctx.destination)
-      o2.frequency.setValueAtTime(280, ctx.currentTime)
-      o2.frequency.exponentialRampToValueAtTime(560, ctx.currentTime + 0.18)
-      g2.gain.setValueAtTime(0.05, ctx.currentTime)
-      g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18)
-      o2.start(); o2.stop(ctx.currentTime + 0.18)
-    }
-  } catch (_) {}
-}
+// playFxSound importé depuis sfx.js
 
 // ─── SLIDE TAG TRANSLATIONS ───────────────────────────────────────────────────
 
@@ -340,7 +295,7 @@ function CinematicSlider({ onCommencer }) {
             fontWeight: 400,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(255,240,210,0.52)',
+            color: 'rgba(255,240,210,0.72)',
             pointerEvents: 'none',
             animation: 'solennReveal 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
@@ -487,14 +442,14 @@ function CinematicSlider({ onCommencer }) {
           href="mailto:contact@solenn.app"
           style={{
             position: 'absolute', bottom: '1rem', left: '1.5rem', zIndex: 20,
-            color: 'rgba(255,248,235,0.40)',
+            color: 'rgba(255,248,235,0.72)',
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic', fontSize: '0.85rem',
             letterSpacing: '0.06em', textDecoration: 'none',
             transition: 'color 0.25s',
           }}
           onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,248,235,0.85)'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,248,235,0.40)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,248,235,0.72)'}
         >
           contact@solenn.app
         </a>
@@ -589,7 +544,7 @@ export default function Landing({ onCommencer }) {
 
       <GlobeBg opacity={0.35} />
       <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(218,138,52,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
         pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
       <div style={{ position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
         background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',

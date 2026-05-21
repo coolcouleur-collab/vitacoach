@@ -49,8 +49,8 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
       style={{
         position: 'fixed', inset: 0, zIndex: 800,
         background: 'rgba(15,5,0,0.55)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
         padding: '0 0 32px',
       }}
@@ -89,7 +89,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
         <div style={{ display: 'flex', gap: 6, marginBottom: 28, justifyContent: 'center' }}>
           {[0, 1, 2].map(i => (
             <div key={i} style={{
-              width: i <= step ? 24 : 6, height: 6, borderRadius: 3,
+              width: i <= step ? 24 : 6, height: 6, borderRadius: 12,
               background: i <= step ? 'rgba(200,123,82,0.85)' : 'rgba(200,123,82,0.15)',
               transition: 'all 0.3s ease',
             }} />
@@ -146,7 +146,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
                 {HUMEURS.map(h => (
                   <button key={h.val} onClick={() => handleHumeur(h.val)} style={{
-                    flex: 1, padding: '12px 4px', borderRadius: 14,
+                    flex: 1, padding: '12px 4px', borderRadius: 12,
                     background: humeur === h.val ? 'rgba(200,123,82,0.15)' : 'rgba(200,123,82,0.06)',
                     border: humeur === h.val ? '1.5px solid rgba(200,123,82,0.50)' : '1.5px solid transparent',
                     cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
@@ -186,7 +186,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                 autoFocus
                 style={{
                   width: '100%', boxSizing: 'border-box',
-                  padding: '13px 16px', borderRadius: 14,
+                  padding: '13px 16px', borderRadius: 12,
                   border: '1.5px solid rgba(200,123,82,0.20)',
                   background: 'rgba(200,123,82,0.05)',
                   fontSize: 13, fontFamily: 'Poppins, sans-serif',
@@ -207,7 +207,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
 }
 
 const btnStyle = {
-  width: '100%', padding: '14px', borderRadius: 14, border: 'none',
+  width: '100%', padding: '14px', borderRadius: 12, border: 'none',
   background: 'rgba(200,123,82,0.12)',
   color: 'rgba(200,123,82,0.90)', fontSize: 14, fontWeight: 600,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',

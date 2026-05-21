@@ -37,7 +37,7 @@ function CheckSVG({ checked }) {
       }}
       transition={{ duration: 0.2 }}
       style={{
-        width: 22, height: 22, borderRadius: 10, flexShrink: 0,
+        width: 22, height: 22, borderRadius: 12, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}
     >
@@ -131,7 +131,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
           <div style={{
             fontSize: 11, fontWeight: 600, color: done === etapes.length ? '#22c55e' : 'rgba(200,123,82,0.60)',
             fontFamily: 'Poppins,sans-serif', background: done === etapes.length ? 'rgba(34,197,94,0.10)' : 'rgba(200,123,82,0.08)',
-            padding: '3px 8px', borderRadius: 8,
+            padding: '3px 8px', borderRadius: 12,
           }}>
             {done}/{etapes.length}
           </div>
@@ -437,7 +437,7 @@ export default function RoutineTab({ userId, profil }) {
         {!loading && error && (
           <div style={{
             background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
-            borderRadius: 14, padding: '12px 16px', marginBottom: 12,
+            borderRadius: 12, padding: '12px 16px', marginBottom: 12,
             fontSize: 13, color: '#ef4444', fontFamily: 'Poppins,sans-serif',
           }}>
             ⚠️ {error}

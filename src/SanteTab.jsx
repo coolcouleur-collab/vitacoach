@@ -77,7 +77,7 @@ function Sparkline({ history, metricKey, color, goal }) {
               background: d.val > 0
                 ? isToday ? `linear-gradient(to top, ${color}, ${color}cc)` : `${color}55`
                 : 'rgba(0,0,0,0.05)',
-              borderRadius:'3px 3px 0 0',
+              borderRadius:'12px 12px 0 0',
               boxShadow: isToday && d.val > 0 ? `0 0 8px ${color}60` : 'none',
               transition:'height 0.5s ease',
             }} />
@@ -119,7 +119,7 @@ function HistoriqueSection({ history }) {
         </div>
         <div style={{
           fontSize:10, fontWeight:700, color:'rgba(200,123,82,0.60)',
-          background:'rgba(200,123,82,0.08)', padding:'4px 10px', borderRadius:8,
+          background:'rgba(200,123,82,0.08)', padding:'4px 10px', borderRadius:12,
           border:'1px solid rgba(200,123,82,0.16)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
@@ -270,7 +270,7 @@ function InsightsCarousel({ insights, onClose }) {
           <button onClick={onClose} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             color: 'rgba(200,123,82,0.35)', fontSize: 14, lineHeight: 1,
-            padding: '3px 6px', borderRadius: 6, fontFamily: 'inherit',
+            padding: '3px 6px', borderRadius: 12, fontFamily: 'Poppins, sans-serif',
           }}>✕</button>
         </div>
       </div>
@@ -576,7 +576,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                   <span style={{
                     fontSize: 9, color: '#fff',
                     background: m.color,
-                    padding: '3px 8px', borderRadius: 8, fontWeight: 800,
+                    padding: '3px 8px', borderRadius: 12, fontWeight: 800,
                     boxShadow: `0 2px 8px ${m.color}50`
                   }}>✓</span>
                 )}
@@ -843,7 +843,7 @@ const ss = {
     boxShadow: '0 -12px 50px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9)'
   },
   modalHandle: {
-    width: 44, height: 5, background: 'rgba(0,0,0,0.10)', borderRadius: 3,
+    width: 44, height: 5, background: 'rgba(0,0,0,0.10)', borderRadius: 12,
     margin: '12px auto 22px'
   },
   modalInput: {

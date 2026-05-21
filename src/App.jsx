@@ -97,8 +97,8 @@ function HealthPermModal({ onAllow, onLater }) {
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:1500,
-      background:'rgba(20,8,0,0.11)', backdropFilter:'blur(6px)',
-      WebkitBackdropFilter:'blur(10px)',
+      background:'rgba(20,8,0,0.11)', backdropFilter:'blur(8px)',
+      WebkitBackdropFilter:'blur(8px)',
       display:'flex', alignItems:'flex-end', justifyContent:'center',
     }}>
       <div style={{
@@ -113,7 +113,7 @@ function HealthPermModal({ onAllow, onLater }) {
         boxShadow:'0 -20px 60px rgba(200,100,40,0.15), inset 0 1px 0 rgba(255,255,255,0.15)',
         animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
-        <div style={{ width:44, height:5, background:'rgba(255,220,160,0.30)', borderRadius:3, margin:'12px auto 26px' }} />
+        <div style={{ width:44, height:5, background:'rgba(255,220,160,0.30)', borderRadius:12, margin:'12px auto 26px' }} />
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
@@ -152,7 +152,7 @@ function HealthPermModal({ onAllow, onLater }) {
           }}>
             <span style={{ fontSize:18 }}>{icon}</span>
             <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:500, flex:1 }}>{label}</span>
-            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:6, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
+            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
           </div>
         ))}
 
@@ -1183,7 +1183,7 @@ export default function App() {
             transition={{ type: 'spring', damping: 22, stiffness: 300 }}
             style={{
               position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
-              zIndex: 900, background: 'linear-gradient(135deg, #FFF8F0, #FFF2E0)',
+              zIndex: 900, background: 'linear-gradient(135deg, #FFF8F4, #FFF2E0)',
               border: '1.5px solid rgba(200,123,82,0.30)',
               borderRadius: 22, padding: '16px 24px', minWidth: 280, maxWidth: 340,
               boxShadow: '0 12px 40px rgba(200,123,82,0.25), 0 4px 12px rgba(0,0,0,0.10)',
@@ -1332,7 +1332,7 @@ export default function App() {
                   <span>{label}</span>
                   {id === 'sante' && score > 0 && (
                     <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700,
-                      color: scoreColor, background: scoreColor+'18', borderRadius:6, padding:'2px 7px' }}>
+                      color: scoreColor, background: scoreColor+'18', borderRadius:12, padding:'2px 7px' }}>
                       {score}
                     </span>
                   )}
@@ -1522,7 +1522,7 @@ export default function App() {
               {/* Backdrop */}
               <div onClick={() => setMenuOpen(false)} style={{
                 position:'fixed', inset:0, zIndex:150,
-                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(6px)',
+                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(8px)',
                 animation:'tabFade 0.22s ease both',
               }} />
               {/* Panel */}
@@ -1753,7 +1753,7 @@ export default function App() {
                             title="Copier"
                             style={{
                               background: copiedIdx === i ? 'rgba(34,197,94,0.12)' : 'transparent',
-                              border: 'none', cursor:'pointer', padding:'4px 6px', borderRadius:8,
+                              border: 'none', cursor:'pointer', padding:'4px 6px', borderRadius:12,
                               display:'flex', alignItems:'center', justifyContent:'center',
                               color: copiedIdx === i ? '#22c55e' : 'rgba(160,100,40,0.55)',
                               transition:'all 0.2s',
@@ -2237,9 +2237,9 @@ function RoutineModule({ profil, metriques }) {
             <span style={{ fontSize:11, fontWeight:400, color:'rgba(160,100,50,0.60)', letterSpacing:'0.04em' }}>Progression</span>
             <span style={{ fontSize:11, color:'rgba(200,123,82,0.70)', fontWeight:500 }}>{doneTotal}/{stepsTotal}</span>
           </div>
-          <div style={{ height:6, background:'#f0e8e0', borderRadius:4, overflow:'hidden' }}>
+          <div style={{ height:6, background:'#f0e8e0', borderRadius:12, overflow:'hidden' }}>
             <div style={{ height:'100%', width:`${stepsTotal>0?(doneTotal/stepsTotal)*100:0}%`,
-              background:'linear-gradient(90deg,#C87B52,#E8A07A)', borderRadius:4, transition:'width 0.4s ease' }} />
+              background:'linear-gradient(90deg,#C87B52,#E8A07A)', borderRadius:12, transition:'width 0.4s ease' }} />
           </div>
         </div>
       )}
@@ -2312,7 +2312,7 @@ function NutritionCard({ nutrition }) {
         </div>
       ))}
       {nutrition.supplements?.length > 0 && (
-        <div style={{ fontSize:12, color:'#22c55e', background:'rgba(34,197,94,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(34,197,94,0.2)' }}>
+        <div style={{ fontSize:12, color:'#22c55e', background:'rgba(34,197,94,0.08)', borderRadius:12, padding:'6px 12px', marginTop:8, border:'1px solid rgba(34,197,94,0.2)' }}>
           <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#22c55e" />{nutrition.supplements.join(' · ')}</span>
         </div>
       )}
@@ -2339,7 +2339,7 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
         </div>
         {total > 0 && (
           <div style={{ fontSize:10, color: doneCount===total ? accent : `${accent}60`, fontWeight:500,
-            background: doneCount===total ? accent+'15' : `${accent}08`, padding:'2px 8px', borderRadius:6 }}>
+            background: doneCount===total ? accent+'15' : `${accent}08`, padding:'2px 8px', borderRadius:12 }}>
             {doneCount}/{total}
           </div>
         )}
@@ -2605,7 +2605,7 @@ function CapsuleSlider({ tenues, loading }) {
               style={{
                 height: 6,
                 width: i === active ? 18 : 6,
-                borderRadius: 6,
+                borderRadius: 12,
                 background: i === active ? '#C87B52' : 'rgba(200,123,82,0.28)',
                 border: 'none',
                 cursor: 'pointer',

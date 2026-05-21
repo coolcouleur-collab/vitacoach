@@ -109,7 +109,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
           <div style={{ fontSize: 15, fontWeight: 700, color: C.texte, display: 'flex', alignItems: 'center', gap: 8 }}>
             {provider.nom}
             {!provider.disponible && (
-              <span style={{ fontSize: 10, background: 'rgba(200,123,82,0.12)', color: C.orange, padding: '1px 7px', borderRadius: 10, fontWeight: 600 }}>
+              <span style={{ fontSize: 10, background: 'rgba(200,123,82,0.12)', color: C.orange, padding: '1px 7px', borderRadius: 12, fontWeight: 600 }}>
                 Bientôt
               </span>
             )}
@@ -127,7 +127,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
             fontSize: 11, color: C.texte2,
             background: 'rgba(10,22,51,0.05)',
             border: '1px solid rgba(10,22,51,0.08)',
-            borderRadius: 8, padding: '2px 8px',
+            borderRadius: 12, padding: '2px 8px',
           }}>
             {d}
           </span>
@@ -150,7 +150,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               style={{
                 flex: 1, padding: '10px 16px',
                 background: `linear-gradient(135deg, ${provider.couleur}, ${provider.couleur}CC)`,
-                border: 'none', borderRadius: 10, color: '#fff',
+                border: 'none', borderRadius: 12, color: '#fff',
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
               }}
@@ -166,7 +166,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                   flex: 1, padding: '9px 14px',
                   background: 'rgba(200,123,82,0.10)',
                   border: '1px solid rgba(200,123,82,0.20)',
-                  borderRadius: 10, color: C.orange,
+                  borderRadius: 12, color: C.orange,
                   fontSize: 13, fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
                   fontFamily: 'Poppins, sans-serif',
                 }}
@@ -182,7 +182,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                   padding: '9px 14px',
                   background: confirmeDeconnect ? 'rgba(239,68,68,0.12)' : 'rgba(10,22,51,0.05)',
                   border: `1px solid ${confirmeDeconnect ? 'rgba(239,68,68,0.30)' : 'rgba(10,22,51,0.10)'}`,
-                  borderRadius: 10,
+                  borderRadius: 12,
                   color: confirmeDeconnect ? C.rouge : C.texte2,
                   fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
                 }}
@@ -276,13 +276,13 @@ function ModalOura({ userId, onSuccess, onClose }) {
         <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
           <button onClick={onClose} style={{
             flex: 1, padding: '11px', background: 'rgba(10,22,51,0.06)',
-            border: '1px solid rgba(10,22,51,0.10)', borderRadius: 10,
+            border: '1px solid rgba(10,22,51,0.10)', borderRadius: 12,
             color: C.texte2, fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins',
           }}>Annuler</button>
           <button onClick={connecter} disabled={loading || !token.trim()} style={{
             flex: 1, padding: '11px',
             background: 'linear-gradient(135deg,#6C63FF,#8B5CF6)',
-            border: 'none', borderRadius: 10,
+            border: 'none', borderRadius: 12,
             color: '#fff', fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',
           }}>
@@ -415,7 +415,7 @@ export default function ConnexionsSante({ userId }) {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
             style={{
               position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
-              background: 'rgba(10,22,51,0.88)', backdropFilter: 'blur(12px)',
+              background: 'rgba(10,22,51,0.88)', backdropFilter: 'blur(20px)',
               color: '#fff', borderRadius: 12, padding: '12px 20px',
               fontSize: 14, fontWeight: 500, zIndex: 300, whiteSpace: 'nowrap',
               boxShadow: '0 8px 24px rgba(10,22,51,0.30)',

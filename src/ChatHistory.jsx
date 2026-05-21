@@ -24,7 +24,7 @@ function HandleBar() {
     <div style={{
       width: 44, height: 5,
       background: C.handle,
-      borderRadius: 3,
+      borderRadius: 12,
       margin: '14px auto 8px',
       flexShrink: 0,
     }} />
@@ -131,7 +131,7 @@ function SessionItem({ session, onSelect }) {
         flexDirection: 'column',
         gap: 5,
         padding: '13px 15px',
-        borderRadius: 14,
+        borderRadius: 12,
         border: `1px solid ${hovered ? C.borderStrong : C.border}`,
         background: hovered ? C.bgCardHover : C.bgCard,
         cursor: 'pointer',
@@ -429,7 +429,7 @@ export default function ChatHistory({
               <div style={{
                 margin: '24px 0',
                 padding: '16px',
-                borderRadius: 14,
+                borderRadius: 12,
                 background: 'rgba(220,60,30,0.06)',
                 border: '1px solid rgba(220,60,30,0.18)',
                 textAlign: 'center',

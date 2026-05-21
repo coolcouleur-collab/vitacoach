@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-export default function SpiralBg({ style, light = false, duration = 15000 }) {
+export default function SpiralBg({ style, light = false, duration = 15000, n = 1100, scale = 1 }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function SpiralBg({ style, light = false, duration = 15000 }) {
     resize()
     window.addEventListener('resize', resize)
 
-    const N    = 1800
+    const N    = n
     const REVS = 7
     const DUR  = duration
 
@@ -38,7 +38,7 @@ export default function SpiralBg({ style, light = false, duration = 15000 }) {
       const p = (i + 0.5) / N
       return {
         p,
-        theta: Math.PI * 2 * REVS * Math.sqrt(p) + (Math.random() - 0.5) * 0.30,
+        theta:  Math.PI * 2 * REVS * Math.sqrt(p) + (Math.random() - 0.5) * 0.30,
         bright: 0.35 + Math.random() * 0.65,
         phase:  Math.random(),
       }
@@ -57,7 +57,7 @@ export default function SpiralBg({ style, light = false, duration = 15000 }) {
       ctx.globalCompositeOperation = 'source-over'
       ctx.globalAlpha = 1
 
-      const R = Math.min(W, H) * 0.42
+      const R = Math.min(W, H) * 0.42 * scale
 
       ctx.fillStyle = light ? 'rgba(210,140,60,1)' : 'rgba(195,105,35,1)'
 
@@ -66,17 +66,17 @@ export default function SpiralBg({ style, light = false, duration = 15000 }) {
       ctx.rotate(t * Math.PI * 2)
 
       for (const p of pts) {
-        const pt   = (t + p.phase) % 1
-        const et   = multiEase(pt)
-        const r    = R * Math.sqrt(p.p) * et
-        const x    = Math.cos(p.theta) * r
-        const y    = Math.sin(p.theta) * r
+        const pt = (t + p.phase) % 1
+        const et = multiEase(pt)
+        const r  = R * Math.sqrt(p.p) * et
+        const x  = Math.cos(p.theta) * r
+        const y  = Math.sin(p.theta) * r
         const dist = p.p
-        const sz   = Math.max(0.15, p.bright * (1.8 - dist * 0.9))
-        const al   = Math.min(0.96, p.bright * (1.0 - dist * 0.55) * (0.25 + et * 0.75))
+        const sz = Math.max(0.15, p.bright * (1.8 - dist * 0.9))
+        const al = Math.min(0.96, p.bright * (1.0 - dist * 0.55) * (0.25 + et * 0.75))
         ctx.beginPath()
         ctx.arc(x, y, sz, 0, Math.PI * 2)
-        ctx.globalAlpha = light ? al * 0.55 : al * 0.95
+        ctx.globalAlpha = light ? al * 0.10 : al * 0.18
         ctx.fill()
       }
 
@@ -91,7 +91,7 @@ export default function SpiralBg({ style, light = false, duration = 15000 }) {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
     }
-  }, [light, duration])
+  }, [light, duration, n, scale])
 
   return (
     <canvas

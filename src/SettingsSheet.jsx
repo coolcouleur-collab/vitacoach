@@ -337,8 +337,8 @@ export default function SettingsSheet({
           inset: 0,
           zIndex: 1200,
           background: 'rgba(26,10,0,0.32)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
         }}
       />
 

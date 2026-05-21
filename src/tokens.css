@@ -21,7 +21,7 @@
   --glass-white:  rgba(255,255,255,0.96);
 
   /* ── Typographie ── */
-  --font: 'Inter', system-ui, sans-serif;
+  --font: 'Poppins', system-ui, sans-serif;
 
   font-size: clamp(9px, calc(100vw / 1512 * 10), 10px);
 
@@ -53,13 +53,14 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { box-sizing: border-box; overflow-x: hidden; scroll-behavior: auto; }
+html { box-sizing: border-box; scroll-behavior: auto; }
 html.lenis { height: auto; }
 body {
   background: var(--bg);
   color: var(--text-body);
   font-family: var(--font);
   line-height: 1.6;
+  overflow-x: hidden;
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
 }
@@ -130,4 +131,22 @@ body {
 .liquid-avatar {
   animation: liquidMorph 4s ease-in-out infinite, liquidGlow 3s ease-in-out infinite;
   will-change: border-radius, box-shadow;
+}
+
+@keyframes orbitGlow {
+  0%,100% { box-shadow: 0 0 0 1.5px rgba(200,123,82,0.30), 0 0 10px 2px rgba(200,123,82,0.12), inset 0 1px 0 rgba(255,255,255,0.45); }
+  50%     { box-shadow: 0 0 0 1.5px rgba(200,123,82,0.72), 0 0 18px 4px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,255,255,0.45); }
+}
+.orbit-glow {
+  animation: orbitGlow 3s ease-in-out infinite;
+  will-change: box-shadow;
+}
+
+@keyframes chatGlow {
+  0%,100% { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.28), 0 6px 22px rgba(200,123,82,0.10), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75); }
+  50%     { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.50), 0 6px 22px rgba(200,123,82,0.18), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75); }
+}
+.chat-glow {
+  animation: chatGlow 3s ease-in-out infinite;
+  will-change: box-shadow;
 }

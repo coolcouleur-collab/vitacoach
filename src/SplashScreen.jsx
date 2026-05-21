@@ -18,8 +18,8 @@ export default function SplashScreen({ onDone }) {
   const [exiting, setExiting] = useState(false)
 
   useEffect(() => {
-    const t1 = setTimeout(() => setExiting(true), 2100) // hold ~1.5 s then exit
-    const t2 = setTimeout(() => onDone(),          2800) // remove after fade
+    const t1 = setTimeout(() => setExiting(true), 1200)
+    const t2 = setTimeout(() => onDone(),          1800)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [onDone])
 
@@ -59,15 +59,15 @@ export default function SplashScreen({ onDone }) {
           transition={{ duration: 0.70, ease: EASE_SPRING, delay: 0.06 }}
           style={{
             width: 88, height: 88, borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(218,138,52,0.28), rgba(190,112,30,0.18))',
+            background: 'linear-gradient(135deg, rgba(200,123,82,0.28), rgba(190,112,30,0.18))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 0 10px rgba(218,138,52,0.07), 0 0 0 20px rgba(218,138,52,0.04)',
+            boxShadow: '0 0 0 10px rgba(200,123,82,0.07), 0 0 0 20px rgba(200,123,82,0.04)',
             position: 'relative', overflow: 'hidden',
             marginBottom: 24,
           }}
         >
           <span style={{
-            fontSize: 44, fontWeight: 900, color: 'rgba(218,138,52,0.90)',
+            fontSize: 44, fontWeight: 900, color: 'rgba(200,123,82,0.90)',
             fontFamily: "'Poppins', 'Inter', system-ui, sans-serif",
             letterSpacing: '-2px',
           }}>S</span>
@@ -79,9 +79,10 @@ export default function SplashScreen({ onDone }) {
           animate={{ opacity: 1,  y: 0  }}
           transition={{ duration: 0.52, ease: EASE_OUT_EXPO, delay: 0.22 }}
           style={{
-            fontSize: 40, fontWeight: 900,
-            letterSpacing: '-0.05em', lineHeight: 1,
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontSize: 'clamp(2.8rem, 8vw, 4rem)', fontWeight: 300,
+            letterSpacing: '-0.02em', lineHeight: 1,
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
             background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 28%, #C87B52 50%, #F0B060 72%, #C87B52 100%)',
             backgroundSize: '200% auto',
             WebkitBackgroundClip: 'text',
@@ -107,7 +108,7 @@ export default function SplashScreen({ onDone }) {
             marginBottom: 30,
           }}
         >
-          re·vivre · évoluer
+          Bien-être sur mesure
         </motion.div>
 
         {/* ── Bottom reveal line ── */}
