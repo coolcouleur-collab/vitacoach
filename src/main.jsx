@@ -7,8 +7,9 @@ import './tokens.css'
 
 // ── Error boundary global — affiche l'erreur au lieu de page blanche
 class RootBoundary extends Component {
-  constructor(props) { super(props); this.state = { error: null } }
+  constructor(props) { super(props); this.state = { error: null, info: null } }
   static getDerivedStateFromError(e) { return { error: e } }
+  componentDidCatch(error, info) { this.setState({ info }) }
   render() {
     if (this.state.error) {
       return (
@@ -16,6 +17,11 @@ class RootBoundary extends Component {
           <h2 style={{ color: '#c00', marginBottom: 16 }}>💥 Erreur React</h2>
           <pre style={{ whiteSpace: 'pre-wrap', color: '#900' }}>{String(this.state.error)}</pre>
           <pre style={{ whiteSpace: 'pre-wrap', color: '#555', marginTop: 12, fontSize: 12 }}>{this.state.error?.stack}</pre>
+          {this.state.info?.componentStack && (
+            <pre style={{ whiteSpace: 'pre-wrap', color: '#00c', marginTop: 16, fontSize: 12, background: '#f0f4ff', padding: 12, borderRadius: 8 }}>
+              📍 Component Stack:{'\n'}{this.state.info.componentStack}
+            </pre>
+          )}
         </div>
       )
     }
