@@ -64,7 +64,8 @@ app.use((req, res, next) => {
   next()
 })
 
-app.get('/', (req, res) => res.json({ status: 'Solenn OK' }))
+app.get('/',           (req, res) => res.json({ status: 'Solenn OK' }))
+app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: Date.now() }))
 
 // Inscription
 app.post('/api/inscription', async (req, res) => {
@@ -991,7 +992,8 @@ app.get('/api/connect/withings', (req, res) => {
 // GET /api/connect/withings/callback → échange le code contre un token
 app.get('/api/connect/withings/callback', async (req, res) => {
   const { code, state: userId } = req.query
-  if (!code || !userId) return res.status(400).send('Paramètres manquants')
+  // Withings vérifie l'URL avec un GET sans params — répondre 200
+  if (!code || !userId) return res.status(200).send('Solenn Withings callback OK')
   try {
     const { data } = await axios.post('https://wbsapi.withings.net/v2/oauth2',
       new URLSearchParams({
