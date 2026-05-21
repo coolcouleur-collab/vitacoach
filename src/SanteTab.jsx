@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
+import ConnexionsSante from './ConnexionsSante'
 
 // hex → rgba helper
 function h2r(hex, a) {
@@ -299,7 +300,7 @@ function InsightsCarousel({ insights, onClose }) {
   )
 }
 
-export default function SanteTab({ metriques, profil, onUpdate, score, history = [] }) {
+export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -668,6 +669,17 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           </div>
         )
       })()}
+
+      {/* ── Appareils & Intégrations Santé ── */}
+      <div style={{ marginBottom: 14 }}>
+        <div style={{
+          fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)',
+          fontFamily: 'Poppins,sans-serif', marginBottom: 12, letterSpacing: '0.3px'
+        }}>
+          📡 Appareils connectés
+        </div>
+        <ConnexionsSante userId={userId} />
+      </div>
 
       {/* ── Edit Modal ── */}
       {editMode && editMetric && (
