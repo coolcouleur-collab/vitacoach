@@ -639,7 +639,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
     { iconEl:<RunIcon   size={22} color={runC}   />,  val:metriques?.pas,     color:runC,      key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
     { iconEl:<MoonIcon  size={22} color="#818cf8" />, val:metriques?.sommeil, color:'#818cf8', key:'sommeil', fmt: v => v+'h' },
     { iconEl:<MoodIcon  size={22} color={moodC}  />,  val:metriques?.humeur,  color:moodC,     key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color="#ff3b30" />, val:metriques?.fc,      color:'#ff3b30', key:'fc',      fmt: v => v },
+    { iconEl:<HeartIcon size={22} color="#ef4444" />, val:metriques?.fc,      color:'#ef4444', key:'fc',      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
@@ -1298,7 +1298,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 function MetricRings({ metriques }) {
   const items = [
     { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
-    { iconEl:<RunIcon size={17} color="#C87B52" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#FF6B35', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
+    { iconEl:<RunIcon size={17} color="#C87B52" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#C87B52', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
     { iconEl:<MoonIcon size={17} color="#818cf8" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#818cf8', fmt: v => `${v}h` },
     { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
@@ -1539,14 +1539,14 @@ function generateDailyTasks(profil, metriques) {
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'nutrition', emoji:'🥗', color:'#34c759',
+      id:'nutrition', emoji:'🥗', color:'#22c55e',
       title: regime === 'végétarien' ? 'Protéines végétales' : regime === 'vegan' ? 'Équilibre vegan' : regime === 'sans gluten' ? 'Repas sans gluten' : 'Repas équilibrés',
       detail:'3 repas / légumes · protéines · glucides lents',
       goal:3, auto:false, fmt: v => `${v}/3 repas`,
     },
     {
       id:'sport', emoji: niveau==='avancé' ? '🏋️' : niveau==='intermédiaire' ? '🚴' : '🚶',
-      color:'#ec4899',
+      color:'#C87B52',
       title: niveau==='avancé' ? 'Session entraînement' : niveau==='intermédiaire' ? 'Cardio 30 min' : 'Mouvement doux',
       detail: niveau==='avancé' ? '45-60 min d\'effort physique' : niveau==='intermédiaire' ? 'Cardio modéré + échauffement' : '20-30 min de stretching ou marche',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -1624,7 +1624,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
           transition={{ duration: 1.1, type:'spring', stiffness:55, damping:16 }}
           style={{
             height:'100%', borderRadius:10, position:'relative', overflow:'hidden',
-            background:'linear-gradient(90deg,#FFD4A0,#E8A07A,#C87B52,#9E5C35)',
+            background:'linear-gradient(90deg,#FFD4A0,#E8A07A,#C87B52,#C87B52)',
             boxShadow:'0 0 6px rgba(200,123,82,0.45)',
           }}
         >
@@ -1676,7 +1676,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
       image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
       title:'Prépare ton sommeil',
       body:"Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l'obscurité.",
-      action:'Routine soir', from:'#38C1B6',
+      action:'Routine soir', from:'#0A1633',
     },
     {
       image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&auto=format&q=72',
@@ -1684,7 +1684,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
       body: (metriques?.eau||0) > 0
         ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Un verre maintenant !' : 'Continue comme ça !'}`
         : "Objectif : 8 verres/jour. Pose un grand verre devant toi maintenant.",
-      action:'Mettre à jour', from:'#38C1B6',
+      action:'Mettre à jour', from:'#22c55e',
     },
     {
       image:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&q=72',
@@ -2065,7 +2065,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
             <span style={{
               fontSize:28, fontWeight:700, lineHeight:1,
-              color: score > 50 ? '#ff9500' : '#C87B52',
+              color: score > 50 ? '#E8962A' : '#C87B52',
               fontFamily:"'Poppins',system-ui,sans-serif",
               letterSpacing:'-0.02em',
             }}>{score}</span>
@@ -2298,7 +2298,7 @@ const hc = {
     display:'flex', alignItems:'center', justifyContent:'center', marginBottom:20 },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
-    background:'linear-gradient(145deg, #C87B52, #9E5C35)',
+    background:'linear-gradient(145deg, #C87B52, #C87B52)',
     color:'#fff', border:'none', borderRadius:22, fontSize:13, fontWeight:500,
     cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
     boxShadow:'0 12px 36px rgba(200,123,82,0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',

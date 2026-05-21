@@ -221,9 +221,9 @@ function CelebrationOverlay({ score, onDone }) {
           {score >= 90 ? '🌟' : '🎉'}
         </div>
         <div style={{ fontSize:50, fontWeight:900, color:'#C87B52', lineHeight:1, letterSpacing:'-2px' }}>
-          {score}<span style={{ fontSize:18, color:'#c4b5a8', fontWeight:400 }}>/100</span>
+          {score}<span style={{ fontSize:18, color:'rgba(200,123,82,0.6)', fontWeight:400 }}>/100</span>
         </div>
-        <div style={{ fontSize:15, fontWeight:700, color:'#9E5C35', marginTop:9 }}>
+        <div style={{ fontSize:15, fontWeight:700, color:'#C87B52', marginTop:9 }}>
           {score >= 90 ? 'Journée parfaite ! 🏆' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
         </div>
         <div style={{ fontSize:11, color:'rgba(160,110,70,0.70)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
@@ -243,7 +243,7 @@ function ReactionBtn({ emoji, active, onClick }) {
       style={{
         background: active ? 'rgba(200,123,82,0.15)' : 'transparent',
         border: active ? '1.5px solid rgba(200,123,82,0.60)' : '1.5px solid rgba(200,123,82,0.18)',
-        borderRadius: 10, padding: '3px 9px',
+        borderRadius: 12, padding: '3px 9px',
         fontSize: 14,
         cursor: 'pointer',
         transition: 'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
@@ -405,7 +405,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
                     {item.label}
                   </span>
                   {item.id === 'forum' && forumUnread > 0 && (
-                    <span style={{ position:'absolute', top:4, right:8, background:'#FF303C', color:'#fff', fontSize:8, fontWeight:800, borderRadius:20, minWidth:13, height:13, lineHeight:'13px', display:'flex', alignItems:'center', justifyContent:'center', padding:'0 2px' }}>
+                    <span style={{ position:'absolute', top:4, right:8, background:'#ef4444', color:'#fff', fontSize:8, fontWeight:800, borderRadius:20, minWidth:13, height:13, lineHeight:'13px', display:'flex', alignItems:'center', justifyContent:'center', padding:'0 2px' }}>
                       {forumUnread > 9 ? '9+' : forumUnread}
                     </span>
                   )}
@@ -1131,7 +1131,7 @@ export default function App() {
   // ── MAIN APP ════════════════════════════════════════════════════════════════
   const [homePreset, setHomePreset] = useState('day')
   const score = scoreJour(metriques)
-  const scoreColor = score >= 70 ? '#34c759' : score >= 40 ? '#ff9500' : '#ff3b30'
+  const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? '#E8962A' : '#ef4444'
 
   const sectionTitles = {
     chat:'Solenn', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style', forum:'Forum'
@@ -1356,14 +1356,14 @@ export default function App() {
             <button
               style={{
                 ...s.btnEdit,
-                background: notifEnabled ? 'rgba(52,199,89,0.10)' : 'rgba(0,0,0,0.04)',
-                color: notifEnabled ? '#34c759' : 'rgba(200,123,82,0.65)',
-                border: notifEnabled ? '1px solid rgba(52,199,89,0.25)' : '1px solid rgba(0,0,0,0.08)',
+                background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)',
+                color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)',
+                border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)',
                 display:'flex', alignItems:'center', gap:6,
               }}
               onClick={notifEnabled ? desactiverNotifications : activerNotifications}
             >
-              {notifEnabled ? <><BellIcon size={15} color="#34c759" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
+              {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
             <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => {
               setProfilBackup(profil); setProfil(null)
@@ -1752,14 +1752,14 @@ export default function App() {
                             }}
                             title="Copier"
                             style={{
-                              background: copiedIdx === i ? 'rgba(52,199,89,0.12)' : 'transparent',
+                              background: copiedIdx === i ? 'rgba(34,197,94,0.12)' : 'transparent',
                               border: 'none', cursor:'pointer', padding:'4px 6px', borderRadius:8,
                               display:'flex', alignItems:'center', justifyContent:'center',
-                              color: copiedIdx === i ? '#34c759' : 'rgba(160,100,40,0.55)',
+                              color: copiedIdx === i ? '#22c55e' : 'rgba(160,100,40,0.55)',
                               transition:'all 0.2s',
                             }}>
                             {copiedIdx === i
-                              ? <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#34c759" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                              ? <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                               : <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1826,7 +1826,7 @@ export default function App() {
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
-                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#ff3b30" /> Suivi Santé</div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#ef4444" /> Suivi Santé</div>
                     <div style={s.pageSubtitle}>Tes métriques du jour</div>
                   </div>
                 </div>
@@ -2254,7 +2254,7 @@ function RoutineModule({ profil, metriques }) {
 
       {!routine && !loading && !routineError && (
         <div style={sr.empty}>
-          <div style={{ marginBottom:14 }}><RoutineIcon size={48} color="#c4b5a8" /></div>
+          <div style={{ marginBottom:14 }}><RoutineIcon size={48} color="rgba(200,123,82,0.6)" /></div>
           <div style={{ fontSize:15, color:'rgba(55,22,5,0.90)', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
           <div style={{ fontSize:12, color:'rgba(155,100,58,0.72)' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
         </div>
@@ -2274,8 +2274,8 @@ function RoutineModule({ profil, metriques }) {
           )}
           {routine.nutrition && <NutritionCard nutrition={routine.nutrition} />}
           {routine.apresmidi && (
-            <RoutineSection id="apresmidi" iconEl={<SunIcon size={18} color="#ff9500" />} titre={routine.apresmidi.titre} heure={routine.apresmidi.heure}
-              etapes={routine.apresmidi.etapes} accent="#ff9500" checked={checkedSteps} onToggle={toggleStep} />
+            <RoutineSection id="apresmidi" iconEl={<SunIcon size={18} color="#E8962A" />} titre={routine.apresmidi.titre} heure={routine.apresmidi.heure}
+              etapes={routine.apresmidi.etapes} accent="#E8962A" checked={checkedSteps} onToggle={toggleStep} />
           )}
           {routine.soir && (
             <RoutineSection id="soir" iconEl={<MoonIcon size={18} color="#5856d6" />} titre={routine.soir.titre} heure={routine.soir.heure}
@@ -2298,22 +2298,22 @@ function RoutineModule({ profil, metriques }) {
 
 function NutritionCard({ nutrition }) {
   return (
-    <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(52,199,89,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(52,199,89,0.18)' }}>
+    <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
       <div style={sr.cardHeader}>
-        <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#34c759" /></span>
+        <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#22c55e" /></span>
         <span style={{ ...sr.cardTitre, color:'rgba(30,140,60,0.85)', fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
-          <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(52,199,89,0.55)" /></span>
+          <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(34,197,94,0.55)" /></span>
           <div style={{ fontSize:12, color:'rgba(155,100,58,0.65)', lineHeight:1.5 }}>
             <strong style={{ color:'rgba(80,40,10,0.80)', fontWeight:500 }}>{r.moment}</strong> — {r.suggestion}
           </div>
         </div>
       ))}
       {nutrition.supplements?.length > 0 && (
-        <div style={{ fontSize:12, color:'#34c759', background:'rgba(52,199,89,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(52,199,89,0.2)' }}>
-          <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#34c759" />{nutrition.supplements.join(' · ')}</span>
+        <div style={{ fontSize:12, color:'#22c55e', background:'rgba(34,197,94,0.08)', borderRadius:8, padding:'6px 12px', marginTop:8, border:'1px solid rgba(34,197,94,0.2)' }}>
+          <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#22c55e" />{nutrition.supplements.join(' · ')}</span>
         </div>
       )}
     </div>
@@ -2464,9 +2464,9 @@ function TenueCard({ tenue, style: extraStyle }) {
           {tenue.description}
         </div>
         <div style={{
-          fontSize: 11, color: '#9E5C35', fontStyle: 'italic', lineHeight: 1.55,
+          fontSize: 11, color: '#C87B52', fontStyle: 'italic', lineHeight: 1.55,
           display: 'flex', alignItems: 'flex-start', gap: 5,
-          background: 'rgba(200,123,82,0.07)', borderRadius: 10, padding: '6px 10px',
+          background: 'rgba(200,123,82,0.07)', borderRadius: 12, padding: '6px 10px',
         }}>
           <LightbulbIcon size={12} color="#C87B52" />
           <span>{tenue.pourquoi}</span>
@@ -2691,7 +2691,7 @@ function TenuesModule({ profil }) {
         <div style={{ marginBottom: 8 }}>
           <input
             className="tenues-ville-input"
-            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? '#ff3b30' : undefined }}
+            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? '#ef4444' : undefined }}
             placeholder="Ta ville (ex: Paris)" value={ville}
             onChange={e => { setVille(e.target.value); setVilleError(false) }}
             onKeyDown={e => e.key === 'Enter' && getTenues()}
@@ -2711,7 +2711,7 @@ function TenuesModule({ profil }) {
             {loading ? <LoadingIcon size={15} color="rgba(200,123,82,0.80)" /> : <SparkleIcon size={15} color="rgba(200,123,82,0.80)" />}
           </button>
         </div>
-        {villeError && <div style={{ fontSize: 12, color: '#ff3b30', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+        {villeError && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Entre ta ville pour continuer</div>}
 
         {/* Météo */}
         {meteo && (
@@ -2764,7 +2764,7 @@ const st = {
     boxShadow: '0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.70)',
   },
   meteoBar: {
-    background: 'rgba(200,123,82,0.06)', borderRadius: 10, padding: '8px 14px',
+    background: 'rgba(200,123,82,0.06)', borderRadius: 12, padding: '8px 14px',
     fontSize: 12, marginBottom: 12, color: '#C87B52', fontWeight: 600, border: '1px solid rgba(200,123,82,0.16)',
   },
   row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
@@ -2856,7 +2856,7 @@ const s = {
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',
   },
   profileName: { fontSize:13, fontWeight:700, color:'rgba(55,22,5,0.90)', marginBottom:1 },
-  profileMeta: { fontSize:10, color:'#c4b5a8', lineHeight:1.5 },
+  profileMeta: { fontSize:10, color:'rgba(200,123,82,0.6)', lineHeight:1.5 },
   btnPro: {
     background:'transparent', color:'rgba(200,123,82,0.70)',
     border:'none', borderBottom:'1px solid rgba(200,123,82,0.25)',
@@ -2908,7 +2908,7 @@ const s = {
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
   pageTitle: { fontSize:18, fontWeight:800, color:'rgba(55,22,5,0.90)', letterSpacing:'-0.03em', marginBottom:2 },
-  pageSubtitle: { fontSize:12, color:'#c4b5a8', fontWeight:500 },
+  pageSubtitle: { fontSize:12, color:'rgba(200,123,82,0.6)', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
   chatWrap: {
@@ -2989,7 +2989,7 @@ const s = {
   navBot: {
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:0,
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
-    fontFamily:F, color:'#c4b5a8', position:'relative', transition:'color .2s',
+    fontFamily:F, color:'rgba(200,123,82,0.6)', position:'relative', transition:'color .2s',
   },
   navBotActive: { color:'#DA8A34' },
 }
