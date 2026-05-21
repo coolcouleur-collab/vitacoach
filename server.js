@@ -5,6 +5,7 @@ import webpush from 'web-push'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
+import fs from 'fs'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
 import {
@@ -859,12 +860,17 @@ app.post('/api/metriques-update', (req, res) => {
   res.json({ ok: true })
 })
 
-// ── Sert le frontend React (dist/) — seulement en local ─────────────────────
+// ── Sert le frontend React (dist/) — seulement en local avec dist/ présent ──
 if (!process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname, 'dist')))
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-  })
+  const distIndex = path.join(__dirname, 'dist', 'index.html')
+  if (fs.existsSync(distIndex)) {
+    app.use(express.static(path.join(__dirname, 'dist')))
+    app.get('*', (req, res) => {
+      // Ne pas intercepter les routes /api/ — laisser Express continuer
+      if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route API non trouvée' })
+      res.sendFile(distIndex)
+    })
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
