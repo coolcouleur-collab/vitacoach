@@ -367,12 +367,12 @@ export default function Onboarding({ onTermine }) {
   async function runIntro() {
     setInputMode(null)
     setChatStep('intro')
-    await delay(500)
+    await delay(200)
     await sendSolennSeq([
       { text:"Hey ! 👋", after:0 },
-      { text:"Moi c'est Solenn — ton coach de vie personnel ✨", after:700 },
-      { text:"Je vais te poser quelques questions pour personnaliser toute ton expérience. 2 minutes chrono !", after:1000 },
-      { text:"Pour commencer... comment tu t'appelles ?", after:1000 },
+      { text:"Moi c'est Solenn — ton coach de vie personnel ✨", after:200 },
+      { text:"Quelques questions rapides pour personnaliser ton expérience !", after:200 },
+      { text:"Pour commencer... comment tu t'appelles ?", after:200 },
     ])
     setChatStep('nom')
     setInputMode('text')
@@ -384,10 +384,10 @@ export default function Onboarding({ onTermine }) {
     for (const item of items) {
       await delay(item.after || 0)
       setIsTyping(true)
-      await delay(800)
+      await delay(350)
       setIsTyping(false)
       setMsgs(m => [...m, { id: Date.now() + Math.random(), from:'solenn', text: item.text }])
-      await delay(60)
+      await delay(40)
     }
   }
 
@@ -405,7 +405,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(nom)
     setAnswers(a => ({ ...a, nom }))
     setChatStep('objectif')
-    await delay(400)
+    await delay(150)
     await sendSolennSeq([
       { text:`Enchanté·e ${nom} ! 😊`, after:0 },
       { text:"C'est quoi ton objectif principal ?", after:400 },
@@ -428,7 +428,7 @@ export default function Onboarding({ onTermine }) {
     else if (opt.label.includes('Sport')) reaction = 'On va aller loin ! 💪'
     else if (opt.label.includes('Aliment')) reaction = 'Bien manger, tout commence par là 🥗'
 
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:reaction, after:0 },
       { text:"Tu as quel âge ?", after:400 },
@@ -441,7 +441,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(`${ageVal} ans`)
     setAnswers(a => ({ ...a, age: ageVal }))
     setChatStep('activite')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"OK ! Ton niveau d'activité physique en ce moment ?", after:0 },
     ])
@@ -454,7 +454,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(val)
     setAnswers(a => ({ ...a, activite: val }))
     setChatStep('alimentation')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Et ton alimentation, tu te décrirais comment ?", after:0 },
     ])
@@ -470,7 +470,7 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, alimentation: selectedChips }))
     setSelectedChips([])
     setChatStep('sante_yn')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Tu as des problèmes de santé dont je dois tenir compte ?", after:0 },
     ])
@@ -483,11 +483,11 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, sante_yn: val }))
     if (val === 'Non') {
       setChatStep('lever')
-      await delay(300)
+      await delay(100)
       await askLever()
     } else {
       setChatStep('sante_conditions')
-      await delay(300)
+      await delay(100)
       await sendSolennSeq([
         { text:"D'accord. Quelles conditions ?", after:0 },
       ])
@@ -504,11 +504,11 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, sante_conditions: selectedChips }))
     setSelectedChips([])
     setChatStep('lever')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Merci pour cette info — j'en tiendrai compte dans chaque conseil.", after:0 },
     ])
-    await delay(600)
+    await delay(200)
     await askLever()
   }
 
@@ -524,7 +524,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(opt.label)
     setAnswers(a => ({ ...a, lever: opt.val }))
     setChatStep('coucher')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Et tu te couches vers ?", after:0 },
     ])
@@ -536,7 +536,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(opt.label)
     setAnswers(a => ({ ...a, coucher: opt.val }))
     setChatStep('profession')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Dernière chose — tu fais quoi dans la vie ?", after:0 },
     ])
@@ -552,7 +552,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(val)
     setAnswers(a => ({ ...a, profession: val }))
     setChatStep('taille_poids')
-    await delay(300)
+    await delay(100)
     await sendSolennSeq([
       { text:"Ta taille et ton poids ? (pour les conseils nutrition)", after:0 },
     ])
@@ -566,9 +566,9 @@ export default function Onboarding({ onTermine }) {
     const finalAnswers = { ...answers, taille: tailleVal, poids: poidsVal }
     setAnswers(finalAnswers)
     setChatStep('fin')
-    await delay(300)
+    await delay(100)
     setIsTyping(true)
-    await delay(800)
+    await delay(150)
     setIsTyping(false)
     setMsgs(m => [...m, { id: Date.now(), from:'solenn', text:`Parfait ${nom} ! Je prépare ton espace... 🌟` }])
     await delay(1500)
