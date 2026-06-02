@@ -7,8 +7,17 @@ export default defineConfig({
   // ─── Build config pour Capacitor ──────────────────────────────────────────
   build: {
     outDir: 'dist',
-    // Pas de base URL relative — Capacitor charge les assets via file://
-    // donc les chemins absolus ne fonctionnent pas
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react-vendor'
+          if (id.includes('node_modules/framer-motion')) return 'framer'
+          if (id.includes('node_modules/three')) return 'three'
+          if (id.includes('node_modules/@supabase')) return 'supabase'
+          if (id.includes('node_modules/@stripe')) return 'stripe'
+        }
+      }
+    }
   },
 
   // ─── Dev server ───────────────────────────────────────────────────────────

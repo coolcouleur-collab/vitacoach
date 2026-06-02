@@ -3004,11 +3004,11 @@ const s = {
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'rgba(255,248,242,0.28)',
+    display:'flex', gap:8, background:'rgba(255,252,248,0.45)',
     backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
     borderRadius:20, padding:'8px 8px 8px 18px',
-    border:'1px solid rgba(200,123,82,0.18)', alignItems:'center',
-    boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.45)',
+    border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
+    boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
   inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'rgba(140,75,30,0.80)' },
   sendBtn: {
