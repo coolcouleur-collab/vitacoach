@@ -1,131 +1,147 @@
-/**
- * MORNING CHECK-IN EXPRESS
- * ─────────────────────────────────────────────────────────────────────────────
- * Modal qui apparaît chaque matin (6h–11h) si pas encore fait aujourd'hui.
- * 3 questions rapides → 20 secondes → Solenn génère le focus du jour.
- */
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const EASE = [0.22, 1, 0.36, 1]
 
 const HUMEURS = [
-  { val: 1, emoji: '😶', label: 'Vide' },
-  { val: 2, emoji: '😕', label: 'Difficile' },
-  { val: 3, emoji: '😐', label: 'Neutre' },
-  { val: 4, emoji: '🙂', label: 'Bien' },
-  { val: 5, emoji: '😄', label: 'Super' },
+  { val: 1, emoji: '😶', label: 'Vide',     color: 'rgba(148,163,184,0.90)' },
+  { val: 2, emoji: '😕', label: 'Difficile', color: 'rgba(251,146,60,0.90)' },
+  { val: 3, emoji: '😐', label: 'Neutre',    color: 'rgba(251,191,36,0.90)' },
+  { val: 4, emoji: '🙂', label: 'Bien',      color: 'rgba(34,197,94,0.90)'  },
+  { val: 5, emoji: '😄', label: 'Super',     color: 'rgba(200,123,82,0.90)' },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
-  const [step, setStep]           = useState(0)   // 0=sommeil, 1=humeur, 2=intention, 3=done
-  const [sommeil, setSommeil]     = useState(7)
-  const [humeur, setHumeur]       = useState(null)
+  const [step, setStep]       = useState(0)
+  const [sommeil, setSommeil] = useState(7)
+  const [humeur, setHumeur]   = useState(null)
   const [intention, setIntention] = useState('')
 
-  const nom = profil?.nom || 'toi'
-
-  const hr = new Date().getHours()
+  const nom   = profil?.nom || ''
+  const hr    = new Date().getHours()
   const greet = hr < 9 ? 'Bonjour' : 'Salut'
-
-  function handleSommeil() {
-    if (step === 0) setStep(1)
-  }
 
   function handleHumeur(val) {
     setHumeur(val)
-    setTimeout(() => setStep(2), 280)
+    setTimeout(() => setStep(2), 320)
   }
 
   function handleSubmit() {
     onDone({ sommeil, humeur, intention: intention.trim() })
   }
 
+  const progress = ((step) / 3) * 100
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, transition: { duration: 0.3 } }}
       style={{
         position: 'fixed', inset: 0, zIndex: 800,
-        background: 'rgba(15,5,0,0.55)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-        padding: '0 0 32px',
+        background: 'rgba(10,4,0,0.72)',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
+        display: 'flex', flexDirection: 'column',
+        fontFamily: 'Poppins, sans-serif',
       }}
-      onClick={e => { if (e.target === e.currentTarget) onSkip() }}
     >
-      <motion.div
-        initial={{ y: 80, opacity: 0, scale: 0.96 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: 60, opacity: 0 }}
-        transition={{ duration: 0.45, ease: EASE }}
+      {/* ── Barre de progression ── */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'rgba(200,123,82,0.15)', zIndex: 10 }}>
+        <motion.div
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.4, ease: EASE }}
+          style={{ height: '100%', background: 'linear-gradient(90deg, #C87B52, #E8962A)', borderRadius: 2 }}
+        />
+      </div>
+
+      {/* ── Bouton skip ── */}
+      <button
+        onClick={onSkip}
         style={{
-          width: '100%', maxWidth: 420,
-          background: 'linear-gradient(160deg, #FFF8F4 0%, #FFF2E8 100%)',
-          borderRadius: '28px 28px 20px 20px',
-          padding: '28px 24px 24px',
-          boxShadow: '0 -4px 40px rgba(200,123,82,0.12), 0 24px 60px rgba(0,0,0,0.30)',
-          border: '1px solid rgba(200,123,82,0.12)',
+          position: 'absolute', top: 20, right: 20, zIndex: 10,
+          background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.15)',
+          borderRadius: 20, padding: '6px 14px',
+          color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 500,
+          fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
+          backdropFilter: 'blur(8px)',
         }}
       >
-        {/* ── Header ── */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-          <div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.3px' }}>
-              {greet} {nom} ☀️
-            </div>
-            <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', marginTop: 2, fontFamily: 'Poppins, sans-serif' }}>
-              Check-in express · 20 secondes
-            </div>
-          </div>
-          <button onClick={onSkip} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, opacity: 0.35, padding: 4 }}>
-            ✕
-          </button>
-        </div>
+        Passer
+      </button>
 
-        {/* ── Progress dots ── */}
-        <div style={{ display: 'flex', gap: 6, marginBottom: 28, justifyContent: 'center' }}>
-          {[0, 1, 2].map(i => (
-            <div key={i} style={{
-              width: i <= step ? 24 : 6, height: 6, borderRadius: 12,
-              background: i <= step ? 'rgba(200,123,82,0.85)' : 'rgba(200,123,82,0.15)',
-              transition: 'all 0.3s ease',
-            }} />
-          ))}
-        </div>
+      {/* ── Contenu centré ── */}
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '60px 28px 40px', maxWidth: 480, margin: '0 auto', width: '100%',
+      }}>
+
+        {/* Salutation */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
+            color: 'rgba(200,123,82,0.70)', textTransform: 'uppercase',
+            marginBottom: 40, textAlign: 'center',
+          }}
+        >
+          {greet}{nom ? ` ${nom}` : ''} ☀️ · Check-in express
+        </motion.div>
 
         <AnimatePresence mode="wait">
 
           {/* ── Étape 0 : Sommeil ── */}
           {step === 0 && (
             <motion.div key="sommeil"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.25, ease: EASE }}
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -32 }}
+              transition={{ duration: 0.35, ease: EASE }}
+              style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0a00', marginBottom: 20, fontFamily: 'Poppins, sans-serif' }}>
-                😴 Combien d'heures tu as dormi ?
-              </div>
+              <div style={{ fontSize: 56, marginBottom: 20 }}>😴</div>
+              <h2 style={{
+                fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
+                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+                lineHeight: 1.2,
+              }}>
+                Combien d'heures<br/>tu as dormi ?
+              </h2>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 48 }}>
+                Objectif recommandé : 8h
+              </p>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
-                <span style={{ fontSize: 36, fontWeight: 800, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins, sans-serif', minWidth: 60 }}>
-                  {sommeil}h
-                </span>
+              {/* Slider visuel */}
+              <div style={{ marginBottom: 16, position: 'relative' }}>
+                <div style={{
+                  fontSize: 72, fontWeight: 900, lineHeight: 1,
+                  color: '#fff', letterSpacing: '-3px', marginBottom: 24,
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: 'rgba(200,123,82,0.80)', marginLeft: 4 }}>h</span>
+                </div>
                 <input
                   type="range" min={2} max={12} step={0.5} value={sommeil}
                   onChange={e => setSommeil(parseFloat(e.target.value))}
-                  style={{ flex: 1, accentColor: '#C87B52', height: 4, cursor: 'pointer' }}
+                  style={{
+                    width: '100%', accentColor: '#C87B52',
+                    height: 6, cursor: 'pointer',
+                    appearance: 'none', WebkitAppearance: 'none',
+                    background: `linear-gradient(to right, #C87B52 0%, #E8962A ${((sommeil-2)/10)*100}%, rgba(255,255,255,0.15) ${((sommeil-2)/10)*100}%, rgba(255,255,255,0.15) 100%)`,
+                    borderRadius: 6, outline: 'none', border: 'none',
+                  }}
                 />
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between',
+                  fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 8,
+                }}>
+                  <span>2h</span><span>12h</span>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(200,123,82,0.40)', marginBottom: 24, fontFamily: 'Poppins, sans-serif' }}>
-                <span>2h</span><span>Objectif 8h</span><span>12h</span>
-              </div>
-
-              <button onClick={handleSommeil} style={btnStyle}>
+              <button onClick={() => setStep(1)} style={btnFullStyle}>
                 Suivant →
               </button>
             </motion.div>
@@ -134,29 +150,53 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           {/* ── Étape 1 : Humeur ── */}
           {step === 1 && (
             <motion.div key="humeur"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.25, ease: EASE }}
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -32 }}
+              transition={{ duration: 0.35, ease: EASE }}
+              style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0a00', marginBottom: 22, fontFamily: 'Poppins, sans-serif' }}>
-                😊 Ton humeur ce matin ?
-              </div>
+              <div style={{ fontSize: 56, marginBottom: 20 }}>✨</div>
+              <h2 style={{
+                fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
+                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+              }}>
+                Ton humeur ce matin ?
+              </h2>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 48 }}>
+                Sois honnête — Solenn adapte ses conseils
+              </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-                {HUMEURS.map(h => (
-                  <button key={h.val} onClick={() => handleHumeur(h.val)} style={{
-                    flex: 1, padding: '12px 4px', borderRadius: 12,
-                    background: humeur === h.val ? 'rgba(200,123,82,0.15)' : 'rgba(200,123,82,0.06)',
-                    border: humeur === h.val ? '1.5px solid rgba(200,123,82,0.50)' : '1.5px solid transparent',
-                    cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                    transition: 'all 0.2s',
-                  }}>
-                    <span style={{ fontSize: 24 }}>{h.emoji}</span>
-                    <span style={{ fontSize: 9, color: 'rgba(100,50,10,0.55)', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+                {HUMEURS.map((h, i) => (
+                  <motion.button
+                    key={h.val}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.06, duration: 0.3, ease: EASE }}
+                    onClick={() => handleHumeur(h.val)}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.94 }}
+                    style={{
+                      width: 72, padding: '16px 8px',
+                      borderRadius: 20,
+                      background: humeur === h.val
+                        ? 'rgba(200,123,82,0.25)'
+                        : 'rgba(255,255,255,0.07)',
+                      border: humeur === h.val
+                        ? '2px solid rgba(200,123,82,0.70)'
+                        : '1.5px solid rgba(255,255,255,0.12)',
+                      cursor: 'pointer',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+                      backdropFilter: 'blur(8px)',
+                      transition: 'background 0.2s, border 0.2s',
+                    }}
+                  >
+                    <span style={{ fontSize: 30 }}>{h.emoji}</span>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.60)', fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
                       {h.label}
                     </span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </motion.div>
@@ -165,51 +205,89 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           {/* ── Étape 2 : Intention ── */}
           {step === 2 && (
             <motion.div key="intention"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.25, ease: EASE }}
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -32 }}
+              transition={{ duration: 0.35, ease: EASE }}
+              style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0a00', marginBottom: 16, fontFamily: 'Poppins, sans-serif' }}>
-                🎯 Une intention pour aujourd'hui ?
-                <span style={{ fontSize: 11, fontWeight: 400, color: 'rgba(200,123,82,0.55)', marginLeft: 8 }}>
-                  (optionnel)
-                </span>
-              </div>
+              <div style={{ fontSize: 56, marginBottom: 20 }}>🎯</div>
+              <h2 style={{
+                fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
+                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+              }}>
+                Une intention<br/>pour aujourd'hui ?
+              </h2>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 36 }}>
+                Optionnel — mais ça aide vraiment
+              </p>
 
               <input
                 type="text"
-                placeholder="Ex : boire 8 verres, marcher 30 min..."
+                placeholder="Ex : marcher 30 min, boire 2L..."
                 value={intention}
                 onChange={e => setIntention(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSubmit()}
                 autoFocus
                 style={{
                   width: '100%', boxSizing: 'border-box',
-                  padding: '13px 16px', borderRadius: 12,
-                  border: '1.5px solid rgba(200,123,82,0.20)',
-                  background: 'rgba(200,123,82,0.05)',
-                  fontSize: 13, fontFamily: 'Poppins, sans-serif',
-                  color: '#1a0a00', outline: 'none', marginBottom: 20,
+                  padding: '16px 20px', borderRadius: 16,
+                  border: '1.5px solid rgba(200,123,82,0.30)',
+                  background: 'rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(8px)',
+                  fontSize: 15, fontFamily: 'Poppins, sans-serif',
+                  color: '#fff', outline: 'none', marginBottom: 24,
+                  textAlign: 'center',
                 }}
               />
 
-              <button onClick={handleSubmit} style={{ ...btnStyle, background: 'linear-gradient(135deg, #C87B52, #E8962A)' }}>
+              <button onClick={handleSubmit} style={{
+                ...btnFullStyle,
+                background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                color: '#fff',
+              }}>
                 ✨ Lancer ma journée
               </button>
+
+              {!intention && (
+                <button onClick={handleSubmit} style={{
+                  marginTop: 12, background: 'none', border: 'none',
+                  color: 'rgba(255,255,255,0.30)', fontSize: 12,
+                  fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
+                  padding: 8,
+                }}>
+                  Passer cette étape
+                </button>
+              )}
             </motion.div>
           )}
 
         </AnimatePresence>
-      </motion.div>
+      </div>
+
+      {/* ── Indicateurs de step ── */}
+      <div style={{
+        display: 'flex', justifyContent: 'center', gap: 8,
+        paddingBottom: 40,
+      }}>
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{
+            height: 6, borderRadius: 6,
+            width: i === step ? 24 : 6,
+            background: i <= step ? 'rgba(200,123,82,0.85)' : 'rgba(255,255,255,0.15)',
+            transition: 'all 0.3s ease',
+          }} />
+        ))}
+      </div>
     </motion.div>
   )
 }
 
-const btnStyle = {
-  width: '100%', padding: '14px', borderRadius: 12, border: 'none',
-  background: 'rgba(200,123,82,0.12)',
-  color: 'rgba(200,123,82,0.90)', fontSize: 14, fontWeight: 600,
+const btnFullStyle = {
+  width: '100%', padding: '16px', borderRadius: 16, border: 'none',
+  background: 'rgba(200,123,82,0.18)',
+  color: 'rgba(255,255,255,0.90)', fontSize: 15, fontWeight: 700,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
-  letterSpacing: '-0.2px',
+  letterSpacing: '-0.2px', backdropFilter: 'blur(8px)',
+  border: '1px solid rgba(200,123,82,0.25)',
 }
