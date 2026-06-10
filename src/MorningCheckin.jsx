@@ -74,7 +74,8 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        padding: '60px 28px 40px', maxWidth: 480, margin: '0 auto', width: '100%',
+        padding: '60px 28px 20px', maxWidth: 520, margin: '0 auto', width: '100%',
+        overflowY: 'auto', boxSizing: 'border-box',
       }}>
 
         {/* Salutation */}
@@ -268,7 +269,8 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
       {/* ── Indicateurs de step ── */}
       <div style={{
         display: 'flex', justifyContent: 'center', gap: 8,
-        paddingBottom: 40,
+        padding: '16px 0 max(32px, env(safe-area-inset-bottom, 32px))',
+        flexShrink: 0,
       }}>
         {[0, 1, 2].map(i => (
           <div key={i} style={{
