@@ -357,6 +357,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
   // ── Count-up animation ───────────────────────────────────────────────────────
   useEffect(() => {
+    let alive = true
     const from = prevScoreRef.current
     const to   = score || 0
     if (from === to) { setDisplayScore(to); return }
@@ -364,6 +365,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
     const duration = 900
     const start    = performance.now()
     function step(now) {
+      if (!alive) return
       const t      = Math.min((now - start) / duration, 1)
       const eased  = 1 - Math.pow(1 - t, 3)              // easeOutCubic
       setDisplayScore(Math.round(from + (to - from) * eased))
@@ -371,7 +373,10 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       else { prevScoreRef.current = to }
     }
     animRef.current = requestAnimationFrame(step)
-    return () => { if (animRef.current) cancelAnimationFrame(animRef.current) }
+    return () => {
+      alive = false
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+    }
   }, [score])
 
   const editMetric = METRICS.find(m => m.key === editMode)

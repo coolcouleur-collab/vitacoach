@@ -2,6 +2,18 @@ import React, { useEffect, useRef } from 'react'
 
 export default function SpiralBg({ style, light = false, duration = 15000, n = 1100, scale = 1 }) {
   const ref = useRef(null)
+  const isVisibleRef = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting },
+      { threshold: 0.1 }
+    )
+    observer.observe(el.parentElement || el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const cv = ref.current
@@ -47,6 +59,8 @@ export default function SpiralBg({ style, light = false, duration = 15000, n = 1
     let t0 = null
 
     function draw(ts) {
+      raf = requestAnimationFrame(draw)
+      if (!isVisibleRef.current) return
       if (!t0) t0 = ts
       const t = ((ts - t0) % DUR) / DUR
 
@@ -82,8 +96,6 @@ export default function SpiralBg({ style, light = false, duration = 15000, n = 1
 
       ctx.globalAlpha = 1
       ctx.restore()
-
-      raf = requestAnimationFrame(draw)
     }
 
     raf = requestAnimationFrame(draw)

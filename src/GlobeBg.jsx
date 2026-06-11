@@ -51,6 +51,18 @@ function isLand(map, lat, lon) {
 // ─── composant ───────────────────────────────────────────────────────────────
 export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 'orange', halo = true }) {
   const mountRef = useRef(null)
+  const isVisibleRef = useRef(false)
+
+  useEffect(() => {
+    const el = mountRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisibleRef.current = entry.isIntersecting },
+      { threshold: 0.1 }
+    )
+    observer.observe(el.parentElement || el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const el = mountRef.current
@@ -140,6 +152,7 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
       let raf
       function animate() {
         raf = requestAnimationFrame(animate)
+        if (!isVisibleRef.current) return
         mesh.rotation.y += 0.0022
         renderer.render(scene, camera)
       }

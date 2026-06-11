@@ -236,7 +236,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   border: '1.5px solid rgba(200,123,82,0.30)',
                   background: 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(8px)',
-                  fontSize: 15, fontFamily: 'Poppins, sans-serif',
+                  fontSize: 16, fontFamily: 'Poppins, sans-serif',
                   color: '#fff', outline: 'none', marginBottom: 24,
                   textAlign: 'center',
                 }}

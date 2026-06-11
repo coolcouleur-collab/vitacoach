@@ -190,9 +190,11 @@ function HealthPermModal({ onAllow, onLater }) {
 function CelebrationOverlay({ score, onDone }) {
   const [out, setOut] = useState(false)
   useEffect(() => {
-    const t = setTimeout(() => { setOut(true); setTimeout(onDone, 420) }, 2700)
-    return () => clearTimeout(t)
-  }, [])
+    let alive = true
+    const t1 = setTimeout(() => { if (alive) setOut(true) }, 2700)
+    const t2 = setTimeout(() => { if (alive) onDone() }, 3120)
+    return () => { alive = false; clearTimeout(t1); clearTimeout(t2) }
+  }, [onDone])
   const sparks = Array.from({ length: 16 }, (_, i) => ({
     id: i,
     e: ['✨','🔥','⭐','💫','🌟','🎊','🎉','🌈'][i % 8],
@@ -563,6 +565,8 @@ export default function App() {
   const contentRef = useRef(null)
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
+  const [isScrolling, setIsScrolling] = useState(false)
+  const scrollTimerRef = useRef(null)
 
   // ── Calculs gamification — mémoïsés, ne recalculent que si history/messages changent ──
   const streak = useMemo(() => {
@@ -626,6 +630,18 @@ export default function App() {
   }, [])
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
+  // ── Pause animations pendant le scroll ──────────────────────────────────────
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    const onScroll = () => {
+      setIsScrolling(true)
+      clearTimeout(scrollTimerRef.current)
+      scrollTimerRef.current = setTimeout(() => setIsScrolling(false), 200)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => { el.removeEventListener('scroll', onScroll); clearTimeout(scrollTimerRef.current) }
+  }, [])
   // Scroll to last message when user navigates back to chat tab
   useEffect(() => {
     if (onglet === 'chat' && messages.length > 0) {
@@ -1047,10 +1063,15 @@ export default function App() {
     detectSOS(msg)
 
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000)
+
       const resp = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() })
+        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() }),
+        signal: controller.signal,
       })
+      clearTimeout(timeoutId)
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
 
       // ── Streaming SSE ──────────────────────────────────────────────────────
@@ -1117,8 +1138,12 @@ export default function App() {
         }
       }
 
-    } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Une erreur est survenue. Réessaie.' }])
+    } catch(err) {
+      if (err.name === 'AbortError') {
+        setMessages(prev => [...prev, { role: 'assistant', content: "La réponse a pris trop longtemps. Réessaie !" }])
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: 'Une erreur est survenue. Réessaie.' }])
+      }
       setLoading(false)
     } finally {
       isSendingRef.current = false   // libère le verrou
@@ -1695,6 +1720,7 @@ export default function App() {
               level={level}
               history={history}
               onPresetChange={setHomePreset}
+              isScrolling={isScrolling}
             />
             </Suspense>
           )}

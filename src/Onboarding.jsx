@@ -637,7 +637,7 @@ export default function Onboarding({ onTermine }) {
               border:'1.5px solid rgba(200,123,82,0.28)',
               background:'rgba(255,248,244,0.85)',
               backdropFilter:'blur(12px)',
-              fontSize:15, fontFamily:'Poppins, sans-serif', color:'#0A1633',
+              fontSize:16, fontFamily:'Poppins, sans-serif', color:'#0A1633',
               outline:'none', fontWeight:500,
               boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
             }}
@@ -866,7 +866,7 @@ export default function Onboarding({ onTermine }) {
                 width:'100%', padding:'11px 16px', borderRadius:20, boxSizing:'border-box',
                 border:'1.5px solid rgba(200,123,82,0.25)',
                 background:'rgba(255,248,244,0.85)',
-                fontSize:14, fontFamily:'Poppins, sans-serif', color:'#0A1633',
+                fontSize:16, fontFamily:'Poppins, sans-serif', color:'#0A1633',
                 outline:'none', fontWeight:500, marginBottom:10,
               }}
             />
