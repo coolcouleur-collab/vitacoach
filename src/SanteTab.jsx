@@ -13,7 +13,7 @@ function h2r(hex, a) {
   return `rgba(${r},${g},${b},${a})`
 }
 
-function ScaleIcon({ color = '#34c759', size = 18 }) {
+function ScaleIcon({ color = '#22c55e', size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="3 3 18 19" fill="none">
       <path d="M12 5v15M5 10l7-5 7 5M7 20h10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -26,9 +26,9 @@ const METRICS = [
   { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#F59E0B" />,   unit: '',      goal: 10000, color: '#F59E0B', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
   { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#60A5FA" />,  unit: 'h',    goal: 8,     color: '#8B5CF6', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
   { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#38bdf8" />, unit: ' v.',  goal: 8,     color: '#38bdf8', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
-  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#ff3b30" />, unit: ' bpm', goal: 70,    color: '#ff3b30', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
+  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#ef4444" />, unit: ' bpm', goal: 70,    color: '#ef4444', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
   { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#fbbf24" />,  unit: '/5',   goal: 5,     color: '#fbbf24', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
-  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#34c759" />, unit: ' kg',  goal: null,  color: '#34c759', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
+  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#22c55e" />, unit: ' kg',  goal: null,  color: '#22c55e', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
 ]
 
 const HUMEUR_ICONS = [null,
@@ -101,9 +101,9 @@ function HistoriqueSection({ history }) {
   ]
   return (
     <div style={{
-      background:'rgba(255,255,255,0.28)', border:'1.5px solid rgba(200,123,82,0.12)', borderRadius:22,
+      background:'rgba(255,255,255,0.28)', border:'1.5px solid rgba(200,123,82,0.12)', borderRadius:20,
       overflow:'hidden', marginBottom:14,
-      backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+      backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
       boxShadow:'0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)',
     }}>
       <button
@@ -132,7 +132,7 @@ function HistoriqueSection({ history }) {
             {metricsToShow.map(m => (
               <div key={m.key} style={{
                 background:`${m.color}08`, border:`1px solid ${m.color}20`,
-                borderRadius:14, padding:'12px 14px',
+                borderRadius:12, padding:'12px 14px',
               }}>
                 <div style={{ fontSize:10, color:m.color, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:4 }}>
                   {m.label}
@@ -169,7 +169,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
 
   return (
     <div className="lg-card" style={{
-      width: cardW, flexShrink: 0, borderRadius: 22, overflow: 'hidden',
+      width: cardW, flexShrink: 0, borderRadius: 20, overflow: 'hidden',
       background: 'rgba(255,255,255,0.13)',
       backdropFilter: 'blur(28px) saturate(1.8)',
       WebkitBackdropFilter: 'blur(28px) saturate(1.8)',
@@ -554,7 +554,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               style={{
                 ...ss.metricCard,
                 background: `linear-gradient(145deg, rgba(255,255,255,0.82) 0%, ${m.color}12 100%)`,
-                backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                 border: `1px solid ${m.color}40`,
                 borderTop: `2.5px solid ${m.color}`,
                 boxShadow: done
@@ -568,7 +568,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                 <div style={{
-                  width: 34, height: 34, borderRadius: 10, flexShrink: 0,
+                  width: 34, height: 34, borderRadius: 8, flexShrink: 0,
                   background: `${m.color}22`,
                   border: `1.5px solid ${m.color}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -660,7 +660,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 <div key={i} style={{
                   background: 'rgba(200,123,82,0.06)',
                   border: '1px solid rgba(200,123,82,0.12)',
-                  borderRadius: 14, padding: '10px 14px',
+                  borderRadius: 12, padding: '10px 14px',
                   fontSize: 12, color: '#C87B52',
                   fontFamily: 'Poppins,sans-serif', fontWeight: 500, lineHeight: 1.5,
                 }}>
@@ -716,7 +716,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               fontSize: 30, margin: '0 auto 12px',
               boxShadow: `0 6px 20px ${editMetric.color}25, inset 0 1px 0 rgba(255,255,255,0.8)`
             }}>{editMetric.iconEl}</div>
-            <div style={{ fontSize: 18, fontWeight: 900, color: '#1a0a00', marginBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#0A1633', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
             <div style={{ fontSize: 12, color: '#8a7265', textAlign: 'center', marginBottom: 22 }}>
@@ -782,17 +782,17 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 const ss = {
   scoreCard: {
     background: 'rgba(255,255,255,0.06)',
-    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     border: '1px solid rgba(200,123,82,0.06)',
-    borderRadius: 26, padding: '20px',
+    borderRadius: 28, padding: '20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
     boxShadow: 'none', overflow: 'visible',
   },
   btnInsights: {
     width: 'auto',
     background: 'rgba(255,255,255,0.70)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
     color: 'rgba(234,88,12,0.95)',
     border: '1px solid rgba(249,115,22,0.30)',
     padding: '11px 34px',
@@ -807,15 +807,15 @@ const ss = {
   insightsCard: {
     background: 'rgba(255,252,250,0.32)',
     border: '1px solid rgba(200,123,82,0.12)',
-    borderRadius: 22, padding: '14px 0 12px', marginBottom: 14,
-    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    borderRadius: 20, padding: '14px 0 12px', marginBottom: 14,
+    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     boxShadow: '0 8px 28px rgba(200,123,82,0.08), 0 3px 10px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.85)'
   },
   waterBar: {
     background: 'rgba(255,255,255,0.30)',
-    backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     border: '1px solid rgba(200,123,82,0.10)',
-    borderRadius: 24, padding: '16px 18px', marginBottom: 14,
+    borderRadius: 20, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
     boxShadow: '0 4px 14px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)'
   },
@@ -830,15 +830,15 @@ const ss = {
   },
   grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14, padding: '0 2px' },
   metricCard: {
-    borderRadius: 24, padding: '16px',
+    borderRadius: 20, padding: '16px',
     cursor: 'pointer',
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',
   },
   appleSection: {
     background: 'rgba(255,252,250,0.28)',
-    backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     border: '1px solid rgba(200,123,82,0.10)',
-    borderRadius: 22, overflow: 'hidden',
+    borderRadius: 20, overflow: 'hidden',
     boxShadow: '0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)'
   },
   appleTrigger: {
@@ -870,14 +870,14 @@ const ss = {
   },
   modalInput: {
     width: '100%', padding: '18px',
-    borderRadius: 18,
+    borderRadius: 20,
     border: '2px solid #f0e8e0', background: 'rgba(255,248,244,0.8)',
-    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: '#1a0a00',
+    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: '#0A1633',
     boxSizing: 'border-box', textAlign: 'center', marginBottom: 22, fontWeight: 800,
     boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.04)'
   },
   humeurBtn: {
-    width: 56, height: 56, borderRadius: 18,
+    width: 56, height: 56, borderRadius: 20,
     border: '1.5px solid rgba(0,0,0,0.08)',
     background: 'linear-gradient(145deg, #fff8f4, #fff)',
     fontSize: 28, cursor: 'pointer',

@@ -98,7 +98,7 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
       {suggestions.length > 0 && (
         <div style={{
           position:'absolute', top:'100%', left:0, right:0, zIndex:300, marginTop:4,
-          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(16px)',
+          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(20px)',
           border:'1px solid rgba(200,123,82,0.22)', borderRadius:12,
           boxShadow:'0 4px 18px rgba(200,123,82,0.13)', overflow:'hidden',
         }}>
@@ -125,7 +125,7 @@ const inputBase = {
   padding: '1rem 1.4rem', borderRadius: '1.4rem',
   border: '1.5px solid rgba(200,123,82,0.22)',
   background: 'rgba(255,246,238,0.70)',
-  backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+  backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,14px)',
   color: 'rgba(200,123,82,0.88)', lineHeight: 1.6,
@@ -179,7 +179,7 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
         </span>
         <button onClick={submit} disabled={!text.trim() || loading} style={{
           background: text.trim() ? 'rgba(255,255,255,0.25)' : 'rgba(200,123,82,0.06)',
-          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
           color: text.trim() ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.30)',
           border: text.trim() ? '1px solid rgba(200,123,82,0.25)' : '1px solid rgba(200,123,82,0.12)',
           borderRadius: '2rem', padding: '.6rem 1.8rem',
@@ -214,7 +214,7 @@ function PostCard({ post, onLike, onOpen, userId }) {
       borderRadius: 20, padding: '1.4rem 1.6rem',
       border: '1px solid rgba(200,123,82,0.16)',
       boxShadow: '0 2px 14px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.70)',
-      backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
       cursor: 'pointer', transition: 'all .18s ease',
     }}>
       {/* Header */}
@@ -514,7 +514,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
         background:'rgba(255,248,242,0.70)', borderRadius:20, padding:'1.6rem',
         border:'1px solid rgba(200,123,82,0.18)',
         boxShadow:'0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.80)',
-        backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+        backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
         marginBottom:'1.4rem',
       }}>
         <div style={{ display:'flex', gap:'.8rem', alignItems:'flex-start', marginBottom:'1rem' }}>
@@ -629,7 +629,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
           style={{
             position: 'fixed', bottom: 106, right: 18,
             background: 'rgba(255,248,242,0.82)',
-            backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
             border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 100,
             width: 40, height: 40,
@@ -673,7 +673,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
   return (
     <div style={{
       background: 'rgba(255,248,242,0.88)',
-      borderRadius: 22, padding: '2.2rem 2rem',
+      borderRadius: 20, padding: '2.2rem 2rem',
       border: '1.5px solid rgba(200,123,82,0.22)',
       boxShadow: '0 8px 36px rgba(200,123,82,0.13), inset 0 1px 0 rgba(255,255,255,0.88)',
       backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
@@ -749,7 +749,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
         </button>
         <button onClick={submit} disabled={loading} style={{
           background: 'rgba(255,255,255,0.25)',
-          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
           color: 'rgba(200,123,82,0.72)', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
@@ -776,12 +776,12 @@ function Skeleton() {
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
             <div style={{ width: 34, height: 34, borderRadius: 11, background: 'rgba(200,123,82,0.12)' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ height: 12, background: 'rgba(200,123,82,0.10)', borderRadius: 6, width: '40%', marginBottom: 8 }} />
-              <div style={{ height: 16, background: 'rgba(200,123,82,0.10)', borderRadius: 6, width: '75%' }} />
+              <div style={{ height: 12, background: 'rgba(200,123,82,0.10)', borderRadius: 8, width: '40%', marginBottom: 8 }} />
+              <div style={{ height: 16, background: 'rgba(200,123,82,0.10)', borderRadius: 8, width: '75%' }} />
             </div>
           </div>
-          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 6, marginBottom: 8 }} />
-          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 6, width: '80%' }} />
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 8, marginBottom: 8 }} />
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 8, width: '80%' }} />
         </div>
       ))}
     </div>
@@ -1059,7 +1059,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           {unreadCount > 0 && (
             <span style={{
               position:'absolute', top:-4, right:-4,
-              background:'#FF303C', color:'#fff', fontSize:9, fontWeight:800,
+              background:'#ef4444', color:'#fff', fontSize:9, fontWeight:800,
               borderRadius:20, minWidth:16, height:16,
               display:'flex', alignItems:'center', justifyContent:'center', padding:'0 3px',
             }}>{unreadCount > 9 ? '9+' : unreadCount}</span>
@@ -1076,9 +1076,9 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* ── Panel notifications ── */}
       {showNotifs && (
         <div className="forum-in" style={{
-          background:'rgba(255,248,242,0.92)', borderRadius:18, marginBottom:'1.2rem',
+          background:'rgba(255,248,242,0.92)', borderRadius:20, marginBottom:'1.2rem',
           border:'1px solid rgba(200,123,82,0.18)', overflow:'hidden',
-          backdropFilter:'blur(16px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
+          backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
         }}>
           <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'rgba(140,70,20,0.85)', borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
             🔔 Mentions
@@ -1124,10 +1124,10 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* Rules panel */}
       {showRules && (
         <div className="forum-in" style={{
-          background: 'rgba(255,248,242,0.80)', borderRadius: 18,
+          background: 'rgba(255,248,242,0.80)', borderRadius: 20,
           padding: '1.6rem 1.8rem',
           border: '1.5px solid rgba(200,123,82,0.17)', marginBottom: '1.4rem',
-          backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+          backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           boxShadow: '0 5px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.82)',
         }}>
           <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: 'rgba(200,123,82,0.72)', marginBottom: '1rem' }}>
@@ -1172,7 +1172,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             cursor: 'pointer', fontFamily: 'var(--font)',
             flexShrink: 0,
             background: filter === c ? 'rgba(255,255,255,0.30)' : 'rgba(200,123,82,0.06)',
-            backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
             color: filter === c ? 'rgba(200,123,82,0.95)' : 'rgba(200,123,82,0.65)',
             border: filter === c ? '1px solid rgba(200,123,82,0.28)' : '1px solid rgba(200,123,82,0.14)',
             boxShadow: filter === c ? 'inset 0 1px 0 rgba(255,255,255,0.8)' : 'none',

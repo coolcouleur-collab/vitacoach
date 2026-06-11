@@ -23,7 +23,7 @@ const DATA = {
   tisanes: [
     { nom:'Camomille',       tag:'Apaisante',   color:'#fbbf24', benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
     { nom:'Menthe poivrée',  tag:'Digestive',   color:'#22c55e', benefice:'Soulage les ballonnements et les douleurs intestinales', usage:'Après les repas, 2 tasses/jour max', detail:'Le menthol relâche la musculature lisse digestive. Cliniquement efficace contre le SII. Éviter en cas de reflux gastro-œsophagien.' },
-    { nom:'Hibiscus',        tag:'Cardio',      color:'#ff2d55', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
+    { nom:'Hibiscus',        tag:'Cardio',      color:'#ef4444', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
     { nom:'Rooibos',         tag:'Antioxydant', color:'#E8962A', benefice:'Zéro caféine — riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
     { nom:'Tilleul',         tag:'Stress',      color:'#86efac', benefice:'Relâche les tensions nerveuses et musculaires', usage:'1–2 tasses en fin d\'après-midi', detail:'Flavonoïdes sédatifs légers utilisés depuis le Moyen-Âge. Efficace contre les maux de tête de tension, l\'anxiété et l\'hypertension légère.' },
     { nom:'Gingembre-citron',tag:'Immunité',    color:'#ffd60a', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
@@ -37,7 +37,7 @@ const DATA = {
     { nom:'Qi Gong',         tag:'Énergie',    color:'#5856d6', benefice:'Harmonise corps, souffle et esprit par le mouvement', usage:'20 min le matin à jeun, quotidiennement', detail:'+800 études scientifiques. Réduit la tension artérielle, renforce l\'immunité et améliore l\'équilibre mental. Idéal pour tous les âges.' },
   ],
   holistique: [
-    { nom:'Cohérence cardiaque', tag:'Système nerveux', color:'#ff2d55', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
+    { nom:'Cohérence cardiaque', tag:'Système nerveux', color:'#ef4444', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
     { nom:'Bain de forêt',       tag:'Shinrin-yoku', color:'#22c55e', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
     { nom:'Thérapie par le froid',tag:'Dopamine',   color:'#38bdf8', benefice:'Dopamine +250%, inflammation réduite, volonté renforcée', usage:'Douche froide 30s → 3 min progressivement', detail:'La noradrénaline monte de 300% (Wim Hof Institute). Réduit l\'inflammation chronique, améliore la récupération musculaire et renforce la résilience mentale.' },
     { nom:'Earthing',            tag:'Électrons',   color:'#92400e', benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
@@ -106,7 +106,7 @@ function AIRecoCard({ r, onChat, index }) {
         <span style={{ fontSize:22, flexShrink:0 }}>{r.emoji}</span>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap', marginBottom:2 }}>
-            <span style={{ fontSize:13, fontWeight:700, color:'#1a0a00' }}>{r.nom}</span>
+            <span style={{ fontSize:13, fontWeight:700, color:'#0A1633' }}>{r.nom}</span>
             {r.tag && (
               <span style={{
                 fontSize:9, fontWeight:800, padding:'2px 8px', borderRadius:12,
@@ -158,7 +158,7 @@ function AIRecoCard({ r, onChat, index }) {
                 <div style={{ fontSize:9, color:'#8b5cf6', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
                   Comment utiliser
                 </div>
-                <div style={{ fontSize:12, color:'#1a0a00', fontWeight:600, lineHeight:1.55 }}>{r.usage}</div>
+                <div style={{ fontSize:12, color:'#0A1633', fontWeight:600, lineHeight:1.55 }}>{r.usage}</div>
               </div>
             </div>
           )}
@@ -308,7 +308,7 @@ function HerbItem({ item, onChat }) {
       >
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4, flexWrap:'wrap' }}>
-            <span style={{ fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' }}>{item.nom}</span>
+            <span style={{ fontSize:14, fontWeight:800, color:'#0A1633', letterSpacing:'-0.2px' }}>{item.nom}</span>
             <span style={{
               fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:12,
               background: `${item.color}22`, color: item.color,
@@ -346,7 +346,7 @@ function HerbItem({ item, onChat }) {
             display:'flex', alignItems:'flex-start', gap:11,
             background:`linear-gradient(135deg, ${item.color}12, ${item.color}06)`,
             border:`1px solid ${item.color}22`,
-            borderRadius:14, padding:'11px 13px', margin:'12px 0 10px',
+            borderRadius:12, padding:'11px 13px', margin:'12px 0 10px',
           }}>
             <div style={{
               width:10, height:10, borderRadius:'50%',
@@ -358,7 +358,7 @@ function HerbItem({ item, onChat }) {
               <div style={{ fontSize:9, color:`${item.color}cc`, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px' }}>
                 Comment utiliser
               </div>
-              <div style={{ fontSize:12, color:'#1a0a00', fontWeight:700, marginTop:2, lineHeight:1.4 }}>
+              <div style={{ fontSize:12, color:'#0A1633', fontWeight:700, marginTop:2, lineHeight:1.4 }}>
                 {item.usage}
               </div>
             </div>
@@ -371,7 +371,7 @@ function HerbItem({ item, onChat }) {
           <button
             style={{
               display:'inline-flex', alignItems:'center', gap:6,
-              padding:'9px 16px', borderRadius:14,
+              padding:'9px 16px', borderRadius:12,
               background:`linear-gradient(135deg, ${item.color}18, ${item.color}0c)`,
               border:`1.5px solid ${item.color}35`,
               color: item.color, fontSize:11, fontWeight:800,
@@ -419,7 +419,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
           </div>
           {/* Title */}
           <div style={{
-            fontSize:26, fontWeight:900, color:'#1a0a00',
+            fontSize:26, fontWeight:900, color:'#0A1633',
             letterSpacing:'-0.5px', textAlign:'center', lineHeight:1.1,
           }}>
             Santé Naturelle
@@ -537,12 +537,12 @@ const hb = {
     boxShadow:'0 4px 14px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
     display:'flex', alignItems:'center', justifyContent:'center',
   },
-  aiTitle: { fontSize:14, fontWeight:800, color:'#1a0a00', letterSpacing:'-0.2px' },
+  aiTitle: { fontSize:14, fontWeight:800, color:'#0A1633', letterSpacing:'-0.2px' },
   aiSub: { fontSize:10, color:'#c4b5a8', fontWeight:600, marginTop:1 },
   aiCta: {
     background:'linear-gradient(135deg, #8b5cf6, #6d28d9)',
     color:'#fff', border:'none',
-    padding:'9px 16px', borderRadius:14,
+    padding:'9px 16px', borderRadius:12,
     fontSize:11, fontWeight:800, cursor:'pointer',
     fontFamily:'Poppins,sans-serif', flexShrink:0,
     boxShadow:'0 5px 16px rgba(139,92,246,0.38), inset 0 1px 0 rgba(255,255,255,0.2)',
@@ -561,7 +561,7 @@ const hb = {
     display:'flex', alignItems:'center', gap:11,
     background:'linear-gradient(135deg, rgba(139,92,246,0.07), rgba(255,154,60,0.04))',
     border:'1px solid rgba(139,92,246,0.14)',
-    borderRadius:14, padding:'11px 13px',
+    borderRadius:12, padding:'11px 13px',
     boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)',
   },
   aiAskBtn: {
@@ -599,7 +599,7 @@ const hb = {
     padding:'10px 14px',
     background:'rgba(139,120,110,0.05)',
     border:'1px solid rgba(139,120,110,0.14)',
-    borderRadius:14,
+    borderRadius:12,
     fontSize:10, color:'#b0a09a', lineHeight:1.6,
     fontStyle:'italic',
   },

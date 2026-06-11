@@ -117,7 +117,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 22 }}>{icon}</span>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
               {titre}
             </div>
             {heure && (
@@ -158,7 +158,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
                 <span style={{ fontSize: 15 }}>{e.emoji}</span>
                 <span style={{
                   fontSize: 13, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
-                  color: checked[e.id] ? 'rgba(26,10,0,0.35)' : '#1a0a00',
+                  color: checked[e.id] ? 'rgba(26,10,0,0.35)' : '#0A1633',
                   textDecoration: checked[e.id] ? 'line-through' : 'none',
                   transition: 'all 0.2s',
                 }}>
@@ -207,7 +207,7 @@ function NutritionCard({ nutrition }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
         <span style={{ fontSize: 22 }}>🥗</span>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
           {nutrition.titre || 'Nutrition du jour'}
         </div>
       </div>
@@ -223,7 +223,7 @@ function NutritionCard({ nutrition }) {
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {r.moment}
               </div>
-              <div style={{ fontSize: 12.5, color: '#1a0a00', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12.5, color: '#0A1633', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
                 {r.suggestion}
               </div>
             </div>
@@ -257,7 +257,7 @@ function EmptyRoutine({ generating, onGenerate }) {
       }}
     >
       <div style={{ fontSize: 56, marginBottom: 20 }}>🌅</div>
-      <div style={{ fontSize: 18, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
+      <div style={{ fontSize: 18, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
       <div style={{ fontSize: 13, color: 'rgba(26,10,0,0.45)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
@@ -392,7 +392,7 @@ export default function RoutineTab({ userId, profil }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#1a0a00', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
             Ma Routine
           </div>
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
@@ -489,7 +489,7 @@ export default function RoutineTab({ userId, profil }) {
                 <div style={{ flex: 1 }}>
                   {routine.motivation && (
                     <div style={{
-                      fontSize: 12.5, color: '#1a0a00', fontFamily: 'Poppins,sans-serif',
+                      fontSize: 12.5, color: '#0A1633', fontFamily: 'Poppins,sans-serif',
                       lineHeight: 1.55, fontStyle: 'italic', marginBottom: 8,
                       fontWeight: 500,
                     }}>

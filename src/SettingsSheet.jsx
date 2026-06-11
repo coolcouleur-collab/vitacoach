@@ -11,7 +11,7 @@ const C = {
   accent: '#C87B52',
   accentLight: 'rgba(200,123,82,0.12)',
   accentMid: 'rgba(200,123,82,0.22)',
-  text: '#1a0a00',
+  text: '#0A1633',
   textMuted: 'rgba(26,10,0,0.52)',
   textLight: 'rgba(26,10,0,0.36)',
   handle: 'rgba(200,123,82,0.28)',
@@ -25,7 +25,7 @@ function HandleBar() {
     <div style={{
       width: 44, height: 5,
       background: C.handle,
-      borderRadius: 3,
+      borderRadius: 8,
       margin: '14px auto 8px',
       flexShrink: 0,
     }} />
@@ -169,7 +169,7 @@ function ToggleSwitch({ enabled, onToggle }) {
       onClick={onToggle}
       style={{
         width: 48, height: 28,
-        borderRadius: 14,
+        borderRadius: 12,
         background: enabled
           ? `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`
           : 'rgba(26,10,0,0.14)',
@@ -587,7 +587,7 @@ export default function SettingsSheet({
                   <div style={{ marginBottom: 12 }}>
                     <div style={{
                       height: 6,
-                      borderRadius: 3,
+                      borderRadius: 8,
                       background: 'rgba(200,123,82,0.14)',
                       overflow: 'hidden',
                       marginBottom: 5,
@@ -595,7 +595,7 @@ export default function SettingsSheet({
                       <div style={{
                         height: '100%',
                         width: `${Math.max(0, Math.min(100, (msgsRestants / 5) * 100))}%`,
-                        borderRadius: 3,
+                        borderRadius: 8,
                         background: `linear-gradient(90deg, ${C.accent} 0%, #E8962A 100%)`,
                         transition: 'width 0.4s ease',
                       }} />

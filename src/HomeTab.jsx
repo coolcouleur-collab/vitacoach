@@ -1227,8 +1227,8 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       {/* Inner card — fond teinté couleur + transparent */}
       <div style={{
         background:`linear-gradient(145deg, ${color}07, rgba(255,246,238,0.72))`,
-        backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-        borderRadius:18, padding:'8px 4px 7px',
+        backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+        borderRadius:20, padding:'8px 4px 7px',
         boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.65)`,
         display:'flex', flexDirection:'column', alignItems:'center', gap:3,
         position:'relative', zIndex:1,
@@ -1447,11 +1447,11 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
       whileTap={{ scale:0.98 }}
       style={{
         display:'flex', alignItems:'center', gap:13,
-        padding:'7px 12px', minHeight:44, borderRadius:14, cursor:'pointer',
+        padding:'7px 12px', minHeight:44, borderRadius:12, cursor:'pointer',
         background: t.isDone
           ? `linear-gradient(135deg, ${t.color}40 0%, ${t.color}22 100%)`
           : `linear-gradient(135deg, ${t.color}55 0%, ${t.color}35 60%, ${t.color}20 100%)`,
-        backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+        backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
         border:`1.5px solid ${t.isDone ? t.color+'55' : t.color+'88'}`,
         boxShadow: t.isDone
           ? '0 2px 8px rgba(0,0,0,0.08)'
@@ -1463,7 +1463,7 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
       {/* Icône colorée + checkbox intégrée */}
       <div style={{ position:'relative', flexShrink:0 }}>
         <div style={{
-          width:32, height:32, borderRadius:10, flexShrink:0,
+          width:32, height:32, borderRadius:8, flexShrink:0,
           background: t.isDone
             ? `linear-gradient(135deg,${t.color},${t.color}cc)`
             : `linear-gradient(135deg, ${t.color}35, ${t.color}20)`,
@@ -1618,13 +1618,13 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
       </div>
 
       {/* Progress bar */}
-      <div style={{ position:'relative', height:3, borderRadius:10, background:'rgba(200,123,82,0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
+      <div style={{ position:'relative', height:3, borderRadius:8, background:'rgba(200,123,82,0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 1.1, type:'spring', stiffness:55, damping:16 }}
           style={{
-            height:'100%', borderRadius:10, position:'relative', overflow:'hidden',
+            height:'100%', borderRadius:8, position:'relative', overflow:'hidden',
             background:'linear-gradient(90deg,#FFD4A0,#E8A07A,#C87B52,#C87B52)',
             boxShadow:'0 0 6px rgba(200,123,82,0.45)',
           }}
@@ -1791,15 +1791,15 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
               }}>
                 {/* Glass inner — ivoire jour / verre sombre nuit */}
                 <div style={{
-                  borderRadius:24, overflow:'hidden', position:'relative',
+                  borderRadius:20, overflow:'hidden', position:'relative',
                   background: isNight
                     ? 'linear-gradient(150deg,rgba(15,30,60,0.82) 0%,rgba(10,22,48,0.78) 50%,rgba(8,18,40,0.75) 100%)'
                     : 'linear-gradient(150deg,rgba(255,246,238,0.72) 0%,rgba(255,240,225,0.68) 50%,rgba(255,234,214,0.65) 100%)',
-                  backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+                  backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
                   boxShadow: isNight ? 'inset 0 1px 0 rgba(180,210,255,0.15)' : 'inset 0 1px 0 rgba(255,255,255,0.60)',
                 }}>
                   {/* Image */}
-                  <div style={{ margin:'8px 8px 0', height:120, borderRadius:18, overflow:'hidden', position:'relative' }}>
+                  <div style={{ margin:'8px 8px 0', height:120, borderRadius:20, overflow:'hidden', position:'relative' }}>
                     <img src={card.image} alt={card.title}
                       style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
                       loading="lazy" />
@@ -1965,7 +1965,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               background: isNight
                 ? `linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)`
                 : `linear-gradient(135deg, ${s.color}22 0%, ${s.color}0e 60%, ${s.color}06 100%)`,
-              backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+              backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
               border: isNight ? `1.5px solid ${s.color}38` : `1.5px solid ${s.color}50`,
               boxShadow: isNight
                 ? `0 6px 22px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(180,210,255,0.08)`
@@ -2012,7 +2012,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           background: isNight
             ? 'linear-gradient(135deg, rgba(200,220,255,0.10) 0%, rgba(180,210,255,0.05) 100%)'
             : 'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(200,123,82,0.08) 60%, rgba(200,123,82,0.05) 100%)',
-          backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+          backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >
@@ -2042,7 +2042,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           background: isNight
             ? 'linear-gradient(135deg, rgba(255,165,80,0.10) 0%, rgba(255,120,40,0.06) 100%)'
             : 'linear-gradient(135deg, rgba(255,165,80,0.18) 0%, rgba(200,123,82,0.10) 60%, rgba(200,123,82,0.05) 100%)',
-          backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+          backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
           border: isNight ? '1.5px solid rgba(255,165,80,0.22)' : '1.5px solid rgba(200,123,82,0.28)',
           boxShadow: isNight
             ? '0 6px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,100,0.06)'
@@ -2288,7 +2288,7 @@ const hc = {
     alignItems:'center', justifyContent:'flex-end', paddingBottom:18 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
-    borderRadius:24, padding:'6px 16px', fontSize:11, color:'rgba(200,123,82,0.72)', fontWeight:500,
+    borderRadius:20, padding:'6px 16px', fontSize:11, color:'rgba(200,123,82,0.72)', fontWeight:500,
     marginBottom:12, marginTop:32, letterSpacing:'0.3px',
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   greetDot: { width:7, height:7, borderRadius:'50%', background:'#E8A07A',
@@ -2302,7 +2302,7 @@ const hc = {
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
     background:'linear-gradient(145deg, #C87B52, #C87B52)',
-    color:'#fff', border:'none', borderRadius:22, fontSize:13, fontWeight:500,
+    color:'#fff', border:'none', borderRadius:20, fontSize:13, fontWeight:500,
     cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
     boxShadow:'0 12px 36px rgba(200,123,82,0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)' },

@@ -10,7 +10,7 @@ const C = {
   borderStrong: 'rgba(200,123,82,0.30)',
   accent: '#C87B52',
   accentLight: 'rgba(200,123,82,0.10)',
-  text: '#1a0a00',
+  text: '#0A1633',
   textMuted: 'rgba(26,10,0,0.52)',
   textLight: 'rgba(26,10,0,0.36)',
   handle: 'rgba(200,123,82,0.28)',

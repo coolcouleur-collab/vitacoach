@@ -1057,7 +1057,7 @@ function DemoFormSection() {
             {error && (
               <p
                 style={{
-                  color: "#ff7b7b",
+                  color: "#ef4444",
                   fontSize: "13px",
                   textAlign: "center",
                   padding: "8px",

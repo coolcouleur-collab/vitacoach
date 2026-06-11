@@ -284,8 +284,8 @@ function CinematicSlider({ onCommencer }) {
                 WebkitAppearance: 'none',
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
               }}
             >
               {[
@@ -383,11 +383,11 @@ function CinematicSlider({ onCommencer }) {
             zIndex: 100,
             width: 300,
             background: 'rgba(185,110,45,0.16)',
-            backdropFilter: 'blur(26px)',
-            WebkitBackdropFilter: 'blur(26px)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,210,150,0.30)',
             boxShadow: '0 8px 32px rgba(130,70,15,0.18)',
-            borderRadius: 24,
+            borderRadius: 20,
             padding: '36px 26px 32px',
             minHeight: 320,
             cursor: 'pointer',

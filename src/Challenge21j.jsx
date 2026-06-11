@@ -495,7 +495,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                         style={{
                           position: 'absolute',
                           inset: '-3px',
-                          borderRadius: '14px',
+                          borderRadius: '12px',
                           border: '2px solid #E8962A',
                           pointerEvents: 'none',
                         }}
