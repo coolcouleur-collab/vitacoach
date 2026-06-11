@@ -1369,14 +1369,14 @@ app.get('/api/business/dashboard', async (req, res) => {
 // ── Keep-alive — évite le cold start Render free tier ────────────────────────
 app.get('/ping', (req, res) => res.send('pong'))
 
-// Auto-ping toutes les 10 min pour garder le service chaud
+// Auto-ping toutes les 4 min pour garder le service chaud (Render s'endort après 15min)
 if (!process.env.VERCEL && process.env.API_BASE_URL) {
   setInterval(async () => {
     try {
       await fetch(`${process.env.API_BASE_URL}/ping`)
       console.log('[Keep-alive] ping ✓')
     } catch {}
-  }, 10 * 60 * 1000) // 10 minutes
+  }, 4 * 60 * 1000) // 4 minutes
 }
 
 // ═════════════════════════════════════════════════════════════════════════════

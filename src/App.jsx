@@ -596,6 +596,9 @@ export default function App() {
     return () => document.removeEventListener('pointerdown', onTap)
   }, [])
 
+  // Pré-warm Render dès le chargement de l'app
+  useEffect(() => { fetch('/api/health').catch(() => {}) }, [])
+
   // Responsive
   const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1024)
   useEffect(() => {
