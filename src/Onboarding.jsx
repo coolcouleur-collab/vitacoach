@@ -364,31 +364,39 @@ export default function Onboarding({ onTermine }) {
   }
 
   // ── INTRO ─────────────────────────────────────────────────────────────────────
-  async function runIntro() {
+  function runIntro() {
     setInputMode(null)
     setChatStep('intro')
-    await delay(200)
-    await sendSolennSeq([
-      { text:"Hey ! 👋", after:0 },
-      { text:"Moi c'est Solenn — ton coach de vie personnel ✨", after:200 },
-      { text:"Quelques questions rapides pour personnaliser ton expérience !", after:200 },
-      { text:"Pour commencer... comment tu t'appelles ?", after:200 },
-    ])
-    setChatStep('nom')
-    setInputMode('text')
-    setTimeout(() => inputRef.current?.focus(), 100)
+    const msgs = [
+      "Hey ! 👋",
+      "Moi c'est Solenn — ton coach de vie personnel ✨",
+      "Quelques questions rapides pour personnaliser ton expérience !",
+      "Pour commencer... comment tu t'appelles ?",
+    ]
+    msgs.forEach((text, i) => {
+      setTimeout(() => {
+        setMsgs(m => [...m, { id: i, from:'solenn', text }])
+        if (i === msgs.length - 1) {
+          setTimeout(() => {
+            setChatStep('nom')
+            setInputMode('text')
+            inputRef.current?.focus()
+          }, 150)
+        }
+      }, 300 + i * 400)
+    })
   }
 
-  // Sequential message sender with custom delays between messages
-  async function sendSolennSeq(items) {
-    for (const item of items) {
-      await delay(item.after || 0)
-      setIsTyping(true)
-      await delay(350)
-      setIsTyping(false)
-      setMsgs(m => [...m, { id: Date.now() + Math.random(), from:'solenn', text: item.text }])
-      await delay(40)
-    }
+  // Sequential message sender — robuste mobile
+  function sendSolennSeq(items) {
+    return new Promise(resolve => {
+      items.forEach((item, i) => {
+        setTimeout(() => {
+          setMsgs(m => [...m, { id: Date.now() + i, from:'solenn', text: item.text }])
+          if (i === items.length - 1) setTimeout(resolve, 100)
+        }, i * 350)
+      })
+    })
   }
 
   function delay(ms) {
