@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, Component } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo, Component, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
 import { playFx } from './sfx'
@@ -6,15 +6,17 @@ import SplashScreen from './SplashScreen'
 import Auth from './Auth'
 import Landing from './Landing'
 import GlowLoader from './GlowLoader'
-import Forum from './Forum'
-import Onboarding from './Onboarding'
-import HomeTab from './HomeTab'
-import HerbalTab from './HerbalTab'
-import SanteTab from './SanteTab'
 import MorningCheckin from './MorningCheckin'
-import RoutineTab from './RoutineTab'
 import SettingsSheet from './SettingsSheet'
-import ChatHistory from './ChatHistory'
+
+// Lazy — chargés uniquement quand l'utilisateur y accède
+const Forum       = lazy(() => import('./Forum'))
+const Onboarding  = lazy(() => import('./Onboarding'))
+const HomeTab     = lazy(() => import('./HomeTab'))
+const HerbalTab   = lazy(() => import('./HerbalTab'))
+const SanteTab    = lazy(() => import('./SanteTab'))
+const RoutineTab  = lazy(() => import('./RoutineTab'))
+const ChatHistory = lazy(() => import('./ChatHistory'))
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
@@ -1136,7 +1138,7 @@ export default function App() {
     setShowAuth(false)
   }
 
-  if (showForum) return <Forum onBack={() => setShowForum(false)} user={user} profil={profil} />
+  if (showForum) return <Suspense fallback={<GlowLoader />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
   if (!user && !showAuth && !isMobile) return <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
@@ -1154,6 +1156,7 @@ export default function App() {
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
   if (!profil) {
     return (
+      <Suspense fallback={<GlowLoader />}>
       <Onboarding onTermine={p => {
         setProfil(p)
         setProfilBackup(null)
@@ -1164,6 +1167,7 @@ export default function App() {
         const nomFmt = p.nom ? p.nom.charAt(0).toUpperCase() + p.nom.slice(1).toLowerCase() : ''
         setMessages([{ role:'assistant', content:`${g2} ${nomFmt} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
       }} />
+      </Suspense>
     )
   }
 
@@ -1300,7 +1304,7 @@ export default function App() {
       {/* ── Chat History Sheet ── */}
       <AnimatePresence>
         {showChatHistory && user?.id && (
-          <ChatHistory
+          <Suspense fallback={null}><ChatHistory
             userId={user.id}
             supabase={supabase}
             onClose={() => setShowChatHistory(false)}
@@ -1308,7 +1312,7 @@ export default function App() {
               setMessages(msgs)
               setShowChatHistory(false)
             }}
-          />
+          /></Suspense>
         )}
       </AnimatePresence>
 
@@ -1676,6 +1680,7 @@ export default function App() {
 
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (
+            <Suspense fallback={<GlowLoader />}>
             <HomeTab
               profil={profil}
               metriques={metriques}
@@ -1691,6 +1696,7 @@ export default function App() {
               history={history}
               onPresetChange={setHomePreset}
             />
+            </Suspense>
           )}
 
           {/* ── Chat ── */}
@@ -1873,7 +1879,7 @@ export default function App() {
                   </div>
                 </div>
               )}
-              <SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} />
+              <Suspense fallback={<GlowLoader />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} /></Suspense>
             </div>
           )}
 
@@ -1894,11 +1900,13 @@ export default function App() {
 
           {/* ── Herbal ── */}
           {onglet === 'herbal' && (
+            <Suspense fallback={<GlowLoader />}>
             <HerbalTab
               profil={profil}
               onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
               onBack={() => setOnglet('accueil')}
             />
+            </Suspense>
           )}
 
           {/* ── Style ── */}
@@ -1925,12 +1933,12 @@ export default function App() {
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <RoutineTab userId={user?.id} profil={profil} />
+            <Suspense fallback={<GlowLoader />}><RoutineTab userId={user?.id} profil={profil} /></Suspense>
           )}
 
           {/* ── Forum ── */}
           {onglet === 'forum' && (
-            <Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} showForm={forumFormOpen} setShowForm={setForumFormOpen} onUnreadCount={setForumUnread} />
+            <Suspense fallback={<GlowLoader />}><Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} showForm={forumFormOpen} setShowForm={setForumFormOpen} onUnreadCount={setForumUnread} /></Suspense>
           )}
 
           </div>{/* end keyed tab wrapper */}
