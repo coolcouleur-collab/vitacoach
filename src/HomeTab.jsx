@@ -528,7 +528,7 @@ function OceanSceneBg({ preset: key }) {
   const p = OCEAN_PRESETS[key] || OCEAN_PRESETS.day
   return (
     <div style={{
-      position:'absolute', inset:0, zIndex:0, overflow:'hidden', pointerEvents:'none',
+      position:'fixed', inset:0, zIndex:0, overflow:'hidden', pointerEvents:'none',
       /* Fade bottom edge into the page — no hard cutoff */
       WebkitMaskImage:'linear-gradient(180deg, black 72%, transparent 100%)',
       maskImage:       'linear-gradient(180deg, black 72%, transparent 100%)',
