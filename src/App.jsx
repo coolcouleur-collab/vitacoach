@@ -549,6 +549,7 @@ export default function App() {
     const todayStr = new Date().toDateString()
     return hr >= 6 && hr < 11 && lastCheckin !== todayStr
   })
+  const [homePreset, setHomePreset] = useState('day')
 
   // ── Célébrations mémorables ──────────────────────────────────────────────────
   const [milestone, setMilestone]       = useState(null)   // { emoji, titre, texte }
@@ -1197,7 +1198,6 @@ export default function App() {
   }
 
   // ── MAIN APP ════════════════════════════════════════════════════════════════
-  const [homePreset, setHomePreset] = useState('day')
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? '#E8962A' : '#ef4444'
 
@@ -2881,8 +2881,8 @@ const s = {
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
     width:260, flexShrink:0,
-    background:'rgba(255,246,240,0.15)',
-    backdropFilter:'blur(24px) saturate(1.4)', WebkitBackdropFilter:'blur(24px) saturate(1.4)',
+    background:'transparent',
+    backdropFilter:'none', WebkitBackdropFilter:'none',
     borderRight:'1px solid rgba(200,123,82,0.06)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
