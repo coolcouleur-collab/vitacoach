@@ -2883,7 +2883,7 @@ const s = {
     width:260, flexShrink:0,
     background:'transparent',
     backdropFilter:'none', WebkitBackdropFilter:'none',
-    borderRight:'none',
+    borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
     padding:'2.8rem 1.4rem 2.4rem',
