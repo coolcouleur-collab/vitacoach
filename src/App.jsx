@@ -1446,8 +1446,8 @@ export default function App() {
       {/* Fondu sidebar→contenu */}
       {!isMobile && (
         <div style={{
-          position:'fixed', top:0, left:230, width:60, height:'100vh',
-          background:'linear-gradient(to right, #EDD8CC, transparent)',
+          position:'fixed', top:0, left:140, width:180, height:'100vh',
+          background:'linear-gradient(to right, #EDD8CC 30%, transparent 100%)',
           pointerEvents:'none', zIndex:2,
         }} />
       )}
