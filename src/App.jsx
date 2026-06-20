@@ -1443,6 +1443,15 @@ export default function App() {
         </aside>
       )}
 
+      {/* Fondu sidebar→contenu */}
+      {!isMobile && (
+        <div style={{
+          position:'fixed', top:0, left:230, width:60, height:'100vh',
+          background:'linear-gradient(to right, #EDD8CC, transparent)',
+          pointerEvents:'none', zIndex:2,
+        }} />
+      )}
+
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
         <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY: isMobile ? 'auto' : 'unset', overflowX:'hidden', WebkitOverflowScrolling:'touch' }}>
