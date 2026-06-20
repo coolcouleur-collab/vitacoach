@@ -2058,7 +2058,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           border: `1px solid ${score > 50 ? 'rgba(255,149,0,0.20)' : 'rgba(200,123,82,0.18)'}`,
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>
-          <span style={{ fontSize:16, lineHeight:1 }}>⭐</span>
+          <StarIcon size={16} color={score > 50 ? 'rgba(255,149,0,0.75)' : 'rgba(200,123,82,0.60)'} />
         </div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
