@@ -1444,7 +1444,7 @@ export default function App() {
       )}
 
       {/* ══ MAIN ══ */}
-      <main style={{ ...s.main, marginLeft: isMobile ? 0 : 252 }}>
+      <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
         <div ref={contentRef} style={{ ...s.content, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY: isMobile ? 'auto' : 'unset', overflowX:'hidden', WebkitOverflowScrolling:'touch' }}>
 
           {/* Mobile header — transparent sur Accueil, plein sur les autres onglets */}
