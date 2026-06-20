@@ -2064,13 +2064,19 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         </div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
-            <span style={{
-              fontSize:28, fontWeight:700, lineHeight:1,
-              color: score > 50 ? '#E8962A' : '#C87B52',
-              fontFamily:"'Poppins',system-ui,sans-serif",
-              letterSpacing:'-0.02em',
-            }}>{score}</span>
-            <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
+            {score > 0 ? (
+              <>
+                <span style={{
+                  fontSize:28, fontWeight:700, lineHeight:1,
+                  color: score > 50 ? '#E8962A' : '#C87B52',
+                  fontFamily:"'Poppins',system-ui,sans-serif",
+                  letterSpacing:'-0.02em',
+                }}>{score}</span>
+                <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
+              </>
+            ) : (
+              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>—</span>
+            )}
           </div>
           <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
             Score bien-être du jour
@@ -2150,7 +2156,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                   Évolution · 14 jours
                 </div>
                 <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
-                  <span style={{ fontSize:15, fontWeight:600, color:tc(0.90), letterSpacing:'-0.3px', lineHeight:1 }}>
+                  <span style={{ fontSize:15, fontWeight:600, color:avg > 0 ? tc(0.90) : tc(0.65), letterSpacing: avg > 0 ? '-0.3px' : '0px', lineHeight:1 }}>
                     {avg > 0 ? avg : '—'}
                   </span>
                   {avg > 0 && <span style={{ fontSize:9, color:tc(0.55), fontWeight:400 }}>/100</span>}
