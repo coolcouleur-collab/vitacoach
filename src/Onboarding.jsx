@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SendIcon } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -655,7 +656,7 @@ export default function Onboarding({ onTermine }) {
               boxShadow: inputVal.trim() ? '0 4px 14px rgba(200,123,82,0.35)' : 'none',
               transition:'all 0.2s',
             }}
-          >↩</button>
+          ><SendIcon size={18} color={inputVal.trim() ? '#fff' : 'rgba(200,123,82,0.40)'} /></button>
         </motion.div>
       )
     }
