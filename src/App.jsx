@@ -2881,10 +2881,10 @@ const s = {
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
     width:260, flexShrink:0,
-    background:'rgba(255,242,232,0.72)',
-    backdropFilter:'blur(32px) saturate(1.6)', WebkitBackdropFilter:'blur(32px) saturate(1.6)',
-    borderRight:'1px solid rgba(200,123,82,0.18)',
-    boxShadow:'4px 0 32px rgba(200,123,82,0.10)',
+    background:'rgba(255,246,240,0.60)',
+    backdropFilter:'blur(20px) saturate(1.2)', WebkitBackdropFilter:'blur(20px) saturate(1.2)',
+    borderRight:'1px solid rgba(200,123,82,0.08)',
+    boxShadow:'2px 0 16px rgba(200,123,82,0.05)',
     display:'flex', flexDirection:'column',
     padding:'2.8rem 1.4rem 2.4rem',
     position:'fixed', top:0, left:0, height:'100vh',
