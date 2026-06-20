@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import SpiralBg from './SpiralBg'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -323,10 +322,10 @@ export default function Onboarding({ onTermine }) {
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
 
-  // Auto-scroll to bottom on new message
+  // Auto-scroll uniquement sur nouveaux messages (pas sur isTyping/inputMode)
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:'smooth' })
-  }, [msgs, isTyping, inputMode])
+  }, [msgs])
 
   // Start intro sequence on mount
   useEffect(() => {
@@ -387,14 +386,14 @@ export default function Onboarding({ onTermine }) {
     })
   }
 
-  // Sequential message sender — robuste mobile
+  // Sequential message sender — délais réduits pour fluidité mobile
   function sendSolennSeq(items) {
     return new Promise(resolve => {
       items.forEach((item, i) => {
         setTimeout(() => {
           setMsgs(m => [...m, { id: Date.now() + i, from:'solenn', text: item.text }])
-          if (i === items.length - 1) setTimeout(resolve, 100)
-        }, i * 350)
+          if (i === items.length - 1) setTimeout(resolve, 50)
+        }, i * 180)
       })
     })
   }
@@ -413,7 +412,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(nom)
     setAnswers(a => ({ ...a, nom }))
     setChatStep('objectif')
-    await delay(150)
+    await delay(40)
     await sendSolennSeq([
       { text:`Enchanté·e ${nom} ! 😊`, after:0 },
       { text:"C'est quoi ton objectif principal ?", after:400 },
@@ -436,7 +435,7 @@ export default function Onboarding({ onTermine }) {
     else if (opt.label.includes('Sport')) reaction = 'On va aller loin ! 💪'
     else if (opt.label.includes('Aliment')) reaction = 'Bien manger, tout commence par là 🥗'
 
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:reaction, after:0 },
       { text:"Tu as quel âge ?", after:400 },
@@ -449,7 +448,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(`${ageVal} ans`)
     setAnswers(a => ({ ...a, age: ageVal }))
     setChatStep('activite')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"OK ! Ton niveau d'activité physique en ce moment ?", after:0 },
     ])
@@ -462,7 +461,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(val)
     setAnswers(a => ({ ...a, activite: val }))
     setChatStep('alimentation')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Et ton alimentation, tu te décrirais comment ?", after:0 },
     ])
@@ -478,7 +477,7 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, alimentation: selectedChips }))
     setSelectedChips([])
     setChatStep('sante_yn')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Tu as des problèmes de santé dont je dois tenir compte ?", after:0 },
     ])
@@ -491,11 +490,11 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, sante_yn: val }))
     if (val === 'Non') {
       setChatStep('lever')
-      await delay(100)
+      await delay(40)
       await askLever()
     } else {
       setChatStep('sante_conditions')
-      await delay(100)
+      await delay(40)
       await sendSolennSeq([
         { text:"D'accord. Quelles conditions ?", after:0 },
       ])
@@ -512,7 +511,7 @@ export default function Onboarding({ onTermine }) {
     setAnswers(a => ({ ...a, sante_conditions: selectedChips }))
     setSelectedChips([])
     setChatStep('lever')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Merci pour cette info — j'en tiendrai compte dans chaque conseil.", after:0 },
     ])
@@ -532,7 +531,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(opt.label)
     setAnswers(a => ({ ...a, lever: opt.val }))
     setChatStep('coucher')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Et tu te couches vers ?", after:0 },
     ])
@@ -544,7 +543,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(opt.label)
     setAnswers(a => ({ ...a, coucher: opt.val }))
     setChatStep('profession')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Dernière chose — tu fais quoi dans la vie ?", after:0 },
     ])
@@ -560,7 +559,7 @@ export default function Onboarding({ onTermine }) {
     addUserMsg(val)
     setAnswers(a => ({ ...a, profession: val }))
     setChatStep('taille_poids')
-    await delay(100)
+    await delay(40)
     await sendSolennSeq([
       { text:"Ta taille et ton poids ? (pour les conseils nutrition)", after:0 },
     ])
@@ -574,9 +573,9 @@ export default function Onboarding({ onTermine }) {
     const finalAnswers = { ...answers, taille: tailleVal, poids: poidsVal }
     setAnswers(finalAnswers)
     setChatStep('fin')
-    await delay(100)
+    await delay(40)
     setIsTyping(true)
-    await delay(150)
+    await delay(40)
     setIsTyping(false)
     setMsgs(m => [...m, { id: Date.now(), from:'solenn', text:`Parfait ${nom} ! Je prépare ton espace... 🌟` }])
     await delay(1500)
@@ -982,7 +981,6 @@ export default function Onboarding({ onTermine }) {
         input::placeholder { color:rgba(200,123,82,0.45); }
       `}</style>
 
-      <SpiralBg light />
       <BgBlobs />
 
       {/* Progress bar */}
@@ -1030,9 +1028,7 @@ export default function Onboarding({ onTermine }) {
       {/* Input area */}
       <div style={{
         position:'sticky', bottom:0,
-        background:'rgba(255,248,244,0.88)',
-        backdropFilter:'blur(20px)',
-        WebkitBackdropFilter:'blur(20px)',
+        background:'rgba(255,248,244,0.97)',
         borderTop:'1px solid rgba(200,123,82,0.12)',
         width:'100%',
         zIndex:50,

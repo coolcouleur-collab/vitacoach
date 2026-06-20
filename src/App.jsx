@@ -2909,13 +2909,13 @@ const s = {
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
-    color:'rgba(200,123,82,0.60)', fontWeight:300, textAlign:'left', width:'100%', fontSize:13,
-    letterSpacing:'0.01em', transition:'background .2s, color .2s',
+    color:'rgba(200,123,82,0.42)', fontWeight:300, textAlign:'left', width:'100%', fontSize:12,
+    letterSpacing:'0.05em', transition:'background .2s, color .2s',
   },
   navActive: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'rgba(200,123,82,0.07)',
-    cursor:'pointer', fontFamily:F, color:'#C87B52', fontWeight:500,
+    cursor:'pointer', fontFamily:F, color:'rgba(200,123,82,0.90)', fontWeight:500,
     textAlign:'left', width:'100%', fontSize:13, transition:'all .2s',
     boxShadow:'inset 0 0 0 1.5px rgba(200,123,82,0.18)',
   },
