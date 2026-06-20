@@ -68,17 +68,23 @@ export default function GlowLoader({
   gap       = 6,
 }) {
   return (
-    <div style={{ display:'flex', alignItems:'center', gap }}>
-      {Array.from({ length: count }, (_, i) => (
-        <Dot
-          key={i}
-          delay={(i / count) * (1.1 / speed)}
-          size={size}
-          color={color}
-          glowStyle={glowStyle}
-          speed={speed}
-        />
-      ))}
+    <div style={{
+      position:'fixed', inset:0,
+      display:'flex', alignItems:'center', justifyContent:'center',
+      pointerEvents:'none',
+    }}>
+      <div style={{ display:'flex', alignItems:'center', gap }}>
+        {Array.from({ length: count }, (_, i) => (
+          <Dot
+            key={i}
+            delay={(i / count) * (1.1 / speed)}
+            size={size}
+            color={color}
+            glowStyle={glowStyle}
+            speed={speed}
+          />
+        ))}
+      </div>
     </div>
   )
 }
