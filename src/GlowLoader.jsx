@@ -69,9 +69,8 @@ export default function GlowLoader({
 }) {
   return (
     <div style={{
-      position:'fixed', inset:0,
+      minHeight:'60vh',
       display:'flex', alignItems:'center', justifyContent:'center',
-      pointerEvents:'none',
     }}>
       <div style={{ display:'flex', alignItems:'center', gap }}>
         {Array.from({ length: count }, (_, i) => (
