@@ -2051,16 +2051,14 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         }}
       >
         <div style={{
-          width:52, height:52, borderRadius:16, flexShrink:0,
+          width:38, height:38, borderRadius:12, flexShrink:0,
           background: score > 50
-            ? 'linear-gradient(135deg, rgba(255,149,0,0.30), rgba(255,100,0,0.18))'
-            : 'linear-gradient(135deg, rgba(200,123,82,0.30), rgba(200,123,82,0.18))',
-          border: `1.5px solid ${score > 50 ? 'rgba(255,149,0,0.40)' : 'rgba(200,123,82,0.35)'}`,
+            ? 'linear-gradient(135deg, rgba(255,149,0,0.20), rgba(255,100,0,0.12))'
+            : 'linear-gradient(135deg, rgba(200,123,82,0.18), rgba(200,123,82,0.10))',
+          border: `1px solid ${score > 50 ? 'rgba(255,149,0,0.35)' : 'rgba(200,123,82,0.28)'}`,
           display:'flex', alignItems:'center', justifyContent:'center',
-          flexDirection:'column',
-          boxShadow: score > 50 ? '0 4px 14px rgba(255,149,0,0.28)' : '0 4px 14px rgba(200,123,82,0.22)',
         }}>
-          <span style={{ fontSize:22, lineHeight:1 }}>{score > 50 ? '🔥' : '💪'}</span>
+          <span style={{ fontSize:16, lineHeight:1 }}>⭐</span>
         </div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
