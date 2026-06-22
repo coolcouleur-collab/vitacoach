@@ -558,7 +558,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
             borderRadius:20, padding:'.35rem .85rem',
             cursor:'pointer', fontFamily:'var(--font)', transition:'all .18s ease',
           }}>
-            <span style={{ fontSize:'1.1rem', color: showReplyForm ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)' }}>💬</span>
+            <ChatIcon size={16} color={showReplyForm ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)'} />
             <span style={{ fontSize:'max(1.1rem,11px)', fontWeight:500, color: showReplyForm ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>Commenter</span>
           </button>
         </div>

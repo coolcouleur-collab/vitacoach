@@ -7,6 +7,7 @@
  */
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon } from './Icons'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -237,7 +238,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         justifyContent: 'center', padding: '60px 24px', textAlign: 'center',
       }}
     >
-      <div style={{ fontSize: 56, marginBottom: 20 }}>🌅</div>
+      <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="#E8962A" /></div>
       <div style={{ fontSize: 18, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
@@ -259,7 +260,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         }}
       >
         <RefreshSVG spinning={generating} />
-        {generating ? 'Génération en cours…' : '✨ Générer ma routine'}
+        {generating ? 'Génération en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Générer ma routine</span>}
       </button>
     </motion.div>
   )
@@ -487,7 +488,7 @@ export default function RoutineTab({ userId, profil }) {
               {/* ── Matin ── */}
               {routine.matin?.etapes?.length > 0 && (
                 <Section
-                  icon="🌅"
+                  icon={<SunIcon size={22} color="#E8962A" />}
                   titre={routine.matin.titre || 'Matin'}
                   heure={routine.matin.heure}
                   etapes={routine.matin.etapes}
@@ -514,7 +515,7 @@ export default function RoutineTab({ userId, profil }) {
               {/* ── Soir ── */}
               {routine.soir?.etapes?.length > 0 && (
                 <Section
-                  icon="🌙"
+                  icon={<MoonIcon size={22} color="#9A96CC" />}
                   titre={routine.soir.titre || 'Soir'}
                   heure={routine.soir.heure}
                   etapes={routine.soir.etapes}
@@ -537,7 +538,7 @@ export default function RoutineTab({ userId, profil }) {
                     display: 'flex', gap: 12, alignItems: 'flex-start',
                   }}
                 >
-                  <span style={{ fontSize: 22, flexShrink: 0 }}>{routine.astuce.emoji || '💡'}</span>
+                  <LightbulbIcon size={22} color="rgba(200,100,20,0.80)" />
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,100,20,0.80)', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
@@ -568,7 +569,7 @@ export default function RoutineTab({ userId, profil }) {
                       Journée accomplie !
                     </div>
                     <div style={{ fontSize: 12.5, color: 'rgba(22,163,74,0.70)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
-                      Tu as terminé toutes tes étapes. Solenn est fière de toi 💪
+                      Tu as terminé toutes tes étapes. Solenn est fière de toi !
                     </div>
                   </motion.div>
                 )}

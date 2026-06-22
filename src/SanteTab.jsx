@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
-import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
+import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
@@ -514,7 +514,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(56,189,248,0.45))' }}><WaterIcon size={24} color="#38bdf8" /></span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 10, color: 'rgba(56,189,248,0.9)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5 }}>
-              💧 Hydratation du jour
+              <span style={{display:'flex',alignItems:'center',gap:5}}><WaterIcon size={11} color="rgba(56,189,248,0.9)" />Hydratation du jour</span>
             </div>
             <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
               {Array.from({ length: 8 }).map((_, i) => (
@@ -650,15 +650,15 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         const pas     = metriques.pas     || 0
 
         const tips = []
-        if (eau < 4)      tips.push('💧 Bois plus d\'eau — objectif 8 verres par jour')
-        if (sommeil < 6)  tips.push('😴 Tu dors peu — vise 7-8h pour récupérer')
-        if (pas < 3000)   tips.push('🚶 Bouge plus — 10 min de marche changent tout')
-        if (tips.length === 0) tips.push('✅ Tes habitudes sont bonnes — continue !')
+        if (eau < 4)      tips.push('Bois plus d\'eau — objectif 8 verres par jour')
+        if (sommeil < 6)  tips.push('Tu dors peu — vise 7-8h pour récupérer')
+        if (pas < 3000)   tips.push('Bouge plus — 10 min de marche changent tout')
+        if (tips.length === 0) tips.push('Tes habitudes sont bonnes — continue !')
 
         return (
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '0.3px' }}>
-              💡 Conseils personnalisés
+              <span style={{display:'flex',alignItems:'center',gap:5}}><LightbulbIcon size={12} color="rgba(200,123,82,0.70)" />Conseils personnalisés</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {tips.map((tip, i) => (
@@ -683,7 +683,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)',
           fontFamily: 'Poppins,sans-serif', marginBottom: 12, letterSpacing: '0.3px'
         }}>
-          📡 Appareils connectés
+          <span style={{display:'flex',alignItems:'center',gap:5}}><PhoneIcon size={12} color="rgba(200,123,82,0.70)" />Appareils connectés</span>
         </div>
         <ConnexionsSante userId={userId} />
       </div>
@@ -692,7 +692,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {userId && (
         <div style={{ padding: '0 16px 8px' }}>
           <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-            📊 Rapport hebdomadaire
+            <span style={{display:'flex',alignItems:'center',gap:5}}><CalendarIcon size={12} color="rgba(200,123,82,0.70)" />Rapport hebdomadaire</span>
           </div>
           <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>
@@ -702,7 +702,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {userId && (
         <div style={{ padding: '0 16px 24px' }}>
           <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-            🏆 Challenge 21 jours
+            <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />Challenge 21 jours</span>
           </div>
           <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>

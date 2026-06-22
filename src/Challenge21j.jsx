@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -157,7 +158,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           transition={{ duration: 0.5 }}
           style={{ ...styles.card, textAlign: 'center' }}
         >
-          <div style={{ fontSize: '52px', marginBottom: '12px' }}>🏆</div>
+          <div style={{ marginBottom: '12px', display:'flex', justifyContent:'center' }}><TargetIcon size={52} color="#C87B52" /></div>
           <h2
             style={{
               fontFamily: "'Cormorant Garamond', serif",
@@ -230,7 +231,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               boxShadow: '0 4px 20px rgba(200,123,82,0.35)',
             }}
           >
-            ✨ Passer Pro pour débloquer
+            <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Passer Pro pour débloquer</span>
           </motion.button>
         </motion.div>
       </div>
@@ -514,7 +515,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                           zIndex: 1,
                         }}
                       >
-                        ⭐
+                        <StarIcon size={10} color="white" />
                       </div>
                     )}
 
@@ -650,7 +651,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     width: '100%',
                   }}
                 >
-                  ✅ Fait aujourd'hui !
+                  Fait aujourd'hui !
                 </button>
               ) : (
                 <motion.button

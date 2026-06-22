@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -110,7 +111,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           gap: 12,
         }}
       >
-        <span style={{ fontSize: 32 }}>📊</span>
+        <CalendarIcon size={32} color="rgba(200,123,82,0.70)" />
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
@@ -145,7 +146,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             letterSpacing: 0.2,
           }}
         >
-          ⭐ Disponible avec Pro · 4,99€/mois
+          <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={13} color="white" />Disponible avec Pro · 4,99€/mois</span>
         </button>
       </motion.div>
     )
@@ -169,7 +170,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           gap: 12,
         }}
       >
-        <span style={{ fontSize: 32 }}>📊</span>
+        <CalendarIcon size={32} color="rgba(200,123,82,0.70)" />
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
@@ -396,7 +397,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                 textTransform: 'uppercase',
                 letterSpacing: 0.6,
               }}>
-                ✨ Point fort
+                <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={11} color="rgba(200,123,82,0.70)" />Point fort</span>
               </p>
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
@@ -427,7 +428,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                 textTransform: 'uppercase',
                 letterSpacing: 0.6,
               }}>
-                💡 À améliorer
+                <span style={{display:'flex',alignItems:'center',gap:5}}><LightbulbIcon size={11} color="rgba(200,123,82,0.70)" />À améliorer</span>
               </p>
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
