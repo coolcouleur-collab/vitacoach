@@ -188,16 +188,17 @@ function TypingIndicator() {
 // ─── SOLENN AVATAR ────────────────────────────────────────────────────────────
 function SolennAvatar() {
   return (
-    <div style={{
-      width:36, height:36, borderRadius:'50%', flexShrink:0,
-      background:'linear-gradient(135deg, #C87B52, #E8962A)',
+    <div className="liquid-avatar" style={{
+      width:36, height:36, flexShrink:0,
+      background:'rgba(220,140,70,0.08)',
+      border:'1.5px solid rgba(200,123,82,0.28)',
       display:'flex', alignItems:'center', justifyContent:'center',
-      boxShadow:'0 2px 8px rgba(200,123,82,0.30)',
+      isolation:'isolate', transform:'translateZ(0)',
     }}>
       <span style={{
-        fontSize:18, color:'#fff', fontStyle:'italic',
-        fontFamily:"'Cormorant Garamond', Georgia, serif", fontWeight:600,
-        lineHeight:1, marginTop:1,
+        fontSize:16, fontWeight:700, color:'rgba(255,230,190,0.92)',
+        fontFamily:'Poppins, sans-serif',
+        lineHeight:1, letterSpacing:'-0.02em', userSelect:'none',
       }}>S</span>
     </div>
   )
@@ -322,14 +323,17 @@ export default function Onboarding({ onTermine }) {
 
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
+  const introRan = useRef(false)
 
   // Auto-scroll uniquement sur nouveaux messages (pas sur isTyping/inputMode)
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:'smooth' })
   }, [msgs])
 
-  // Start intro sequence on mount
+  // Start intro sequence on mount — guard against StrictMode double-invoke
   useEffect(() => {
+    if (introRan.current) return
+    introRan.current = true
     runIntro()
   }, [])
 

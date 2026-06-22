@@ -66,10 +66,11 @@ export default function GlowLoader({
   glowStyle = 'soft',
   speed     = 1,
   gap       = 6,
+  fullPage  = false,
 }) {
   return (
     <div style={{
-      minHeight:'60vh',
+      ...(fullPage ? { position:'fixed', inset:0, zIndex:99 } : {}),
       display:'flex', alignItems:'center', justifyContent:'center',
     }}>
       <div style={{ display:'flex', alignItems:'center', gap }}>

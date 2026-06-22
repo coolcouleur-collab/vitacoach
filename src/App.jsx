@@ -1164,7 +1164,7 @@ export default function App() {
     setShowAuth(false)
   }
 
-  if (showForum) return <Suspense fallback={<GlowLoader />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
+  if (showForum) return <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
   if (!user && !showAuth && !isMobile) return <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
@@ -1182,7 +1182,7 @@ export default function App() {
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
   if (!profil) {
     return (
-      <Suspense fallback={<GlowLoader />}>
+      <Suspense fallback={<GlowLoader fullPage />}>
       <Onboarding onTermine={p => {
         setProfil(p)
         setProfilBackup(null)
@@ -1705,7 +1705,7 @@ export default function App() {
 
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (
-            <Suspense fallback={<GlowLoader />}>
+            <Suspense fallback={<GlowLoader fullPage />}>
             <HomeTab
               profil={profil}
               metriques={metriques}
@@ -1905,7 +1905,7 @@ export default function App() {
                   </div>
                 </div>
               )}
-              <Suspense fallback={<GlowLoader />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} /></Suspense>
+              <Suspense fallback={<GlowLoader fullPage />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} /></Suspense>
             </div>
           )}
 
@@ -1926,7 +1926,7 @@ export default function App() {
 
           {/* ── Herbal ── */}
           {onglet === 'herbal' && (
-            <Suspense fallback={<GlowLoader />}>
+            <Suspense fallback={<GlowLoader fullPage />}>
             <HerbalTab
               profil={profil}
               onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
@@ -1959,12 +1959,12 @@ export default function App() {
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <Suspense fallback={<GlowLoader />}><RoutineTab userId={user?.id} profil={profil} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><RoutineTab userId={user?.id} profil={profil} /></Suspense>
           )}
 
           {/* ── Forum ── */}
           {onglet === 'forum' && (
-            <Suspense fallback={<GlowLoader />}><Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} showForm={forumFormOpen} setShowForm={setForumFormOpen} onUnreadCount={setForumUnread} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setOnglet('accueil')} user={user} profil={profil} showForm={forumFormOpen} setShowForm={setForumFormOpen} onUnreadCount={setForumUnread} /></Suspense>
           )}
 
           </div>{/* end keyed tab wrapper */}
