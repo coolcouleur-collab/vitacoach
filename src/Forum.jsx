@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './supabase'
+import { BellIcon, ChatIcon } from './Icons'
 import './tokens.css'
 
 // ─── Moderation ───────────────────────────────────────────────────────────────
@@ -253,7 +254,7 @@ function PostCard({ post, onLike, onOpen, userId }) {
           <span style={{ fontSize: 'max(1.1rem,11px)', fontWeight: 500, color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>{likesCount}</span>
         </button>
         <div style={{ display:'flex', alignItems:'center', gap:'.4rem', color:'rgba(200,123,82,0.50)', fontSize:'max(1.1rem,11px)' }}>
-          <span style={{ fontSize:'1.1rem' }}>💬</span>
+          <ChatIcon size={16} color="rgba(200,123,82,0.50)" />
           <span>{repliesCount} réponse{repliesCount !== 1 ? 's' : ''}</span>
         </div>
         <div style={{ marginLeft:'auto', fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.62)' }}>Lire →</div>
@@ -1055,7 +1056,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center',
           cursor:'pointer', flexShrink:0,
         }}>
-          <span style={{ fontSize:15 }}>🔔</span>
+          <BellIcon size={15} color="rgba(200,123,82,0.80)" />
           {unreadCount > 0 && (
             <span style={{
               position:'absolute', top:-4, right:-4,
@@ -1070,7 +1071,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           border:'1px solid rgba(200,123,82,0.28)', borderRadius:20,
           padding:'.45rem 1rem', fontSize:'max(1.1rem,11px)', fontWeight:600,
           color:'rgba(200,123,82,0.80)', cursor:'pointer', fontFamily:'var(--font)', whiteSpace:'nowrap',
-        }}>📜 Règles</button>
+        }}>Règles</button>
       </div>
 
       {/* ── Panel notifications ── */}
@@ -1081,7 +1082,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
         }}>
           <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'rgba(140,70,20,0.85)', borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
-            🔔 Mentions
+            <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color="rgba(140,70,20,0.85)" /> Mentions</span>
           </div>
           {mentions.length === 0 ? (
             <div style={{ padding:'1.4rem', textAlign:'center', fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.50)' }}>
@@ -1094,7 +1095,10 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
                 borderBottom:'1px solid rgba(200,123,82,0.07)',
                 background: m.read ? 'transparent' : 'rgba(200,123,82,0.05)',
               }}>
-              <span style={{ fontSize:16, flexShrink:0 }}>👤</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0 }}>
+                <circle cx="12" cy="8" r="4" fill="rgba(200,123,82,0.70)"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(200,123,82,0.70)" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
               <div style={{ minWidth:0 }}>
                 <div style={{ fontSize:'max(1.1rem,11px)', color:'rgba(140,70,20,0.80)', lineHeight:1.5 }}>
                   Tu as été mentionné(e) dans{' '}
@@ -1131,7 +1135,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           boxShadow: '0 5px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.82)',
         }}>
           <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: 'rgba(200,123,82,0.72)', marginBottom: '1rem' }}>
-            📜 Règlement du forum
+            Règlement du forum
           </div>
           {[
             ['Respect mutuel', "Sois bienveillant(e). Pas d'insultes ni propos haineux."],
