@@ -1606,7 +1606,9 @@ export default function App() {
                 borderLeft:'1px solid rgba(210,145,40,0.09)',
                 boxShadow:'none',
                 display:'flex', flexDirection:'column',
-                padding:'52px 22px 32px',
+                padding:'22px 22px 90px',
+                paddingTop: 'calc(env(safe-area-inset-top, 0px) + 22px)',
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
                 animation:'slideInRight 0.36s cubic-bezier(0.34,1.56,0.64,1) both',
               }}>
                 {/* Profile */}
