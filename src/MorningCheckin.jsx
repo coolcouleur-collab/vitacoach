@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MoonIcon, SparkleIcon, SunIcon } from './Icons'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -88,7 +89,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
             marginBottom: 40, textAlign: 'center',
           }}
         >
-          {greet}{nom ? ` ${nom}` : ''} ☀️ · Check-in express
+          <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>{greet}{nom ? ` ${nom}` : ''} <SunIcon size={14} color="rgba(255,220,140,0.90)" /> · Check-in express</span>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -102,7 +103,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 56, marginBottom: 20 }}>😴</div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color="rgba(162,192,248,0.90)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
@@ -157,7 +158,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 56, marginBottom: 20 }}>✨</div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SparkleIcon size={56} color="rgba(255,220,140,0.90)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
@@ -247,7 +248,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                 background: 'linear-gradient(135deg, #C87B52, #E8962A)',
                 color: '#fff',
               }}>
-                ✨ Lancer ma journée
+                <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Lancer ma journée</span>
               </button>
 
               {!intention && (
