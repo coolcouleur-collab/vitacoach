@@ -1003,7 +1003,7 @@ export default function Onboarding({ onTermine }) {
 
       {/* Logo */}
       <div style={{
-        position:'fixed', top:10, left:'50%', transform:'translateX(-50%)', zIndex:100,
+        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 10px)', left:'50%', transform:'translateX(-50%)', zIndex:100,
         background:'rgba(255,248,244,0.80)', backdropFilter:'blur(12px)',
         padding:'4px 16px', borderRadius:20, border:'1px solid rgba(200,123,82,0.14)',
       }}>

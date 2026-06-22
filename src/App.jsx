@@ -344,7 +344,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
       layoutTransition={spring}
       onClick={!open ? () => setOpen(true) : undefined}
       style={{
-        position:'fixed', bottom:26, left:16, right:16,
+        position:'fixed', bottom:'calc(env(safe-area-inset-bottom, 0px) + 16px)', left:16, right:16,
         marginLeft:'auto', marginRight:'auto',
         width:'fit-content',
         maxWidth:'calc(100vw - 32px)',
@@ -1452,6 +1452,7 @@ export default function App() {
             <div style={{
               position:'fixed', top:0, left:0, right:0, zIndex:50,
               padding:'10px 18px',
+              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
               display:'flex', justifyContent:'space-between', alignItems:'center',
             }}>
               {/* Logo */}
@@ -2962,6 +2963,7 @@ const s = {
   mobileHeader: {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'8px 18px 8px',
+    paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
     borderBottom:'1px solid rgba(200,123,82,0.06)',
     background:'transparent',
     backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',

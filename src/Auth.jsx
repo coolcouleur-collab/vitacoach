@@ -187,6 +187,7 @@ export default function Auth({ onConnecte, onBack }) {
 const s = {
   page: { minHeight:'100vh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
+    paddingTop: 'calc(env(safe-area-inset-top, 0px) + 20px)',
     position:'relative', overflow:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',

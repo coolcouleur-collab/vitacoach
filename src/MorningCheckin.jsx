@@ -60,7 +60,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
       <button
         onClick={onSkip}
         style={{
-          position: 'absolute', top: 20, right: 20, zIndex: 10,
+          position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 20px)', right: 20, zIndex: 10,
           background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.15)',
           borderRadius: 20, padding: '6px 14px',
           color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 500,
