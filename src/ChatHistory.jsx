@@ -399,6 +399,7 @@ export default function ChatHistory({
             overflowY: 'auto',
             flex: 1,
             padding: '4px 18px 48px',
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 48px)',
             WebkitOverflowScrolling: 'touch',
           }}>
 

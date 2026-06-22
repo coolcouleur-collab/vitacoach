@@ -628,7 +628,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label="Retour en haut"
           style={{
-            position: 'fixed', bottom: 106, right: 18,
+            position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
             background: 'rgba(255,248,242,0.82)',
             backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
             border: '1px solid rgba(200,123,82,0.22)',

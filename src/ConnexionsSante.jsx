@@ -531,7 +531,7 @@ export default function ConnexionsSante({ userId }) {
             transition={{ type: 'spring', stiffness: 360, damping: 26 }}
             style={{
               position:       'fixed',
-              bottom:         100,
+              bottom:         'calc(env(safe-area-inset-bottom, 0px) + 100px)',
               left:           '50%',
               transform:      'translateX(-50%)',
               background:     'rgba(10,22,51,0.92)',

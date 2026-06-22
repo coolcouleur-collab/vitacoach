@@ -1003,6 +1003,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
           borderRadius:'28px 28px 0 0',
           padding:'12px 24px 48px',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 48px)',
           boxShadow:'0 -10px 52px rgba(0,0,0,0.16)',
           border:'1.5px solid rgba(200,123,82,0.16)',
           borderBottom:'none',

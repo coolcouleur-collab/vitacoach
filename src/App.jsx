@@ -1250,7 +1250,7 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.9, y: -20 }}
             transition={{ type: 'spring', damping: 22, stiffness: 300 }}
             style={{
-              position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
+              position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 100px)', left: '50%', transform: 'translateX(-50%)',
               zIndex: 900, background: 'linear-gradient(135deg, #FFF8F4, #FFF2E0)',
               border: '1.5px solid rgba(200,123,82,0.30)',
               borderRadius: 22, padding: '16px 24px', minWidth: 280, maxWidth: 340,
@@ -1279,6 +1279,7 @@ export default function App() {
             background: 'linear-gradient(90deg, rgba(80,120,200,0.15), rgba(100,140,220,0.10))',
             borderBottom: '1px solid rgba(100,140,220,0.20)',
             padding: '10px 20px',
+            paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
         >
@@ -1993,7 +1994,7 @@ export default function App() {
             }}
             aria-label="Nouvelle discussion"
             style={{
-              position: 'fixed', bottom: 106, right: 18,
+              position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
               width: 52, height: 52, borderRadius: '50%',
               background: 'linear-gradient(135deg, rgba(200,123,82,0.42), rgba(190,112,30,0.48))',
               border: '1px solid rgba(255,220,170,0.22)',
