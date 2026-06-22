@@ -503,7 +503,7 @@ export default function RoutineTab({ userId, profil }) {
               {/* ── Après-midi ── */}
               {routine.apresmidi?.etapes?.length > 0 && (
                 <Section
-                  icon="☀️"
+                  icon={<SunIcon size={22} color="#E8962A" />}
                   titre={routine.apresmidi.titre || 'Après-midi'}
                   heure={routine.apresmidi.heure}
                   etapes={routine.apresmidi.etapes}
