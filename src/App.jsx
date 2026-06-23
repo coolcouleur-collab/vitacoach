@@ -1369,52 +1369,35 @@ export default function App() {
       {/* ══ SIDEBAR (desktop) ══ */}
       {!isMobile && (
         <aside style={s.sidebar}>
-          {/* Zone scrollable */}
-          <div style={{ flex:1, overflowY:'auto', minHeight:0, padding:'1.6rem 1.4rem 0.5rem' }}>
-          <div style={s.sidebarTop}>
-            <style>{`
-              @keyframes dotPulse {
-                0%, 100% { opacity: 1; transform: scale(1); }
-                50%       { opacity: 0.55; transform: scale(1.35); }
-              }
-            `}</style>
-            <span style={{
-              fontSize:30, fontWeight:400, letterSpacing:'-0.05em',
-              fontFamily:"'Cormorant Garamond', Georgia, serif",
-              fontStyle:'italic',
-              color:'rgba(200,123,82,0.65)', mixBlendMode:'multiply',
-            }}>Solenn</span>
-            <span style={{
-              fontSize:9, fontWeight:400, color:'rgba(200,123,82,0.75)',
-              letterSpacing:'0.4px', marginTop:2,
-              fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic',
-              display:'block',
-            }}>
-              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>,</span> guidée.
+          <style>{`@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.35)}}`}</style>
+
+          {/* Logo */}
+          <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:'1px solid rgba(200,123,82,0.14)' }}>
+            <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color:'rgba(200,123,82,0.65)' }}>Solenn</span>
+            <span style={{ fontSize:9, fontWeight:400, color:'rgba(200,123,82,0.75)', letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
+              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite' }}>,</span> guidée.
             </span>
           </div>
 
-          <nav style={s.sidebarNav}>
+          {/* Nav */}
+          <nav style={{ display:'flex', flexDirection:'column', gap:3 }}>
             {navItems.map(({ id, Icon, label }) => {
               const active = onglet === id
               const color = active ? '#C87B52' : 'rgba(200,123,82,0.48)'
               return (
-                <button key={id} style={active ? s.navActive : s.nav}
-                  onClick={() => setOnglet(id)}>
+                <button key={id} style={active ? s.navActive : s.nav} onClick={() => setOnglet(id)}>
                   <Icon color={color} size={18} />
                   <span>{label}</span>
                   {id === 'sante' && score > 0 && (
-                    <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700,
-                      color: scoreColor, background: scoreColor+'18', borderRadius:12, padding:'2px 7px' }}>
-                      {score}
-                    </span>
+                    <span style={{ marginLeft:'auto', fontSize:11, fontWeight:700, color: scoreColor, background: scoreColor+'18', borderRadius:12, padding:'2px 7px' }}>{score}</span>
                   )}
                 </button>
               )
             })}
           </nav>
 
-          <div style={s.sidebarBottom}>
+          {/* Bas de sidebar */}
+          <div style={{ marginTop:'1rem', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)', display:'flex', flexDirection:'column', gap:5 }}>
             <div style={s.profileCard}>
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
@@ -1422,50 +1405,28 @@ export default function App() {
                 {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#C87B52" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
-            {!isPro && (
-              <button style={s.btnPro} onClick={passerPro}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 4.99€/mois</button>
-            )}
+            {!isPro && <button style={s.btnPro} onClick={passerPro}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 4.99€/mois</button>}
             {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
-            <button
-              style={{
-                ...s.btnEdit,
-                background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)',
-                color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)',
-                border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)',
-                display:'flex', alignItems:'center', gap:6,
-              }}
-              onClick={notifEnabled ? desactiverNotifications : activerNotifications}
-            >
+            <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => {
-              setProfilBackup(profil); setProfil(null)
-            }}>✏ Modifier mon profil</button>
+            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => { setProfilBackup(profil); setProfil(null) }}>✏ Modifier mon profil</button>
             <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               Paramètres
             </button>
+            <button onClick={async () => {
+              await supabase.auth.signOut()
+              localStorage.removeItem('vitacoach_user')
+              localStorage.removeItem('vitacoach_profil')
+              setUser(null); setProfil(null)
+            }} style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6, color:'rgba(239,68,68,0.70)', border:'1px solid rgba(239,68,68,0.18)', background:'rgba(239,68,68,0.04)'}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.70)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Se déconnecter
+            </button>
           </div>
-          </div>{/* fin zone scrollable */}
-          {/* Logout — toujours visible, hors du scroll */}
-          <button onClick={async () => {
-            await supabase.auth.signOut()
-            localStorage.removeItem('vitacoach_user')
-            localStorage.removeItem('vitacoach_profil')
-            setUser(null)
-            setProfil(null)
-          }} style={{
-            flexShrink:0, margin:'0 12px 12px',
-            display:'flex', alignItems:'center', gap:6,
-            padding:'8px 12px', borderRadius:10, border:'1px solid rgba(239,68,68,0.18)',
-            background:'rgba(239,68,68,0.04)', cursor:'pointer', fontFamily:F,
-            color:'rgba(239,68,68,0.70)', fontSize:12, fontWeight:400,
-          }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.70)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Se déconnecter
-          </button>
         </aside>
       )}
 
@@ -2939,9 +2900,9 @@ const s = {
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
-    padding:0,
+    padding:'1.2rem 1rem',
     position:'fixed', top:0, left:0, height:'100vh',
-    zIndex:50, overflow:'hidden',
+    zIndex:50, overflowY:'auto',
   },
   sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
