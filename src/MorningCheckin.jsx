@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MoonIcon, SparkleIcon, SunIcon } from './Icons'
+import { MoonIcon, SparkleIcon, SunIcon, TargetIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
 
 const EASE = [0.22, 1, 0.36, 1]
 
 const HUMEURS = [
-  { val: 1, emoji: '😶', label: 'Vide',     color: 'rgba(148,163,184,0.90)' },
-  { val: 2, emoji: '😕', label: 'Difficile', color: 'rgba(251,146,60,0.90)' },
-  { val: 3, emoji: '😐', label: 'Neutre',    color: 'rgba(251,191,36,0.90)' },
-  { val: 4, emoji: '🙂', label: 'Bien',      color: 'rgba(34,197,94,0.90)'  },
-  { val: 5, emoji: '😄', label: 'Super',     color: 'rgba(200,123,82,0.90)' },
+  { val: 1, emoji: '😶', label: 'Vide',      color: 'rgba(148,163,184,0.90)', icon: <NeutralIcon size={30} color="rgba(148,163,184,0.90)" /> },
+  { val: 2, emoji: '😕', label: 'Difficile', color: 'rgba(251,146,60,0.90)',  icon: <SadIcon     size={30} color="rgba(251,146,60,0.90)"  /> },
+  { val: 3, emoji: '😐', label: 'Neutre',    color: 'rgba(251,191,36,0.90)',  icon: <NeutralIcon size={30} color="rgba(251,191,36,0.90)"  /> },
+  { val: 4, emoji: '🙂', label: 'Bien',      color: 'rgba(34,197,94,0.90)',   icon: <HappyIcon   size={30} color="rgba(34,197,94,0.90)"   /> },
+  { val: 5, emoji: '😄', label: 'Super',     color: 'rgba(200,123,82,0.90)',  icon: <HappyIcon   size={30} color="rgba(200,123,82,0.90)"  /> },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
@@ -194,7 +194,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                       transition: 'background 0.2s, border 0.2s',
                     }}
                   >
-                    <span style={{ fontSize: 30 }}>{h.emoji}</span>
+                    <span style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>{h.icon}</span>
                     <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.60)', fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
                       {h.label}
                     </span>
@@ -213,7 +213,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ fontSize: 56, marginBottom: 20 }}>🎯</div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><TargetIcon size={56} color="rgba(200,123,82,0.80)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SendIcon } from './Icons'
+import { SendIcon, FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon, LeafIcon, HeartIcon, RunIcon, FireIcon } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -255,19 +255,19 @@ function UserBubble({ text }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { emoji:'⚡', label:'Énergie & vitalité' },
-  { emoji:'⚖️', label:'Perdre du poids' },
-  { emoji:'😴', label:'Mieux dormir' },
-  { emoji:'🧘', label:'Gérer le stress' },
-  { emoji:'💪', label:'Sport & forme' },
-  { emoji:'🥗', label:'Alimentation saine' },
+  { emoji:'⚡', label:'Énergie & vitalité',  icon: <FlashIcon    size={22} color="rgba(251,191,36,0.90)"  /> },
+  { emoji:'⚖️', label:'Perdre du poids',     icon: <TargetIcon   size={22} color="rgba(200,123,82,0.90)"  /> },
+  { emoji:'😴', label:'Mieux dormir',         icon: <MoonIcon     size={22} color="rgba(162,192,248,0.90)" /> },
+  { emoji:'🧘', label:'Gérer le stress',      icon: <MeditateIcon size={22} color="rgba(167,139,250,0.90)" /> },
+  { emoji:'💪', label:'Sport & forme',        icon: <MuscleIcon   size={22} color="rgba(200,123,82,0.90)"  /> },
+  { emoji:'🥗', label:'Alimentation saine',   icon: <FoodIcon     size={22} color="rgba(34,197,94,0.90)"   /> },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { emoji:'🛋️', label:'Sédentaire' },
-  { emoji:'🚶', label:'Léger' },
-  { emoji:'🏃', label:'Modéré' },
-  { emoji:'🔥', label:'Intense' },
+  { emoji:'🛋️', label:'Sédentaire', icon: <LeafIcon  size={16} color="rgba(200,123,82,0.70)" /> },
+  { emoji:'🚶', label:'Léger',       icon: <HeartIcon size={16} color="rgba(34,197,94,0.80)"  /> },
+  { emoji:'🏃', label:'Modéré',      icon: <RunIcon   size={16} color="rgba(200,123,82,0.90)" /> },
+  { emoji:'🔥', label:'Intense',     icon: <FireIcon  size={16} color="rgba(239,68,68,0.90)"  /> },
 ]
 
 const ALIMENTATION_OPTIONS = [
@@ -728,7 +728,7 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => handleObjectifSelect(opt)}
                 style={cardBtnStyle}
               >
-                <span style={{fontSize:22, display:'block', marginBottom:4}}>{opt.emoji}</span>
+                <span style={{display:'flex', justifyContent:'center', marginBottom:4}}>{opt.icon}</span>
                 <span style={{fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.88)', fontFamily:'Poppins, sans-serif', lineHeight:1.3}}>
                   {opt.label}
                 </span>
@@ -745,10 +745,9 @@ export default function Onboarding({ onTermine }) {
       let onSelect = null
 
       if (chatStep === 'activite') {
-        options = ACTIVITE_OPTIONS.map(o => `${o.emoji} ${o.label}`)
+        options = ACTIVITE_OPTIONS
         onSelect = async (val) => {
-          const opt = ACTIVITE_OPTIONS.find(o => `${o.emoji} ${o.label}` === val)
-          await handleActiviteSelect(opt)
+          await handleActiviteSelect(val)
         }
       } else if (chatStep === 'sante_yn') {
         options = ['✅ Oui', '❌ Non']
@@ -788,7 +787,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => onSelect && onSelect(opt)}
                 style={chipBtnStyle}
               >
-                {opt}
+                {opt && typeof opt === 'object' && opt.icon
+                  ? <span style={{display:'flex', alignItems:'center', gap:6}}>{opt.icon}{opt.label}</span>
+                  : opt}
               </motion.button>
             ))}
           </div>

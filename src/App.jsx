@@ -17,7 +17,7 @@ const HerbalTab   = lazy(() => import('./HerbalTab'))
 const SanteTab    = lazy(() => import('./SanteTab'))
 const RoutineTab  = lazy(() => import('./RoutineTab'))
 const ChatHistory = lazy(() => import('./ChatHistory'))
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon } from './Icons'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
@@ -119,10 +119,10 @@ function HealthPermModal({ onAllow, onLater }) {
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
-            { bg:'rgba(200,100,40,0.12)', e:'❤️' },
-            { bg:'rgba(200,100,40,0.08)', e:'🏃' },
-          ].map(({ bg, e }) => (
-            <div key={e} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>{e}</div>
+            { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color="rgba(200,100,40,0.80)" /> },
+            { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color="rgba(200,100,40,0.70)" /> },
+          ].map(({ bg, icon }, idx) => (
+            <div key={idx} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center' }}>{icon}</div>
           ))}
         </div>
 
@@ -238,7 +238,7 @@ function CelebrationOverlay({ score, onDone }) {
   )
 }
 
-function ReactionBtn({ emoji, active, onClick }) {
+function ReactionBtn({ emoji, icon, active, onClick }) {
   const [pressed, setPressed] = useState(false)
   return (
     <button
@@ -247,18 +247,17 @@ function ReactionBtn({ emoji, active, onClick }) {
       style={{
         background: active ? 'rgba(200,123,82,0.15)' : 'transparent',
         border: active ? '1.5px solid rgba(200,123,82,0.60)' : '1.5px solid rgba(200,123,82,0.18)',
-        borderRadius: 12, padding: '3px 9px',
-        fontSize: 14,
+        borderRadius: 12, padding: '4px 9px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer',
         transition: 'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
         transform: pressed ? 'scale(1.40)' : active ? 'scale(1.10)' : 'scale(1)',
         boxShadow: active ? '0 2px 10px rgba(200,123,82,0.20)' : 'none',
         filter: active ? 'none' : 'opacity(0.45)',
         outline: 'none',
-        lineHeight: 1,
       }}
     >
-      {emoji}
+      {icon || emoji}
     </button>
   )
 }
@@ -1813,12 +1812,17 @@ export default function App() {
                       </div>
                       {msg.role === 'assistant' && (
                         <div style={{ display:'flex', gap:5, paddingLeft:4, alignItems:'center' }}>
-                          {['👍','💡','❤️'].map(emoji => (
+                          {[
+                            { key:'👍', icon: <ThumbsUpIcon  size={13} color="rgba(200,123,82,0.80)" /> },
+                            { key:'💡', icon: <LightbulbIcon size={13} color="rgba(200,123,82,0.80)" /> },
+                            { key:'❤️', icon: <HeartIcon     size={13} color="rgba(200,123,82,0.80)" /> },
+                          ].map(({ key, icon }) => (
                             <ReactionBtn
-                              key={emoji}
-                              emoji={emoji}
-                              active={reactions[i] === emoji}
-                              onClick={() => setReactions(prev => ({ ...prev, [i]: prev[i]===emoji ? null : emoji }))}
+                              key={key}
+                              emoji={key}
+                              icon={icon}
+                              active={reactions[i] === key}
+                              onClick={() => setReactions(prev => ({ ...prev, [i]: prev[i]===key ? null : key }))}
                             />
                           ))}
                           <button

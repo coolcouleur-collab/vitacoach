@@ -416,6 +416,14 @@ export function ForumIcon({ color = '#c4b5a8', size = 22 }) {
   )
 }
 
+export function ThumbsUpIcon({ color = '#FF6B35', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M7 22V11M2 13v7a2 2 0 0 0 2 2h11.34a2 2 0 0 0 1.97-1.67l1.31-8A2 2 0 0 0 16.65 11H13V7a2 2 0 0 0-2-2h-1.5L7 11" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
 export function GiftIcon({ color = '#FF6B35', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
