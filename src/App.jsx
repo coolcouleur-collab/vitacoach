@@ -2932,11 +2932,11 @@ const s = {
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
-    padding:'2.8rem 1.4rem 2.4rem',
+    padding:'1.6rem 1.4rem 1.5rem',
     position:'fixed', top:0, left:0, height:'100vh',
     zIndex:50, overflowY:'auto',
   },
-  sidebarTop: { marginBottom:'2.8rem', paddingBottom:'2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
+  sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
     /* Géré par ShinyLogoText — statique par défaut, shimmer au hover/tap */
@@ -2951,7 +2951,7 @@ const s = {
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
   sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
-  sidebarBottom: { display:'flex', flexDirection:'column', gap:8, marginTop:'2rem', paddingTop:'2rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
+  sidebarBottom: { display:'flex', flexDirection:'column', gap:6, marginTop:'1rem', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
