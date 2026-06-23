@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
@@ -292,6 +292,12 @@ export default function SettingsSheet({
   onExportData,
 }) {
   const [confirmReset, setConfirmReset] = useState(false)
+
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
 
   // Heure format HH:MM depuis nombre décimal ou string
   const fmtHeure = (h) => {

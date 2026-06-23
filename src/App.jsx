@@ -1369,6 +1369,8 @@ export default function App() {
       {/* ══ SIDEBAR (desktop) ══ */}
       {!isMobile && (
         <aside style={s.sidebar}>
+          {/* Zone scrollable */}
+          <div style={{ flex:1, overflowY:'auto', minHeight:0, padding:'1.6rem 1.4rem 0.5rem' }}>
           <div style={s.sidebarTop}>
             <style>{`
               @keyframes dotPulse {
@@ -1444,7 +1446,8 @@ export default function App() {
               Paramètres
             </button>
           </div>
-          {/* Logout — toujours visible en bas de la sidebar */}
+          </div>{/* fin zone scrollable */}
+          {/* Logout — toujours visible, hors du scroll */}
           <button onClick={async () => {
             await supabase.auth.signOut()
             localStorage.removeItem('vitacoach_user')
@@ -1452,9 +1455,9 @@ export default function App() {
             setUser(null)
             setProfil(null)
           }} style={{
-            position:'absolute', bottom:12, left:16, right:16,
+            flexShrink:0, margin:'0 12px 12px',
             display:'flex', alignItems:'center', gap:6,
-            padding:'7px 12px', borderRadius:10, border:'1px solid rgba(239,68,68,0.18)',
+            padding:'8px 12px', borderRadius:10, border:'1px solid rgba(239,68,68,0.18)',
             background:'rgba(239,68,68,0.04)', cursor:'pointer', fontFamily:F,
             color:'rgba(239,68,68,0.70)', fontSize:12, fontWeight:400,
           }}>
@@ -2936,9 +2939,9 @@ const s = {
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
-    padding:'1.6rem 1.4rem 52px',
+    padding:0,
     position:'fixed', top:0, left:0, height:'100vh',
-    zIndex:50, overflowY:'auto',
+    zIndex:50, overflow:'hidden',
   },
   sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
