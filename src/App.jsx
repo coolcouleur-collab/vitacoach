@@ -2932,7 +2932,7 @@ const s = {
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
     display:'flex', flexDirection:'column',
-    padding:'1.6rem 1.4rem 1.5rem',
+    padding:'1.6rem 1.4rem 0.5rem',
     position:'fixed', top:0, left:0, height:'100vh',
     zIndex:50, overflowY:'auto',
   },
@@ -2995,7 +2995,7 @@ const s = {
   },
   btnEdit: {
     background:'rgba(245,235,215,0.22)', color:'rgba(188,118,28,0.65)', border:'1px solid rgba(200,123,82,0.14)',
-    padding:'9px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
+    padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
   },
