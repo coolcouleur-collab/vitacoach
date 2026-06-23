@@ -2950,8 +2950,8 @@ const s = {
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
-  sidebarNav: { display:'flex', flexDirection:'column', gap:4, flex:1 },
-  sidebarBottom: { display:'flex', flexDirection:'column', gap:6, marginTop:'1rem', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
+  sidebarNav: { display:'flex', flexDirection:'column', gap:4 },
+  sidebarBottom: { display:'flex', flexDirection:'column', gap:6, marginTop:'auto', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
