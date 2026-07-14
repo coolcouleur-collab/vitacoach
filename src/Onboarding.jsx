@@ -301,8 +301,10 @@ const PROFESSION_OPTIONS = [
 
 // ─── STEPS ────────────────────────────────────────────────────────────────────
 // Used to track conversation progress and compute progress bar
-const STEP_ORDER = ['intro','nom','objectif','age','activite','alimentation','sante_yn','sante_conditions','lever','coucher','profession','taille_poids']
-const TOTAL_STEPS = 10 // visible steps (excluding intro)
+const STEP_ORDER = ['intro','nom','objectif','age_range','activite']
+const TOTAL_STEPS = 4
+
+const AGE_RANGE_OPTIONS = ['18–24 ans','25–34 ans','35–44 ans','45–54 ans','55 ans et +']
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine }) {
@@ -371,23 +373,14 @@ export default function Onboarding({ onTermine }) {
   function runIntro() {
     setInputMode(null)
     setChatStep('intro')
-    const msgs = [
-      "Hey ! 👋",
-      "Moi c'est Solenn — ton coach bien-être personnel ✨",
-      "Pour commencer... comment tu t'appelles ?",
-    ]
-    msgs.forEach((text, i) => {
+    setTimeout(() => {
+      setMsgs([{ id: 0, from:'solenn', text:"Coucou, je suis Solenn, bienvenue ! Je vais commencer par te demander ton prénom afin de mieux te connaître." }])
       setTimeout(() => {
-        setMsgs(m => [...m, { id: i, from:'solenn', text }])
-        if (i === msgs.length - 1) {
-          setTimeout(() => {
-            setChatStep('nom')
-            setInputMode('text')
-            inputRef.current?.focus()
-          }, 150)
-        }
-      }, 300 + i * 400)
-    })
+        setChatStep('nom')
+        setInputMode('text')
+        inputRef.current?.focus()
+      }, 200)
+    }, 300)
   }
 
   // Sequential message sender — délais réduits pour fluidité mobile
@@ -418,8 +411,7 @@ export default function Onboarding({ onTermine }) {
     setChatStep('objectif')
     await delay(40)
     await sendSolennSeq([
-      { text:`Enchanté·e ${nom} ! 😊`, after:0 },
-      { text:"C'est quoi ton objectif principal ?", after:400 },
+      { text:`Avec plaisir, ${nom} ! Qu'est-ce qui t'amène chez Solenn ?` },
     ])
     setInputMode('cards')
   }
@@ -428,23 +420,25 @@ export default function Onboarding({ onTermine }) {
     const val = `${opt.emoji} ${opt.label}`
     setInputMode(null)
     addUserMsg(val)
-    const finalAnswers = { ...answers, objectif: val }
-    setAnswers(finalAnswers)
-
-    let reaction = 'Parfait, on commence !'
-    if (opt.label.includes('nergie')) reaction = 'Top, on va booster ça ensemble 💪'
-    else if (opt.label.includes('dormir')) reaction = 'Le sommeil, c\'est ma spécialité 🌙'
-    else if (opt.label.includes('stress')) reaction = 'Je comprends — on s\'en occupe 🧘'
-    else if (opt.label.includes('poids')) reaction = 'On y arrive ensemble 🎯'
-    else if (opt.label.includes('Sport')) reaction = 'On va aller loin ! 💪'
-    else if (opt.label.includes('Aliment')) reaction = 'Bien manger, tout commence par là 🥗'
-
+    setAnswers(a => ({ ...a, objectif: val }))
+    setChatStep('age_range')
     await delay(40)
     await sendSolennSeq([
-      { text:reaction, after:0 },
+      { text:"Et pour personnaliser tes conseils — tu as quel âge ?" },
     ])
-    await delay(400)
-    finishOnboarding(finalAnswers)
+    setInputMode('buttons')
+  }
+
+  async function handleAgeRangeSelect(val) {
+    setInputMode(null)
+    addUserMsg(val)
+    setAnswers(a => ({ ...a, age: val }))
+    setChatStep('activite')
+    await delay(40)
+    await sendSolennSeq([
+      { text:"Ton niveau d'activité au quotidien ?" },
+    ])
+    setInputMode('buttons')
   }
 
   async function handleAgeSubmit() {
@@ -463,14 +457,14 @@ export default function Onboarding({ onTermine }) {
     const val = `${opt.emoji} ${opt.label}`
     setInputMode(null)
     addUserMsg(val)
-    setAnswers(a => ({ ...a, activite: val }))
-    setChatStep('alimentation')
+    const finalAnswers = { ...answers, activite: val }
+    setAnswers(finalAnswers)
     await delay(40)
     await sendSolennSeq([
-      { text:"Et ton alimentation, tu te décrirais comment ?", after:0 },
+      { text:"C'est noté ! Je prépare ton espace..." },
     ])
-    setSelectedChips([])
-    setInputMode('chips')
+    await delay(600)
+    finishOnboarding(finalAnswers)
   }
 
   async function handleAlimentationSubmit() {
@@ -739,7 +733,12 @@ export default function Onboarding({ onTermine }) {
       let options = []
       let onSelect = null
 
-      if (chatStep === 'activite') {
+      if (chatStep === 'age_range') {
+        options = AGE_RANGE_OPTIONS
+        onSelect = async (val) => {
+          await handleAgeRangeSelect(val)
+        }
+      } else if (chatStep === 'activite') {
         options = ACTIVITE_OPTIONS
         onSelect = async (val) => {
           await handleActiviteSelect(val)
