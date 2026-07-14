@@ -382,9 +382,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.18)'}`,
-                  background: isSel ? opt.accent.sel : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? opt.accent.sel : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', display:'flex', alignItems:'center', gap:14,
                   fontFamily:"'DM Sans', sans-serif", textAlign:'left',
@@ -437,9 +437,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.18)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -483,9 +483,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.18)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -539,9 +539,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -587,9 +587,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -638,9 +638,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
