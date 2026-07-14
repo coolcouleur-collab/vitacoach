@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SendIcon, FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon, LeafIcon, HeartIcon, RunIcon, FireIcon } from './Icons'
+import { FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
@@ -52,12 +52,7 @@ function RevealScreen({ answers, onEnter }) {
 
   const nom = answers.nom || 'toi'
   const objectifs = answers.objectif ? [answers.objectif] : []
-
-  const tags = [
-    answers.activite,
-    ...(Array.isArray(answers.alimentation) ? answers.alimentation.slice(0, 2) : []),
-    answers.profession,
-  ].filter(Boolean).slice(0, 4)
+  const tags = [answers.activite, answers.age].filter(Boolean)
 
   return (
     <div style={{
@@ -111,9 +106,7 @@ function RevealScreen({ answers, onEnter }) {
                   background:'rgba(200,123,82,0.09)',
                   border:'1px solid rgba(200,123,82,0.22)',
                   fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.80)',
-                }}>
-                  {o}
-                </span>
+                }}>{o}</span>
               ))}
             </div>
           </div>
@@ -126,9 +119,7 @@ function RevealScreen({ answers, onEnter }) {
                 background:'rgba(200,123,82,0.05)',
                 border:'1px solid rgba(200,123,82,0.14)',
                 fontSize:11, fontWeight:500, color:'rgba(200,123,82,0.70)',
-              }}>
-                {t}
-              </span>
+              }}>{t}</span>
             ))}
           </div>
         )}
@@ -141,7 +132,6 @@ function RevealScreen({ answers, onEnter }) {
             fontSize:15, fontWeight:600, cursor:'pointer',
             fontFamily:'Poppins, sans-serif',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-            boxShadow:'none',
             opacity: btnVisible ? 1 : 0,
             transform: btnVisible ? 'translateY(0)' : 'translateY(14px)',
             transition:'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
@@ -156,446 +146,110 @@ function RevealScreen({ answers, onEnter }) {
   )
 }
 
-// ─── TYPING INDICATOR ─────────────────────────────────────────────────────────
-function TypingIndicator() {
-  return (
-    <div style={{display:'flex', alignItems:'flex-end', gap:10, marginBottom:4, paddingLeft:4}}>
-      <SolennAvatar />
-      <div style={{
-        display:'flex', alignItems:'center', gap:5,
-        background:'rgba(255,248,244,0.90)',
-        border:'1px solid rgba(200,123,82,0.20)',
-        borderRadius:20, borderBottomLeftRadius:4,
-        padding:'12px 18px',
-        boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
-      }}>
-        {[0,1,2].map(i => (
-          <motion.span
-            key={i}
-            style={{
-              display:'inline-block', width:7, height:7, borderRadius:'50%',
-              background:'rgba(200,123,82,0.55)',
-            }}
-            animate={{opacity:[0.3,1,0.3]}}
-            transition={{repeat:Infinity, duration:0.8, delay:i*0.2}}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ─── SOLENN AVATAR ────────────────────────────────────────────────────────────
-function SolennAvatar() {
-  return (
-    <div className="liquid-avatar" style={{
-      width:36, height:36, flexShrink:0,
-      background:'rgba(220,140,70,0.08)',
-      border:'1.5px solid rgba(200,123,82,0.28)',
-      display:'flex', alignItems:'center', justifyContent:'center',
-      isolation:'isolate', transform:'translateZ(0)',
-    }}>
-      <span style={{
-        fontSize:16, fontWeight:700, color:'rgba(255,230,190,0.92)',
-        fontFamily:'Poppins, sans-serif',
-        lineHeight:1, letterSpacing:'-0.02em', userSelect:'none',
-      }}>S</span>
-    </div>
-  )
-}
-
-// ─── CHAT BUBBLE ──────────────────────────────────────────────────────────────
-function SolennBubble({ text }) {
-  return (
-    <motion.div
-      initial={{opacity:0, y:12}}
-      animate={{opacity:1, y:0}}
-      transition={{duration:0.3}}
-      style={{display:'flex', alignItems:'flex-end', gap:10, marginBottom:4, paddingLeft:4}}
-    >
-      <SolennAvatar />
-      <div style={{
-        maxWidth:'78%',
-        background:'#FEF0E4',
-        border:'1px solid rgba(200,123,82,0.20)',
-        borderRadius:20, borderBottomLeftRadius:4,
-        padding:'12px 18px',
-        fontSize:15, fontWeight:500, color:'#3D2014', lineHeight:1.55,
-        boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
-        fontFamily:'Poppins, sans-serif',
-      }}>
-        {text}
-      </div>
-    </motion.div>
-  )
-}
-
-function UserBubble({ text }) {
-  return (
-    <motion.div
-      initial={{opacity:0, y:12}}
-      animate={{opacity:1, y:0}}
-      transition={{duration:0.3}}
-      style={{display:'flex', justifyContent:'flex-end', marginBottom:4, paddingRight:4}}
-    >
-      <div style={{
-        maxWidth:'78%',
-        background:'linear-gradient(135deg, #C87B52, #E8962A)',
-        borderRadius:20, borderBottomRightRadius:4,
-        padding:'12px 18px',
-        fontSize:15, fontWeight:500, color:'#fff', lineHeight:1.55,
-        boxShadow:'0 2px 12px rgba(200,123,82,0.28)',
-        fontFamily:'Poppins, sans-serif',
-      }}>
-        {text}
-      </div>
-    </motion.div>
-  )
-}
-
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { emoji:'⚡', label:'Énergie & vitalité',  icon: <FlashIcon    size={22} color="rgba(251,191,36,0.90)"  /> },
-  { emoji:'⚖️', label:'Perdre du poids',     icon: <TargetIcon   size={22} color="rgba(200,123,82,0.90)"  /> },
-  { emoji:'😴', label:'Mieux dormir',         icon: <MoonIcon     size={22} color="rgba(162,192,248,0.90)" /> },
-  { emoji:'🧘', label:'Gérer le stress',      icon: <MeditateIcon size={22} color="rgba(167,139,250,0.90)" /> },
-  { emoji:'💪', label:'Sport & forme',        icon: <MuscleIcon   size={22} color="rgba(200,123,82,0.90)"  /> },
-  { emoji:'🥗', label:'Alimentation saine',   icon: <FoodIcon     size={22} color="rgba(34,197,94,0.90)"   /> },
+  { emoji:'⚡', label:'Énergie & vitalité',  Icon: FlashIcon,    iconColor:'rgba(251,191,36,0.90)'  },
+  { emoji:'⚖️', label:'Perdre du poids',     Icon: TargetIcon,   iconColor:'rgba(200,123,82,0.90)'  },
+  { emoji:'😴', label:'Mieux dormir',         Icon: MoonIcon,     iconColor:'rgba(162,192,248,0.90)' },
+  { emoji:'🧘', label:'Gérer le stress',      Icon: MeditateIcon, iconColor:'rgba(167,139,250,0.90)' },
+  { emoji:'💪', label:'Sport & forme',        Icon: MuscleIcon,   iconColor:'rgba(200,123,82,0.90)'  },
+  { emoji:'🥗', label:'Alimentation saine',   Icon: FoodIcon,     iconColor:'rgba(34,197,94,0.90)'   },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { emoji:'🛋️', label:'Sédentaire', icon: <LeafIcon  size={16} color="rgba(200,123,82,0.70)" /> },
-  { emoji:'🚶', label:'Léger',       icon: <HeartIcon size={16} color="rgba(34,197,94,0.80)"  /> },
-  { emoji:'🏃', label:'Modéré',      icon: <RunIcon   size={16} color="rgba(200,123,82,0.90)" /> },
-  { emoji:'🔥', label:'Intense',     icon: <FireIcon  size={16} color="rgba(239,68,68,0.90)"  /> },
+  { emoji:'🛋️', label:'Sédentaire' },
+  { emoji:'🚶', label:'Léger'      },
+  { emoji:'🏃', label:'Modéré'     },
+  { emoji:'🔥', label:'Intense'    },
 ]
-
-const ALIMENTATION_OPTIONS = [
-  'Équilibrée','Végétarienne','Vegan','Sans gluten','Omnivore','Prise de masse','Je mange n\'importe quoi',
-]
-
-const SANTE_CONDITIONS_OPTIONS = [
-  'Diabète','Hypertension','Problèmes cardiaques','Allergie alimentaire',
-  'Trouble du sommeil','Anxiété/dépression','Autre',
-]
-
-const LEVER_OPTIONS = [
-  { label:'Avant 6h', val:5.5 },
-  { label:'6h–7h', val:6.5 },
-  { label:'7h–8h', val:7.5 },
-  { label:'8h–9h', val:8.5 },
-  { label:'Après 9h', val:9.5 },
-]
-
-const COUCHER_OPTIONS = [
-  { label:'Avant 22h', val:21.5 },
-  { label:'22h–23h', val:22.5 },
-  { label:'23h–00h', val:23.5 },
-  { label:'00h–1h', val:0.5 },
-  { label:'Après 1h', val:2 },
-]
-
-const PROFESSION_OPTIONS = [
-  'Étudiant·e','Salarié·e','Freelance/Indépendant','Entrepreneur','Sans emploi','Retraité·e','Autre',
-]
-
-// ─── STEPS ────────────────────────────────────────────────────────────────────
-// Used to track conversation progress and compute progress bar
-const STEP_ORDER = ['intro','nom','objectif','age_range','activite']
-const TOTAL_STEPS = 4
 
 const AGE_RANGE_OPTIONS = ['18–24 ans','25–34 ans','35–44 ans','45–54 ans','55 ans et +']
 
+// ─── STYLES ───────────────────────────────────────────────────────────────────
+const S = {
+  question: {
+    fontSize:26, fontWeight:700, lineHeight:1.35,
+    color:'#3D2014', fontFamily:'Poppins, sans-serif',
+    margin:0, letterSpacing:'-0.01em',
+  },
+  sub: {
+    fontSize:14, fontWeight:400, color:'rgba(61,32,20,0.55)',
+    fontFamily:'Poppins, sans-serif', margin:'8px 0 0', lineHeight:1.5,
+  },
+  input: {
+    width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
+    border:'1.5px solid rgba(200,123,82,0.28)',
+    background:'rgba(255,248,244,0.92)',
+    fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
+    outline:'none', fontWeight:500,
+    boxShadow:'0 2px 14px rgba(200,123,82,0.09)',
+    transition:'border-color 0.2s',
+  },
+  cta: {
+    width:'100%', padding:'16px', borderRadius:16, border:'none',
+    background:'linear-gradient(135deg, #C87B52, #E8962A)',
+    color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer',
+    fontFamily:'Poppins, sans-serif',
+    boxShadow:'0 6px 20px rgba(200,123,82,0.35)',
+    transition:'opacity 0.2s, transform 0.15s',
+  },
+  card: {
+    padding:'20px 12px 16px', borderRadius:20,
+    border:'1.5px solid rgba(200,123,82,0.16)',
+    background:'rgba(255,248,244,0.90)',
+    cursor:'pointer', textAlign:'center',
+    fontFamily:'Poppins, sans-serif',
+    boxShadow:'0 4px 18px rgba(200,123,82,0.09)',
+    outline:'none', transition:'all 0.18s',
+  },
+  row: {
+    width:'100%', padding:'16px 20px', borderRadius:14, border:'none',
+    border:'1.5px solid rgba(200,123,82,0.16)',
+    background:'rgba(255,248,244,0.90)',
+    cursor:'pointer', textAlign:'left',
+    fontSize:15, fontWeight:500, color:'#3D2014',
+    fontFamily:'Poppins, sans-serif',
+    boxShadow:'0 2px 10px rgba(200,123,82,0.07)',
+    outline:'none', transition:'all 0.18s',
+    display:'flex', alignItems:'center', gap:12,
+  },
+}
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine }) {
-  const [msgs, setMsgs] = useState([])
-  const [chatStep, setChatStep] = useState('intro')
+  const [step, setStep] = useState(0)
+  const [nomVal, setNomVal] = useState('')
   const [answers, setAnswers] = useState({})
-  const [inputVal, setInputVal] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const [inputMode, setInputMode] = useState(null)
-  // inputMode: null | 'text' | 'number' | 'cards' | 'chips' | 'buttons' | 'dual_number'
-  const [selectedChips, setSelectedChips] = useState([])
-  const [ageVal, setAgeVal] = useState(25)
-  const [tailleVal, setTailleVal] = useState(170)
-  const [poidsVal, setPoidsVal] = useState(65)
-  const [professionInput, setProfessionInput] = useState('')
   const [showReveal, setShowReveal] = useState(false)
-  const [progress, setProgress] = useState(0)
+  const [slideDir, setSlideDir] = useState(1)
+  const nomRef = useRef(null)
 
-  const bottomRef = useRef(null)
-  const inputRef = useRef(null)
-  const introRan = useRef(false)
-
-  // Auto-scroll uniquement sur nouveaux messages (pas sur isTyping/inputMode)
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior:'smooth' })
-  }, [msgs])
-
-  // Start intro sequence on mount — guard against StrictMode double-invoke
-  useEffect(() => {
-    if (introRan.current) return
-    introRan.current = true
-    runIntro()
+    setTimeout(() => nomRef.current?.focus(), 350)
   }, [])
 
-  // Update progress bar when chatStep changes
-  useEffect(() => {
-    const idx = STEP_ORDER.indexOf(chatStep)
-    if (idx <= 1) setProgress(0)
-    else setProgress(Math.round(((idx - 1) / TOTAL_STEPS) * 100))
-  }, [chatStep])
-
-  // ── Helper: queue Solenn messages with typing indicator ──────────────────────
-  function sendSolenn(texts, delay = 0) {
-    return new Promise(resolve => {
-      let cursor = delay
-      texts.forEach((text, i) => {
-        setTimeout(() => {
-          setIsTyping(true)
-        }, cursor)
-        cursor += 800
-        setTimeout(() => {
-          setIsTyping(false)
-          setMsgs(m => [...m, { id: Date.now() + i, from:'solenn', text }])
-          if (i === texts.length - 1) resolve()
-        }, cursor)
-        cursor += 100
-      })
-    })
-  }
-
-  function addUserMsg(text) {
-    setMsgs(m => [...m, { id: Date.now(), from:'user', text }])
-  }
-
-  // ── INTRO ─────────────────────────────────────────────────────────────────────
-  function runIntro() {
-    setInputMode(null)
-    setChatStep('intro')
-    setTimeout(() => {
-      setMsgs([{ id: 0, from:'solenn', text:"Coucou, je suis Solenn, bienvenue ! Je vais commencer par te demander ton prénom afin de mieux te connaître." }])
-      setTimeout(() => {
-        setChatStep('nom')
-        setInputMode('text')
-        inputRef.current?.focus()
-      }, 200)
-    }, 300)
-  }
-
-  // Sequential message sender — délais réduits pour fluidité mobile
-  function sendSolennSeq(items) {
-    return new Promise(resolve => {
-      items.forEach((item, i) => {
-        setTimeout(() => {
-          setMsgs(m => [...m, { id: Date.now() + i, from:'solenn', text: item.text }])
-          if (i === items.length - 1) setTimeout(resolve, 50)
-        }, i * 180)
-      })
-    })
-  }
-
-  function delay(ms) {
-    return new Promise(r => setTimeout(r, ms))
-  }
-
-  // ── STEP HANDLERS ─────────────────────────────────────────────────────────────
-
-  async function handleNomSubmit() {
-    const nom = inputVal.trim()
-    if (!nom) return
-    setInputMode(null)
-    setInputVal('')
-    addUserMsg(nom)
-    setAnswers(a => ({ ...a, nom }))
-    setChatStep('objectif')
-    await delay(40)
-    await sendSolennSeq([
-      { text:`Avec plaisir, ${nom} ! Qu'est-ce qui t'amène chez Solenn ?` },
-    ])
-    setInputMode('cards')
-  }
-
-  async function handleObjectifSelect(opt) {
-    const val = `${opt.emoji} ${opt.label}`
-    setInputMode(null)
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, objectif: val }))
-    setChatStep('age_range')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Et pour personnaliser tes conseils — tu as quel âge ?" },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleAgeRangeSelect(val) {
-    setInputMode(null)
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, age: val }))
-    setChatStep('activite')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Ton niveau d'activité au quotidien ?" },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleAgeSubmit() {
-    setInputMode(null)
-    addUserMsg(`${ageVal} ans`)
-    setAnswers(a => ({ ...a, age: ageVal }))
-    setChatStep('activite')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"OK ! Ton niveau d'activité physique en ce moment ?", after:0 },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleActiviteSelect(opt) {
-    const val = `${opt.emoji} ${opt.label}`
-    setInputMode(null)
-    addUserMsg(val)
-    const finalAnswers = { ...answers, activite: val }
-    setAnswers(finalAnswers)
-    await delay(40)
-    await sendSolennSeq([
-      { text:"C'est noté ! Je prépare ton espace..." },
-    ])
-    await delay(600)
-    finishOnboarding(finalAnswers)
-  }
-
-  async function handleAlimentationSubmit() {
-    if (selectedChips.length === 0) return
-    setInputMode(null)
-    const val = selectedChips.join(', ')
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, alimentation: selectedChips }))
-    setSelectedChips([])
-    setChatStep('sante_yn')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Tu as des problèmes de santé dont je dois tenir compte ?", after:0 },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleSanteYN(val) {
-    setInputMode(null)
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, sante_yn: val }))
-    if (val === 'Non') {
-      setChatStep('lever')
-      await delay(40)
-      await askLever()
-    } else {
-      setChatStep('sante_conditions')
-      await delay(40)
-      await sendSolennSeq([
-        { text:"D'accord. Quelles conditions ?", after:0 },
-      ])
-      setSelectedChips([])
-      setInputMode('chips')
-    }
-  }
-
-  async function handleSanteConditionsSubmit() {
-    if (selectedChips.length === 0) return
-    setInputMode(null)
-    const val = selectedChips.join(', ')
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, sante_conditions: selectedChips }))
-    setSelectedChips([])
-    setChatStep('lever')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Merci pour cette info — j'en tiendrai compte dans chaque conseil.", after:0 },
-    ])
-    await delay(200)
-    await askLever()
-  }
-
-  async function askLever() {
-    await sendSolennSeq([
-      { text:"Presque fini ! À quelle heure tu te lèves en général ?", after:0 },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleLeverSelect(opt) {
-    setInputMode(null)
-    addUserMsg(opt.label)
-    setAnswers(a => ({ ...a, lever: opt.val }))
-    setChatStep('coucher')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Et tu te couches vers ?", after:0 },
-    ])
-    setInputMode('buttons')
-  }
-
-  async function handleCoucherSelect(opt) {
-    setInputMode(null)
-    addUserMsg(opt.label)
-    setAnswers(a => ({ ...a, coucher: opt.val }))
-    setChatStep('profession')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Dernière chose — tu fais quoi dans la vie ?", after:0 },
-    ])
-    setProfessionInput('')
-    setInputMode('chips')
-    setSelectedChips([])
-  }
-
-  async function handleProfessionSubmit() {
-    const val = professionInput.trim()
-    if (!val) return
-    setInputMode(null)
-    addUserMsg(val)
-    setAnswers(a => ({ ...a, profession: val }))
-    setChatStep('taille_poids')
-    await delay(40)
-    await sendSolennSeq([
-      { text:"Ta taille et ton poids ? (pour les conseils nutrition)", after:0 },
-    ])
-    setInputMode('dual_number')
-  }
-
-  async function handleTaillePoidsSubmit() {
-    setInputMode(null)
-    const nom = answers.nom || ''
-    addUserMsg(`${tailleVal} cm / ${poidsVal} kg`)
-    const finalAnswers = { ...answers, taille: tailleVal, poids: poidsVal }
-    setAnswers(finalAnswers)
-    setChatStep('fin')
-    await delay(40)
-    setIsTyping(true)
-    await delay(40)
-    setIsTyping(false)
-    setMsgs(m => [...m, { id: Date.now(), from:'solenn', text:`Parfait ${nom} ! Je prépare ton espace... 🌟` }])
-    await delay(1500)
-    finishOnboarding(finalAnswers)
+  function goNext(newAnswers) {
+    setAnswers(newAnswers)
+    setSlideDir(1)
+    setStep(s => s + 1)
   }
 
   function finishOnboarding(finalAnswers) {
-    const a = finalAnswers || answers
+    const a = finalAnswers
     const profil = {
       nom:              a.nom || 'Ami',
       objectif:         a.objectif || '',
       objectifs:        a.objectif ? [a.objectif] : [],
-      age:              parseInt(a.age) || 0,
+      age:              a.age || '',
       activite:         a.activite || '',
-      alimentation:     a.alimentation || [],
-      heure_lever:      a.lever || 7.5,
-      heure_coucher:    a.coucher || 23.5,
-      profession:       a.profession || '',
-      poids:            parseFloat(a.poids) || 0,
-      taille:           parseFloat(a.taille) || 0,
-      sante:            a.sante_yn === 'Oui',
-      sante_conditions: a.sante_conditions || [],
+      alimentation:     [],
+      heure_lever:      7.5,
+      heure_coucher:    23.5,
+      profession:       '',
+      poids:            0,
+      taille:           0,
+      sante:            false,
+      sante_conditions: [],
       isPro:            false,
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
@@ -603,362 +257,134 @@ export default function Onboarding({ onTermine }) {
     setShowReveal(true)
   }
 
-  // ── Chips helpers ─────────────────────────────────────────────────────────────
-  function toggleChip(val) {
-    setSelectedChips(c => c.includes(val) ? c.filter(x => x !== val) : [...c, val])
+  if (showReveal) {
+    return <RevealScreen answers={answers} onEnter={() => onTermine(answers)} />
   }
 
-  // ── Current input area renderer ───────────────────────────────────────────────
-  function renderInputArea() {
-    if (!inputMode) return null
+  const slideVariants = {
+    enter:  (d) => ({ opacity:0, x: d * 48 }),
+    center: { opacity:1, x:0 },
+    exit:   (d) => ({ opacity:0, x: -d * 48 }),
+  }
 
-    // Text input
-    if (inputMode === 'text') {
-      return (
-        <motion.div
-          key="input-text"
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{display:'flex', gap:10, padding:'12px 16px', alignItems:'center'}}
-        >
+  const nom = answers.nom || ''
+
+  function renderStep() {
+    // ── Étape 0 : Prénom ──
+    if (step === 0) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div>
+          <p style={S.question}>Comment tu t'appelles ?</p>
+          <p style={S.sub}>Pour que Solenn puisse s'adresser à toi.</p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:12}}>
           <input
-            ref={inputRef}
+            ref={nomRef}
             type="text"
-            value={inputVal}
-            onChange={e => setInputVal(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && inputVal.trim() && handleNomSubmit()}
+            value={nomVal}
+            onChange={e => setNomVal(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && nomVal.trim() && goNext({ nom: nomVal.trim() })}
             placeholder="Ton prénom..."
-            style={{
-              flex:1, padding:'13px 18px', borderRadius:24,
-              border:'1.5px solid rgba(200,123,82,0.28)',
-              background:'rgba(255,248,244,0.85)',
-              backdropFilter:'blur(12px)',
-              fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
-              outline:'none', fontWeight:500,
-              boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
-            }}
+            style={S.input}
           />
           <button
-            onClick={handleNomSubmit}
-            disabled={!inputVal.trim()}
-            style={{
-              width:36, height:36, borderRadius:12, border:'none',
-              background:'transparent',
-              cursor: inputVal.trim() ? 'pointer' : 'default',
-              display:'flex', alignItems:'center', justifyContent:'center',
-              flexShrink:0, transition:'all 0.2s',
-            }}
-          ><SendIcon size={20} color={inputVal.trim() ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.28)'} /></button>
-        </motion.div>
-      )
-    }
+            onClick={() => nomVal.trim() && goNext({ nom: nomVal.trim() })}
+            disabled={!nomVal.trim()}
+            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.38 }}
+          >
+            Continuer →
+          </button>
+        </div>
+      </div>
+    )
 
-    // Number input (age)
-    if (inputMode === 'number') {
-      return (
-        <motion.div
-          key="input-number"
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{padding:'12px 16px 16px'}}
-        >
-          <div style={{display:'flex', alignItems:'center', justifyContent:'center', gap:16, marginBottom:14}}>
-            <button
-              onClick={() => setAgeVal(v => Math.max(13, v - 1))}
-              style={numBtnStyle}
-            >−</button>
-            <div style={{
-              display:'flex', alignItems:'baseline', gap:6,
-              background:'rgba(255,248,244,0.90)',
-              border:'1.5px solid rgba(200,123,82,0.25)',
-              borderRadius:16, padding:'10px 24px',
-              boxShadow:'0 2px 12px rgba(200,123,82,0.10)',
-            }}>
-              <span style={{fontSize:46, fontWeight:900, color:'rgba(200,123,82,0.90)', fontFamily:'Poppins, sans-serif', lineHeight:1}}>
-                {ageVal}
-              </span>
-              <span style={{fontSize:16, color:'rgba(200,123,82,0.65)', fontWeight:600}}>ans</span>
-            </div>
-            <button
-              onClick={() => setAgeVal(v => Math.min(100, v + 1))}
-              style={numBtnStyle}
-            >+</button>
-          </div>
-          <div style={{display:'flex', justifyContent:'center'}}>
-            <button onClick={handleAgeSubmit} style={sendBtnStyle}>
-              Envoyer ↩
-            </button>
-          </div>
-        </motion.div>
-      )
-    }
-
-    // Cards (objectif)
-    if (inputMode === 'cards' && chatStep === 'objectif') {
-      return (
-        <motion.div
-          key="input-cards-objectif"
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{padding:'8px 12px 14px'}}
-        >
-          <div style={{
-            display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8,
-          }}>
-            {OBJECTIF_OPTIONS.map((opt, i) => (
-              <motion.button
-                key={opt.label}
-                initial={{opacity:0, y:12}}
-                animate={{opacity:1, y:0}}
-                transition={{duration:0.28, delay: i * 0.05}}
-                onClick={() => handleObjectifSelect(opt)}
-                style={cardBtnStyle}
-              >
-                <span style={{display:'flex', justifyContent:'center', marginBottom:4}}>{opt.icon}</span>
-                <span style={{fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.88)', fontFamily:'Poppins, sans-serif', lineHeight:1.3}}>
-                  {opt.label}
-                </span>
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-      )
-    }
-
-    // Buttons (activité, santé oui/non, lever, coucher)
-    if (inputMode === 'buttons') {
-      let options = []
-      let onSelect = null
-
-      if (chatStep === 'age_range') {
-        options = AGE_RANGE_OPTIONS
-        onSelect = async (val) => {
-          await handleAgeRangeSelect(val)
-        }
-      } else if (chatStep === 'activite') {
-        options = ACTIVITE_OPTIONS
-        onSelect = async (val) => {
-          await handleActiviteSelect(val)
-        }
-      } else if (chatStep === 'sante_yn') {
-        options = ['✅ Oui', '❌ Non']
-        onSelect = async (val) => {
-          const yn = val.includes('Oui') ? 'Oui' : 'Non'
-          await handleSanteYN(yn)
-        }
-      } else if (chatStep === 'lever') {
-        options = LEVER_OPTIONS.map(o => o.label)
-        onSelect = async (val) => {
-          const opt = LEVER_OPTIONS.find(o => o.label === val)
-          await handleLeverSelect(opt)
-        }
-      } else if (chatStep === 'coucher') {
-        options = COUCHER_OPTIONS.map(o => o.label)
-        onSelect = async (val) => {
-          const opt = COUCHER_OPTIONS.find(o => o.label === val)
-          await handleCoucherSelect(opt)
-        }
-      }
-
-      return (
-        <motion.div
-          key={`input-buttons-${chatStep}`}
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{padding:'8px 12px 14px'}}
-        >
-          <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
-            {options.map((opt, i) => (
-              <motion.button
-                key={opt}
-                initial={{opacity:0, y:12}}
-                animate={{opacity:1, y:0}}
-                transition={{duration:0.28, delay: i * 0.05}}
-                onClick={() => onSelect && onSelect(opt)}
-                style={chipBtnStyle}
-              >
-                {opt && typeof opt === 'object' && opt.icon
-                  ? <span style={{display:'flex', alignItems:'center', gap:6}}>{opt.icon}{opt.label}</span>
-                  : opt}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-      )
-    }
-
-    // Chips multi-select (alimentation, sante_conditions, profession)
-    if (inputMode === 'chips') {
-      let options = []
-      let onValidate = null
-      let showTextInput = false
-
-      if (chatStep === 'alimentation') {
-        options = ALIMENTATION_OPTIONS
-        onValidate = handleAlimentationSubmit
-      } else if (chatStep === 'sante_conditions') {
-        options = SANTE_CONDITIONS_OPTIONS
-        onValidate = handleSanteConditionsSubmit
-      } else if (chatStep === 'profession') {
-        options = PROFESSION_OPTIONS
-        showTextInput = true
-        onValidate = handleProfessionSubmit
-      }
-
-      return (
-        <motion.div
-          key={`input-chips-${chatStep}`}
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{padding:'8px 12px 14px'}}
-        >
-          <div style={{display:'flex', flexWrap:'wrap', gap:8, marginBottom:10}}>
-            {options.map((opt, i) => {
-              const sel = chatStep === 'profession'
-                ? professionInput === opt
-                : selectedChips.includes(opt)
-              return (
-                <motion.button
-                  key={opt}
-                  initial={{opacity:0, y:8}}
-                  animate={{opacity:1, y:0}}
-                  transition={{duration:0.25, delay: i * 0.04}}
-                  onClick={() => {
-                    if (chatStep === 'profession') {
-                      setProfessionInput(opt)
-                    } else {
-                      toggleChip(opt)
-                    }
-                  }}
-                  style={{
-                    ...chipBtnStyle,
-                    background: sel
-                      ? 'linear-gradient(135deg, rgba(200,123,82,0.15), rgba(232,150,42,0.12))'
-                      : 'rgba(255,248,244,0.80)',
-                    border: sel
-                      ? '1.5px solid rgba(200,123,82,0.55)'
-                      : '1px solid rgba(200,123,82,0.20)',
-                    color: sel ? 'rgba(200,123,82,0.95)' : 'rgba(200,123,82,0.72)',
-                    fontWeight: sel ? 700 : 500,
-                  }}
-                >
-                  {sel && chatStep !== 'profession' && <span style={{marginRight:4, fontSize:11}}>✓</span>}
-                  {opt}
-                </motion.button>
-              )
-            })}
-          </div>
-
-          {showTextInput && (
-            <input
-              type="text"
-              value={professionInput}
-              onChange={e => setProfessionInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && professionInput.trim() && handleProfessionSubmit()}
-              placeholder="Ou tape directement..."
-              style={{
-                width:'100%', padding:'11px 16px', borderRadius:20, boxSizing:'border-box',
-                border:'1.5px solid rgba(200,123,82,0.25)',
-                background:'rgba(255,248,244,0.85)',
-                fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
-                outline:'none', fontWeight:500, marginBottom:10,
-              }}
-            />
-          )}
-
-          <div style={{display:'flex', justifyContent:'flex-end'}}>
-            <button
-              onClick={chatStep === 'profession' ? handleProfessionSubmit : onValidate}
-              disabled={chatStep === 'profession' ? !professionInput.trim() : selectedChips.length === 0}
-              style={{
-                ...sendBtnStyle,
-                opacity: (chatStep === 'profession' ? professionInput.trim() : selectedChips.length > 0) ? 1 : 0.4,
-                cursor: (chatStep === 'profession' ? professionInput.trim() : selectedChips.length > 0) ? 'pointer' : 'default',
-              }}
+    // ── Étape 1 : Objectif ──
+    if (step === 1) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <p style={S.question}>
+          Qu'est-ce qui t'amène chez Solenn{nom ? `, ${nom}` : ''} ?
+        </p>
+        <div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:12}}>
+          {OBJECTIF_OPTIONS.map((opt, i) => (
+            <motion.button
+              key={opt.label}
+              initial={{opacity:0, y:16}}
+              animate={{opacity:1, y:0}}
+              transition={{duration:0.26, delay: i * 0.06}}
+              onClick={() => goNext({ ...answers, objectif:`${opt.emoji} ${opt.label}` })}
+              style={S.card}
+              whileHover={{ scale:1.03, boxShadow:'0 8px 24px rgba(200,123,82,0.18)' }}
+              whileTap={{ scale:0.97 }}
             >
-              Valider →
-            </button>
-          </div>
-        </motion.div>
-      )
-    }
+              <span style={{fontSize:30, display:'block', marginBottom:10, lineHeight:1}}>{opt.emoji}</span>
+              <span style={{fontSize:12, fontWeight:600, color:'#3D2014', lineHeight:1.35, display:'block'}}>
+                {opt.label}
+              </span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    )
 
-    // Dual number (taille + poids)
-    if (inputMode === 'dual_number') {
-      return (
-        <motion.div
-          key="input-dual"
-          initial={{opacity:0, y:16}}
-          animate={{opacity:1, y:0}}
-          transition={{duration:0.3}}
-          style={{padding:'12px 16px 16px'}}
-        >
-          <div style={{display:'flex', gap:12, marginBottom:14}}>
-            {/* Taille */}
-            <div style={{flex:1, display:'flex', flexDirection:'column', gap:6}}>
-              <span style={{fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.70)', textAlign:'center', fontFamily:'Poppins, sans-serif'}}>Taille</span>
-              <div style={{display:'flex', alignItems:'center', gap:6}}>
-                <button onClick={() => setTailleVal(v => Math.max(130, v - 1))} style={{...numBtnSmall}}>−</button>
-                <div style={{
-                  flex:1, display:'flex', alignItems:'baseline', justifyContent:'center', gap:4,
-                  background:'rgba(255,248,244,0.90)', border:'1.5px solid rgba(200,123,82,0.22)',
-                  borderRadius:12, padding:'8px 10px',
-                }}>
-                  <span style={{fontSize:28, fontWeight:900, color:'rgba(200,123,82,0.88)', fontFamily:'Poppins, sans-serif', lineHeight:1}}>
-                    {tailleVal}
-                  </span>
-                  <span style={{fontSize:13, color:'rgba(200,123,82,0.60)', fontWeight:600}}>cm</span>
-                </div>
-                <button onClick={() => setTailleVal(v => Math.min(230, v + 1))} style={{...numBtnSmall}}>+</button>
-              </div>
-            </div>
-            {/* Poids */}
-            <div style={{flex:1, display:'flex', flexDirection:'column', gap:6}}>
-              <span style={{fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.70)', textAlign:'center', fontFamily:'Poppins, sans-serif'}}>Poids</span>
-              <div style={{display:'flex', alignItems:'center', gap:6}}>
-                <button onClick={() => setPoidsVal(v => Math.max(30, v - 1))} style={{...numBtnSmall}}>−</button>
-                <div style={{
-                  flex:1, display:'flex', alignItems:'baseline', justifyContent:'center', gap:4,
-                  background:'rgba(255,248,244,0.90)', border:'1.5px solid rgba(200,123,82,0.22)',
-                  borderRadius:12, padding:'8px 10px',
-                }}>
-                  <span style={{fontSize:28, fontWeight:900, color:'rgba(200,123,82,0.88)', fontFamily:'Poppins, sans-serif', lineHeight:1}}>
-                    {poidsVal}
-                  </span>
-                  <span style={{fontSize:13, color:'rgba(200,123,82,0.60)', fontWeight:600}}>kg</span>
-                </div>
-                <button onClick={() => setPoidsVal(v => Math.min(250, v + 1))} style={{...numBtnSmall}}>+</button>
-              </div>
-            </div>
-          </div>
-          <div style={{display:'flex', justifyContent:'flex-end'}}>
-            <button onClick={handleTaillePoidsSubmit} style={sendBtnStyle}>
-              C'est parti →
-            </button>
-          </div>
-        </motion.div>
-      )
-    }
+    // ── Étape 2 : Âge ──
+    if (step === 2) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div>
+          <p style={S.question}>Tu as quel âge ?</p>
+          <p style={S.sub}>Pour personnaliser tes conseils.</p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {AGE_RANGE_OPTIONS.map((age, i) => (
+            <motion.button
+              key={age}
+              initial={{opacity:0, x:24}}
+              animate={{opacity:1, x:0}}
+              transition={{duration:0.24, delay: i * 0.07}}
+              onClick={() => goNext({ ...answers, age })}
+              style={S.row}
+              whileHover={{ background:'rgba(200,123,82,0.08)', borderColor:'rgba(200,123,82,0.40)' }}
+              whileTap={{ scale:0.98 }}
+            >
+              <span style={{fontSize:18}}>
+                {['🌱','🌿','🌳','🍂','✨'][i]}
+              </span>
+              {age}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    )
+
+    // ── Étape 3 : Activité ──
+    if (step === 3) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div>
+          <p style={S.question}>Ton niveau d'activité au quotidien ?</p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {ACTIVITE_OPTIONS.map((opt, i) => (
+            <motion.button
+              key={opt.label}
+              initial={{opacity:0, x:24}}
+              animate={{opacity:1, x:0}}
+              transition={{duration:0.24, delay: i * 0.07}}
+              onClick={() => {
+                const finalAnswers = { ...answers, activite:`${opt.emoji} ${opt.label}` }
+                finishOnboarding(finalAnswers)
+              }}
+              style={S.row}
+              whileHover={{ background:'rgba(200,123,82,0.08)', borderColor:'rgba(200,123,82,0.40)' }}
+              whileTap={{ scale:0.98 }}
+            >
+              <span style={{fontSize:22}}>{opt.emoji}</span>
+              {opt.label}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    )
 
     return null
-  }
-
-  // ── RENDER ───────────────────────────────────────────────────────────────────
-  if (showReveal) {
-    return (
-      <RevealScreen
-        answers={answers}
-        onEnter={() => {
-          const profil = window._solennProfil
-          if (profil) onTermine(profil)
-        }}
-      />
-    )
   }
 
   return (
@@ -966,133 +392,72 @@ export default function Onboarding({ onTermine }) {
       minHeight:'100vh', background:'transparent',
       fontFamily:'Poppins, sans-serif',
       display:'flex', flexDirection:'column',
-      position:'relative', overflowX:'hidden',
+      position:'relative', overflow:'hidden',
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital@1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Cormorant+Garamond:ital@1&display=swap');
         @keyframes liquidBlob1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,5%) scale(1.06)} 66%{transform:translate(-2%,-3%) scale(0.96)} }
         @keyframes liquidBlob2 { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-4%,3%) scale(1.08)} 70%{transform:translate(2%,-5%) scale(0.94)} }
         @keyframes liquidBlob3 { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
         @keyframes liquidBlob4 { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(-3%,4%) scale(1.07)} 75%{transform:translate(4%,-2%) scale(0.95)} }
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
-        ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-thumb { background:rgba(200,123,82,0.20); border-radius:4px; }
-        input:focus { outline:none; }
-        input::placeholder { color:rgba(200,123,82,0.45); }
+        input:focus { outline:none; border-color:rgba(200,123,82,0.55) !important; }
+        input::placeholder { color:rgba(200,123,82,0.40); }
       `}</style>
 
       <BgBlobs />
 
-      {/* Progress bar */}
+      {/* Header */}
       <div style={{
-        position:'fixed', top:0, left:0, right:0, height:3,
-        background:'rgba(200,123,82,0.10)', zIndex:100,
-      }}>
-        <div style={{
-          height:'100%', width:`${progress}%`,
-          background:'linear-gradient(90deg, #C87B52, #E8962A)',
-          transition:'width 0.5s cubic-bezier(0.34,1.56,0.64,1)',
-          borderRadius:2,
-        }} />
-      </div>
-
-      {/* Logo */}
-      <div style={{
-        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 12px)', left:'50%', transform:'translateX(-50%)', zIndex:100,
+        position:'fixed', top:0, left:0, right:0, zIndex:100,
+        paddingTop:'calc(env(safe-area-inset-top,0px) + 20px)',
+        paddingBottom:16,
+        display:'flex', flexDirection:'column', alignItems:'center', gap:14,
       }}>
         <span style={{
           fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
           fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
           color:'rgba(184,105,58,0.88)',
-          textShadow:'0 1px 10px rgba(255,248,244,0.60)',
-        }}>
-          Solenn
-        </span>
-      </div>
+          textShadow:'0 1px 10px rgba(255,248,244,0.70)',
+        }}>Solenn</span>
 
-      {/* Chat messages area */}
-      <div style={{
-        flex:1, overflowY:'auto', padding:'60px 12px 12px',
-        display:'flex', flexDirection:'column', justifyContent:'flex-end',
-        maxWidth:600, width:'100%', margin:'0 auto', boxSizing:'border-box',
-        minHeight:'calc(100vh - 180px)',
-      }}>
-        <div style={{display:'flex', flexDirection:'column', gap:2}}>
-          {msgs.map(msg => (
-            msg.from === 'solenn'
-              ? <SolennBubble key={msg.id} text={msg.text} />
-              : <UserBubble key={msg.id} text={msg.text} />
+        {/* Progress dots */}
+        <div style={{display:'flex', gap:6, alignItems:'center'}}>
+          {[0,1,2,3].map(i => (
+            <motion.div
+              key={i}
+              animate={{
+                width: i === step ? 22 : 6,
+                background: i <= step ? '#C87B52' : 'rgba(200,123,82,0.22)',
+              }}
+              transition={{duration:0.35, ease:[0.34,1.56,0.64,1]}}
+              style={{ height:6, borderRadius:3 }}
+            />
           ))}
-          {isTyping && <TypingIndicator />}
-          <div ref={bottomRef} style={{height:4}} />
         </div>
       </div>
 
-      {/* Input area */}
+      {/* Content */}
       <div style={{
-        position:'sticky', bottom:0,
-        background:'rgba(255,248,244,0.97)',
-        borderTop:'1px solid rgba(200,123,82,0.12)',
-        width:'100%',
-        zIndex:50,
+        flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
+        padding:'0 28px 48px',
+        paddingTop:'calc(env(safe-area-inset-top,0px) + 110px)',
+        maxWidth:480, width:'100%', margin:'0 auto', boxSizing:'border-box',
       }}>
-        <div style={{maxWidth:600, margin:'0 auto'}}>
-          <AnimatePresence mode="wait">
-            {renderInputArea()}
-          </AnimatePresence>
-        </div>
+        <AnimatePresence mode="wait" custom={slideDir}>
+          <motion.div
+            key={step}
+            custom={slideDir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{duration:0.28, ease:'easeOut'}}
+          >
+            {renderStep()}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   )
-}
-
-// ─── SHARED BUTTON STYLES ─────────────────────────────────────────────────────
-const numBtnStyle = {
-  width:52, height:52, borderRadius:'50%', border:'none',
-  background:'linear-gradient(135deg, #C87B52, #E8962A)',
-  color:'#fff', fontSize:24, fontWeight:700, cursor:'pointer',
-  fontFamily:'Poppins, sans-serif',
-  display:'flex', alignItems:'center', justifyContent:'center',
-  boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
-  flexShrink:0, lineHeight:1, outline:'none',
-}
-
-const numBtnSmall = {
-  width:34, height:34, borderRadius:'50%', border:'none',
-  background:'linear-gradient(135deg, #C87B52, #E8962A)',
-  color:'#fff', fontSize:18, fontWeight:700, cursor:'pointer',
-  fontFamily:'Poppins, sans-serif',
-  display:'flex', alignItems:'center', justifyContent:'center',
-  boxShadow:'0 3px 10px rgba(200,123,82,0.30)',
-  flexShrink:0, lineHeight:1, outline:'none',
-}
-
-const sendBtnStyle = {
-  padding:'11px 22px', borderRadius:24, border:'none',
-  background:'linear-gradient(135deg, #C87B52, #E8962A)',
-  color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer',
-  fontFamily:'Poppins, sans-serif',
-  boxShadow:'0 4px 14px rgba(200,123,82,0.32)',
-  outline:'none', transition:'opacity 0.2s',
-}
-
-const cardBtnStyle = {
-  padding:'12px 8px', borderRadius:16,
-  border:'1px solid rgba(200,123,82,0.22)',
-  background:'rgba(255,248,244,0.88)',
-  cursor:'pointer', textAlign:'center',
-  fontFamily:'Poppins, sans-serif',
-  boxShadow:'0 2px 10px rgba(200,123,82,0.07)',
-  transition:'all 0.18s', outline:'none',
-}
-
-const chipBtnStyle = {
-  padding:'9px 16px', borderRadius:40,
-  border:'1px solid rgba(200,123,82,0.22)',
-  background:'rgba(255,248,244,0.85)',
-  cursor:'pointer', fontSize:13, fontWeight:500,
-  color:'rgba(200,123,82,0.78)',
-  fontFamily:'Poppins, sans-serif',
-  transition:'all 0.18s', outline:'none',
-  boxShadow:'0 1px 6px rgba(200,123,82,0.07)',
 }
