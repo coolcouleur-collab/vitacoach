@@ -222,7 +222,7 @@ const S = {
   },
   cta: {
     width:'100%', padding:'17px', borderRadius:16, border:'none',
-    background:'linear-gradient(110deg, #D4894E 0%, #E8952A 40%, #F5BA4A 62%, #D4894E 100%)',
+    background:'linear-gradient(110deg, #FFF0E0 0%, #F5BA4A 48%, #D4894E 100%)',
     backgroundSize:'250% 100%',
     color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'DM Sans', sans-serif", letterSpacing:'0.3px',
