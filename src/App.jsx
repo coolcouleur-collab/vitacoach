@@ -494,7 +494,6 @@ const [messages, setMessages] = useState(() => {
     }
     return []
   })
-  const [input, setInput]       = useState('')
   const [loading, setLoading]   = useState(false)
   const [onglet, setOnglet]     = useState('accueil')
   const [metriques, setMetriques] = useState(defaultMetriques)
@@ -1002,9 +1001,8 @@ const [messages, setMessages] = useState(() => {
     } catch {}
   }
 
-  async function envoyerMessage(msgOverride) {
-    const msg = msgOverride || input
-    if (!msg.trim()) return
+  async function envoyerMessage(msg) {
+    if (!msg?.trim()) return
     if (isSendingRef.current) return     // verrou : un seul envoi à la fois
     isSendingRef.current = true
 
@@ -1029,7 +1027,6 @@ const [messages, setMessages] = useState(() => {
       return
     }
     setMessages(prev => [...prev, { role:'user', content: msg }])
-    setInput('')
     setLoading(true)
     if (!isPro) incrementMsgCount()
     detectSOS(msg)
@@ -1868,27 +1865,14 @@ const [messages, setMessages] = useState(() => {
                 </div>
               )}
 
-              <div style={{ ...s.inputRow, marginBottom: isMobile && kbOffset > 0 ? kbOffset : 0 }}>
-                {/* Scroll-to-bottom */}
-                {showScrollBtn && (
-                  <button onClick={() => messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })}
-                    style={{ position:'absolute', bottom:74, right:16, zIndex:10,
-                      width:32, height:32, borderRadius:'50%', border:'1px solid rgba(200,123,82,0.25)',
-                      background:'rgba(255,248,242,0.96)',
-                      cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
-                      boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
-                )}
-                <div style={s.inputBox}>
-                  <input className="chat-input" style={s.inputChat}
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key==='Enter' && envoyerMessage()}
-                    placeholder="Pose une question à Solenn..." />
-                  <button style={s.sendBtn} onClick={() => { navigator.vibrate?.(8); envoyerMessage() }}>
-                    <SendIcon color="rgba(200,123,82,0.58)" size={20} />
-                  </button>
-                </div>
-              </div>
+              <ChatInputBar
+                onSend={envoyerMessage}
+                disabled={loading}
+                kbOffset={kbOffset}
+                isMobile={isMobile}
+                showScrollBtn={showScrollBtn}
+                onScrollDown={() => messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })}
+              />
             </div>
           )}
 
@@ -2922,3 +2906,38 @@ const s = {
   },
   navBotActive: { color:'#DA8A34' },
 }
+
+// Composant isolé : l'état `input` reste ici et ne remonte jamais dans App
+// → chaque frappe clavier ne re-render que ce composant (~10 lignes), pas les 2900 lignes d'App
+const ChatInputBar = React.memo(function ChatInputBar({ onSend, disabled, kbOffset, isMobile, showScrollBtn, onScrollDown }) {
+  const [input, setInput] = React.useState('')
+  function send() {
+    const msg = input.trim()
+    if (!msg || disabled) return
+    setInput('')
+    onSend(msg)
+  }
+  return (
+    <div style={{ ...s.inputRow, marginBottom: isMobile && kbOffset > 0 ? kbOffset : 0 }}>
+      {showScrollBtn && (
+        <button onClick={onScrollDown}
+          style={{ position:'absolute', bottom:74, right:16, zIndex:10,
+            width:32, height:32, borderRadius:'50%', border:'1px solid rgba(200,123,82,0.25)',
+            background:'rgba(255,248,242,0.96)',
+            cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
+      )}
+      <div style={s.inputBox}>
+        <input className="chat-input" style={s.inputChat}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send()}
+          placeholder="Pose une question à Solenn..."
+          disabled={disabled} />
+        <button style={s.sendBtn} onClick={() => { navigator.vibrate?.(8); send() }}>
+          <SendIcon color="rgba(200,123,82,0.58)" size={20} />
+        </button>
+      </div>
+    </div>
+  )
+})
