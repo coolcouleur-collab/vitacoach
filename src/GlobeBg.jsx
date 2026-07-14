@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import * as THREE from 'three'
 
 // Carte terrestre de cobe (256×128, bright = terre)
 const LAND_B64 =
@@ -68,8 +67,12 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
     const el = mountRef.current
     if (!el) return
 
+    let cancelled = false
     const vmin = Math.min(window.innerWidth, window.innerHeight)
     const SIZE = Math.round(vmin * size)
+
+    import('three').then(THREE => {
+    if (cancelled) return
 
     // ── Three.js setup ────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -168,9 +171,11 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
       }
     })
 
+    }) // end import('three')
+
     return () => {
+      cancelled = true
       el._cleanup?.()
-      if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement)
     }
   }, [])
 

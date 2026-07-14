@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
 import { playFx } from './sfx'
 import SplashScreen from './SplashScreen'
-import Auth from './Auth'
-import Landing from './Landing'
 import GlowLoader from './GlowLoader'
 import MorningCheckin from './MorningCheckin'
 import SettingsSheet from './SettingsSheet'
 
 // Lazy — chargés uniquement quand l'utilisateur y accède
+const Auth        = lazy(() => import('./Auth'))
+const Landing     = lazy(() => import('./Landing'))
 const Forum       = lazy(() => import('./Forum'))
 const Onboarding  = lazy(() => import('./Onboarding'))
 const HomeTab     = lazy(() => import('./HomeTab'))
@@ -1164,18 +1164,24 @@ export default function App() {
   }
 
   if (showForum) return <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
-  if (!user && !showAuth && !isMobile) return <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
+  if (!user && !showAuth && !isMobile) return (
+    <Suspense fallback={<GlowLoader fullPage />}>
+      <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
+    </Suspense>
+  )
 
   // ── AUTH ────────────────────────────────────────────────────────────────────
   if (!user) return (
-    <Auth
-      onConnecte={u => {
-        sessionStorage.removeItem('solenn_page')
-        setUser(u)
-        localStorage.setItem('vitacoach_user', JSON.stringify(u))
-      }}
-      onBack={goToLanding}
-    />
+    <Suspense fallback={<GlowLoader fullPage />}>
+      <Auth
+        onConnecte={u => {
+          sessionStorage.removeItem('solenn_page')
+          setUser(u)
+          localStorage.setItem('vitacoach_user', JSON.stringify(u))
+        }}
+        onBack={goToLanding}
+      />
+    </Suspense>
   )
 
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
