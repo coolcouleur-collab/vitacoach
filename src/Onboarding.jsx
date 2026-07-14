@@ -204,7 +204,7 @@ const MOMENT_OPTIONS = [
 const S = {
   question: {
     fontSize:'clamp(16px,3.8vw,19px)', fontWeight:300, lineHeight:1.5,
-    color:'#7A3D1A', fontFamily:"'DM Sans', sans-serif",
+    color:'rgba(184,105,58,0.88)', fontFamily:"'DM Sans', sans-serif",
     letterSpacing:'0em',
   },
   sub: {
