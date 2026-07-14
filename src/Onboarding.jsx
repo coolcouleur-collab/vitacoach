@@ -398,10 +398,10 @@ export default function Onboarding({ onTermine }) {
                 <div style={{ flex:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
-                    color: isSel ? '#C87B52' : '#5C2E0A',
+                    color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
-                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -453,7 +453,7 @@ export default function Onboarding({ onTermine }) {
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
-                  color: isSel ? '#C87B52' : '#5C2E0A',
+                  color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
@@ -500,12 +500,12 @@ export default function Onboarding({ onTermine }) {
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400,
-                    color: isSel ? '#C87B52' : '#5C2E0A',
+                    color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
                     transition:'color 0.16s',
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
@@ -552,10 +552,10 @@ export default function Onboarding({ onTermine }) {
                   <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -600,10 +600,10 @@ export default function Onboarding({ onTermine }) {
                   <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -651,10 +651,10 @@ export default function Onboarding({ onTermine }) {
                   <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
