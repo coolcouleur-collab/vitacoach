@@ -216,11 +216,11 @@ function SolennBubble({ text }) {
       <SolennAvatar />
       <div style={{
         maxWidth:'78%',
-        background:'rgba(255,248,244,0.90)',
+        background:'#FEF0E4',
         border:'1px solid rgba(200,123,82,0.20)',
         borderRadius:20, borderBottomLeftRadius:4,
         padding:'12px 18px',
-        fontSize:15, fontWeight:500, color:'#0A1633', lineHeight:1.55,
+        fontSize:15, fontWeight:500, color:'#3D2014', lineHeight:1.55,
         boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
         fontFamily:'Poppins, sans-serif',
       }}>
@@ -373,8 +373,7 @@ export default function Onboarding({ onTermine }) {
     setChatStep('intro')
     const msgs = [
       "Hey ! 👋",
-      "Moi c'est Solenn — ton coach de vie personnel ✨",
-      "Quelques questions rapides pour personnaliser ton expérience !",
+      "Moi c'est Solenn — ton coach bien-être personnel ✨",
       "Pour commencer... comment tu t'appelles ?",
     ]
     msgs.forEach((text, i) => {
@@ -429,23 +428,23 @@ export default function Onboarding({ onTermine }) {
     const val = `${opt.emoji} ${opt.label}`
     setInputMode(null)
     addUserMsg(val)
-    setAnswers(a => ({ ...a, objectif: val }))
-    setChatStep('age')
+    const finalAnswers = { ...answers, objectif: val }
+    setAnswers(finalAnswers)
 
-    let reaction = 'Parfait !'
-    if (opt.label.includes('nergie')) reaction = 'Top, on va booster ça 💪'
-    else if (opt.label.includes('dormir')) reaction = 'Le sommeil c\'est la base, on s\'en occupe 🌙'
-    else if (opt.label.includes('stress')) reaction = 'Je comprends, c\'est ma spécialité 🧘'
-    else if (opt.label.includes('poids')) reaction = 'On va y arriver ensemble 🎯'
+    let reaction = 'Parfait, on commence !'
+    if (opt.label.includes('nergie')) reaction = 'Top, on va booster ça ensemble 💪'
+    else if (opt.label.includes('dormir')) reaction = 'Le sommeil, c\'est ma spécialité 🌙'
+    else if (opt.label.includes('stress')) reaction = 'Je comprends — on s\'en occupe 🧘'
+    else if (opt.label.includes('poids')) reaction = 'On y arrive ensemble 🎯'
     else if (opt.label.includes('Sport')) reaction = 'On va aller loin ! 💪'
     else if (opt.label.includes('Aliment')) reaction = 'Bien manger, tout commence par là 🥗'
 
     await delay(40)
     await sendSolennSeq([
       { text:reaction, after:0 },
-      { text:"Tu as quel âge ?", after:400 },
     ])
-    setInputMode('number')
+    await delay(400)
+    finishOnboarding(finalAnswers)
   }
 
   async function handleAgeSubmit() {
@@ -641,7 +640,7 @@ export default function Onboarding({ onTermine }) {
               border:'1.5px solid rgba(200,123,82,0.28)',
               background:'rgba(255,248,244,0.85)',
               backdropFilter:'blur(12px)',
-              fontSize:16, fontFamily:'Poppins, sans-serif', color:'#0A1633',
+              fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
               outline:'none', fontWeight:500,
               boxShadow:'0 2px 12px rgba(200,123,82,0.08)',
             }}
@@ -650,17 +649,13 @@ export default function Onboarding({ onTermine }) {
             onClick={handleNomSubmit}
             disabled={!inputVal.trim()}
             style={{
-              width:46, height:46, borderRadius:'50%', border:'none',
-              background: inputVal.trim()
-                ? 'linear-gradient(135deg, #C87B52, #E8962A)'
-                : 'rgba(200,123,82,0.18)',
-              color:'#fff', fontSize:20, cursor: inputVal.trim() ? 'pointer' : 'default',
+              width:36, height:36, borderRadius:12, border:'none',
+              background:'transparent',
+              cursor: inputVal.trim() ? 'pointer' : 'default',
               display:'flex', alignItems:'center', justifyContent:'center',
-              flexShrink:0,
-              boxShadow: inputVal.trim() ? '0 4px 14px rgba(200,123,82,0.35)' : 'none',
-              transition:'all 0.2s',
+              flexShrink:0, transition:'all 0.2s',
             }}
-          ><SendIcon size={18} color={inputVal.trim() ? '#fff' : 'rgba(200,123,82,0.40)'} /></button>
+          ><SendIcon size={20} color={inputVal.trim() ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.28)'} /></button>
         </motion.div>
       )
     }
@@ -871,7 +866,7 @@ export default function Onboarding({ onTermine }) {
                 width:'100%', padding:'11px 16px', borderRadius:20, boxSizing:'border-box',
                 border:'1.5px solid rgba(200,123,82,0.25)',
                 background:'rgba(255,248,244,0.85)',
-                fontSize:16, fontFamily:'Poppins, sans-serif', color:'#0A1633',
+                fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
                 outline:'none', fontWeight:500, marginBottom:10,
               }}
             />
@@ -1004,11 +999,14 @@ export default function Onboarding({ onTermine }) {
 
       {/* Logo */}
       <div style={{
-        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 10px)', left:'50%', transform:'translateX(-50%)', zIndex:100,
-        background:'rgba(255,248,244,0.80)', backdropFilter:'blur(12px)',
-        padding:'4px 16px', borderRadius:20, border:'1px solid rgba(200,123,82,0.14)',
+        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 12px)', left:'50%', transform:'translateX(-50%)', zIndex:100,
       }}>
-        <span style={{fontSize:16, fontWeight:900, letterSpacing:'-0.04em', color:'rgba(200,123,82,0.75)'}}>
+        <span style={{
+          fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
+          fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
+          color:'rgba(184,105,58,0.88)',
+          textShadow:'0 1px 10px rgba(255,248,244,0.60)',
+        }}>
           Solenn
         </span>
       </div>
