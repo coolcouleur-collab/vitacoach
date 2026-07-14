@@ -95,7 +95,7 @@ function RevealScreen({ answers, onEnter }) {
         <div style={{fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.70)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
           Profil créé
         </div>
-        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(200,123,82,0.90)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
+        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'#5C2E0A', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
           Bonjour, {nom} !
         </h1>
         <p style={{fontSize:15, color:'rgba(200,123,82,0.70)', marginBottom:32, lineHeight:1.6}}>
@@ -156,10 +156,10 @@ function RevealScreen({ answers, onEnter }) {
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
   { Icon: FlashIcon,    label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien',    iconColor:'rgba(218,160,30,0.92)',   accent:{ sel:'rgba(251,191,36,0.13)', border:'rgba(218,160,30,0.40)', glow:'rgba(218,160,30,0.22)' } },
-  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'#C87B52', glow:'rgba(200,123,82,0.22)' } },
   { Icon: MoonIcon,     label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment',    iconColor:'rgba(82,130,220,0.92)',   accent:{ sel:'rgba(82,130,220,0.10)',  border:'rgba(82,130,220,0.38)',  glow:'rgba(82,130,220,0.18)'  } },
   { Icon: MeditateIcon, label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale',     iconColor:'rgba(140,110,220,0.92)',  accent:{ sel:'rgba(140,110,220,0.10)', border:'rgba(140,110,220,0.38)', glow:'rgba(140,110,220,0.18)' } },
-  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'#C87B52', glow:'rgba(200,123,82,0.22)' } },
   { Icon: FoodIcon,     label:'Alimentation saine',   desc:'Manger mieux sans me priver',           iconColor:'rgba(34,170,80,0.92)',    accent:{ sel:'rgba(34,170,80,0.10)',   border:'rgba(34,170,80,0.38)',   glow:'rgba(34,170,80,0.18)'   } },
 ]
 
@@ -204,11 +204,11 @@ const MOMENT_OPTIONS = [
 const S = {
   question: {
     fontSize:'clamp(16px,3.8vw,19px)', fontWeight:300, lineHeight:1.5,
-    color:'rgba(200,123,82,0.70)', fontFamily:"'DM Sans', sans-serif",
+    color:'#7A3D1A', fontFamily:"'DM Sans', sans-serif",
     letterSpacing:'0em',
   },
   sub: {
-    fontSize:14, fontWeight:300, color:'rgba(200,123,82,0.58)',
+    fontSize:14, fontWeight:300, color:'#A06845',
     fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
@@ -382,25 +382,25 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? opt.accent.sel : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? opt.accent.sel : '#FFFFFF',
+                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', display:'flex', alignItems:'center', gap:14,
                   fontFamily:"'DM Sans', sans-serif", textAlign:'left',
                   outline:'none',
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? opt.iconColor : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? opt.iconColor : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ flex:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
-                    color: isSel ? opt.iconColor : 'rgba(200,123,82,0.90)',
+                    color: isSel ? opt.iconColor : '#5C2E0A',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
-                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -437,9 +437,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : '#FFFFFF',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -447,12 +447,12 @@ export default function Onboarding({ onTermine }) {
                   display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <AgeIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <AgeIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
-                  color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
+                  color: isSel ? '#C87B52' : '#5C2E0A',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
@@ -483,9 +483,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : '#FFFFFF',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -493,18 +493,18 @@ export default function Onboarding({ onTermine }) {
                   display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400,
-                    color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
+                    color: isSel ? '#C87B52' : '#5C2E0A',
                     transition:'color 0.16s',
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.50)', fontWeight:400 }}>
+                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
@@ -539,22 +539,22 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : '#FFFFFF',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -587,22 +587,22 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : '#FFFFFF',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -638,22 +638,22 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.24)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.98)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(200,123,82,0.10), 0 1px 3px rgba(0,0,0,0.05)',
+                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : '#FFFFFF',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : '#5C2E0A', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
@@ -688,6 +688,7 @@ export default function Onboarding({ onTermine }) {
       `}</style>
 
       <BgBlobs step={step} />
+      <div style={{position:'absolute',inset:0,background:'rgba(255,245,235,0.22)',pointerEvents:'none',zIndex:1}}/>
 
       {/* Header */}
       <div style={{
@@ -750,6 +751,7 @@ export default function Onboarding({ onTermine }) {
         padding:'0 28px 48px',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 110px)',
         maxWidth:480, width:'100%', margin:'0 auto', boxSizing:'border-box',
+        position:'relative', zIndex:2,
       }}>
         <AnimatePresence mode="wait" custom={slideDir}>
           <motion.div
