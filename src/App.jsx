@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, Component, lazy, Suspense } from 'react'
+import React, { useState, useRef, useEffect, useMemo, Component, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
 import { playFx } from './sfx'
-import SplashScreen from './SplashScreen'
 import GlowLoader from './GlowLoader'
 import MorningCheckin from './MorningCheckin'
 import SettingsSheet from './SettingsSheet'
@@ -17,42 +16,8 @@ const HerbalTab   = lazy(() => import('./HerbalTab'))
 const SanteTab    = lazy(() => import('./SanteTab'))
 const RoutineTab  = lazy(() => import('./RoutineTab'))
 const ChatHistory = lazy(() => import('./ChatHistory'))
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, LeafIcon, StyleIcon, ForumIcon, BackIcon, SendIcon, BellIcon, BellOffIcon, FlashIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, CalendarIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon } from './Icons'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
-
-// ─── SHINY LOGO TEXT (statique par défaut, shimmer au hover/tap) ─────────────
-function ShinyLogoText({ text, color = 'rgba(232,150,42,0.55)', gradient = null, animDuration = '8s', autoPlay = false, style = {} }) {
-  return (
-    <span style={{
-      position: 'relative',
-      display: 'inline-block',
-      overflow: 'hidden',
-      userSelect: 'none',
-      WebkitUserSelect: 'none',
-      ...style,
-    }}>
-      {/* Texte avec gradient ou couleur unie */}
-      <span style={gradient ? {
-        display: 'inline',
-        background: gradient,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-      } : { color }}>
-        {text}
-      </span>
-      {/* Reflet miroir qui glisse */}
-      <span style={{
-        position: 'absolute', top: 0, left: '-100%',
-        width: '45%', height: '100%',
-        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.50) 50%, transparent 100%)',
-        transform: 'skewX(-18deg)',
-        animation: autoPlay ? `mirrorSweep ${animDuration} ease-in-out infinite` : 'none',
-        pointerEvents: 'none',
-      }} />
-    </span>
-  )
-}
 
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
 function SolennFace({ size = 34 }) {
@@ -447,7 +412,6 @@ export default function App() {
   const FREE_LIMIT = 5
 
   const appPreset = getOceanPreset(new Date().getHours())
-  const isSunrise = appPreset === 'sunrise'
 
   const getMsgCount = () => {
     const today = new Date().toDateString()
@@ -465,12 +429,10 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
-  const [splashDone] = useState(true)
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
-  const [profilBackup, setProfilBackup] = useState(null)
-  const [messages, setMessages] = useState(() => {
+const [messages, setMessages] = useState(() => {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
     if (p && h) {
@@ -1190,7 +1152,7 @@ export default function App() {
       <Suspense fallback={<GlowLoader fullPage />}>
       <Onboarding onTermine={p => {
         setProfil(p)
-        setProfilBackup(null)
+        
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
         syncProfilSupabase(user?.id, p)
         const h2 = new Date().getHours()
@@ -1206,9 +1168,6 @@ export default function App() {
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? '#E8962A' : '#ef4444'
 
-  const sectionTitles = {
-    chat:'Solenn', sante:'Santé', routine:'Routine', herbal:'Santé Naturelle', style:'Style', forum:'Forum'
-  }
 
   const navItems = [
     { id:'accueil', Icon: HomeIcon,    label:'Accueil' },
@@ -1307,7 +1266,7 @@ export default function App() {
             onPasserPro={passerPro}
             msgsRestants={isPro ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
             onClose={() => setShowSettings(false)}
-            onEditProfil={() => { setShowSettings(false); setProfilBackup(profil); setProfil(null) }}
+            onEditProfil={() => { setShowSettings(false); setProfil(null) }}
             onPresetChange={p => { setHomePreset(p); setShowSettings(false) }}
             onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}
             onResetMemoire={() => {
@@ -1416,7 +1375,7 @@ export default function App() {
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => { setProfilBackup(profil); setProfil(null) }}>✏ Modifier mon profil</button>
+            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => { setProfil(null) }}>✏ Modifier mon profil</button>
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
               <button style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
@@ -1686,7 +1645,7 @@ export default function App() {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,238,228,0.55)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     Paramètres
                   </button>
-                  <button onClick={() => { setProfilBackup(profil); setProfil(null); setMenuOpen(false) }} style={{
+                  <button onClick={() => { setProfil(null); setMenuOpen(false) }} style={{
                     display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                     border:'none', background:'transparent', cursor:'pointer',
                     fontFamily:F, width:'100%', textAlign:'left',
@@ -1929,21 +1888,6 @@ export default function App() {
                 </div>
               )}
               <Suspense fallback={<GlowLoader fullPage />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} /></Suspense>
-            </div>
-          )}
-
-          {/* ── Routine ── */}
-          {onglet === 'routine' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
-              {!isMobile && (
-                <div style={s.pageHeader}>
-                  <div>
-                    <div style={s.pageTitle}>📋 Routine du jour</div>
-                    <div style={s.pageSubtitle}>Ton programme personnalisé</div>
-                  </div>
-                </div>
-              )}
-              <RoutineModule profil={profil} metriques={metriques} />
             </div>
           )}
 
@@ -2266,135 +2210,6 @@ export default function App() {
     </div>
   )
 }
-
-// ─── ROUTINE MODULE ───────────────────────────────────────────────────────────
-function RoutineModule({ profil, metriques }) {
-  const todayKey = new Date().toDateString()
-  const savedKey = `vitacoach_routine_${todayKey}`
-
-  const [routine, setRoutine]           = useState(() => {
-    try { return JSON.parse(localStorage.getItem(savedKey)) || null } catch { return null }
-  })
-  const [loading, setLoading]           = useState(false)
-  const [routineError, setRoutineError] = useState(false)
-  const [checkedSteps, setCheckedSteps] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(`${savedKey}_checked`)) || {} } catch { return {} }
-  })
-
-  // Auto-générer au premier chargement si pas de routine sauvegardée
-  useEffect(() => {
-    if (!routine && !loading) genererRoutine()
-  }, [])
-
-  async function genererRoutine() {
-    setLoading(true); setCheckedSteps({}); setRoutineError(false)
-    localStorage.removeItem(`${savedKey}_checked`)
-    try {
-      const res = await fetch('/api/routine', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ profil, metriques })
-      })
-      const data = await res.json()
-      if (data.erreur) setRoutineError(true)
-      else {
-        setRoutine(data)
-        localStorage.setItem(savedKey, JSON.stringify(data))
-      }
-    } catch { setRoutineError(true) }
-    setLoading(false)
-  }
-
-  function toggleStep(id) {
-    setCheckedSteps(prev => {
-      const next = { ...prev, [id]: !prev[id] }
-      localStorage.setItem(`${savedKey}_checked`, JSON.stringify(next))
-      return next
-    })
-  }
-
-  const today = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
-  const doneTotal = Object.values(checkedSteps).filter(Boolean).length
-  const stepsTotal = routine
-    ? ((routine.matin?.etapes?.length||0) + (routine.apresmidi?.etapes?.length||0) + (routine.soir?.etapes?.length||0))
-    : 0
-
-  return (
-    <div style={{ paddingBottom:20 }}>
-      <div style={sr.header}>
-        <div>
-          <div style={sr.date}>{today}</div>
-          <div style={sr.titre}>Ta routine du jour</div>
-        </div>
-        <button style={{...sr.btnGen, display:'flex', alignItems:'center', gap:6}} onClick={genererRoutine} disabled={loading}>
-          {loading ? <><LoadingIcon size={14} color="rgba(200,123,82,0.80)" /> Génération...</> : routine ? <><RefreshIcon size={14} color="rgba(200,123,82,0.80)" /> Regénérer</> : <><SparkleIcon size={14} color="rgba(200,123,82,0.80)" /> Générer</>}
-        </button>
-      </div>
-
-      {stepsTotal > 0 && (
-        <div style={sr.progressBar}>
-          <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-            <span style={{ fontSize:11, fontWeight:400, color:'rgba(160,100,50,0.60)', letterSpacing:'0.04em' }}>Progression</span>
-            <span style={{ fontSize:11, color:'rgba(200,123,82,0.70)', fontWeight:500 }}>{doneTotal}/{stepsTotal}</span>
-          </div>
-          <div style={{ height:6, background:'#f0e8e0', borderRadius:12, overflow:'hidden' }}>
-            <div style={{ height:'100%', width:`${stepsTotal>0?(doneTotal/stepsTotal)*100:0}%`,
-              background:'linear-gradient(90deg,#C87B52,#E8A07A)', borderRadius:12, transition:'width 0.4s ease' }} />
-          </div>
-        </div>
-      )}
-
-      {routineError && (
-        <div style={{ ...sr.empty, background:'#fff5f5', border:'1px solid #ffcdd2', borderRadius:16, padding:24 }}>
-          <div style={{ fontSize:32, marginBottom:10, color:'#c62828' }}>!</div>
-          <div style={{ fontSize:14, color:'#c62828', fontWeight:600, marginBottom:8 }}>La génération a échoué</div>
-          <div style={{ fontSize:12, color:'rgba(155,100,58,0.72)' }}>Vérifie ta connexion et réessaie</div>
-        </div>
-      )}
-
-      {!routine && !loading && !routineError && (
-        <div style={sr.empty}>
-          <div style={{ marginBottom:14 }}><RoutineIcon size={48} color="rgba(200,123,82,0.6)" /></div>
-          <div style={{ fontSize:15, color:'rgba(55,22,5,0.90)', fontWeight:700, marginBottom:6 }}>Ta routine personnalisée</div>
-          <div style={{ fontSize:12, color:'rgba(155,100,58,0.72)' }}>Adaptée à ton rythme · {profil.reveil} → {profil.coucher}</div>
-        </div>
-      )}
-
-      {routine && (
-        <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-          {routine.motivation && (
-            <div style={sr.motivCard}>
-              <div style={{ marginBottom:6 }}><SparkleIcon size={14} color="rgba(200,123,82,0.55)" /></div>
-              <div style={{ fontSize:12, fontWeight:400, color:'rgba(160,95,40,0.65)', lineHeight:1.65, fontStyle:'italic' }}>{routine.motivation}</div>
-            </div>
-          )}
-          {routine.matin && (
-            <RoutineSection id="matin" iconEl={<SunIcon size={18} color="#C87B52" />} titre={routine.matin.titre} heure={routine.matin.heure}
-              etapes={routine.matin.etapes} accent="#C87B52" checked={checkedSteps} onToggle={toggleStep} />
-          )}
-          {routine.nutrition && <NutritionCard nutrition={routine.nutrition} />}
-          {routine.apresmidi && (
-            <RoutineSection id="apresmidi" iconEl={<SunIcon size={18} color="#E8962A" />} titre={routine.apresmidi.titre} heure={routine.apresmidi.heure}
-              etapes={routine.apresmidi.etapes} accent="#E8962A" checked={checkedSteps} onToggle={toggleStep} />
-          )}
-          {routine.soir && (
-            <RoutineSection id="soir" iconEl={<MoonIcon size={18} color="#5856d6" />} titre={routine.soir.titre} heure={routine.soir.heure}
-              etapes={routine.soir.etapes} accent="#5856d6" checked={checkedSteps} onToggle={toggleStep} />
-          )}
-          {routine.astuce && (
-            <div style={sr.card}>
-              <div style={sr.cardHeader}>
-                <span style={{ fontSize:20 }}>{routine.astuce.emoji}</span>
-                <span style={{ ...sr.cardTitre, color:'#C87B52' }}>{routine.astuce.titre}</span>
-              </div>
-              <div style={{ fontSize:13, color:'rgba(155,100,58,0.72)', lineHeight:1.7 }}>{routine.astuce.conseil}</div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
 function NutritionCard({ nutrition }) {
   return (
     <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
