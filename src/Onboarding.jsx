@@ -215,18 +215,18 @@ const CARD_ACCENTS = [
 const S = {
   question: {
     fontSize:'clamp(22px,5.5vw,28px)', fontWeight:700, lineHeight:1.32,
-    color:'#3D2014', fontFamily:'Poppins, sans-serif',
+    color:'rgba(200,123,82,0.92)', fontFamily:'Poppins, sans-serif',
     letterSpacing:'-0.01em',
   },
   sub: {
-    fontSize:14, fontWeight:400, color:'rgba(61,32,20,0.52)',
+    fontSize:14, fontWeight:400, color:'rgba(200,123,82,0.58)',
     fontFamily:'Poppins, sans-serif', lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
     border:'1.5px solid rgba(200,123,82,0.28)',
     background:'rgba(255,248,244,0.92)',
-    fontSize:16, fontFamily:'Poppins, sans-serif', color:'#3D2014',
+    fontSize:16, fontFamily:'Poppins, sans-serif', color:'rgba(200,123,82,0.92)',
     outline:'none', fontWeight:500,
     boxShadow:'0 2px 14px rgba(200,123,82,0.09)',
     transition:'border-color 0.2s, box-shadow 0.2s',
@@ -404,7 +404,7 @@ export default function Onboarding({ onTermine }) {
                 </motion.span>
                 <span style={{
                   fontSize:12, fontWeight:600, lineHeight:1.35, display:'block',
-                  color: isSel ? accent.text : '#3D2014',
+                  color: isSel ? accent.text : 'rgba(200,123,82,0.88)',
                   transition:'color 0.16s',
                 }}>
                   {opt.label}
@@ -474,7 +474,7 @@ export default function Onboarding({ onTermine }) {
                 </motion.span>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 500,
-                  color: isSel ? 'rgba(122,48,24,0.95)' : '#3D2014',
+                  color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
@@ -547,12 +547,12 @@ export default function Onboarding({ onTermine }) {
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 500,
-                    color: isSel ? 'rgba(122,48,24,0.95)' : '#3D2014',
+                    color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
                     transition:'color 0.16s',
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:11.5, color:'rgba(61,32,20,0.46)', fontWeight:400 }}>
+                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.50)', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
