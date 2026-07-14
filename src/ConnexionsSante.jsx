@@ -6,6 +6,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
+
+const HK_KEY = 'vitacoach_healthkit_connected'
 
 const C = {
   bg:       'rgba(255,248,244,0.0)',
@@ -65,7 +68,7 @@ const PROVIDERS = [
 ]
 
 // ─── Composant provider card ──────────────────────────────────────────────────
-function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, onSync, loading }) {
+function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, onSync, loading, disabled, disabledLabel }) {
   const [confirmeDeconnect, setConfirmeDeconnect] = useState(false)
 
   return (
@@ -145,6 +148,15 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
       {provider.disponible && (
         <div style={{ display: 'flex', gap: 8 }}>
           {!connecte ? (
+            disabled ? (
+              <div style={{
+                flex: 1, padding: '10px 16px', borderRadius: 12, textAlign: 'center',
+                background: 'rgba(10,22,51,0.05)', border: '1px solid rgba(10,22,51,0.10)',
+                fontSize: 13, color: C.texte2, fontWeight: 500,
+              }}>
+                {disabledLabel || 'Non disponible'}
+              </div>
+            ) : (
             <button
               onClick={() => onConnect(provider)}
               style={{
@@ -157,6 +169,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
             >
               Connecter
             </button>
+            )
           ) : (
             <>
               <button
@@ -295,14 +308,16 @@ function ModalOura({ userId, onSuccess, onClose }) {
 }
 
 // ─── Composant principal ──────────────────────────────────────────────────────
-export default function ConnexionsSante({ userId }) {
-  const [integrations, setIntegrations] = useState([])
-  const [loadingSync,  setLoadingSync]  = useState(null)
-  const [modalOura,    setModalOura]    = useState(false)
-  const [toast,        setToast]        = useState(null)
-  // 'ok' | 'error' | null — banner OAuth pleine largeur
-  const [oauthBanner,  setOauthBanner]  = useState(null)
-  const [syncing,      setSyncing]      = useState(false)
+export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
+  const [integrations,   setIntegrations]   = useState([])
+  const [loadingSync,    setLoadingSync]     = useState(null)
+  const [modalOura,      setModalOura]       = useState(false)
+  const [toast,          setToast]           = useState(null)
+  const [oauthBanner,    setOauthBanner]     = useState(null)
+  const [syncing,        setSyncing]         = useState(false)
+  const [hkConnected,    setHkConnected]     = useState(() => localStorage.getItem(HK_KEY) === 'true')
+  const [hkLastSync,     setHkLastSync]      = useState(() => localStorage.getItem(HK_KEY + '_last'))
+  const hkAvailable = isHealthKitAvailable()
 
   useEffect(() => {
     if (userId) chargerIntegrations()
@@ -348,6 +363,7 @@ export default function ConnexionsSante({ userId }) {
   }
 
   function estConnecte(providerId) {
+    if (providerId === 'apple_health') return hkConnected
     return integrations.some(i => i.provider === providerId && i.actif)
   }
 
@@ -359,13 +375,64 @@ export default function ConnexionsSante({ userId }) {
     if (!userId) return
 
     if (provider.methode === 'oauth') {
-      // Redirect OAuth
       window.location.href = `/api/connect/${provider.id}?userId=${userId}`
     } else if (provider.methode === 'token') {
-      // Modal PAT
       if (provider.id === 'oura') setModalOura(true)
-    } else if (provider.methode === 'native') {
-      showToast('💡 Apple Santé se connecte automatiquement via l\'app iOS')
+    } else if (provider.methode === 'native' && provider.id === 'apple_health') {
+      if (!hkAvailable) {
+        showToast('💡 Disponible uniquement dans l\'app iOS Solenn')
+        return
+      }
+      setLoadingSync('apple_health')
+      try {
+        await requestHealthKitPermissions()
+        localStorage.setItem(HK_KEY, 'true')
+        setHkConnected(true)
+        showToast('🍎 Apple Santé connecté !')
+        await syncAppleHealth()
+      } catch (e) {
+        showToast('❌ Autorisation refusée')
+      } finally {
+        setLoadingSync(null)
+      }
+    }
+  }
+
+  async function syncAppleHealth() {
+    setLoadingSync('apple_health')
+    try {
+      const metrics = await readTodayHealthData()
+      let synced = 0
+      if (onMetriqueUpdate) {
+        for (const [key, val] of Object.entries(metrics)) {
+          if (val !== undefined && val > 0) {
+            onMetriqueUpdate(key, val)
+            synced++
+          }
+        }
+      }
+      // Historique poids 30 jours → merge localStorage
+      const weightHistory = await readWeightHistory(30)
+      if (weightHistory.length > 0) {
+        try {
+          const stored = JSON.parse(localStorage.getItem('vitacoach_history') || '[]')
+          const merged = [...stored]
+          for (const w of weightHistory) {
+            const idx = merged.findIndex(h => h.date === w.date)
+            if (idx >= 0) merged[idx] = { ...merged[idx], poids: w.poids }
+            else merged.push({ date: w.date, poids: w.poids })
+          }
+          localStorage.setItem('vitacoach_history', JSON.stringify(merged))
+        } catch {}
+      }
+      const now = new Date().toISOString()
+      localStorage.setItem(HK_KEY + '_last', now)
+      setHkLastSync(now)
+      showToast(`✅ ${synced} métriques synchronisées depuis Apple Santé`)
+    } catch (e) {
+      showToast('❌ Erreur de sync Apple Santé')
+    } finally {
+      setLoadingSync(null)
     }
   }
 
@@ -376,6 +443,10 @@ export default function ConnexionsSante({ userId }) {
   }
 
   async function syncNow(providerId) {
+    if (providerId === 'apple_health') {
+      await syncAppleHealth()
+      return
+    }
     setLoadingSync(providerId)
     try {
       const res  = await fetch('/api/sync-now', {
@@ -487,18 +558,29 @@ export default function ConnexionsSante({ userId }) {
         Appareils & Services
       </div>
 
-      {PROVIDERS.map(provider => (
-        <ProviderCard
-          key={provider.id}
-          provider={provider}
-          connecte={estConnecte(provider.id)}
-          lastSync={getIntegration(provider.id)?.last_sync_at}
-          onConnect={connecter}
-          onDisconnect={deconnecter}
-          onSync={syncNow}
-          loading={loadingSync === provider.id}
-        />
-      ))}
+      {PROVIDERS.map(provider => {
+        const isHK = provider.id === 'apple_health'
+        return (
+          <ProviderCard
+            key={provider.id}
+            provider={provider}
+            connecte={estConnecte(provider.id)}
+            lastSync={isHK ? hkLastSync : getIntegration(provider.id)?.last_sync_at}
+            onConnect={connecter}
+            onDisconnect={isHK ? () => {
+              localStorage.removeItem(HK_KEY)
+              localStorage.removeItem(HK_KEY + '_last')
+              setHkConnected(false)
+              setHkLastSync(null)
+              showToast('Apple Santé déconnecté')
+            } : deconnecter}
+            onSync={syncNow}
+            loading={loadingSync === provider.id}
+            disabled={isHK && !hkAvailable}
+            disabledLabel={isHK && !hkAvailable ? 'App iOS uniquement' : undefined}
+          />
+        )
+      })}
 
       <div style={{ fontSize: 11, color: C.texte2, textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
         Tes données de santé restent privées et ne sont jamais partagées.{'\n'}

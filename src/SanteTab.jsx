@@ -685,7 +685,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         }}>
           <span style={{display:'flex',alignItems:'center',gap:5}}><PhoneIcon size={12} color="rgba(200,123,82,0.70)" />Appareils connectés</span>
         </div>
-        <ConnexionsSante userId={userId} />
+        <ConnexionsSante userId={userId} onMetriqueUpdate={onUpdate} />
       </div>
 
       {/* ── Rapport Hebdomadaire ── */}
