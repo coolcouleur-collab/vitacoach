@@ -203,7 +203,7 @@ const MOMENT_OPTIONS = [
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
   question: {
-    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:300, lineHeight:1.5,
+    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:400, lineHeight:1.5,
     color:'rgba(184,105,58,0.88)', fontFamily:"'DM Sans', sans-serif",
     letterSpacing:'0em',
   },
@@ -382,9 +382,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.10)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.10)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 24px rgba(200,123,82,0.20)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', display:'flex', alignItems:'center', gap:14,
@@ -437,9 +437,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => tapThen(range, () => goNext({ ...answers, age: range }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
@@ -483,9 +483,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
@@ -539,9 +539,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, declencheur: opt.label }))}
                 whileTap={{ scale:0.97 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
@@ -587,9 +587,9 @@ export default function Onboarding({ onTermine }) {
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, baseline: opt.label }))}
                 whileTap={{ scale:0.97 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
@@ -638,9 +638,9 @@ export default function Onboarding({ onTermine }) {
                 })}
                 whileTap={{ scale:0.97 }}
                 style={{
-                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  width:'100%', padding:'12px 18px', borderRadius:16,
                   border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.32)',
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
                   boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
@@ -743,7 +743,7 @@ export default function Onboarding({ onTermine }) {
               key={i}
               style={{
                 width:30, height:2, borderRadius:1,
-                background: i <= step ? '#C87B52' : 'rgba(200,123,82,0.15)',
+                background: i <= step ? '#C87B52' : 'rgba(200,123,82,0.28)',
                 transition:'background 0.22s ease-out',
               }}
             />
