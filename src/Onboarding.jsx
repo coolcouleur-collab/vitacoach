@@ -265,23 +265,44 @@ const S = {
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine }) {
-  const [step, setStep] = useState(0)
-  const [nomVal, setNomVal] = useState('')
-  const [answers, setAnswers] = useState({})
+  const [step, setStep] = useState(() => {
+    const s = sessionStorage.getItem('solenn_onboarding_step')
+    return s ? parseInt(s, 10) : 0
+  })
+  const [answers, setAnswers] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('solenn_onboarding_answers') || '{}') } catch { return {} }
+  })
+  const [nomVal, setNomVal] = useState(() => {
+    try {
+      const a = JSON.parse(sessionStorage.getItem('solenn_onboarding_answers') || '{}')
+      return a.nom || ''
+    } catch { return '' }
+  })
   const [showReveal, setShowReveal] = useState(false)
   const [slideDir, setSlideDir] = useState(1)
   const [tapped, setTapped] = useState(null)
   const nomRef = useRef(null)
 
   useEffect(() => {
-    setTimeout(() => nomRef.current?.focus(), 350)
-  }, [])
+    if (step === 0) setTimeout(() => nomRef.current?.focus(), 350)
+  }, [step])
+
+  useEffect(() => {
+    sessionStorage.setItem('solenn_onboarding_step', step)
+    sessionStorage.setItem('solenn_onboarding_answers', JSON.stringify(answers))
+  }, [step, answers])
 
   function goNext(newAnswers) {
     setAnswers(newAnswers)
     setSlideDir(1)
     setTapped(null)
     setStep(s => s + 1)
+  }
+
+  function goBack() {
+    setSlideDir(-1)
+    setTapped(null)
+    setStep(s => s - 1)
   }
 
   function tapThen(key, fn) {
@@ -312,6 +333,8 @@ export default function Onboarding({ onTermine }) {
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
     window._solennProfil = profil
+    sessionStorage.removeItem('solenn_onboarding_step')
+    sessionStorage.removeItem('solenn_onboarding_answers')
     setShowReveal(true)
   }
 
@@ -815,19 +838,39 @@ export default function Onboarding({ onTermine }) {
         paddingBottom:16,
         display:'flex', flexDirection:'column', alignItems:'center', gap:14,
       }}>
-        <motion.span
-          initial={{ opacity:0, y:-10 }}
-          animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.1, type:'spring', stiffness:300, damping:24 }}
-          style={{
-            fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
-            fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
-            color:'rgba(184,105,58,0.88)',
-            textShadow:'0 1px 10px rgba(255,248,244,0.70)',
-          }}
-        >
-          Solenn
-        </motion.span>
+        <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center', width:'100%', maxWidth:480, padding:'0 20px', boxSizing:'border-box' }}>
+          {step > 0 && (
+            <motion.button
+              onClick={goBack}
+              initial={{ opacity:0, x:-6 }}
+              animate={{ opacity:1, x:0 }}
+              whileHover={{ x:-2 }}
+              whileTap={{ scale:0.92 }}
+              style={{
+                position:'absolute', left:20,
+                background:'none', border:'none', cursor:'pointer',
+                color:'rgba(200,123,82,0.72)', fontFamily:'Poppins, sans-serif',
+                fontWeight:600, fontSize:20, padding:'4px 8px',
+                display:'flex', alignItems:'center', lineHeight:1,
+              }}
+            >
+              ←
+            </motion.button>
+          )}
+          <motion.span
+            initial={{ opacity:0, y:-10 }}
+            animate={{ opacity:1, y:0 }}
+            transition={{ delay:0.1, type:'spring', stiffness:300, damping:24 }}
+            style={{
+              fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
+              fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
+              color:'rgba(184,105,58,0.88)',
+              textShadow:'0 1px 10px rgba(255,248,244,0.70)',
+            }}
+          >
+            Solenn
+          </motion.span>
+        </div>
 
         {/* Progress dots */}
         <div style={{display:'flex', gap:6, alignItems:'center'}}>

@@ -1,10 +1,17 @@
 import React, { useState, useRef, useEffect, useMemo, Component, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { supabase } from './supabase'
 import { playFx } from './sfx'
 import GlowLoader from './GlowLoader'
-import MorningCheckin from './MorningCheckin'
-import SettingsSheet from './SettingsSheet'
+
+// Supabase chargé en lazy — ne bloque pas le démarrage
+let _sb = null
+async function getSupabase() {
+  if (!_sb) { const m = await import('./supabase'); _sb = m.supabase }
+  return _sb
+}
+
+const MorningCheckin = lazy(() => import('./MorningCheckin'))
+const SettingsSheet  = lazy(() => import('./SettingsSheet'))
 
 // Lazy — chargés uniquement quand l'utilisateur y accède
 const Auth        = lazy(() => import('./Auth'))
@@ -243,6 +250,7 @@ function sauverMetriques(m) {
 
 async function syncMetriquesSupabase(userId, m) {
   if (!userId) return
+  const supabase = await getSupabase()
   const today = new Date().toISOString().split('T')[0]
   await supabase.from('user_metrics').upsert({
     user_id: userId, date: today,
@@ -254,6 +262,7 @@ async function syncMetriquesSupabase(userId, m) {
 
 async function syncProfilSupabase(userId, profil) {
   if (!userId) return
+  const supabase = await getSupabase()
   await supabase.from('profils').upsert({
     user_id: userId, profil,
     updated_at: new Date().toISOString(),
@@ -681,33 +690,34 @@ const [messages, setMessages] = useState(() => {
     if (!user?.id) return
     const today = new Date().toISOString().split('T')[0]
 
-    // Charger le profil depuis Supabase (priorité sur localStorage)
-    supabase.from('profils').select('profil').eq('user_id', user.id).maybeSingle()
-      .then(({ data }) => {
-        if (data?.profil) {
-          setProfil(data.profil)
-          localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
-          // Sync isPro depuis Supabase (mis à jour par le webhook Stripe)
-          if (data.profil.isPro === true) {
-            setIsPro(true)
-            localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+    getSupabase().then(supabase => {
+      // Charger le profil depuis Supabase (priorité sur localStorage)
+      supabase.from('profils').select('profil').eq('user_id', user.id).maybeSingle()
+        .then(({ data }) => {
+          if (data?.profil) {
+            setProfil(data.profil)
+            localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
+            if (data.profil.isPro === true) {
+              setIsPro(true)
+              localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+            }
           }
-        }
-      })
+        })
 
-    // Charger les métriques du jour depuis Supabase
-    supabase.from('user_metrics').select('*').eq('user_id', user.id).eq('date', today).maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          const m = {
-            date: new Date().toDateString(),
-            pas: data.pas||0, sommeil: data.sommeil||0, eau: data.eau||0,
-            fc: data.fc||0, humeur: data.humeur||0, poids: data.poids||0,
+      // Charger les métriques du jour depuis Supabase
+      supabase.from('user_metrics').select('*').eq('user_id', user.id).eq('date', today).maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            const m = {
+              date: new Date().toDateString(),
+              pas: data.pas||0, sommeil: data.sommeil||0, eau: data.eau||0,
+              fc: data.fc||0, humeur: data.humeur||0, poids: data.poids||0,
+            }
+            setMetriques(m)
+            localStorage.setItem('vitacoach_metriques', JSON.stringify(m))
           }
-          setMetriques(m)
-          localStorage.setItem('vitacoach_metriques', JSON.stringify(m))
-        }
-      })
+        })
+    })
   }, [user?.id])
 
   // Permission apps santé — affichée une seule fois au 1er lancement après profil
@@ -1182,6 +1192,7 @@ const [messages, setMessages] = useState(() => {
       {/* ── Morning Check-in ── */}
       <AnimatePresence>
         {showCheckin && profil && (
+          <Suspense fallback={null}>
           <MorningCheckin
             profil={profil}
             onDone={({ sommeil, humeur, intention }) => {
@@ -1201,6 +1212,7 @@ const [messages, setMessages] = useState(() => {
               setShowCheckin(false)
             }}
           />
+          </Suspense>
         )}
       </AnimatePresence>
 
@@ -1258,6 +1270,7 @@ const [messages, setMessages] = useState(() => {
       {/* ── Settings Sheet ── */}
       <AnimatePresence>
         {showSettings && profil && (
+          <Suspense fallback={null}>
           <SettingsSheet
             profil={profil}
             preset={homePreset}
@@ -1288,6 +1301,7 @@ const [messages, setMessages] = useState(() => {
               a.click(); URL.revokeObjectURL(url)
             }}
           />
+          </Suspense>
         )}
       </AnimatePresence>
 
@@ -1383,7 +1397,8 @@ const [messages, setMessages] = useState(() => {
                 Paramètres
               </button>
               <button onClick={async () => {
-                await supabase.auth.signOut()
+                const sb = await getSupabase()
+                await sb.auth.signOut()
                 localStorage.removeItem('vitacoach_user')
                 localStorage.removeItem('vitacoach_profil')
                 setUser(null); setProfil(null)
@@ -1654,7 +1669,8 @@ const [messages, setMessages] = useState(() => {
                     <SparkleIcon size={18} color="rgba(255,238,228,0.46)" /> Modifier mon profil
                   </button>
                   <button onClick={async () => {
-                    await supabase.auth.signOut()
+                    const sb = await getSupabase()
+                    await sb.auth.signOut()
                     localStorage.removeItem('vitacoach_user')
                     localStorage.removeItem('vitacoach_profil')
                     setUser(null)
