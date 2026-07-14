@@ -208,7 +208,7 @@ const S = {
     letterSpacing:'0em',
   },
   sub: {
-    fontSize:14, fontWeight:300, color:'#A06845',
+    fontSize:14, fontWeight:300, color:'rgba(184,105,58,0.88)',
     fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
