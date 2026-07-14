@@ -179,12 +179,12 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { emoji:'⚡', label:'Énergie & vitalité',  Icon: FlashIcon,    iconColor:'rgba(251,191,36,0.90)'  },
-  { emoji:'⚖️', label:'Perdre du poids',     Icon: TargetIcon,   iconColor:'rgba(200,123,82,0.90)'  },
-  { emoji:'😴', label:'Mieux dormir',         Icon: MoonIcon,     iconColor:'rgba(99,149,238,0.90)'  },
-  { emoji:'🧘', label:'Gérer le stress',      Icon: MeditateIcon, iconColor:'rgba(167,139,250,0.90)' },
-  { emoji:'💪', label:'Sport & forme',        Icon: MuscleIcon,   iconColor:'rgba(200,123,82,0.90)'  },
-  { emoji:'🥗', label:'Alimentation saine',   Icon: FoodIcon,     iconColor:'rgba(34,197,94,0.90)'   },
+  { emoji:'⚡', label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien',    iconColor:'rgba(218,160,30,0.92)',   accent:{ sel:'rgba(251,191,36,0.13)', border:'rgba(218,160,30,0.40)', glow:'rgba(218,160,30,0.22)' } },
+  { emoji:'⚖️', label:'Perdre du poids',     desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { emoji:'😴', label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment',    iconColor:'rgba(82,130,220,0.92)',   accent:{ sel:'rgba(82,130,220,0.10)',  border:'rgba(82,130,220,0.38)',  glow:'rgba(82,130,220,0.18)'  } },
+  { emoji:'🧘', label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale',     iconColor:'rgba(140,110,220,0.92)', accent:{ sel:'rgba(140,110,220,0.10)', border:'rgba(140,110,220,0.38)', glow:'rgba(140,110,220,0.18)' } },
+  { emoji:'💪', label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { emoji:'🥗', label:'Alimentation saine',   desc:'Manger mieux sans me priver',           iconColor:'rgba(34,170,80,0.92)',    accent:{ sel:'rgba(34,170,80,0.10)',   border:'rgba(34,170,80,0.38)',   glow:'rgba(34,170,80,0.18)'   } },
 ]
 
 const ACTIVITE_OPTIONS = [
@@ -202,14 +202,6 @@ const AGE_RANGE_OPTIONS = [
   { range:'55 ans et +', icon:'✨' },
 ]
 
-const CARD_ACCENTS = [
-  { bg:'rgba(255,244,236,0.62)', border:'rgba(200,123,82,0.22)', selBg:'rgba(200,123,82,0.16)', glow:'rgba(200,123,82,0.28)' },
-  { bg:'rgba(253,238,224,0.62)', border:'rgba(200,123,82,0.26)', selBg:'rgba(200,123,82,0.20)', glow:'rgba(200,123,82,0.32)' },
-  { bg:'rgba(251,232,212,0.62)', border:'rgba(200,123,82,0.30)', selBg:'rgba(200,123,82,0.24)', glow:'rgba(200,123,82,0.36)' },
-  { bg:'rgba(248,226,202,0.62)', border:'rgba(200,123,82,0.28)', selBg:'rgba(200,123,82,0.22)', glow:'rgba(200,123,82,0.34)' },
-  { bg:'rgba(255,240,226,0.62)', border:'rgba(200,123,82,0.24)', selBg:'rgba(200,123,82,0.18)', glow:'rgba(200,123,82,0.30)' },
-  { bg:'rgba(250,234,218,0.62)', border:'rgba(200,123,82,0.32)', selBg:'rgba(200,123,82,0.26)', glow:'rgba(200,123,82,0.38)' },
-]
 
 const TRIGGER_OPTIONS = [
   { emoji:'😮‍💨', label:'Stress & burnout',      desc:'Je suis à bout, j\'ai besoin de souffler'  },
@@ -400,58 +392,53 @@ export default function Onboarding({ onTermine }) {
           text={`Qu'est-ce qui t'amène chez Solenn${nom ? `, ${nom}` : ''} ?`}
           style={S.question}
         />
-        <div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:12}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {OBJECTIF_OPTIONS.map((opt, i) => {
-            const accent = CARD_ACCENTS[i]
             const isSel = tapped === opt.label
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, y:28, scale:0.88 }}
+                initial={{ opacity:0, x:36, scale:0.95 }}
                 animate={{
-                  opacity:1, y:0, scale: isSel ? 1.06 : 1,
-                  background: isSel ? accent.selBg : accent.bg,
-                  borderColor: isSel ? 'rgba(200,123,82,0.55)' : accent.border,
-                  boxShadow: isSel
-                    ? `0 14px 40px ${accent.glow}, 0 0 0 1.5px rgba(200,123,82,0.40), inset 0 1px 0 rgba(255,255,255,0.55)`
-                    : `0 4px 20px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)`,
+                  opacity:1, x:0, scale:1,
+                  background: isSel ? opt.accent.sel : 'rgba(255,248,244,0.92)',
+                  borderColor: isSel ? opt.accent.border : 'rgba(200,123,82,0.18)',
+                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 2px 10px rgba(200,123,82,0.06)',
                 }}
                 transition={{
-                  opacity:  { type:'spring', stiffness:300, damping:24, delay: i * 0.07 },
-                  y:        { type:'spring', stiffness:300, damping:24, delay: i * 0.07 },
-                  scale:    { type:'spring', stiffness:380, damping:20 },
+                  opacity:  { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
+                  x:        { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
+                  scale:    { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
                   background: { duration:0.16 },
                   borderColor: { duration:0.16 },
                   boxShadow: { duration:0.18 },
                 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif:`${opt.emoji} ${opt.label}` }))}
-                whileHover={{ scale: isSel ? 1.06 : 1.04, boxShadow:`0 10px 32px ${accent.glow}, inset 0 1px 0 rgba(255,255,255,0.60)` }}
-                whileTap={{ scale:0.94 }}
+                whileHover={{ x:5, borderColor: opt.accent.border, boxShadow:`0 6px 20px ${opt.accent.glow}` }}
+                whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  padding:'22px 12px 18px', borderRadius:22,
-                  border:`1.5px solid ${accent.border}`,
-                  background: accent.bg,
-                  background:'rgba(255,248,244,0.96)',
-                  cursor:'pointer', textAlign:'center',
-                  fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 4px 20px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
+                  width:'100%', padding:'16px 20px', borderRadius:16,
+                  border:'1.5px solid rgba(200,123,82,0.18)',
+                  background:'rgba(255,248,244,0.92)',
+                  cursor:'pointer', display:'flex', alignItems:'center', gap:14,
+                  fontFamily:'Poppins, sans-serif', textAlign:'left',
                   outline:'none',
                 }}
               >
-                <motion.span
-                  animate={{ scale: isSel ? [1, 1.3, 1] : 1 }}
-                  transition={{ duration:0.35 }}
-                  style={{ fontSize:34, display:'block', marginBottom:12, lineHeight:1 }}
-                >
+                <span style={{ fontSize:28, display:'block', lineHeight:1, flexShrink:0 }}>
                   {opt.emoji}
-                </motion.span>
-                <span style={{
-                  fontSize:12, fontWeight: isSel ? 700 : 600, lineHeight:1.35, display:'block',
-                  color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.88)',
-                  transition:'color 0.16s, font-weight 0.1s',
-                }}>
-                  {opt.label}
                 </span>
+                <div style={{ flex:1 }}>
+                  <span style={{
+                    fontSize:15, fontWeight: isSel ? 600 : 500, display:'block',
+                    color: isSel ? opt.iconColor : 'rgba(200,123,82,0.90)',
+                    transition:'color 0.16s',
+                  }}>{opt.label}</span>
+                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                {isSel && (
+                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16, color: opt.iconColor }}>✓</motion.span>
+                )}
               </motion.button>
             )
           })}
@@ -592,7 +579,7 @@ export default function Onboarding({ onTermine }) {
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.50)', fontWeight:400 }}>
+                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.50)', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
@@ -662,7 +649,7 @@ export default function Onboarding({ onTermine }) {
                   <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 {isSel && (
                   <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
@@ -724,7 +711,7 @@ export default function Onboarding({ onTermine }) {
                   <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 {isSel && (
                   <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
@@ -789,7 +776,7 @@ export default function Onboarding({ onTermine }) {
                   <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
                 {isSel && (
                   <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
