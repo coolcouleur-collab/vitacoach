@@ -203,12 +203,12 @@ const MOMENT_OPTIONS = [
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
   question: {
-    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:400, lineHeight:1.5,
+    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:500, lineHeight:1.5,
     color:'rgba(184,105,58,0.88)', fontFamily:"'DM Sans', sans-serif",
     letterSpacing:'0em',
   },
   sub: {
-    fontSize:14, fontWeight:300, color:'rgba(184,105,58,0.88)',
+    fontSize:14, fontWeight:400, color:'rgba(184,105,58,0.88)',
     fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
