@@ -164,10 +164,10 @@ const OBJECTIF_OPTIONS = [
 ]
 
 const ACTIVITE_OPTIONS = [
-  { Icon: SofaIcon, label:'Sédentaire',  desc:'Bureau / peu de mouvements' },
-  { Icon: WalkIcon, label:'Léger',       desc:'Quelques sorties par semaine' },
-  { Icon: RunIcon,  label:'Modéré',      desc:'Sport 3-4×/semaine' },
-  { Icon: FireIcon, label:'Intense',     desc:'Sport quotidien ou physique' },
+  { Icon: SofaIcon, label:'Sédentaire',  desc:'Bureau / peu de mouvements'      },
+  { Icon: WalkIcon, label:'Léger',       desc:'Quelques sorties par semaine'    },
+  { Icon: RunIcon,  label:'Modéré',      desc:'Sport 3-4×/semaine'              },
+  { Icon: FireIcon, label:'Intense',     desc:'Sport quotidien ou physique'     },
 ]
 
 const AGE_RANGE_OPTIONS = [
