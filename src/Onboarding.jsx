@@ -155,12 +155,12 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { Icon: FlashIcon,    label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien',    iconColor:'rgba(218,160,30,0.92)',   accent:{ sel:'rgba(251,191,36,0.13)', border:'rgba(218,160,30,0.40)', glow:'rgba(218,160,30,0.22)' } },
-  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'#C87B52', glow:'rgba(200,123,82,0.22)' } },
-  { Icon: MoonIcon,     label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment',    iconColor:'rgba(82,130,220,0.92)',   accent:{ sel:'rgba(82,130,220,0.10)',  border:'rgba(82,130,220,0.38)',  glow:'rgba(82,130,220,0.18)'  } },
-  { Icon: MeditateIcon, label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale',     iconColor:'rgba(140,110,220,0.92)',  accent:{ sel:'rgba(140,110,220,0.10)', border:'rgba(140,110,220,0.38)', glow:'rgba(140,110,220,0.18)' } },
-  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'#C87B52', glow:'rgba(200,123,82,0.22)' } },
-  { Icon: FoodIcon,     label:'Alimentation saine',   desc:'Manger mieux sans me priver',           iconColor:'rgba(34,170,80,0.92)',    accent:{ sel:'rgba(34,170,80,0.10)',   border:'rgba(34,170,80,0.38)',   glow:'rgba(34,170,80,0.18)'   } },
+  { Icon: FlashIcon,    label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien'  },
+  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel'      },
+  { Icon: MoonIcon,     label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment' },
+  { Icon: MeditateIcon, label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale'  },
+  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte'  },
+  { Icon: FoodIcon,     label:'Alimentation saine',   desc:'Manger mieux sans me priver'        },
 ]
 
 const ACTIVITE_OPTIONS = [
@@ -222,9 +222,10 @@ const S = {
   },
   cta: {
     width:'100%', padding:'17px', borderRadius:16, border:'none',
-    background:'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
+    background:'linear-gradient(110deg, #B86A3A 0%, #E8962A 45%, #F4AA48 65%, #C87B52 100%)',
+    backgroundSize:'250% 100%',
     color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer',
-    fontFamily:"'DM Sans', sans-serif", letterSpacing:'0',
+    fontFamily:"'DM Sans', sans-serif", letterSpacing:'0.3px',
     boxShadow:'0 8px 24px rgba(200,123,82,0.40)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
@@ -311,9 +312,9 @@ export default function Onboarding({ onTermine }) {
   }
 
   const slideVariants = {
-    enter:  (d) => ({ opacity:0, x: d * 48, scale:0.97 }),
-    center: { opacity:1, x:0, scale:1 },
-    exit:   (d) => ({ opacity:0, x: -d * 48, scale:0.97 }),
+    enter:  (d) => ({ opacity:0, x: d * 72, scale:0.94 }),
+    center: { opacity:1, x:0, scale:1, transition:{ type:'spring', stiffness:340, damping:26, mass:0.85 } },
+    exit:   (d) => ({ opacity:0, x: -d * 54, scale:0.97, transition:{ duration:0.16, ease:'easeIn' } }),
   }
 
   const nom = answers.nom || ''
@@ -353,7 +354,7 @@ export default function Onboarding({ onTermine }) {
             onClick={() => nomVal.trim() && goNext({ nom: nomVal.trim() })}
             disabled={!nomVal.trim()}
             whileTap={nomVal.trim() ? { scale:0.97 } : {}}
-            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'ctaPulse 2.2s ease-in-out infinite' : 'none' }}
+            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, ctaPulse 2.2s ease-in-out infinite' : 'none' }}
           >
             Continuer →
           </motion.button>
@@ -375,16 +376,16 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? opt.accent.sel : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.10)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 24px rgba(200,123,82,0.20)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', display:'flex', alignItems:'center', gap:14,
                   fontFamily:"'DM Sans', sans-serif", textAlign:'left',
@@ -392,12 +393,12 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? opt.iconColor : '#C87B52'} size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ flex:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
-                    color: isSel ? opt.iconColor : '#5C2E0A',
+                    color: isSel ? '#C87B52' : '#5C2E0A',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
                   <span style={{ fontSize:13, color:'#A06845', fontWeight:400 }}>{opt.desc}</span>
@@ -430,16 +431,16 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={range}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(range, () => goNext({ ...answers, age: range }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -476,16 +477,16 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
                   fontFamily:"'DM Sans', sans-serif",
@@ -532,16 +533,16 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, declencheur: opt.label }))}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -580,16 +581,16 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, baseline: opt.label }))}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -628,9 +629,9 @@ export default function Onboarding({ onTermine }) {
             return (
               <motion.button
                 key={opt.label}
-                initial={{ opacity:0, x:36, scale:0.95 }}
+                initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => {
                   const finalAnswers = { ...answers, moment: opt.label }
                   finishOnboarding(finalAnswers)
@@ -638,9 +639,9 @@ export default function Onboarding({ onTermine }) {
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? '#A06845' : 'rgba(200,123,82,0.38)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(242,219,201,0.85)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 4px 20px rgba(80,25,0,0.14), 0 1px 4px rgba(80,25,0,0.08)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.80)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
                   transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -683,7 +684,8 @@ export default function Onboarding({ onTermine }) {
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
         input:focus { outline:none; border-color:rgba(200,123,82,0.55) !important; box-shadow:0 0 0 3px rgba(200,123,82,0.10) !important; }
         input::placeholder { color:rgba(200,123,82,0.40); }
-        @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 32px rgba(200,123,82,0.62)} }
+        @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 36px rgba(200,123,82,0.68)} }
+        @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
       `}</style>
 
@@ -693,6 +695,10 @@ export default function Onboarding({ onTermine }) {
       {/* Header */}
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:100,
+        backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+        background:'rgba(255,248,244,0.60)',
+        borderBottom:'1px solid rgba(255,255,255,0.42)',
+        boxShadow:'0 2px 24px rgba(180,80,20,0.07)',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 20px)',
         paddingBottom:16,
         display:'flex', flexDirection:'column', alignItems:'center', gap:14,
@@ -761,7 +767,7 @@ export default function Onboarding({ onTermine }) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration:0.26, ease:'easeOut' }}
+            transition={{ duration:0.18, ease:'easeIn' }}
           >
             {renderStep()}
           </motion.div>
