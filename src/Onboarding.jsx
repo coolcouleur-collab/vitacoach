@@ -203,12 +203,33 @@ const AGE_RANGE_OPTIONS = [
 ]
 
 const CARD_ACCENTS = [
-  { bg:'rgba(251,191,36,0.13)',  border:'rgba(251,191,36,0.50)',  glow:'rgba(251,191,36,0.30)', selBg:'rgba(251,191,36,0.22)',  text:'#7A5E00' },
-  { bg:'rgba(200,123,82,0.11)', border:'rgba(200,123,82,0.42)',  glow:'rgba(200,123,82,0.26)', selBg:'rgba(200,123,82,0.22)',  text:'#7A3018' },
-  { bg:'rgba(99,149,238,0.11)', border:'rgba(99,149,238,0.40)',  glow:'rgba(99,149,238,0.24)', selBg:'rgba(99,149,238,0.22)',  text:'#1A3A8A' },
-  { bg:'rgba(167,139,250,0.11)',border:'rgba(167,139,250,0.40)', glow:'rgba(167,139,250,0.24)',selBg:'rgba(167,139,250,0.22)', text:'#4A1D8A' },
-  { bg:'rgba(200,123,82,0.11)', border:'rgba(200,123,82,0.42)',  glow:'rgba(200,123,82,0.26)', selBg:'rgba(200,123,82,0.22)',  text:'#7A3018' },
-  { bg:'rgba(34,197,94,0.10)',  border:'rgba(34,197,94,0.38)',   glow:'rgba(34,197,94,0.22)',  selBg:'rgba(34,197,94,0.20)',   text:'#145A2C' },
+  { bg:'rgba(255,244,236,0.62)', border:'rgba(200,123,82,0.22)', selBg:'rgba(200,123,82,0.16)', glow:'rgba(200,123,82,0.28)' },
+  { bg:'rgba(253,238,224,0.62)', border:'rgba(200,123,82,0.26)', selBg:'rgba(200,123,82,0.20)', glow:'rgba(200,123,82,0.32)' },
+  { bg:'rgba(251,232,212,0.62)', border:'rgba(200,123,82,0.30)', selBg:'rgba(200,123,82,0.24)', glow:'rgba(200,123,82,0.36)' },
+  { bg:'rgba(248,226,202,0.62)', border:'rgba(200,123,82,0.28)', selBg:'rgba(200,123,82,0.22)', glow:'rgba(200,123,82,0.34)' },
+  { bg:'rgba(255,240,226,0.62)', border:'rgba(200,123,82,0.24)', selBg:'rgba(200,123,82,0.18)', glow:'rgba(200,123,82,0.30)' },
+  { bg:'rgba(250,234,218,0.62)', border:'rgba(200,123,82,0.32)', selBg:'rgba(200,123,82,0.26)', glow:'rgba(200,123,82,0.38)' },
+]
+
+const TRIGGER_OPTIONS = [
+  { emoji:'😮‍💨', label:'Stress & burnout',      desc:'Je suis à bout, j\'ai besoin de souffler'  },
+  { emoji:'🔄',   label:'Envie de changement',   desc:'Je veux évoluer et prendre de nouvelles habitudes' },
+  { emoji:'🌱',   label:'Simple curiosité',       desc:'Je veux explorer ce que ça peut m\'apporter' },
+  { emoji:'🌊',   label:'Transition de vie',      desc:'Quelque chose a changé, je me réajuste'    },
+]
+
+const BASELINE_OPTIONS = [
+  { emoji:'😴', label:'Vraiment à plat',   desc:'Épuisé(e), je tourne à vide'    },
+  { emoji:'😐', label:'Ça peut aller',     desc:'Ni bien ni mal, en pilotage auto' },
+  { emoji:'🙂', label:'Bien mais mieux',   desc:'J\'aspire à encore plus'          },
+  { emoji:'✨', label:'En pleine forme',   desc:'Je veux maintenir cet élan'       },
+]
+
+const MOMENT_OPTIONS = [
+  { emoji:'🌅', label:'Le matin',    desc:'Je commence la journée par moi'       },
+  { emoji:'☀️', label:'La journée',  desc:'Mes pauses sont précieuses'           },
+  { emoji:'🌆', label:'Le soir',     desc:'Je décompresse après ma journée'      },
+  { emoji:'🌙', label:'La nuit',     desc:'Le calme nocturne est mon moment'     },
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
@@ -276,6 +297,9 @@ export default function Onboarding({ onTermine }) {
       objectifs:        a.objectif ? [a.objectif] : [],
       age:              a.age || '',
       activite:         a.activite || '',
+      declencheur:      a.declencheur || '',
+      baseline:         a.baseline || '',
+      moment:           a.moment || '',
       alimentation:     [],
       heure_lever:      7.5,
       heure_coucher:    23.5,
@@ -369,10 +393,10 @@ export default function Onboarding({ onTermine }) {
                 animate={{
                   opacity:1, y:0, scale: isSel ? 1.06 : 1,
                   background: isSel ? accent.selBg : accent.bg,
-                  borderColor: isSel ? accent.border : accent.border.replace(/[\d.]+\)$/, '0.22)'),
+                  borderColor: isSel ? 'rgba(200,123,82,0.55)' : accent.border,
                   boxShadow: isSel
-                    ? `0 12px 36px ${accent.glow}, 0 0 0 2px ${accent.border}`
-                    : '0 4px 16px rgba(200,123,82,0.08)',
+                    ? `0 14px 40px ${accent.glow}, 0 0 0 1.5px rgba(200,123,82,0.40), inset 0 1px 0 rgba(255,255,255,0.55)`
+                    : `0 4px 20px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)`,
                 }}
                 transition={{
                   opacity:  { type:'spring', stiffness:300, damping:24, delay: i * 0.07 },
@@ -383,15 +407,16 @@ export default function Onboarding({ onTermine }) {
                   boxShadow: { duration:0.18 },
                 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif:`${opt.emoji} ${opt.label}` }))}
-                whileHover={{ scale: isSel ? 1.06 : 1.05, boxShadow:`0 10px 30px ${accent.glow}` }}
+                whileHover={{ scale: isSel ? 1.06 : 1.04, boxShadow:`0 10px 32px ${accent.glow}, inset 0 1px 0 rgba(255,255,255,0.60)` }}
                 whileTap={{ scale:0.94 }}
                 style={{
                   padding:'22px 12px 18px', borderRadius:22,
-                  border:`1.5px solid ${accent.border.replace(/[\d.]+\)$/, '0.22)')}`,
+                  border:`1.5px solid ${accent.border}`,
                   background: accent.bg,
+                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
                   cursor:'pointer', textAlign:'center',
                   fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 4px 16px rgba(200,123,82,0.08)',
+                  boxShadow:'0 4px 20px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
                   outline:'none',
                 }}
               >
@@ -403,9 +428,9 @@ export default function Onboarding({ onTermine }) {
                   {opt.emoji}
                 </motion.span>
                 <span style={{
-                  fontSize:12, fontWeight:600, lineHeight:1.35, display:'block',
-                  color: isSel ? accent.text : 'rgba(200,123,82,0.88)',
-                  transition:'color 0.16s',
+                  fontSize:12, fontWeight: isSel ? 700 : 600, lineHeight:1.35, display:'block',
+                  color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.88)',
+                  transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {opt.label}
                 </span>
@@ -520,10 +545,7 @@ export default function Onboarding({ onTermine }) {
                   borderColor: { duration:0.16 },
                   boxShadow: { duration:0.18 },
                 }}
-                onClick={() => tapThen(opt.label, () => {
-                  const finalAnswers = { ...answers, activite:`${opt.emoji} ${opt.label}` }
-                  finishOnboarding(finalAnswers)
-                })}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite:`${opt.emoji} ${opt.label}` }))}
                 whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.44)', boxShadow:'0 6px 20px rgba(200,123,82,0.18)' }}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
@@ -564,6 +586,195 @@ export default function Onboarding({ onTermine }) {
                   >
                     ✓
                   </motion.span>
+                )}
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+    // ── Étape 4 : Déclencheur émotionnel ──────────────────────────────────────
+    if (step === 4) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text="Qu'est-ce qui t'a amené ici aujourd'hui ?" style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Pas de bonne ou mauvaise réponse.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {TRIGGER_OPTIONS.map((opt, i) => {
+            const isSel = tapped === opt.label
+            return (
+              <motion.button
+                key={opt.label}
+                initial={{ opacity:0, x:36, scale:0.95 }}
+                animate={{
+                  opacity:1, x:0, scale:1,
+                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
+                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
+                  boxShadow: isSel
+                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
+                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                }}
+                transition={{
+                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
+                }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, declencheur: opt.label }))}
+                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
+                whileTap={{ scale:0.97 }}
+                style={{
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:'1.5px solid rgba(200,123,82,0.20)',
+                  background:'rgba(255,248,244,0.70)',
+                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
+                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  outline:'none', display:'flex', alignItems:'center', gap:14,
+                }}
+              >
+                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
+                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
+                  {opt.emoji}
+                </motion.span>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                {isSel && (
+                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
+                )}
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+    // ── Étape 5 : Baseline bien-être ──────────────────────────────────────────
+    if (step === 5) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text="Comment tu te sens en ce moment ?" style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Pour calibrer Solenn à ton état réel aujourd'hui.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {BASELINE_OPTIONS.map((opt, i) => {
+            const isSel = tapped === opt.label
+            return (
+              <motion.button
+                key={opt.label}
+                initial={{ opacity:0, x:36, scale:0.95 }}
+                animate={{
+                  opacity:1, x:0, scale:1,
+                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
+                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
+                  boxShadow: isSel
+                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
+                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                }}
+                transition={{
+                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
+                }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, baseline: opt.label }))}
+                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
+                whileTap={{ scale:0.97 }}
+                style={{
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:'1.5px solid rgba(200,123,82,0.20)',
+                  background:'rgba(255,248,244,0.70)',
+                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
+                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  outline:'none', display:'flex', alignItems:'center', gap:14,
+                }}
+              >
+                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
+                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
+                  {opt.emoji}
+                </motion.span>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                {isSel && (
+                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
+                )}
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+    // ── Étape 6 : Moment préféré ───────────────────────────────────────────────
+    if (step === 6) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text="Quand tu veux prendre soin de toi ?" style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Solenn s'adapte à ton rythme de vie.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {MOMENT_OPTIONS.map((opt, i) => {
+            const isSel = tapped === opt.label
+            return (
+              <motion.button
+                key={opt.label}
+                initial={{ opacity:0, x:36, scale:0.95 }}
+                animate={{
+                  opacity:1, x:0, scale:1,
+                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
+                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
+                  boxShadow: isSel
+                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
+                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                }}
+                transition={{
+                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
+                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
+                }}
+                onClick={() => tapThen(opt.label, () => {
+                  const finalAnswers = { ...answers, moment: opt.label }
+                  finishOnboarding(finalAnswers)
+                })}
+                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
+                whileTap={{ scale:0.97 }}
+                style={{
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:'1.5px solid rgba(200,123,82,0.20)',
+                  background:'rgba(255,248,244,0.70)',
+                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
+                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  outline:'none', display:'flex', alignItems:'center', gap:14,
+                }}
+              >
+                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
+                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
+                  {opt.emoji}
+                </motion.span>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:11.5, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                {isSel && (
+                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
                 )}
               </motion.button>
             )
@@ -620,7 +831,7 @@ export default function Onboarding({ onTermine }) {
 
         {/* Progress dots */}
         <div style={{display:'flex', gap:6, alignItems:'center'}}>
-          {[0,1,2,3].map(i => (
+          {[0,1,2,3,4,5,6].map(i => (
             <motion.div
               key={i}
               animate={{
