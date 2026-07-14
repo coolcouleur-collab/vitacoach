@@ -1726,7 +1726,7 @@ const [messages, setMessages] = useState(() => {
               {user?.id && (
                 <div style={{ position:'absolute', top:12, right:16, zIndex:10 }}>
                   <button onClick={() => setShowChatHistory(true)} title="Historique" style={{
-                    background:'rgba(255,255,255,0.12)', backdropFilter:'blur(10px)',
+                    background:'rgba(255,255,255,0.92)',
                     border:'1px solid rgba(200,123,82,0.18)', borderRadius:10,
                     padding:'6px 10px', cursor:'pointer', display:'flex', alignItems:'center', gap:5,
                     fontSize:11, fontWeight:600, color:'rgba(200,123,82,0.75)', fontFamily:'Poppins,sans-serif',
@@ -1758,7 +1758,7 @@ const [messages, setMessages] = useState(() => {
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
-                        <span style={{ background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(180,100,30,0.75)', display:'flex', alignItems:'center', gap:5 }}>
+                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(180,100,30,0.75)', display:'flex', alignItems:'center', gap:5 }}>
                           🔥 {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
@@ -1874,7 +1874,7 @@ const [messages, setMessages] = useState(() => {
                   <button onClick={() => messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })}
                     style={{ position:'absolute', bottom:74, right:16, zIndex:10,
                       width:32, height:32, borderRadius:'50%', border:'1px solid rgba(200,123,82,0.25)',
-                      background:'rgba(255,248,242,0.85)', backdropFilter:'blur(12px)',
+                      background:'rgba(255,248,242,0.96)',
                       cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
                       boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
                 )}
@@ -2689,7 +2689,7 @@ const st = {
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: 'rgba(255,248,242,0.55)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    background: 'rgba(255,248,242,0.96)',
     border: '1px solid rgba(200,123,82,0.14)', borderRadius: 20, padding: 16, marginTop: 4,
     boxShadow: '0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.70)',
   },
@@ -2818,8 +2818,7 @@ const s = {
     padding:'8px 18px 8px',
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
     borderBottom:'1px solid rgba(200,123,82,0.06)',
-    background:'transparent',
-    backdropFilter:'blur(24px)', WebkitBackdropFilter:'blur(24px)',
+    background:'rgba(250,245,240,0.97)',
     position:'fixed', top:0, left:0, right:0, zIndex:50,
   },
   backBtn: {
@@ -2852,7 +2851,7 @@ const s = {
   emptyChatSub: { fontSize:13, color:'rgba(160,120,60,0.65)', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
-    background:'rgba(255,255,255,0.22)', backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    background:'rgba(255,248,242,0.96)',
     border:'1px solid rgba(200,123,82,0.20)', borderRadius:16,
     padding:'13px 18px', fontSize:13, color:'rgba(185,112,25,0.86)', cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
@@ -2863,7 +2862,7 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'rgba(255,180,130,0.07)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+    background:'rgba(255,220,190,0.42)',
     border:'1px solid rgba(200,123,82,0.28)',
     color:'rgba(100,55,20,0.85)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
@@ -2871,7 +2870,7 @@ const s = {
     boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
-    background:'rgba(255,248,238,0.05)', backdropFilter:'blur(22px)', WebkitBackdropFilter:'blur(22px)',
+    background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
     color:'rgba(180,100,40,0.80)',
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
@@ -2888,7 +2887,7 @@ const s = {
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
-    background:'rgba(255,255,255,0.22)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    background:'rgba(255,248,242,0.92)',
     border:'1px solid rgba(200,123,82,0.22)', borderRadius:20,
     padding:'7px 14px', fontSize:12, color:'rgba(185,112,25,0.88)', cursor:'pointer',
     fontFamily:F, fontWeight:300,
@@ -2896,8 +2895,7 @@ const s = {
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'rgba(255,252,248,0.45)',
-    backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+    display:'flex', gap:8, background:'rgba(255,252,248,0.96)',
     borderRadius:20, padding:'8px 8px 8px 18px',
     border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
@@ -2912,7 +2910,7 @@ const s = {
   // ── Bottom nav ────────────────────────────────────────────────────────────────
   bottomNav: {
     position:'fixed', bottom:0, left:0, right:0, display:'flex',
-    background:'rgba(242,242,240,.97)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)',
+    background:'rgba(242,242,240,.99)',
     borderTop:'1px solid rgba(0,0,0,.06)',
     padding:'8px 6px 14px', zIndex:100,
     boxShadow:'0 -8px 40px rgba(0,0,0,.06)',

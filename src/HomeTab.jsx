@@ -925,8 +925,6 @@ export function GlassyButtonWrap({
         boxShadow: h
           ? `0 18px ${Math.round(48 * shadowHoverIntensity)}px 0 ${shadowHoverColor}, 0 6px 24px 0 rgba(0,0,0,0.12)`
           : '0 6px 18px 0 rgba(0,0,0,0.10)',
-        backdropFilter:       `blur(${blur}px) saturate(1.2)`,
-        WebkitBackdropFilter: `blur(${blur}px) saturate(1.2)`,
         border:   '1px solid rgba(255,255,255,0.12)',
         overflow: 'hidden',
         cursor:   onClick ? 'pointer' : 'default',
@@ -1228,7 +1226,6 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       {/* Inner card — fond teinté couleur + transparent */}
       <div style={{
         background:`linear-gradient(145deg, ${color}07, rgba(255,246,238,0.72))`,
-        backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
         borderRadius:20, padding:'8px 4px 7px',
         boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.65)`,
         display:'flex', flexDirection:'column', alignItems:'center', gap:3,
@@ -1452,7 +1449,6 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
         background: t.isDone
           ? `linear-gradient(135deg, ${t.color}40 0%, ${t.color}22 100%)`
           : `linear-gradient(135deg, ${t.color}55 0%, ${t.color}35 60%, ${t.color}20 100%)`,
-        backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
         border:`1.5px solid ${t.isDone ? t.color+'55' : t.color+'88'}`,
         boxShadow: t.isDone
           ? '0 2px 8px rgba(0,0,0,0.08)'
@@ -1796,7 +1792,6 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
                   background: isNight
                     ? 'linear-gradient(150deg,rgba(15,30,60,0.82) 0%,rgba(10,22,48,0.78) 50%,rgba(8,18,40,0.75) 100%)'
                     : 'linear-gradient(150deg,rgba(255,246,238,0.72) 0%,rgba(255,240,225,0.68) 50%,rgba(255,234,214,0.65) 100%)',
-                  backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
                   boxShadow: isNight ? 'inset 0 1px 0 rgba(180,210,255,0.15)' : 'inset 0 1px 0 rgba(255,255,255,0.60)',
                 }}>
                   {/* Image */}
@@ -1860,7 +1855,6 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
             position:'absolute', left:0, top:'50%', transform:'translateY(-50%)',
             width:34, height:34, borderRadius:'50%', zIndex:20,
             background: isNight ? 'rgba(8,18,45,0.88)' : 'rgba(255,246,238,0.92)',
-            backdropFilter:'blur(8px)',
             border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
             cursor: activeIndex === 0 ? 'not-allowed' : 'pointer',
             opacity: activeIndex === 0 ? 0.3 : 1,
@@ -1881,7 +1875,6 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
             position:'absolute', right:0, top:'50%', transform:'translateY(-50%)',
             width:34, height:34, borderRadius:'50%', zIndex:20,
             background: isNight ? 'rgba(8,18,45,0.88)' : 'rgba(255,246,238,0.92)',
-            backdropFilter:'blur(8px)',
             border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
             cursor: activeIndex === cardCount - 1 ? 'not-allowed' : 'pointer',
             opacity: activeIndex === cardCount - 1 ? 0.3 : 1,
@@ -1966,7 +1959,6 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               background: isNight
                 ? `linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)`
                 : `linear-gradient(135deg, ${s.color}22 0%, ${s.color}0e 60%, ${s.color}06 100%)`,
-              backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
               border: isNight ? `1.5px solid ${s.color}38` : `1.5px solid ${s.color}50`,
               boxShadow: isNight
                 ? `0 6px 22px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(180,210,255,0.08)`
@@ -2013,7 +2005,6 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           background: isNight
             ? 'linear-gradient(135deg, rgba(200,220,255,0.10) 0%, rgba(180,210,255,0.05) 100%)'
             : 'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(200,123,82,0.08) 60%, rgba(200,123,82,0.05) 100%)',
-          backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >

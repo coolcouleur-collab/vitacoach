@@ -384,13 +384,8 @@ export default function Onboarding({ onTermine }) {
           <motion.button
             onClick={() => nomVal.trim() && goNext({ nom: nomVal.trim() })}
             disabled={!nomVal.trim()}
-            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40 }}
-            whileHover={nomVal.trim() ? { scale:1.02, boxShadow:'0 12px 32px rgba(200,123,82,0.50)' } : {}}
             whileTap={nomVal.trim() ? { scale:0.97 } : {}}
-            animate={nomVal.trim() ? {
-              boxShadow:['0 8px 24px rgba(200,123,82,0.40)','0 8px 32px rgba(200,123,82,0.60)','0 8px 24px rgba(200,123,82,0.40)'],
-            } : {}}
-            transition={{ boxShadow:{ repeat:Infinity, duration:2.2, ease:'easeInOut' }}}
+            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'ctaPulse 2.2s ease-in-out infinite' : 'none' }}
           >
             Continuer →
           </motion.button>
@@ -436,7 +431,7 @@ export default function Onboarding({ onTermine }) {
                   padding:'22px 12px 18px', borderRadius:22,
                   border:`1.5px solid ${accent.border}`,
                   background: accent.bg,
-                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  background:'rgba(255,248,244,0.96)',
                   cursor:'pointer', textAlign:'center',
                   fontFamily:'Poppins, sans-serif',
                   boxShadow:'0 4px 20px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
@@ -653,7 +648,7 @@ export default function Onboarding({ onTermine }) {
                   width:'100%', padding:'15px 18px', borderRadius:16,
                   border:'1.5px solid rgba(200,123,82,0.20)',
                   background:'rgba(255,248,244,0.70)',
-                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  background:'rgba(255,248,244,0.96)',
                   cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
                   boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -715,7 +710,7 @@ export default function Onboarding({ onTermine }) {
                   width:'100%', padding:'15px 18px', borderRadius:16,
                   border:'1.5px solid rgba(200,123,82,0.20)',
                   background:'rgba(255,248,244,0.70)',
-                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  background:'rgba(255,248,244,0.96)',
                   cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
                   boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -780,7 +775,7 @@ export default function Onboarding({ onTermine }) {
                   width:'100%', padding:'15px 18px', borderRadius:16,
                   border:'1.5px solid rgba(200,123,82,0.20)',
                   background:'rgba(255,248,244,0.70)',
-                  backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                  background:'rgba(255,248,244,0.96)',
                   cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
                   boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
                   outline:'none', display:'flex', alignItems:'center', gap:14,
@@ -826,6 +821,7 @@ export default function Onboarding({ onTermine }) {
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
         input:focus { outline:none; border-color:rgba(200,123,82,0.55) !important; box-shadow:0 0 0 3px rgba(200,123,82,0.10) !important; }
         input::placeholder { color:rgba(200,123,82,0.40); }
+        @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 32px rgba(200,123,82,0.62)} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
       `}</style>
 

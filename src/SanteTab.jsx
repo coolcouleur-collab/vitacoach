@@ -101,9 +101,8 @@ function HistoriqueSection({ history }) {
   ]
   return (
     <div style={{
-      background:'rgba(255,255,255,0.28)', border:'1.5px solid rgba(200,123,82,0.12)', borderRadius:20,
+      background:'rgba(255,255,255,0.92)', border:'1.5px solid rgba(200,123,82,0.12)', borderRadius:20,
       overflow:'hidden', marginBottom:14,
-      backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
       boxShadow:'0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)',
     }}>
       <button
@@ -558,8 +557,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div key={m.key}
               style={{
                 ...ss.metricCard,
-                background: `linear-gradient(145deg, rgba(255,255,255,0.82) 0%, ${m.color}12 100%)`,
-                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                background: `linear-gradient(145deg, rgba(255,255,255,0.96) 0%, ${m.color}18 100%)`,
                 border: `1px solid ${m.color}40`,
                 borderTop: `2.5px solid ${m.color}`,
                 boxShadow: done
@@ -786,8 +784,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
 const ss = {
   scoreCard: {
-    background: 'rgba(255,255,255,0.06)',
-    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+    background: 'rgba(255,255,255,0.60)',
     border: '1px solid rgba(200,123,82,0.06)',
     borderRadius: 28, padding: '20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
@@ -795,9 +792,7 @@ const ss = {
   },
   btnInsights: {
     width: 'auto',
-    background: 'rgba(255,255,255,0.70)',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
+    background: 'rgba(255,255,255,0.96)',
     color: 'rgba(234,88,12,0.95)',
     border: '1px solid rgba(249,115,22,0.30)',
     padding: '11px 34px',
@@ -810,15 +805,13 @@ const ss = {
     transition: 'transform 0.15s ease',
   },
   insightsCard: {
-    background: 'rgba(255,252,250,0.32)',
+    background: 'rgba(255,252,250,0.96)',
     border: '1px solid rgba(200,123,82,0.12)',
     borderRadius: 20, padding: '14px 0 12px', marginBottom: 14,
-    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     boxShadow: '0 8px 28px rgba(200,123,82,0.08), 0 3px 10px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.85)'
   },
   waterBar: {
-    background: 'rgba(255,255,255,0.30)',
-    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+    background: 'rgba(255,255,255,0.92)',
     border: '1px solid rgba(200,123,82,0.10)',
     borderRadius: 20, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
@@ -840,8 +833,7 @@ const ss = {
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',
   },
   appleSection: {
-    background: 'rgba(255,252,250,0.28)',
-    backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+    background: 'rgba(255,252,250,0.96)',
     border: '1px solid rgba(200,123,82,0.10)',
     borderRadius: 20, overflow: 'hidden',
     boxShadow: '0 4px 20px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.75)'

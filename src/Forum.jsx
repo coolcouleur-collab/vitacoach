@@ -125,8 +125,7 @@ const inputBase = {
   width: '100%', boxSizing: 'border-box',
   padding: '1rem 1.4rem', borderRadius: '1.4rem',
   border: '1.5px solid rgba(200,123,82,0.22)',
-  background: 'rgba(255,246,238,0.70)',
-  backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+  background: 'rgba(255,246,238,0.96)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,14px)',
   color: 'rgba(200,123,82,0.88)', lineHeight: 1.6,
@@ -180,7 +179,6 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
         </span>
         <button onClick={submit} disabled={!text.trim() || loading} style={{
           background: text.trim() ? 'rgba(255,255,255,0.25)' : 'rgba(200,123,82,0.06)',
-          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
           color: text.trim() ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.30)',
           border: text.trim() ? '1px solid rgba(200,123,82,0.25)' : '1px solid rgba(200,123,82,0.12)',
           borderRadius: '2rem', padding: '.6rem 1.8rem',
@@ -211,11 +209,10 @@ function PostCard({ post, onLike, onOpen, userId }) {
 
   return (
     <div onClick={() => onOpen(post)} style={{
-      background: 'rgba(255,248,242,0.60)',
+      background: 'rgba(255,248,242,0.96)',
       borderRadius: 20, padding: '1.4rem 1.6rem',
       border: '1px solid rgba(200,123,82,0.16)',
       boxShadow: '0 2px 14px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.70)',
-      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
       cursor: 'pointer', transition: 'all .18s ease',
     }}>
       {/* Header */}
@@ -515,7 +512,6 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
         background:'rgba(255,248,242,0.70)', borderRadius:20, padding:'1.6rem',
         border:'1px solid rgba(200,123,82,0.18)',
         boxShadow:'0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.80)',
-        backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
         marginBottom:'1.4rem',
       }}>
         <div style={{ display:'flex', gap:'.8rem', alignItems:'flex-start', marginBottom:'1rem' }}>
@@ -673,11 +669,10 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
 
   return (
     <div style={{
-      background: 'rgba(255,248,242,0.88)',
+      background: 'rgba(255,248,242,0.98)',
       borderRadius: 20, padding: '2.2rem 2rem',
       border: '1.5px solid rgba(200,123,82,0.22)',
       boxShadow: '0 8px 36px rgba(200,123,82,0.13), inset 0 1px 0 rgba(255,255,255,0.88)',
-      backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
       marginBottom: '2rem',
     }}>
       <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 700, color: 'rgba(100,55,20,0.85)', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem', fontFamily:'var(--font)' }}>
@@ -750,7 +745,6 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
         </button>
         <button onClick={submit} disabled={loading} style={{
           background: 'rgba(255,255,255,0.25)',
-          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
           color: 'rgba(200,123,82,0.72)', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
@@ -1176,7 +1170,6 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             cursor: 'pointer', fontFamily: 'var(--font)',
             flexShrink: 0,
             background: filter === c ? 'rgba(255,255,255,0.30)' : 'rgba(200,123,82,0.06)',
-            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
             color: filter === c ? 'rgba(200,123,82,0.95)' : 'rgba(200,123,82,0.65)',
             border: filter === c ? '1px solid rgba(200,123,82,0.28)' : '1px solid rgba(200,123,82,0.14)',
             boxShadow: filter === c ? 'inset 0 1px 0 rgba(255,255,255,0.8)' : 'none',
