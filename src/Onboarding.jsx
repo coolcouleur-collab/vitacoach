@@ -1,28 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
-import { FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon } from './Icons'
+import {
+  FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon,
+  BackIcon, BrainIcon, RefreshIcon, LightbulbIcon,
+  SadIcon, NeutralIcon, MoodIcon, HappyIcon,
+  SunIcon, BellIcon, RunIcon, FireIcon, StarIcon, DiamondIcon,
+  BalanceIcon, WalkIcon, SofaIcon, WaveIcon,
+} from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
-function BgBlobs({ step }) {
-  const shifts = [
-    { x:'50%', y:'48%' },
-    { x:'55%', y:'44%' },
-    { x:'48%', y:'52%' },
-    { x:'52%', y:'46%' },
-  ]
-  const s = shifts[step] || shifts[0]
+function BgBlobs() {
   return (
     <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
-      <motion.div
-        animate={{ backgroundPosition:`${s.x} ${s.y}` }}
-        transition={{ duration:0.9, ease:'easeInOut' }}
-        style={{
-          position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
-          opacity:0.62, mixBlendMode:'multiply',
-          animation:'liquidBlob3 14s ease-in-out infinite',
-        }}
-      />
+      <div style={{
+        position:'absolute', inset:0,
+        backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
+        opacity:0.62, mixBlendMode:'multiply',
+        animation:'liquidBlob3 14s ease-in-out infinite',
+      }}/>
       <div style={{
         position:'absolute', inset:0,
         backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
@@ -31,21 +26,8 @@ function BgBlobs({ step }) {
       }}/>
       <div style={{
         position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.45) 0%, transparent 58%)',
-        filter:'blur(72px)',
+        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.35) 0%, transparent 58%)',
         animation:'liquidBlob2 16s ease-in-out infinite',
-      }}/>
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(212,132,74,0.32) 0%, transparent 52%)',
-        filter:'blur(64px)',
-        animation:'liquidBlob4 20s ease-in-out infinite reverse',
-      }}/>
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 82% 80%, rgba(255,180,80,0.28) 0%, transparent 50%)',
-        filter:'blur(50px)',
-        animation:'liquidBlob3 11s ease-in-out infinite 2s',
       }}/>
     </div>
   )
@@ -53,21 +35,15 @@ function BgBlobs({ step }) {
 
 // ─── ANIMATED QUESTION TEXT ───────────────────────────────────────────────────
 function AnimatedQuestion({ text, style }) {
-  const words = text.split(' ')
   return (
-    <p style={{ ...style, margin:0 }}>
-      {words.map((word, i) => (
-        <motion.span
-          key={`${text}-${i}`}
-          initial={{ opacity:0, y:14, filter:'blur(4px)' }}
-          animate={{ opacity:1, y:0, filter:'blur(0px)' }}
-          transition={{ type:'spring', stiffness:400, damping:30, delay: 0.04 + i * 0.055 }}
-          style={{ display:'inline-block', marginRight:'0.26em' }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </p>
+    <motion.p
+      style={{ ...style, margin:0 }}
+      initial={{ opacity:0, y:10 }}
+      animate={{ opacity:1, y:0 }}
+      transition={{ duration:0.24, ease:'easeOut' }}
+    >
+      {text}
+    </motion.p>
   )
 }
 
@@ -179,67 +155,67 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { emoji:'⚡', label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien',    iconColor:'rgba(218,160,30,0.92)',   accent:{ sel:'rgba(251,191,36,0.13)', border:'rgba(218,160,30,0.40)', glow:'rgba(218,160,30,0.22)' } },
-  { emoji:'⚖️', label:'Perdre du poids',     desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
-  { emoji:'😴', label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment',    iconColor:'rgba(82,130,220,0.92)',   accent:{ sel:'rgba(82,130,220,0.10)',  border:'rgba(82,130,220,0.38)',  glow:'rgba(82,130,220,0.18)'  } },
-  { emoji:'🧘', label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale',     iconColor:'rgba(140,110,220,0.92)', accent:{ sel:'rgba(140,110,220,0.10)', border:'rgba(140,110,220,0.38)', glow:'rgba(140,110,220,0.18)' } },
-  { emoji:'💪', label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
-  { emoji:'🥗', label:'Alimentation saine',   desc:'Manger mieux sans me priver',           iconColor:'rgba(34,170,80,0.92)',    accent:{ sel:'rgba(34,170,80,0.10)',   border:'rgba(34,170,80,0.38)',   glow:'rgba(34,170,80,0.18)'   } },
+  { Icon: FlashIcon,    label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien',    iconColor:'rgba(218,160,30,0.92)',   accent:{ sel:'rgba(251,191,36,0.13)', border:'rgba(218,160,30,0.40)', glow:'rgba(218,160,30,0.22)' } },
+  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel',         iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { Icon: MoonIcon,     label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment',    iconColor:'rgba(82,130,220,0.92)',   accent:{ sel:'rgba(82,130,220,0.10)',  border:'rgba(82,130,220,0.38)',  glow:'rgba(82,130,220,0.18)'  } },
+  { Icon: MeditateIcon, label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale',     iconColor:'rgba(140,110,220,0.92)',  accent:{ sel:'rgba(140,110,220,0.10)', border:'rgba(140,110,220,0.38)', glow:'rgba(140,110,220,0.18)' } },
+  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte',     iconColor:'rgba(200,123,82,0.92)',   accent:{ sel:'rgba(200,123,82,0.14)', border:'rgba(200,123,82,0.45)', glow:'rgba(200,123,82,0.22)' } },
+  { Icon: FoodIcon,     label:'Alimentation saine',   desc:'Manger mieux sans me priver',           iconColor:'rgba(34,170,80,0.92)',    accent:{ sel:'rgba(34,170,80,0.10)',   border:'rgba(34,170,80,0.38)',   glow:'rgba(34,170,80,0.18)'   } },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { emoji:'🛋️', label:'Sédentaire',  desc:'Bureau / peu de mouvements' },
-  { emoji:'🚶', label:'Léger',       desc:'Quelques sorties par semaine' },
-  { emoji:'🏃', label:'Modéré',      desc:'Sport 3-4×/semaine' },
-  { emoji:'🔥', label:'Intense',     desc:'Sport quotidien ou physique' },
+  { Icon: SofaIcon, label:'Sédentaire',  desc:'Bureau / peu de mouvements' },
+  { Icon: WalkIcon, label:'Léger',       desc:'Quelques sorties par semaine' },
+  { Icon: RunIcon,  label:'Modéré',      desc:'Sport 3-4×/semaine' },
+  { Icon: FireIcon, label:'Intense',     desc:'Sport quotidien ou physique' },
 ]
 
 const AGE_RANGE_OPTIONS = [
-  { range:'18–24 ans', icon:'🌱' },
-  { range:'25–34 ans', icon:'🌿' },
-  { range:'35–44 ans', icon:'🌳' },
-  { range:'45–54 ans', icon:'🍂' },
-  { range:'55 ans et +', icon:'✨' },
+  { range:'18–24 ans',   Icon: SunIcon     },
+  { range:'25–34 ans',   Icon: FlashIcon   },
+  { range:'35–44 ans',   Icon: TargetIcon  },
+  { range:'45–54 ans',   Icon: StarIcon    },
+  { range:'55 ans et +', Icon: DiamondIcon },
 ]
 
 
 const TRIGGER_OPTIONS = [
-  { emoji:'😮‍💨', label:'Stress & burnout',      desc:'Je suis à bout, j\'ai besoin de souffler'  },
-  { emoji:'🔄',   label:'Envie de changement',   desc:'Je veux évoluer et prendre de nouvelles habitudes' },
-  { emoji:'🌱',   label:'Simple curiosité',       desc:'Je veux explorer ce que ça peut m\'apporter' },
-  { emoji:'🌊',   label:'Transition de vie',      desc:'Quelque chose a changé, je me réajuste'    },
+  { Icon: BrainIcon,     label:'Stress & burnout',    desc:'Je suis à bout, j\'ai besoin de souffler'  },
+  { Icon: RefreshIcon,   label:'Envie de changement', desc:'Je veux évoluer et prendre de nouvelles habitudes' },
+  { Icon: LightbulbIcon, label:'Simple curiosité',    desc:'Je veux explorer ce que ça peut m\'apporter' },
+  { Icon: WaveIcon,      label:'Transition de vie',   desc:'Quelque chose a changé, je me réajuste'    },
 ]
 
 const BASELINE_OPTIONS = [
-  { emoji:'😴', label:'Vraiment à plat',   desc:'Épuisé(e), je tourne à vide'    },
-  { emoji:'😐', label:'Ça peut aller',     desc:'Ni bien ni mal, en pilotage auto' },
-  { emoji:'🙂', label:'Bien mais mieux',   desc:'J\'aspire à encore plus'          },
-  { emoji:'✨', label:'En pleine forme',   desc:'Je veux maintenir cet élan'       },
+  { Icon: SadIcon,     label:'Vraiment à plat', desc:'Épuisé(e), je tourne à vide'     },
+  { Icon: NeutralIcon, label:'Ça peut aller',   desc:'Ni bien ni mal, en pilotage auto' },
+  { Icon: MoodIcon,    label:'Bien mais mieux', desc:'J\'aspire à encore plus'           },
+  { Icon: HappyIcon,   label:'En pleine forme', desc:'Je veux maintenir cet élan'        },
 ]
 
 const MOMENT_OPTIONS = [
-  { emoji:'🌅', label:'Le matin',    desc:'Je commence la journée par moi'       },
-  { emoji:'☀️', label:'La journée',  desc:'Mes pauses sont précieuses'           },
-  { emoji:'🌆', label:'Le soir',     desc:'Je décompresse après ma journée'      },
-  { emoji:'🌙', label:'La nuit',     desc:'Le calme nocturne est mon moment'     },
+  { Icon: SunIcon,  label:'Le matin',   desc:'Je commence la journée par moi'  },
+  { Icon: FlashIcon,label:'La journée', desc:'Mes pauses sont précieuses'      },
+  { Icon: BellIcon, label:'Le soir',    desc:'Je décompresse après ma journée' },
+  { Icon: MoonIcon, label:'La nuit',    desc:'Le calme nocturne est mon moment'},
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
   question: {
-    fontSize:'clamp(22px,5.5vw,28px)', fontWeight:700, lineHeight:1.32,
-    color:'rgba(200,123,82,0.92)', fontFamily:'Poppins, sans-serif',
-    letterSpacing:'-0.01em',
+    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:300, lineHeight:1.5,
+    color:'rgba(200,123,82,0.70)', fontFamily:"'DM Sans', sans-serif",
+    letterSpacing:'0em',
   },
   sub: {
-    fontSize:14, fontWeight:400, color:'rgba(200,123,82,0.58)',
-    fontFamily:'Poppins, sans-serif', lineHeight:1.55,
+    fontSize:14, fontWeight:300, color:'rgba(200,123,82,0.58)',
+    fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
     border:'1.5px solid rgba(200,123,82,0.28)',
     background:'rgba(255,248,244,0.92)',
-    fontSize:16, fontFamily:'Poppins, sans-serif', color:'rgba(200,123,82,0.92)',
+    fontSize:16, fontFamily:"'DM Sans', sans-serif", color:'rgba(200,123,82,0.92)',
     outline:'none', fontWeight:500,
     boxShadow:'0 2px 14px rgba(200,123,82,0.09)',
     transition:'border-color 0.2s, box-shadow 0.2s',
@@ -247,8 +223,8 @@ const S = {
   cta: {
     width:'100%', padding:'17px', borderRadius:16, border:'none',
     background:'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
-    color:'#fff', fontSize:16, fontWeight:700, cursor:'pointer',
-    fontFamily:'Poppins, sans-serif', letterSpacing:'0.1px',
+    color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer',
+    fontFamily:"'DM Sans', sans-serif", letterSpacing:'0',
     boxShadow:'0 8px 24px rgba(200,123,82,0.40)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
@@ -335,9 +311,9 @@ export default function Onboarding({ onTermine }) {
   }
 
   const slideVariants = {
-    enter:  (d) => ({ opacity:0, x: d * 70, scale:0.95, filter:'blur(3px)' }),
-    center: { opacity:1, x:0, scale:1, filter:'blur(0px)' },
-    exit:   (d) => ({ opacity:0, x: -d * 70, scale:0.95, filter:'blur(3px)' }),
+    enter:  (d) => ({ opacity:0, x: d * 48, scale:0.97 }),
+    center: { opacity:1, x:0, scale:1 },
+    exit:   (d) => ({ opacity:0, x: -d * 48, scale:0.97 }),
   }
 
   const nom = answers.nom || ''
@@ -361,7 +337,7 @@ export default function Onboarding({ onTermine }) {
         <motion.div
           initial={{ opacity:0, y:16 }}
           animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.45, type:'spring', stiffness:320, damping:28 }}
+          transition={{ delay:0.35, duration:0.24, ease:'easeOut' }}
           style={{display:'flex', flexDirection:'column', gap:14}}
         >
           <input
@@ -395,50 +371,38 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {OBJECTIF_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
             return (
               <motion.button
                 key={opt.label}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? opt.accent.sel : 'rgba(255,248,244,0.92)',
-                  borderColor: isSel ? opt.accent.border : 'rgba(200,123,82,0.18)',
-                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 2px 10px rgba(200,123,82,0.06)',
-                }}
-                transition={{
-                  opacity:  { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
-                  x:        { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
-                  scale:    { type:'spring', stiffness:320, damping:26, delay: i * 0.06 },
-                  background: { duration:0.16 },
-                  borderColor: { duration:0.16 },
-                  boxShadow: { duration:0.18 },
-                }}
-                onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif:`${opt.emoji} ${opt.label}` }))}
-                whileHover={{ x:5, borderColor: opt.accent.border, boxShadow:`0 6px 20px ${opt.accent.glow}` }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'16px 20px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.18)',
-                  background:'rgba(255,248,244,0.92)',
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:`1.5px solid ${isSel ? opt.accent.border : 'rgba(200,123,82,0.18)'}`,
+                  background: isSel ? opt.accent.sel : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? `0 6px 24px ${opt.accent.glow}` : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', display:'flex', alignItems:'center', gap:14,
-                  fontFamily:'Poppins, sans-serif', textAlign:'left',
+                  fontFamily:"'DM Sans', sans-serif", textAlign:'left',
                   outline:'none',
                 }}
               >
-                <span style={{ fontSize:28, display:'block', lineHeight:1, flexShrink:0 }}>
-                  {opt.emoji}
-                </span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? opt.iconColor : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <div style={{ flex:1 }}>
                   <span style={{
-                    fontSize:15, fontWeight: isSel ? 600 : 500, display:'block',
+                    fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
                     color: isSel ? opt.iconColor : 'rgba(200,123,82,0.90)',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
                   <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                {isSel && (
-                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16, color: opt.iconColor }}>✓</motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -461,63 +425,39 @@ export default function Onboarding({ onTermine }) {
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          {AGE_RANGE_OPTIONS.map(({ range, icon }, i) => {
+          {AGE_RANGE_OPTIONS.map(({ range, Icon: AgeIcon }, i) => {
             const isSel = tapped === range
             return (
               <motion.button
                 key={range}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.88)',
-                  borderColor: isSel ? 'rgba(200,123,82,0.70)' : 'rgba(200,123,82,0.18)',
-                  boxShadow: isSel ? '0 6px 24px rgba(200,123,82,0.22)' : '0 2px 10px rgba(200,123,82,0.06)',
-                }}
-                transition={{
-                  opacity:  { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  x:        { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  scale:    { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  background: { duration:0.16 },
-                  borderColor: { duration:0.16 },
-                  boxShadow: { duration:0.18 },
-                }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
                 onClick={() => tapThen(range, () => goNext({ ...answers, age: range }))}
-                whileHover={{ x: 5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.44)', boxShadow:'0 6px 20px rgba(200,123,82,0.18)' }}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'16px 20px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.18)',
-                  background:'rgba(255,248,244,0.88)',
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.18)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
-                  fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 2px 10px rgba(200,123,82,0.06)',
+                  fontFamily:"'DM Sans', sans-serif",
                   outline:'none',
                   display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <motion.span
-                  animate={{ scale: isSel ? [1,1.25,1] : 1 }}
-                  transition={{ duration:0.30 }}
-                  style={{ fontSize:22, display:'block', lineHeight:1 }}
-                >
-                  {icon}
-                </motion.span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <AgeIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <span style={{
-                  fontSize:15, fontWeight: isSel ? 600 : 500,
+                  fontSize:15, fontWeight: isSel ? 600 : 400,
                   color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
                 </span>
-                {isSel && (
-                  <motion.span
-                    initial={{ opacity:0, scale:0.5 }}
-                    animate={{ opacity:1, scale:1 }}
-                    style={{ marginLeft:'auto', fontSize:16 }}
-                  >
-                    ✓
-                  </motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -532,48 +472,33 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {ACTIVITE_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
             return (
               <motion.button
                 key={opt.label}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.88)',
-                  borderColor: isSel ? 'rgba(200,123,82,0.70)' : 'rgba(200,123,82,0.18)',
-                  boxShadow: isSel ? '0 6px 24px rgba(200,123,82,0.22)' : '0 2px 10px rgba(200,123,82,0.06)',
-                }}
-                transition={{
-                  opacity:  { type:'spring', stiffness:320, damping:26, delay: i * 0.08 },
-                  x:        { type:'spring', stiffness:320, damping:26, delay: i * 0.08 },
-                  scale:    { type:'spring', stiffness:320, damping:26, delay: i * 0.08 },
-                  background: { duration:0.16 },
-                  borderColor: { duration:0.16 },
-                  boxShadow: { duration:0.18 },
-                }}
-                onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite:`${opt.emoji} ${opt.label}` }))}
-                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.44)', boxShadow:'0 6px 20px rgba(200,123,82,0.18)' }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
                 style={{
-                  width:'100%', padding:'16px 20px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.18)',
-                  background:'rgba(255,248,244,0.88)',
+                  width:'100%', padding:'15px 18px', borderRadius:16,
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.18)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
                   cursor:'pointer', textAlign:'left',
-                  fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 2px 10px rgba(200,123,82,0.06)',
+                  fontFamily:"'DM Sans', sans-serif",
                   outline:'none',
                   display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <motion.span
-                  animate={{ scale: isSel ? [1,1.25,1] : 1 }}
-                  transition={{ duration:0.30 }}
-                  style={{ fontSize:26, display:'block', lineHeight:1 }}
-                >
-                  {opt.emoji}
-                </motion.span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
-                    fontSize:15, fontWeight: isSel ? 600 : 500,
+                    fontSize:15, fontWeight: isSel ? 600 : 400,
                     color: isSel ? '#C87B52' : 'rgba(200,123,82,0.88)',
                     transition:'color 0.16s',
                   }}>
@@ -583,15 +508,7 @@ export default function Onboarding({ onTermine }) {
                     {opt.desc}
                   </span>
                 </div>
-                {isSel && (
-                  <motion.span
-                    initial={{ opacity:0, scale:0.5 }}
-                    animate={{ opacity:1, scale:1 }}
-                    style={{ marginLeft:'auto', fontSize:16 }}
-                  >
-                    ✓
-                  </motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -611,49 +528,35 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {TRIGGER_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
             return (
               <motion.button
                 key={opt.label}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
-                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
-                  boxShadow: isSel
-                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
-                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
-                }}
-                transition={{
-                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
-                }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, declencheur: opt.label }))}
-                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.20)',
-                  background:'rgba(255,248,244,0.70)',
-                  background:'rgba(255,248,244,0.96)',
-                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
-                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
-                  {opt.emoji}
-                </motion.span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                {isSel && (
-                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -673,49 +576,35 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {BASELINE_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
             return (
               <motion.button
                 key={opt.label}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
-                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
-                  boxShadow: isSel
-                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
-                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
-                }}
-                transition={{
-                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
-                }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, baseline: opt.label }))}
-                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.20)',
-                  background:'rgba(255,248,244,0.70)',
-                  background:'rgba(255,248,244,0.96)',
-                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
-                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
-                  {opt.emoji}
-                </motion.span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                {isSel && (
-                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -735,52 +624,38 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {MOMENT_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
             return (
               <motion.button
                 key={opt.label}
                 initial={{ opacity:0, x:36, scale:0.95 }}
-                animate={{
-                  opacity:1, x:0, scale:1,
-                  background: isSel ? 'rgba(200,123,82,0.16)' : 'rgba(255,248,244,0.70)',
-                  borderColor: isSel ? 'rgba(200,123,82,0.60)' : 'rgba(200,123,82,0.20)',
-                  boxShadow: isSel
-                    ? '0 8px 28px rgba(200,123,82,0.24), inset 0 1px 0 rgba(255,255,255,0.55)'
-                    : '0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
-                }}
-                transition={{
-                  opacity: { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  x:       { type:'spring', stiffness:320, damping:26, delay: i * 0.07 },
-                  background: { duration:0.16 }, borderColor: { duration:0.16 }, boxShadow: { duration:0.18 },
-                }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ duration:0.22, ease:'easeOut', delay: i * 0.05 }}
                 onClick={() => tapThen(opt.label, () => {
                   const finalAnswers = { ...answers, moment: opt.label }
                   finishOnboarding(finalAnswers)
                 })}
-                whileHover={{ x:5, background:'rgba(200,123,82,0.10)', borderColor:'rgba(200,123,82,0.40)' }}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'15px 18px', borderRadius:16,
-                  border:'1.5px solid rgba(200,123,82,0.20)',
-                  background:'rgba(255,248,244,0.70)',
-                  background:'rgba(255,248,244,0.96)',
-                  cursor:'pointer', textAlign:'left', fontFamily:'Poppins, sans-serif',
-                  boxShadow:'0 2px 14px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.70)',
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.52)' : 'rgba(200,123,82,0.20)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,255,255,0.94)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : '0 2px 10px rgba(200,123,82,0.06)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
                   outline:'none', display:'flex', alignItems:'center', gap:14,
                 }}
               >
-                <motion.span animate={{ scale: isSel ? [1,1.25,1] : 1 }} transition={{ duration:0.30 }}
-                  style={{ fontSize:24, display:'block', lineHeight:1, flexShrink:0 }}>
-                  {opt.emoji}
-                </motion.span>
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.15)':'rgba(200,123,82,0.08)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : 'rgba(200,123,82,0.45)'} size={20}/>
+                </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 700 : 600, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(200,123,82,0.90)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(200,123,82,0.52)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                {isSel && (
-                  <motion.span initial={{ opacity:0, scale:0.5 }} animate={{ opacity:1, scale:1 }} style={{ marginLeft:'auto', fontSize:16 }}>✓</motion.span>
-                )}
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -795,7 +670,7 @@ export default function Onboarding({ onTermine }) {
     <div style={{
       minHeight:'100vh',
       background:'linear-gradient(160deg,#FFF8F4 0%,#FFF0E6 60%,#FDECD8 100%)',
-      fontFamily:'Poppins, sans-serif',
+      fontFamily:"'DM Sans', sans-serif",
       display:'flex', flexDirection:'column',
       position:'relative', overflow:'hidden',
     }}>
@@ -827,23 +702,22 @@ export default function Onboarding({ onTermine }) {
               onClick={goBack}
               initial={{ opacity:0, x:-6 }}
               animate={{ opacity:1, x:0 }}
-              whileHover={{ x:-2 }}
               whileTap={{ scale:0.92 }}
               style={{
                 position:'absolute', left:20,
-                background:'none', border:'none', cursor:'pointer',
-                color:'rgba(200,123,82,0.72)', fontFamily:'Poppins, sans-serif',
-                fontWeight:600, fontSize:20, padding:'4px 8px',
-                display:'flex', alignItems:'center', lineHeight:1,
+                width:36, height:36, borderRadius:'50%',
+                background:'rgba(200,123,82,0.08)',
+                border:'none', cursor:'pointer',
+                display:'flex', alignItems:'center', justifyContent:'center',
               }}
             >
-              ←
+              <BackIcon color="rgba(200,123,82,0.78)" size={18}/>
             </motion.button>
           )}
           <motion.span
             initial={{ opacity:0, y:-10 }}
             animate={{ opacity:1, y:0 }}
-            transition={{ delay:0.1, type:'spring', stiffness:300, damping:24 }}
+            transition={{ delay:0.1, duration:0.22, ease:'easeOut' }}
             style={{
               fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
               fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
@@ -855,22 +729,16 @@ export default function Onboarding({ onTermine }) {
           </motion.span>
         </div>
 
-        {/* Progress dots */}
-        <div style={{display:'flex', gap:6, alignItems:'center'}}>
+        {/* Progress segments */}
+        <div style={{display:'flex', gap:4, alignItems:'center'}}>
           {[0,1,2,3,4,5,6].map(i => (
-            <motion.div
+            <div
               key={i}
-              animate={{
-                width: i === step ? 24 : 6,
-                background: i < step
-                  ? '#C87B52'
-                  : i === step
-                    ? '#C87B52'
-                    : 'rgba(200,123,82,0.20)',
-                opacity: i > step ? 0.6 : 1,
+              style={{
+                width:30, height:2, borderRadius:1,
+                background: i <= step ? '#C87B52' : 'rgba(200,123,82,0.15)',
+                transition:'background 0.22s ease-out',
               }}
-              transition={{ type:'spring', stiffness:420, damping:26 }}
-              style={{ height:6, borderRadius:3 }}
             />
           ))}
         </div>
@@ -891,7 +759,7 @@ export default function Onboarding({ onTermine }) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ type:'spring', stiffness:300, damping:28 }}
+            transition={{ duration:0.26, ease:'easeOut' }}
           >
             {renderStep()}
           </motion.div>

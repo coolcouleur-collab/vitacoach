@@ -435,3 +435,46 @@ export function GiftIcon({ color = '#FF6B35', size = 20 }) {
     </svg>
   )
 }
+
+export function BalanceIcon({ color = '#C87B52', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <line x1="12" y1="4" x2="12" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="6" y1="21" x2="18" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <polyline points="4,8 12,4 20,8" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M4 8l-2 5h4l-2-5z" stroke={color} strokeWidth="1.5" strokeLinejoin="round" fill={color} fillOpacity="0.15"/>
+      <path d="M20 8l-2 5h4l-2-5z" stroke={color} strokeWidth="1.5" strokeLinejoin="round" fill={color} fillOpacity="0.15"/>
+    </svg>
+  )
+}
+
+export function WalkIcon({ color = '#C87B52', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="4" r="2" stroke={color} strokeWidth="2"/>
+      <path d="M9 22l2-5 2 2 2-3 2 6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 13l1.5-5 3 1 2-4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+export function SofaIcon({ color = '#C87B52', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M20 9V7a2 2 0 00-2-2H6a2 2 0 00-2 2v2" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <rect x="2" y="9" width="20" height="6" rx="2" stroke={color} strokeWidth="2" fill={color} fillOpacity="0.1"/>
+      <line x1="4" y1="15" x2="4" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="20" y1="15" x2="20" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <line x1="6" y1="19" x2="18" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+export function WaveIcon({ color = '#38bdf8', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M2 11c2-3 4-3 6 0s4 3 6 0 4-3 6 0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <path d="M2 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0" stroke={color} strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+    </svg>
+  )
+}

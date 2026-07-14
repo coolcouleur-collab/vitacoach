@@ -11,14 +11,23 @@ function getCtx() {
     if (!AC) return null
     _ctx = new AC()
   }
-  if (_ctx.state === 'suspended') _ctx.resume()
   return _ctx
 }
 
-export function playFx(type = 'tap') {
+// Re-resume quand l'app revient au premier plan (iOS Capacitor)
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && _ctx && _ctx.state !== 'running') {
+      _ctx.resume().catch(() => {})
+    }
+  })
+}
+
+export async function playFx(type = 'tap') {
   try {
     const ctx = getCtx()
     if (!ctx) return
+    if (ctx.state !== 'running') await ctx.resume()
     const now = ctx.currentTime
 
     if (type === 'tap' || type === 'click') {
