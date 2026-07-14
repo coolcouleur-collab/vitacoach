@@ -364,7 +364,7 @@ export default function Onboarding({ onTermine }) {
 
     // ── Étape 1 : Objectif ────────────────────────────────────────────────────
     if (step === 1) return (
-      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+      <div style={{display:'flex', flexDirection:'column', gap:16}}>
         <AnimatedQuestion
           text={`Qu'est-ce qui t'amène chez Solenn${nom ? `, ${nom}` : ''} ?`}
           style={S.question}
