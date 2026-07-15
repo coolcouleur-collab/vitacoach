@@ -344,11 +344,11 @@ function CinematicSlider({ onCommencer }) {
             bottom: '10rem', left: '2rem',
             zIndex: 100,
             width: 300,
-            background: 'rgba(80,35,8,0.28)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,220,160,0.65)',
-            boxShadow: '0 8px 40px rgba(80,35,8,0.32)',
+            background: 'rgba(255,245,220,0.55)',
+            backdropFilter: 'blur(24px) saturate(1.25)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.25)',
+            border: '1px solid rgba(200,123,82,0.42)',
+            boxShadow: '0 8px 40px rgba(140,65,15,0.16), inset 0 1px 0 rgba(255,230,175,0.55)',
             borderRadius: 20,
             padding: '36px 26px 32px',
             minHeight: 320,
@@ -366,7 +366,7 @@ function CinematicSlider({ onCommencer }) {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic', fontWeight: 400,
               fontSize: 'clamp(2rem, 2.8vw, 2.7rem)',
-              color: 'rgba(255,252,248,0.96)',
+              color: 'rgba(60,22,4,0.90)',
               lineHeight: 1.2, marginBottom: 20,
             }}>
               {SLIDE.title[0]}<br />{SLIDE.title[1]}
@@ -374,7 +374,7 @@ function CinematicSlider({ onCommencer }) {
             <div style={{
               fontFamily: 'Poppins, sans-serif', fontWeight: 400,
               fontSize: '1rem',
-              color: 'rgba(255,252,248,0.82)',
+              color: 'rgba(72,32,8,0.68)',
               lineHeight: 1.75, marginBottom: 28,
             }}>
               {SLIDE.sub}
@@ -383,8 +383,8 @@ function CinematicSlider({ onCommencer }) {
               {SLIDE.items.map(item => (
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-                  color: 'rgba(255,252,248,0.88)',
-                  border: '1px solid rgba(200,123,82,0.30)',
+                  color: 'rgba(105,52,16,0.82)',
+                  border: '1px solid rgba(200,123,82,0.35)',
                   borderRadius: '2rem', padding: '4px 13px',
                 }}>
                   {item}
