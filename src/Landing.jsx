@@ -374,7 +374,7 @@ function CinematicSlider({ onCommencer }) {
             <div style={{
               fontFamily: 'Poppins, sans-serif', fontWeight: 400,
               fontSize: '1rem',
-              color: 'rgba(44,21,8,0.78)',
+              color: 'rgba(200,123,82,0.72)',
               lineHeight: 1.75, marginBottom: 28,
             }}>
               {SLIDE.sub}
