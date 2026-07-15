@@ -159,26 +159,6 @@ function CinematicSlider({ onCommencer }) {
 
 
 
-        {/* ── PRICING ligne discrète ── */}
-        <div style={{
-          position: 'absolute', bottom: '5.2rem', left: '50%',
-          transform: 'translateX(-50%)', zIndex: 20,
-          display: 'flex', alignItems: 'center', gap: '1.2rem',
-          whiteSpace: 'nowrap',
-          animation: 'panelIn 0.5s 0.8s cubic-bezier(0.34,1.56,0.64,1) both',
-        }}>
-          <span style={{
-            fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(0.70rem, 0.85vw, 0.80rem)',
-            fontWeight: 400, color: 'rgba(255,240,210,0.68)', letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-          }}>Gratuit</span>
-          <span style={{ width: 1, height: 12, background: 'rgba(200,123,82,0.35)', display: 'inline-block', flexShrink: 0 }} />
-          <span style={{
-            fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(0.70rem, 0.85vw, 0.80rem)',
-            fontWeight: 500, color: 'rgba(232,150,42,0.82)', letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-          }}>Pro · 4,99€/mois</span>
-        </div>
 
         {/* ── Commencer — centré ── */}
         {onCommencer && (
