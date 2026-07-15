@@ -355,7 +355,15 @@ export default function Onboarding({ onTermine }) {
           initial={{ opacity:0, y:16 }}
           animate={{ opacity:1, y:0 }}
           transition={{ delay:0.35, duration:0.24, ease:'easeOut' }}
-          style={{display:'flex', flexDirection:'column', gap:14}}
+          style={{
+            background:'rgba(255,248,244,0.72)',
+            backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+            border:'1.5px solid rgba(255,255,255,0.52)',
+            borderRadius:20,
+            padding:16,
+            boxShadow:'0 4px 24px rgba(80,25,0,0.10)',
+            display:'flex', flexDirection:'column', gap:14,
+          }}
         >
           <input
             ref={nomRef}
