@@ -9,7 +9,7 @@ import {
   SunHorizon, Sun, CloudSun, MoonStars,
   User, Users, House, UsersThree,
   Buildings, AirplaneInFlight, ClockCounterClockwise, Laptop,
-  CheckCircle, Brain, Zzz, Bandaids, Pulse, ForkKnife,
+  CheckCircle, Brain, CloudMoon, Bandaids, Pulse, ForkKnife,
   BatteryLow, Pill, DotsThreeCircle,
   Star, Target, Tree, Crown, ArrowUpRight,
 } from '@phosphor-icons/react'
@@ -50,7 +50,7 @@ const G = {
   Freelance: ph(Laptop),
   Healthy:   ph(CheckCircle),
   Anxiety:   ph(Brain),
-  SleepBad:  ph(Zzz),
+  SleepBad:  ph(CloudMoon),
   Pain:      ph(Bandaids),
   Endo:      ph(Pulse),
   FoodRel:   ph(ForkKnife),
