@@ -211,7 +211,7 @@ const SANTE_OPTIONS = [
   { Icon: HappyIcon,   label:'Tout va bien de ce côté',          desc:'Pas de condition particulière à signaler'              },
   { Icon: BrainIcon,   label:'Anxiété ou stress chronique',      desc:'Je me sens souvent submergé·e mentalement'            },
   { Icon: MoonIcon,    label:'Troubles du sommeil',              desc:'J\'ai du mal à dormir ou à vraiment récupérer'        },
-  { Icon: MuscleIcon,  label:'Douleurs ou blessures',            desc:'J\'ai une douleur chronique ou une limite physique'   },
+  { Icon: MuscleIcon,  label:'Douleurs ou blessures',            desc:'Chronique, passagère, blessure récente ou courbatures'  },
   { Icon: PillIcon,    label:'Endométriose',                     desc:'Douleurs chroniques et fatigue liées au cycle'        },
   { Icon: FoodIcon,    label:'Rapport compliqué avec la bouffe', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
   { Icon: FlashIcon,   label:'Fatigue profonde',                 desc:'Une fatigue qui ne part pas même après avoir dormi'   },
