@@ -91,6 +91,7 @@ function CinematicSlider({ onCommencer }) {
   const [dir,     setDir]     = useState('next')
   const [soundOn,    setSoundOn]    = useState(false)
   const [hovered,    setHovered]    = useState(false)
+  const [showPanel,  setShowPanel]  = useState(false)
   const [lang,       setLang]       = useState('FR')
   const [langOpen,   setLangOpen]   = useState(false)
 
@@ -336,6 +337,64 @@ function CinematicSlider({ onCommencer }) {
 
         </div>
 
+        {/* ── Mini panel transparent ── */}
+        {showPanel && (
+          <div key={cur} onClick={() => setShowPanel(false)} className="mini-panel" style={{
+            position: 'fixed',
+            bottom: '10rem', left: '2rem',
+            zIndex: 100,
+            width: 300,
+            background: 'rgba(200,100,40,0.14)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,220,160,0.50)',
+            boxShadow: '0 8px 32px rgba(140,65,15,0.20)',
+            borderRadius: 20,
+            padding: '36px 26px 32px',
+            minHeight: 320,
+            cursor: 'pointer',
+            animation: 'panelIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
+          }}>
+            <div style={{
+              fontSize: '0.90rem', fontFamily: 'Poppins, sans-serif', fontWeight: 600,
+              color: 'rgba(200,123,82,0.90)', letterSpacing: '0.18em',
+              textTransform: 'uppercase', marginBottom: 20,
+            }}>
+              {SLIDE.num} · {SLIDE.tag}
+            </div>
+            <div style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic', fontWeight: 400,
+              fontSize: 'clamp(2rem, 2.8vw, 2.7rem)',
+              color: '#C87B52',
+              lineHeight: 1.2, marginBottom: 20,
+            }}>
+              {SLIDE.title[0]}<br />{SLIDE.title[1]}
+            </div>
+            <div style={{
+              fontFamily: 'Poppins, sans-serif', fontWeight: 400,
+              fontSize: '1rem',
+              color: 'rgba(200,123,82,0.72)',
+              lineHeight: 1.75, marginBottom: 28,
+            }}>
+              {SLIDE.sub}
+            </div>
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+              {SLIDE.items.map(item => (
+                <span key={item} style={{
+                  fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
+                  color: '#C87B52',
+                  background: 'rgba(200,123,82,0.12)',
+                  border: '1px solid rgba(200,123,82,0.30)',
+                  borderRadius: '2rem', padding: '4px 13px',
+                }}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Filmstrip navigation — bas ── */}
         <div className="filmstrip-nav" style={{
           position: 'absolute', bottom: '2.4rem', left: 0, right: 0, zIndex: 20,
@@ -377,7 +436,8 @@ function CinematicSlider({ onCommencer }) {
               key={i}
               onClick={() => {
                 if (soundOn) playFxSound('click')
-                if (i !== cur) { navigate(i, i > cur ? 'next' : 'prev') }
+                if (i === cur) { setShowPanel(p => !p) }
+                else { navigate(i, i > cur ? 'next' : 'prev'); setShowPanel(true) }
               }}
               onMouseEnter={e => {
                 if (soundOn) playFxSound('hover')
@@ -500,6 +560,14 @@ export default function Landing({ onCommencer }) {
             right: 50% !important;
             transform: translate(50%, -50%) !important;
             top: 88% !important;
+          }
+          .mini-panel {
+            left: 1rem !important;
+            right: 1rem !important;
+            width: auto !important;
+            bottom: 6rem !important;
+            min-height: auto !important;
+            padding: 24px 18px 20px !important;
           }
           .filmstrip-nav {
             gap: 0 !important;
