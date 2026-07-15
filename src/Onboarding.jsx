@@ -5,7 +5,7 @@ import {
   BackIcon, BrainIcon, RefreshIcon, LightbulbIcon,
   SadIcon, NeutralIcon, MoodIcon, HappyIcon,
   SunIcon, BellIcon, RunIcon, FireIcon, StarIcon, DiamondIcon,
-  BalanceIcon, WalkIcon, SofaIcon, WaveIcon, PillIcon,
+  BalanceIcon, WalkIcon, SofaIcon, WaveIcon, PillIcon, ChevronIcon,
 } from './Icons'
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
@@ -409,7 +409,12 @@ export default function Onboarding({ onTermine }) {
               whileTap={nomVal.trim() ? { scale:0.97 } : {}}
               style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, heartbeat 2.5s ease-in-out infinite' : 'none' }}
             >
-              Continuer <span style={{opacity:0.5}}>→</span>
+              <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+                Continuer
+                <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:'rgba(255,245,238,0.18)',borderRadius:8,width:28,height:28,flexShrink:0}}>
+                  <ChevronIcon color="#FFF5EE" size={14} direction="right" />
+                </span>
+              </span>
             </motion.button>
           </div>
         </motion.div>
@@ -885,7 +890,12 @@ export default function Onboarding({ onTermine }) {
             disabled={!canContinue}
             style={{ ...S.cta, opacity: canContinue ? 1 : 0.40 }}
           >
-            Continuer <span style={{opacity:0.5}}>→</span>
+            <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+              Continuer
+              <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:'rgba(255,245,238,0.18)',borderRadius:8,width:28,height:28,flexShrink:0}}>
+                <ChevronIcon color="#FFF5EE" size={14} direction="right" />
+              </span>
+            </span>
           </motion.button>
         </div>
       )
