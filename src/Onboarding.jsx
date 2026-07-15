@@ -213,7 +213,7 @@ const SANTE_OPTIONS = [
   { Icon: MoonIcon,    label:'Troubles du sommeil',              desc:'J\'ai du mal à dormir ou à vraiment récupérer'        },
   { Icon: MuscleIcon,  label:'Douleurs ou blessures',            desc:'Chronique, passagère, blessure récente ou courbatures'  },
   { Icon: PillIcon,    label:'Endométriose',                     desc:'Douleurs chroniques et fatigue liées au cycle'        },
-  { Icon: FoodIcon,    label:'Rapport compliqué avec la bouffe', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
+  { Icon: FoodIcon,    label:'Rapport compliqué avec la nourriture', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
   { Icon: FlashIcon,   label:'Fatigue profonde',                 desc:'Une fatigue qui ne part pas même après avoir dormi'   },
   { Icon: BalanceIcon, label:'Maladie diagnostiquée',            desc:'Diabète, hypertension ou autre pathologie chronique'  },
   { Icon: WaveIcon,    label:'Autre chose',                      desc:'Je l\'expliquerai directement à Solenn'               },
@@ -903,7 +903,7 @@ export default function Onboarding({ onTermine }) {
   }
 
   return (
-    <div style={{
+    <div className="ob-outer" style={{
       minHeight:'100vh',
       background:'linear-gradient(160deg,#FFF8F4 0%,#FFF0E6 60%,#FDECD8 100%)',
       fontFamily:"'DM Sans', sans-serif",
@@ -930,13 +930,18 @@ export default function Onboarding({ onTermine }) {
         @keyframes heartbeat { 0%,100%{box-shadow:0 8px 24px rgba(184,104,58,0.38)} 50%{box-shadow:0 12px 36px rgba(184,104,58,0.62)} }
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
+        @media (min-width:600px) {
+          body { background:#F5EDE4; }
+          .ob-outer { max-width:480px; margin:0 auto; min-height:100vh; box-shadow:0 0 80px rgba(180,80,20,0.14); }
+          .ob-header { left:50% !important; right:auto !important; transform:translateX(-50%); width:480px; }
+        }
       `}</style>
 
       <BgBlobs step={step} />
       <div style={{position:'absolute',inset:0,background:'rgba(255,245,235,0.22)',pointerEvents:'none',zIndex:1}}/>
 
       {/* Header */}
-      <div style={{
+      <div className="ob-header" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:100,
         backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
         background:'rgba(255,248,244,0.60)',
