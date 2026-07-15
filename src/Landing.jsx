@@ -92,8 +92,6 @@ function CinematicSlider({ onCommencer }) {
   const [soundOn,    setSoundOn]    = useState(false)
   const [hovered,    setHovered]    = useState(false)
   const [showPanel,  setShowPanel]  = useState(false)
-  const [lang,       setLang]       = useState('FR')
-  const [langOpen,   setLangOpen]   = useState(false)
 
   const SLIDE = FX_SLIDES[cur]
   const N     = FX_SLIDES.length
@@ -190,87 +188,6 @@ function CinematicSlider({ onCommencer }) {
           </button>
         )}
 
-        {/* ── Langue — coin haut-droit custom ── */}
-        {langOpen && (
-          <div
-            style={{ position: 'fixed', inset: 0, zIndex: 19 }}
-            onClick={() => setLangOpen(false)}
-          />
-        )}
-        <div style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', zIndex: 20 }}>
-          <button
-            onClick={() => setLangOpen(o => !o)}
-            style={{
-              background: 'rgba(200,100,40,0.10)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(200,123,82,0.40)',
-              borderRadius: '0.7rem',
-              color: 'rgba(255,248,235,0.92)',
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontStyle: 'italic',
-              fontSize: '1rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              padding: '0.42rem 0.85rem',
-              letterSpacing: '0.08em',
-              outline: 'none',
-              display: 'flex', alignItems: 'center', gap: '0.35rem',
-              transition: 'border-color 0.2s',
-            }}
-          >
-            {lang}
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
-          {langOpen && (
-            <div style={{
-              position: 'absolute', top: 'calc(100% + 6px)', right: 0,
-              background: 'rgba(38,16,4,0.80)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(200,123,82,0.28)',
-              borderRadius: '0.8rem',
-              overflow: 'hidden',
-              minWidth: 148,
-              boxShadow: '0 8px 32px rgba(100,50,10,0.28)',
-              animation: 'panelIn 0.18s cubic-bezier(0.34,1.56,0.64,1) both',
-            }}>
-              {[
-                ['FR', 'Français'], ['EN', 'English'], ['ES', 'Español'],
-                ['DE', 'Deutsch'],  ['IT', 'Italiano'], ['PT', 'Português'],
-                ['AR', 'العربية'],  ['ZH', '中文'],     ['JA', '日本語'],
-              ].map(([code, label]) => (
-                <button
-                  key={code}
-                  onClick={() => { setLang(code); setLangOpen(false) }}
-                  onMouseEnter={e => { if (code !== lang) e.currentTarget.style.background = 'rgba(200,123,82,0.12)' }}
-                  onMouseLeave={e => { if (code !== lang) e.currentTarget.style.background = 'transparent' }}
-                  style={{
-                    display: 'block', width: '100%',
-                    background: code === lang ? 'rgba(200,123,82,0.22)' : 'transparent',
-                    border: 'none',
-                    color: 'rgba(255,248,235,0.90)',
-                    fontFamily: "'Cormorant Garamond', Georgia, serif",
-                    fontStyle: 'italic',
-                    fontSize: '0.95rem',
-                    fontWeight: code === lang ? 600 : 400,
-                    cursor: 'pointer',
-                    padding: '0.48rem 1rem',
-                    textAlign: 'left',
-                    letterSpacing: '0.04em',
-                    transition: 'background 0.15s',
-                  }}
-                >
-                  <span style={{ opacity: 0.55, fontSize: '0.76em', marginRight: 7 }}>{code}</span>
-                  {label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* ═══ CENTER — titre pur ═══ */}
         <div style={{
           position: 'absolute',
@@ -350,7 +267,7 @@ function CinematicSlider({ onCommencer }) {
         {showPanel && (
           <div key={cur} onClick={() => setShowPanel(false)} className="mini-panel" style={{
             position: 'fixed',
-            bottom: '10rem', left: '2rem',
+            bottom: 'calc(10rem + env(safe-area-inset-bottom, 0px))', left: '2rem',
             zIndex: 100,
             width: 300,
             background: 'rgba(200,100,40,0.14)',
@@ -406,7 +323,7 @@ function CinematicSlider({ onCommencer }) {
 
         {/* ── Filmstrip navigation — bas ── */}
         <div className="filmstrip-nav" style={{
-          position: 'absolute', bottom: '2.4rem', left: 0, right: 0, zIndex: 20,
+          position: 'absolute', bottom: 'calc(2.4rem + env(safe-area-inset-bottom, 0px))', left: 0, right: 0, zIndex: 20,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           gap: '0.2rem', padding: '0 1rem',
           overflowX: 'auto', WebkitOverflowScrolling: 'touch',
@@ -484,7 +401,7 @@ function CinematicSlider({ onCommencer }) {
         <a
           href="mailto:contact@solenn.app"
           style={{
-            position: 'absolute', bottom: '1rem', left: '1.5rem', zIndex: 20,
+            position: 'absolute', bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))', left: '1.5rem', zIndex: 20,
             color: 'rgba(255,248,235,0.72)',
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic', fontSize: '0.85rem',
@@ -498,7 +415,7 @@ function CinematicSlider({ onCommencer }) {
         </a>
 
         {/* ── Progress bar ── */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, zIndex: 20, background: 'rgba(255,255,255,0.08)' }}>
+        <div style={{ position: 'absolute', bottom: 'env(safe-area-inset-bottom, 0px)', left: 0, right: 0, height: 2, zIndex: 20, background: 'rgba(255,255,255,0.08)' }}>
           <div style={{
             height: '100%',
             width: `${((cur + 1) / N) * 100}%`,
@@ -524,7 +441,6 @@ export default function Landing({ onCommencer }) {
   return (
     <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', height: '100vh', overflow: 'hidden', fontFamily: 'var(--font)', position: 'relative', zIndex: 1 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
           from { clip-path: inset(0 100% 0 0); }
@@ -565,11 +481,6 @@ export default function Landing({ onCommencer }) {
           }
           .btn-top-left  { left: 1rem !important; top: 1.2rem !important; }
           .btn-top-right { right: 1rem !important; top: 1.2rem !important; }
-          .lang-selector {
-            right: 50% !important;
-            transform: translate(50%, -50%) !important;
-            top: 88% !important;
-          }
           .mini-panel {
             left: 1rem !important;
             right: 1rem !important;
