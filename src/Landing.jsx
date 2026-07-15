@@ -330,17 +330,6 @@ function CinematicSlider({ onCommencer }) {
             pointerEvents: 'none',
           }}>
             <span style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: 'clamp(0.72rem, 1vw, 0.88rem)',
-              fontWeight: 400,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,240,210,0.92)',
-              animation: 'solennReveal 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
-            }}>
-              Coach IA · Santé &amp; Bien-être
-            </span>
-            <span style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: 'clamp(1rem, 1.4vw, 1.25rem)',
