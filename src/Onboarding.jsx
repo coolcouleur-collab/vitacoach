@@ -155,19 +155,19 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { Icon: FlashIcon,    label:'Énergie & vitalité',  desc:'Retrouver de l\'élan au quotidien'  },
-  { Icon: BalanceIcon,  label:'Perdre du poids',      desc:'Trouver mon équilibre naturel'      },
-  { Icon: MoonIcon,     label:'Mieux dormir',         desc:'Récupérer et décompresser vraiment' },
-  { Icon: MeditateIcon, label:'Gérer le stress',      desc:'Retrouver calme et clarté mentale'  },
-  { Icon: MuscleIcon,   label:'Sport & forme',        desc:'Bouger plus, me sentir plus forte'  },
-  { Icon: FoodIcon,     label:'Alimentation saine',   desc:'Manger mieux sans me priver'        },
+  { Icon: FlashIcon,    label:'Retrouver mon énergie',          desc:'Retrouver cet élan que j\'ai quelque part perdu'        },
+  { Icon: BalanceIcon,  label:'Me réconcilier avec mon corps',  desc:'Trouver l\'équilibre sans régime ni privation'           },
+  { Icon: MoonIcon,     label:'Dormir enfin comme il faut',     desc:'Me réveiller avec de l\'énergie, pas à plat dès le matin'},
+  { Icon: MeditateIcon, label:'Retrouver ma sérénité',          desc:'Moins de tensions, plus de clarté au quotidien'         },
+  { Icon: MuscleIcon,   label:'Reprendre le mouvement',         desc:'Bouger parce que ça me fait du bien, pas par obligation'},
+  { Icon: FoodIcon,     label:'Manger sans culpabiliser',       desc:'Reconstruire une vraie relation avec la nourriture'     },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { Icon: SofaIcon, label:'Sédentaire',  desc:'Bureau / peu de mouvements'      },
-  { Icon: WalkIcon, label:'Léger',       desc:'Quelques sorties par semaine'    },
-  { Icon: RunIcon,  label:'Modéré',      desc:'Sport 3-4×/semaine'              },
-  { Icon: FireIcon, label:'Intense',     desc:'Sport quotidien ou physique'     },
+  { Icon: SofaIcon, label:'Pas vraiment mon truc',    desc:'Je bouge peu, surtout entre le bureau et le canapé' },
+  { Icon: WalkIcon, label:'J\'essaie de bouger',      desc:'Quelques sorties ou marches dans la semaine'        },
+  { Icon: RunIcon,  label:'Je fais du sport',         desc:'Deux à quatre séances par semaine'                  },
+  { Icon: FireIcon, label:'Le sport, c\'est ma vie',  desc:'Je m\'entraîne tous les jours ou presque'           },
 ]
 
 const AGE_RANGE_OPTIONS = [
@@ -180,24 +180,24 @@ const AGE_RANGE_OPTIONS = [
 
 
 const TRIGGER_OPTIONS = [
-  { Icon: BrainIcon,     label:'Stress & burnout',    desc:'Je suis à bout, j\'ai besoin de souffler'  },
-  { Icon: RefreshIcon,   label:'Envie de changement', desc:'Je veux évoluer et prendre de nouvelles habitudes' },
-  { Icon: LightbulbIcon, label:'Simple curiosité',    desc:'Je veux explorer ce que ça peut m\'apporter' },
-  { Icon: WaveIcon,      label:'Transition de vie',   desc:'Quelque chose a changé, je me réajuste'    },
+  { Icon: BrainIcon,     label:'J\'ai atteint mes limites',      desc:'Trop de pression — il faut que quelque chose change'  },
+  { Icon: RefreshIcon,   label:'Je veux tourner une page',       desc:'Je sens qu\'il est temps de faire autrement'          },
+  { Icon: LightbulbIcon, label:'Pure curiosité',                 desc:'Je veux voir ce que ça peut m\'apporter'              },
+  { Icon: WaveIcon,      label:'Ma vie est en train de changer', desc:'Un tournant, un événement — je me repositionne'       },
 ]
 
 const BASELINE_OPTIONS = [
-  { Icon: SadIcon,     label:'Vraiment à plat', desc:'Épuisé(e), je tourne à vide'     },
-  { Icon: NeutralIcon, label:'Ça peut aller',   desc:'Ni bien ni mal, en pilotage auto' },
-  { Icon: MoodIcon,    label:'Bien mais mieux', desc:'J\'aspire à encore plus'           },
-  { Icon: HappyIcon,   label:'En pleine forme', desc:'Je veux maintenir cet élan'        },
+  { Icon: SadIcon,     label:'À bout, vraiment',          desc:'Je tourne à vide, j\'ai besoin d\'un vrai coup de pouce' },
+  { Icon: NeutralIcon, label:'Ça fait le job',            desc:'Ni bien ni mal — je fonctionne en pilotage automatique'  },
+  { Icon: MoodIcon,    label:'Bien, mais j\'aspire à plus', desc:'Quelque chose me manque, je veux aller plus loin'      },
+  { Icon: HappyIcon,   label:'Au top !',                  desc:'Je veux maintenir cet élan et continuer à progresser'   },
 ]
 
 const MOMENT_OPTIONS = [
-  { Icon: SunIcon,  label:'Le matin',   desc:'Je commence la journée par moi'  },
-  { Icon: FlashIcon,label:'La journée', desc:'Mes pauses sont précieuses'      },
-  { Icon: BellIcon, label:'Le soir',    desc:'Je décompresse après ma journée' },
-  { Icon: MoonIcon, label:'La nuit',    desc:'Le calme nocturne est mon moment'},
+  { Icon: SunIcon,   label:'Le matin',   desc:'Je commence la journée par moi, avant que tout s\'emballe' },
+  { Icon: FlashIcon, label:'En journée', desc:'Mes pauses sont précieuses — j\'en profite pour moi'       },
+  { Icon: BellIcon,  label:'Le soir',    desc:'Je décompresse après une longue journée'                   },
+  { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme nocturne, c\'est mon moment à moi'                },
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
@@ -366,7 +366,7 @@ export default function Onboarding({ onTermine }) {
     if (step === 1) return (
       <div style={{display:'flex', flexDirection:'column', gap:16}}>
         <AnimatedQuestion
-          text={`Qu'est-ce qui t'amène chez Solenn${nom ? `, ${nom}` : ''} ?`}
+          text={`C'est quoi ton envie du moment${nom ? `, ${nom}` : ''} ?`}
           style={S.question}
         />
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -415,14 +415,14 @@ export default function Onboarding({ onTermine }) {
     if (step === 2) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Tu as quel âge ?" style={S.question} />
+          <AnimatedQuestion text={`Tu as quel âge${nom ? `, ${nom}` : ''} ?`} style={S.question} />
           <motion.p
             initial={{ opacity:0 }}
             animate={{ opacity:1 }}
             transition={{ delay:0.30 }}
             style={S.sub}
           >
-            Pour adapter tes recommandations.
+            Chaque étape de vie a ses forces et ses défis.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -469,7 +469,7 @@ export default function Onboarding({ onTermine }) {
     // ── Étape 3 : Activité ────────────────────────────────────────────────────
     if (step === 3) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
-        <AnimatedQuestion text="Ton niveau d'activité au quotidien ?" style={S.question} />
+        <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {ACTIVITE_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
@@ -521,9 +521,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 4) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Qu'est-ce qui t'a amené ici aujourd'hui ?" style={S.question} />
+          <AnimatedQuestion text={`Et là, qu'est-ce qui t'a poussé à te lancer${nom ? `, ${nom}` : ''} ?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Pas de bonne ou mauvaise réponse.
+            Il n'y a pas de mauvaise réponse.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -569,9 +569,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 5) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Comment tu te sens en ce moment ?" style={S.question} />
+          <AnimatedQuestion text={`Honnêtement${nom ? `, ${nom}` : ''}, comment tu vas ?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Pour calibrer Solenn à ton état réel aujourd'hui.
+            Solenn s'adapte à où tu en es, sans jugement.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -617,9 +617,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 6) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Quand tu veux prendre soin de toi ?" style={S.question} />
+          <AnimatedQuestion text="Quel moment de la journée t'appartient vraiment ?" style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Solenn s'adapte à ton rythme de vie.
+            Solenn se glissera dans tes moments à toi.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
