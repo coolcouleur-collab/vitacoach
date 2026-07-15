@@ -67,7 +67,7 @@ function RevealScreen({ answers, onEnter }) {
       background:'linear-gradient(160deg,#FFF8F2 0%,#FDEEE0 50%,#FFF4EC 100%)',
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       padding:'40px 28px',
-      fontFamily:'Poppins, sans-serif',
+      fontFamily:"'DM Sans', sans-serif",
     }}>
       <BgBlobs step={0} />
       <div style={{
@@ -201,7 +201,7 @@ const MOMENT_OPTIONS = [
 ]
 
 const VIE_OPTIONS = [
-  { Icon: StarIcon,    label:'Seul(e)',          desc:'J\'organise mon quotidien comme je l\'entends'          },
+  { Icon: StarIcon,    label:'Seul·e',          desc:'J\'organise mon quotidien comme je l\'entends'          },
   { Icon: BalanceIcon, label:'En couple',         desc:'On partage le quotidien, les routines, les repas'       },
   { Icon: HappyIcon,   label:'En famille',        desc:'Des enfants dans l\'équation — c\'est plus complexe'    },
   { Icon: WalkIcon,    label:'En colocation',     desc:'On vit ensemble, mais chacun son rythme'                },
@@ -380,7 +380,7 @@ export default function Onboarding({ onTermine }) {
 
     // ── Étape 1 : Objectif ────────────────────────────────────────────────────
     if (step === 1) return (
-      <div style={{display:'flex', flexDirection:'column', gap:16}}>
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <AnimatedQuestion
           text={`C'est quoi ton envie du moment${nom ? `, ${nom}` : ''} ?`}
           style={S.question}
@@ -465,7 +465,7 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <AgeIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <AgeIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
@@ -485,7 +485,12 @@ export default function Onboarding({ onTermine }) {
     // ── Étape 3 : Activité ────────────────────────────────────────────────────
     if (step === 3) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
-        <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Pas de jugement — juste pour mieux t'accompagner.
+          </motion.p>
+        </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {ACTIVITE_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
@@ -511,7 +516,7 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
@@ -565,10 +570,10 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
@@ -613,10 +618,10 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
@@ -661,10 +666,10 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
@@ -712,7 +717,7 @@ export default function Onboarding({ onTermine }) {
                   <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
@@ -763,7 +768,7 @@ export default function Onboarding({ onTermine }) {
                   <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
                   <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
@@ -785,7 +790,7 @@ export default function Onboarding({ onTermine }) {
       background:'linear-gradient(160deg,#FFF8F4 0%,#FFF0E6 60%,#FDECD8 100%)',
       fontFamily:"'DM Sans', sans-serif",
       display:'flex', flexDirection:'column',
-      position:'relative', overflow:'hidden',
+      position:'relative', overflowX:'hidden', overflowY:'auto',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Cormorant+Garamond:ital@1&display=swap');
@@ -855,7 +860,7 @@ export default function Onboarding({ onTermine }) {
               key={i}
               style={{
                 width:30, height:2, borderRadius:1,
-                background: i <= step ? '#C87B52' : 'rgba(200,123,82,0.28)',
+                background: i < step ? '#C87B52' : 'rgba(200,123,82,0.28)',
                 transition:'background 0.22s ease-out',
               }}
             />
@@ -865,11 +870,11 @@ export default function Onboarding({ onTermine }) {
 
       {/* Content */}
       <div style={{
-        flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
+        flex:1, display:'flex', flexDirection:'column', justifyContent:'flex-start',
         padding:'0 28px 48px',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 110px)',
         maxWidth:480, width:'100%', margin:'0 auto', boxSizing:'border-box',
-        position:'relative', zIndex:2,
+        position:'relative', zIndex:2, overflowX:'hidden',
       }}>
         <AnimatePresence mode="wait" custom={slideDir}>
           <motion.div
