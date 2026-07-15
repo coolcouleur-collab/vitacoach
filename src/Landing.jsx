@@ -159,75 +159,25 @@ function CinematicSlider({ onCommencer }) {
 
 
 
-        {/* ── PRICING PILL ── */}
+        {/* ── PRICING ligne discrète ── */}
         <div style={{
           position: 'absolute', bottom: '5.2rem', left: '50%',
           transform: 'translateX(-50%)', zIndex: 20,
-          background: 'rgba(200,123,82,0.10)',
-          border: '1px solid rgba(200,123,82,0.25)',
-          borderRadius: 20,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          display: 'flex', flexDirection: 'row', alignItems: 'stretch',
-          gap: 0,
-          padding: 0,
-          overflow: 'hidden',
-          animation: 'panelIn 0.5s 0.8s cubic-bezier(0.34,1.56,0.64,1) both',
+          display: 'flex', alignItems: 'center', gap: '1.2rem',
           whiteSpace: 'nowrap',
-          boxShadow: '0 4px 24px rgba(130,70,15,0.14)',
+          animation: 'panelIn 0.5s 0.8s cubic-bezier(0.34,1.56,0.64,1) both',
         }}>
-          {/* Colonne Gratuit */}
-          <div style={{
-            padding: '14px 18px',
-            display: 'flex', flexDirection: 'column', gap: 5,
-            minWidth: 160,
-          }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'Poppins, sans-serif', fontWeight: 700,
-              color: '#C87B52', letterSpacing: '0.18em',
-              textTransform: 'uppercase', marginBottom: 4,
-            }}>
-              GRATUIT
-            </span>
-            {['5 messages/jour', 'Profil santé personnalisé', 'Routines quotidiennes'].map(item => (
-              <div key={item} style={{
-                fontSize: 11, fontFamily: 'Poppins, sans-serif', fontWeight: 400,
-                color: 'rgba(255,240,210,0.88)', lineHeight: 1.5,
-              }}>
-                {item}
-              </div>
-            ))}
-          </div>
-
-          {/* Séparateur vertical */}
-          <div style={{
-            width: 1, alignSelf: 'stretch',
-            background: 'rgba(200,123,82,0.25)',
-          }} />
-
-          {/* Colonne Pro */}
-          <div style={{
-            padding: '14px 18px',
-            display: 'flex', flexDirection: 'column', gap: 5,
-            minWidth: 180,
-            background: 'rgba(200,123,82,0.15)',
-          }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'Poppins, sans-serif', fontWeight: 700,
-              color: '#E8962A', letterSpacing: '0.18em',
-              textTransform: 'uppercase', marginBottom: 4,
-            }}>
-              PRO · 4,99€/mois
-            </span>
-            {['Messages illimités', 'Rapport hebdo · Défis 21j', 'Agents nutrition · Météo'].map(item => (
-              <div key={item} style={{
-                fontSize: 11, fontFamily: 'Poppins, sans-serif', fontWeight: 400,
-                color: 'rgba(255,240,210,0.88)', lineHeight: 1.5,
-              }}>
-                {item}
-              </div>
-            ))}
-          </div>
+          <span style={{
+            fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(0.70rem, 0.85vw, 0.80rem)',
+            fontWeight: 400, color: 'rgba(255,240,210,0.68)', letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+          }}>Gratuit</span>
+          <span style={{ width: 1, height: 12, background: 'rgba(200,123,82,0.35)', display: 'inline-block', flexShrink: 0 }} />
+          <span style={{
+            fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(0.70rem, 0.85vw, 0.80rem)',
+            fontWeight: 500, color: 'rgba(232,150,42,0.82)', letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+          }}>Pro · 4,99€/mois</span>
         </div>
 
         {/* ── Commencer — centré ── */}
@@ -237,7 +187,7 @@ function CinematicSlider({ onCommencer }) {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.70)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.50)' }}
             style={{
-              position: 'absolute', top: '62%', left: '50%',
+              position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               background: 'rgba(200,100,40,0.08)',
               border: '1px solid rgba(255,220,160,0.60)',
@@ -342,7 +292,7 @@ function CinematicSlider({ onCommencer }) {
         {/* ═══ CENTER — titre pur ═══ */}
         <div style={{
           position: 'absolute',
-          top: '44%', left: '0',
+          top: '50%', left: '0',
           right: '0',
           transform: 'translateY(-50%)',
           zIndex: 10,
