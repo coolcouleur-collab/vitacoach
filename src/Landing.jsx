@@ -323,16 +323,34 @@ function CinematicSlider({ onCommencer }) {
             top: '62%',
             left: 0, right: 0,
             textAlign: 'center',
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: 'clamp(0.72rem, 1vw, 0.88rem)',
-            fontWeight: 400,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,240,210,0.92)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.55rem',
             pointerEvents: 'none',
-            animation: 'solennReveal 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
-            Coach IA · Santé &amp; Bien-être
+            <span style={{
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: 'clamp(0.72rem, 1vw, 0.88rem)',
+              fontWeight: 400,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,240,210,0.92)',
+              animation: 'solennReveal 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}>
+              Coach IA · Santé &amp; Bien-être
+            </span>
+            <span style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(1rem, 1.4vw, 1.25rem)',
+              fontWeight: 300,
+              letterSpacing: '0.08em',
+              color: 'rgba(255,240,210,0.78)',
+              animation: 'solennReveal 1s 0.65s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}>
+              Ton soleil au quotidien
+            </span>
           </div>
 
         </div>
