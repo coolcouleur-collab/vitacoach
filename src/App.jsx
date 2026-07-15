@@ -1157,7 +1157,13 @@ const [messages, setMessages] = useState(() => {
   if (!profil) {
     return (
       <Suspense fallback={<GlowLoader fullPage />}>
-      <Onboarding onTermine={p => {
+      <Onboarding onBack={async () => {
+        const sb = await getSupabase()
+        await sb.auth.signOut()
+        localStorage.removeItem('vitacoach_user')
+        localStorage.removeItem('vitacoach_profil')
+        setUser(null); setProfil(null)
+      }} onTermine={p => {
         setProfil(p)
         
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))

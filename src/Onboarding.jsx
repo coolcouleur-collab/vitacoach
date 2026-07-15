@@ -315,7 +315,7 @@ const S = {
 }
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-export default function Onboarding({ onTermine }) {
+export default function Onboarding({ onTermine, onBack }) {
   const [step, setStep] = useState(() => {
     const s = sessionStorage.getItem('solenn_onboarding_step')
     return s ? parseInt(s, 10) : 0
@@ -1027,9 +1027,9 @@ export default function Onboarding({ onTermine }) {
         display:'flex', flexDirection:'column', alignItems:'center', gap:14,
       }}>
         <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center', width:'100%', maxWidth:480, padding:'0 20px', boxSizing:'border-box' }}>
-          {step > 0 && (
+          {(step > 0 || onBack) && (
             <motion.button
-              onClick={goBack}
+              onClick={step === 0 ? onBack : goBack}
               initial={{ opacity:0, x:-6 }}
               animate={{ opacity:1, x:0 }}
               whileTap={{ scale:0.92 }}
