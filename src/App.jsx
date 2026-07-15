@@ -1163,9 +1163,52 @@ const [messages, setMessages] = useState(() => {
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))
         syncProfilSupabase(user?.id, p)
         const h2 = new Date().getHours()
-        const g2 = h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
+        const g2 = h2 < 6 ? 'Bonsoir' : h2 < 12 ? 'Bonjour' : h2 < 18 ? 'Salut' : 'Bonsoir'
         const nomFmt = p.nom ? p.nom.charAt(0).toUpperCase() + p.nom.slice(1).toLowerCase() : ''
-        setMessages([{ role:'assistant', content:`${g2} ${nomFmt} ! Je suis Solenn, ton coach de vie personnel. Je connais ton profil et je suis là pour t'aider à atteindre tes objectifs. Par quoi on commence ?` }])
+        const introParts = [`${g2} ${nomFmt} !`]
+        // Empathie selon le déclencheur
+        const triggerMap = {
+          'J\'ai atteint mes limites':      'Je sais que tu traverses une période chargée.',
+          'Je veux tourner une page':       'Tourner une page, c\'est déjà une belle décision.',
+          'Pure curiosité':                 'La curiosité, c\'est souvent là que tout commence.',
+          'Ma vie est en train de changer': 'Les périodes de changement, c\'est là où tout peut se jouer.',
+        }
+        if (p.declencheur && triggerMap[p.declencheur]) introParts.push(triggerMap[p.declencheur])
+        // Objectif principal
+        const objMap = {
+          'Retrouver mon énergie':          'On va retrouver cet élan ensemble.',
+          'Me réconcilier avec mon corps':  'On va travailler l\'équilibre, sans pression.',
+          'Dormir enfin comme il faut':     'On va s\'attaquer à ton sommeil en profondeur.',
+          'Retrouver ma sérénité':          'On va réduire ce que tu portes mentalement.',
+          'Reprendre le mouvement':         'On va construire une routine qui te ressemble vraiment.',
+          'Manger sans culpabiliser':       'On va reconstruire un rapport sain avec la bouffe.',
+        }
+        const obj0 = p.objectifs?.[0] || p.objectif
+        if (obj0 && objMap[obj0]) introParts.push(objMap[obj0])
+        else introParts.push('On va construire quelque chose de vraiment adapté à toi.')
+        // Conditions de santé — reconnaissance discrète
+        const santeConditions = p.sante_conditions || []
+        const hasConditions = p.sante && santeConditions.length > 0 &&
+          !santeConditions.includes('Tout va bien de ce côté') &&
+          !santeConditions.includes('Aucune condition particulière')
+        if (hasConditions) introParts.push('J\'ai bien noté ce que tu vis côté santé, je vais en tenir compte dans tout ce que je te propose.')
+        // Moment préféré — engagement
+        const momentMap = {
+          'Le matin':    'Je serai là pour bien commencer tes journées.',
+          'En journée':  'Je serai disponible pour tes pauses.',
+          'Le soir':     'Je serai là le soir pour t\'aider à décompresser.',
+          'La nuit':     'Je respecte ton rythme, on travaille à ton heure.',
+        }
+        if (p.moment_prefere && momentMap[p.moment_prefere]) introParts.push(momentMap[p.moment_prefere])
+        // Question d'ouverture selon la baseline
+        const baselineQ = {
+          'À bout, vraiment':        'Dis-moi, qu\'est-ce qui pèse le plus en ce moment ?',
+          'Ça fait le job':          'Par quoi tu veux qu\'on commence ?',
+          'Bien, mais j\'aspire à plus': 'C\'est quoi la première chose que tu veux changer ?',
+          'Au top !':                'On maintient cet élan ? Qu\'est-ce qu\'on travaille en premier ?',
+        }
+        introParts.push((p.baseline && baselineQ[p.baseline]) || 'Par quoi on commence ?')
+        setMessages([{ role:'assistant', content: introParts.join(' ') }])
       }} />
       </Suspense>
     )
