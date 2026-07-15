@@ -93,6 +93,7 @@ function CinematicSlider({ onCommencer }) {
   const [hovered,    setHovered]    = useState(false)
   const [showPanel,  setShowPanel]  = useState(false)
   const [lang,       setLang]       = useState('FR')
+  const [langOpen,   setLangOpen]   = useState(false)
 
   const SLIDE = FX_SLIDES[cur]
   const N     = FX_SLIDES.length
@@ -160,7 +161,7 @@ function CinematicSlider({ onCommencer }) {
 
         {/* ── PRICING PILL ── */}
         <div style={{
-          position: 'absolute', bottom: '8rem', left: '50%',
+          position: 'absolute', bottom: '5.2rem', left: '50%',
           transform: 'translateX(-50%)', zIndex: 20,
           background: 'rgba(200,123,82,0.10)',
           border: '1px solid rgba(200,123,82,0.25)',
@@ -236,7 +237,7 @@ function CinematicSlider({ onCommencer }) {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.70)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.50)' }}
             style={{
-              position: 'absolute', top: '51%', left: '50%',
+              position: 'absolute', top: '62%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               background: 'rgba(200,100,40,0.08)',
               border: '1px solid rgba(255,220,160,0.60)',
@@ -257,60 +258,91 @@ function CinematicSlider({ onCommencer }) {
           </button>
         )}
 
-        {/* ── Langue — onglet vertical droit ── */}
-        <div style={{
-          position: 'fixed', right: 0, top: '50%',
-          transform: 'translateY(-50%)', zIndex: 20,
-        }}>
-          <div style={{ position: 'relative' }}>
-            <select
-              value={lang}
-              onChange={e => setLang(e.target.value)}
-              style={{
-                background: 'rgba(200,100,40,0.06)',
-                border: '1px solid rgba(255,220,160,0.50)',
-                borderRight: 'none',
-                borderRadius: '0.8rem 0 0 0.8rem',
-                color: 'rgba(255,248,235,1)',
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: 'italic',
-                fontSize: '1rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                padding: '1.2rem 0.7rem',
-                letterSpacing: '0.12em',
-                outline: 'none',
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                writingMode: 'vertical-rl',
-                textOrientation: 'mixed',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-              }}
-            >
+        {/* ── Langue — coin haut-droit custom ── */}
+        {langOpen && (
+          <div
+            style={{ position: 'fixed', inset: 0, zIndex: 19 }}
+            onClick={() => setLangOpen(false)}
+          />
+        )}
+        <div style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', zIndex: 20 }}>
+          <button
+            onClick={() => setLangOpen(o => !o)}
+            style={{
+              background: 'rgba(200,100,40,0.10)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(200,123,82,0.40)',
+              borderRadius: '0.7rem',
+              color: 'rgba(255,248,235,0.92)',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: '1rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              padding: '0.42rem 0.85rem',
+              letterSpacing: '0.08em',
+              outline: 'none',
+              display: 'flex', alignItems: 'center', gap: '0.35rem',
+              transition: 'border-color 0.2s',
+            }}
+          >
+            {lang}
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7, transform: langOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          {langOpen && (
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+              background: 'rgba(38,16,4,0.80)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(200,123,82,0.28)',
+              borderRadius: '0.8rem',
+              overflow: 'hidden',
+              minWidth: 148,
+              boxShadow: '0 8px 32px rgba(100,50,10,0.28)',
+              animation: 'panelIn 0.18s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}>
               {[
-                ['FR', 'Français'],
-                ['EN', 'English'],
-                ['ES', 'Español'],
-                ['DE', 'Deutsch'],
-                ['IT', 'Italiano'],
-                ['PT', 'Português'],
-                ['AR', 'العربية'],
-                ['ZH', '中文'],
-                ['JA', '日本語'],
+                ['FR', 'Français'], ['EN', 'English'], ['ES', 'Español'],
+                ['DE', 'Deutsch'],  ['IT', 'Italiano'], ['PT', 'Português'],
+                ['AR', 'العربية'],  ['ZH', '中文'],     ['JA', '日本語'],
               ].map(([code, label]) => (
-                <option key={code} value={code} style={{ background: '#2a1200', color: '#fff8eb', writingMode: 'horizontal-tb' }}>
-                  {code}  {label}
-                </option>
+                <button
+                  key={code}
+                  onClick={() => { setLang(code); setLangOpen(false) }}
+                  onMouseEnter={e => { if (code !== lang) e.currentTarget.style.background = 'rgba(200,123,82,0.12)' }}
+                  onMouseLeave={e => { if (code !== lang) e.currentTarget.style.background = 'transparent' }}
+                  style={{
+                    display: 'block', width: '100%',
+                    background: code === lang ? 'rgba(200,123,82,0.22)' : 'transparent',
+                    border: 'none',
+                    color: 'rgba(255,248,235,0.90)',
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontStyle: 'italic',
+                    fontSize: '0.95rem',
+                    fontWeight: code === lang ? 600 : 400,
+                    cursor: 'pointer',
+                    padding: '0.48rem 1rem',
+                    textAlign: 'left',
+                    letterSpacing: '0.04em',
+                    transition: 'background 0.15s',
+                  }}
+                >
+                  <span style={{ opacity: 0.55, fontSize: '0.76em', marginRight: 7 }}>{code}</span>
+                  {label}
+                </button>
               ))}
-            </select>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* ═══ CENTER — titre pur ═══ */}
         <div style={{
           position: 'absolute',
-          top: '36%', left: '0',
+          top: '44%', left: '0',
           right: '0',
           transform: 'translateY(-50%)',
           zIndex: 10,
