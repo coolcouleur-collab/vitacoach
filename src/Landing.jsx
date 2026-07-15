@@ -53,7 +53,7 @@ function Splash({ done }) {
 // ─── FX SLIDER DATA ───────────────────────────────────────────────────────────
 const FX_SLIDES = [
   {
-    num: '01', tag: 'Énergie',
+    num: '01', tag: 'Vitalité',
     title: ['Nourrir le corps,', 'guider le quotidien'],
     sub: 'Ce que l\'on mange change tout. Solenn le sait, et s\'adapte en continu.',
     color: '#EDE8DC', accent: '#E8962A',
@@ -61,7 +61,7 @@ const FX_SLIDES = [
     items: ['Sur mesure', 'Apple Santé', 'En temps réel'],
   },
   {
-    num: '02', tag: 'Sérénité',
+    num: '02', tag: 'Sommeil',
     title: ['Mieux dormir,', 'mieux vivre'],
     sub: 'Des protocoles pensés pour un sommeil qui répare vraiment.',
     color: '#EDE8DC', accent: '#E8962A',
@@ -69,7 +69,7 @@ const FX_SLIDES = [
     items: ['Sommeil réparateur', 'Gestion du stress', 'Routine du soir'],
   },
   {
-    num: '03', tag: 'Équilibre',
+    num: '03', tag: 'Rythme',
     title: ['Un quotidien', 'enfin aligné'],
     sub: 'Quand chaque détail est à sa place, la journée entière change de texture.',
     color: '#EDE8DC', accent: '#E8962A',
