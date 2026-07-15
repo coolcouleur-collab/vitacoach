@@ -54,27 +54,27 @@ function Splash({ done }) {
 const FX_SLIDES = [
   {
     num: '01', tag: 'Vitalité',
-    title: ['Nourrir le corps,', 'guider le quotidien'],
-    sub: 'Ce que l\'on mange change tout. Solenn le sait, et s\'adapte en continu.',
+    title: ['Ce que tu manges,', 'te reconstruit.'],
+    sub: 'Solenn analyse ton corps en temps réel et adapte chaque repas à ce dont il a vraiment besoin.',
     color: '#EDE8DC', accent: '#E8962A',
     bg: 'transparent',
-    items: ['Sur mesure', 'Apple Santé', 'En temps réel'],
+    items: ['Nutrition intuitive', 'Données santé', 'Temps réel'],
   },
   {
     num: '02', tag: 'Sommeil',
-    title: ['Mieux dormir,', 'mieux vivre'],
-    sub: 'Des protocoles pensés pour un sommeil qui répare vraiment.',
+    title: ['Dormir mieux,', 'dès ce soir.'],
+    sub: 'Un sommeil qui récupère vraiment — Solenn ajuste ta routine du soir pour que chaque nuit compte.',
     color: '#EDE8DC', accent: '#E8962A',
     bg: 'transparent',
-    items: ['Sommeil réparateur', 'Gestion du stress', 'Routine du soir'],
+    items: ['Récupération profonde', 'Gestion du stress', 'Routine nocturne'],
   },
   {
     num: '03', tag: 'Rythme',
-    title: ['Un quotidien', 'enfin aligné'],
-    sub: 'Quand chaque détail est à sa place, la journée entière change de texture.',
+    title: ['Chaque jour,', 'à ta mesure.'],
+    sub: 'Quand chaque habitude s\'aligne sur ton rythme naturel, tout devient plus fluide.',
     color: '#EDE8DC', accent: '#E8962A',
     bg: 'transparent',
-    items: ['Habitudes saines', 'Style du jour', 'Sans effort'],
+    items: ['Habitudes durables', 'Journée alignée', 'Sans friction'],
   },
 ]
 
