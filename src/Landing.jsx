@@ -160,7 +160,7 @@ function CinematicSlider({ onCommencer }) {
 
         {/* ── PRICING PILL ── */}
         <div style={{
-          position: 'absolute', bottom: '11rem', left: '50%',
+          position: 'absolute', bottom: '14rem', left: '50%',
           transform: 'translateX(-50%)', zIndex: 20,
           background: 'rgba(200,123,82,0.10)',
           border: '1px solid rgba(200,123,82,0.25)',
@@ -218,7 +218,7 @@ function CinematicSlider({ onCommencer }) {
             }}>
               PRO · 4,99€/mois
             </span>
-            {['Messages illimités ✨', 'Rapport hebdo · Défis 21j', 'Agents nutrition · Météo'].map(item => (
+            {['Messages illimités', 'Rapport hebdo · Défis 21j', 'Agents nutrition · Météo'].map(item => (
               <div key={item} style={{
                 fontSize: 11, fontFamily: 'Poppins, sans-serif', fontWeight: 400,
                 color: 'rgba(255,240,210,0.88)', lineHeight: 1.5,
@@ -236,17 +236,17 @@ function CinematicSlider({ onCommencer }) {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.70)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.50)' }}
             style={{
-              position: 'absolute', top: '62%', left: '50%',
+              position: 'absolute', top: '56%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
-              background: 'rgba(200,100,40,0.06)',
-              border: '1px solid rgba(255,220,160,0.50)',
+              background: 'rgba(200,100,40,0.08)',
+              border: '1px solid rgba(255,220,160,0.60)',
               borderRadius: '2rem',
               color: 'rgba(255,248,235,1)',
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
-              fontSize: 'clamp(1.2rem,1.2vw,1.5rem)',
+              fontSize: 'clamp(1.3rem,1.4vw,1.65rem)',
               fontWeight: 500, cursor: 'pointer',
-              padding: '0.7rem 2.4rem',
+              padding: '0.85rem 3rem',
               letterSpacing: '0.10em',
               textShadow: 'none',
               transition: 'background 0.25s, border-color 0.25s', outline: 'none',
