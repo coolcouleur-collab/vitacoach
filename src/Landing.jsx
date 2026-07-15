@@ -357,7 +357,7 @@ function CinematicSlider({ onCommencer }) {
           }}>
             <div style={{
               fontSize: '0.90rem', fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-              color: 'rgba(255,220,160,0.96)', letterSpacing: '0.18em',
+              color: 'rgba(200,123,82,0.90)', letterSpacing: '0.18em',
               textTransform: 'uppercase', marginBottom: 20,
             }}>
               {SLIDE.num} · {SLIDE.tag}
@@ -383,8 +383,8 @@ function CinematicSlider({ onCommencer }) {
               {SLIDE.items.map(item => (
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-                  color: 'rgba(255,225,165,1)',
-                  border: '1px solid rgba(255,210,140,0.30)',
+                  color: 'rgba(255,240,210,0.88)',
+                  border: '1px solid rgba(200,123,82,0.30)',
                   borderRadius: '2rem', padding: '4px 13px',
                 }}>
                   {item}
