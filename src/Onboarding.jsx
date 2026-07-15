@@ -801,6 +801,13 @@ export default function Onboarding({ onTermine }) {
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
         input:focus { outline:none; border-color:rgba(200,123,82,0.55) !important; box-shadow:0 0 0 3px rgba(200,123,82,0.10) !important; }
         input::placeholder { color:rgba(200,123,82,0.40); }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+          -webkit-box-shadow: 0 0 0px 1000px rgba(255,248,244,0.92) inset !important;
+          -webkit-text-fill-color: rgba(200,123,82,0.92) !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
         @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 36px rgba(200,123,82,0.68)} }
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
