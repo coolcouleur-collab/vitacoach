@@ -180,49 +180,49 @@ const AGE_RANGE_OPTIONS = [
 
 
 const TRIGGER_OPTIONS = [
-  { Icon: BrainIcon,     label:'J\'ai atteint mes limites',      desc:'Trop de pression — il faut que quelque chose change'  },
+  { Icon: BrainIcon,     label:'J\'ai atteint mes limites',      desc:'Trop de pression, quelque chose doit changer'         },
   { Icon: RefreshIcon,   label:'Je veux tourner une page',       desc:'Je sens qu\'il est temps de faire autrement'          },
   { Icon: LightbulbIcon, label:'Pure curiosité',                 desc:'Je veux voir ce que ça peut m\'apporter'              },
-  { Icon: WaveIcon,      label:'Ma vie est en train de changer', desc:'Un tournant, un événement — je me repositionne'       },
+  { Icon: WaveIcon,      label:'Ma vie est en train de changer', desc:'Quelque chose a changé et je cherche à me retrouver'  },
 ]
 
 const BASELINE_OPTIONS = [
-  { Icon: SadIcon,     label:'À bout, vraiment',          desc:'Je tourne à vide, j\'ai besoin d\'un vrai coup de pouce' },
-  { Icon: NeutralIcon, label:'Ça fait le job',            desc:'Ni bien ni mal — je fonctionne en pilotage automatique'  },
-  { Icon: MoodIcon,    label:'Bien, mais j\'aspire à plus', desc:'Quelque chose me manque, je veux aller plus loin'      },
-  { Icon: HappyIcon,   label:'Au top !',                  desc:'Je veux maintenir cet élan et continuer à progresser'   },
+  { Icon: SadIcon,     label:'À bout, vraiment',           desc:'Je tourne à vide et j\'ai besoin d\'un vrai souffle'  },
+  { Icon: NeutralIcon, label:'Ça fait le job',             desc:'Ni bien ni mal, je vis un peu en mode automatique'    },
+  { Icon: MoodIcon,    label:'Bien, mais j\'aspire à plus',desc:'Quelque chose me manque, je veux aller plus loin'    },
+  { Icon: HappyIcon,   label:'Au top !',                   desc:'Je veux maintenir cet élan et continuer à progresser'},
 ]
 
 const MOMENT_OPTIONS = [
-  { Icon: SunIcon,   label:'Le matin',   desc:'Je commence la journée par moi, avant que tout s\'emballe' },
-  { Icon: FlashIcon, label:'En journée', desc:'Mes pauses sont précieuses — j\'en profite pour moi'       },
-  { Icon: BellIcon,  label:'Le soir',    desc:'Je décompresse après une longue journée'                   },
-  { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme nocturne, c\'est mon moment à moi'                },
+  { Icon: SunIcon,   label:'Le matin',   desc:'Je commence la journée pour moi, avant que tout démarre'  },
+  { Icon: FlashIcon, label:'En journée', desc:'Mes pauses sont précieuses, j\'en profite pour souffler'  },
+  { Icon: BellIcon,  label:'Le soir',    desc:'Je décompresse après une longue journée'                  },
+  { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme de la nuit, c\'est mon moment à moi'             },
 ]
 
 const VIE_OPTIONS = [
-  { Icon: StarIcon,    label:'Seul·e',          desc:'J\'organise mon quotidien comme je l\'entends'          },
-  { Icon: BalanceIcon, label:'En couple',         desc:'On partage le quotidien, les routines, les repas'       },
-  { Icon: HappyIcon,   label:'En famille',        desc:'Des enfants dans l\'équation — c\'est plus complexe'    },
-  { Icon: WalkIcon,    label:'En colocation',     desc:'On vit ensemble, mais chacun son rythme'                },
+  { Icon: StarIcon,    label:'Seul·e',        desc:'J\'organise mon quotidien comme je l\'entends'             },
+  { Icon: BalanceIcon, label:'En couple',      desc:'On partage le quotidien, les routines, les repas'          },
+  { Icon: HappyIcon,   label:'En famille',     desc:'Il y a des enfants dans ma vie, c\'est plus complexe'     },
+  { Icon: WalkIcon,    label:'En colocation',  desc:'On vit ensemble mais chacun a son propre rythme'          },
 ]
 
 const SANTE_OPTIONS = [
-  { Icon: HappyIcon,   label:'Aucune condition particulière', desc:'Je n\'ai pas de problème de santé spécifique'         },
-  { Icon: BrainIcon,   label:'Anxiété / stress chronique',   desc:'Je me sens souvent débordé·e mentalement'             },
-  { Icon: MoonIcon,    label:'Troubles du sommeil',          desc:'Difficulté à dormir ou à récupérer'                   },
-  { Icon: MuscleIcon,  label:'Douleurs / blessures',         desc:'Douleur chronique ou limitation physique'             },
-  { Icon: FoodIcon,    label:'Rapport difficile avec la nourriture', desc:'TCA, restrictions, compulsions alimentaires'  },
-  { Icon: FlashIcon,   label:'Fatigue chronique',            desc:'Une fatigue profonde qui ne passe pas avec le repos'  },
-  { Icon: BalanceIcon, label:'Maladie chronique',            desc:'Diabète, hypertension, pathologie diagnostiquée...'   },
-  { Icon: WaveIcon,    label:'Autre',                        desc:'Une condition que tu mentionneras à Solenn directement'},
+  { Icon: HappyIcon,   label:'Tout va bien de ce côté',          desc:'Pas de condition particulière à signaler'              },
+  { Icon: BrainIcon,   label:'Anxiété ou stress chronique',      desc:'Je me sens souvent submergé·e mentalement'            },
+  { Icon: MoonIcon,    label:'Troubles du sommeil',              desc:'J\'ai du mal à dormir ou à vraiment récupérer'        },
+  { Icon: MuscleIcon,  label:'Douleurs ou blessures',            desc:'J\'ai une douleur chronique ou une limite physique'   },
+  { Icon: FoodIcon,    label:'Rapport compliqué avec la bouffe', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
+  { Icon: FlashIcon,   label:'Fatigue profonde',                 desc:'Une fatigue qui ne part pas même après avoir dormi'   },
+  { Icon: BalanceIcon, label:'Maladie diagnostiquée',            desc:'Diabète, hypertension ou autre pathologie chronique'  },
+  { Icon: WaveIcon,    label:'Autre chose',                      desc:'Je l\'expliquerai directement à Solenn'               },
 ]
 
 const RYTHME_OPTIONS = [
-  { Icon: TargetIcon,    label:'Bureau / télétravail',    desc:'Sédentaire, horaires fixes ou flexibles'             },
-  { Icon: WaveIcon,      label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite'},
-  { Icon: MoonIcon,      label:'Horaires décalés',        desc:'Nuits, week-ends, cycles — mon rythme est atypique'  },
-  { Icon: LightbulbIcon, label:'À mon compte',            desc:'Entrepreneur, freelance — je gère mon propre temps'  },
+  { Icon: TargetIcon,    label:'Bureau ou télétravail',   desc:'Je travaille assis la plupart du temps'                },
+  { Icon: WaveIcon,      label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite' },
+  { Icon: MoonIcon,      label:'Horaires décalés',        desc:'Nuits, week-ends, mon planning est peu classique'     },
+  { Icon: LightbulbIcon, label:'À mon compte',            desc:'Je gère mon propre temps, freelance ou entrepreneur'  },
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
@@ -525,7 +525,7 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Pas de jugement — juste pour mieux t'accompagner.
+            Pas de jugement, c'est juste pour mieux t'accompagner.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -677,7 +677,7 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text="Quel moment de la journée t'appartient vraiment ?" style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Solenn se glissera dans tes moments à toi.
+            On s'adapte à ton rythme, pas l'inverse.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
