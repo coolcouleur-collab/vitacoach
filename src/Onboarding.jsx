@@ -217,17 +217,17 @@ const RYTHME_OPTIONS = [
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
   question: {
-    fontSize:'clamp(16px,3.8vw,19px)', fontWeight:500, lineHeight:1.5,
-    color:'rgba(184,105,58,0.88)', fontFamily:"'DM Sans', sans-serif",
-    letterSpacing:'0em',
+    fontSize:'clamp(22px,5vw,28px)', fontWeight:600, lineHeight:1.35,
+    color:'rgba(184,105,58,0.90)', fontFamily:"'DM Sans', sans-serif",
+    letterSpacing:'-0.01em',
   },
   sub: {
-    fontSize:14, fontWeight:400, color:'rgba(184,105,58,0.88)',
+    fontSize:14, fontWeight:400, color:'rgba(184,105,58,0.58)',
     fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
-    border:'1.5px solid rgba(200,123,82,0.28)',
+    border:'1.5px solid rgba(200,123,82,0.42)',
     background:'rgba(255,248,244,0.92)',
     fontSize:16, fontFamily:"'DM Sans', sans-serif", color:'rgba(200,123,82,0.92)',
     outline:'none', fontWeight:500,
@@ -339,8 +339,8 @@ export default function Onboarding({ onTermine }) {
 
     // ── Étape 0 : Prénom ──────────────────────────────────────────────────────
     if (step === 0) return (
-      <div style={{display:'flex', flexDirection:'column', gap:32}}>
-        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+      <div style={{display:'flex', flexDirection:'column', gap:40}}>
+        <div style={{display:'flex', flexDirection:'column', gap:12}}>
           <AnimatedQuestion text="Comment tu t'appelles ?" style={S.question} />
           <motion.p
             initial={{ opacity:0, y:8 }}
@@ -355,7 +355,7 @@ export default function Onboarding({ onTermine }) {
           initial={{ opacity:0, y:16 }}
           animate={{ opacity:1, y:0 }}
           transition={{ delay:0.35, duration:0.24, ease:'easeOut' }}
-          style={{display:'flex', flexDirection:'column', gap:14}}
+          style={{display:'flex', flexDirection:'column', gap:16}}
         >
           <input
             ref={nomRef}
@@ -372,7 +372,7 @@ export default function Onboarding({ onTermine }) {
             whileTap={nomVal.trim() ? { scale:0.97 } : {}}
             style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, ctaPulse 2.2s ease-in-out infinite' : 'none' }}
           >
-            Continuer
+            Continuer →
           </motion.button>
         </motion.div>
       </div>
