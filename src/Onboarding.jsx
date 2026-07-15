@@ -93,18 +93,18 @@ function RevealScreen({ answers, onEnter }) {
           </span>
         </div>
         <div style={{fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.70)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
-          Profil créé
+          Profile created
         </div>
         <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'#5C2E0A', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
-          Bonjour, {nom} !
+          Hello, {nom}!
         </h1>
         <p style={{fontSize:15, color:'rgba(200,123,82,0.70)', marginBottom:32, lineHeight:1.6}}>
-          Solenn connaît ton profil et est prête à t'accompagner.
+          Solenn knows your profile and is ready to guide you.
         </p>
         {objectifs.length > 0 && (
           <div style={{marginBottom:20, width:'100%'}}>
             <div style={{fontSize:11, fontWeight:700, color:'rgba(200,123,82,0.62)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
-              Ton objectif
+              Your goal
             </div>
             <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
               {objectifs.map(o => (
@@ -145,7 +145,7 @@ function RevealScreen({ answers, onEnter }) {
             letterSpacing:'0.2px', outline:'none',
           }}
         >
-          Entrer dans Solenn
+          Enter Solenn
           <span style={{display:'inline-block', fontSize:18}}>→</span>
         </button>
       </div>
@@ -155,49 +155,49 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { Icon: FlashIcon,    label:'Retrouver mon énergie',          desc:'Retrouver cet élan que j\'ai quelque part perdu'        },
-  { Icon: BalanceIcon,  label:'Me réconcilier avec mon corps',  desc:'Trouver l\'équilibre sans régime ni privation'           },
-  { Icon: MoonIcon,     label:'Dormir enfin comme il faut',     desc:'Me réveiller avec de l\'énergie, pas à plat dès le matin'},
-  { Icon: MeditateIcon, label:'Retrouver ma sérénité',          desc:'Moins de tensions, plus de clarté au quotidien'         },
-  { Icon: MuscleIcon,   label:'Reprendre le mouvement',         desc:'Bouger parce que ça me fait du bien, pas par obligation'},
-  { Icon: FoodIcon,     label:'Manger sans culpabiliser',       desc:'Reconstruire une vraie relation avec la nourriture'     },
+  { Icon: FlashIcon,    label:'Get my energy back',      desc:'Reclaim that drive I\'ve lost along the way'          },
+  { Icon: BalanceIcon,  label:'Make peace with my body', desc:'Find balance without diets or restrictions'            },
+  { Icon: MoonIcon,     label:'Finally sleep properly',  desc:'Wake up with energy, not drained from the start'      },
+  { Icon: MeditateIcon, label:'Find my peace again',     desc:'Less tension, more clarity day to day'                },
+  { Icon: MuscleIcon,   label:'Get moving again',        desc:'Move because it feels good, not out of obligation'    },
+  { Icon: FoodIcon,     label:'Eat without guilt',       desc:'Rebuild a healthy relationship with food'             },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { Icon: SofaIcon, label:'Pas vraiment mon truc',    desc:'Je bouge peu, surtout entre le bureau et le canapé' },
-  { Icon: WalkIcon, label:'J\'essaie de bouger',      desc:'Quelques sorties ou marches dans la semaine'        },
-  { Icon: RunIcon,  label:'Je fais du sport',         desc:'Deux à quatre séances par semaine'                  },
-  { Icon: FireIcon, label:'Le sport, c\'est ma vie',  desc:'Je m\'entraîne tous les jours ou presque'           },
+  { Icon: SofaIcon, label:'Not really my thing',  desc:'I barely move — mostly desk and couch'         },
+  { Icon: WalkIcon, label:'I try to stay active', desc:'A few walks or outings during the week'        },
+  { Icon: RunIcon,  label:'I work out',           desc:'Two to four sessions a week'                   },
+  { Icon: FireIcon, label:'Sport is my life',     desc:'I train every day or almost'                   },
 ]
 
 const AGE_RANGE_OPTIONS = [
-  { range:'18–24 ans',   Icon: SunIcon     },
-  { range:'25–34 ans',   Icon: FlashIcon   },
-  { range:'35–44 ans',   Icon: TargetIcon  },
-  { range:'45–54 ans',   Icon: StarIcon    },
-  { range:'55 ans et +', Icon: DiamondIcon },
+  { range:'18–24',  Icon: SunIcon     },
+  { range:'25–34',  Icon: FlashIcon   },
+  { range:'35–44',  Icon: TargetIcon  },
+  { range:'45–54',  Icon: StarIcon    },
+  { range:'55+',    Icon: DiamondIcon },
 ]
 
 
 const TRIGGER_OPTIONS = [
-  { Icon: BrainIcon,     label:'J\'ai atteint mes limites',      desc:'Trop de pression — il faut que quelque chose change'  },
-  { Icon: RefreshIcon,   label:'Je veux tourner une page',       desc:'Je sens qu\'il est temps de faire autrement'          },
-  { Icon: LightbulbIcon, label:'Pure curiosité',                 desc:'Je veux voir ce que ça peut m\'apporter'              },
-  { Icon: WaveIcon,      label:'Ma vie est en train de changer', desc:'Un tournant, un événement — je me repositionne'       },
+  { Icon: BrainIcon,     label:'I\'ve hit my limit',      desc:'Too much pressure — something has to change'         },
+  { Icon: RefreshIcon,   label:'I want a fresh start',    desc:'I feel it\'s time to do things differently'           },
+  { Icon: LightbulbIcon, label:'Pure curiosity',          desc:'I want to see what this can bring me'                 },
+  { Icon: WaveIcon,      label:'My life is changing',     desc:'A turning point — I\'m finding my footing again'     },
 ]
 
 const BASELINE_OPTIONS = [
-  { Icon: SadIcon,     label:'À bout, vraiment',          desc:'Je tourne à vide, j\'ai besoin d\'un vrai coup de pouce' },
-  { Icon: NeutralIcon, label:'Ça fait le job',            desc:'Ni bien ni mal — je fonctionne en pilotage automatique'  },
-  { Icon: MoodIcon,    label:'Bien, mais j\'aspire à plus', desc:'Quelque chose me manque, je veux aller plus loin'      },
-  { Icon: HappyIcon,   label:'Au top !',                  desc:'Je veux maintenir cet élan et continuer à progresser'   },
+  { Icon: SadIcon,     label:'Running on empty',    desc:'Spinning my wheels — I need a real boost'             },
+  { Icon: NeutralIcon, label:'Getting by',          desc:'Neither good nor bad — running on autopilot'          },
+  { Icon: MoodIcon,    label:'Good, but want more', desc:'Something\'s missing — I want to go further'          },
+  { Icon: HappyIcon,   label:'At my best!',         desc:'I want to keep this momentum and keep growing'        },
 ]
 
 const MOMENT_OPTIONS = [
-  { Icon: SunIcon,   label:'Le matin',   desc:'Je commence la journée par moi, avant que tout s\'emballe' },
-  { Icon: FlashIcon, label:'En journée', desc:'Mes pauses sont précieuses — j\'en profite pour moi'       },
-  { Icon: BellIcon,  label:'Le soir',    desc:'Je décompresse après une longue journée'                   },
-  { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme nocturne, c\'est mon moment à moi'                },
+  { Icon: SunIcon,   label:'Morning',         desc:'I start the day for myself, before everything kicks off' },
+  { Icon: FlashIcon, label:'During the day',  desc:'My breaks are precious — I use them for myself'         },
+  { Icon: BellIcon,  label:'Evening',         desc:'I unwind after a long day'                              },
+  { Icon: MoonIcon,  label:'At night',        desc:'The quiet of night — that\'s my time'                   },
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
@@ -282,7 +282,7 @@ export default function Onboarding({ onTermine }) {
   function finishOnboarding(finalAnswers) {
     const a = finalAnswers
     const profil = {
-      nom:              a.nom || 'Ami',
+      nom:              a.nom || 'Friend',
       objectif:         a.objectif || '',
       objectifs:        a.objectif ? [a.objectif] : [],
       age:              a.age || '',
@@ -325,14 +325,14 @@ export default function Onboarding({ onTermine }) {
     if (step === 0) return (
       <div style={{display:'flex', flexDirection:'column', gap:32}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Comment tu t'appelles ?" style={S.question} />
+          <AnimatedQuestion text="What's your name?" style={S.question} />
           <motion.p
             initial={{ opacity:0, y:8 }}
             animate={{ opacity:1, y:0 }}
             transition={{ delay:0.35, duration:0.4 }}
             style={S.sub}
           >
-            Pour que Solenn puisse s'adresser à toi.
+            So Solenn can speak to you personally.
           </motion.p>
         </div>
         <motion.div
@@ -347,7 +347,7 @@ export default function Onboarding({ onTermine }) {
             value={nomVal}
             onChange={e => setNomVal(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && nomVal.trim() && goNext({ nom: nomVal.trim() })}
-            placeholder="Ton prénom..."
+            placeholder="Your name..."
             style={S.input}
           />
           <motion.button
@@ -356,7 +356,7 @@ export default function Onboarding({ onTermine }) {
             whileTap={nomVal.trim() ? { scale:0.97 } : {}}
             style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, ctaPulse 2.2s ease-in-out infinite' : 'none' }}
           >
-            Continuer →
+            Continue →
           </motion.button>
         </motion.div>
       </div>
@@ -366,7 +366,7 @@ export default function Onboarding({ onTermine }) {
     if (step === 1) return (
       <div style={{display:'flex', flexDirection:'column', gap:16}}>
         <AnimatedQuestion
-          text={`C'est quoi ton envie du moment${nom ? `, ${nom}` : ''} ?`}
+          text={`What's on your mind right now${nom ? `, ${nom}` : ''}?`}
           style={S.question}
         />
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -415,14 +415,14 @@ export default function Onboarding({ onTermine }) {
     if (step === 2) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text={`Tu as quel âge${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+          <AnimatedQuestion text={`How old are you${nom ? `, ${nom}` : ''}?`} style={S.question} />
           <motion.p
             initial={{ opacity:0 }}
             animate={{ opacity:1 }}
             transition={{ delay:0.30 }}
             style={S.sub}
           >
-            Chaque étape de vie a ses forces et ses défis.
+            Every stage of life has its strengths and challenges.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -469,7 +469,7 @@ export default function Onboarding({ onTermine }) {
     // ── Étape 3 : Activité ────────────────────────────────────────────────────
     if (step === 3) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
-        <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+        <AnimatedQuestion text={`Where are you with exercise right now${nom ? `, ${nom}` : ''}?`} style={S.question} />
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           {ACTIVITE_OPTIONS.map((opt, i) => {
             const isSel = tapped === opt.label
@@ -521,9 +521,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 4) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text={`Et là, qu'est-ce qui t'a poussé à te lancer${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+          <AnimatedQuestion text={`And what pushed you to get started${nom ? `, ${nom}` : ''}?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Il n'y a pas de mauvaise réponse.
+            There's no wrong answer.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -569,9 +569,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 5) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text={`Honnêtement${nom ? `, ${nom}` : ''}, comment tu vas ?`} style={S.question} />
+          <AnimatedQuestion text={`Honestly${nom ? `, ${nom}` : ''} — how are you doing?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Solenn s'adapte à où tu en es, sans jugement.
+            Solenn meets you where you are, no judgment.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -617,9 +617,9 @@ export default function Onboarding({ onTermine }) {
     if (step === 6) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
-          <AnimatedQuestion text="Quel moment de la journée t'appartient vraiment ?" style={S.question} />
+          <AnimatedQuestion text="Which part of the day is really yours?" style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Solenn se glissera dans tes moments à toi.
+            Solenn will fit right into your moments.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
