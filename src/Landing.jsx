@@ -366,7 +366,7 @@ function CinematicSlider({ onCommencer }) {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic', fontWeight: 400,
               fontSize: 'clamp(2rem, 2.8vw, 2.7rem)',
-              color: 'rgba(255,248,235,0.96)',
+              color: '#C87B52',
               lineHeight: 1.2, marginBottom: 20,
             }}>
               {SLIDE.title[0]}<br />{SLIDE.title[1]}
@@ -374,7 +374,7 @@ function CinematicSlider({ onCommencer }) {
             <div style={{
               fontFamily: 'Poppins, sans-serif', fontWeight: 400,
               fontSize: '1rem',
-              color: 'rgba(255,240,210,0.88)',
+              color: 'rgba(44,21,8,0.78)',
               lineHeight: 1.75, marginBottom: 28,
             }}>
               {SLIDE.sub}
@@ -383,8 +383,9 @@ function CinematicSlider({ onCommencer }) {
               {SLIDE.items.map(item => (
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-                  color: 'rgba(255,240,210,0.88)',
-                  border: '1px solid rgba(255,220,160,0.35)',
+                  color: '#C87B52',
+                  background: 'rgba(200,123,82,0.12)',
+                  border: '1px solid rgba(200,123,82,0.30)',
                   borderRadius: '2rem', padding: '4px 13px',
                 }}>
                   {item}
