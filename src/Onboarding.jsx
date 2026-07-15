@@ -409,7 +409,7 @@ export default function Onboarding({ onTermine }) {
               whileTap={nomVal.trim() ? { scale:0.97 } : {}}
               style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, heartbeat 2.5s ease-in-out infinite' : 'none' }}
             >
-              Continuer
+              Continuer <span style={{opacity:0.5}}>→</span>
             </motion.button>
           </div>
         </motion.div>
@@ -774,7 +774,7 @@ export default function Onboarding({ onTermine }) {
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Ton quotidien ressemble à quoi${nom ? `, ${nom}` : ''} ?`} style={S.question} />
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
-            Pour que les conseils de Solenn collent à ta réalité concrète.
+            Ça change ce que Solenn te propose au quotidien.
           </motion.p>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -885,7 +885,7 @@ export default function Onboarding({ onTermine }) {
             disabled={!canContinue}
             style={{ ...S.cta, opacity: canContinue ? 1 : 0.40 }}
           >
-            Continuer
+            Continuer <span style={{opacity:0.5}}>→</span>
           </motion.button>
         </div>
       )
