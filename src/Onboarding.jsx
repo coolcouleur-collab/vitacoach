@@ -207,6 +207,17 @@ const VIE_OPTIONS = [
   { Icon: WalkIcon,    label:'En colocation',     desc:'On vit ensemble, mais chacun son rythme'                },
 ]
 
+const SANTE_OPTIONS = [
+  { Icon: HappyIcon,   label:'Aucune condition particulière', desc:'Je n\'ai pas de problème de santé spécifique'         },
+  { Icon: BrainIcon,   label:'Anxiété / stress chronique',   desc:'Je me sens souvent débordé·e mentalement'             },
+  { Icon: MoonIcon,    label:'Troubles du sommeil',          desc:'Difficulté à dormir ou à récupérer'                   },
+  { Icon: MuscleIcon,  label:'Douleurs / blessures',         desc:'Douleur chronique ou limitation physique'             },
+  { Icon: FoodIcon,    label:'Rapport difficile avec la nourriture', desc:'TCA, restrictions, compulsions alimentaires'  },
+  { Icon: FlashIcon,   label:'Fatigue chronique',            desc:'Une fatigue profonde qui ne passe pas avec le repos'  },
+  { Icon: BalanceIcon, label:'Maladie chronique',            desc:'Diabète, hypertension, pathologie diagnostiquée...'   },
+  { Icon: WaveIcon,    label:'Autre',                        desc:'Une condition que tu mentionneras à Solenn directement'},
+]
+
 const RYTHME_OPTIONS = [
   { Icon: TargetIcon,    label:'Bureau / télétravail',    desc:'Sédentaire, horaires fixes ou flexibles'             },
   { Icon: WaveIcon,      label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite'},
@@ -265,6 +276,7 @@ export default function Onboarding({ onTermine }) {
   const [slideDir, setSlideDir] = useState(1)
   const [tapped, setTapped] = useState(null)
   const [rippleKey, setRippleKey] = useState(0)
+  const [santeSelections, setSanteSelections] = useState([])
   const nomRef = useRef(null)
 
   useEffect(() => {
@@ -313,8 +325,8 @@ export default function Onboarding({ onTermine }) {
       profession:       '',
       poids:            0,
       taille:           0,
-      sante:            false,
-      sante_conditions: [],
+      sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Aucune condition particulière'),
+      sante_conditions: a.sante_conditions || [],
       isPro:            false,
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
@@ -774,10 +786,7 @@ export default function Onboarding({ onTermine }) {
                 initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
-                onClick={() => tapThen(opt.label, () => {
-                  const finalAnswers = { ...answers, rythme: opt.label }
-                  finishOnboarding(finalAnswers)
-                })}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, rythme: opt.label }))}
                 whileTap={{ scale:0.97 }}
                 style={{
                   width:'100%', padding:'12px 18px', borderRadius:16,
@@ -805,6 +814,81 @@ export default function Onboarding({ onTermine }) {
         </div>
       </div>
     )
+
+    // ── Étape 9 : Santé (multi-select) ───────────────────────────────────────
+    if (step === 9) {
+      const toggleSante = (label) => {
+        if (label === 'Aucune condition particulière') {
+          setSanteSelections(['Aucune condition particulière'])
+          return
+        }
+        setSanteSelections(prev => {
+          const without = prev.filter(s => s !== 'Aucune condition particulière')
+          return without.includes(label) ? without.filter(s => s !== label) : [...without, label]
+        })
+      }
+      const canContinue = santeSelections.length > 0
+      return (
+        <div style={{display:'flex', flexDirection:'column', gap:28}}>
+          <div style={{display:'flex', flexDirection:'column', gap:10}}>
+            <AnimatedQuestion text={`Y a-t-il des choses que Solenn devrait savoir${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+            <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+              Ces infos restent privées et aident Solenn à mieux t'accompagner.
+            </motion.p>
+          </div>
+          <div style={{display:'flex', flexDirection:'column', gap:10}}>
+            {SANTE_OPTIONS.map((opt, i) => {
+              const isSel = santeSelections.includes(opt.label)
+              const OptIcon = opt.Icon
+              return (
+                <motion.button
+                  key={opt.label}
+                  initial={{ opacity:0, x:40, scale:0.93 }}
+                  animate={{ opacity:1, x:0, scale:1 }}
+                  transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.05 }}
+                  onClick={() => toggleSante(opt.label)}
+                  whileTap={{ scale:0.97 }}
+                  style={{
+                    width:'100%', padding:'12px 18px', borderRadius:16,
+                    border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                    background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
+                    boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
+                    transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                    cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
+                    outline:'none', display:'flex', alignItems:'center', gap:14,
+                  }}
+                >
+                  <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                    <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                  </div>
+                  <div style={{ display:'flex', flexDirection:'column', gap:1, flex:1 }}>
+                    <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                      {opt.label}
+                    </span>
+                    <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  </div>
+                  <div style={{width:18,height:18,borderRadius:'50%',border:`1.5px solid ${isSel ? '#C87B52' : 'rgba(200,123,82,0.30)'}`,background:isSel?'#C87B52':'transparent',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.15s'}}>
+                    {isSel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="#FFF5EE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  </div>
+                </motion.button>
+              )
+            })}
+          </div>
+          <motion.button
+            onClick={() => {
+              if (canContinue) {
+                const finalAnswers = { ...answers, sante_conditions: santeSelections }
+                finishOnboarding(finalAnswers)
+              }
+            }}
+            disabled={!canContinue}
+            style={{ ...S.cta, opacity: canContinue ? 1 : 0.40 }}
+          >
+            Continuer
+          </motion.button>
+        </div>
+      )
+    }
 
     return null
   }
@@ -888,7 +972,7 @@ export default function Onboarding({ onTermine }) {
 
         {/* Progress segments */}
         <div style={{display:'flex', gap:4, alignItems:'center'}}>
-          {[0,1,2,3,4,5,6,7,8].map(i => (
+          {[0,1,2,3,4,5,6,7,8,9].map(i => (
             <div
               key={i}
               style={{
