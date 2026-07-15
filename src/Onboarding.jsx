@@ -200,6 +200,20 @@ const MOMENT_OPTIONS = [
   { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme nocturne, c\'est mon moment à moi'                },
 ]
 
+const VIE_OPTIONS = [
+  { Icon: StarIcon,    label:'Seul(e)',          desc:'J\'organise mon quotidien comme je l\'entends'          },
+  { Icon: BalanceIcon, label:'En couple',         desc:'On partage le quotidien, les routines, les repas'       },
+  { Icon: HappyIcon,   label:'En famille',        desc:'Des enfants dans l\'équation — c\'est plus complexe'    },
+  { Icon: WalkIcon,    label:'En colocation',     desc:'On vit ensemble, mais chacun son rythme'                },
+]
+
+const RYTHME_OPTIONS = [
+  { Icon: TargetIcon,    label:'Bureau / télétravail',    desc:'Sédentaire, horaires fixes ou flexibles'             },
+  { Icon: WaveIcon,      label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite'},
+  { Icon: MoonIcon,      label:'Horaires décalés',        desc:'Nuits, week-ends, cycles — mon rythme est atypique'  },
+  { Icon: LightbulbIcon, label:'À mon compte',            desc:'Entrepreneur, freelance — je gère mon propre temps'  },
+]
+
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
   question: {
@@ -290,6 +304,8 @@ export default function Onboarding({ onTermine }) {
       declencheur:      a.declencheur || '',
       baseline:         a.baseline || '',
       moment:           a.moment || '',
+      vie:              a.vie || '',
+      rythme:           a.rythme || '',
       alimentation:     [],
       heure_lever:      7.5,
       heure_coucher:    23.5,
@@ -632,8 +648,104 @@ export default function Onboarding({ onTermine }) {
                 initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, moment: opt.label }))}
+                whileTap={{ scale:0.97 }}
+                style={{
+                  width:'100%', padding:'12px 18px', borderRadius:16,
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
+                  outline:'none', display:'flex', alignItems:'center', gap:14,
+                }}
+              >
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+    // ── Étape 7 : Contexte de vie ─────────────────────────────────────────────
+    if (step === 7) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text={`Tu vis comment au quotidien${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Solenn s'adapte à ton environnement de vie.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {VIE_OPTIONS.map((opt, i) => {
+            const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
+            return (
+              <motion.button
+                key={opt.label}
+                initial={{ opacity:0, x:40, scale:0.93 }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
+                onClick={() => tapThen(opt.label, () => goNext({ ...answers, vie: opt.label }))}
+                whileTap={{ scale:0.97 }}
+                style={{
+                  width:'100%', padding:'12px 18px', borderRadius:16,
+                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
+                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
+                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1.5px 0 rgba(255,255,255,0.70), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
+                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
+                  outline:'none', display:'flex', alignItems:'center', gap:14,
+                }}
+              >
+                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                  <OptIcon color='#C87B52' size={20}/>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+    // ── Étape 8 : Rythme de travail ───────────────────────────────────────────
+    if (step === 8) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text={`Ton quotidien ressemble à quoi${nom ? `, ${nom}` : ''} ?`} style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Pour que Solenn intervienne au bon moment.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {RYTHME_OPTIONS.map((opt, i) => {
+            const isSel = tapped === opt.label
+            const OptIcon = opt.Icon
+            return (
+              <motion.button
+                key={opt.label}
+                initial={{ opacity:0, x:40, scale:0.93 }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => {
-                  const finalAnswers = { ...answers, moment: opt.label }
+                  const finalAnswers = { ...answers, rythme: opt.label }
                   finishOnboarding(finalAnswers)
                 })}
                 whileTap={{ scale:0.97 }}
@@ -648,7 +760,7 @@ export default function Onboarding({ onTermine }) {
                 }}
               >
                 <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#C87B52' : '#C87B52'} size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:14, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
@@ -738,7 +850,7 @@ export default function Onboarding({ onTermine }) {
 
         {/* Progress segments */}
         <div style={{display:'flex', gap:4, alignItems:'center'}}>
-          {[0,1,2,3,4,5,6].map(i => (
+          {[0,1,2,3,4,5,6,7,8].map(i => (
             <div
               key={i}
               style={{
