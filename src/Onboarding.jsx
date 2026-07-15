@@ -8,6 +8,56 @@ import {
   BalanceIcon, WalkIcon, SofaIcon, WaveIcon, PillIcon, ChevronIcon,
 } from './Icons'
 
+// ─── ABSTRACT GLYPH ICONS — signature Solenn ─────────────────────────────────
+const G = {
+  Energy:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M14 3L6 13h5l-1 8 9-11h-5l1-7z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  Body:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 18 Q4 8 12 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M20 18 Q20 8 12 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="6" r="1.8" fill={color}/></svg>,
+  Sleep:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M20 13.5A8.5 8.5 0 0110.5 4 7 7 0 1020 13.5z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="18" cy="7" r="1" fill={color}/><circle cx="21" cy="10.5" r=".7" fill={color}/></svg>,
+  Calm:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="4" y1="9" x2="20" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="6" y1="13" x2="18" y2="13" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="9" y1="17" x2="15" y2="17" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Move:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 18 Q8 10 14 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="17" cy="6" r="2" fill={color}/><path d="M17 9 L19 13" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Food:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M9 18 Q9 14 11 12 Q13 10 11 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M15 18 Q15 14 13 12 Q11 10 13 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="9" y1="20" x2="15" y2="20" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".4"/></svg>,
+
+  Sofa:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q4 10 12 10 Q20 10 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="16" x2="20" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="7" y1="16" x2="7" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="17" y1="16" x2="17" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Walk:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="7" cy="14" r="1.5" fill={color} opacity=".45"/><circle cx="12" cy="12" r="2" fill={color} opacity=".72"/><circle cx="17" cy="10" r="2.5" fill={color}/></svg>,
+  Run:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 19 L15 5" stroke={color} strokeWidth="2.5" strokeLinecap="round"/><path d="M15 5 Q19 5 19 10" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="5" cy="19" r="1.5" fill={color}/></svg>,
+  Fire:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 20 Q6 16 8 10 Q9 7 12 6 Q11 9 14 10 Q18 8 16 4 Q20 8 18 14 Q17 18 12 20z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+
+  Brain:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 12 Q17 7 19 12 Q21 18 16 20 Q10 22 7 17 Q4 12 8 8 Q12 4 17 7" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  Refresh:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 12 Q5 5 12 5 Q19 5 19 12 Q19 17 15 19" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M12 20 L15 19 L14 16" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  Lightbulb:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2" fill={color}/><circle cx="12" cy="5" r="1" fill={color} opacity=".7"/><circle cx="12" cy="19" r="1" fill={color} opacity=".7"/><circle cx="5" cy="12" r="1" fill={color} opacity=".7"/><circle cx="19" cy="12" r="1" fill={color} opacity=".7"/><circle cx="7.5" cy="7.5" r=".8" fill={color} opacity=".45"/><circle cx="16.5" cy="7.5" r=".8" fill={color} opacity=".45"/><circle cx="7.5" cy="16.5" r=".8" fill={color} opacity=".45"/><circle cx="16.5" cy="16.5" r=".8" fill={color} opacity=".45"/></svg>,
+  Wave:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 12 Q6 6 9 12 Q12 18 15 12 Q18 6 21 12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+
+  Sad:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 10 Q12 16 19 10" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="7" y1="18" x2="17" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Neutral:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="5" y1="10" x2="19" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="5" y1="15" x2="19" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Mood:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 14 Q12 8 19 14" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="7" r="1.5" fill={color}/></svg>,
+  Happy:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.5" fill={color}/><line x1="12" y1="4" x2="12" y2="7" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="17" x2="12" y2="20" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="12" x2="7" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="17" y1="12" x2="20" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+
+  Morning:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q12 4 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M7 16 Q12 8 17 16" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".65"/><path d="M10 16 Q12 12 14 16" stroke={color} strokeWidth="1.2" strokeLinecap="round" opacity=".45"/><line x1="3" y1="17" x2="21" y2="17" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".25"/></svg>,
+  Day:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 4 L20 12 L12 20 L4 12 Z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="1.5" fill={color}/></svg>,
+  Evening:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q4 8 12 8 Q20 8 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="16" x2="20" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="16" x2="12" y2="20" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Night:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M20 13.5A8.5 8.5 0 0110.5 4 7 7 0 1020 13.5z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="17" cy="7" r="1" fill={color}/><circle cx="20.5" cy="10" r=".7" fill={color}/><circle cx="20" cy="14" r=".5" fill={color} opacity=".55"/></svg>,
+
+  Solo:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="3" fill={color}/><path d="M5 20 Q5 15 9 13.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".55"/><path d="M19 20 Q19 15 15 13.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".55"/></svg>,
+  Couple:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="8" cy="12" r="2.5" fill={color}/><circle cx="16" cy="12" r="2.5" fill={color}/><path d="M8 9 Q12 4 16 9" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Family:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="2.5" fill={color}/><circle cx="7" cy="16" r="2" fill={color} opacity=".8"/><circle cx="17" cy="16" r="2" fill={color} opacity=".8"/><path d="M9.8 14 L12 9.5 L14.2 14" stroke={color} strokeWidth="1" strokeLinecap="round" opacity=".3"/></svg>,
+  Coloc:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.5" fill={color} opacity=".45"/><circle cx="10" cy="12" r="2" fill={color} opacity=".68"/><circle cx="15" cy="12" r="2" fill={color} opacity=".85"/><circle cx="20" cy="12" r="1.5" fill={color} opacity=".55"/></svg>,
+
+  Office:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="4" y1="12" x2="20" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="12" x2="12" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="18" x2="16" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Travel:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 8 Q6 4 9 8 Q12 12 15 8 Q18 4 21 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M3 16 Q6 12 9 16 Q12 20 15 16 Q18 12 21 16" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".5"/></svg>,
+  ShiftWork:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M18 8 A6 6 0 1 1 18 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="6" y1="18" x2="18" y2="6" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Freelance:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="1.8" fill={color}/><circle cx="12" cy="5" r="1.2" fill={color} opacity=".6"/><circle cx="19" cy="8.5" r="1.2" fill={color} opacity=".6"/><circle cx="19" cy="15.5" r="1.2" fill={color} opacity=".6"/><circle cx="12" cy="19" r="1.2" fill={color} opacity=".6"/><circle cx="5" cy="15.5" r="1.2" fill={color} opacity=".6"/><circle cx="5" cy="8.5" r="1.2" fill={color} opacity=".6"/></svg>,
+
+  Healthy:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 14 Q12 7 19 14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/></svg>,
+  Anxiety:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 12 Q17 7 19 12 Q21 18 16 20 Q10 22 7 17 Q4 12 8 8 Q12 4 17 7" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+  SleepBad:     ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M19 13A8 8 0 0111 5a6.5 6.5 0 108 8z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><line x1="6" y1="18" x2="19" y2="5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".6"/></svg>,
+  Pain:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 14 L7 8 L10 16 L13 10 L16 16 L19 8 L21 12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  Endo:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.5" fill={color}/><circle cx="19" cy="12" r="1.5" fill={color}/><circle cx="12" cy="19" r="1.5" fill={color}/><circle cx="5" cy="12" r="1.5" fill={color}/><path d="M12 6.5 Q18.5 6.5 18.5 12 Q18.5 18.5 12 18.5 Q5.5 18.5 5.5 12 Q5.5 6.5 12 6.5" stroke={color} strokeWidth="1" opacity=".3"/></svg>,
+  FoodRel:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 12 Q5 9 7 12 Q10 16 12 11 Q14 6 17 12 Q19 16 21 12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
+  Fatigue:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 8 Q12 15 20 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="18" r="2" fill={color}/><line x1="12" y1="15" x2="12" y2="16" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Chronic:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 12 Q5 7 9 7 Q12 7 12 12 Q12 7 15 7 Q19 7 19 12 Q19 17 12 20 Q5 17 5 12z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  Other:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="7" cy="17" r="2" fill={color} opacity=".5"/><circle cx="12" cy="12" r="2" fill={color} opacity=".75"/><circle cx="17" cy="7" r="2" fill={color}/></svg>,
+}
+
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
 function BgBlobs() {
   return (
@@ -155,19 +205,19 @@ function RevealScreen({ answers, onEnter }) {
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const OBJECTIF_OPTIONS = [
-  { Icon: FlashIcon,    label:'Retrouver mon énergie',          desc:'Retrouver cet élan que j\'ai quelque part perdu'        },
-  { Icon: BalanceIcon,  label:'Me réconcilier avec mon corps',  desc:'Trouver l\'équilibre sans régime ni privation'           },
-  { Icon: MoonIcon,     label:'Dormir enfin comme il faut',     desc:'Me réveiller avec de l\'énergie, pas à plat dès le matin'},
-  { Icon: MeditateIcon, label:'Retrouver ma sérénité',          desc:'Moins de tensions, plus de clarté au quotidien'         },
-  { Icon: MuscleIcon,   label:'Reprendre le mouvement',         desc:'Bouger parce que ça me fait du bien, pas par obligation'},
-  { Icon: FoodIcon,     label:'Manger sans culpabiliser',       desc:'Reconstruire une vraie relation avec la nourriture'     },
+  { Icon: G.Energy,    label:'Retrouver mon énergie',          desc:'Retrouver cet élan que j\'ai quelque part perdu'        },
+  { Icon: G.Body,      label:'Me réconcilier avec mon corps',  desc:'Trouver l\'équilibre sans régime ni privation'           },
+  { Icon: G.Sleep,     label:'Dormir enfin comme il faut',     desc:'Me réveiller avec de l\'énergie, pas à plat dès le matin'},
+  { Icon: G.Calm,      label:'Retrouver ma sérénité',          desc:'Moins de tensions, plus de clarté au quotidien'         },
+  { Icon: G.Move,      label:'Reprendre le mouvement',         desc:'Bouger parce que ça me fait du bien, pas par obligation'},
+  { Icon: G.Food,      label:'Manger sans culpabiliser',       desc:'Reconstruire une vraie relation avec la nourriture'     },
 ]
 
 const ACTIVITE_OPTIONS = [
-  { Icon: SofaIcon, label:'Pas vraiment mon truc',    desc:'Je bouge peu, surtout entre le bureau et le canapé' },
-  { Icon: WalkIcon, label:'J\'essaie de bouger',      desc:'Quelques sorties ou marches dans la semaine'        },
-  { Icon: RunIcon,  label:'Je fais du sport',         desc:'Deux à quatre séances par semaine'                  },
-  { Icon: FireIcon, label:'Le sport, c\'est ma vie',  desc:'Je m\'entraîne tous les jours ou presque'           },
+  { Icon: G.Sofa,  label:'Pas vraiment mon truc',    desc:'Je bouge peu, surtout entre le bureau et le canapé' },
+  { Icon: G.Walk,  label:'J\'essaie de bouger',      desc:'Quelques sorties ou marches dans la semaine'        },
+  { Icon: G.Run,   label:'Je fais du sport',         desc:'Deux à quatre séances par semaine'                  },
+  { Icon: G.Fire,  label:'Le sport, c\'est ma vie',  desc:'Je m\'entraîne tous les jours ou presque'           },
 ]
 
 const AGE_RANGE_OPTIONS = [
@@ -180,50 +230,50 @@ const AGE_RANGE_OPTIONS = [
 
 
 const TRIGGER_OPTIONS = [
-  { Icon: BrainIcon,     label:'J\'ai atteint mes limites',      desc:'Trop de pression, quelque chose doit changer'         },
-  { Icon: RefreshIcon,   label:'Je veux tourner une page',       desc:'Je sens qu\'il est temps de faire autrement'          },
-  { Icon: LightbulbIcon, label:'Pure curiosité',                 desc:'Je veux voir ce que ça peut m\'apporter'              },
-  { Icon: WaveIcon,      label:'Ma vie est en train de changer', desc:'Quelque chose a changé et je cherche à me retrouver'  },
+  { Icon: G.Brain,      label:'J\'ai atteint mes limites',      desc:'Trop de pression, quelque chose doit changer'         },
+  { Icon: G.Refresh,    label:'Je veux tourner une page',       desc:'Je sens qu\'il est temps de faire autrement'          },
+  { Icon: G.Lightbulb,  label:'Pure curiosité',                 desc:'Je veux voir ce que ça peut m\'apporter'              },
+  { Icon: G.Wave,       label:'Ma vie est en train de changer', desc:'Quelque chose a changé et je cherche à me retrouver'  },
 ]
 
 const BASELINE_OPTIONS = [
-  { Icon: SadIcon,     label:'À bout, vraiment',           desc:'Je tourne à vide et j\'ai besoin d\'un vrai souffle'  },
-  { Icon: NeutralIcon, label:'Ça fait le job',             desc:'Ni bien ni mal, je vis un peu en mode automatique'    },
-  { Icon: MoodIcon,    label:'Bien, mais j\'aspire à plus',desc:'Quelque chose me manque, je veux aller plus loin'    },
-  { Icon: HappyIcon,   label:'Au top !',                   desc:'Je veux maintenir cet élan et continuer à progresser'},
+  { Icon: G.Sad,     label:'À bout, vraiment',           desc:'Je tourne à vide et j\'ai besoin d\'un vrai souffle'  },
+  { Icon: G.Neutral, label:'Ça fait le job',             desc:'Ni bien ni mal, je vis un peu en mode automatique'    },
+  { Icon: G.Mood,    label:'Bien, mais j\'aspire à plus',desc:'Quelque chose me manque, je veux aller plus loin'    },
+  { Icon: G.Happy,   label:'Au top !',                   desc:'Je veux maintenir cet élan et continuer à progresser'},
 ]
 
 const MOMENT_OPTIONS = [
-  { Icon: SunIcon,   label:'Le matin',   desc:'Je commence la journée pour moi, avant que tout démarre'  },
-  { Icon: FlashIcon, label:'En journée', desc:'Mes pauses sont précieuses, j\'en profite pour souffler'  },
-  { Icon: BellIcon,  label:'Le soir',    desc:'Je décompresse après une longue journée'                  },
-  { Icon: MoonIcon,  label:'La nuit',    desc:'Le calme de la nuit, c\'est mon moment à moi'             },
+  { Icon: G.Morning,  label:'Le matin',   desc:'Je commence la journée pour moi, avant que tout démarre'  },
+  { Icon: G.Day,      label:'En journée', desc:'Mes pauses sont précieuses, j\'en profite pour souffler'  },
+  { Icon: G.Evening,  label:'Le soir',    desc:'Je décompresse après une longue journée'                  },
+  { Icon: G.Night,    label:'La nuit',    desc:'Le calme de la nuit, c\'est mon moment à moi'             },
 ]
 
 const VIE_OPTIONS = [
-  { Icon: StarIcon,    label:'Seul·e',        desc:'J\'organise mon quotidien comme je l\'entends'             },
-  { Icon: BalanceIcon, label:'En couple',      desc:'On partage le quotidien, les routines, les repas'          },
-  { Icon: HappyIcon,   label:'En famille',     desc:'Il y a des enfants dans ma vie, c\'est plus complexe'     },
-  { Icon: WalkIcon,    label:'En colocation',  desc:'On vit ensemble mais chacun a son propre rythme'          },
+  { Icon: G.Solo,    label:'Seul·e',        desc:'J\'organise mon quotidien comme je l\'entends'             },
+  { Icon: G.Couple,  label:'En couple',      desc:'On partage le quotidien, les routines, les repas'          },
+  { Icon: G.Family,  label:'En famille',     desc:'Il y a des enfants dans ma vie, c\'est plus complexe'     },
+  { Icon: G.Coloc,   label:'En colocation',  desc:'On vit ensemble mais chacun a son propre rythme'          },
 ]
 
 const SANTE_OPTIONS = [
-  { Icon: HappyIcon,   label:'Tout va bien de ce côté',          desc:'Pas de condition particulière à signaler'              },
-  { Icon: BrainIcon,   label:'Anxiété ou stress chronique',      desc:'Je me sens souvent submergé·e mentalement'            },
-  { Icon: MoonIcon,    label:'Troubles du sommeil',              desc:'J\'ai du mal à dormir ou à vraiment récupérer'        },
-  { Icon: MuscleIcon,  label:'Douleurs ou blessures',            desc:'Chronique, passagère, blessure récente ou courbatures'  },
-  { Icon: PillIcon,    label:'Endométriose',                     desc:'Douleurs chroniques et fatigue liées au cycle'        },
-  { Icon: FoodIcon,    label:'Rapport compliqué avec la nourriture', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
-  { Icon: FlashIcon,   label:'Fatigue profonde',                 desc:'Une fatigue qui ne part pas même après avoir dormi'   },
-  { Icon: BalanceIcon, label:'Maladie diagnostiquée',            desc:'Diabète, hypertension ou autre pathologie chronique'  },
-  { Icon: WaveIcon,    label:'Autre chose',                      desc:'Je l\'expliquerai directement à Solenn'               },
+  { Icon: G.Healthy,   label:'Tout va bien de ce côté',          desc:'Pas de condition particulière à signaler'              },
+  { Icon: G.Anxiety,   label:'Anxiété ou stress chronique',      desc:'Je me sens souvent submergé·e mentalement'            },
+  { Icon: G.SleepBad,  label:'Troubles du sommeil',              desc:'J\'ai du mal à dormir ou à vraiment récupérer'        },
+  { Icon: G.Pain,      label:'Douleurs ou blessures',            desc:'Chronique, passagère, blessure récente ou courbatures'  },
+  { Icon: G.Endo,      label:'Endométriose',                     desc:'Douleurs chroniques et fatigue liées au cycle'        },
+  { Icon: G.FoodRel,   label:'Rapport compliqué avec la nourriture', desc:'Restrictions, compulsions ou culpabilité autour des repas'},
+  { Icon: G.Fatigue,   label:'Fatigue profonde',                 desc:'Une fatigue qui ne part pas même après avoir dormi'   },
+  { Icon: G.Chronic,   label:'Maladie diagnostiquée',            desc:'Diabète, hypertension ou autre pathologie chronique'  },
+  { Icon: G.Other,     label:'Autre chose',                      desc:'Je l\'expliquerai directement à Solenn'               },
 ]
 
 const RYTHME_OPTIONS = [
-  { Icon: TargetIcon,    label:'Bureau ou télétravail',   desc:'Je travaille assis la plupart du temps'                },
-  { Icon: WaveIcon,      label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite' },
-  { Icon: MoonIcon,      label:'Horaires décalés',        desc:'Nuits, week-ends, mon planning est peu classique'     },
-  { Icon: LightbulbIcon, label:'À mon compte',            desc:'Je gère mon propre temps, freelance ou entrepreneur'  },
+  { Icon: G.Office,    label:'Bureau ou télétravail',   desc:'Je travaille assis la plupart du temps'                },
+  { Icon: G.Travel,    label:'Souvent en déplacement',  desc:'Je suis rarement au même endroit deux jours de suite' },
+  { Icon: G.ShiftWork, label:'Horaires décalés',        desc:'Nuits, week-ends, mon planning est peu classique'     },
+  { Icon: G.Freelance, label:'À mon compte',            desc:'Je gère mon propre temps, freelance ou entrepreneur'  },
 ]
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
