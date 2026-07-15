@@ -335,7 +335,7 @@ function CinematicSlider({ onCommencer }) {
               fontSize: 'clamp(1rem, 1.4vw, 1.25rem)',
               fontWeight: 300,
               letterSpacing: '0.08em',
-              color: 'rgba(255,240,210,0.78)',
+              color: 'rgba(255,240,210,0.95)',
               animation: 'solennReveal 1s 0.65s cubic-bezier(0.34,1.56,0.64,1) both',
             }}>
               Ton soleil au quotidien
