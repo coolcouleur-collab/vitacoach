@@ -264,6 +264,7 @@ export default function Onboarding({ onTermine }) {
   const [showReveal, setShowReveal] = useState(false)
   const [slideDir, setSlideDir] = useState(1)
   const [tapped, setTapped] = useState(null)
+  const [rippleKey, setRippleKey] = useState(0)
   const nomRef = useRef(null)
 
   useEffect(() => {
@@ -366,14 +367,38 @@ export default function Onboarding({ onTermine }) {
             placeholder="Ton prénom..."
             style={S.input}
           />
-          <motion.button
-            onClick={() => nomVal.trim() && goNext({ nom: nomVal.trim() })}
-            disabled={!nomVal.trim()}
-            whileTap={nomVal.trim() ? { scale:0.97 } : {}}
-            style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, ctaPulse 2.2s ease-in-out infinite' : 'none' }}
-          >
-            Continuer →
-          </motion.button>
+          <div style={{position:'relative', borderRadius:16, overflow:'hidden'}}>
+            <AnimatePresence>
+              {rippleKey > 0 && (
+                <motion.div
+                  key={rippleKey}
+                  initial={{ opacity:0.6, scale:0.85 }}
+                  animate={{ opacity:0, scale:1.5 }}
+                  exit={{ opacity:0 }}
+                  transition={{ duration:0.65, ease:'easeOut' }}
+                  style={{
+                    position:'absolute', inset:0, borderRadius:16,
+                    background:'rgba(255,245,238,0.28)', pointerEvents:'none', zIndex:2,
+                  }}
+                />
+              )}
+            </AnimatePresence>
+            <motion.button
+              onClick={() => {
+                if (nomVal.trim()) {
+                  setRippleKey(k => k + 1)
+                  goNext({ nom: nomVal.trim() })
+                }
+              }}
+              disabled={!nomVal.trim()}
+              animate={nomVal.trim() ? { scale:[1, 1.016, 1] } : { scale:1 }}
+              transition={nomVal.trim() ? { duration:2.5, ease:'easeInOut', repeat:Infinity } : {}}
+              whileTap={nomVal.trim() ? { scale:0.97 } : {}}
+              style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, heartbeat 2.5s ease-in-out infinite' : 'none' }}
+            >
+              Continuer →
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     )
@@ -809,6 +834,7 @@ export default function Onboarding({ onTermine }) {
           transition: background-color 5000s ease-in-out 0s;
         }
         @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 36px rgba(200,123,82,0.68)} }
+        @keyframes heartbeat { 0%,100%{box-shadow:0 8px 24px rgba(184,104,58,0.38)} 50%{box-shadow:0 12px 36px rgba(184,104,58,0.62)} }
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
       `}</style>
