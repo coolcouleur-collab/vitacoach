@@ -411,9 +411,7 @@ export default function Onboarding({ onTermine }) {
             >
               <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
                 Continuer
-                <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:'rgba(255,245,238,0.18)',borderRadius:8,width:28,height:28,flexShrink:0}}>
-                  <ChevronIcon color="#FFF5EE" size={14} direction="right" />
-                </span>
+                <ChevronIcon color="#FFF5EE" size={16} direction="right" />
               </span>
             </motion.button>
           </div>
