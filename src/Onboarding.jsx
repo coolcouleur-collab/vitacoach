@@ -372,7 +372,7 @@ export default function Onboarding({ onTermine }) {
             whileTap={nomVal.trim() ? { scale:0.97 } : {}}
             style={{ ...S.cta, opacity: nomVal.trim() ? 1 : 0.40, animation: nomVal.trim() ? 'gradientShift 3s ease infinite, ctaPulse 2.2s ease-in-out infinite' : 'none' }}
           >
-            Continuer →
+            Continuer
           </motion.button>
         </motion.div>
       </div>
