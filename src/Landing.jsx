@@ -160,7 +160,7 @@ function CinematicSlider({ onCommencer }) {
 
         {/* ── PRICING PILL ── */}
         <div style={{
-          position: 'absolute', bottom: '14rem', left: '50%',
+          position: 'absolute', bottom: '8rem', left: '50%',
           transform: 'translateX(-50%)', zIndex: 20,
           background: 'rgba(200,123,82,0.10)',
           border: '1px solid rgba(200,123,82,0.25)',
@@ -236,7 +236,7 @@ function CinematicSlider({ onCommencer }) {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.70)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.50)' }}
             style={{
-              position: 'absolute', top: '56%', left: '50%',
+              position: 'absolute', top: '51%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               background: 'rgba(200,100,40,0.08)',
               border: '1px solid rgba(255,220,160,0.60)',
@@ -310,9 +310,9 @@ function CinematicSlider({ onCommencer }) {
         {/* ═══ CENTER — titre pur ═══ */}
         <div style={{
           position: 'absolute',
-          top: '51%', left: '0',
+          top: '36%', left: '0',
           right: '0',
-          transform: 'translateY(-36%)',
+          transform: 'translateY(-50%)',
           zIndex: 10,
           display: 'flex',
           justifyContent: 'center',
@@ -366,7 +366,7 @@ function CinematicSlider({ onCommencer }) {
             fontWeight: 400,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(255,240,210,0.72)',
+            color: 'rgba(255,240,210,0.92)',
             pointerEvents: 'none',
             animation: 'solennReveal 1s 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
