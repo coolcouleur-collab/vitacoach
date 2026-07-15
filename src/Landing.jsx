@@ -164,14 +164,15 @@ function CinematicSlider({ onCommencer }) {
         {onCommencer && (
           <button
             onClick={onCommencer}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.70)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.50)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.28)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.80)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,150,42,0.45), inset 0 1px 0 rgba(255,240,200,0.25)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.18)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.60)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,150,42,0.25), inset 0 1px 0 rgba(255,240,200,0.18)' }}
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
-              background: 'rgba(200,100,40,0.08)',
+              background: 'rgba(200,100,40,0.18)',
               border: '1px solid rgba(255,220,160,0.60)',
               borderRadius: '2rem',
+              boxShadow: '0 0 24px rgba(232,150,42,0.25), inset 0 1px 0 rgba(255,240,200,0.18)',
               color: 'rgba(255,248,235,1)',
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
@@ -180,7 +181,8 @@ function CinematicSlider({ onCommencer }) {
               padding: '0.85rem 3rem',
               letterSpacing: '0.10em',
               textShadow: 'none',
-              transition: 'background 0.25s, border-color 0.25s', outline: 'none',
+              animation: 'btnBreath 3s ease-in-out infinite',
+              transition: 'background 0.25s, border-color 0.25s, box-shadow 0.25s', outline: 'none',
               whiteSpace: 'nowrap',
             }}
           >
@@ -209,18 +211,18 @@ function CinematicSlider({ onCommencer }) {
               height: 'auto',
               overflow: 'visible',
               animation: 'solennReveal 0.8s 0.15s cubic-bezier(0.34,1.56,0.64,1) both',
-              filter: 'drop-shadow(0 0 28px rgba(245,200,100,0.18))',
+              filter: 'drop-shadow(0 2px 60px rgba(245,190,80,0.32))',
             }}
           >
             <defs>
-              <linearGradient id="solennGrad" x1="-200%" y1="0%" x2="0%" y2="0%">
-                <animate attributeName="x1" values="-200%;200%;-200%" dur="9s" repeatCount="indefinite" />
-                <animate attributeName="x2" values="0%;400%;0%"       dur="9s" repeatCount="indefinite" />
-                <stop offset="0%"   stopColor="#E8924A" stopOpacity="0.48" />
-                <stop offset="42%"  stopColor="#F0A855" stopOpacity="0.48" />
-                <stop offset="50%"  stopColor="#FFD4A0" stopOpacity="0.58" />
-                <stop offset="58%"  stopColor="#F0A855" stopOpacity="0.48" />
-                <stop offset="100%" stopColor="#E8924A" stopOpacity="0.48" />
+              <linearGradient id="solennGrad" x1="-80%" y1="0%" x2="20%" y2="0%">
+                <animate attributeName="x1" values="-80%;80%;-80%" dur="9s" repeatCount="indefinite" />
+                <animate attributeName="x2" values="20%;180%;20%"  dur="9s" repeatCount="indefinite" />
+                <stop offset="0%"   stopColor="#E8924A" stopOpacity="0.72" />
+                <stop offset="42%"  stopColor="#F0A855" stopOpacity="0.72" />
+                <stop offset="50%"  stopColor="#FFD4A0" stopOpacity="0.82" />
+                <stop offset="58%"  stopColor="#F0A855" stopOpacity="0.72" />
+                <stop offset="100%" stopColor="#E8924A" stopOpacity="0.72" />
               </linearGradient>
             </defs>
             <text
@@ -261,6 +263,31 @@ function CinematicSlider({ onCommencer }) {
             </span>
           </div>
 
+        </div>
+
+        {/* ── Slide title — visible bas-gauche ── */}
+        <div
+          onClick={() => setShowPanel(p => !p)}
+          style={{
+            position: 'absolute',
+            bottom: 'calc(6.2rem + env(safe-area-inset-bottom, 0px))',
+            left: '2rem',
+            zIndex: 15,
+            cursor: 'pointer',
+            pointerEvents: 'all',
+          }}
+        >
+          <div key={cur} style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
+            fontWeight: 300,
+            fontSize: 'clamp(1.3rem, 2vw, 1.65rem)',
+            color: 'rgba(255,248,235,0.88)',
+            lineHeight: 1.25,
+            animation: 'panelIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
+          }}>
+            {SLIDE.title[0]}<br />{SLIDE.title[1]}
+          </div>
         </div>
 
         {/* ── Mini panel transparent ── */}
@@ -470,6 +497,10 @@ export default function Landing({ onCommencer }) {
         @keyframes arrowSlide {
           0%,100% { transform: translateX(0); }
           60%     { transform: translateX(6px); }
+        }
+        @keyframes btnBreath {
+          0%,100% { transform: translateX(-50%) scale(1); }
+          50%     { transform: translateX(-50%) scale(1.015); }
         }
         .commencer-arrow { display:inline-block; margin-left:6px; animation: arrowSlide 1.6s ease-in-out infinite; }
 
