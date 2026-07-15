@@ -1,61 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import { BackIcon, ChevronIcon } from './Icons'
 import {
-  FlashIcon, TargetIcon, MoonIcon, MeditateIcon, MuscleIcon, FoodIcon,
-  BackIcon, BrainIcon, RefreshIcon, LightbulbIcon,
-  SadIcon, NeutralIcon, MoodIcon, HappyIcon,
-  SunIcon, BellIcon, RunIcon, FireIcon, StarIcon, DiamondIcon,
-  BalanceIcon, WalkIcon, SofaIcon, WaveIcon, PillIcon, ChevronIcon,
-} from './Icons'
+  Lightning, Heartbeat, Moon, Leaf, PersonSimpleRun,
+  Bowl, Armchair, PersonSimpleWalk, Barbell, Fire,
+  Warning, BookOpen, Lightbulb, Wind,
+  BatteryEmpty, Minus, TrendUp, Sparkle,
+  Sunrise, Sun, Sunset, MoonStars,
+  User, Users, House, UsersThree,
+  Buildings, AirplaneInFlight, ClockCounterClockwise, Laptop,
+  CheckCircle, Brain, Zzz, Bandaids, Pulse, ForkKnife,
+  BatteryLow, Pill, DotsThreeCircle,
+  Star, Target, Tree, Crown, ArrowUpRight,
+} from '@phosphor-icons/react'
 
-// ─── ABSTRACT GLYPH ICONS — signature Solenn ─────────────────────────────────
+const ph = (I, w = 'light') => ({ color = '#C87B52', size = 20 }) =>
+  <I weight={w} color={color} size={size} />
+
 const G = {
-  Energy:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M14 3L6 13h5l-1 8 9-11h-5l1-7z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Body:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 18 Q4 8 12 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M20 18 Q20 8 12 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="6" r="1.8" fill={color}/></svg>,
-  Sleep:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M20 13.5A8.5 8.5 0 0110.5 4 7 7 0 1020 13.5z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="18" cy="7" r="1" fill={color}/><circle cx="21" cy="10.5" r=".7" fill={color}/></svg>,
-  Calm:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="4" y1="9" x2="20" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="6" y1="13" x2="18" y2="13" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="9" y1="17" x2="15" y2="17" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Move:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 18 Q8 10 14 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="17" cy="6" r="2" fill={color}/><path d="M17 9 L19 13" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Food:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M9 18 Q9 14 11 12 Q13 10 11 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M15 18 Q15 14 13 12 Q11 10 13 7" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="9" y1="20" x2="15" y2="20" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".4"/></svg>,
-
-  Sofa:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q4 10 12 10 Q20 10 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="16" x2="20" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="7" y1="16" x2="7" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="17" y1="16" x2="17" y2="19" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Walk:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="7" cy="14" r="1.5" fill={color} opacity=".45"/><circle cx="12" cy="12" r="2" fill={color} opacity=".72"/><circle cx="17" cy="10" r="2.5" fill={color}/></svg>,
-  Run:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 19 L15 5" stroke={color} strokeWidth="2.5" strokeLinecap="round"/><path d="M15 5 Q19 5 19 10" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="5" cy="19" r="1.5" fill={color}/></svg>,
-  Fire:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 20 Q6 16 8 10 Q9 7 12 6 Q11 9 14 10 Q18 8 16 4 Q20 8 18 14 Q17 18 12 20z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-
-  Brain:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 12 Q17 7 19 12 Q21 18 16 20 Q10 22 7 17 Q4 12 8 8 Q12 4 17 7" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></svg>,
-  Refresh:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 12 Q5 5 12 5 Q19 5 19 12 Q19 17 15 19" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M12 20 L15 19 L14 16" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Lightbulb:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2" fill={color}/><circle cx="12" cy="5" r="1" fill={color} opacity=".7"/><circle cx="12" cy="19" r="1" fill={color} opacity=".7"/><circle cx="5" cy="12" r="1" fill={color} opacity=".7"/><circle cx="19" cy="12" r="1" fill={color} opacity=".7"/><circle cx="7.5" cy="7.5" r=".8" fill={color} opacity=".45"/><circle cx="16.5" cy="7.5" r=".8" fill={color} opacity=".45"/><circle cx="7.5" cy="16.5" r=".8" fill={color} opacity=".45"/><circle cx="16.5" cy="16.5" r=".8" fill={color} opacity=".45"/></svg>,
-  Wave:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 12 Q6 6 9 12 Q12 18 15 12 Q18 6 21 12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-
-  Sad:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 10 Q12 16 19 10" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="7" y1="18" x2="17" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Neutral:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="5" y1="10" x2="19" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="5" y1="15" x2="19" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Mood:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 14 Q12 8 19 14" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="7" r="1.5" fill={color}/></svg>,
-  Happy:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.5" fill={color}/><line x1="12" y1="4" x2="12" y2="7" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="17" x2="12" y2="20" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="12" x2="7" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="17" y1="12" x2="20" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-
-  Morning:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q12 4 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M7 16 Q12 8 17 16" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".65"/><path d="M10 16 Q12 12 14 16" stroke={color} strokeWidth="1.2" strokeLinecap="round" opacity=".45"/><line x1="3" y1="17" x2="21" y2="17" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".25"/></svg>,
-  Day:          ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 4 L20 12 L12 20 L4 12 Z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="1.5" fill={color}/></svg>,
-  Evening:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 16 Q4 8 12 8 Q20 8 20 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="4" y1="16" x2="20" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="16" x2="12" y2="20" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Night:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M20 13.5A8.5 8.5 0 0110.5 4 7 7 0 1020 13.5z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="17" cy="7" r="1" fill={color}/><circle cx="20.5" cy="10" r=".7" fill={color}/><circle cx="20" cy="14" r=".5" fill={color} opacity=".55"/></svg>,
-
-  Solo:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="3" fill={color}/><path d="M5 20 Q5 15 9 13.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".55"/><path d="M19 20 Q19 15 15 13.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".55"/></svg>,
-  Couple:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="8" cy="12" r="2.5" fill={color}/><circle cx="16" cy="12" r="2.5" fill={color}/><path d="M8 9 Q12 4 16 9" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Family:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="2.5" fill={color}/><circle cx="7" cy="16" r="2" fill={color} opacity=".8"/><circle cx="17" cy="16" r="2" fill={color} opacity=".8"/><path d="M9.8 14 L12 9.5 L14.2 14" stroke={color} strokeWidth="1" strokeLinecap="round" opacity=".3"/></svg>,
-  Coloc:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.5" fill={color} opacity=".45"/><circle cx="10" cy="12" r="2" fill={color} opacity=".68"/><circle cx="15" cy="12" r="2" fill={color} opacity=".85"/><circle cx="20" cy="12" r="1.5" fill={color} opacity=".55"/></svg>,
-
-  Office:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><line x1="4" y1="12" x2="20" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="12" y1="12" x2="12" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="8" y1="18" x2="16" y2="18" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Travel:       ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 8 Q6 4 9 8 Q12 12 15 8 Q18 4 21 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><path d="M3 16 Q6 12 9 16 Q12 20 15 16 Q18 12 21 16" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".5"/></svg>,
-  ShiftWork:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M18 8 A6 6 0 1 1 18 16" stroke={color} strokeWidth="2" strokeLinecap="round"/><line x1="6" y1="18" x2="18" y2="6" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Freelance:    ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="1.8" fill={color}/><circle cx="12" cy="5" r="1.2" fill={color} opacity=".6"/><circle cx="19" cy="8.5" r="1.2" fill={color} opacity=".6"/><circle cx="19" cy="15.5" r="1.2" fill={color} opacity=".6"/><circle cx="12" cy="19" r="1.2" fill={color} opacity=".6"/><circle cx="5" cy="15.5" r="1.2" fill={color} opacity=".6"/><circle cx="5" cy="8.5" r="1.2" fill={color} opacity=".6"/></svg>,
-
-  Healthy:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 14 Q12 7 19 14" stroke={color} strokeWidth="2.5" strokeLinecap="round"/></svg>,
-  Anxiety:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M12 12 Q17 7 19 12 Q21 18 16 20 Q10 22 7 17 Q4 12 8 8 Q12 4 17 7" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></svg>,
-  SleepBad:     ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M19 13A8 8 0 0111 5a6.5 6.5 0 108 8z" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><line x1="6" y1="18" x2="19" y2="5" stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity=".6"/></svg>,
-  Pain:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 14 L7 8 L10 16 L13 10 L16 16 L19 8 L21 12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Endo:         ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.5" fill={color}/><circle cx="19" cy="12" r="1.5" fill={color}/><circle cx="12" cy="19" r="1.5" fill={color}/><circle cx="5" cy="12" r="1.5" fill={color}/><path d="M12 6.5 Q18.5 6.5 18.5 12 Q18.5 18.5 12 18.5 Q5.5 18.5 5.5 12 Q5.5 6.5 12 6.5" stroke={color} strokeWidth="1" opacity=".3"/></svg>,
-  FoodRel:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M3 12 Q5 9 7 12 Q10 16 12 11 Q14 6 17 12 Q19 16 21 12" stroke={color} strokeWidth="2" strokeLinecap="round"/></svg>,
-  Fatigue:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M4 8 Q12 15 20 8" stroke={color} strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="18" r="2" fill={color}/><line x1="12" y1="15" x2="12" y2="16" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Chronic:      ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><path d="M5 12 Q5 7 9 7 Q12 7 12 12 Q12 7 15 7 Q19 7 19 12 Q19 17 12 20 Q5 17 5 12z" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  Other:        ({color='#C87B52',size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none"><circle cx="7" cy="17" r="2" fill={color} opacity=".5"/><circle cx="12" cy="12" r="2" fill={color} opacity=".75"/><circle cx="17" cy="7" r="2" fill={color}/></svg>,
+  Energy:    ph(Lightning),
+  Body:      ph(Heartbeat),
+  Sleep:     ph(Moon),
+  Calm:      ph(Leaf),
+  Move:      ph(PersonSimpleRun),
+  Food:      ph(Bowl),
+  Sofa:      ph(Armchair),
+  Walk:      ph(PersonSimpleWalk),
+  Run:       ph(Barbell),
+  Fire:      ph(Fire),
+  Brain:     ph(Warning),
+  Refresh:   ph(BookOpen),
+  Lightbulb: ph(Lightbulb),
+  Wave:      ph(Wind),
+  Sad:       ph(BatteryEmpty),
+  Neutral:   ph(Minus),
+  Mood:      ph(TrendUp),
+  Happy:     ph(Sparkle),
+  Morning:   ph(Sunrise),
+  Day:       ph(Sun),
+  Evening:   ph(Sunset),
+  Night:     ph(MoonStars),
+  Solo:      ph(User),
+  Couple:    ph(Users),
+  Family:    ph(House),
+  Coloc:     ph(UsersThree),
+  Office:    ph(Buildings),
+  Travel:    ph(AirplaneInFlight),
+  ShiftWork: ph(ClockCounterClockwise),
+  Freelance: ph(Laptop),
+  Healthy:   ph(CheckCircle),
+  Anxiety:   ph(Brain),
+  SleepBad:  ph(Zzz),
+  Pain:      ph(Bandaids),
+  Endo:      ph(Pulse),
+  FoodRel:   ph(ForkKnife),
+  Fatigue:   ph(BatteryLow),
+  Chronic:   ph(Pill),
+  Other:     ph(DotsThreeCircle),
+  Age1:      ph(Star),
+  Age2:      ph(ArrowUpRight),
+  Age3:      ph(Target),
+  Age4:      ph(Tree),
+  Age5:      ph(Crown),
 }
 
 // ─── BG BLOBS ─────────────────────────────────────────────────────────────────
@@ -221,11 +227,11 @@ const ACTIVITE_OPTIONS = [
 ]
 
 const AGE_RANGE_OPTIONS = [
-  { range:'18–24 ans',   Icon: SunIcon     },
-  { range:'25–34 ans',   Icon: FlashIcon   },
-  { range:'35–44 ans',   Icon: TargetIcon  },
-  { range:'45–54 ans',   Icon: StarIcon    },
-  { range:'55 ans et +', Icon: DiamondIcon },
+  { range:'18–24 ans',   Icon: G.Age1 },
+  { range:'25–34 ans',   Icon: G.Age2 },
+  { range:'35–44 ans',   Icon: G.Age3 },
+  { range:'45–54 ans',   Icon: G.Age4 },
+  { range:'55 ans et +', Icon: G.Age5 },
 ]
 
 
@@ -981,9 +987,28 @@ export default function Onboarding({ onTermine }) {
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
         button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
         @media (min-width:600px) {
-          body { background:#F5EDE4; }
-          .ob-outer { max-width:480px; margin:0 auto; min-height:100vh; box-shadow:0 0 80px rgba(180,80,20,0.14); }
-          .ob-header { left:50% !important; right:auto !important; transform:translateX(-50%); width:480px; }
+          html, body {
+            background: linear-gradient(160deg, #FFE8D6 0%, #F5D8C0 50%, #EBC9A8 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+          }
+          .ob-outer {
+            max-width: 520px;
+            margin: 0 auto;
+            min-height: 100vh;
+            box-shadow:
+              -1px 0 0 rgba(200,123,82,0.12),
+              1px 0 0 rgba(200,123,82,0.12),
+              0 0 60px rgba(180,80,20,0.18),
+              0 20px 80px rgba(180,80,20,0.12);
+            border-radius: 0 0 24px 24px;
+          }
+          .ob-header {
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%);
+            width: 520px;
+          }
         }
       `}</style>
 

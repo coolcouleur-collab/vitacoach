@@ -13,6 +13,7 @@
     "cap:sync": "npx cap sync"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@stripe/stripe-js": "^9.1.0",
     "@supabase/supabase-js": "^2.101.0",
     "@vitejs/plugin-react": "^6.0.1",
