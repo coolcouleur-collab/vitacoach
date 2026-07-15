@@ -142,9 +142,11 @@ function CinematicSlider({ onCommencer }) {
         </div>
 
         {/* ── BG wipe layers ── */}
-        {prev !== null && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: FX_SLIDES[prev].bg }} />
-        )}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: prev !== null ? FX_SLIDES[prev].bg : 'transparent',
+          visibility: prev !== null ? 'visible' : 'hidden',
+        }} />
         <div key={animKey} style={{
           position: 'absolute', inset: 0, zIndex: 2,
           background: SLIDE.bg,
