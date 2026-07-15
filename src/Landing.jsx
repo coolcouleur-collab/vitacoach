@@ -297,11 +297,11 @@ function CinematicSlider({ onCommencer }) {
               <linearGradient id="solennGrad" x1="-200%" y1="0%" x2="0%" y2="0%">
                 <animate attributeName="x1" values="-200%;200%;-200%" dur="9s" repeatCount="indefinite" />
                 <animate attributeName="x2" values="0%;400%;0%"       dur="9s" repeatCount="indefinite" />
-                <stop offset="0%"   stopColor="#E8924A" stopOpacity="0.62" />
-                <stop offset="42%"  stopColor="#F0A855" stopOpacity="0.62" />
-                <stop offset="50%"  stopColor="#FFD4A0" stopOpacity="0.72" />
-                <stop offset="58%"  stopColor="#F0A855" stopOpacity="0.62" />
-                <stop offset="100%" stopColor="#E8924A" stopOpacity="0.62" />
+                <stop offset="0%"   stopColor="#E8924A" stopOpacity="0.50" />
+                <stop offset="42%"  stopColor="#F0A855" stopOpacity="0.50" />
+                <stop offset="50%"  stopColor="#FFD4A0" stopOpacity="0.60" />
+                <stop offset="58%"  stopColor="#F0A855" stopOpacity="0.50" />
+                <stop offset="100%" stopColor="#E8924A" stopOpacity="0.50" />
               </linearGradient>
             </defs>
             <text
