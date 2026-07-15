@@ -456,6 +456,147 @@ function CinematicSlider({ onCommencer }) {
   )
 }
 
+// ─── EARLY ACCESS ─────────────────────────────────────────────────────────────
+function EarlyAccessSection() {
+  const [email, setEmail]   = useState('')
+  const [status, setStatus] = useState('idle') // idle | loading | success | error
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!email.trim()) return
+    setStatus('loading')
+    try {
+      const { supabase } = await import('./supabase')
+      const { error } = await supabase.from('waitlist').insert({ email: email.trim() })
+      if (error) throw error
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  return (
+    <section style={{
+      background: 'linear-gradient(160deg, #F5DDB0 0%, #FFF6E8 60%, #F0D09C 100%)',
+      padding: 'clamp(5rem, 10vw, 9rem) 1.5rem',
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      textAlign: 'center', position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{
+        position: 'absolute', top: '-20%', right: '-10%', width: 500, height: 500,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(200,123,82,0.18) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-15%', left: '-8%', width: 400, height: 400,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(232,150,42,0.14) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <p style={{
+        fontFamily: 'Poppins, sans-serif', fontWeight: 500,
+        fontSize: 'clamp(0.7rem, 1vw, 0.82rem)',
+        letterSpacing: '0.24em', textTransform: 'uppercase',
+        color: 'rgba(200,123,82,0.70)', marginBottom: '1.2rem',
+      }}>
+        Accès anticipé
+      </p>
+
+      <h2 style={{
+        fontFamily: "'Cormorant Garamond', Georgia, serif",
+        fontStyle: 'italic', fontWeight: 300,
+        fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
+        color: 'rgba(140,75,40,0.88)',
+        lineHeight: 1.2, marginBottom: '1.1rem',
+        maxWidth: 640,
+      }}>
+        Sois parmi les premiers<br />à rencontrer Solenn.
+      </h2>
+
+      <p style={{
+        fontFamily: 'Poppins, sans-serif', fontWeight: 400,
+        fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)',
+        color: 'rgba(160,90,45,0.80)',
+        lineHeight: 1.7, marginBottom: '2.8rem',
+        maxWidth: 480,
+      }}>
+        L'app arrive bientôt. Inscris-toi pour être notifié en avant-première et accéder aux premières semaines gratuitement.
+      </p>
+
+      {status === 'success' ? (
+        <div style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontStyle: 'italic', fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
+          color: 'rgba(140,75,40,0.90)',
+        }}>
+          C'est noté — on te contacte en premier.
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} style={{
+          display: 'flex', gap: '0.75rem', flexWrap: 'wrap',
+          justifyContent: 'center', width: '100%', maxWidth: 480,
+        }}>
+          <input
+            type="email" required
+            placeholder="ton@email.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={{
+              flex: '1 1 220px',
+              background: 'rgba(200,100,40,0.08)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(200,123,82,0.35)',
+              borderRadius: '2rem',
+              color: 'rgba(120,60,25,0.90)',
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '1rem', fontWeight: 400,
+              padding: '0.82rem 1.4rem',
+              outline: 'none',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            style={{
+              background: 'rgba(200,100,40,0.22)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,220,160,0.60)',
+              borderRadius: '2rem',
+              boxShadow: '0 0 22px rgba(232,150,42,0.22)',
+              color: 'rgba(255,248,235,1)',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(1.1rem, 1.4vw, 1.3rem)',
+              fontWeight: 500,
+              padding: '0.82rem 2.2rem',
+              cursor: status === 'loading' ? 'wait' : 'pointer',
+              letterSpacing: '0.08em',
+              whiteSpace: 'nowrap',
+              transition: 'background 0.25s, box-shadow 0.25s',
+              outline: 'none',
+            }}
+          >
+            {status === 'loading' ? '...' : "Rejoindre"}
+          </button>
+          {status === 'error' && (
+            <p style={{
+              width: '100%', textAlign: 'center',
+              fontFamily: 'Poppins, sans-serif', fontSize: '0.88rem',
+              color: 'rgba(180,80,40,0.80)', marginTop: '0.5rem',
+            }}>
+              Une erreur est survenue, réessaie.
+            </p>
+          )}
+        </form>
+      )}
+    </section>
+  )
+}
+
 // ─── LANDING ──────────────────────────────────────────────────────────────────
 export default function Landing({ onCommencer }) {
   const [splashDone, setSplashDone] = useState(false)
@@ -466,7 +607,7 @@ export default function Landing({ onCommencer }) {
   }, [])
 
   return (
-    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', height: '100vh', overflow: 'hidden', fontFamily: 'var(--font)', position: 'relative', zIndex: 1 }}>
+    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100vh', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
       <style>{`
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
@@ -527,18 +668,21 @@ export default function Landing({ onCommencer }) {
         }
       `}</style>
 
-      <GlobeBg opacity={0.35} />
-      <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
-        pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
-      <div style={{ position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
-        pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' }} />
-      <div style={{ position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
-        pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' }} />
-      <Splash done={splashDone} />
-      <CinematicSlider onCommencer={onCommencer} />
+      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 1 }}>
+        <GlobeBg opacity={0.35} />
+        <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
+          background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+          pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
+        <div style={{ position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
+          background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+          pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' }} />
+        <div style={{ position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
+          background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
+          pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' }} />
+        <Splash done={splashDone} />
+        <CinematicSlider onCommencer={onCommencer} />
+      </div>
+      <EarlyAccessSection />
     </div>
   )
 }
