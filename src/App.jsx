@@ -263,10 +263,21 @@ async function syncMetriquesSupabase(userId, m) {
 async function syncProfilSupabase(userId, profil) {
   if (!userId) return
   const supabase = await getSupabase()
-  await supabase.from('profils').upsert({
+  const { error } = await supabase.from('profils').upsert({
     user_id: userId, profil,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
+  if (error) {
+    setTimeout(async () => {
+      try {
+        const sb = await getSupabase()
+        await sb.from('profils').upsert({
+          user_id: userId, profil,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' })
+      } catch (_) {}
+    }, 4000)
+  }
 }
 
 // Convertit base64url en Uint8Array pour VAPID
@@ -1154,7 +1165,12 @@ const [messages, setMessages] = useState(() => {
           sessionStorage.removeItem('solenn_page')
           setUser(u)
           localStorage.setItem('vitacoach_user', JSON.stringify(u))
-          if (!safeParse('vitacoach_profil', null)) setProfilLoading(true)
+          const profilLocal = safeParse('vitacoach_profil', null)
+          if (!profilLocal) {
+            setProfilLoading(true)
+          } else {
+            syncProfilSupabase(u.id, profilLocal)
+          }
         }}
         onBack={goToLanding}
       />
