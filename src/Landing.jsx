@@ -96,11 +96,7 @@ function CinematicSlider({ onCommencer }) {
   const SLIDE = FX_SLIDES[cur]
   const N     = FX_SLIDES.length
 
-  useEffect(() => {
-    if (hovered) return
-    const id = setTimeout(() => navigate((cur + 1) % N, 'next'), 5200)
-    return () => clearTimeout(id)
-  }, [cur, hovered])
+  // Auto-slide désactivé — l'utilisateur navigue à son rythme
 
   function navigate(idx, direction) {
     if (idx === cur) return
@@ -349,7 +345,7 @@ function CinematicSlider({ onCommencer }) {
         )}
 
         {/* ── Filmstrip navigation — bas ── */}
-        <div className="filmstrip-nav" style={{
+        <div className="filmstrip-nav" data-no-sfx="true" style={{
           position: 'absolute', bottom: 'calc(2.4rem + env(safe-area-inset-bottom, 0px))', left: 0, right: 0, zIndex: 20,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           gap: '0.2rem', padding: '0 1rem',

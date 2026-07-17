@@ -571,6 +571,7 @@ const [messages, setMessages] = useState(() => {
     function onTap(e) {
       const el = e.target.closest('button, [role="button"]')
       if (!el || el.disabled) return
+      if (el.closest('[data-no-sfx]')) return
       playFx('tap')
     }
     document.addEventListener('pointerdown', onTap, { passive: true })
