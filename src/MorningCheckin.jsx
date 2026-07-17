@@ -28,7 +28,21 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
   }
 
   function handleSubmit() {
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+        Haptics.impact({ style: ImpactStyle.Medium })
+      }).catch(() => {})
+    }
     onDone({ sommeil, humeur, intention: intention.trim() })
+  }
+
+  function handleHumeurWithHaptic(val) {
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+        Haptics.impact({ style: ImpactStyle.Light })
+      }).catch(() => {})
+    }
+    handleHumeur(val)
   }
 
   const progress = ((step) / 3) * 100
@@ -176,7 +190,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.06, duration: 0.3, ease: EASE }}
-                    onClick={() => handleHumeur(h.val)}
+                    onClick={() => handleHumeurWithHaptic(h.val)}
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.94 }}
                     style={{

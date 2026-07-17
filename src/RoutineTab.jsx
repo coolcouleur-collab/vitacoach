@@ -364,6 +364,22 @@ export default function RoutineTab({ userId, profil }) {
 
   const { done, total } = countAll()
   const pct = total > 0 ? Math.round((done / total) * 100) : 0
+  const prevPctRef = React.useRef(pct)
+
+  // ── Célébration 100% ──
+  const [showCelebration, setShowCelebration] = useState(false)
+  useEffect(() => {
+    if (pct === 100 && prevPctRef.current < 100 && total > 0) {
+      setShowCelebration(true)
+      if (window?.Capacitor?.isNativePlatform?.()) {
+        import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+          Haptics.impact({ style: ImpactStyle.Heavy })
+        }).catch(() => {})
+      }
+      setTimeout(() => setShowCelebration(false), 3000)
+    }
+    prevPctRef.current = pct
+  }, [pct, total])
 
   // ── Formater l'heure de génération ──
   function formatHeure(iso) {
@@ -413,15 +429,40 @@ export default function RoutineTab({ userId, profil }) {
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
 
-        {/* Loading */}
+        {/* Skeleton loader */}
         {loading && (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: '50%',
-              border: '3px solid rgba(200,123,82,0.15)',
-              borderTop: '3px solid rgba(200,123,82,0.80)',
-              animation: 'spin360 0.8s linear infinite',
-            }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <style>{`@keyframes routinePulse { 0%,100%{opacity:.45} 50%{opacity:.80} }`}</style>
+            {[1, 2, 3].map(i => (
+              <div key={i} style={{ borderRadius: 18, background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.22)', padding: '14px 16px', animation: `routinePulse ${1.2 + i * 0.15}s ease-in-out infinite` }}>
+                <div style={{ height: 13, width: '40%', borderRadius: 8, background: 'rgba(200,123,82,0.20)', marginBottom: 14 }} />
+                {[1, 2, 3].map(j => (
+                  <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 22, height: 22, borderRadius: 8, background: 'rgba(200,123,82,0.15)', flexShrink: 0 }} />
+                    <div style={{ flex: 1, height: 10, borderRadius: 6, background: 'rgba(200,123,82,0.12)', width: `${55 + j * 12}%` }} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Toast célébration 100% */}
+        {showCelebration && (
+          <div style={{
+            position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
+            background: 'rgba(255,248,235,0.97)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: 20, padding: '16px 28px', textAlign: 'center',
+            boxShadow: '0 16px 48px rgba(200,123,82,0.28), 0 4px 12px rgba(0,0,0,0.08)',
+            border: '1.5px solid rgba(200,123,82,0.22)',
+            animation: 'celebPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
+            display: 'flex', alignItems: 'center', gap: 12,
+          }}>
+            <span style={{ fontSize: 28 }}>🏆</span>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
+              <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
+            </div>
           </div>
         )}
 

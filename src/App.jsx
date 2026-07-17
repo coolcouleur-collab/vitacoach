@@ -579,6 +579,11 @@ const [messages, setMessages] = useState(() => {
   const isSendingRef   = useRef(false)   // verrou anti-doublon
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimerRef = useRef(null)
+  // Pull-to-refresh
+  const pullStartY  = useRef(null)
+  const [pullDist, setPullDist] = useState(0)
+  const [pullRefreshing, setPullRefreshing] = useState(false)
+  const PULL_THRESHOLD = 72
 
   // ── Calculs gamification — mémoïsés, ne recalculent que si history/messages changent ──
   const streak = useMemo(() => {
@@ -657,6 +662,48 @@ const [messages, setMessages] = useState(() => {
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => { el.removeEventListener('scroll', onScroll); clearTimeout(scrollTimerRef.current) }
   }, [])
+
+  // ── Pull-to-refresh (iOS natif uniquement) ───────────────────────────────────
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el || !window?.Capacitor?.isNativePlatform?.()) return
+    function onTouchStart(e) {
+      if (el.scrollTop <= 0) pullStartY.current = e.touches[0].clientY
+    }
+    function onTouchMove(e) {
+      if (pullStartY.current === null) return
+      const dy = e.touches[0].clientY - pullStartY.current
+      if (dy > 0) {
+        setPullDist(Math.min(dy * 0.45, PULL_THRESHOLD + 20))
+      } else {
+        pullStartY.current = null
+        setPullDist(0)
+      }
+    }
+    function onTouchEnd() {
+      if (pullStartY.current !== null && pullDist >= PULL_THRESHOLD) {
+        setPullRefreshing(true)
+        import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+          Haptics.impact({ style: ImpactStyle.Medium })
+        }).catch(() => {})
+        // Reload : on simule un changement d'onglet pour refetch
+        const cur = onglet
+        setOnglet('__refresh__')
+        setTimeout(() => { setOnglet(cur); setPullRefreshing(false) }, 800)
+      }
+      pullStartY.current = null
+      setPullDist(0)
+    }
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: true })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [onglet, pullDist])
+
   // Scroll to last message when user navigates back to chat tab
   useEffect(() => {
     if (onglet === 'chat' && messages.length > 0) {
@@ -1518,6 +1565,32 @@ const [messages, setMessages] = useState(() => {
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
         <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+
+          {/* Pull-to-refresh indicator */}
+          {(pullDist > 8 || pullRefreshing) && (
+            <div style={{
+              position: 'sticky', top: 0, zIndex: 200, display: 'flex', justifyContent: 'center',
+              paddingTop: pullRefreshing ? 14 : Math.max(0, pullDist - 8),
+              transition: pullRefreshing ? 'padding 0.3s ease' : 'none',
+              pointerEvents: 'none',
+            }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(255,248,235,0.95)', backdropFilter: 'blur(12px)',
+                border: '1.5px solid rgba(200,123,82,0.28)',
+                boxShadow: '0 4px 16px rgba(200,123,82,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {pullRefreshing
+                  ? <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(200,123,82,0.18)', borderTop: '2px solid rgba(200,123,82,0.85)', animation: 'spin360 0.7s linear infinite' }} />
+                  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.70)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${Math.min(pullDist / PULL_THRESHOLD * 180, 180)}deg)`, transition: 'none' }}>
+                      <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                }
+              </div>
+            </div>
+          )}
 
           {/* Mobile header — transparent sur Accueil, plein sur les autres onglets */}
           {isMobile && onglet === 'accueil' && (
