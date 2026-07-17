@@ -192,28 +192,17 @@ export default function Auth({ onConnecte, onBack }) {
 
         {message && (
           <div key={message} style={{
-            display: 'flex', alignItems: 'center', gap: 10,
-            padding: '11px 14px', borderRadius: 12, marginBottom: 14,
-            animation: message.startsWith('✓')
-              ? 'msgSlideIn 0.35s ease both'
-              : 'msgShake 0.42s ease both',
-            background: message.startsWith('✓')
-              ? 'rgba(180,220,160,0.08)'
-              : 'rgba(200,100,40,0.08)',
-            borderLeft: `3px solid ${message.startsWith('✓') ? 'rgba(160,210,130,0.55)' : 'rgba(200,110,50,0.50)'}`,
+            padding: '10px 14px', borderRadius: 10, marginBottom: 14,
+            animation: message.startsWith('✓') ? 'msgSlideIn 0.35s ease both' : 'msgShake 0.42s ease both',
+            background: message.startsWith('✓') ? 'rgba(120,180,100,0.12)' : 'rgba(180,80,30,0.10)',
+            borderLeft: `2px solid ${message.startsWith('✓') ? 'rgba(120,180,100,0.55)' : 'rgba(180,80,30,0.45)'}`,
           }}>
-            <span style={{ fontSize: 14, flexShrink: 0, opacity: 0.80 }}>
-              {message.startsWith('✓') ? '✓' : '·'}
-            </span>
             <span style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
-              fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)',
-              color: message.startsWith('✓')
-                ? 'rgba(200,240,180,0.90)'
-                : 'rgba(255,225,195,0.88)',
+              fontSize: '1rem',
+              color: message.startsWith('✓') ? 'rgba(60,120,40,0.90)' : 'rgba(140,50,10,0.88)',
               letterSpacing: '0.01em',
-              lineHeight: 1.4,
             }}>
               {message}
             </span>
