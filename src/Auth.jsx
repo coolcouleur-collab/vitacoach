@@ -372,14 +372,14 @@ export default function Auth({ onConnecte, onBack }) {
           <div key={message} style={{
             padding: '10px 14px', borderRadius: 10, marginBottom: 14,
             animation: message.startsWith('✓') ? 'msgSlideIn 0.35s ease both' : 'msgShake 0.42s ease both',
-            background: message.startsWith('✓') ? 'rgba(120,180,100,0.12)' : 'rgba(180,80,30,0.10)',
-            borderLeft: `2px solid ${message.startsWith('✓') ? 'rgba(120,180,100,0.55)' : 'rgba(180,80,30,0.45)'}`,
+            background: message.startsWith('✓') ? 'rgba(80,140,60,0.18)' : 'rgba(180,80,30,0.22)',
+            borderLeft: `2px solid ${message.startsWith('✓') ? 'rgba(160,220,140,0.60)' : 'rgba(255,180,120,0.65)'}`,
           }}>
             <span style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: '1rem',
-              color: message.startsWith('✓') ? 'rgba(60,120,40,0.90)' : 'rgba(140,50,10,0.88)',
+              color: 'rgba(255,248,235,0.95)',
               letterSpacing: '0.01em',
             }}>
               {message}
