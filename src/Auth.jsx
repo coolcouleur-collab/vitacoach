@@ -203,6 +203,24 @@ export default function Auth({ onConnecte, onBack }) {
           80%     { transform: translateX(3px); }
         }
         input::placeholder { color: rgba(255,248,235,0.82); }
+        input[type="checkbox"] {
+          appearance: none; -webkit-appearance: none;
+          width: 15px; height: 15px; flex-shrink: 0;
+          border: 1.5px solid rgba(255,220,160,0.60);
+          border-radius: 3px;
+          background: rgba(255,235,200,0.12);
+          cursor: pointer; position: relative;
+          transition: background 0.2s, border-color 0.2s;
+        }
+        input[type="checkbox"]:checked {
+          background: rgba(220,165,90,0.38);
+          border-color: rgba(255,220,160,0.90);
+        }
+        input[type="checkbox"]:checked::after {
+          content: '✓'; position: absolute;
+          color: rgba(255,248,235,1); font-size: 11px;
+          top: -2px; left: 1px; font-weight: 600;
+        }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
@@ -215,11 +233,11 @@ export default function Auth({ onConnecte, onBack }) {
       <div ref={langRef} style={{ position:'fixed', top:'calc(env(safe-area-inset-top,0px) + 14px)', right:16, zIndex:210 }}>
         <button onClick={() => setLangOpen(o => !o)} style={{
           display:'flex', alignItems:'center', gap:5,
-          background:'rgba(255,235,200,0.55)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-          border:'1px solid rgba(200,123,82,0.22)', borderRadius:'2rem',
+          background:'rgba(180,95,35,0.32)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+          border:'1px solid rgba(255,220,160,0.35)', borderRadius:'2rem',
           padding:'6px 12px', cursor:'pointer',
           fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight:500, letterSpacing:'0.08em',
-          color:'rgba(100,45,10,0.80)', transition:'background 0.2s',
+          color:'rgba(255,248,235,0.92)', transition:'background 0.2s',
         }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
@@ -230,20 +248,20 @@ export default function Auth({ onConnecte, onBack }) {
         {langOpen && (
           <div style={{
             position:'absolute', right:0, top:'calc(100% + 6px)',
-            background:'rgba(255,242,220,0.97)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
-            border:'1px solid rgba(200,123,82,0.18)', borderRadius:12,
+            background:'rgba(160,80,25,0.88)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+            border:'1px solid rgba(255,220,160,0.30)', borderRadius:12,
             padding:'4px 0', minWidth:140,
-            boxShadow:'0 8px 28px rgba(120,60,10,0.12)',
+            boxShadow:'0 8px 28px rgba(80,30,5,0.25)',
             animation:'msgSlideIn 0.18s ease both',
           }}>
             {LANGS.map(({ code, name }) => (
               <button key={code} onClick={() => switchLang(code)} style={{
                 display:'block', width:'100%', textAlign:'left',
-                padding:'9px 16px', background: lang===code ? 'rgba(200,123,82,0.10)' : 'none',
+                padding:'9px 16px', background: lang===code ? 'rgba(255,248,235,0.15)' : 'none',
                 border:'none', cursor:'pointer',
                 fontFamily:'Poppins, sans-serif', fontSize:13,
                 fontWeight: lang===code ? 600 : 400,
-                color: lang===code ? 'rgba(100,45,10,0.95)' : 'rgba(100,45,10,0.60)',
+                color: lang===code ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.65)',
                 transition:'background 0.15s',
               }}>
                 {name}
@@ -342,7 +360,7 @@ export default function Auth({ onConnecte, onBack }) {
           <label style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16, cursor:'pointer' }}>
             <input
               type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
-              style={{ accentColor:'#E8C090', width:15, height:15, cursor:'pointer' }}
+              style={{ cursor:'pointer' }}
             />
             <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.87)' }}>
               {T.remember}
