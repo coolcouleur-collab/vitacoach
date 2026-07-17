@@ -4,6 +4,16 @@ import { FlashIcon, LoadingIcon } from './Icons'
 import LiquidImage from './LiquidImage'
 import GlobeBg from './GlobeBg'
 
+const LANGS = [
+  { code: 'fr', flag: '🇫🇷' },
+  { code: 'en', flag: '🇬🇧' },
+  { code: 'es', flag: '🇪🇸' },
+  { code: 'pt', flag: '🇵🇹' },
+  { code: 'it', flag: '🇮🇹' },
+  { code: 'de', flag: '🇩🇪' },
+  { code: 'nl', flag: '🇳🇱' },
+]
+
 const TRANS = {
   fr: {
     login: 'Connexion', signup: 'Inscription',
@@ -13,16 +23,11 @@ const TRANS = {
     loading: 'Chargement…',
     terms: "En rejoignant Solenn, tu acceptes nos",
     termsLink: "conditions d'utilisation",
-    errFields: 'Remplis tous les champs !',
-    errShort: 'Mot de passe minimum 6 caractères.',
+    errFields: 'Remplis tous les champs.', errShort: 'Mot de passe minimum 6 caractères.',
     okCreated: '✓ Compte créé ! Connecte-toi.',
-    errInvalid: 'Identifiants incorrects.',
-    errNotConfirmed: 'Confirme ton email avant de te connecter.',
-    errExists: 'Ce compte existe déjà — connecte-toi.',
-    errPasswordShort: 'Mot de passe trop court (6 caractères minimum).',
-    errEmailInvalid: 'Adresse email invalide.',
-    errNetwork: 'Problème de connexion, réessaie.',
-    errGeneric: 'Une erreur est survenue, réessaie.',
+    errInvalid: 'Identifiants incorrects.', errNotConfirmed: 'Confirme ton email avant de te connecter.',
+    errExists: 'Ce compte existe déjà — connecte-toi.', errPasswordShort: 'Mot de passe trop court (6 caractères minimum).',
+    errEmailInvalid: 'Adresse email invalide.', errNetwork: 'Problème de connexion, réessaie.', errGeneric: 'Une erreur est survenue, réessaie.',
   },
   en: {
     login: 'Log in', signup: 'Sign up',
@@ -30,18 +35,77 @@ const TRANS = {
     remember: 'Remember me',
     ctaLogin: 'Find Solenn', ctaSignup: 'Join Solenn',
     loading: 'Loading…',
-    terms: 'By joining Solenn, you agree to our',
-    termsLink: 'terms of use',
-    errFields: 'Please fill in all fields.',
-    errShort: 'Password must be at least 6 characters.',
+    terms: 'By joining Solenn, you agree to our', termsLink: 'terms of use',
+    errFields: 'Please fill in all fields.', errShort: 'Password must be at least 6 characters.',
     okCreated: '✓ Account created! Log in.',
-    errInvalid: 'Incorrect credentials.',
-    errNotConfirmed: 'Please confirm your email first.',
-    errExists: 'Account already exists — log in.',
-    errPasswordShort: 'Password too short (6 characters minimum).',
-    errEmailInvalid: 'Invalid email address.',
-    errNetwork: 'Connection error, please try again.',
-    errGeneric: 'Something went wrong, please try again.',
+    errInvalid: 'Incorrect credentials.', errNotConfirmed: 'Please confirm your email first.',
+    errExists: 'Account already exists — log in.', errPasswordShort: 'Password too short (6 characters minimum).',
+    errEmailInvalid: 'Invalid email address.', errNetwork: 'Connection error, try again.', errGeneric: 'Something went wrong, try again.',
+  },
+  es: {
+    login: 'Iniciar sesión', signup: 'Registrarse',
+    email: 'Email', password: 'Contraseña',
+    remember: 'Recordarme',
+    ctaLogin: 'Encontrar Solenn', ctaSignup: 'Unirse a Solenn',
+    loading: 'Cargando…',
+    terms: 'Al unirte a Solenn, aceptas nuestros', termsLink: 'términos de uso',
+    errFields: 'Por favor completa todos los campos.', errShort: 'La contraseña debe tener al menos 6 caracteres.',
+    okCreated: '✓ ¡Cuenta creada! Inicia sesión.',
+    errInvalid: 'Credenciales incorrectas.', errNotConfirmed: 'Por favor confirma tu email primero.',
+    errExists: 'Esta cuenta ya existe — inicia sesión.', errPasswordShort: 'Contraseña demasiado corta (mínimo 6 caracteres).',
+    errEmailInvalid: 'Dirección de email inválida.', errNetwork: 'Error de conexión, inténtalo de nuevo.', errGeneric: 'Algo salió mal, inténtalo de nuevo.',
+  },
+  pt: {
+    login: 'Entrar', signup: 'Cadastrar',
+    email: 'Email', password: 'Senha',
+    remember: 'Lembrar de mim',
+    ctaLogin: 'Encontrar Solenn', ctaSignup: 'Entrar no Solenn',
+    loading: 'Carregando…',
+    terms: 'Ao entrar no Solenn, você concorda com nossos', termsLink: 'termos de uso',
+    errFields: 'Por favor preencha todos os campos.', errShort: 'A senha deve ter pelo menos 6 caracteres.',
+    okCreated: '✓ Conta criada! Entre agora.',
+    errInvalid: 'Credenciais incorretas.', errNotConfirmed: 'Por favor confirme seu email primeiro.',
+    errExists: 'Esta conta já existe — entre.', errPasswordShort: 'Senha muito curta (mínimo 6 caracteres).',
+    errEmailInvalid: 'Endereço de email inválido.', errNetwork: 'Erro de conexão, tente novamente.', errGeneric: 'Algo deu errado, tente novamente.',
+  },
+  it: {
+    login: 'Accedi', signup: 'Registrati',
+    email: 'Email', password: 'Password',
+    remember: 'Ricordami',
+    ctaLogin: 'Trovare Solenn', ctaSignup: 'Unirsi a Solenn',
+    loading: 'Caricamento…',
+    terms: 'Unendoti a Solenn, accetti i nostri', termsLink: 'termini di utilizzo',
+    errFields: 'Per favore compila tutti i campi.', errShort: 'La password deve avere almeno 6 caratteri.',
+    okCreated: '✓ Account creato! Accedi.',
+    errInvalid: 'Credenziali errate.', errNotConfirmed: 'Per favore conferma la tua email prima.',
+    errExists: 'Questo account esiste già — accedi.', errPasswordShort: 'Password troppo corta (minimo 6 caratteri).',
+    errEmailInvalid: 'Indirizzo email non valido.', errNetwork: 'Errore di connessione, riprova.', errGeneric: 'Qualcosa è andato storto, riprova.',
+  },
+  de: {
+    login: 'Anmelden', signup: 'Registrieren',
+    email: 'E-Mail', password: 'Passwort',
+    remember: 'Angemeldet bleiben',
+    ctaLogin: 'Solenn finden', ctaSignup: 'Solenn beitreten',
+    loading: 'Laden…',
+    terms: 'Mit dem Beitritt stimmst du unseren zu', termsLink: 'Nutzungsbedingungen',
+    errFields: 'Bitte füll alle Felder aus.', errShort: 'Das Passwort muss mindestens 6 Zeichen haben.',
+    okCreated: '✓ Konto erstellt! Anmelden.',
+    errInvalid: 'Falsche Anmeldedaten.', errNotConfirmed: 'Bitte bestätige zuerst deine E-Mail.',
+    errExists: 'Dieses Konto existiert bereits — anmelden.', errPasswordShort: 'Passwort zu kurz (mindestens 6 Zeichen).',
+    errEmailInvalid: 'Ungültige E-Mail-Adresse.', errNetwork: 'Verbindungsfehler, bitte erneut versuchen.', errGeneric: 'Ein Fehler ist aufgetreten, bitte erneut versuchen.',
+  },
+  nl: {
+    login: 'Inloggen', signup: 'Registreren',
+    email: 'E-mail', password: 'Wachtwoord',
+    remember: 'Onthoud mij',
+    ctaLogin: 'Solenn vinden', ctaSignup: 'Solenn joinen',
+    loading: 'Laden…',
+    terms: 'Door Solenn te joinen, ga je akkoord met onze', termsLink: 'gebruiksvoorwaarden',
+    errFields: 'Vul alle velden in.', errShort: 'Wachtwoord moet minimaal 6 tekens bevatten.',
+    okCreated: '✓ Account aangemaakt! Log in.',
+    errInvalid: 'Onjuiste inloggegevens.', errNotConfirmed: 'Bevestig eerst je e-mail.',
+    errExists: 'Dit account bestaat al — log in.', errPasswordShort: 'Wachtwoord te kort (minimaal 6 tekens).',
+    errEmailInvalid: 'Ongeldig e-mailadres.', errNetwork: 'Verbindingsfout, probeer opnieuw.', errGeneric: 'Er is iets misgegaan, probeer opnieuw.',
   },
 }
 
@@ -138,6 +202,32 @@ export default function Auth({ onConnecte, onBack }) {
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
+      {/* ── Barre de langue fixe en haut ── */}
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+        display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2,
+        paddingTop: 'max(env(safe-area-inset-top, 10px), 10px)',
+        paddingBottom: 8, paddingLeft: 16, paddingRight: 16,
+        background: 'rgba(255,246,232,0.78)',
+        backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+        borderBottom: '1px solid rgba(255,210,140,0.22)',
+      }}>
+        {LANGS.map(({ code, flag }) => (
+          <button key={code} onClick={() => switchLang(code)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '8px 5px', minWidth: 40, minHeight: 40,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 22,
+            transform: lang === code ? 'scale(1.35)' : 'scale(1)',
+            opacity: lang === code ? 1 : 0.38,
+            filter: lang === code ? 'drop-shadow(0 2px 5px rgba(160,90,10,0.30))' : 'none',
+            transition: 'transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease',
+          }}>
+            {flag}
+          </button>
+        ))}
+      </div>
+
       <div style={s.liquidWrap}>
         <LiquidImage
           gradient={['#EDD8CC', '#CCA898', '#E8CABB', '#C4A090']}
@@ -284,22 +374,6 @@ export default function Auth({ onConnecte, onBack }) {
           </div>
         )}
 
-        {/* ── Sélecteur de langue ── */}
-        <div style={{ display:'flex', justifyContent:'center', gap:4, marginTop:20 }}>
-          {['fr','en'].map(l => (
-            <button key={l} onClick={() => switchLang(l)} style={{
-              background: lang === l ? 'rgba(200,123,82,0.15)' : 'transparent',
-              border: lang === l ? '1px solid rgba(200,123,82,0.40)' : '1px solid rgba(255,220,160,0.20)',
-              borderRadius:'2rem', padding:'4px 12px', cursor:'pointer',
-              fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight: lang === l ? 600 : 400,
-              color: lang === l ? 'rgba(255,248,235,0.95)' : 'rgba(255,248,235,0.45)',
-              letterSpacing:'0.08em', textTransform:'uppercase',
-              transition:'all 0.2s',
-            }}>
-              {l === 'fr' ? 'FR' : 'EN'}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   )
@@ -308,7 +382,7 @@ export default function Auth({ onConnecte, onBack }) {
 const s = {
   page: { minHeight:'100vh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
-    paddingTop: 'calc(env(safe-area-inset-top, 0px) + 20px)',
+    paddingTop: 'calc(max(env(safe-area-inset-top, 10px), 10px) + 68px)',
     position:'relative', overflow:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
