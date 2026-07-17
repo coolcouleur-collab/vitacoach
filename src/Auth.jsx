@@ -58,6 +58,13 @@ export default function Auth({ onConnecte, onBack }) {
           66%     { transform: translate(-20px,15px) scale(0.97); }
         }
         input::placeholder { color: rgba(255,248,235,0.82); }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+          -webkit-box-shadow: 0 0 0px 1000px rgba(220,160,100,0.18) inset !important;
+          -webkit-text-fill-color: rgba(255,248,235,1) !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
       `}</style>
       <div style={s.liquidWrap}>
         <LiquidImage
