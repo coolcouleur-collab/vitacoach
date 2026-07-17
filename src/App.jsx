@@ -2678,17 +2678,11 @@ function CapsuleSlider({ tenues, loading }) {
 function TenuesModule({ profil }) {
   const [ville, setVille]       = useState(() => localStorage.getItem('vitacoach_ville') || '')
   const [occasion, setOccasion] = useState('Casual')
-  const [tenues, setTenues]     = useState([])
-  const [meteo, setMeteo]       = useState('')
+  const [tenues, setTenues]     = useState(() => { try { return JSON.parse(localStorage.getItem('vitacoach_tenues') || '[]') } catch { return [] } })
+  const [meteo, setMeteo]       = useState(() => localStorage.getItem('vitacoach_meteo') || '')
   const [loading, setLoading]   = useState(false)
   const [villeError, setVilleError] = useState(false)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
-
-  // Auto-charger si ville déjà connue
-  useEffect(() => {
-    const savedVille = localStorage.getItem('vitacoach_ville')
-    if (savedVille) getTenues(savedVille)
-  }, [])
 
   async function getTenues(villeArg) {
     const v = (villeArg || ville).trim()
@@ -2702,8 +2696,11 @@ function TenuesModule({ profil }) {
         body: JSON.stringify({ profil, ville: v, occasion })
       })
       const data = await res.json()
-      setTenues(data.tenues || [])
-      setMeteo(data.meteo)
+      const t = data.tenues || []
+      setTenues(t)
+      setMeteo(data.meteo || '')
+      localStorage.setItem('vitacoach_tenues', JSON.stringify(t))
+      localStorage.setItem('vitacoach_meteo', data.meteo || '')
     } catch (err) {
       console.error('Erreur tenues:', err)
       setTenues([])
