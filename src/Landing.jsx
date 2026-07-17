@@ -159,13 +159,13 @@ function CinematicSlider({ onCommencer }) {
         {onCommencer && (
           <button
             onClick={onCommencer}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.28)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.80)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,150,42,0.45), inset 0 1px 0 rgba(255,240,200,0.25)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,100,40,0.18)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.60)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,150,42,0.25), inset 0 1px 0 rgba(255,240,200,0.18)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,215,155,0.32)'; e.currentTarget.style.borderColor = 'rgba(255,225,170,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,215,155,0.15)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.65)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
-              background: 'rgba(200,100,40,0.18)',
-              border: '1px solid rgba(255,220,160,0.60)',
+              background: 'rgba(255,215,155,0.15)',
+              border: '1px solid rgba(255,220,160,0.65)',
               borderRadius: '2rem',
               boxShadow: '0 0 24px rgba(232,150,42,0.25), inset 0 1px 0 rgba(255,240,200,0.18)',
               color: 'rgba(255,248,235,1)',
