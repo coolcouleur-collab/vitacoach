@@ -276,6 +276,67 @@ function ActionBtn({ emoji, label, onClick, danger }) {
   )
 }
 
+// ─── EDIT PROFILE OPTIONS ────────────────────────────────────────────────────
+const OBJECTIF_OPTS = [
+  'Retrouver mon énergie',
+  'Me réconcilier avec mon corps',
+  'Dormir enfin comme il faut',
+  'Retrouver ma sérénité',
+  'Reprendre le mouvement',
+  'Manger sans culpabiliser',
+]
+const ACTIVITE_OPTS = [
+  'Pas vraiment mon truc',
+  "J'essaie de bouger",
+  'Je fais du sport',
+  "Le sport, c'est ma vie",
+]
+const RYTHME_OPTS = [
+  'Bureau ou télétravail',
+  'Souvent en déplacement',
+  'Horaires décalés',
+  'À mon compte',
+]
+
+function PillPicker({ options, value, onChange }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 8 }}>
+      {options.map(opt => {
+        const active = value === opt
+        return (
+          <button
+            key={opt}
+            onClick={() => onChange(opt)}
+            style={{
+              padding: '7px 13px', borderRadius: 20,
+              border: active ? `1.5px solid ${C.accent}` : `1px solid ${C.border}`,
+              background: active ? C.accentLight : 'transparent',
+              color: active ? C.accent : C.textMuted,
+              fontFamily: C.font, fontSize: 12, fontWeight: active ? 700 : 500,
+              cursor: 'pointer', outline: 'none',
+              WebkitTapHighlightColor: 'transparent',
+              transition: 'all 0.18s ease',
+            }}
+          >
+            {opt}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+function EditField({ label, children }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ fontFamily: C.font, fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>
+        {label}
+      </div>
+      {children}
+    </div>
+  )
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 export default function SettingsSheet({
   profil = {},
@@ -285,13 +346,22 @@ export default function SettingsSheet({
   onPasserPro,
   msgsRestants = null,
   onClose,
-  onEditProfil,
+  onSaveProfil,
   onPresetChange,
   onToggleNotifs,
   onResetMemoire,
   onExportData,
 }) {
   const [confirmReset, setConfirmReset] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [editValues, setEditValues] = useState(() => ({
+    nom: profil.nom || '',
+    objectif: profil.objectif || profil.objectifs?.[0] || '',
+    activite: profil.activite || '',
+    rythme: profil.rythme || '',
+    heure_lever: profil.heure_lever ?? profil.heureReveil ?? 7.5,
+    heure_coucher: profil.heure_coucher ?? profil.heureCoucher ?? 23.5,
+  }))
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -308,6 +378,13 @@ export default function SettingsSheet({
     return `${String(heures).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
   }
 
+  // HH:MM → decimal
+  const parseHeure = (str) => {
+    if (!str) return null
+    const [h, m] = str.split(':').map(Number)
+    return h + (m || 0) / 60
+  }
+
   const objectifs = Array.isArray(profil.objectifs)
     ? profil.objectifs
     : profil.objectif
@@ -322,6 +399,23 @@ export default function SettingsSheet({
       setConfirmReset(true)
       setTimeout(() => setConfirmReset(false), 4000)
     }
+  }
+
+  function handleSaveProfil() {
+    const updated = {
+      ...profil,
+      nom: editValues.nom.trim() || profil.nom,
+      objectif: editValues.objectif,
+      objectifs: editValues.objectif ? [editValues.objectif] : (profil.objectifs || []),
+      activite: editValues.activite,
+      rythme: editValues.rythme,
+      heure_lever: editValues.heure_lever,
+      heure_coucher: editValues.heure_coucher,
+      heureReveil: editValues.heure_lever,
+      heureCoucher: editValues.heure_coucher,
+    }
+    onSaveProfil && onSaveProfil(updated)
+    setEditMode(false)
   }
 
   const PRESETS = [
@@ -435,78 +529,140 @@ export default function SettingsSheet({
             {/* ── 1. MON PROFIL ───────────────────────────────────────── */}
             <SectionTitle>Mon Profil</SectionTitle>
             <Card>
-              {/* Avatar + nom */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-                <Avatar nom={profil.nom || profil.prenom} size={52} />
+              {/* Avatar + nom + bouton édition */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: editMode ? 20 : 16 }}>
+                <Avatar nom={editMode ? (editValues.nom || profil.nom) : (profil.nom || profil.prenom)} size={52} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    fontFamily: C.font,
-                    fontWeight: 700,
-                    fontSize: 16,
-                    color: C.text,
-                    lineHeight: 1.25,
-                    marginBottom: 2,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}>
+                  <div style={{ fontFamily: C.font, fontWeight: 700, fontSize: 16, color: C.accent, lineHeight: 1.25, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {[profil.prenom, profil.nom].filter(Boolean).join(' ') || profil.nom || '—'}
                   </div>
                   {profil.age && (
-                    <div style={{ fontFamily: C.font, fontSize: 12, color: C.textMuted, fontWeight: 500 }}>
-                      {profil.age} ans
-                    </div>
+                    <div style={{ fontFamily: C.font, fontSize: 12, color: C.textMuted, fontWeight: 500 }}>{profil.age}</div>
                   )}
                 </div>
-                <button
-                  onClick={onEditProfil}
-                  style={{
-                    padding: '7px 14px',
-                    borderRadius: 20,
-                    border: `1.5px solid ${C.accent}`,
-                    background: C.accentLight,
-                    fontFamily: C.font,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: C.accent,
-                    cursor: 'pointer',
-                    outline: 'none',
-                    WebkitTapHighlightColor: 'transparent',
-                    transition: 'background 0.15s',
-                    flexShrink: 0,
-                  }}
-                >
-                  Modifier
-                </button>
+                {!editMode ? (
+                  <button
+                    onClick={() => setEditMode(true)}
+                    style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${C.accent}`, background: C.accentLight, fontFamily: C.font, fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
+                  >
+                    Modifier
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setEditMode(false)}
+                    style={{ padding: '7px 14px', borderRadius: 20, border: `1px solid ${C.border}`, background: 'transparent', fontFamily: C.font, fontSize: 12, fontWeight: 600, color: C.textMuted, cursor: 'pointer', outline: 'none', flexShrink: 0 }}
+                  >
+                    Annuler
+                  </button>
+                )}
               </div>
 
-              {/* Objectifs */}
-              {objectifs.length > 0 && (
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500, marginBottom: 6 }}>
-                    Objectifs
+              {/* Mode lecture */}
+              {!editMode && (
+                <>
+                  {objectifs.length > 0 && (
+                    <div style={{ marginBottom: 12 }}>
+                      <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500, marginBottom: 6 }}>Objectif</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {objectifs.map((obj, i) => <ObjectifBadge key={i} label={obj} />)}
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
+                    <InfoRow label="🌅 Réveil" value={fmtHeure(profil.heure_lever ?? profil.heureReveil)} />
+                    <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
+                      <InfoRow label="🌙 Coucher" value={fmtHeure(profil.heure_coucher ?? profil.heureCoucher)} />
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {objectifs.map((obj, i) => (
-                      <ObjectifBadge key={i} label={obj} />
-                    ))}
-                  </div>
-                </div>
+                </>
               )}
 
-              {/* Horaires */}
-              <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
-                <InfoRow
-                  label="🌅 Heure de réveil"
-                  value={fmtHeure(profil.heureReveil ?? profil.heure_reveil)}
-                />
-                <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-                  <InfoRow
-                    label="🌙 Heure de coucher"
-                    value={fmtHeure(profil.heureCoucher ?? profil.heure_coucher)}
-                  />
+              {/* Mode édition */}
+              {editMode && (
+                <div>
+                  <style>{`
+                    .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
+                      border:1px solid ${C.border}; background:rgba(255,248,244,0.60);
+                      font-family:${C.font}; font-size:14px; color:${C.accent}; outline:none;
+                      transition:border-color 0.18s; }
+                    .ss-edit-input:focus { border-color:${C.accent}; }
+                    .ss-edit-input::placeholder { color:${C.textLight}; }
+                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid ${C.border};
+                      background:rgba(255,248,244,0.60); font-family:${C.font}; font-size:14px;
+                      color:${C.accent}; outline:none; }
+                    .ss-time-input:focus { border-color:${C.accent}; }
+                  `}</style>
+
+                  <EditField label="Prénom / Pseudo">
+                    <input
+                      className="ss-edit-input"
+                      value={editValues.nom}
+                      onChange={e => setEditValues(v => ({ ...v, nom: e.target.value }))}
+                      placeholder="Ton prénom ou pseudo"
+                      maxLength={30}
+                    />
+                  </EditField>
+
+                  <EditField label="Objectif principal">
+                    <PillPicker
+                      options={OBJECTIF_OPTS}
+                      value={editValues.objectif}
+                      onChange={val => setEditValues(v => ({ ...v, objectif: val }))}
+                    />
+                  </EditField>
+
+                  <EditField label="Niveau d'activité">
+                    <PillPicker
+                      options={ACTIVITE_OPTS}
+                      value={editValues.activite}
+                      onChange={val => setEditValues(v => ({ ...v, activite: val }))}
+                    />
+                  </EditField>
+
+                  <EditField label="Rythme de vie">
+                    <PillPicker
+                      options={RYTHME_OPTS}
+                      value={editValues.rythme}
+                      onChange={val => setEditValues(v => ({ ...v, rythme: val }))}
+                    />
+                  </EditField>
+
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+                    <EditField label="🌅 Réveil">
+                      <input
+                        type="time"
+                        className="ss-time-input"
+                        value={fmtHeure(editValues.heure_lever)}
+                        onChange={e => setEditValues(v => ({ ...v, heure_lever: parseHeure(e.target.value) ?? v.heure_lever }))}
+                      />
+                    </EditField>
+                    <EditField label="🌙 Coucher">
+                      <input
+                        type="time"
+                        className="ss-time-input"
+                        value={fmtHeure(editValues.heure_coucher)}
+                        onChange={e => setEditValues(v => ({ ...v, heure_coucher: parseHeure(e.target.value) ?? v.heure_coucher }))}
+                      />
+                    </EditField>
+                  </div>
+
+                  <button
+                    onClick={handleSaveProfil}
+                    style={{
+                      width: '100%', padding: '14px', borderRadius: 16, border: 'none',
+                      background: `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`,
+                      color: '#fff', fontFamily: C.font, fontSize: 14, fontWeight: 700,
+                      cursor: 'pointer', outline: 'none',
+                      boxShadow: '0 4px 18px rgba(200,123,82,0.32)',
+                      WebkitTapHighlightColor: 'transparent',
+                    }}
+                    onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
+                    onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
+                  >
+                    Sauvegarder les modifications
+                  </button>
                 </div>
-              </div>
+              )}
             </Card>
 
             {/* ── 2. MON ABONNEMENT ────────────────────────────────── */}

@@ -1428,7 +1428,11 @@ const [messages, setMessages] = useState(() => {
             onPasserPro={passerPro}
             msgsRestants={isPro ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
             onClose={() => setShowSettings(false)}
-            onEditProfil={() => { setShowSettings(false); setProfil(null) }}
+            onSaveProfil={async (updated) => {
+              setProfil(updated)
+              localStorage.setItem('vitacoach_profil', JSON.stringify(updated))
+              if (user?.id) await syncProfilSupabase(user.id, updated)
+            }}
             onPresetChange={p => { setHomePreset(p); setShowSettings(false) }}
             onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}
             onResetMemoire={() => {
@@ -1538,7 +1542,7 @@ const [messages, setMessages] = useState(() => {
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => { setProfil(null) }}>✏ Modifier mon profil</button>
+            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>✏ Modifier mon profil</button>
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
               <button style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
@@ -1835,7 +1839,7 @@ const [messages, setMessages] = useState(() => {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,238,228,0.55)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     Paramètres
                   </button>
-                  <button onClick={() => { setProfil(null); setMenuOpen(false) }} style={{
+                  <button onClick={() => { setShowSettings(true); setMenuOpen(false) }} style={{
                     display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                     border:'none', background:'transparent', cursor:'pointer',
                     fontFamily:F, width:'100%', textAlign:'left',
@@ -3023,7 +3027,7 @@ const s = {
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',
   },
-  profileName: { fontSize:13, fontWeight:700, color:'rgba(55,22,5,0.90)', marginBottom:1 },
+  profileName: { fontSize:13, fontWeight:700, color:'rgba(200,123,82,0.92)', marginBottom:1 },
   profileMeta: { fontSize:10, color:'rgba(200,123,82,0.6)', lineHeight:1.5 },
   btnPro: {
     background:'transparent', color:'rgba(200,123,82,0.70)',
