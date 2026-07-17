@@ -64,26 +64,24 @@ const G = {
   Age5:      ph(Crown),
 }
 
-// ─── BG BLOBS ─────────────────────────────────────────────────────────────────
+// ─── BG BLOBS — même palette qu'Auth ─────────────────────────────────────────
 function BgBlobs() {
   return (
     <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
       <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 50% 48%, #FFF991 0%, transparent 68%)',
-        opacity:0.62, mixBlendMode:'multiply',
-        animation:'liquidBlob3 14s ease-in-out infinite',
+        position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+        animation:'liquidBlob1 10s ease-in-out infinite',
       }}/>
       <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
-        opacity:0.20, mixBlendMode:'multiply',
-        animation:'liquidBlob1 18s ease-in-out infinite reverse',
+        position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+        animation:'liquidBlob2 13s ease-in-out infinite reverse',
       }}/>
       <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.35) 0%, transparent 58%)',
-        animation:'liquidBlob2 16s ease-in-out infinite',
+        position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
+        background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
+        animation:'liquidBlob3 17s ease-in-out infinite',
       }}/>
     </div>
   )
@@ -103,7 +101,7 @@ function AnimatedQuestion({ text, style }) {
   )
 }
 
-// ─── REVEAL SCREEN ────────────────────────────────────────────────────────────
+// ─── REVEAL SCREEN — palette Auth ─────────────────────────────────────────────
 function RevealScreen({ answers, onEnter }) {
   const [visible, setVisible] = useState(false)
   const [btnVisible, setBtnVisible] = useState(false)
@@ -120,12 +118,12 @@ function RevealScreen({ answers, onEnter }) {
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:200,
-      background:'linear-gradient(160deg,#FFF8F2 0%,#FDEEE0 50%,#FFF4EC 100%)',
+      background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       padding:'40px 28px',
       fontFamily:"'DM Sans', sans-serif",
     }}>
-      <BgBlobs step={0} />
+      <BgBlobs />
       <div style={{
         position:'relative', zIndex:1, width:'100%', maxWidth:400,
         opacity: visible ? 1 : 0,
@@ -135,40 +133,42 @@ function RevealScreen({ answers, onEnter }) {
       }}>
         <div style={{
           width:88, height:88, borderRadius:'50%',
-          background:'linear-gradient(135deg,rgba(200,123,82,0.35),rgba(190,112,30,0.25))',
+          background:'rgba(255,235,210,0.28)',
+          backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+          border:'1px solid rgba(255,220,160,0.40)',
           display:'flex', alignItems:'center', justifyContent:'center',
           marginBottom:24,
           boxShadow:'0 0 0 8px rgba(200,123,82,0.08), 0 0 0 16px rgba(200,123,82,0.04)',
           animation:'revealPulse 2.8s ease-in-out infinite',
         }}>
           <span style={{
-            fontSize:38, fontWeight:800, color:'rgba(200,123,82,0.80)',
+            fontSize:38, fontWeight:800, color:'rgba(255,248,235,0.92)',
             fontFamily:'Poppins, sans-serif', letterSpacing:'-0.02em',
           }}>
             {nom.charAt(0).toUpperCase()}
           </span>
         </div>
-        <div style={{fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.70)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
+        <div style={{fontSize:13, fontWeight:600, color:'rgba(255,248,235,0.72)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
           Profil créé
         </div>
-        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'#5C2E0A', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
+        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(255,248,235,0.97)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
           Bonjour, {nom} !
         </h1>
-        <p style={{fontSize:15, color:'rgba(200,123,82,0.70)', marginBottom:32, lineHeight:1.6}}>
+        <p style={{fontSize:15, color:'rgba(255,248,235,0.68)', marginBottom:32, lineHeight:1.6}}>
           Solenn connaît ton profil et est prête à t'accompagner.
         </p>
         {objectifs.length > 0 && (
           <div style={{marginBottom:20, width:'100%'}}>
-            <div style={{fontSize:11, fontWeight:700, color:'rgba(200,123,82,0.62)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
+            <div style={{fontSize:11, fontWeight:700, color:'rgba(255,248,235,0.55)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
               Ton objectif
             </div>
             <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
               {objectifs.map(o => (
                 <span key={o} style={{
                   padding:'7px 16px', borderRadius:20,
-                  background:'rgba(200,123,82,0.09)',
-                  border:'1px solid rgba(200,123,82,0.22)',
-                  fontSize:12, fontWeight:600, color:'rgba(200,123,82,0.80)',
+                  background:'rgba(255,235,210,0.20)',
+                  border:'1px solid rgba(255,220,160,0.38)',
+                  fontSize:12, fontWeight:600, color:'rgba(255,248,235,0.88)',
                 }}>{o}</span>
               ))}
             </div>
@@ -179,9 +179,9 @@ function RevealScreen({ answers, onEnter }) {
             {tags.map(t => (
               <span key={t} style={{
                 padding:'5px 12px', borderRadius:20,
-                background:'rgba(200,123,82,0.05)',
-                border:'1px solid rgba(200,123,82,0.14)',
-                fontSize:11, fontWeight:500, color:'rgba(200,123,82,0.70)',
+                background:'rgba(255,235,210,0.14)',
+                border:'1px solid rgba(255,220,160,0.28)',
+                fontSize:11, fontWeight:500, color:'rgba(255,248,235,0.75)',
               }}>{t}</span>
             ))}
           </div>
@@ -190,8 +190,9 @@ function RevealScreen({ answers, onEnter }) {
           onClick={onEnter}
           style={{
             width:'100%', height:52,
-            background:'transparent',
-            color:'rgba(200,123,82,0.78)', border:'1.5px solid rgba(200,123,82,0.32)', borderRadius:30,
+            background:'rgba(255,235,210,0.18)',
+            backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+            color:'rgba(255,248,235,0.92)', border:'1px solid rgba(255,220,160,0.50)', borderRadius:30,
             fontSize:15, fontWeight:600, cursor:'pointer',
             fontFamily:'Poppins, sans-serif',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
@@ -233,7 +234,6 @@ const AGE_RANGE_OPTIONS = [
   { range:'45–54 ans',   Icon: G.Age4 },
   { range:'55 ans et +', Icon: G.Age5 },
 ]
-
 
 const TRIGGER_OPTIONS = [
   { Icon: G.Brain,      label:'J\'ai atteint mes limites',      desc:'Trop de pression, quelque chose doit changer'         },
@@ -282,36 +282,61 @@ const RYTHME_OPTIONS = [
   { Icon: G.Freelance, label:'À mon compte',            desc:'Je gère mon propre temps, freelance ou entrepreneur'  },
 ]
 
-// ─── STYLES ───────────────────────────────────────────────────────────────────
+// ─── STYLES — palette Auth ────────────────────────────────────────────────────
 const S = {
   question: {
     fontSize:'clamp(22px,5vw,28px)', fontWeight:600, lineHeight:1.35,
-    color:'rgba(184,105,58,0.90)', fontFamily:"'DM Sans', sans-serif",
+    color:'rgba(255,248,235,0.95)', fontFamily:"'DM Sans', sans-serif",
     letterSpacing:'-0.01em',
   },
   sub: {
-    fontSize:14, fontWeight:400, color:'rgba(184,105,58,0.58)',
+    fontSize:14, fontWeight:400, color:'rgba(255,248,235,0.65)',
     fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
-    border:'1.5px solid rgba(200,123,82,0.42)',
-    background:'rgba(255,248,244,0.92)',
-    fontSize:16, fontFamily:"'DM Sans', sans-serif", color:'rgba(200,123,82,0.92)',
+    border:'1px solid rgba(255,220,160,0.35)',
+    background:'rgba(255,235,200,0.15)',
+    backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+    fontSize:16, fontFamily:"'DM Sans', sans-serif", color:'rgba(255,248,235,1)',
     outline:'none', fontWeight:500,
-    boxShadow:'0 2px 14px rgba(200,123,82,0.09)',
+    boxShadow:'0 2px 14px rgba(180,80,20,0.08)',
     transition:'border-color 0.2s, box-shadow 0.2s',
   },
   cta: {
-    width:'100%', padding:'17px', borderRadius:16, border:'none',
-    background:'linear-gradient(110deg, #B8683A 0%, #C87B52 55%, #B8683A 100%)',
+    width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,220,160,0.38)',
+    background:'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
     backgroundSize:'250% 100%',
-    color:'#FFF5EE', fontSize:16, fontWeight:600, cursor:'pointer',
+    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    color:'rgba(255,248,235,1)', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'DM Sans', sans-serif", letterSpacing:'0.3px',
-    boxShadow:'0 8px 24px rgba(184,104,58,0.38)',
+    boxShadow:'0 8px 24px rgba(180,80,30,0.22)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
   },
+}
+
+// ─── OPTION BUTTON SHARED STYLE ───────────────────────────────────────────────
+function optStyle(isSel) {
+  return {
+    width:'100%', padding:'12px 18px', borderRadius:16,
+    border:`1px solid ${isSel ? 'rgba(255,220,160,0.72)' : 'rgba(255,220,160,0.25)'}`,
+    background: isSel ? 'rgba(255,235,210,0.32)' : 'rgba(255,235,210,0.14)',
+    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    boxShadow: isSel ? '0 6px 24px rgba(220,160,90,0.18)' : '0 2px 12px rgba(180,80,20,0.08)',
+    transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+    cursor:'pointer', display:'flex', alignItems:'center', gap:14,
+    fontFamily:"'DM Sans', sans-serif", textAlign:'left', outline:'none',
+  }
+}
+
+function iconCircleStyle(isSel) {
+  return {
+    width:40, height:40, borderRadius:'50%',
+    background: isSel ? 'rgba(255,235,210,0.42)' : 'rgba(255,235,210,0.20)',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    flexShrink:0, transition:'background 0.18s',
+  }
 }
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
@@ -447,7 +472,7 @@ export default function Onboarding({ onTermine, onBack }) {
                   transition={{ duration:0.65, ease:'easeOut' }}
                   style={{
                     position:'absolute', inset:0, borderRadius:16,
-                    background:'rgba(255,245,238,0.28)', pointerEvents:'none', zIndex:2,
+                    background:'rgba(255,235,210,0.22)', pointerEvents:'none', zIndex:2,
                   }}
                 />
               )}
@@ -467,7 +492,7 @@ export default function Onboarding({ onTermine, onBack }) {
             >
               <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
                 Continuer
-                <ChevronIcon color="#FFF5EE" size={16} direction="right" />
+                <ChevronIcon color="rgba(255,248,235,1)" size={16} direction="right" />
               </span>
             </motion.button>
           </div>
@@ -494,29 +519,20 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, objectif: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.10)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 24px rgba(200,123,82,0.20)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', display:'flex', alignItems:'center', gap:14,
-                  fontFamily:"'DM Sans', sans-serif", textAlign:'left',
-                  outline:'none',
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                <div style={iconCircleStyle(isSel)}>
                   <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ flex:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
-                    color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
+                    color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -549,29 +565,19 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(range, () => goNext({ ...answers, age: range }))}
                 whileTap={{ scale:0.97, x:2 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left',
-                  fontFamily:"'DM Sans', sans-serif",
-                  outline:'none',
-                  display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <AgeIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                <div style={iconCircleStyle(isSel)}>
+                  <AgeIcon color='#C87B52' size={20}/>
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
-                  color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
+                  color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
                 </span>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -600,34 +606,24 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, activite: opt.label }))}
                 whileTap={{ scale:0.97, x:2 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 22px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left',
-                  fontFamily:"'DM Sans', sans-serif",
-                  outline:'none',
-                  display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                <div style={iconCircleStyle(isSel)}>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400,
-                    color: isSel ? '#C87B52' : 'rgba(184,105,58,0.88)',
+                    color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)',
                     transition:'color 0.16s',
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -656,26 +652,18 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, declencheur: opt.label }))}
                 whileTap={{ scale:0.97 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                  outline:'none', display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                <div style={iconCircleStyle(isSel)}>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -704,26 +692,18 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, baseline: opt.label }))}
                 whileTap={{ scale:0.97 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                  outline:'none', display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                <div style={iconCircleStyle(isSel)}>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -752,26 +732,18 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, moment: opt.label }))}
                 whileTap={{ scale:0.97 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                  outline:'none', display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                  <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                <div style={iconCircleStyle(isSel)}>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -800,26 +772,18 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, vie: opt.label }))}
                 whileTap={{ scale:0.97 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                  outline:'none', display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                <div style={iconCircleStyle(isSel)}>
                   <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -848,26 +812,18 @@ export default function Onboarding({ onTermine, onBack }) {
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
                 onClick={() => tapThen(opt.label, () => goNext({ ...answers, rythme: opt.label }))}
                 whileTap={{ scale:0.97 }}
-                style={{
-                  width:'100%', padding:'12px 18px', borderRadius:16,
-                  border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                  background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                  boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                  transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                  outline:'none', display:'flex', alignItems:'center', gap:14,
-                }}
+                style={optStyle(isSel)}
               >
-                <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
+                <div style={iconCircleStyle(isSel)}>
                   <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'#C87B52',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -908,27 +864,19 @@ export default function Onboarding({ onTermine, onBack }) {
                   transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.05 }}
                   onClick={() => toggleSante(opt.label)}
                   whileTap={{ scale:0.97 }}
-                  style={{
-                    width:'100%', padding:'12px 18px', borderRadius:16,
-                    border:`1.5px solid ${isSel ? 'rgba(200,123,82,0.55)' : 'rgba(255,255,255,0.45)'}`,
-                    background: isSel ? 'rgba(200,123,82,0.12)' : 'rgba(255,248,244,0.72)',
-                    boxShadow: isSel ? '0 6px 20px rgba(200,123,82,0.18)' : 'inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 20px rgba(80,25,0,0.12), 0 1px 4px rgba(80,25,0,0.07)',
-                    transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                    cursor:'pointer', textAlign:'left', fontFamily:"'DM Sans', sans-serif",
-                    outline:'none', display:'flex', alignItems:'center', gap:14,
-                  }}
+                  style={optStyle(isSel)}
                 >
-                  <div style={{width:40,height:40,borderRadius:'50%',background:isSel?'rgba(200,123,82,0.18)':'#F2DBC9',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'background 0.18s'}}>
-                    <OptIcon color={isSel ? '#B8683A' : '#C87B52'} size={20}/>
+                  <div style={iconCircleStyle(isSel)}>
+                    <OptIcon color='#C87B52' size={20}/>
                   </div>
                   <div style={{ display:'flex', flexDirection:'column', gap:1, flex:1 }}>
-                    <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(180,90,40,0.95)' : 'rgba(184,105,58,0.88)', transition:'color 0.16s' }}>
+                    <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
                       {opt.label}
                     </span>
-                    <span style={{ fontSize:13, color:'rgba(184,105,58,0.62)', fontWeight:400 }}>{opt.desc}</span>
+                    <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
                   </div>
-                  <div style={{width:18,height:18,borderRadius:'50%',border:`1.5px solid ${isSel ? '#C87B52' : 'rgba(200,123,82,0.30)'}`,background:isSel?'#C87B52':'transparent',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.15s'}}>
-                    {isSel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="#FFF5EE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  <div style={{width:18,height:18,borderRadius:'50%',border:`1.5px solid ${isSel ? 'rgba(255,220,160,0.90)' : 'rgba(255,220,160,0.40)'}`,background:isSel?'rgba(200,123,82,0.65)':'transparent',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.15s'}}>
+                    {isSel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="rgba(255,248,235,1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                   </div>
                 </motion.button>
               )
@@ -947,7 +895,7 @@ export default function Onboarding({ onTermine, onBack }) {
             <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
               Continuer
               <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:'rgba(255,245,238,0.18)',borderRadius:8,width:28,height:28,flexShrink:0}}>
-                <ChevronIcon color="#FFF5EE" size={14} direction="right" />
+                <ChevronIcon color="rgba(255,248,235,1)" size={14} direction="right" />
               </span>
             </span>
           </motion.button>
@@ -961,7 +909,7 @@ export default function Onboarding({ onTermine, onBack }) {
   return (
     <div className="ob-outer" style={{
       minHeight:'100vh',
-      background:'linear-gradient(160deg,#FFF8F4 0%,#FFF0E6 60%,#FDECD8 100%)',
+      background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       fontFamily:"'DM Sans', sans-serif",
       display:'flex', flexDirection:'column',
       position:'relative', overflowX:'hidden', overflowY:'auto',
@@ -971,24 +919,23 @@ export default function Onboarding({ onTermine, onBack }) {
         @keyframes liquidBlob1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,5%) scale(1.06)} 66%{transform:translate(-2%,-3%) scale(0.96)} }
         @keyframes liquidBlob2 { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-4%,3%) scale(1.08)} 70%{transform:translate(2%,-5%) scale(0.94)} }
         @keyframes liquidBlob3 { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
-        @keyframes liquidBlob4 { 0%,100%{transform:translate(0,0) scale(1)} 45%{transform:translate(-3%,4%) scale(1.07)} 75%{transform:translate(4%,-2%) scale(0.95)} }
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
-        input:focus { outline:none; border-color:rgba(200,123,82,0.55) !important; box-shadow:0 0 0 3px rgba(200,123,82,0.10) !important; }
-        input::placeholder { color:rgba(200,123,82,0.40); }
+        input:focus { outline:none; border-color:rgba(255,220,160,0.65) !important; box-shadow:0 0 0 3px rgba(255,220,160,0.12) !important; }
+        input::placeholder { color:rgba(255,248,235,0.38); }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
-          -webkit-box-shadow: 0 0 0px 1000px rgba(255,248,244,0.92) inset !important;
-          -webkit-text-fill-color: rgba(200,123,82,0.92) !important;
+          -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
+          -webkit-text-fill-color: rgba(255,248,235,1) !important;
           transition: background-color 5000s ease-in-out 0s;
         }
-        @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(200,123,82,0.40)} 50%{box-shadow:0 8px 36px rgba(200,123,82,0.68)} }
-        @keyframes heartbeat { 0%,100%{box-shadow:0 8px 24px rgba(184,104,58,0.38)} 50%{box-shadow:0 12px 36px rgba(184,104,58,0.62)} }
+        @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(180,80,30,0.22)} 50%{box-shadow:0 8px 36px rgba(180,80,30,0.40)} }
+        @keyframes heartbeat { 0%,100%{box-shadow:0 8px 24px rgba(180,80,30,0.22)} 50%{box-shadow:0 12px 36px rgba(180,80,30,0.38)} }
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-        button:focus-visible { outline:2px solid rgba(200,123,82,0.60); outline-offset:2px; }
+        button:focus-visible { outline:2px solid rgba(255,220,160,0.60); outline-offset:2px; }
         @media (min-width:600px) {
           html, body {
-            background: linear-gradient(160deg, #FFE8D6 0%, #F5D8C0 50%, #EBC9A8 100%);
+            background: linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%);
             background-attachment: fixed;
             min-height: 100vh;
           }
@@ -997,10 +944,10 @@ export default function Onboarding({ onTermine, onBack }) {
             margin: 0 auto;
             min-height: 100vh;
             box-shadow:
-              -1px 0 0 rgba(200,123,82,0.12),
-              1px 0 0 rgba(200,123,82,0.12),
-              0 0 60px rgba(180,80,20,0.18),
-              0 20px 80px rgba(180,80,20,0.12);
+              -1px 0 0 rgba(255,220,160,0.18),
+              1px 0 0 rgba(255,220,160,0.18),
+              0 0 60px rgba(180,80,20,0.12),
+              0 20px 80px rgba(180,80,20,0.08);
             border-radius: 0 0 24px 24px;
           }
           .ob-header {
@@ -1012,15 +959,15 @@ export default function Onboarding({ onTermine, onBack }) {
         }
       `}</style>
 
-      <BgBlobs step={step} />
-      <div style={{position:'absolute',inset:0,background:'rgba(255,245,235,0.22)',pointerEvents:'none',zIndex:1}}/>
+      <BgBlobs />
+      <div style={{position:'absolute',inset:0,background:'rgba(255,245,235,0.10)',pointerEvents:'none',zIndex:1}}/>
 
       {/* Header */}
       <div className="ob-header" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:100,
         backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-        background:'rgba(255,248,244,0.60)',
-        borderBottom:'1px solid rgba(255,255,255,0.42)',
+        background:'rgba(255,235,210,0.22)',
+        borderBottom:'1px solid rgba(255,220,160,0.28)',
         boxShadow:'0 2px 24px rgba(180,80,20,0.07)',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 20px)',
         paddingBottom:16,
@@ -1036,12 +983,12 @@ export default function Onboarding({ onTermine, onBack }) {
               style={{
                 position:'absolute', left:20,
                 width:36, height:36, borderRadius:'50%',
-                background:'rgba(200,123,82,0.08)',
+                background:'rgba(255,235,210,0.22)',
                 border:'none', cursor:'pointer',
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}
             >
-              <BackIcon color="rgba(200,123,82,0.78)" size={18}/>
+              <BackIcon color="rgba(255,248,235,0.82)" size={18}/>
             </motion.button>
           )}
           <motion.span
@@ -1051,8 +998,8 @@ export default function Onboarding({ onTermine, onBack }) {
             style={{
               fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
               fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
-              color:'rgba(184,105,58,0.88)',
-              textShadow:'0 1px 10px rgba(255,248,244,0.70)',
+              color:'rgba(255,248,235,0.92)',
+              textShadow:'0 1px 10px rgba(180,80,20,0.25)',
             }}
           >
             Solenn
@@ -1066,7 +1013,7 @@ export default function Onboarding({ onTermine, onBack }) {
               key={i}
               style={{
                 width:30, height:2, borderRadius:1,
-                background: i < step ? '#C87B52' : 'rgba(200,123,82,0.28)',
+                background: i < step ? 'rgba(255,220,160,0.90)' : 'rgba(255,220,160,0.25)',
                 transition:'background 0.22s ease-out',
               }}
             />
