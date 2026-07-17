@@ -153,7 +153,10 @@ export default function Auth({ onConnecte, onBack }) {
       if (error) setMessage(traductionErreur(error.message))
       else {
         if (!remember) {
-          window.addEventListener('beforeunload', () => supabase.auth.signOut(), { once: true })
+          localStorage.setItem('solenn_remember_me', 'false')
+          sessionStorage.setItem('solenn_active_session', '1')
+        } else {
+          localStorage.removeItem('solenn_remember_me')
         }
         onConnecte(data.user)
       }

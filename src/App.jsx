@@ -449,7 +449,16 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
-  const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
+  const [user, setUser]         = useState(() => {
+    if (localStorage.getItem('solenn_remember_me') === 'false' && !sessionStorage.getItem('solenn_active_session')) {
+      // "Don't remember me" session ended — clear stale auth
+      localStorage.removeItem('vitacoach_user')
+      localStorage.removeItem('solenn_remember_me')
+      getSupabase().then(sb => sb.auth.signOut())
+      return null
+    }
+    return safeParse('vitacoach_user', null)
+  })
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
   const [profilLoading, setProfilLoading] = useState(() => {
