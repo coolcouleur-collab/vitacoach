@@ -661,6 +661,7 @@ export default function Landing({ onCommencer }) {
             min-height: auto !important;
             padding: 24px 18px 20px !important;
           }
+          .globe-wrapper { opacity: 0.6; }
           .filmstrip-nav {
             gap: 0 !important;
             padding: 0 0.5rem !important;
@@ -669,7 +670,7 @@ export default function Landing({ onCommencer }) {
       `}</style>
 
       <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 1 }}>
-        <GlobeBg opacity={0.35} />
+        <div className="globe-wrapper"><GlobeBg opacity={0.35} /></div>
         <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
           background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
           pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
