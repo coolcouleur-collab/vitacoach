@@ -441,6 +441,11 @@ export default function App() {
   const [user, setUser]         = useState(() => safeParse('vitacoach_user', null))
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
+  const [profilLoading, setProfilLoading] = useState(() => {
+    const u = safeParse('vitacoach_user', null)
+    const p = safeParse('vitacoach_profil', null)
+    return !!u && !p
+  })
 const [messages, setMessages] = useState(() => {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
@@ -701,6 +706,7 @@ const [messages, setMessages] = useState(() => {
               localStorage.setItem('vitacoach_pro', JSON.stringify(true))
             }
           }
+          setProfilLoading(false)
         })
 
       // Charger les métriques du jour depuis Supabase
@@ -1147,6 +1153,7 @@ const [messages, setMessages] = useState(() => {
           sessionStorage.removeItem('solenn_page')
           setUser(u)
           localStorage.setItem('vitacoach_user', JSON.stringify(u))
+          if (!safeParse('vitacoach_profil', null)) setProfilLoading(true)
         }}
         onBack={goToLanding}
       />
@@ -1154,6 +1161,7 @@ const [messages, setMessages] = useState(() => {
   )
 
   // ── ONBOARDING ─────────────────────────────────────────────────────────────
+  if (profilLoading) return <GlowLoader fullPage />
   if (!profil) {
     return (
       <Suspense fallback={<GlowLoader fullPage />}>
