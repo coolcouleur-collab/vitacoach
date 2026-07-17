@@ -53,17 +53,19 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { box-sizing: border-box; scroll-behavior: auto; }
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; }
 html.lenis { height: auto; }
 body {
   background: var(--bg);
   color: var(--text-body);
   font-family: var(--font);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow: hidden;
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
+  height: 100%;
 }
+#root { height: 100%; overflow: hidden; }
 
 /* Scroll reveal */
 .IO {

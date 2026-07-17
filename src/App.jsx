@@ -1504,7 +1504,7 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
-        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY: isMobile ? 'auto' : 'unset', overflowX:'hidden', WebkitOverflowScrolling:'touch' }}>
+        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
 
           {/* Mobile header — transparent sur Accueil, plein sur les autres onglets */}
           {isMobile && onglet === 'accueil' && (
@@ -2859,7 +2859,7 @@ const st = {
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
 const F = "'Poppins', system-ui, sans-serif"
 const s = {
-  app: { display:'flex', minHeight:'100vh', background:'transparent', fontFamily:F, position:'relative' },
+  app: { display:'flex', height:'100%', background:'transparent', fontFamily:F, position:'relative' },
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
@@ -2938,8 +2938,8 @@ const s = {
   },
 
   // ── Main ─────────────────────────────────────────────────────────────────────
-  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, minHeight:'100vh', background:'transparent', overflow:'hidden' },
-  content: { flex:1, maxWidth:860, width:'100%', margin:'0 auto', display:'flex', flexDirection:'column' },
+  main: { flex:1, display:'flex', flexDirection:'column', position:'relative', zIndex:1, height:'100%', background:'transparent', overflow:'hidden' },
+  content: { flex:1, minHeight:0, maxWidth:860, width:'100%', margin:'0 auto', display:'flex', flexDirection:'column' },
 
   // ── Mobile header ─────────────────────────────────────────────────────────────
   mobileHeader: {
