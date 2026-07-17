@@ -1,17 +1,17 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { supabase } from './supabase'
 import { FlashIcon, LoadingIcon } from './Icons'
 import LiquidImage from './LiquidImage'
 import GlobeBg from './GlobeBg'
 
 const LANGS = [
-  { code: 'fr', flag: '🇫🇷' },
-  { code: 'en', flag: '🇬🇧' },
-  { code: 'es', flag: '🇪🇸' },
-  { code: 'pt', flag: '🇵🇹' },
-  { code: 'it', flag: '🇮🇹' },
-  { code: 'de', flag: '🇩🇪' },
-  { code: 'nl', flag: '🇳🇱' },
+  { code: 'fr', name: 'Français' },
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'pt', name: 'Português' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'nl', name: 'Nederlands' },
 ]
 
 const TRANS = {
@@ -117,9 +117,18 @@ export default function Auth({ onConnecte, onBack }) {
   const [message, setMessage]   = useState('')
   const [remember, setRemember] = useState(true)
   const [lang, setLang]         = useState(() => localStorage.getItem('solenn_lang') || 'fr')
+  const [langOpen, setLangOpen] = useState(false)
+  const langRef                 = useRef(null)
 
   const T = TRANS[lang]
-  function switchLang(l) { setLang(l); localStorage.setItem('solenn_lang', l); setMessage('') }
+  function switchLang(l) { setLang(l); localStorage.setItem('solenn_lang', l); setMessage(''); setLangOpen(false) }
+
+  useEffect(() => {
+    if (!langOpen) return
+    function handler(e) { if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false) }
+    const t = setTimeout(() => document.addEventListener('click', handler), 50)
+    return () => { clearTimeout(t); document.removeEventListener('click', handler) }
+  }, [langOpen])
 
   async function soumettre() {
     if (!email || !password) return setMessage(T.errFields)
@@ -202,30 +211,46 @@ export default function Auth({ onConnecte, onBack }) {
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
-      {/* ── Barre de langue fixe en haut ── */}
-      <div style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
-        display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2,
-        paddingTop: 'max(env(safe-area-inset-top, 10px), 10px)',
-        paddingBottom: 8, paddingLeft: 16, paddingRight: 16,
-        background: 'rgba(255,246,232,0.78)',
-        backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-        borderBottom: '1px solid rgba(255,210,140,0.22)',
-      }}>
-        {LANGS.map(({ code, flag }) => (
-          <button key={code} onClick={() => switchLang(code)} style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            padding: '8px 5px', minWidth: 40, minHeight: 40,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22,
-            transform: lang === code ? 'scale(1.35)' : 'scale(1)',
-            opacity: lang === code ? 1 : 0.38,
-            filter: lang === code ? 'drop-shadow(0 2px 5px rgba(160,90,10,0.30))' : 'none',
-            transition: 'transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease',
+      {/* ── Sélecteur langue — coin haut droit ── */}
+      <div ref={langRef} style={{ position:'fixed', top:'calc(env(safe-area-inset-top,0px) + 14px)', right:16, zIndex:210 }}>
+        <button onClick={() => setLangOpen(o => !o)} style={{
+          display:'flex', alignItems:'center', gap:5,
+          background:'rgba(255,235,200,0.55)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+          border:'1px solid rgba(200,123,82,0.22)', borderRadius:'2rem',
+          padding:'6px 12px', cursor:'pointer',
+          fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight:500, letterSpacing:'0.08em',
+          color:'rgba(100,45,10,0.80)', transition:'background 0.2s',
+        }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          {lang.toUpperCase()}
+        </button>
+        {langOpen && (
+          <div style={{
+            position:'absolute', right:0, top:'calc(100% + 6px)',
+            background:'rgba(255,242,220,0.97)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+            border:'1px solid rgba(200,123,82,0.18)', borderRadius:12,
+            padding:'4px 0', minWidth:140,
+            boxShadow:'0 8px 28px rgba(120,60,10,0.12)',
+            animation:'msgSlideIn 0.18s ease both',
           }}>
-            {flag}
-          </button>
-        ))}
+            {LANGS.map(({ code, name }) => (
+              <button key={code} onClick={() => switchLang(code)} style={{
+                display:'block', width:'100%', textAlign:'left',
+                padding:'9px 16px', background: lang===code ? 'rgba(200,123,82,0.10)' : 'none',
+                border:'none', cursor:'pointer',
+                fontFamily:'Poppins, sans-serif', fontSize:13,
+                fontWeight: lang===code ? 600 : 400,
+                color: lang===code ? 'rgba(100,45,10,0.95)' : 'rgba(100,45,10,0.60)',
+                transition:'background 0.15s',
+              }}>
+                {name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div style={s.liquidWrap}>
@@ -382,7 +407,7 @@ export default function Auth({ onConnecte, onBack }) {
 const s = {
   page: { minHeight:'100vh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex', alignItems:'center',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
-    paddingTop: 'calc(max(env(safe-area-inset-top, 10px), 10px) + 68px)',
+    paddingTop: 'calc(env(safe-area-inset-top, 0px) + 20px)',
     position:'relative', overflow:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
