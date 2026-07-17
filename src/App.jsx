@@ -28,6 +28,19 @@ const CycleTab      = lazy(() => import('./CycleTab'))
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
+// ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
+async function triggerHaptic(type = 'light') {
+  if (!window?.Capacitor?.isNativePlatform?.()) return
+  try {
+    const { Haptics, ImpactStyle } = await import('@capacitor/haptics')
+    await Haptics.impact({
+      style: type === 'heavy' ? ImpactStyle.Heavy
+           : type === 'medium' ? ImpactStyle.Medium
+           : ImpactStyle.Light,
+    })
+  } catch {}
+}
+
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
 function SolennFace({ size = 34 }) {
   return (
@@ -383,7 +396,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
                 <motion.button key={item.id}
                   initial={{ opacity:0, filter:'blur(10px)' }}
                   animate={{ opacity:1, filter:'blur(0px)', transition:{ delay: 0.06 + i * 0.04, duration:0.22, ease:[0.22,1,0.36,1] } }}
-                  onClick={() => { setOnglet(item.id); setOpen(false) }}
+                  onClick={() => { triggerHaptic('light'); setOnglet(item.id); setOpen(false) }}
                   style={{
                     background: isActive ? activeBg : 'transparent',
                     border:'none', cursor:'pointer', borderRadius:14,
@@ -2560,8 +2573,8 @@ function CapsuleSlider({ tenues, loading }) {
   function onTouchEnd(e) {
     if (touchStartX.current === null) return
     const dx = e.changedTouches[0].clientX - touchStartX.current
-    if (dx < -40) setActive(a => clamp(a + 1))
-    else if (dx > 40) setActive(a => clamp(a - 1))
+    if (dx < -40) { triggerHaptic('light'); setActive(a => clamp(a + 1)) }
+    else if (dx > 40) { triggerHaptic('light'); setActive(a => clamp(a - 1)) }
     touchStartX.current = null
   }
 
@@ -2688,12 +2701,15 @@ function TenuesModule({ profil }) {
   const [meteo, setMeteo]       = useState(() => localStorage.getItem('vitacoach_meteo') || '')
   const [loading, setLoading]   = useState(false)
   const [villeError, setVilleError] = useState(false)
+  const [apiError, setApiError] = useState(null)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
 
   async function getTenues(villeArg) {
     const v = (villeArg || ville).trim()
     if (!v) { setVilleError(true); return }
     setVilleError(false)
+    setApiError(null)
+    triggerHaptic('light')
     localStorage.setItem('vitacoach_ville', v)
     setLoading(true); setTenues([])
     try {
@@ -2701,14 +2717,26 @@ function TenuesModule({ profil }) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profil, ville: v, occasion })
       })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
+      if (data.erreur) {
+        setApiError('Service momentanément indisponible. Réessaie dans quelques secondes.')
+        setLoading(false)
+        return
+      }
       const t = data.tenues || []
+      if (t.length === 0) {
+        setApiError('Aucune tenue générée. Essaie une autre ville ou occasion.')
+        setLoading(false)
+        return
+      }
       setTenues(t)
       setMeteo(data.meteo || '')
       localStorage.setItem('vitacoach_tenues', JSON.stringify(t))
       localStorage.setItem('vitacoach_meteo', data.meteo || '')
     } catch (err) {
       console.error('Erreur tenues:', err)
+      setApiError('Impossible de charger les tenues. Vérifie ta connexion.')
       setTenues([])
     } finally {
       setLoading(false)
@@ -2765,6 +2793,14 @@ function TenuesModule({ profil }) {
           </button>
         </div>
         {villeError && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+
+        {/* Erreur API */}
+        {apiError && (
+          <div style={{ marginTop: 10, padding: '10px 14px', borderRadius: 12, background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.22)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14 }}>⚠️</span>
+            <span style={{ fontSize: 12, color: 'rgba(255,180,160,0.92)', fontFamily: F, fontWeight: 500, lineHeight: 1.4 }}>{apiError}</span>
+          </div>
+        )}
 
         {/* Météo */}
         {meteo && (
@@ -3079,7 +3115,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, disabled, kbOffs
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder="Pose une question à Solenn..."
           disabled={disabled} />
-        <button style={s.sendBtn} onClick={() => { navigator.vibrate?.(8); send() }}>
+        <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
           <SendIcon color="rgba(200,123,82,0.58)" size={20} />
         </button>
       </div>

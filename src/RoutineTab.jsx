@@ -86,12 +86,12 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: EASE }}
       style={{
-        background: 'rgba(255,255,255,0.55)',
-        border: '1px solid rgba(200,123,82,0.10)',
+        background: 'rgba(255,235,210,0.22)',
+        border: '1px solid rgba(255,220,160,0.28)',
         borderRadius: 20,
         padding: '18px 16px',
         marginBottom: 12,
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(18px)',
       }}
     >
       {/* Header section */}
@@ -99,7 +99,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 22 }}>{icon}</span>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
               {titre}
             </div>
             {heure && (
@@ -111,8 +111,8 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
         </div>
         {etapes.length > 0 && (
           <div style={{
-            fontSize: 11, fontWeight: 600, color: done === etapes.length ? '#22c55e' : 'rgba(200,123,82,0.60)',
-            fontFamily: 'Poppins,sans-serif', background: done === etapes.length ? 'rgba(34,197,94,0.10)' : 'rgba(200,123,82,0.08)',
+            fontSize: 11, fontWeight: 600, color: done === etapes.length ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.60)',
+            fontFamily: 'Poppins,sans-serif', background: done === etapes.length ? 'rgba(200,123,82,0.18)' : 'rgba(200,123,82,0.08)',
             padding: '3px 8px', borderRadius: 12,
           }}>
             {done}/{etapes.length}
@@ -140,7 +140,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
                 <span style={{ fontSize: 15 }}>{e.emoji}</span>
                 <span style={{
                   fontSize: 13, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
-                  color: checked[e.id] ? 'rgba(26,10,0,0.35)' : '#0A1633',
+                  color: checked[e.id] ? 'rgba(200,123,82,0.35)' : 'rgba(200,123,82,0.92)',
                   textDecoration: checked[e.id] ? 'line-through' : 'none',
                   transition: 'all 0.2s',
                 }}>
@@ -157,7 +157,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
               </div>
               {e.description && (
                 <div style={{
-                  fontSize: 11.5, color: checked[e.id] ? 'rgba(26,10,0,0.25)' : 'rgba(26,10,0,0.50)',
+                  fontSize: 11.5, color: checked[e.id] ? 'rgba(200,123,82,0.25)' : 'rgba(200,123,82,0.50)',
                   fontFamily: 'Poppins,sans-serif', lineHeight: 1.5,
                   transition: 'color 0.2s',
                 }}>
@@ -181,15 +181,15 @@ function NutritionCard({ nutrition }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
       style={{
-        background: 'rgba(255,255,255,0.55)',
-        border: '1px solid rgba(200,123,82,0.10)',
+        background: 'rgba(255,235,210,0.22)',
+        border: '1px solid rgba(255,220,160,0.28)',
         borderRadius: 20, padding: '18px 16px', marginBottom: 12,
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(18px)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
         <span style={{ fontSize: 22 }}>🥗</span>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
           {nutrition.titre || 'Nutrition du jour'}
         </div>
       </div>
@@ -205,7 +205,7 @@ function NutritionCard({ nutrition }) {
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {r.moment}
               </div>
-              <div style={{ fontSize: 12.5, color: '#0A1633', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
                 {r.suggestion}
               </div>
             </div>
@@ -219,7 +219,7 @@ function NutritionCard({ nutrition }) {
             💊 Suppléments
           </div>
           {nutrition.supplements.map((s, i) => (
-            <div key={i} style={{ fontSize: 12, color: 'rgba(26,10,0,0.65)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
+            <div key={i} style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
           ))}
         </div>
       )}
@@ -239,10 +239,10 @@ function EmptyRoutine({ generating, onGenerate }) {
       }}
     >
       <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="#E8962A" /></div>
-      <div style={{ fontSize: 18, fontWeight: 700, color: '#0A1633', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
+      <div style={{ fontSize: 18, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
-      <div style={{ fontSize: 13, color: 'rgba(26,10,0,0.45)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
+      <div style={{ fontSize: 13, color: 'rgba(200,123,82,0.45)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
         Solenn va générer une routine personnalisée pour ta journée en fonction de ton profil et de tes métriques.
       </div>
       <button
@@ -306,6 +306,11 @@ export default function RoutineTab({ userId, profil }) {
   // ── Générer à la demande ──
   async function generer() {
     if (!userId || !profil) return
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+        Haptics.impact({ style: ImpactStyle.Light })
+      }).catch(() => {})
+    }
     setGenerating(true); setError(null)
     try {
       const res = await fetch('/api/routine-regenerer', {
@@ -332,8 +337,14 @@ export default function RoutineTab({ userId, profil }) {
   // ── Toggle une étape ──
   function toggleStep(id) {
     setChecked(prev => {
-      const next = { ...prev, [id]: !prev[id] }
+      const completing = !prev[id]
+      const next = { ...prev, [id]: completing }
       localStorage.setItem(storageKey, JSON.stringify(next))
+      if (window?.Capacitor?.isNativePlatform?.()) {
+        import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+          Haptics.impact({ style: completing ? ImpactStyle.Medium : ImpactStyle.Light })
+        }).catch(() => {})
+      }
       return next
     })
   }
@@ -365,7 +376,6 @@ export default function RoutineTab({ userId, profil }) {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(160deg, #FFF8F4 0%, #FFF2E8 60%, #FFE8D6 100%)',
       paddingBottom: 120,
     }}>
       {/* ── Header ── */}
@@ -374,7 +384,7 @@ export default function RoutineTab({ userId, profil }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#0A1633', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
             Ma Routine
           </div>
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
@@ -418,9 +428,9 @@ export default function RoutineTab({ userId, profil }) {
         {/* Erreur */}
         {!loading && error && (
           <div style={{
-            background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
+            background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12, padding: '12px 16px', marginBottom: 12,
-            fontSize: 13, color: '#ef4444', fontFamily: 'Poppins,sans-serif',
+            fontSize: 13, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
           }}>
             ⚠️ {error}
           </div>
@@ -471,7 +481,7 @@ export default function RoutineTab({ userId, profil }) {
                 <div style={{ flex: 1 }}>
                   {routine.motivation && (
                     <div style={{
-                      fontSize: 12.5, color: '#0A1633', fontFamily: 'Poppins,sans-serif',
+                      fontSize: 12.5, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
                       lineHeight: 1.55, fontStyle: 'italic', marginBottom: 8,
                       fontWeight: 500,
                     }}>
@@ -515,7 +525,7 @@ export default function RoutineTab({ userId, profil }) {
               {/* ── Soir ── */}
               {routine.soir?.etapes?.length > 0 && (
                 <Section
-                  icon={<MoonIcon size={22} color="#9A96CC" />}
+                  icon={<MoonIcon size={22} color="#C87B52" />}
                   titre={routine.soir.titre || 'Soir'}
                   heure={routine.soir.heure}
                   etapes={routine.soir.etapes}
@@ -543,7 +553,7 @@ export default function RoutineTab({ userId, profil }) {
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,100,20,0.80)', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(26,10,0,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
                       {routine.astuce.conseil}
                     </div>
                   </div>
@@ -559,16 +569,16 @@ export default function RoutineTab({ userId, profil }) {
                     exit={{ opacity: 0 }}
                     style={{
                       textAlign: 'center', padding: '20px 16px',
-                      background: 'linear-gradient(135deg, rgba(34,197,94,0.10), rgba(16,185,129,0.08))',
-                      border: '1px solid rgba(34,197,94,0.20)',
+                      background: 'linear-gradient(135deg, rgba(200,123,82,0.10), rgba(232,150,42,0.08))',
+                      border: '1px solid rgba(255,220,160,0.28)',
                       borderRadius: 20, marginTop: 8,
                     }}
                   >
                     <div style={{ fontSize: 36, marginBottom: 8 }}>🎉</div>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: '#16a34a', fontFamily: 'Poppins,sans-serif' }}>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif' }}>
                       Journée accomplie !
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(22,163,74,0.70)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
+                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
                       Tu as terminé toutes tes étapes. Solenn est fière de toi !
                     </div>
                   </motion.div>
