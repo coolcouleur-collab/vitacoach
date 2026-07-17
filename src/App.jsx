@@ -2743,13 +2743,6 @@ function TenuesModule({ profil }) {
           </div>
         )}
 
-        {/* Capsule Slider */}
-        {(loading || tenues.length > 0) && (
-          <div style={{ marginTop: 16 }}>
-            <CapsuleSlider tenues={tenues} loading={loading} />
-          </div>
-        )}
-
         {/* Empty state si pas encore de ville */}
         {!loading && tenues.length === 0 && !ville && (
           <div style={{ textAlign:'center', padding:'32px 0 8px' }}>
@@ -2765,6 +2758,13 @@ function TenuesModule({ profil }) {
           </div>
         )}
       </div>
+
+      {/* Capsule Slider — hors du panel pour ne pas être rogné par les bords */}
+      {(loading || tenues.length > 0) && (
+        <div style={{ marginTop: 16 }}>
+          <CapsuleSlider tenues={tenues} loading={loading} />
+        </div>
+      )}
     </div>
   )
 }
@@ -2929,15 +2929,15 @@ const s = {
   scorePill: { borderRadius:20, padding:'4px 10px', fontSize:11, fontWeight:700 },
 
   // ── Page header ───────────────────────────────────────────────────────────────
-  pageHeader: { padding:'2.8rem 0 2rem', borderBottom:'1px solid #f0e8e0', marginBottom:'2rem' },
+  pageHeader: { padding:'2.8rem 0 2rem', borderBottom:'1px solid rgba(255,220,160,0.18)', marginBottom:'2rem' },
   tabHeaderMobile: { display:'flex', alignItems:'center', gap:10, padding:'16px 0 12px', marginBottom:4 },
   backBtnInline: {
     width:34, height:34, borderRadius:10,
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(55,22,5,0.90)', letterSpacing:'-0.03em', marginBottom:2 },
-  pageSubtitle: { fontSize:12, color:'rgba(200,123,82,0.6)', fontWeight:500 },
+  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(255,248,235,0.95)', letterSpacing:'-0.03em', marginBottom:2 },
+  pageSubtitle: { fontSize:12, color:'rgba(255,248,235,0.55)', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
   chatWrap: {
