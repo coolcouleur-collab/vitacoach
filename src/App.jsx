@@ -2429,18 +2429,18 @@ function TenueCard({ tenue, style: extraStyle }) {
   return (
     <div style={{
       width: 280,
-      borderRadius: 28,
+      borderRadius: 24,
       overflow: 'hidden',
-      background: 'rgba(255,245,238,0.97)',
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
-      boxShadow: '0 16px 48px rgba(158,92,53,0.28), 0 2px 8px rgba(0,0,0,0.10)',
-      border: '1px solid rgba(255,220,160,0.35)',
+      background: 'rgba(255,235,210,0.20)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      boxShadow: '0 16px 48px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.18)',
+      border: '1px solid rgba(255,220,160,0.28)',
       flexShrink: 0,
       ...extraStyle,
     }}>
       {/* Image area */}
-      <div style={{ width: '100%', height: 320, background: '#EDE0D4', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: '100%', height: 320, background: 'rgba(18,8,3,0.78)', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {imgLoading && (
           <div style={{
             position: 'absolute', inset: 0,
@@ -2473,20 +2473,21 @@ function TenueCard({ tenue, style: extraStyle }) {
       </div>
       {/* Info area */}
       <div style={{ padding: '14px 16px 18px' }}>
-        <div style={{ fontWeight: 700, color: 'rgba(140,65,20,0.95)', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em', fontFamily: F }}>
+        <div style={{ fontWeight: 600, color: 'rgba(255,248,235,0.92)', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em', fontFamily: F }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(100,48,15,0.85)', lineHeight: 1.55, marginBottom: 8, fontFamily: F,
+        <div style={{ fontSize: 12, color: 'rgba(255,248,235,0.68)', lineHeight: 1.55, marginBottom: 8, fontFamily: F,
           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
         <div style={{
-          fontSize: 11, color: 'rgba(140,65,20,0.80)', fontStyle: 'italic', lineHeight: 1.45,
+          fontSize: 11, color: 'rgba(255,248,235,0.60)', lineHeight: 1.45,
           display: 'flex', alignItems: 'flex-start', gap: 5,
-          background: 'rgba(200,123,82,0.10)', borderRadius: 10, padding: '6px 10px',
+          background: 'rgba(200,123,82,0.18)', borderRadius: 10, padding: '6px 10px',
+          border: '1px solid rgba(255,220,160,0.15)',
           fontFamily: F,
         }}>
-          <LightbulbIcon size={12} color="rgba(190,100,35,0.80)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <LightbulbIcon size={12} color="rgba(255,220,160,0.65)" style={{ flexShrink: 0, marginTop: 1 }} />
           <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tenue.pourquoi}</span>
         </div>
       </div>
