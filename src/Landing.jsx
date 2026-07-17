@@ -262,31 +262,6 @@ function CinematicSlider({ onCommencer }) {
         </div>
 
         {/* ── Slide title — visible bas-gauche ── */}
-        {showPanel && (
-          <div
-            onClick={() => setShowPanel(false)}
-            style={{
-              position: 'absolute',
-              bottom: 'calc(6.2rem + env(safe-area-inset-bottom, 0px))',
-              left: '2rem',
-              zIndex: 15,
-              cursor: 'pointer',
-              pointerEvents: 'all',
-            }}
-          >
-            <div key={cur} style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontStyle: 'italic',
-              fontWeight: 300,
-              fontSize: 'clamp(1.3rem, 2vw, 1.65rem)',
-              color: 'rgba(255,248,235,0.88)',
-              lineHeight: 1.25,
-              animation: 'panelIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
-            }}>
-              {SLIDE.title[0]}<br />{SLIDE.title[1]}
-            </div>
-          </div>
-        )}
 
         {/* ── Mini panel transparent ── */}
         {showPanel && (
