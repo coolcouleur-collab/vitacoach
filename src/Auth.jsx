@@ -4,6 +4,47 @@ import { FlashIcon, LoadingIcon } from './Icons'
 import LiquidImage from './LiquidImage'
 import GlobeBg from './GlobeBg'
 
+const TRANS = {
+  fr: {
+    login: 'Connexion', signup: 'Inscription',
+    email: 'Email', password: 'Mot de passe',
+    remember: 'Se souvenir de moi',
+    ctaLogin: 'Retrouver Solenn', ctaSignup: 'Rejoindre Solenn',
+    loading: 'Chargement…',
+    terms: "En rejoignant Solenn, tu acceptes nos",
+    termsLink: "conditions d'utilisation",
+    errFields: 'Remplis tous les champs !',
+    errShort: 'Mot de passe minimum 6 caractères.',
+    okCreated: '✓ Compte créé ! Connecte-toi.',
+    errInvalid: 'Identifiants incorrects.',
+    errNotConfirmed: 'Confirme ton email avant de te connecter.',
+    errExists: 'Ce compte existe déjà — connecte-toi.',
+    errPasswordShort: 'Mot de passe trop court (6 caractères minimum).',
+    errEmailInvalid: 'Adresse email invalide.',
+    errNetwork: 'Problème de connexion, réessaie.',
+    errGeneric: 'Une erreur est survenue, réessaie.',
+  },
+  en: {
+    login: 'Log in', signup: 'Sign up',
+    email: 'Email', password: 'Password',
+    remember: 'Remember me',
+    ctaLogin: 'Find Solenn', ctaSignup: 'Join Solenn',
+    loading: 'Loading…',
+    terms: 'By joining Solenn, you agree to our',
+    termsLink: 'terms of use',
+    errFields: 'Please fill in all fields.',
+    errShort: 'Password must be at least 6 characters.',
+    okCreated: '✓ Account created! Log in.',
+    errInvalid: 'Incorrect credentials.',
+    errNotConfirmed: 'Please confirm your email first.',
+    errExists: 'Account already exists — log in.',
+    errPasswordShort: 'Password too short (6 characters minimum).',
+    errEmailInvalid: 'Invalid email address.',
+    errNetwork: 'Connection error, please try again.',
+    errGeneric: 'Something went wrong, please try again.',
+  },
+}
+
 export default function Auth({ onConnecte, onBack }) {
   const [mode, setMode]         = useState('connexion')
   const [email, setEmail]       = useState('')
@@ -11,25 +52,29 @@ export default function Auth({ onConnecte, onBack }) {
   const [loading, setLoading]   = useState(false)
   const [message, setMessage]   = useState('')
   const [remember, setRemember] = useState(true)
+  const [lang, setLang]         = useState(() => localStorage.getItem('solenn_lang') || 'fr')
+
+  const T = TRANS[lang]
+  function switchLang(l) { setLang(l); localStorage.setItem('solenn_lang', l); setMessage('') }
 
   async function soumettre() {
-    if (!email || !password) return setMessage('Remplis tous les champs !')
-    if (password.length < 6) return setMessage('Mot de passe minimum 6 caractères.')
+    if (!email || !password) return setMessage(T.errFields)
+    if (password.length < 6) return setMessage(T.errShort)
     setLoading(true); setMessage('')
     const traductionErreur = (msg = '') => {
-      if (/invalid login/i.test(msg))      return 'Identifiants incorrects.'
-      if (/email not confirmed/i.test(msg)) return 'Confirme ton email avant de te connecter.'
-      if (/already registered/i.test(msg)) return 'Ce compte existe déjà — connecte-toi.'
-      if (/password.*short|at least/i.test(msg)) return 'Mot de passe trop court (6 caractères minimum).'
-      if (/invalid email/i.test(msg))      return 'Adresse email invalide.'
-      if (/network|fetch/i.test(msg))      return 'Problème de connexion, réessaie.'
-      return 'Une erreur est survenue, réessaie.'
+      if (/invalid login/i.test(msg))           return T.errInvalid
+      if (/email not confirmed/i.test(msg))     return T.errNotConfirmed
+      if (/already registered/i.test(msg))      return T.errExists
+      if (/password.*short|at least/i.test(msg)) return T.errPasswordShort
+      if (/invalid email/i.test(msg))           return T.errEmailInvalid
+      if (/network|fetch/i.test(msg))           return T.errNetwork
+      return T.errGeneric
     }
 
     if (mode === 'inscription') {
       const { error } = await supabase.auth.signUp({ email, password })
       if (error) setMessage(traductionErreur(error.message))
-      else { setMessage('✓ Compte créé ! Connecte-toi.'); setMode('connexion') }
+      else { setMessage(T.okCreated); setMode('connexion') }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage(traductionErreur(error.message))
@@ -147,13 +192,13 @@ export default function Auth({ onConnecte, onBack }) {
         <div style={s.tabs}>
           {['connexion','inscription'].map(m => (
             <button key={m} style={mode===m ? s.tabActive : s.tab} onClick={() => setMode(m)}>
-              {m === 'connexion' ? 'Connexion' : 'Inscription'}
+              {m === 'connexion' ? T.login : T.signup}
             </button>
           ))}
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>Email</label>
+          <label style={s.label}>{T.email}</label>
           <input style={s.input} type="email" placeholder="@" value={email}
             autoComplete="email" name="email"
             onChange={e => setEmail(e.target.value)}
@@ -161,7 +206,7 @@ export default function Auth({ onConnecte, onBack }) {
         </div>
 
         <div style={{...s.field, position:'relative'}}>
-          <label style={s.label}>Mot de passe</label>
+          <label style={s.label}>{T.password}</label>
           <div style={{position:'relative'}}>
             <svg style={{position:'absolute', left:4, top:'50%', transform:'translateY(-50%)',
               opacity:0.82, pointerEvents:'none', color:'rgba(255,248,235,1)'}}
@@ -185,7 +230,7 @@ export default function Auth({ onConnecte, onBack }) {
               style={{ accentColor:'#C87B52', width:15, height:15, cursor:'pointer' }}
             />
             <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.87)' }}>
-              Se souvenir de moi
+              {T.remember}
             </span>
           </label>
         )}
@@ -225,19 +270,36 @@ export default function Auth({ onConnecte, onBack }) {
           }}>
           <span style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
             {loading
-              ? <><LoadingIcon size={16} color="#C87B52" /> Chargement...</>
+              ? <><LoadingIcon size={16} color="#C87B52" /> {T.loading}</>
               : mode==='connexion'
-                ? <>Retrouver Solenn <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>
-                : <>Rejoindre Solenn <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>}
+                ? <>{T.ctaLogin} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>
+                : <>{T.ctaSignup} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>}
           </span>
         </button>
 
         {mode === 'inscription' && (
           <div style={s.footer}>
-            En rejoignant Solenn, tu acceptes nos<br />
-            <span style={{ color:'rgba(255,228,195,0.75)', fontWeight:600 }}>conditions d'utilisation</span>.
+            {T.terms}<br />
+            <span style={{ color:'rgba(255,228,195,0.75)', fontWeight:600 }}>{T.termsLink}</span>.
           </div>
         )}
+
+        {/* ── Sélecteur de langue ── */}
+        <div style={{ display:'flex', justifyContent:'center', gap:4, marginTop:20 }}>
+          {['fr','en'].map(l => (
+            <button key={l} onClick={() => switchLang(l)} style={{
+              background: lang === l ? 'rgba(200,123,82,0.15)' : 'transparent',
+              border: lang === l ? '1px solid rgba(200,123,82,0.40)' : '1px solid rgba(255,220,160,0.20)',
+              borderRadius:'2rem', padding:'4px 12px', cursor:'pointer',
+              fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight: lang === l ? 600 : 400,
+              color: lang === l ? 'rgba(255,248,235,0.95)' : 'rgba(255,248,235,0.45)',
+              letterSpacing:'0.08em', textTransform:'uppercase',
+              transition:'all 0.2s',
+            }}>
+              {l === 'fr' ? 'FR' : 'EN'}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
