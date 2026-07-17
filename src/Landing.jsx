@@ -386,7 +386,6 @@ function CinematicSlider({ onCommencer }) {
             <button
               key={i}
               onClick={() => {
-                if (soundOn) playFxSound('click')
                 if (i === cur) { setShowPanel(p => !p) }
                 else { navigate(i, i > cur ? 'next' : 'prev'); setShowPanel(true) }
               }}
