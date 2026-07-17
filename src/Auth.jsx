@@ -184,7 +184,7 @@ export default function Auth({ onConnecte, onBack }) {
               type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
               style={{ accentColor:'#C87B52', width:15, height:15, cursor:'pointer' }}
             />
-            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.72)' }}>
+            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.87)' }}>
               Se souvenir de moi
             </span>
           </label>
@@ -271,14 +271,14 @@ const s = {
   tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
     borderBottom:'1px solid rgba(255,220,160,0.20)' },
   tab: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
-    fontSize:14, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.55)', fontWeight:400,
+    fontSize:14, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.72)', fontWeight:400,
     borderBottom:'2px solid transparent', marginBottom:'-1px' },
   tabActive: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
     fontSize:14, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,1)', fontWeight:600,
     borderBottom:'2px solid rgba(255,220,160,0.60)', marginBottom:'-1px' },
   field: { marginBottom:16 },
   label: { display:'block', marginBottom:6, fontWeight:500, fontSize:12,
-    color:'rgba(255,248,235,0.82)', letterSpacing:'1.2px', textTransform:'uppercase' },
+    color:'rgba(255,248,235,0.92)', letterSpacing:'1.2px', textTransform:'uppercase' },
   input: { width:'100%', padding:'12px 14px', border:'1px solid rgba(255,220,160,0.30)',
     borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:15, fontFamily:'Poppins, sans-serif',
     boxSizing:'border-box', outline:'none', color:'rgba(255,248,235,1)', transition:'border-color 0.2s, background 0.2s' },
