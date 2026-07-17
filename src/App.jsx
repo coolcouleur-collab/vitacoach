@@ -2712,14 +2712,14 @@ function TenuesModule({ profil }) {
     <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
       <style>{`
   .tenues-ville-input { border: 1px solid rgba(255,220,160,0.35) !important; box-shadow: none !important; }
-  .tenues-ville-input::placeholder { color: rgba(255,248,235,0.38); }
-  .tenues-ville-input:focus { border-color: rgba(255,220,160,0.65) !important; box-shadow: 0 0 0 3px rgba(255,220,160,0.12) !important; outline: none !important; }
+  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.42); }
+  .tenues-ville-input:focus { border-color: rgba(200,123,82,0.50) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
   .tenues-ville-input:-webkit-autofill,
   .tenues-ville-input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
-    -webkit-text-fill-color: rgba(255,248,235,1) !important;
+    -webkit-text-fill-color: rgba(200,123,82,0.92) !important;
   }
-  .tenues-select option { background: #4a2810; color: rgba(255,248,235,0.92); }
+  .tenues-select option { background: #F5E8D8; color: rgba(160,80,20,0.92); }
 `}</style>
       {/* Controls — toujours visibles */}
       <div style={{ ...st.panel, marginBottom: 0 }}>
@@ -2804,7 +2804,7 @@ const st = {
   meteoBar: {
     background: 'rgba(255,235,210,0.20)', borderRadius: 12, padding: '8px 14px',
     fontSize: 12, marginBottom: 12,
-    color: 'rgba(255,248,235,0.80)', fontWeight: 500,
+    color: 'rgba(200,123,82,0.88)', fontWeight: 500,
     border: '1px solid rgba(255,220,160,0.25)',
     display: 'flex', alignItems: 'center', gap: 6,
   },
@@ -2814,7 +2814,7 @@ const st = {
     border: '1px solid rgba(255,220,160,0.35)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 13, fontFamily: "'Poppins',system-ui,sans-serif",
-    outline: 'none', color: 'rgba(255,248,235,1)',
+    outline: 'none', color: 'rgba(200,123,82,0.92)',
     WebkitAppearance: 'none', appearance: 'none',
     boxShadow: 'none',
   },
@@ -2823,7 +2823,7 @@ const st = {
     border: '1px solid rgba(255,220,160,0.30)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 12, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
-    color: 'rgba(255,248,235,0.90)', cursor: 'pointer',
+    color: 'rgba(200,123,82,0.90)', cursor: 'pointer',
     appearance: 'none', WebkitAppearance: 'none',
   },
   btn: {
