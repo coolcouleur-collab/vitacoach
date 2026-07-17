@@ -16,13 +16,23 @@ export default function Auth({ onConnecte, onBack }) {
     if (!email || !password) return setMessage('Remplis tous les champs !')
     if (password.length < 6) return setMessage('Mot de passe minimum 6 caractères.')
     setLoading(true); setMessage('')
+    const traductionErreur = (msg = '') => {
+      if (/invalid login/i.test(msg))      return 'Identifiants incorrects.'
+      if (/email not confirmed/i.test(msg)) return 'Confirme ton email avant de te connecter.'
+      if (/already registered/i.test(msg)) return 'Ce compte existe déjà — connecte-toi.'
+      if (/password.*short|at least/i.test(msg)) return 'Mot de passe trop court (6 caractères minimum).'
+      if (/invalid email/i.test(msg))      return 'Adresse email invalide.'
+      if (/network|fetch/i.test(msg))      return 'Problème de connexion, réessaie.'
+      return 'Une erreur est survenue, réessaie.'
+    }
+
     if (mode === 'inscription') {
       const { error } = await supabase.auth.signUp({ email, password })
-      if (error) setMessage(error.message)
+      if (error) setMessage(traductionErreur(error.message))
       else { setMessage('✓ Compte créé ! Connecte-toi.'); setMode('connexion') }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) setMessage(error.message)
+      if (error) setMessage(traductionErreur(error.message))
       else {
         if (!remember) {
           window.addEventListener('beforeunload', () => supabase.auth.signOut(), { once: true })
@@ -62,6 +72,17 @@ export default function Auth({ onConnecte, onBack }) {
           0%,100% { transform: translate(0,0) scale(1); }
           33%     { transform: translate(30px,-20px) scale(1.04); }
           66%     { transform: translate(-20px,15px) scale(0.97); }
+        }
+        @keyframes msgSlideIn {
+          from { opacity:0; transform: translateY(-6px); }
+          to   { opacity:1; transform: translateY(0); }
+        }
+        @keyframes msgShake {
+          0%,100% { transform: translateX(0); }
+          20%     { transform: translateX(-5px); }
+          40%     { transform: translateX(5px); }
+          60%     { transform: translateX(-3px); }
+          80%     { transform: translateX(3px); }
         }
         input::placeholder { color: rgba(255,248,235,0.82); }
         input:-webkit-autofill,
@@ -170,11 +191,32 @@ export default function Auth({ onConnecte, onBack }) {
         )}
 
         {message && (
-          <div style={{ ...s.msg,
-            background: message.startsWith('✓') ? '#f0fdf4' : '#fef2f2',
-            color: message.startsWith('✓') ? '#16a34a' : '#dc2626',
-            border: `1px solid ${message.startsWith('✓') ? '#bbf7d0' : '#fecaca'}` }}>
-            {message}
+          <div key={message} style={{
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '11px 14px', borderRadius: 12, marginBottom: 14,
+            animation: message.startsWith('✓')
+              ? 'msgSlideIn 0.35s ease both'
+              : 'msgShake 0.42s ease both',
+            background: message.startsWith('✓')
+              ? 'rgba(180,220,160,0.08)'
+              : 'rgba(200,100,40,0.08)',
+            borderLeft: `3px solid ${message.startsWith('✓') ? 'rgba(160,210,130,0.55)' : 'rgba(200,110,50,0.50)'}`,
+          }}>
+            <span style={{ fontSize: 14, flexShrink: 0, opacity: 0.80 }}>
+              {message.startsWith('✓') ? '✓' : '·'}
+            </span>
+            <span style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)',
+              color: message.startsWith('✓')
+                ? 'rgba(200,240,180,0.90)'
+                : 'rgba(255,225,195,0.88)',
+              letterSpacing: '0.01em',
+              lineHeight: 1.4,
+            }}>
+              {message}
+            </span>
           </div>
         )}
 
