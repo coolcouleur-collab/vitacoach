@@ -129,82 +129,97 @@ function RevealScreen({ answers, onEnter }) {
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(32px)',
         transition:'opacity 0.7s ease, transform 0.7s cubic-bezier(0.34,1.56,0.64,1)',
-        display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
+        display:'flex', flexDirection:'column', alignItems:'center',
       }}>
+        {/* Avatar au-dessus de la carte */}
         <div style={{
           width:88, height:88, borderRadius:'50%',
-          background:'rgba(255,235,210,0.28)',
+          background:'rgba(255,235,210,0.32)',
           backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-          border:'1px solid rgba(255,220,160,0.40)',
+          border:'1px solid rgba(255,220,160,0.45)',
           display:'flex', alignItems:'center', justifyContent:'center',
-          marginBottom:24,
-          boxShadow:'0 0 0 8px rgba(200,123,82,0.08), 0 0 0 16px rgba(200,123,82,0.04)',
+          marginBottom:-44, zIndex:2, position:'relative',
+          boxShadow:'0 0 0 8px rgba(200,123,82,0.10), 0 0 0 16px rgba(200,123,82,0.05)',
           animation:'revealPulse 2.8s ease-in-out infinite',
         }}>
           <span style={{
-            fontSize:38, fontWeight:800, color:'rgba(255,248,235,0.92)',
+            fontSize:38, fontWeight:800, color:'rgba(255,248,235,1)',
             fontFamily:'Poppins, sans-serif', letterSpacing:'-0.02em',
           }}>
             {nom.charAt(0).toUpperCase()}
           </span>
         </div>
-        <div style={{fontSize:13, fontWeight:600, color:'rgba(255,248,235,0.72)', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:10}}>
-          Profil créé
-        </div>
-        <h1 style={{fontSize:'clamp(28px,7vw,40px)', fontWeight:900, color:'rgba(255,248,235,0.97)', letterSpacing:'-0.03em', marginBottom:6, lineHeight:1.1}}>
-          Bonjour, {nom} !
-        </h1>
-        <p style={{fontSize:15, color:'rgba(255,248,235,0.68)', marginBottom:32, lineHeight:1.6}}>
-          Solenn connaît ton profil et est prête à t'accompagner.
-        </p>
-        {objectifs.length > 0 && (
-          <div style={{marginBottom:20, width:'100%'}}>
-            <div style={{fontSize:11, fontWeight:700, color:'rgba(255,248,235,0.55)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
-              Ton objectif
+
+        {/* Carte glassmorphism — même style qu'Auth */}
+        <div style={{
+          width:'100%',
+          background:'rgba(255,235,210,0.28)',
+          backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+          border:'1px solid rgba(255,220,160,0.32)',
+          borderRadius:24,
+          padding:'56px 24px 28px',
+          display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
+          boxShadow:'0 8px 40px rgba(180,80,20,0.10)',
+        }}>
+          <div style={{fontSize:12, fontWeight:700, color:'rgba(255,248,235,0.88)', letterSpacing:'1.8px', textTransform:'uppercase', marginBottom:10}}>
+            Profil créé
+          </div>
+          <h1 style={{fontSize:'clamp(26px,7vw,38px)', fontWeight:900, color:'rgba(255,248,235,1)', letterSpacing:'-0.03em', marginBottom:8, lineHeight:1.1}}>
+            Bonjour, {nom} !
+          </h1>
+          <p style={{fontSize:15, color:'rgba(255,248,235,0.90)', marginBottom:28, lineHeight:1.6}}>
+            Solenn connaît ton profil et est prête à t'accompagner.
+          </p>
+          {objectifs.length > 0 && (
+            <div style={{marginBottom:18, width:'100%'}}>
+              <div style={{fontSize:11, fontWeight:700, color:'rgba(255,248,235,0.72)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
+                Ton objectif
+              </div>
+              <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
+                {objectifs.map(o => (
+                  <span key={o} style={{
+                    padding:'7px 16px', borderRadius:20,
+                    background:'rgba(255,235,210,0.22)',
+                    border:'1px solid rgba(255,220,160,0.45)',
+                    fontSize:12, fontWeight:600, color:'rgba(255,248,235,0.97)',
+                  }}>{o}</span>
+                ))}
+              </div>
             </div>
-            <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
-              {objectifs.map(o => (
-                <span key={o} style={{
-                  padding:'7px 16px', borderRadius:20,
-                  background:'rgba(255,235,210,0.20)',
-                  border:'1px solid rgba(255,220,160,0.38)',
-                  fontSize:12, fontWeight:600, color:'rgba(255,248,235,0.88)',
-                }}>{o}</span>
+          )}
+          {tags.length > 0 && (
+            <div style={{display:'flex', flexWrap:'wrap', gap:7, justifyContent:'center', marginBottom:28}}>
+              {tags.map(t => (
+                <span key={t} style={{
+                  padding:'5px 12px', borderRadius:20,
+                  background:'rgba(255,235,210,0.16)',
+                  border:'1px solid rgba(255,220,160,0.35)',
+                  fontSize:11, fontWeight:500, color:'rgba(255,248,235,0.90)',
+                }}>{t}</span>
               ))}
             </div>
-          </div>
-        )}
-        {tags.length > 0 && (
-          <div style={{display:'flex', flexWrap:'wrap', gap:7, justifyContent:'center', marginBottom:40}}>
-            {tags.map(t => (
-              <span key={t} style={{
-                padding:'5px 12px', borderRadius:20,
-                background:'rgba(255,235,210,0.14)',
-                border:'1px solid rgba(255,220,160,0.28)',
-                fontSize:11, fontWeight:500, color:'rgba(255,248,235,0.75)',
-              }}>{t}</span>
-            ))}
-          </div>
-        )}
-        <button
-          onClick={onEnter}
-          style={{
-            width:'100%', height:52,
-            background:'rgba(255,235,210,0.18)',
-            backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-            color:'rgba(255,248,235,0.92)', border:'1px solid rgba(255,220,160,0.50)', borderRadius:30,
-            fontSize:15, fontWeight:600, cursor:'pointer',
-            fontFamily:'Poppins, sans-serif',
-            display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-            opacity: btnVisible ? 1 : 0,
-            transform: btnVisible ? 'translateY(0)' : 'translateY(14px)',
-            transition:'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
-            letterSpacing:'0.2px', outline:'none',
-          }}
-        >
-          Entrer dans Solenn
-          <span style={{display:'inline-block', fontSize:18}}>→</span>
-        </button>
+          )}
+          <button
+            onClick={onEnter}
+            style={{
+              width:'100%', height:52,
+              background:'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
+              backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+              color:'rgba(255,248,235,1)', border:'1px solid rgba(255,220,160,0.45)', borderRadius:30,
+              fontSize:15, fontWeight:600, cursor:'pointer',
+              fontFamily:'Poppins, sans-serif',
+              display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+              opacity: btnVisible ? 1 : 0,
+              transform: btnVisible ? 'translateY(0)' : 'translateY(14px)',
+              transition:'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
+              letterSpacing:'0.2px', outline:'none',
+              boxShadow:'0 8px 24px rgba(180,80,30,0.22)',
+            }}
+          >
+            Entrer dans Solenn
+            <span style={{display:'inline-block', fontSize:18}}>→</span>
+          </button>
+        </div>
       </div>
     </div>
   )
