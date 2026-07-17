@@ -342,7 +342,7 @@ export default function Auth({ onConnecte, onBack }) {
           <label style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16, cursor:'pointer' }}>
             <input
               type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
-              style={{ accentColor:'#C87B52', width:15, height:15, cursor:'pointer' }}
+              style={{ accentColor:'#E8C090', width:15, height:15, cursor:'pointer' }}
             />
             <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.87)' }}>
               {T.remember}
