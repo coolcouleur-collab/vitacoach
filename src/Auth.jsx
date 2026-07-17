@@ -459,7 +459,7 @@ const s = {
   label: { display:'block', marginBottom:6, fontWeight:500, fontSize:12,
     color:'rgba(255,248,235,0.92)', letterSpacing:'1.2px', textTransform:'uppercase' },
   input: { width:'100%', padding:'12px 14px', border:'1px solid rgba(255,220,160,0.30)',
-    borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:15, fontFamily:'Poppins, sans-serif',
+    borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:16, fontFamily:'Poppins, sans-serif',
     boxSizing:'border-box', outline:'none', color:'rgba(255,248,235,1)', transition:'border-color 0.2s, background 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
   btn: { width:'auto', padding:'0.85rem 2.5rem', background:'rgba(200,100,40,0.06)', display:'block', margin:'12px auto 0',
