@@ -2949,8 +2949,8 @@ const s = {
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(255,248,235,0.95)', letterSpacing:'-0.03em', marginBottom:2 },
-  pageSubtitle: { fontSize:12, color:'rgba(255,248,235,0.55)', fontWeight:500 },
+  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(120,55,14,0.95)', letterSpacing:'-0.03em', marginBottom:2 },
+  pageSubtitle: { fontSize:12, color:'rgba(140,65,20,0.65)', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
   chatWrap: {
