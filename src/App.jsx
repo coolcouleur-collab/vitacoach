@@ -2439,8 +2439,8 @@ function TenueCard({ tenue, style: extraStyle }) {
       flexShrink: 0,
       ...extraStyle,
     }}>
-      {/* Image area — contain pour voir la tenue complète de la tête aux pieds */}
-      <div style={{ width: '100%', height: 400, background: '#EDE0D4', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Image area */}
+      <div style={{ width: '100%', height: 320, background: '#EDE0D4', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {imgLoading && (
           <div style={{
             position: 'absolute', inset: 0,
@@ -2476,17 +2476,18 @@ function TenueCard({ tenue, style: extraStyle }) {
         <div style={{ fontWeight: 700, color: 'rgba(140,65,20,0.95)', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em', fontFamily: F }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(100,48,15,0.85)', lineHeight: 1.65, marginBottom: 8, fontFamily: F }}>
+        <div style={{ fontSize: 12, color: 'rgba(100,48,15,0.85)', lineHeight: 1.55, marginBottom: 8, fontFamily: F,
+          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
         <div style={{
-          fontSize: 11, color: 'rgba(140,65,20,0.80)', fontStyle: 'italic', lineHeight: 1.55,
+          fontSize: 11, color: 'rgba(140,65,20,0.80)', fontStyle: 'italic', lineHeight: 1.45,
           display: 'flex', alignItems: 'flex-start', gap: 5,
           background: 'rgba(200,123,82,0.10)', borderRadius: 10, padding: '6px 10px',
           fontFamily: F,
         }}>
-          <LightbulbIcon size={12} color="rgba(190,100,35,0.80)" />
-          <span>{tenue.pourquoi}</span>
+          <LightbulbIcon size={12} color="rgba(190,100,35,0.80)" style={{ flexShrink: 0, marginTop: 1 }} />
+          <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tenue.pourquoi}</span>
         </div>
       </div>
     </div>
@@ -2552,7 +2553,7 @@ function CapsuleSlider({ tenues, loading }) {
         style={{
           position: 'relative',
           width: '100%',
-          height: 520,
+          height: 480,
           perspective: '900px',
           overflow: 'visible',
         }}
@@ -2572,8 +2573,8 @@ function CapsuleSlider({ tenues, loading }) {
           const cardStyle = {
             position: 'absolute',
             left: '50%',
-            top: '50%',
-            transform: `translate(-50%,-50%) translateX(${x}px) translateY(${y}px) translateZ(${z}px) scale(${scale}) rotateZ(${rotate}deg)`,
+            top: 0,
+            transform: `translateX(-50%) translateX(${x}px) translateY(${y}px) translateZ(${z}px) scale(${scale}) rotateZ(${rotate}deg)`,
             opacity,
             zIndex,
             transition: 'transform 0.5s cubic-bezier(.4,2,.3,1), opacity 0.4s ease',
@@ -2761,7 +2762,7 @@ function TenuesModule({ profil }) {
 
       {/* Capsule Slider — hors du panel pour ne pas être rogné par les bords */}
       {(loading || tenues.length > 0) && (
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginTop: 20 }}>
           <CapsuleSlider tenues={tenues} loading={loading} />
         </div>
       )}
