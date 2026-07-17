@@ -2734,29 +2734,30 @@ function TenuesModule({ profil }) {
             onKeyDown={e => e.key === 'Enter' && getTenues()}
           />
         </div>
-        {/* Ligne 2 : select occasion */}
-        <div style={{ position:'relative', marginBottom: 8 }}>
-          <select className="tenues-select" style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
-            {occasions.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
-          <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
-            <path d="M1 1l4.5 4.5L10 1" stroke="rgba(200,123,82,0.60)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+        {/* Ligne 2 : select occasion + bouton ↻ */}
+        <div style={{ display:'flex', gap: 8, alignItems:'center' }}>
+          <div style={{ position:'relative', flex: 1 }}>
+            <select className="tenues-select" style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
+              {occasions.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+            <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
+              <path d="M1 1l4.5 4.5L10 1" stroke="rgba(200,123,82,0.60)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <button
+            style={{ ...st.btn, flexShrink: 0, padding:'11px 14px', borderRadius:14, justifyContent:'center' }}
+            onClick={() => getTenues()}
+            disabled={loading}
+          >
+            {loading
+              ? <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
+              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                </svg>
+            }
+          </button>
         </div>
-        {/* Bouton actualisation — pleine largeur, clair */}
-        <button
-          style={{ ...st.btn, alignSelf:'center', padding:'11px 16px', borderRadius:14, justifyContent:'center' }}
-          onClick={() => getTenues()}
-          disabled={loading}
-        >
-          {loading
-            ? <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
-            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
-          }
-        </button>
         {villeError && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Entre ta ville pour continuer</div>}
 
         {/* Météo */}
