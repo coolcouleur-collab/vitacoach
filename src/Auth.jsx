@@ -10,6 +10,7 @@ export default function Auth({ onConnecte, onBack }) {
   const [password, setPassword] = useState('')
   const [loading, setLoading]   = useState(false)
   const [message, setMessage]   = useState('')
+  const [remember, setRemember] = useState(true)
 
   async function soumettre() {
     if (!email || !password) return setMessage('Remplis tous les champs !')
@@ -22,7 +23,12 @@ export default function Auth({ onConnecte, onBack }) {
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage(error.message)
-      else onConnecte(data.user)
+      else {
+        if (!remember) {
+          window.addEventListener('beforeunload', () => supabase.auth.signOut(), { once: true })
+        }
+        onConnecte(data.user)
+      }
     }
     setLoading(false)
   }
@@ -128,6 +134,7 @@ export default function Auth({ onConnecte, onBack }) {
         <div style={s.field}>
           <label style={s.label}>Email</label>
           <input style={s.input} type="email" placeholder="@" value={email}
+            autoComplete="email" name="email"
             onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key==='Enter' && soumettre()} />
         </div>
@@ -143,10 +150,24 @@ export default function Auth({ onConnecte, onBack }) {
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
             <input style={{...s.input, paddingLeft:24}} type="password" placeholder=""
+              autoComplete={mode === 'inscription' ? 'new-password' : 'current-password'}
+              name="password"
               value={password} onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key==='Enter' && soumettre()} />
           </div>
         </div>
+
+        {mode === 'connexion' && (
+          <label style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16, cursor:'pointer' }}>
+            <input
+              type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
+              style={{ accentColor:'#C87B52', width:15, height:15, cursor:'pointer' }}
+            />
+            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'rgba(255,248,235,0.72)' }}>
+              Se souvenir de moi
+            </span>
+          </label>
+        )}
 
         {message && (
           <div style={{ ...s.msg,
