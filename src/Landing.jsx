@@ -522,7 +522,7 @@ function EarlyAccessSection() {
         lineHeight: 1.7, marginBottom: '2.8rem',
         maxWidth: 480,
       }}>
-        L'app arrive bientôt. Inscris-toi pour être notifié en avant-première et accéder aux premières semaines gratuitement.
+        L'app arrive bientôt. Inscris-toi pour être notifié en avant-première et accéder aux <span style={{ color: 'rgba(200,123,82,0.90)', fontWeight: 500 }}>premières semaines gratuitement.</span>
       </p>
 
       {status === 'success' ? (
@@ -580,7 +580,7 @@ function EarlyAccessSection() {
               outline: 'none',
             }}
           >
-            {status === 'loading' ? '...' : "Rejoindre"}
+            {status === 'loading' ? '...' : "Je rejoins"}
           </button>
           {status === 'error' && (
             <p style={{
@@ -670,7 +670,7 @@ export default function Landing({ onCommencer }) {
       `}</style>
 
       <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 1 }}>
-        <div className="globe-wrapper"><GlobeBg opacity={0.35} /></div>
+        <div className="globe-wrapper"><GlobeBg opacity={0.35} fixed={false} /></div>
         <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
           background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
           pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />

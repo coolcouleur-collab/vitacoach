@@ -48,7 +48,7 @@ function isLand(map, lat, lon) {
 }
 
 // ─── composant ───────────────────────────────────────────────────────────────
-export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 'orange', halo = true }) {
+export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 'orange', halo = true, fixed = true }) {
   const mountRef = useRef(null)
   const isVisibleRef = useRef(false)
 
@@ -181,7 +181,7 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
 
   return (
     <div style={{
-      position: 'fixed',
+      position: fixed ? 'fixed' : 'absolute',
       top: '50%', left: '50%',
       transform: 'translate(-50%, -50%)',
       width:  `${size * 100}vmin`,
