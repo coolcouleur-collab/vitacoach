@@ -524,7 +524,7 @@ const [messages, setMessages] = useState(() => {
     return []
   })
   const [loading, setLoading]   = useState(false)
-  const [onglet, setOnglet]     = useState('accueil')
+  const [onglet, setOnglet]     = useState(() => localStorage.getItem('vitacoach_onglet') || 'accueil')
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
@@ -601,6 +601,8 @@ const [messages, setMessages] = useState(() => {
     document.addEventListener('pointerdown', onTap, { passive: true })
     return () => document.removeEventListener('pointerdown', onTap)
   }, [])
+
+  useEffect(() => { localStorage.setItem('vitacoach_onglet', onglet) }, [onglet])
 
   // Pré-warm Render dès le chargement de l'app
   useEffect(() => { fetch('/api/health').catch(() => {}) }, [])
