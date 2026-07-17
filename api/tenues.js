@@ -2,6 +2,36 @@ import Groq from 'groq-sdk'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
+async function fetchImageUrl(query, alt) {
+  async function pexels(q) {
+    const r = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(q.slice(0,100))}&per_page=15&orientation=portrait`,
+      { headers: { Authorization: process.env.PEXELS_API_KEY } }
+    )
+    const d = await r.json()
+    return d.photos || []
+  }
+  function pick(photos) {
+    const top = photos.slice(0, 5)
+    const portraits = top.filter(p => p.height > p.width * 1.2)
+    const pool = portraits.length >= 2 ? portraits : top
+    const p = pool[Math.floor(Math.random() * pool.length)]
+    return p?.src?.large || p?.src?.medium || null
+  }
+  try {
+    if (query) {
+      const p1 = await pexels(query)
+      if (p1.length >= 3) { const u = pick(p1); if (u) return u }
+    }
+    if (alt) {
+      const p2 = await pexels(alt)
+      if (p2.length >= 2) { const u = pick(p2); if (u) return u }
+    }
+    const p3 = await pexels('trendy street style fashion outfit 2024')
+    return pick(p3)
+  } catch { return null }
+}
+
 const TRENDS_ETE_2026 = `
 TENDANCES ÉTÉ 2026 (à intégrer dans les suggestions) :
 • Matières : lin naturel, coton brodé, maille crochet ouverte, organza léger, denim léger
@@ -76,7 +106,15 @@ Réponds UNIQUEMENT avec ce JSON valide, sans texte avant ni après :
     const text = response.choices[0].message.content
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const data = JSON.parse(jsonMatch[0])
-    res.json({ tenues: data.tenues, meteo })
+    const tenues = data.tenues || []
+    // Fetch images en parallèle pendant qu'on a déjà la réponse LLaMA
+    const tenus = await Promise.all(
+      tenues.map(async t => ({
+        ...t,
+        imageUrl: await fetchImageUrl(t.searchQuery, t.searchQueryAlt)
+      }))
+    )
+    res.json({ tenues: tenus, meteo })
   } catch {
     res.json({ tenues: [], meteo, erreur: 'Erreur de parsing' })
   }

@@ -2418,6 +2418,12 @@ function TenueCard({ tenue, style: extraStyle }) {
   const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
+    // Image déjà fournie par l'API tenues → pas de fetch supplémentaire
+    if (tenue.imageUrl) {
+      setImgSrc(tenue.imageUrl)
+      setImgLoading(false)
+      return
+    }
     const q   = tenue.searchQuery    || tenue.imagePrompt || tenue.description || tenue.titre
     const alt = tenue.searchQueryAlt || ''
     const url = `/api/image?prompt=${encodeURIComponent(q)}${alt ? `&alt=${encodeURIComponent(alt)}` : ''}`
