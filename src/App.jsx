@@ -2751,7 +2751,7 @@ function TenuesModule({ profil }) {
           disabled={loading}
         >
           {loading ? (
-            <><LoadingIcon size={15} color="rgba(255,248,235,0.90)" /> Génération en cours…</>
+            <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
           ) : (
             <>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
