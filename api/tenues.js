@@ -41,11 +41,13 @@ CONTEXTE :
 
 MISSION : Propose 3 tenues différentes, chacune dans un style distinct (ex: une "quiet luxury", une "color pop", une "casual chic"), toutes tendance été 2026 et parfaitement adaptées à la météo.
 
-Pour le champ "searchQuery" : écris une requête Pexels EN ANGLAIS, précise et visuelle, qui décrit une photo éditoriale correspondant à ce look.
-Exemples de bonnes searchQuery :
-- "cream linen wide leg trousers white blouse ballet flat editorial summer fashion"
-- "cobalt blue mini dress gold sandals summer street style editorial lookbook"
-- "barrel jeans cropped blazer beige mules fashion week street style"
+Pour le champ "searchQuery" : écris une requête Pexels EN ANGLAIS qui décrit précisément les VÊTEMENTS portés, sans mot lié au visage ou portrait.
+La photo doit montrer la tenue complète de la tête aux pieds (street style, lookbook).
+Exemples de BONNES searchQuery (centrées sur les vêtements, pas sur le modèle) :
+- "cream linen wide leg trousers white linen shirt summer street style lookbook"
+- "cobalt blue mini skirt crop top gold sandals summer lookbook full body"
+- "barrel jeans beige cropped blazer loafers chic street style full body outfit"
+Évite : "woman", "girl", "portrait", "face", "beauty". Préfère : "outfit", "lookbook", "street style", "full body".
 
 Réponds UNIQUEMENT avec ce JSON valide, sans texte avant ni après :
 {

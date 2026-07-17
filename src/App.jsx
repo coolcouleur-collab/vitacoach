@@ -2429,66 +2429,72 @@ function TenueCard({ tenue, style: extraStyle }) {
   return (
     <div style={{
       width: 280,
+      height: 420,
       borderRadius: 24,
       overflow: 'hidden',
-      background: 'rgba(255,235,210,0.20)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      boxShadow: '0 16px 48px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.18)',
-      border: '1px solid rgba(255,220,160,0.28)',
+      position: 'relative',
       flexShrink: 0,
+      boxShadow: '0 16px 52px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.25)',
+      border: '1px solid rgba(255,220,160,0.22)',
+      background: '#1A0D07',
       ...extraStyle,
     }}>
-      {/* Image area */}
-      <div style={{ width: '100%', height: 320, background: 'rgba(18,8,3,0.78)', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {imgLoading && (
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(110deg, #F5E8DE 30%, #FCDEC8 50%, #F5E8DE 70%)',
-            backgroundSize: '200% 100%',
-            animation: 'capsuleSkeleton 1.4s ease infinite',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: 36, opacity: 0.30 }}>👗</span>
-          </div>
-        )}
-        {imgError && !imgLoading && (
-          <div style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 10,
-            background: '#EDE0D4',
-          }}>
-            <span style={{ fontSize: 48 }}>👗</span>
-            <span style={{ fontSize: 12, color: '#C87B52', fontWeight: 600, textAlign: 'center', padding: '0 16px' }}>{tenue.titre}</span>
-          </div>
-        )}
-        {imgSrc && (
-          <img
-            src={imgSrc}
-            alt={tenue.titre}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-            onError={() => { setImgError(true); setImgSrc(null) }}
-          />
-        )}
-      </div>
-      {/* Info area */}
-      <div style={{ padding: '14px 16px 18px' }}>
-        <div style={{ fontWeight: 600, color: 'rgba(255,248,235,0.92)', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em', fontFamily: F }}>
+      {/* Skeleton */}
+      {imgLoading && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(110deg, #2A1508 30%, #3D2010 50%, #2A1508 70%)',
+          backgroundSize: '200% 100%',
+          animation: 'capsuleSkeleton 1.4s ease infinite',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{ fontSize: 40, opacity: 0.20 }}>👗</span>
+        </div>
+      )}
+      {/* Error */}
+      {imgError && !imgLoading && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(160deg, #2A1508 0%, #1A0D07 100%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
+        }}>
+          <span style={{ fontSize: 48, opacity: 0.60 }}>👗</span>
+          <span style={{ fontSize: 13, color: 'rgba(255,220,160,0.80)', fontWeight: 600, textAlign: 'center', padding: '0 20px', fontFamily: F }}>{tenue.titre}</span>
+        </div>
+      )}
+      {/* Image plein cadre */}
+      {imgSrc && (
+        <img
+          src={imgSrc}
+          alt={tenue.titre}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', display: 'block' }}
+          onError={() => { setImgError(true); setImgSrc(null) }}
+        />
+      )}
+      {/* Gradient overlay — lisibilité texte */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'linear-gradient(0deg, rgba(12,4,1,0.97) 0%, rgba(12,4,1,0.78) 30%, rgba(12,4,1,0.20) 55%, transparent 75%)',
+      }} />
+      {/* Texte en bas */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
+        <div style={{ fontWeight: 700, color: 'rgba(255,248,235,0.96)', fontSize: 15, letterSpacing: '-0.01em', fontFamily: F, marginBottom: 5 }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,248,235,0.68)', lineHeight: 1.55, marginBottom: 8, fontFamily: F,
-          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        <div style={{ fontSize: 11, color: 'rgba(255,248,235,0.72)', lineHeight: 1.55, fontFamily: F, marginBottom: 8,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
         <div style={{
-          fontSize: 11, color: 'rgba(255,248,235,0.60)', lineHeight: 1.45,
           display: 'flex', alignItems: 'flex-start', gap: 5,
-          background: 'rgba(200,123,82,0.18)', borderRadius: 10, padding: '6px 10px',
-          border: '1px solid rgba(255,220,160,0.15)',
-          fontFamily: F,
+          background: 'rgba(255,200,100,0.12)', borderRadius: 9, padding: '5px 9px',
+          border: '1px solid rgba(255,220,160,0.14)',
         }}>
-          <LightbulbIcon size={12} color="rgba(255,220,160,0.65)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tenue.pourquoi}</span>
+          <LightbulbIcon size={11} color="rgba(255,220,130,0.70)" style={{ flexShrink: 0, marginTop: 2 }} />
+          <span style={{ fontSize: 10, color: 'rgba(255,248,235,0.58)', lineHeight: 1.50, fontFamily: F,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {tenue.pourquoi}
+          </span>
         </div>
       </div>
     </div>
@@ -2500,24 +2506,29 @@ function SkeletonCard({ style: extraStyle }) {
   return (
     <div style={{
       width: 280,
-      borderRadius: 28,
+      height: 420,
+      borderRadius: 24,
       overflow: 'hidden',
-      background: '#FFF3EC',
-      boxShadow: '0 8px 24px rgba(158,92,53,0.12)',
-      border: '1px solid rgba(200,123,82,0.12)',
+      position: 'relative',
+      background: '#1A0D07',
+      boxShadow: '0 16px 52px rgba(0,0,0,0.55)',
+      border: '1px solid rgba(255,220,160,0.22)',
       flexShrink: 0,
       ...extraStyle,
     }}>
       <div style={{
-        width: '100%', height: 320,
-        background: 'linear-gradient(110deg, #F5E8DE 30%, #FCDEC8 50%, #F5E8DE 70%)',
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(110deg, #2A1508 30%, #3D2010 50%, #2A1508 70%)',
         backgroundSize: '200% 100%',
         animation: 'capsuleSkeleton 1.4s ease infinite',
-      }} />
-      <div style={{ padding: '16px 18px 20px' }}>
-        <div style={{ height: 14, borderRadius: 7, background: '#F0DDD0', marginBottom: 10, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 10, borderRadius: 5, background: '#F5E8DE', marginBottom: 6, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 10, borderRadius: 5, background: '#F5E8DE', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span style={{ fontSize: 40, opacity: 0.20 }}>👗</span>
+      </div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
+        <div style={{ height: 14, borderRadius: 7, background: 'rgba(255,220,160,0.15)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(255,220,160,0.08)', marginBottom: 5, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(255,220,160,0.08)', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
       </div>
     </div>
   )
