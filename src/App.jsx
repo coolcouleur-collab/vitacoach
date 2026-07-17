@@ -2991,9 +2991,9 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
   userBubble: {
-    background:'rgba(255,220,190,0.42)',
-    border:'1px solid rgba(200,123,82,0.28)',
-    color:'rgba(100,55,20,0.85)',
+    background:'rgba(255,248,238,0.88)',
+    border:'1px solid rgba(200,123,82,0.20)',
+    color:'rgba(180,100,40,0.80)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
     boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
