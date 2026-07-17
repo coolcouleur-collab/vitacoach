@@ -2746,21 +2746,17 @@ function TenuesModule({ profil }) {
         </div>
         {/* Bouton actualisation — pleine largeur, clair */}
         <button
-          style={{ ...st.btn, width:'100%', boxSizing:'border-box', gap:8, fontSize:13, padding:'11px 16px', borderRadius:14, justifyContent:'center' }}
+          style={{ ...st.btn, alignSelf:'center', padding:'11px 16px', borderRadius:14, justifyContent:'center' }}
           onClick={() => getTenues()}
           disabled={loading}
         >
-          {loading ? (
-            <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
-          ) : (
-            <>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          {loading
+            ? <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
               </svg>
-              Rafraîchir les tenues
-            </>
-          )}
+          }
         </button>
         {villeError && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Entre ta ville pour continuer</div>}
 
