@@ -501,7 +501,7 @@ function EarlyAccessSection() {
         letterSpacing: '0.24em', textTransform: 'uppercase',
         color: 'rgba(200,123,82,0.70)', marginBottom: '1.2rem',
       }}>
-        Accès anticipé
+        Communauté
       </p>
 
       <h2 style={{
@@ -512,7 +512,7 @@ function EarlyAccessSection() {
         lineHeight: 1.2, marginBottom: '1.1rem',
         maxWidth: 640,
       }}>
-        Sois parmi les premiers<br />à rencontrer Solenn.
+        Rejoins la communauté Solenn.
       </h2>
 
       <p style={{
@@ -522,7 +522,7 @@ function EarlyAccessSection() {
         lineHeight: 1.7, marginBottom: '2.8rem',
         maxWidth: 480,
       }}>
-        L'app arrive bientôt. Inscris-toi pour être notifié en avant-première et accéder aux <span style={{ color: 'rgba(200,123,82,0.90)', fontWeight: 500 }}>premières semaines gratuitement.</span>
+        Reçois chaque semaine des conseils bien-être, sommeil et nutrition — <span style={{ color: 'rgba(200,123,82,0.90)', fontWeight: 500 }}>signés Solenn.</span>
       </p>
 
       {status === 'success' ? (
@@ -580,7 +580,7 @@ function EarlyAccessSection() {
               outline: 'none',
             }}
           >
-            {status === 'loading' ? '...' : "Je rejoins"}
+            {status === 'loading' ? '...' : "Je m'abonne"}
           </button>
           {status === 'error' && (
             <p style={{
