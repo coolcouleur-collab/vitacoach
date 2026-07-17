@@ -58,8 +58,34 @@ export function LeafIcon({ color = '#c4b5a8', size = 22 }) {
 export function StyleIcon({ color = '#c4b5a8', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
+      <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46l2.38 4 2-1.14V20a1 1 0 001 1h6a1 1 0 001-1V6.32l2 1.14z"
         stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+export function BreathworkIcon({ color = '#c4b5a8', size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3H4"
+        stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 13c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3H2"
+        stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 19c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3H4"
+        stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+export function CycleIcon({ color = '#c4b5a8', size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+        stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        fill={color} fillOpacity="0.15"/>
+      <circle cx="8.5"  cy="11.5" r="1.2" fill={color}/>
+      <circle cx="12"   cy="7.5"  r="1.2" fill={color}/>
+      <circle cx="15.5" cy="11.5" r="1.2" fill={color}/>
     </svg>
   )
 }

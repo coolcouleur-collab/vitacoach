@@ -14,16 +14,18 @@ const MorningCheckin = lazy(() => import('./MorningCheckin'))
 const SettingsSheet  = lazy(() => import('./SettingsSheet'))
 
 // Lazy — chargés uniquement quand l'utilisateur y accède
-const Auth        = lazy(() => import('./Auth'))
-const Landing     = lazy(() => import('./Landing'))
-const Forum       = lazy(() => import('./Forum'))
-const Onboarding  = lazy(() => import('./Onboarding'))
-const HomeTab     = lazy(() => import('./HomeTab'))
-const HerbalTab   = lazy(() => import('./HerbalTab'))
-const SanteTab    = lazy(() => import('./SanteTab'))
-const RoutineTab  = lazy(() => import('./RoutineTab'))
-const ChatHistory = lazy(() => import('./ChatHistory'))
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon } from './Icons'
+const Auth          = lazy(() => import('./Auth'))
+const Landing       = lazy(() => import('./Landing'))
+const Forum         = lazy(() => import('./Forum'))
+const Onboarding    = lazy(() => import('./Onboarding'))
+const HomeTab       = lazy(() => import('./HomeTab'))
+const HerbalTab     = lazy(() => import('./HerbalTab'))
+const SanteTab      = lazy(() => import('./SanteTab'))
+const RoutineTab    = lazy(() => import('./RoutineTab'))
+const ChatHistory   = lazy(() => import('./ChatHistory'))
+const BreathworkTab = lazy(() => import('./BreathworkTab'))
+const CycleTab      = lazy(() => import('./CycleTab'))
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
@@ -290,17 +292,19 @@ function urlBase64ToUint8Array(base64String) {
 
 // ─── DYNAMIC NAV ─────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { id:'accueil', label:'Accueil',  Icon: HomeIcon },
-  { id:'chat',    label:'Solenn',   Icon: ChatIcon },
-  { id:'routine', label:'Routine',  Icon: RoutineIcon },
-  { id:'sante',   label:'Santé',    Icon: HeartIcon },
-  { id:'forum',   label:'Forum',    Icon: ForumIcon },
+  { id:'accueil',   label:'Accueil',    Icon: HomeIcon },
+  { id:'chat',      label:'Solenn',     Icon: ChatIcon },
+  { id:'routine',   label:'Routine',    Icon: RoutineIcon },
+  { id:'sante',     label:'Santé',      Icon: HeartIcon },
+  { id:'style',     label:'Style',      Icon: StyleIcon },
+  { id:'breathwork',label:'Respiration',Icon: BreathworkIcon },
+  { id:'forum',     label:'Forum',      Icon: ForumIcon },
 ]
 
-function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
+function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items = NAV_ITEMS }) {
   const [open, setOpen] = React.useState(false)
   const ref = React.useRef(null)
-  const active = NAV_ITEMS.find(i => i.id === onglet) || NAV_ITEMS[0]
+  const active = items.find(i => i.id === onglet) || items[0]
 
   const isNight = preset === 'night' && onglet === 'accueil'
   // Couleurs adaptées au mode nuit / jour
@@ -371,9 +375,9 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
             initial={{ opacity:0 }}
             animate={{ opacity:1, transition:{ duration:0.18, ease:'easeOut' } }}
             exit={{ opacity:0, transition:{ duration:0.1 } }}
-            style={{ display:'flex', alignItems:'center', gap:1 }}
+            style={{ display:'flex', alignItems:'flex-start', gap:1, flexWrap:'wrap', maxWidth:280, justifyContent:'center' }}
           >
-            {NAV_ITEMS.map((item, i) => {
+            {items.map((item, i) => {
               const isActive = onglet === item.id
               return (
                 <motion.button key={item.id}
@@ -389,7 +393,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day' }) {
                   }}
                 >
                   <item.Icon color={isActive ? txtHigh : txtDim} size={15} />
-                  <span style={{ fontSize:8.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.25px', color: isActive ? txtHigh : txtDim }}>
+                  <span style={{ fontSize:8.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.25px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
                     {item.label}
                   </span>
                   {item.id === 'forum' && forumUnread > 0 && (
@@ -1260,11 +1264,14 @@ const [messages, setMessages] = useState(() => {
 
 
   const navItems = [
-    { id:'accueil', Icon: HomeIcon,    label:'Accueil' },
-    { id:'chat',    Icon: ChatIcon,    label:'Solenn' },
-    { id:'routine', Icon: RoutineIcon, label:'Routine' },
-    { id:'sante',   Icon: HeartIcon,   label:'Santé' },
-    { id:'forum',   Icon: ForumIcon,   label:'Forum' },
+    { id:'accueil',    Icon: HomeIcon,       label:'Accueil' },
+    { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
+    { id:'routine',    Icon: RoutineIcon,    label:'Routine' },
+    { id:'sante',      Icon: HeartIcon,      label:'Santé' },
+    { id:'style',      Icon: StyleIcon,      label:'Style' },
+    { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
+    ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
+    { id:'forum',      Icon: ForumIcon,      label:'Forum' },
   ]
 
   return (
@@ -2007,6 +2014,16 @@ const [messages, setMessages] = useState(() => {
             </div>
           )}
 
+          {/* ── Breathwork ── */}
+          {onglet === 'breathwork' && (
+            <Suspense fallback={<GlowLoader fullPage />}><BreathworkTab /></Suspense>
+          )}
+
+          {/* ── Cycle ── */}
+          {onglet === 'cycle' && profil?.cycle && (
+            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} /></Suspense>
+          )}
+
           {/* ── Routine ── */}
           {onglet === 'routine' && (
             <Suspense fallback={<GlowLoader fullPage />}><RoutineTab userId={user?.id} profil={profil} /></Suspense>
@@ -2074,7 +2091,7 @@ const [messages, setMessages] = useState(() => {
         )}
 
         {/* ══ DYNAMIC NAV (mobile) ══ */}
-        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={homePreset} />}
+        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={homePreset} items={navItems} />}
       </main>
 
       {/* Celebration overlay */}
@@ -2399,7 +2416,7 @@ function TenueCard({ tenue, style: extraStyle }) {
   const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
-    const q = tenue.imagePrompt || tenue.description || tenue.titre
+    const q = tenue.searchQuery || tenue.imagePrompt || tenue.description || tenue.titre
     fetch(`/api/image?prompt=${encodeURIComponent(q)}`)
       .then(r => r.json())
       .then(d => {
@@ -2414,58 +2431,61 @@ function TenueCard({ tenue, style: extraStyle }) {
       width: 280,
       borderRadius: 28,
       overflow: 'hidden',
-      background: '#FFF3EC',
-      boxShadow: '0 16px 48px rgba(158,92,53,0.22), 0 2px 8px rgba(0,0,0,0.08)',
-      border: '1px solid rgba(200,123,82,0.18)',
+      background: 'rgba(255,245,238,0.97)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      boxShadow: '0 16px 48px rgba(158,92,53,0.28), 0 2px 8px rgba(0,0,0,0.10)',
+      border: '1px solid rgba(255,220,160,0.35)',
       flexShrink: 0,
       ...extraStyle,
     }}>
-      {/* Image area */}
-      <div style={{ width: '100%', height: 320, background: '#F5E8DE', overflow: 'hidden', position: 'relative' }}>
+      {/* Image area — contain pour voir la tenue complète de la tête aux pieds */}
+      <div style={{ width: '100%', height: 400, background: '#EDE0D4', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {imgLoading && (
           <div style={{
-            width: '100%', height: '100%',
+            position: 'absolute', inset: 0,
             background: 'linear-gradient(110deg, #F5E8DE 30%, #FCDEC8 50%, #F5E8DE 70%)',
             backgroundSize: '200% 100%',
             animation: 'capsuleSkeleton 1.4s ease infinite',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <span style={{ fontSize: 32, opacity: 0.35 }}>👗</span>
+            <span style={{ fontSize: 36, opacity: 0.30 }}>👗</span>
           </div>
         )}
         {imgError && !imgLoading && (
           <div style={{
-            width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 8,
-            background: '#F5E8DE',
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 10,
+            background: '#EDE0D4',
           }}>
-            <span style={{ fontSize: 40 }}>👗</span>
-            <span style={{ fontSize: 11, color: '#C87B52', fontWeight: 600, textAlign: 'center', padding: '0 16px' }}>{tenue.titre}</span>
+            <span style={{ fontSize: 48 }}>👗</span>
+            <span style={{ fontSize: 12, color: '#C87B52', fontWeight: 600, textAlign: 'center', padding: '0 16px' }}>{tenue.titre}</span>
           </div>
         )}
         {imgSrc && (
           <img
             src={imgSrc}
             alt={tenue.titre}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
             onError={() => { setImgError(true); setImgSrc(null) }}
           />
         )}
       </div>
       {/* Info area */}
-      <div style={{ padding: '16px 18px 20px' }}>
-        <div style={{ fontWeight: 800, color: '#C87B52', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em' }}>
+      <div style={{ padding: '14px 16px 18px' }}>
+        <div style={{ fontWeight: 700, color: 'rgba(140,65,20,0.95)', fontSize: 14, marginBottom: 6, letterSpacing: '-0.01em', fontFamily: F }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 12, color: '#6B4226', lineHeight: 1.65, marginBottom: 8 }}>
+        <div style={{ fontSize: 12, color: 'rgba(100,48,15,0.85)', lineHeight: 1.65, marginBottom: 8, fontFamily: F }}>
           {tenue.description}
         </div>
         <div style={{
-          fontSize: 11, color: '#C87B52', fontStyle: 'italic', lineHeight: 1.55,
+          fontSize: 11, color: 'rgba(140,65,20,0.80)', fontStyle: 'italic', lineHeight: 1.55,
           display: 'flex', alignItems: 'flex-start', gap: 5,
-          background: 'rgba(200,123,82,0.07)', borderRadius: 12, padding: '6px 10px',
+          background: 'rgba(200,123,82,0.10)', borderRadius: 10, padding: '6px 10px',
+          fontFamily: F,
         }}>
-          <LightbulbIcon size={12} color="#C87B52" />
+          <LightbulbIcon size={12} color="rgba(190,100,35,0.80)" />
           <span>{tenue.pourquoi}</span>
         </div>
       </div>
@@ -2678,9 +2698,15 @@ function TenuesModule({ profil }) {
   return (
     <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
       <style>{`
-  .tenues-ville-input { border: 1.5px solid rgba(200,123,82,0.25) !important; box-shadow: none !important; }
-  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.55); }
-  .tenues-ville-input:focus { border-color: rgba(200,123,82,0.55) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
+  .tenues-ville-input { border: 1px solid rgba(255,220,160,0.35) !important; box-shadow: none !important; }
+  .tenues-ville-input::placeholder { color: rgba(255,248,235,0.38); }
+  .tenues-ville-input:focus { border-color: rgba(255,220,160,0.65) !important; box-shadow: 0 0 0 3px rgba(255,220,160,0.12) !important; outline: none !important; }
+  .tenues-ville-input:-webkit-autofill,
+  .tenues-ville-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
+    -webkit-text-fill-color: rgba(255,248,235,1) !important;
+  }
+  .tenues-select option { background: #4a2810; color: rgba(255,248,235,0.92); }
 `}</style>
       {/* Controls — toujours visibles */}
       <div style={{ ...st.panel, marginBottom: 0 }}>
@@ -2697,11 +2723,11 @@ function TenuesModule({ profil }) {
         {/* Ligne 2 : select + bouton */}
         <div style={{ ...st.row, marginBottom: 4 }}>
           <div style={{ position:'relative', flex:1 }}>
-            <select style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
-              {occasions.map(o => <option key={o} value={o} style={{ background:'#FFF6EE', color:'rgba(200,123,82,0.9)' }}>{o}</option>)}
+            <select className="tenues-select" style={{ ...st.select, width:'100%', boxSizing:'border-box' }} value={occasion} onChange={e => setOccasion(e.target.value)}>
+              {occasions.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
             <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
-              <path d="M1 1l4.5 4.5L10 1" stroke="rgba(200,123,82,0.60)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1 1l4.5 4.5L10 1" stroke="rgba(255,220,160,0.70)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
           <button style={st.btn} onClick={() => getTenues()} disabled={loading}>
@@ -2728,14 +2754,14 @@ function TenuesModule({ profil }) {
         {!loading && tenues.length === 0 && !ville && (
           <div style={{ textAlign:'center', padding:'32px 0 8px' }}>
             <div style={{ marginBottom: 12, display:'flex', justifyContent:'center' }}>
-              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.50)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.40)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
                 <path d="M12 6 L5 13 h14 L12 6Z"/>
                 <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
               </svg>
             </div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.75)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
-            <div style={{ fontSize: 12, color: 'rgba(155,107,80,0.70)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,248,235,0.82)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,248,235,0.50)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
           </div>
         )}
       </div>
@@ -2746,48 +2772,54 @@ function TenuesModule({ profil }) {
 const st = {
   trigger: {
     width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '16px',
-    background: '#ffffff', border: '1px solid #f0e8e0', borderRadius: 18, cursor: 'pointer',
-    fontFamily: "'Inter',system-ui,sans-serif", boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 2,
+    background: 'rgba(255,235,210,0.22)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    border: '1px solid rgba(255,220,160,0.28)', borderRadius: 18, cursor: 'pointer',
+    fontFamily: "'Poppins',system-ui,sans-serif",
   },
   triggerIcon: {
     width: 48, height: 48,
-    background: 'linear-gradient(135deg,rgba(200,123,82,0.12),rgba(200,123,82,0.06))',
-    border: '1.5px solid rgba(200,123,82,0.2)', borderRadius: 14,
+    background: 'rgba(255,235,210,0.28)',
+    border: '1px solid rgba(255,220,160,0.35)', borderRadius: 14,
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: 'rgba(255,248,242,0.96)',
-    border: '1px solid rgba(200,123,82,0.14)', borderRadius: 20, padding: 16, marginTop: 4,
-    boxShadow: '0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.70)',
+    background: 'rgba(255,235,210,0.22)',
+    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+    border: '1px solid rgba(255,220,160,0.28)', borderRadius: 20, padding: 16,
+    boxShadow: '0 8px 32px rgba(180,80,20,0.08)',
   },
   meteoBar: {
-    background: 'rgba(200,123,82,0.06)', borderRadius: 12, padding: '8px 14px',
-    fontSize: 12, marginBottom: 12, color: '#C87B52', fontWeight: 600, border: '1px solid rgba(200,123,82,0.16)',
+    background: 'rgba(255,235,210,0.20)', borderRadius: 12, padding: '8px 14px',
+    fontSize: 12, marginBottom: 12,
+    color: 'rgba(255,248,235,0.80)', fontWeight: 500,
+    border: '1px solid rgba(255,220,160,0.25)',
+    display: 'flex', alignItems: 'center', gap: 6,
   },
   row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
   input: {
     flex: 1, padding: '10px 14px', borderRadius: 12,
-    border: '1.5px solid rgba(200,123,82,0.25)',
-    background: '#FFF6EE',
-    fontSize: 13, fontFamily: "'Inter',system-ui,sans-serif",
-    outline: 'none', color: 'rgba(200,123,82,0.85)',
+    border: '1px solid rgba(255,220,160,0.35)',
+    background: 'rgba(255,235,200,0.15)',
+    fontSize: 13, fontFamily: "'Poppins',system-ui,sans-serif",
+    outline: 'none', color: 'rgba(255,248,235,1)',
     WebkitAppearance: 'none', appearance: 'none',
     boxShadow: 'none',
   },
   select: {
-    padding: '10px 30px 10px 12px', borderRadius: 12, border: '1px solid rgba(200,123,82,0.22)',
-    background: '#FFF6EE',
-    fontSize: 12, fontFamily: "'Inter',system-ui,sans-serif", outline: 'none',
-    color: 'rgba(200,123,82,0.85)', cursor: 'pointer',
+    padding: '10px 30px 10px 12px', borderRadius: 12,
+    border: '1px solid rgba(255,220,160,0.30)',
+    background: 'rgba(255,235,200,0.15)',
+    fontSize: 12, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
+    color: 'rgba(255,248,235,0.90)', cursor: 'pointer',
     appearance: 'none', WebkitAppearance: 'none',
   },
   btn: {
-    padding: '8px 14px',
-    background: 'rgba(200,123,82,0.10)',
-    color: 'rgba(200,123,82,0.90)',
-    border: '1.5px solid rgba(200,123,82,0.25)',
+    padding: '8px 16px',
+    background: 'linear-gradient(110deg,rgba(180,90,35,0.68) 0%,rgba(200,123,82,0.68) 100%)',
+    color: 'rgba(255,248,235,1)',
+    border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
-    fontFamily: "'Inter',system-ui,sans-serif",
+    fontFamily: "'Poppins',system-ui,sans-serif",
     boxShadow: 'none',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,

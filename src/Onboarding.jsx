@@ -424,6 +424,7 @@ export default function Onboarding({ onTermine, onBack }) {
       taille:           0,
       sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Aucune condition particulière'),
       sante_conditions: a.sante_conditions || [],
+      cycle:            a.cycle === true,
       isPro:            false,
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
@@ -900,8 +901,7 @@ export default function Onboarding({ onTermine, onBack }) {
           <motion.button
             onClick={() => {
               if (canContinue) {
-                const finalAnswers = { ...answers, sante_conditions: santeSelections }
-                finishOnboarding(finalAnswers)
+                goNext({ ...answers, sante_conditions: santeSelections })
               }
             }}
             disabled={!canContinue}
@@ -917,6 +917,55 @@ export default function Onboarding({ onTermine, onBack }) {
         </div>
       )
     }
+
+    // ── Étape 10 : Cycle (optionnel) ──────────────────────────────────────────
+    if (step === 10) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text="Veux-tu suivre ton cycle ?" style={S.question} />
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
+            Solenn adaptera ses conseils à chaque phase de ton cycle. Tu peux activer ou désactiver ça plus tard.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          {[
+            { label:'Oui, je veux suivre mon cycle', desc:'Suggestions adaptées à chaque phase', val:true },
+            { label:'Non, pas pour l\'instant', desc:'Tu pourras activer ça plus tard dans ton profil', val:false },
+          ].map((opt, i) => {
+            const isSel = tapped === String(opt.val)
+            return (
+              <motion.button
+                key={String(opt.val)}
+                initial={{ opacity:0, x:40, scale:0.93 }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.08 }}
+                onClick={() => tapThen(String(opt.val), () => finishOnboarding({ ...answers, cycle: opt.val }))}
+                whileTap={{ scale:0.97 }}
+                style={optStyle(isSel)}
+              >
+                <div style={iconCircleStyle(isSel)}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                      stroke="rgba(190,100,35,0.92)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      fill="rgba(190,100,35,0.18)"/>
+                    <circle cx="8.5" cy="11.5" r="1.2" fill="rgba(190,100,35,0.92)"/>
+                    <circle cx="12"  cy="7.5"  r="1.2" fill="rgba(190,100,35,0.92)"/>
+                    <circle cx="15.5" cy="11.5" r="1.2" fill="rgba(190,100,35,0.92)"/>
+                  </svg>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: isSel ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.88)', transition:'color 0.16s' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize:13, color:'rgba(255,248,235,0.60)', fontWeight:400 }}>{opt.desc}</span>
+                </div>
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
 
     return null
   }
@@ -1023,7 +1072,7 @@ export default function Onboarding({ onTermine, onBack }) {
 
         {/* Progress segments */}
         <div style={{display:'flex', gap:4, alignItems:'center'}}>
-          {[0,1,2,3,4,5,6,7,8,9].map(i => (
+          {[0,1,2,3,4,5,6,7,8,9,10].map(i => (
             <div
               key={i}
               style={{
