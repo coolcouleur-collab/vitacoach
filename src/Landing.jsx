@@ -100,7 +100,6 @@ function CinematicSlider({ onCommencer }) {
 
   function navigate(idx, direction) {
     if (idx === cur) return
-    if (soundOn) playFxSound('transition')
     setPrev(cur)
     setDir(direction)
     setCur(idx)
