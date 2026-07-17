@@ -41,13 +41,10 @@ CONTEXTE :
 
 MISSION : Propose 3 tenues différentes, chacune dans un style distinct (ex: une "quiet luxury", une "color pop", une "casual chic"), toutes tendance été 2026 et parfaitement adaptées à la météo.
 
-Pour le champ "searchQuery" : écris une requête Pexels EN ANGLAIS qui décrit précisément les VÊTEMENTS portés, sans mot lié au visage ou portrait.
-La photo doit montrer la tenue complète de la tête aux pieds (street style, lookbook).
-Exemples de BONNES searchQuery (centrées sur les vêtements, pas sur le modèle) :
-- "cream linen wide leg trousers white linen shirt summer street style lookbook"
-- "cobalt blue mini skirt crop top gold sandals summer lookbook full body"
-- "barrel jeans beige cropped blazer loafers chic street style full body outfit"
-Évite : "woman", "girl", "portrait", "face", "beauty". Préfère : "outfit", "lookbook", "street style", "full body".
+Pour les champs de recherche image, tu dois fournir DEUX requêtes Pexels EN ANGLAIS, COURTES (5-7 mots max chacune) :
+- "searchQuery" : requête précise sur LA TENDANCE + couleur principale. Ex: "barrel jeans beige street style", "cobalt mini dress lookbook", "quiet luxury cream linen outfit", "crochet top pink skirt summer"
+- "searchQueryAlt" : requête plus large sur la catégorie de look. Ex: "chic summer outfit lookbook", "trendy fashion editorial 2024", "minimalist fashion street style"
+JAMAIS de mots comme "woman", "girl", "face", "portrait". Toujours 5-7 mots max pour Pexels.
 
 Réponds UNIQUEMENT avec ce JSON valide, sans texte avant ni après :
 {
@@ -56,7 +53,8 @@ Réponds UNIQUEMENT avec ce JSON valide, sans texte avant ni après :
       "titre": "Nom accrocheur qui donne envie (ex: Le Lin de Rêve, Power Cobalt, Beach Parisienne)",
       "description": "Pièces concrètes : haut, bas (ou robe), chaussures, accessoires. Couleurs, matières, silhouette. 1-2 marques accessibles suggérées.",
       "pourquoi": "Pourquoi c'est tendance et parfait pour cette météo — 1-2 phrases max.",
-      "searchQuery": "requête Pexels en anglais, précise et éditoriale, pour une photo qui ressemble à ce look"
+      "searchQuery": "5-7 mots, tendance précise + couleur clé",
+      "searchQueryAlt": "5-7 mots, catégorie de look plus large"
     }
   ]
 }`

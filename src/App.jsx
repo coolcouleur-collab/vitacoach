@@ -2416,8 +2416,10 @@ function TenueCard({ tenue, style: extraStyle }) {
   const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
-    const q = tenue.searchQuery || tenue.imagePrompt || tenue.description || tenue.titre
-    fetch(`/api/image?prompt=${encodeURIComponent(q)}`)
+    const q   = tenue.searchQuery    || tenue.imagePrompt || tenue.description || tenue.titre
+    const alt = tenue.searchQueryAlt || ''
+    const url = `/api/image?prompt=${encodeURIComponent(q)}${alt ? `&alt=${encodeURIComponent(alt)}` : ''}`
+    fetch(url)
       .then(r => r.json())
       .then(d => {
         if (d.url) { setImgSrc(d.url); setImgLoading(false) }
