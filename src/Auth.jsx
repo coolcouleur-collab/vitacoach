@@ -475,7 +475,7 @@ const s = {
   footer: { marginTop:20, textAlign:'center', fontSize:14, color:'rgba(255,248,235,0.78)', lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,
-    background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.30)', cursor:'pointer',
+    background:'rgba(255,235,210,0.22)', border:'1px solid rgba(255,220,160,0.40)', cursor:'pointer',
     color:'rgba(255,248,235,1)', fontSize:22, fontWeight:500,
     fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic', padding:'0.55rem 1.8rem',
     borderRadius:'2rem', transition:'background 0.25s, border-color 0.25s',
