@@ -60,7 +60,7 @@ async function genererMessageAlerte(profil, alertes) {
     messages: [
       {
         role: 'system',
-        content: 'Tu es Solenn, coach de santé. Génère un message push court (max 80 chars) bienveillant et motivant. Pas de guillemets. Commence par l\'emoji le plus pertinent.'
+        content: 'Tu es Solenn, coach de santé. Génère un message push court (max 80 chars) bienveillant et motivant. Pas de guillemets. Pas d\'emoji. Texte simple et chaleureux.'
       },
       {
         role: 'user',

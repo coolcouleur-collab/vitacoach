@@ -399,7 +399,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      cursor: estAujourdhui && !estComplete ? 'pointer' : 'default',
+                      cursor: 'default',
                     }}
                   >
                     {/* Indicateur pulsant pour aujourd'hui */}
@@ -527,7 +527,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: 'italic',
                     fontSize: '14px',
-                    color: 'rgba(200,123,82,0.60)',
+                    color: 'rgba(255,238,220,0.75)',
                     marginBottom: '20px',
                     lineHeight: 1.6,
                   }}
@@ -605,10 +605,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 borderRadius: '16px',
                 padding: '16px 20px',
                 border: '1px solid rgba(200,123,82,0.12)',
-                backdropFilter: 'blur(8px)',
+                backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(200,123,82,0.65)', margin: 0 }}>
+              <p style={{ fontSize: '13px', color: 'rgba(255,238,220,0.75)', margin: 0 }}>
                 <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
                   Prochain milestone — Jour {prochainMilestone.jour} :
                 </span>{' '}
@@ -655,7 +655,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
             exit={{ opacity: 0 }}
             style={{
               position: 'fixed', inset: 0, zIndex: 9999,
-              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)',
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: 24,
             }}
@@ -669,7 +669,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               onClick={e => e.stopPropagation()}
               style={{
                 background: 'rgba(22,9,2,0.92)',
-                backdropFilter: 'blur(24px)',
+                backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
                 border: '1px solid rgba(255,220,160,0.22)',
                 borderRadius: 24, padding: '28px 24px',
                 maxWidth: 340, width: '100%',

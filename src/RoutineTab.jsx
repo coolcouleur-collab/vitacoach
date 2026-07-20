@@ -139,7 +139,9 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
                 display: 'flex', alignItems: 'center', gap: 6,
                 marginBottom: 2,
               }}>
-                <span style={{ fontSize: 15 }}>{e.emoji}</span>
+                <svg width="8" height="8" viewBox="0 0 8 8" style={{ flexShrink: 0 }}>
+                  <circle cx="4" cy="4" r="3" fill="#C87B52" fillOpacity={checked[e.id] ? 0.35 : 0.70} />
+                </svg>
                 <span style={{
                   fontSize: 13, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
                   color: checked[e.id] ? 'rgba(200,123,82,0.35)' : 'rgba(200,123,82,0.92)',
@@ -159,7 +161,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
               </div>
               {e.description && (
                 <div style={{
-                  fontSize: 11.5, color: checked[e.id] ? 'rgba(200,123,82,0.25)' : 'rgba(200,123,82,0.50)',
+                  fontSize: 11.5, color: checked[e.id] ? 'rgba(255,238,220,0.40)' : 'rgba(255,238,220,0.65)',
                   fontFamily: 'Poppins,sans-serif', lineHeight: 1.5,
                   transition: 'color 0.2s',
                 }}>
@@ -202,7 +204,10 @@ function NutritionCard({ nutrition }) {
             display: 'flex', gap: 10, alignItems: 'flex-start',
             background: 'rgba(200,123,82,0.05)', borderRadius: 12, padding: '10px 12px',
           }}>
-            <span style={{ fontSize: 18, flexShrink: 0 }}>{r.emoji}</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" style={{ flexShrink: 0, marginTop: 3 }}>
+              <circle cx="6" cy="6" r="4.5" fill="none" stroke="#C87B52" strokeWidth="1.6" opacity="0.75" />
+              <circle cx="6" cy="6" r="1.8" fill="#C87B52" opacity="0.75" />
+            </svg>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {r.moment}
@@ -244,7 +249,7 @@ function EmptyRoutine({ generating, onGenerate }) {
       <div style={{ fontSize: 18, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
-      <div style={{ fontSize: 13, color: 'rgba(200,123,82,0.45)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
+      <div style={{ fontSize: 13, color: 'rgba(255,238,220,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
         Solenn va générer une routine personnalisée pour ta journée en fonction de ton profil et de tes métriques.
       </div>
       <button
@@ -463,7 +468,7 @@ export default function RoutineTab({ userId, profil }) {
             <span style={{ display:'flex' }}><StarIcon size={28} color="#E8962A" /></span>
             <div>
               <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
-              <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
             </div>
           </div>
         )}
@@ -531,7 +536,7 @@ export default function RoutineTab({ userId, profil }) {
                       "{routine.motivation}"
                     </div>
                   )}
-                  <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.50)', fontFamily: 'Poppins,sans-serif' }}>
+                  <div style={{ fontSize: 11, color: 'rgba(255,238,220,0.65)', fontFamily: 'Poppins,sans-serif' }}>
                     {done}/{total} étapes complétées
                     {genTime && ` · générée à ${formatHeure(genTime)}`}
                   </div>
@@ -596,7 +601,7 @@ export default function RoutineTab({ userId, profil }) {
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,100,20,0.80)', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 12.5, color: 'rgba(255,238,220,0.75)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
                       {routine.astuce.conseil}
                     </div>
                   </div>

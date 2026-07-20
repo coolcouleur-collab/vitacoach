@@ -115,7 +115,7 @@ async function genererRapportHebdo(profil, stats, scoreProgression) {
         content: `Tu es Solenn, coach de vie IA. Génère un rapport hebdomadaire bref en JSON avec ces 3 champs :
 {
   "titre": "Titre court et motivant pour la semaine (max 40 chars)",
-  "notifBody": "Message push court (max 90 chars) pour annoncer le rapport — emoji + résumé impactant",
+  "notifBody": "Message push court (max 90 chars) pour annoncer le rapport — résumé impactant, sans emoji",
   "insights": [
     { "emoji": "🏆", "titre": "Ce qui a bien marché", "detail": "2 phrases concrètes" },
     { "emoji": "🎯", "titre": "À améliorer", "detail": "2 phrases concrètes + conseil" },

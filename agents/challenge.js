@@ -180,8 +180,8 @@ export async function runChallengeCheck(pushSubscriptions) {
       const sub = pushSubscriptions?.get(ch.user_id)
       if (sub && jourData) {
         const title = milestone
-          ? `🎉 ${milestone.message?.slice(0, 40)}`
-          : `Défi J${jourActuel} · ${ch.challenge?.emoji || '💪'} ${ch.challenge?.titre}`
+          ? `${milestone.message?.slice(0, 40)}`
+          : `Défi J${jourActuel} · ${ch.challenge?.titre}`
         const body  = milestone
           ? milestone.message
           : jourData.action

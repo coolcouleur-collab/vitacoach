@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
-import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon } from './Icons'
+import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon, SparkleIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
@@ -63,7 +63,7 @@ function Sparkline({ history, metricKey, color, goal }) {
   const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
   const hasData = last7.some(d => d.val > 0)
   if (!hasData) return (
-    <div style={{ fontSize:10, color:'rgba(200,123,82,0.65)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
+    <div style={{ fontSize:10, color:'rgba(255,238,220,0.80)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
       Pas encore de données
     </div>
   )
@@ -116,7 +116,7 @@ function HistoriqueSection({ history }) {
           display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color="#C87B52" /></div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.72)' }}>Historique 7 jours</div>
-          <div style={{ fontSize:11, color:'rgba(200,123,82,0.62)', marginTop:1 }}>Progression de tes métriques</div>
+          <div style={{ fontSize:11, color:'rgba(255,238,220,0.77)', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
           fontSize:10, fontWeight:700, color:'rgba(200,123,82,0.60)',
@@ -138,7 +138,7 @@ function HistoriqueSection({ history }) {
                 </div>
                 <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} />
                 <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
-                  <span style={{ fontSize:9, color:'rgba(200,123,82,0.45)' }}>il y a 6j</span>
+                  <span style={{ fontSize:9, color:'rgba(255,238,220,0.60)' }}>il y a 6j</span>
                   <span style={{ fontSize:9, color:m.color, fontWeight:700 }}>Aujourd'hui</span>
                 </div>
               </div>
@@ -176,7 +176,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
       userSelect: 'none',
     }}>
       <motion.div style={{ x: contentX, padding: '20px 20px', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 3 }}>
-        <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 8 }}>{item.emoji || '✦'}</div>
+        <div style={{ display: 'flex', marginBottom: 8 }}><SparkleIcon size={22} color={accent} /></div>
         {item.titre && (
           <div style={{ fontSize: 9, fontWeight: 700, color: h2r(accent, 0.70), letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>
             {item.titre}
@@ -265,7 +265,7 @@ function InsightsCarousel({ insights, onClose }) {
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 10, color: 'rgba(200,123,82,0.45)', fontWeight: 600, letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: 10, color: 'rgba(255,238,220,0.60)', fontWeight: 600, letterSpacing: '0.05em' }}>
             {activeIdx + 1} / {items.length}
           </span>
           <button onClick={onClose} style={{
@@ -294,7 +294,7 @@ function InsightsCarousel({ insights, onClose }) {
       </div>
 
       {/* ── Hint glisse ── */}
-      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(200,123,82,0.30)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
+      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(255,238,220,0.55)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
         ← glisse →
       </div>
     </div>
@@ -351,11 +351,13 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ metriques, profil })
       })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
+      if (!Array.isArray(data?.insights) && !Array.isArray(data?.points)) throw new Error('Réponse invalide')
       setInsights(data)
     } catch (err) {
       console.error('health-insights error:', err)
-      setInsights({ insights: [{ emoji: '', titre: 'Erreur', message: 'Impossible de générer l\'analyse. Vérifie ta connexion ou réessaie.' }] })
+      setInsights({ insights: [{ titre: 'Erreur', message: 'Impossible de générer l\'analyse. Vérifie ta connexion ou réessaie.' }] })
     } finally {
       setLoadingInsights(false)
     }
@@ -478,8 +480,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{displayScore}</div>
-              <div style={{ fontSize: 9, color: 'rgba(200,123,82,0.45)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
-              <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.62)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
+              <div style={{ fontSize: 9, color: 'rgba(255,238,220,0.60)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
+              <div style={{ fontSize: 8, color: 'rgba(255,238,220,0.77)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
                 {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
               </div>
             </div>
@@ -566,6 +568,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 ...ss.metricCard,
                 background: 'rgba(255,235,210,0.22)',
                 backdropFilter: 'blur(18px)',
+                WebkitBackdropFilter: 'blur(18px)',
                 border: '1px solid rgba(255,220,160,0.28)',
                 borderTop: '2.5px solid #C87B52',
                 boxShadow: done
@@ -730,7 +733,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div style={{ fontSize: 18, fontWeight: 900, color: 'rgba(200,123,82,0.92)', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', textAlign: 'center', marginBottom: 22 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.75)', textAlign: 'center', marginBottom: 22 }}>
               {editMetric.hint}
             </div>
 
@@ -753,7 +756,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                     </button>
                   ))}
                 </div>
-                <div style={{ textAlign: 'center', fontSize: 13, color: 'rgba(200,123,82,0.60)', marginBottom: 22 }}>
+                <div style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,238,220,0.75)', marginBottom: 22 }}>
                   {tempVal ? `Humeur ${tempVal}/5` : 'Sélectionne ton humeur'}
                 </div>
               </div>
@@ -794,7 +797,7 @@ const ss = {
   scoreCard: {
     background: 'rgba(255,235,210,0.22)',
     border: '1px solid rgba(255,220,160,0.28)',
-    backdropFilter: 'blur(18px)',
+    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 28, padding: '20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
     overflow: 'visible',
@@ -815,13 +818,13 @@ const ss = {
   insightsCard: {
     background: 'rgba(255,235,210,0.22)',
     border: '1px solid rgba(255,220,160,0.28)',
-    backdropFilter: 'blur(18px)',
+    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '14px 0 12px', marginBottom: 14,
   },
   waterBar: {
     background: 'rgba(255,235,210,0.22)',
     border: '1px solid rgba(255,220,160,0.28)',
-    backdropFilter: 'blur(18px)',
+    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
   },
@@ -843,7 +846,7 @@ const ss = {
   appleSection: {
     background: 'rgba(255,235,210,0.22)',
     border: '1px solid rgba(255,220,160,0.28)',
-    backdropFilter: 'blur(18px)',
+    backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, overflow: 'hidden',
   },
   appleTrigger: {
@@ -861,7 +864,7 @@ const ss = {
     boxShadow: '0 3px 10px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.6)'
   },
   modalOverlay: {
-    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)',
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
     zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center'
   },
   modalCard: {

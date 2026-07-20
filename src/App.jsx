@@ -25,7 +25,7 @@ const RoutineTab    = lazy(() => import('./RoutineTab'))
 const ChatHistory   = lazy(() => import('./ChatHistory'))
 const BreathworkTab = lazy(() => import('./BreathworkTab'))
 const CycleTab      = lazy(() => import('./CycleTab'))
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon } from './Icons'
+import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
 // ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
@@ -97,7 +97,8 @@ function HealthPermModal({ onAllow, onLater }) {
         borderRadius:'28px 28px 0 0',
         border:'1px solid rgba(255,220,160,0.25)',
         borderBottom:'none',
-        padding:'10px 26px 52px',
+        padding:'10px 26px',
+        paddingBottom:'calc(env(safe-area-inset-bottom, 0px) + 52px)',
         width:'100%', maxWidth:520,
         boxShadow:'0 -20px 60px rgba(200,100,40,0.15), inset 0 1px 0 rgba(255,255,255,0.15)',
         animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
@@ -129,17 +130,19 @@ function HealthPermModal({ onAllow, onLater }) {
         </div>
 
         {[
-          { icon:'👟', label:'Activité & pas quotidiens' },
-          { icon:'🌙', label:'Sommeil & récupération' },
-          { icon:'💗', label:'Fréquence cardiaque' },
-          { icon:'⚖️', label:'Poids & composition' },
-        ].map(({ icon, label }) => (
+          { Icon: WalkIcon,    label:'Activité & pas quotidiens' },
+          { Icon: MoonIcon,    label:'Sommeil & récupération' },
+          { Icon: HeartIcon,   label:'Fréquence cardiaque' },
+          { Icon: BalanceIcon, label:'Poids & composition' },
+        ].map(({ Icon, label }) => (
           <div key={label} style={{
             display:'flex', alignItems:'center', gap:12,
             padding:'10px 14px', borderRadius:13, marginBottom:7,
             background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.18)',
           }}>
-            <span style={{ fontSize:18 }}>{icon}</span>
+            <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <Icon size={18} color="rgba(255,238,220,0.85)" />
+            </span>
             <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:500, flex:1 }}>{label}</span>
             <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
           </div>
@@ -182,9 +185,11 @@ function CelebrationOverlay({ score, onDone }) {
     const t2 = setTimeout(() => { if (alive) onDone() }, 3120)
     return () => { alive = false; clearTimeout(t1); clearTimeout(t2) }
   }, [onDone])
+  const CELEB_COLORS = ['#E8962A', '#C87B52', '#22c55e']
   const sparks = Array.from({ length: 16 }, (_, i) => ({
     id: i,
-    e: ['✨','🔥','⭐','💫','🌟','🎊','🎉','🌈'][i % 8],
+    color: CELEB_COLORS[i % 3],
+    star: i % 2 === 0,
     x: 4 + (i * 6) % 92,
     delay: (i * 0.09) % 0.65,
     dur: 1.2 + (i * 0.11) % 1.0,
@@ -197,27 +202,35 @@ function CelebrationOverlay({ score, onDone }) {
     }}>
       {sparks.map(s => (
         <div key={s.id} style={{
-          position:'absolute', left:`${s.x}%`, top:'-5%', fontSize:22,
+          position:'absolute', left:`${s.x}%`, top:'-5%', lineHeight:0,
           animation:`celebFall ${s.dur}s ${s.delay}s ease-in forwards`,
-        }}>{s.e}</div>
+        }}>
+          {s.star
+            ? <svg width="16" height="16" viewBox="0 0 24 24" fill={s.color} opacity="0.9">
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+              </svg>
+            : <svg width="11" height="11" viewBox="0 0 24 24" opacity="0.85">
+                <circle cx="12" cy="12" r="8" fill={s.color}/>
+              </svg>}
+        </div>
       ))}
       <div style={{
-        background:'rgba(255,253,250,0.97)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
+        background:'rgba(30,15,5,0.85)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
         borderRadius:28, padding:'36px 52px', textAlign:'center',
-        boxShadow:'0 28px 80px rgba(200,123,82,0.30), 0 8px 24px rgba(0,0,0,0.07)',
-        border:'1.5px solid rgba(200,123,82,0.22)',
+        boxShadow:'0 28px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.15)',
+        border:'1.5px solid rgba(255,220,160,0.28)',
         animation:'celebPop 0.55s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
-        <div style={{ fontSize:54, marginBottom:10, lineHeight:1 }}>
-          {score >= 90 ? '🌟' : '🎉'}
+        <div style={{ marginBottom:10, lineHeight:1, display:'flex', justifyContent:'center' }}>
+          {score >= 90 ? <StarIcon size={48} color="#E8962A" /> : <SparkleIcon size={48} color="#E8962A" />}
         </div>
-        <div style={{ fontSize:50, fontWeight:900, color:'#C87B52', lineHeight:1, letterSpacing:'-2px' }}>
-          {score}<span style={{ fontSize:18, color:'rgba(200,123,82,0.6)', fontWeight:400 }}>/100</span>
+        <div style={{ fontSize:50, fontWeight:900, color:'#E8962A', lineHeight:1, letterSpacing:'-2px' }}>
+          {score}<span style={{ fontSize:18, color:'rgba(255,238,220,0.55)', fontWeight:400 }}>/100</span>
         </div>
-        <div style={{ fontSize:15, fontWeight:700, color:'#C87B52', marginTop:9 }}>
-          {score >= 90 ? 'Journée parfaite ! 🏆' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
+        <div style={{ fontSize:15, fontWeight:700, color:'rgba(255,238,220,0.92)', marginTop:9 }}>
+          {score >= 90 ? 'Journée parfaite !' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
         </div>
-        <div style={{ fontSize:11, color:'rgba(160,110,70,0.70)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
+        <div style={{ fontSize:11, color:'rgba(255,238,220,0.65)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
           Score santé du jour
         </div>
       </div>
@@ -521,8 +534,8 @@ const [messages, setMessages] = useState(() => {
       const wantsWeight = /poids|mincir|maigrir/.test(obj0)
       // Construire le message
       const parts = [`${greet} ${nom} !`]
-      if (streakC >= 7)       parts.push(`🔥 ${streakC} jours de suite — tu es vraiment sur une lancée.`)
-      else if (streakC >= 3)  parts.push(`🔥 ${streakC} jours consécutifs — ta régularité paie vraiment.`)
+      if (streakC >= 7)       parts.push(`${streakC} jours de suite — tu es vraiment sur une lancée.`)
+      else if (streakC >= 3)  parts.push(`${streakC} jours consécutifs — ta régularité paie vraiment.`)
       else if (streakC === 2) parts.push(`2 jours de suite, tu prends de bonnes habitudes.`)
       if (yScore >= 80)           parts.push(`Hier tu étais au top (${yScore}/100) — continue comme ça.`)
       else if (yScore > 0 && yScore < 50) parts.push(`Hier c'était une journée difficile (${yScore}/100), aujourd'hui c'est une nouvelle page.`)
@@ -774,10 +787,10 @@ const [messages, setMessages] = useState(() => {
     const key = `vitacoach_streak_cel_${today}_${streak}`
     if (localStorage.getItem(key)) return
     const milestones = {
-      3:  '✨ 3 jours de suite — tu prends de vraies habitudes. Fière de toi.',
-      7:  "🔥 7 jours consécutifs ! Une semaine entière — c'est un vrai changement qui s'installe.",
-      14: '💎 14 jours ! Deux semaines de constance, c\'est vraiment impressionnant.',
-      30: '🏆 30 jours ! Un mois de régularité. Tu n\'es plus la même qu\'au début.',
+      3:  '3 jours de suite — tu prends de vraies habitudes. Fière de toi.',
+      7:  "7 jours consécutifs ! Une semaine entière — c'est un vrai changement qui s'installe.",
+      14: '14 jours ! Deux semaines de constance, c\'est vraiment impressionnant.',
+      30: '30 jours ! Un mois de régularité. Tu n\'es plus la même qu\'au début.',
     }
     if (milestones[streak]) {
       localStorage.setItem(key, '1')
@@ -873,7 +886,7 @@ const [messages, setMessages] = useState(() => {
     // Streak en danger : soir + streak actif + aucune métrique loggée aujourd'hui
     const notLogged = !metriques.pas && !metriques.sommeil && !metriques.eau
     if (streak > 0 && h >= 19 && notLogged)
-      setSuggestions([`🔥 Mon streak de ${streak} jour${streak > 1 ? 's' : ''} est en danger !`, ...base.slice(0, 2)])
+      setSuggestions([`Mon streak de ${streak} jour${streak > 1 ? 's' : ''} est en danger !`, ...base.slice(0, 2)])
     else
       setSuggestions(base)
   }, [profil, streak, metriques])
@@ -931,12 +944,12 @@ const [messages, setMessages] = useState(() => {
 
   // ── Milestones célébrés ──────────────────────────────────────────────────────
   const MILESTONES = [
-    { id: 'streak7',   check: () => streak >= 7,    emoji: '🔥', titre: '7 jours de suite !',      texte: `${profil?.nom}, 7 jours consécutifs — c'est une vraie habitude qui se construit. Continue comme ça.` },
-    { id: 'streak30',  check: () => streak >= 30,   emoji: '🏆', titre: 'Un mois de régularité !', texte: `30 jours. Tu as transformé des intentions en routine réelle. C'est rare et précieux.` },
-    { id: 'steps10k',  check: () => metriques.pas >= 10000, emoji: '👟', titre: '10 000 pas !',   texte: `Objectif pas atteint aujourd'hui — ton corps te remercie.` },
-    { id: 'score100',  check: () => scoreJour(metriques) >= 95, emoji: '⭐', titre: 'Score parfait !', texte: `Presque 100/100 aujourd'hui — sommeil, eau, mouvement, humeur : tout est là.` },
-    { id: 'sleep8',    check: () => metriques.sommeil >= 8, emoji: '😴', titre: '8h de sommeil !', texte: `8h de sommeil enregistrées — ton cerveau consolide, ton corps récupère.` },
-    { id: 'water8',    check: () => metriques.eau >= 8, emoji: '💧', titre: 'Hydratation parfaite !', texte: `8 verres d'eau aujourd'hui — c'est exactement ce qu'il faut.` },
+    { id: 'streak7',   check: () => streak >= 7,    Icon: FireIcon,    titre: '7 jours de suite !',      texte: `${profil?.nom}, 7 jours consécutifs — c'est une vraie habitude qui se construit. Continue comme ça.` },
+    { id: 'streak30',  check: () => streak >= 30,   Icon: StarIcon,    titre: 'Un mois de régularité !', texte: `30 jours. Tu as transformé des intentions en routine réelle. C'est rare et précieux.` },
+    { id: 'steps10k',  check: () => metriques.pas >= 10000, Icon: WalkIcon, titre: '10 000 pas !',   texte: `Objectif pas atteint aujourd'hui — ton corps te remercie.` },
+    { id: 'score100',  check: () => scoreJour(metriques) >= 95, Icon: SparkleIcon, titre: 'Score parfait !', texte: `Presque 100/100 aujourd'hui — sommeil, eau, mouvement, humeur : tout est là.` },
+    { id: 'sleep8',    check: () => metriques.sommeil >= 8, Icon: MoonIcon, titre: '8h de sommeil !', texte: `8h de sommeil enregistrées — ton cerveau consolide, ton corps récupère.` },
+    { id: 'water8',    check: () => metriques.eau >= 8, Icon: WaterIcon, titre: 'Hydratation parfaite !', texte: `8 verres d'eau aujourd'hui — c'est exactement ce qu'il faut.` },
   ]
 
   function checkMilestones() {
@@ -1118,7 +1131,7 @@ const [messages, setMessages] = useState(() => {
       setTimeout(() => {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: `💛 Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 4,99€/mois, résiliable à tout moment.`
+          content: `Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 4,99€/mois, résiliable à tout moment.`
         }])
       }, 800)
     }
@@ -1386,18 +1399,21 @@ const [messages, setMessages] = useState(() => {
             transition={{ type: 'spring', damping: 22, stiffness: 300 }}
             style={{
               position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 100px)', left: '50%', transform: 'translateX(-50%)',
-              zIndex: 900, background: 'linear-gradient(135deg, #FFF8F4, #FFF2E0)',
-              border: '1.5px solid rgba(200,123,82,0.30)',
+              zIndex: 900, background: 'rgba(30,15,5,0.85)',
+              backdropFilter: 'blur(22px)', WebkitBackdropFilter: 'blur(22px)',
+              border: '1.5px solid rgba(255,220,160,0.28)',
               borderRadius: 22, padding: '16px 24px', minWidth: 280, maxWidth: 340,
-              boxShadow: '0 12px 40px rgba(200,123,82,0.25), 0 4px 12px rgba(0,0,0,0.10)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.15)',
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 38, marginBottom: 6 }}>{milestone.emoji}</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#1a0a00', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
+            <div style={{ marginBottom: 6, display: 'flex', justifyContent: 'center' }}>
+              {milestone.Icon && <milestone.Icon size={34} color="#E8962A" />}
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'rgba(255,238,220,0.92)', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
               {milestone.titre}
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(100,50,10,0.65)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.70)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.5 }}>
               {milestone.texte}
             </div>
           </motion.div>
@@ -1419,7 +1435,7 @@ const [messages, setMessages] = useState(() => {
           }}
         >
           <span style={{ fontSize: 12, color: 'rgba(80,120,200,0.90)', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
-            💙 Solenn est là pour toi — prends le temps qu'il faut
+            Solenn est là pour toi — prends le temps qu'il faut
           </span>
           <button onClick={() => setSosMode(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.4, marginLeft: 4 }}>✕</button>
         </motion.div>
@@ -1551,7 +1567,12 @@ const [messages, setMessages] = useState(() => {
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>✏ Modifier mon profil</button>
+            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(188,118,28,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+              </svg>
+              Modifier mon profil
+            </button>
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
               <button style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
@@ -1589,7 +1610,7 @@ const [messages, setMessages] = useState(() => {
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: '50%',
-                background: 'rgba(255,248,235,0.95)', backdropFilter: 'blur(12px)',
+                background: 'rgba(255,248,235,0.95)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                 border: '1.5px solid rgba(200,123,82,0.28)',
                 boxShadow: '0 4px 16px rgba(200,123,82,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1752,7 +1773,7 @@ const [messages, setMessages] = useState(() => {
               {/* Backdrop */}
               <div onClick={() => setMenuOpen(false)} style={{
                 position:'fixed', inset:0, zIndex:150,
-                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(8px)',
+                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
                 animation:'tabFade 0.22s ease both',
               }} />
               {/* Panel */}
@@ -1948,7 +1969,7 @@ const [messages, setMessages] = useState(() => {
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
                         <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(180,100,30,0.75)', display:'flex', alignItems:'center', gap:5 }}>
-                          🔥 {streak} jour{streak > 1 ? 's' : ''} de suite
+                          {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
                     )}
@@ -2006,10 +2027,12 @@ const [messages, setMessages] = useState(() => {
                           ))}
                           <button
                             onClick={() => {
-                              navigator.clipboard.writeText(msg.content).then(() => {
-                                setCopiedIdx(i)
-                                setTimeout(() => setCopiedIdx(null), 1800)
-                              })
+                              if (navigator.clipboard?.writeText) {
+                                navigator.clipboard.writeText(msg.content).then(() => {
+                                  setCopiedIdx(i)
+                                  setTimeout(() => setCopiedIdx(null), 1800)
+                                })
+                              }
                             }}
                             title="Copier"
                             style={{
@@ -2557,7 +2580,11 @@ function TenueCard({ tenue, style: extraStyle }) {
           animation: 'capsuleSkeleton 1.4s ease infinite',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: 40, opacity: 0.20 }}>👗</span>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.55)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
+            <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
+            <path d="M12 6 L5 13 h14 L12 6Z"/>
+            <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
+          </svg>
         </div>
       )}
       {/* Error */}
@@ -2567,7 +2594,11 @@ function TenueCard({ tenue, style: extraStyle }) {
           background: 'linear-gradient(160deg, #2A1508 0%, #1A0D07 100%)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
         }}>
-          <span style={{ fontSize: 48, opacity: 0.60 }}>👗</span>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.60)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
+            <path d="M12 6 L5 13 h14 L12 6Z"/>
+            <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
+          </svg>
           <span style={{ fontSize: 13, color: 'rgba(255,220,160,0.80)', fontWeight: 600, textAlign: 'center', padding: '0 20px', fontFamily: F }}>{tenue.titre}</span>
         </div>
       )}
@@ -2632,7 +2663,11 @@ function SkeletonCard({ style: extraStyle }) {
         animation: 'capsuleSkeleton 1.4s ease infinite',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <span style={{ fontSize: 40, opacity: 0.20 }}>👗</span>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.55)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
+          <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
+          <path d="M12 6 L5 13 h14 L12 6Z"/>
+          <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
+        </svg>
       </div>
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
         <div style={{ height: 14, borderRadius: 7, background: 'rgba(255,220,160,0.15)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
@@ -2883,7 +2918,11 @@ function TenuesModule({ profil }) {
         {/* Erreur API */}
         {apiError && (
           <div style={{ marginTop: 10, padding: '10px 14px', borderRadius: 12, background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.22)', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14 }}>⚠️</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
             <span style={{ fontSize: 12, color: 'rgba(255,180,160,0.92)', fontFamily: F, fontWeight: 500, lineHeight: 1.4 }}>{apiError}</span>
           </div>
         )}
@@ -2949,19 +2988,19 @@ const st = {
   },
   row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
   input: {
-    flex: 1, padding: '10px 14px', borderRadius: 12,
+    flex: 1, padding: '9px 14px', borderRadius: 12,
     border: '1px solid rgba(255,220,160,0.35)',
     background: 'rgba(255,235,200,0.15)',
-    fontSize: 13, fontFamily: "'Poppins',system-ui,sans-serif",
+    fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif",
     outline: 'none', color: 'rgba(200,123,82,0.92)',
     WebkitAppearance: 'none', appearance: 'none',
     boxShadow: 'none',
   },
   select: {
-    padding: '10px 30px 10px 12px', borderRadius: 12,
+    padding: '8px 30px 8px 12px', borderRadius: 12,
     border: '1px solid rgba(255,220,160,0.30)',
     background: 'rgba(255,235,200,0.15)',
-    fontSize: 12, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
+    fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
     color: 'rgba(200,123,82,0.90)', cursor: 'pointer',
     appearance: 'none', WebkitAppearance: 'none',
   },
@@ -3151,7 +3190,7 @@ const s = {
     border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
-  inputChat: { flex:1, border:'none', outline:'none', fontSize:14, fontFamily:F, background:'transparent', color:'rgba(140,75,30,0.80)' },
+  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'rgba(140,75,30,0.80)' },
   sendBtn: {
     background:'transparent', border:'none',
     width:36, height:36, borderRadius:12, cursor:'pointer',

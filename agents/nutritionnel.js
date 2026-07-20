@@ -188,7 +188,7 @@ export async function runNutritionnel(pushSubscriptions) {
       if (sub) {
         try {
           await webpush.sendNotification(sub, JSON.stringify({
-            title: '🥗 Tes conseils nutrition de la semaine',
+            title: 'Tes conseils nutrition de la semaine',
             body:  insights.conseil_phare || insights.message_encouragement || 'Ton bilan nutritionnel est prêt',
             icon:  '/icon-192.png',
             data:  { url: '/?onglet=sante&section=nutrition' },

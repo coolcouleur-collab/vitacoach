@@ -73,8 +73,9 @@ Si ${nom} parle d'une victoire : célèbre-la vraiment, 1-2 phrases, sans en fai
     { role:'system', content:systemPrompt },
     ...historique
       .filter(m => (m.role === 'user' || m.role === 'assistant') && m.content)
-      .slice(-8),
-    { role:'user', content:message }
+      .slice(-8)
+      .map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) })),
+    { role:'user', content:String(message).slice(0, 4000) }
   ]
 
   try {

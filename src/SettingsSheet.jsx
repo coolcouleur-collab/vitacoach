@@ -585,12 +585,12 @@ export default function SettingsSheet({
                   <style>{`
                     .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
                       border:1px solid rgba(255,220,160,0.20); background:rgba(255,235,210,0.10);
-                      font-family:'Poppins',system-ui,sans-serif; font-size:14px; color:rgba(255,238,220,0.90); outline:none;
+                      font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(255,238,220,0.90); outline:none;
                       transition:border-color 0.18s; }
                     .ss-edit-input:focus { border-color:#C87B52; }
                     .ss-edit-input::placeholder { color:rgba(255,210,160,0.35); }
                     .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(255,220,160,0.20);
-                      background:rgba(255,235,210,0.10); font-family:'Poppins',system-ui,sans-serif; font-size:14px;
+                      background:rgba(255,235,210,0.10); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
                       color:rgba(255,238,220,0.90); outline:none; }
                     .ss-time-input:focus { border-color:#C87B52; }
                   `}</style>
@@ -721,7 +721,7 @@ export default function SettingsSheet({
                   borderTop: `1px solid rgba(232,150,42,0.18)`,
                   paddingTop: 10,
                 }}>
-                  Merci de faire partie de l'aventure 💛
+                  Merci de faire partie de l'aventure
                 </div>
               </Card>
             ) : (

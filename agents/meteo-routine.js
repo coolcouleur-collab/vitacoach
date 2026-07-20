@@ -88,7 +88,7 @@ export async function genererContexteMeteo(ville = 'Paris', pays = 'FR') {
     categorie,
     ...reco,
     resume: `${reco.symbole} ${meteo.temp}°C · ${meteo.description} à ${meteo.ville}`,
-    adaptatation_routine: `Activité recommandée : ${reco.activite}. Énergie du jour : ${reco.energie}.`,
+    adaptation_routine: `Activité recommandée : ${reco.activite}. Énergie du jour : ${reco.energie}.`,
   }
 }
 

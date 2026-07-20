@@ -1,7 +1,19 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, startTransition } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
-import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon } from './Icons'
+import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
+
+// ─── Icône vélo (inline — absente d'Icons.jsx) ───────────────────────────────
+function BikeIcon({ color = '#C87B52', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="5.5" cy="17.5" r="3.5" stroke={color} strokeWidth="2"/>
+      <circle cx="18.5" cy="17.5" r="3.5" stroke={color} strokeWidth="2"/>
+      <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 17.5V14l-3-3 4-3 2 3h2" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
 
 // Copie locale — évite d'importer SanteTab (JSX au niveau module → crash)
 function scoreJour(m) {
@@ -32,64 +44,6 @@ function SolennFace({ size = 34, isNight = false }) {
         fontFamily: "'Poppins',system-ui,sans-serif", lineHeight: 1,
         letterSpacing: '-0.02em', userSelect: 'none',
       }}>S</span>
-    </div>
-  )
-}
-
-// ─── ANIMATED LIQUID BACKGROUND — version originale restaurée ────────────────
-function FuturisticBg() {
-  return (
-    <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden' }}>
-
-      {/* Jaune doux — légèrement haut-centre, multiply */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 50% 48%, #FFE4A0 0%, transparent 68%)',
-        opacity:0.62, mixBlendMode:'multiply',
-        animation:'liquidBlob3 14s ease-in-out infinite',
-      }} />
-
-      {/* Orange léger — légèrement bas-gauche, multiply */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 42% 58%, #FF7112 0%, transparent 62%)',
-        opacity:0.13, mixBlendMode:'multiply',
-        animation:'liquidBlob1 18s ease-in-out infinite reverse',
-      }} />
-
-      {/* Pêche chaud haut-droite */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 88% 8%, rgba(232,140,80,0.45) 0%, transparent 58%)',
-        filter:'blur(72px)',
-        animation:'liquidBlob2 16s ease-in-out infinite',
-      }} />
-
-      {/* Ambre bas-gauche */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 8% 90%, rgba(212,132,74,0.18) 0%, transparent 52%)',
-        filter:'blur(64px)',
-        animation:'liquidBlob4 20s ease-in-out infinite reverse',
-      }} />
-
-      {/* Chaleur orange bas-droite */}
-      <div style={{
-        position:'absolute', inset:0,
-        backgroundImage:'radial-gradient(circle at 82% 80%, rgba(255,180,80,0.28) 0%, transparent 50%)',
-        filter:'blur(50px)',
-        animation:'liquidBlob3 11s ease-in-out infinite 2s',
-      }} />
-
-      {/* Dot grid discret */}
-      <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.022 }}>
-        <defs>
-          <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.4" fill="#D4844A"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#dotGrid)"/>
-      </svg>
     </div>
   )
 }
@@ -1362,7 +1316,7 @@ export function StreakXP({ streak, xp, level }) {
                 {streak}<span style={{ fontSize:10, fontWeight:300, color:'rgba(200,123,82,0.60)', marginLeft:6 }}>jours</span>
               </div>
               <div style={{ fontSize:9, color:'rgba(200,123,82,0.80)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
-                {streak >= 7 ? '🔥 En feu !' : streak > 0 ? 'Streak actif' : 'Premier jour'}
+                {streak >= 7 ? 'En feu !' : streak > 0 ? 'Streak actif' : 'Premier jour'}
               </div>
             </div>
           </div>
@@ -1472,7 +1426,7 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
         }}>
           {t.isDone
             ? <span style={{ color:'#fff', fontSize:14, fontWeight:500 }}>✓</span>
-            : t.emoji}
+            : t.Icon && <t.Icon size={17} color={t.color} />}
         </div>
       </div>
 
@@ -1514,49 +1468,49 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', emoji:'💧', color:'#38bdf8',
+      id:'eau', Icon: WaterIcon, color:'#38bdf8',
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', emoji:'👟', color:'#C87B52',
+      id:'pas', Icon: WalkIcon, color:'#C87B52',
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', emoji:'☀️', color:'#fbbf24',
+      id:'matin', Icon: SunIcon, color:'#fbbf24',
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil} — 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
-      id:'soir', emoji:'🌙', color:'#C87B52',
+      id:'soir', Icon: MoonIcon, color:'#C87B52',
       title:'Prépare ton sommeil',
       detail: profil?.coucher ? `Écrans off 30 min avant ${profil.coucher}` : 'Écrans éteints 30 min avant dormir',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'nutrition', emoji:'🥗', color:'#22c55e',
+      id:'nutrition', Icon: FoodIcon, color:'#22c55e',
       title: regime === 'végétarien' ? 'Protéines végétales' : regime === 'vegan' ? 'Équilibre vegan' : regime === 'sans gluten' ? 'Repas sans gluten' : 'Repas équilibrés',
       detail:'3 repas / légumes · protéines · glucides lents',
       goal:3, auto:false, fmt: v => `${v}/3 repas`,
     },
     {
-      id:'sport', emoji: niveau==='avancé' ? '🏋️' : niveau==='intermédiaire' ? '🚴' : '🚶',
+      id:'sport', Icon: niveau==='avancé' ? MuscleIcon : niveau==='intermédiaire' ? BikeIcon : WalkIcon,
       color:'#C87B52',
       title: niveau==='avancé' ? 'Session entraînement' : niveau==='intermédiaire' ? 'Cardio 30 min' : 'Mouvement doux',
       detail: niveau==='avancé' ? '45-60 min d\'effort physique' : niveau==='intermédiaire' ? 'Cardio modéré + échauffement' : '20-30 min de stretching ou marche',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', emoji:'🎯', color:'#C87B52',
+      id:'objectif', Icon: TargetIcon, color:'#C87B52',
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Un pas de plus vers « ${objectif} »` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',
     },
     {
-      id:'mental', emoji:'🧘', color:'#C87B52',
+      id:'mental', Icon: MeditateIcon, color:'#C87B52',
       title:'Bien-être mental',
       detail:'5 min cohérence cardiaque ou journaling',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -1569,7 +1523,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
   const tc = isNight ? nightText : preset === 'sunset' ? sunsetText : warmText
   const [done, setDone] = useState({})
   const [collapsed, setCollapsed] = useState(true)
-  const tasks = useMemo(() => generateDailyTasks(profil, metriques), [profil?.nom, profil?.objectifs?.[0]])
+  const tasks = useMemo(() => generateDailyTasks(profil, metriques), [profil?.nom, profil?.objectifs?.[0], profil?.niveau, profil?.regime, profil?.reveil, profil?.coucher])
 
   const enriched = tasks.map(t => {
     const cur = t.id==='eau' ? (metriques?.eau||0) : t.id==='pas' ? (metriques?.pas||0) : 0
@@ -1674,7 +1628,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
       image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
       title:'Prépare ton sommeil',
       body:"Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l'obscurité.",
-      action:'Routine soir', from:'#0A1633',
+      action:'Routine soir', from:'#0C2040',
     },
     {
       image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&auto=format&q=72',

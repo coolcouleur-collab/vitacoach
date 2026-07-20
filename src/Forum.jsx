@@ -102,7 +102,7 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
       {suggestions.length > 0 && (
         <div style={{
           position:'absolute', top:'100%', left:0, right:0, zIndex:300, marginTop:4,
-          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(20px)',
+          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
           border:'1px solid rgba(200,123,82,0.22)', borderRadius:12,
           boxShadow:'0 4px 18px rgba(200,123,82,0.13)', overflow:'hidden',
         }}>
@@ -130,7 +130,7 @@ const inputBase = {
   border: '1.5px solid rgba(200,123,82,0.22)',
   background: 'rgba(255,246,238,0.96)',
   outline: 'none',
-  fontFamily: 'var(--font)', fontSize: 'max(1.4rem,14px)',
+  fontFamily: 'var(--font)', fontSize: 'max(1.4rem,16px)',
   color: 'rgba(200,123,82,0.88)', lineHeight: 1.6,
   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
 }
@@ -333,7 +333,7 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
               value={editText}
               onChange={e => setEditText(e.target.value)}
               rows={3}
-              style={{ ...inputBase, resize:'vertical', fontSize:'max(1.2rem,12px)', marginBottom:'.5rem' }}
+              style={{ ...inputBase, resize:'vertical', fontSize:'max(1.2rem,16px)', marginBottom:'.5rem' }}
             />
             <div style={{ display:'flex', gap:8 }}>
               <button onClick={save} disabled={loading} style={{
@@ -1080,7 +1080,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
         <div className="forum-in" style={{
           background:'rgba(255,248,242,0.92)', borderRadius:20, marginBottom:'1.2rem',
           border:'1px solid rgba(200,123,82,0.18)', overflow:'hidden',
-          backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
+          backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
         }}>
           <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'rgba(140,70,20,0.85)', borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
             <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color="rgba(140,70,20,0.85)" /> Mentions</span>

@@ -13,7 +13,7 @@ class RootBoundary extends Component {
     if (this.state.error) {
       return (
         <div style={{ padding: 40, fontFamily: 'monospace', fontSize: 14, background: '#fff1f0', minHeight: '100vh' }}>
-          <h2 style={{ color: '#c00', marginBottom: 16 }}>💥 Erreur React</h2>
+          <h2 style={{ color: '#c00', marginBottom: 16 }}>Erreur React</h2>
           <pre style={{ whiteSpace: 'pre-wrap', color: '#900' }}>{String(this.state.error)}</pre>
           <pre style={{ whiteSpace: 'pre-wrap', color: '#555', marginTop: 12, fontSize: 12 }}>{this.state.error?.stack}</pre>
         </div>

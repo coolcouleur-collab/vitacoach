@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react'
-import { MuscleIcon, LightbulbIcon, LeafIcon, CalendarIcon, ChatIcon, CheckIcon } from './Icons'
+import { MuscleIcon, LightbulbIcon, LeafIcon, CalendarIcon, ChatIcon, CheckIcon, FoodIcon } from './Icons'
 
 // ─── Parser ───────────────────────────────────────────────────────────────────
 function parseRich(text) {
@@ -21,7 +21,7 @@ function parseRich(text) {
 
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
-  meals:     { accent:'#C87B52', label:'🍽️ Repas',      gradient:'linear-gradient(135deg,#C87B52,#E8962A)' },
+  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color="#C87B52" /> Repas</>,      gradient:'linear-gradient(135deg,#C87B52,#E8962A)' },
   exercises: { accent:'#F59E0B', labelEl:<><MuscleIcon size={13} color="#F59E0B" /> Exercices</>,  gradient:'linear-gradient(135deg,#F59E0B,#D97706)' },
   tips:      { accent:'#C87B52', labelEl:<><LightbulbIcon size={13} color="#C87B52" /> Conseils</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
   plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
@@ -77,7 +77,7 @@ function BookingCard({ data }) {
           display:'flex', alignItems:'center', justifyContent:'center',
           fontSize:26,
         }}>
-          {data.emoji || <CalendarIcon size={26} color="rgba(255,255,255,0.9)" />}
+          <CalendarIcon size={26} color="rgba(255,255,255,0.9)" />
         </div>
 
         <div style={{ flex:1, minWidth:0 }}>
@@ -85,8 +85,12 @@ function BookingCard({ data }) {
             {data.service || 'Réservation'}
           </div>
           {data.lieu && (
-            <div style={{ fontSize:12, color:'rgba(255,255,255,0.75)', marginTop:3 }}>
-              📍 {data.lieu}
+            <div style={{ fontSize:12, color:'rgba(255,255,255,0.75)', marginTop:3, display:'flex', alignItems:'center', gap:4 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0 }}>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="12" cy="10" r="3" stroke="rgba(255,255,255,0.75)" strokeWidth="2"/>
+              </svg>
+              {data.lieu}
             </div>
           )}
         </div>
@@ -134,29 +138,36 @@ function BookingCard({ data }) {
               transition:'all 0.3s ease',
               cursor:'pointer',
             }}>
-              {added ? <><CheckIcon size={14} color="#34c759" /> Ajouté au calendrier !</> : <><CalendarIcon size={14} color="#fff" /> Ajouter à mon calendrier</>}
+              {added ? <><CheckIcon size={14} color="white" /> Ajouté au calendrier !</> : <><CalendarIcon size={14} color="#fff" /> Ajouter à mon calendrier</>}
             </div>
           </a>
 
           {/* External links */}
-          {Array.isArray(data.links) && data.links.map((link, i) => (
-            <a key={i} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
-              style={{ textDecoration:'none' }}>
-              <div style={{
-                padding:'12px 16px', borderRadius:16,
-                background:'#fff', color:'#1a0a00',
-                border:'1.5px solid #f0e8e0',
-                fontSize:13, fontWeight:600,
-                boxShadow:'0 4px 14px rgba(0,0,0,0.06)',
-                display:'flex', alignItems:'center', gap:8,
-                cursor:'pointer',
-              }}>
-                <span style={{ fontSize:16 }}>{link.icon || '🔗'}</span>
-                <span style={{ flex:1 }}>{link.label}</span>
-                <span style={{ fontSize:12, color:'#c4b5a8' }}>↗</span>
-              </div>
-            </a>
-          ))}
+          {Array.isArray(data.links) && data.links.map((link, i) => {
+            const safeUrl = /^https?:\/\//i.test(link.url || '') ? link.url : null
+            if (!safeUrl) return null
+            return (
+              <a key={i} href={safeUrl} target="_blank" rel="noopener noreferrer"
+                style={{ textDecoration:'none' }}>
+                <div style={{
+                  padding:'12px 16px', borderRadius:16,
+                  background:'#fff', color:'#1a0a00',
+                  border:'1.5px solid #f0e8e0',
+                  fontSize:13, fontWeight:600,
+                  boxShadow:'0 4px 14px rgba(0,0,0,0.06)',
+                  display:'flex', alignItems:'center', gap:8,
+                  cursor:'pointer',
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0 }}>
+                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span style={{ flex:1 }}>{link.label}</span>
+                  <span style={{ fontSize:12, color:'#c4b5a8' }}>↗</span>
+                </div>
+              </a>
+            )
+          })}
         </div>
       </div>
     </div>
@@ -199,7 +210,9 @@ function RichCard({ item, accent, index }) {
         display:'flex', alignItems:'center', justifyContent:'center', fontSize:20,
         boxShadow:`0 3px 10px ${color}20`,
       }}>
-        {item.icon || '→'}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
 
       {/* Text */}

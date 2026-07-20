@@ -109,9 +109,8 @@ Format JSON :
 {
   "titre": "Ton rapport de la semaine, [prénom]",
   "score_global": 0-100,
-  "emoji_semaine": "1 emoji qui résume la semaine",
   "victoire_semaine": "1 victoire concrète à célébrer (même petite)",
-  "stat_phare": { "valeur": "...", "label": "...", "emoji": "..." },
+  "stat_phare": { "valeur": "...", "label": "..." },
   "analyse": "2-3 phrases authentiques et chaleureuses sur la semaine",
   "point_fort": "ce qui s'est bien passé",
   "point_progres": "1 chose à améliorer, formulée positivement",

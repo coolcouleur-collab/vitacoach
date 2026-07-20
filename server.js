@@ -61,7 +61,10 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
   const sig = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-  if (!webhookSecret) return res.json({ received: true }) // pas encore configuré
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET manquant — webhook ignoré, Pro jamais activé')
+    return res.json({ received: true }) // pas encore configuré
+  }
 
   let event
   try {
@@ -853,7 +856,13 @@ app.get('/api/agents-status', (req, res) => {
 })
 
 // ── Déclencher un agent manuellement (debug/admin) ───────────────────────────
+if (!process.env.AGENTS_TRIGGER_KEY) {
+  console.warn('[AgentsTrigger] AGENTS_TRIGGER_KEY non défini — /api/agents-trigger accessible sans authentification')
+}
 app.post('/api/agents-trigger', async (req, res) => {
+  if (process.env.AGENTS_TRIGGER_KEY && req.headers['x-agents-key'] !== process.env.AGENTS_TRIGGER_KEY) {
+    return res.status(401).json({ error: 'Non autorisé' })
+  }
   const { agent, moment } = req.body
   if (!agent) return res.status(400).json({ error: 'agent requis' })
   try {

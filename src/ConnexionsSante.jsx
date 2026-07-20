@@ -311,7 +311,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
           style={{
             width: '100%', padding: '12px 14px',
             border: `1.5px solid ${erreur ? C.rouge : 'rgba(200,123,82,0.25)'}`,
-            borderRadius: 12, fontSize: 13,
+            borderRadius: 12, fontSize: 16,
             fontFamily: 'monospace',
             background: 'rgba(255,240,228,0.30)',
             color: C.nuit, outline: 'none',
@@ -387,9 +387,15 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   }, [userId])
 
   async function chargerIntegrations() {
-    const res  = await fetch(`/api/integrations?userId=${userId}`)
-    const data = await res.json()
-    setIntegrations(data.integrations || [])
+    try {
+      const res = await fetch(`/api/integrations?userId=${userId}`)
+      if (!res.ok) { setIntegrations([]); return }
+      const data = await res.json()
+      setIntegrations(data.integrations || [])
+    } catch {
+      // Échec silencieux : liste vide, pas de crash
+      setIntegrations([])
+    }
   }
 
   function showToast(msg, duree = 3000) {
@@ -623,7 +629,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         )
       })}
 
-      <div style={{ fontSize: 11, color: C.texte2, textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
+      <div style={{ fontSize: 11, color: C.texte2, textAlign: 'center', marginTop: 8, lineHeight: 1.5, whiteSpace: 'pre-line' }}>
         Tes données de santé restent privées et ne sont jamais partagées.{'\n'}
         Synchronisation automatique toutes les 3h.
       </div>

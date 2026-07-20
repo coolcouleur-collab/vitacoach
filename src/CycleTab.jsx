@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MoonIcon } from './Icons'
 
 const F = "'Poppins', system-ui, sans-serif"
 const am = (a) => `rgba(255,248,235,${a})`
+
+// Phase de lune en SVG (cercle avec remplissage partiel selon la phase)
+function MoonPhaseSVG({ phase, size = 16, color = 'rgba(255,238,220,0.85)' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" style={{ display: 'block' }}>
+      <circle cx="8" cy="8" r="7" fill="none" stroke={color} strokeWidth="1.3" />
+      {phase === 'new' && <circle cx="8" cy="8" r="5" fill={color} fillOpacity="0.15" />}
+      {phase === 'full' && <circle cx="8" cy="8" r="5" fill={color} />}
+      {phase === 'waxing' && <path d="M8 3 A5 5 0 0 1 8 13 A7 7 0 0 0 8 3 Z" fill={color} />}
+      {phase === 'waning' && <path d="M8 3 A5 5 0 0 0 8 13 A7 7 0 0 1 8 3 Z" fill={color} />}
+    </svg>
+  )
+}
 
 const CARD = {
   background: 'rgba(255,235,210,0.22)',
@@ -18,7 +32,7 @@ const PHASES = [
     id: 'menstrual',
     name: 'Phase menstruelle',
     days: [1, 5],
-    emoji: '🌑',
+    moonPhase: 'new',
     color: 'rgba(200,80,80,0.70)',
     bgColor: 'rgba(200,80,80,0.12)',
     energy: 'Basse',
@@ -35,7 +49,7 @@ const PHASES = [
     id: 'follicular',
     name: 'Phase folliculaire',
     days: [6, 13],
-    emoji: '🌒',
+    moonPhase: 'waxing',
     color: 'rgba(255,180,60,0.80)',
     bgColor: 'rgba(255,180,60,0.12)',
     energy: 'Montante',
@@ -52,7 +66,7 @@ const PHASES = [
     id: 'ovulatory',
     name: 'Phase ovulatoire',
     days: [14, 16],
-    emoji: '🌕',
+    moonPhase: 'full',
     color: 'rgba(255,200,60,0.90)',
     bgColor: 'rgba(255,200,60,0.14)',
     energy: 'Pic',
@@ -69,7 +83,7 @@ const PHASES = [
     id: 'luteal',
     name: 'Phase lutéale',
     days: [17, 28],
-    emoji: '🌘',
+    moonPhase: 'waning',
     color: 'rgba(160,100,220,0.75)',
     bgColor: 'rgba(160,100,220,0.12)',
     energy: 'Déclinante',
@@ -131,7 +145,9 @@ export default function CycleTab({ profil }) {
                 borderRadius: 12, padding: '8px 4px',
                 textAlign: 'center', transition: 'all 0.3s',
               }}>
-                <div style={{ fontSize: 14, marginBottom: 2 }}>{p.emoji}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+                  <MoonPhaseSVG phase={p.moonPhase} size={14} color={active ? p.color : am(0.45)} />
+                </div>
                 <div style={{ fontSize: 8, fontWeight: 600, color: am(active ? 0.88 : 0.40), letterSpacing: '0.03em' }}>
                   J{p.days[0]}-{p.days[1]}
                 </div>
@@ -155,7 +171,7 @@ export default function CycleTab({ profil }) {
               flex: 1, padding: '10px 14px', borderRadius: 14,
               background: 'rgba(255,235,210,0.15)',
               border: '1px solid rgba(255,220,160,0.30)',
-              color: am(0.90), fontSize: 14, fontFamily: F,
+              color: am(0.90), fontSize: 16, fontFamily: F,
               outline: 'none', colorScheme: 'dark',
             }}
           />
@@ -188,7 +204,9 @@ export default function CycleTab({ profil }) {
               marginBottom: 16,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
-                <div style={{ fontSize: 32 }}>{currentPhase.emoji}</div>
+                <div style={{ display: 'flex', flexShrink: 0 }}>
+                  <MoonPhaseSVG phase={currentPhase.moonPhase} size={32} color={currentPhase.color} />
+                </div>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: am(0.95) }}>{currentPhase.name}</div>
                   <div style={{ fontSize: 12, color: am(0.55), marginTop: 2 }}>
@@ -248,7 +266,9 @@ export default function CycleTab({ profil }) {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             style={{ ...CARD, textAlign: 'center', padding: '40px 24px' }}
           >
-            <div style={{ fontSize: 36, marginBottom: 12 }}>🌙</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+              <MoonIcon size={36} color="rgba(255,238,220,0.75)" />
+            </div>
             <div style={{ fontSize: 15, fontWeight: 600, color: am(0.80), marginBottom: 8 }}>
               Entre la date de tes dernières règles
             </div>

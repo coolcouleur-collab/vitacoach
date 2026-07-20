@@ -73,7 +73,7 @@ function groupByWeek(sessions) {
   const now = new Date()
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const startOfThisWeek = new Date(startOfToday)
-  startOfThisWeek.setDate(startOfToday.getDate() - startOfToday.getDay())
+  startOfThisWeek.setDate(startOfToday.getDate() - ((startOfToday.getDay() + 6) % 7))
   const startOfLastWeek = new Date(startOfThisWeek)
   startOfLastWeek.setDate(startOfThisWeek.getDate() - 7)
 
@@ -436,7 +436,13 @@ export default function ChatHistory({
                 border: '1px solid rgba(220,60,30,0.18)',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 24, marginBottom: 8 }}>⚠️</div>
+                <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <line x1="12" y1="9" x2="12" y2="13" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
                 <div style={{
                   fontFamily: C.font,
                   fontSize: 13,
@@ -458,7 +464,11 @@ export default function ChatHistory({
                 paddingTop: 52,
                 paddingBottom: 24,
               }}>
-                <div style={{ fontSize: 40 }}>💬</div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="rgba(200,123,82,0.60)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
                 <div style={{
                   fontFamily: C.font,
                   fontSize: 14,

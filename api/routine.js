@@ -42,7 +42,7 @@ Période soir : ${soirDebut} → ${coucher}
 ═══ MÉTRIQUES D'HIER / CE MATIN ═══
 Sommeil cette nuit : ${metriques?.sommeil > 0 ? `${metriques.sommeil}h` : 'non renseigné — adapte selon le profil'}
 Pas déjà enregistrés : ${metriques?.pas > 0 ? metriques.pas : 0}
-Hydratation : ${metriques?.eau > 0 ? `${metriques.eau} verres` : '0 (encourage}'}
+Hydratation : ${metriques?.eau > 0 ? `${metriques.eau} verres` : '0 (encourage)'}
 Humeur : ${metriques?.humeur > 0 ? `${metriques.humeur}/5` : 'non renseignée'}
 
 Réponds UNIQUEMENT en JSON valide avec ce format exact. Utilise les vrais horaires de ${profil?.nom} :

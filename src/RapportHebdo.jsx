@@ -399,7 +399,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                 textTransform: 'uppercase',
                 letterSpacing: 0.6,
               }}>
-                <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={11} color="rgba(200,123,82,0.70)" />Point fort</span>
+                <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={11} color="#22c55e" />Point fort</span>
               </p>
               <p style={{
                 fontFamily: 'Poppins, sans-serif',

@@ -107,8 +107,9 @@ function RevealScreen({ answers, onEnter }) {
   const [btnVisible, setBtnVisible] = useState(false)
 
   useEffect(() => {
-    setTimeout(() => setVisible(true), 120)
-    setTimeout(() => setBtnVisible(true), 900)
+    const t1 = setTimeout(() => setVisible(true), 120)
+    const t2 = setTimeout(() => setBtnVisible(true), 900)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
   const nom = answers.nom || 'toi'

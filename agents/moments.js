@@ -71,8 +71,12 @@ Format JSON :
   const match = raw.match(/\{[\s\S]*\}/)
   if (!match) return []
 
-  const parsed = JSON.parse(match[0])
-  return (parsed.moments || []).filter(m => m.description && m.description.length > 5)
+  try {
+    const parsed = JSON.parse(match[0])
+    return (parsed.moments || []).filter(m => m.description && m.description.length > 5)
+  } catch (_) {
+    return []
+  }
 }
 
 // ─── Sauvegarde les moments dans le profil ────────────────────────────────────
@@ -149,13 +153,13 @@ export async function runMomentsCheck(pushSubscriptions) {
           if (!sub) continue
 
           const titre = joursRestants === 0
-            ? `📅 Aujourd'hui : ${moment.description}`
-            : `📅 Dans ${joursRestants}j : ${moment.description}`
+            ? `Aujourd'hui : ${moment.description}`
+            : `Dans ${joursRestants}j : ${moment.description}`
 
           try {
             await webpush.sendNotification(sub, JSON.stringify({
               title: titre,
-              body:  'Solenn se souvient et pense à toi 💙',
+              body:  'Solenn se souvient et pense à toi',
               icon:  '/icon-192.png',
               data:  { url: '/' },
             }))
@@ -166,12 +170,12 @@ export async function runMomentsCheck(pushSubscriptions) {
     }
   }
 
-  // Extraction hebdo depuis les nouvelles conversations
-  const dateHebdo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // Extraction quotidienne depuis les conversations des dernières 24h
+  const dateRecente = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   const { data: recentChats } = await supabase
     .from('solenn_chats')
     .select('user_id, messages')
-    .gte('session_date', dateHebdo)
+    .gte('session_date', dateRecente)
 
   for (const chat of (recentChats || [])) {
     try {

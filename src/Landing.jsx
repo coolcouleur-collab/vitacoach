@@ -98,13 +98,17 @@ function CinematicSlider({ onCommencer }) {
 
   // Auto-slide désactivé — l'utilisateur navigue à son rythme
 
+  const prevTimerRef = useRef(null)
+  useEffect(() => () => clearTimeout(prevTimerRef.current), [])
+
   function navigate(idx, direction) {
     if (idx === cur) return
     setPrev(cur)
     setDir(direction)
     setCur(idx)
     setAnimKey(k => k + 1)
-    setTimeout(() => setPrev(null), 750)
+    clearTimeout(prevTimerRef.current)
+    prevTimerRef.current = setTimeout(() => setPrev(null), 750)
   }
 
   return (

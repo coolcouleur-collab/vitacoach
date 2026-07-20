@@ -27,7 +27,7 @@ const MOMENTS = {
     tag: 'notif-matin',
     url: '/?tab=routine',
     titlePrefix: 'Solenn — Bonjour',
-    systemInstruction: 'Génère un message de motivation matinale court (max 80 chars). Énergie positive, objectif concret pour la journée. Emoji au début.',
+    systemInstruction: 'Génère un message de motivation matinale court (max 80 chars). Énergie positive, objectif concret pour la journée. Pas d\'emoji. Texte simple et chaleureux.',
     userContext: (profil, streak, score) =>
       `${profil.nom} commence sa journée. Streak: ${streak} jours. Objectifs: ${profil.objectifs?.join(', ') || 'bien-être'}. Score hier: ${score}/100.`
   },
@@ -36,7 +36,7 @@ const MOMENTS = {
     tag: 'notif-midi',
     url: '/?tab=sante',
     titlePrefix: 'Solenn — Mi-journée',
-    systemInstruction: 'Génère un rappel de mi-journée (max 80 chars). Hydratation, mouvement, respiration. Pratique et bienveillant. Emoji au début.',
+    systemInstruction: 'Génère un rappel de mi-journée (max 80 chars). Hydratation, mouvement, respiration. Pratique et bienveillant. Pas d\'emoji. Texte simple et chaleureux.',
     userContext: (profil, streak, score) =>
       `${profil.nom} est en pleine journée. Rappelle une habitude santé clé. Objectifs: ${profil.objectifs?.join(', ') || 'bien-être'}.`
   },
@@ -45,7 +45,7 @@ const MOMENTS = {
     tag: 'notif-soir',
     url: '/?tab=accueil',
     titlePrefix: 'Solenn — Bonsoir',
-    systemInstruction: 'Génère un message du soir (max 80 chars). Récupération, sommeil, décompression. Chaleureux et apaisant. Emoji au début.',
+    systemInstruction: 'Génère un message du soir (max 80 chars). Récupération, sommeil, décompression. Chaleureux et apaisant. Pas d\'emoji. Texte simple et chaleureux.',
     userContext: (profil, streak, score) =>
       `${profil.nom} termine sa journée. Score aujourd'hui: ${score}/100. Streak: ${streak} jours. Prépare au repos.`
   },

@@ -5,11 +5,11 @@ import { MoonIcon, SparkleIcon, SunIcon, TargetIcon, SadIcon, NeutralIcon, Happy
 const EASE = [0.22, 1, 0.36, 1]
 
 const HUMEURS = [
-  { val: 1, emoji: '😶', label: 'Vide',      color: 'rgba(148,163,184,0.90)', icon: <NeutralIcon size={30} color="rgba(148,163,184,0.90)" /> },
-  { val: 2, emoji: '😕', label: 'Difficile', color: 'rgba(251,146,60,0.90)',  icon: <SadIcon     size={30} color="rgba(251,146,60,0.90)"  /> },
-  { val: 3, emoji: '😐', label: 'Neutre',    color: 'rgba(251,191,36,0.90)',  icon: <NeutralIcon size={30} color="rgba(251,191,36,0.90)"  /> },
-  { val: 4, emoji: '🙂', label: 'Bien',      color: 'rgba(34,197,94,0.90)',   icon: <HappyIcon   size={30} color="rgba(34,197,94,0.90)"   /> },
-  { val: 5, emoji: '😄', label: 'Super',     color: 'rgba(200,123,82,0.90)',  icon: <HappyIcon   size={30} color="rgba(200,123,82,0.90)"  /> },
+  { val: 1, label: 'Vide',      color: 'rgba(148,163,184,0.90)', icon: <NeutralIcon size={30} color="rgba(148,163,184,0.90)" /> },
+  { val: 2, label: 'Difficile', color: 'rgba(251,146,60,0.90)',  icon: <SadIcon     size={30} color="rgba(251,146,60,0.90)"  /> },
+  { val: 3, label: 'Neutre',    color: 'rgba(251,191,36,0.90)',  icon: <NeutralIcon size={30} color="rgba(251,191,36,0.90)"  /> },
+  { val: 4, label: 'Bien',      color: 'rgba(34,197,94,0.90)',   icon: <HappyIcon   size={30} color="rgba(34,197,94,0.90)"   /> },
+  { val: 5, label: 'Super',     color: 'rgba(200,123,82,0.90)',  icon: <HappyIcon   size={30} color="rgba(200,123,82,0.90)"  /> },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
@@ -45,7 +45,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
     handleHumeur(val)
   }
 
-  const progress = ((step) / 3) * 100
+  const progress = ((step + 1) / 3) * 100
 
   return (
     <motion.div
@@ -61,6 +61,25 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
         fontFamily: 'Poppins, sans-serif',
       }}
     >
+      <style>{`
+        .mc-sleep-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 22px; height: 22px; border-radius: 50%;
+          background: #E8962A;
+          border: 2px solid rgba(255,238,220,0.9);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .mc-sleep-slider::-moz-range-thumb {
+          width: 22px; height: 22px; border-radius: 50%;
+          background: #E8962A;
+          border: 2px solid rgba(255,238,220,0.9);
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+      `}</style>
+
       {/* ── Barre de progression ── */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'rgba(200,123,82,0.15)', zIndex: 10 }}>
         <motion.div
@@ -79,7 +98,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           borderRadius: 20, padding: '6px 14px',
           color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 500,
           fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
-          backdropFilter: 'blur(8px)',
+          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
         }}
       >
         Passer
@@ -139,6 +158,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: 'rgba(200,123,82,0.80)', marginLeft: 4 }}>h</span>
                 </div>
                 <input
+                  className="mc-sleep-slider"
                   type="range" min={2} max={12} step={0.5} value={sommeil}
                   onChange={e => setSommeil(parseFloat(e.target.value))}
                   style={{
@@ -204,7 +224,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                         : '1.5px solid rgba(255,255,255,0.12)',
                       cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                      backdropFilter: 'blur(8px)',
+                      backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                       transition: 'background 0.2s, border 0.2s',
                     }}
                   >
@@ -250,7 +270,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   padding: '16px 20px', borderRadius: 16,
                   border: '1.5px solid rgba(200,123,82,0.30)',
                   background: 'rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(8px)',
+                  backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                   fontSize: 16, fontFamily: 'Poppins, sans-serif',
                   color: '#fff', outline: 'none', marginBottom: 24,
                   textAlign: 'center',
@@ -305,6 +325,6 @@ const btnFullStyle = {
   background: 'rgba(200,123,82,0.18)',
   color: 'rgba(255,255,255,0.90)', fontSize: 15, fontWeight: 700,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
-  letterSpacing: '-0.2px', backdropFilter: 'blur(8px)',
+  letterSpacing: '-0.2px', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
   border: '1px solid rgba(200,123,82,0.25)',
 }
