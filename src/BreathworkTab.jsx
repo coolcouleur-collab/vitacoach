@@ -35,7 +35,7 @@ const TECHNIQUES = [
       { label: 'Expire',   dur: 8, big: false },
     ],
     totalCycles: 4,
-    accent: 'rgba(160,100,220,0.80)',
+    accent: 'rgba(200,123,82,0.80)',
   },
   {
     id: 'box',
@@ -48,7 +48,7 @@ const TECHNIQUES = [
       { label: 'Retiens',  dur: 4, big: false },
     ],
     totalCycles: 4,
-    accent: 'rgba(56,193,182,0.80)',
+    accent: 'rgba(200,123,82,0.80)',
   },
   {
     id: 'wimhof',
@@ -59,7 +59,7 @@ const TECHNIQUES = [
       { label: 'Expire rapide',  dur: 1.5, big: false },
     ],
     totalCycles: 30,
-    accent: 'rgba(255,100,50,0.80)',
+    accent: 'rgba(200,123,82,0.80)',
   },
 ]
 

@@ -103,7 +103,7 @@ function HistoriqueSection({ history }) {
     <div style={{
       background:'rgba(255,235,210,0.22)', border:'1.5px solid rgba(255,220,160,0.28)', borderRadius:20,
       overflow:'hidden', marginBottom:14,
-      backdropFilter:'blur(18px)',
+      backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
     }}>
       <button
         style={{ width:'100%', background:'transparent', border:'none', padding:'16px 18px',
@@ -113,7 +113,7 @@ function HistoriqueSection({ history }) {
         <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
           background:'rgba(200,123,82,0.12)',
           border:'1.5px solid rgba(200,123,82,0.22)',
-          display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>📈</div>
+          display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color="#C87B52" /></div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.72)' }}>Historique 7 jours</div>
           <div style={{ fontSize:11, color:'rgba(200,123,82,0.62)', marginTop:1 }}>Progression de tes métriques</div>
@@ -355,7 +355,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       setInsights(data)
     } catch (err) {
       console.error('health-insights error:', err)
-      setInsights({ insights: [{ emoji: '⚠️', titre: 'Erreur', message: 'Impossible de générer l\'analyse. Vérifie ta connexion ou réessaie.' }] })
+      setInsights({ insights: [{ emoji: '', titre: 'Erreur', message: 'Impossible de générer l\'analyse. Vérifie ta connexion ou réessaie.' }] })
     } finally {
       setLoadingInsights(false)
     }
@@ -607,7 +607,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               </div>
               <div style={{ fontSize: 11, color: `${m.color}`, marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
-                {m.key === 'humeur' && val > 0 && <span style={{ fontSize: 14, lineHeight: 1 }}>{['','😢','😕','😐','🙂','😊'][val]}</span>}
+                {m.key === 'humeur' && val > 0 && <span style={{ display:'flex', alignItems:'center' }}>{HUMEUR_ICONS[val]}</span>}
               </div>
               {m.key === 'poids' && val > 0 && prevPoids > 0 && (() => {
                 const delta  = parseFloat((val - prevPoids).toFixed(1))
@@ -730,7 +730,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div style={{ fontSize: 18, fontWeight: 900, color: 'rgba(200,123,82,0.92)', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
-            <div style={{ fontSize: 12, color: '#8a7265', textAlign: 'center', marginBottom: 22 }}>
+            <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', textAlign: 'center', marginBottom: 22 }}>
               {editMetric.hint}
             </div>
 
@@ -753,7 +753,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                     </button>
                   ))}
                 </div>
-                <div style={{ textAlign: 'center', fontSize: 13, color: '#8a7265', marginBottom: 22 }}>
+                <div style={{ textAlign: 'center', fontSize: 13, color: 'rgba(200,123,82,0.60)', marginBottom: 22 }}>
                   {tempVal ? `Humeur ${tempVal}/5` : 'Sélectionne ton humeur'}
                 </div>
               </div>
@@ -865,35 +865,36 @@ const ss = {
     zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center'
   },
   modalCard: {
-    background: 'linear-gradient(145deg, #FFF8F4, #ffffff)',
+    background: 'rgba(40,20,5,0.94)',
+    backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
     borderRadius: '28px 28px 0 0', padding: '10px 26px 48px', width: '100%', maxWidth: 520,
-    boxShadow: '0 -12px 50px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9)'
+    boxShadow: '0 -12px 50px rgba(0,0,0,0.45)', border: '1px solid rgba(255,220,160,0.14)'
   },
   modalHandle: {
-    width: 44, height: 5, background: 'rgba(0,0,0,0.10)', borderRadius: 12,
+    width: 44, height: 5, background: 'rgba(255,220,160,0.22)', borderRadius: 12,
     margin: '12px auto 22px'
   },
   modalInput: {
     width: '100%', padding: '18px',
     borderRadius: 20,
-    border: '2px solid #f0e8e0', background: 'rgba(255,248,244,0.8)',
-    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: 'rgba(200,123,82,0.92)',
+    border: '1.5px solid rgba(255,220,160,0.28)', background: 'rgba(255,235,210,0.10)',
+    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: 'rgba(255,238,220,0.92)',
     boxSizing: 'border-box', textAlign: 'center', marginBottom: 22, fontWeight: 800,
-    boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.04)'
+    boxShadow: 'none'
   },
   humeurBtn: {
     width: 56, height: 56, borderRadius: 20,
-    border: '1.5px solid rgba(0,0,0,0.08)',
-    background: 'linear-gradient(145deg, #fff8f4, #fff)',
+    border: '1.5px solid rgba(255,220,160,0.22)',
+    background: 'rgba(255,235,210,0.10)',
     fontSize: 28, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     transition: 'all 0.2s ease',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)'
+    boxShadow: 'none'
   },
   btnCancel: {
-    flex: 1, padding: '15px', background: 'rgba(0,0,0,0.05)',
-    border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, fontSize: 13,
-    fontWeight: 700, cursor: 'pointer', color: '#8a7265', fontFamily: 'Poppins,sans-serif',
+    flex: 1, padding: '15px', background: 'rgba(255,235,210,0.08)',
+    border: '1px solid rgba(255,220,160,0.20)', borderRadius: 16, fontSize: 13,
+    fontWeight: 700, cursor: 'pointer', color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif',
     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)'
   },
   btnSave: {

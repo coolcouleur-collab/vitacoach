@@ -5,7 +5,7 @@
  * Si pas de cache : génère à la demande via /api/routine-regenerer.
  * Les étapes cochées sont persistées dans localStorage.
  */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon } from './Icons'
 
@@ -54,25 +54,27 @@ function CheckSVG({ checked }) {
 
 // ─── Anneau de progression ────────────────────────────────────────────────────
 function ProgressRing({ pct, size = 72, stroke = 6 }) {
+  const uid = useId()
+  const gradId = `rg-${uid.replace(/:/g, '')}`
   const r = (size - stroke) / 2
   const circ = 2 * Math.PI * r
   const dash = circ * (pct / 100)
   return (
     <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-      <circle cx={size/2} cy={size/2} r={r} fill="none"
-        stroke="rgba(200,123,82,0.12)" strokeWidth={stroke} />
-      <circle cx={size/2} cy={size/2} r={r} fill="none"
-        stroke="url(#rg)" strokeWidth={stroke}
-        strokeLinecap="round"
-        strokeDasharray={`${dash} ${circ}`}
-        style={{ transition: 'stroke-dasharray 0.5s ease' }}
-      />
       <defs>
-        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#C87B52"/>
           <stop offset="100%" stopColor="#E8962A"/>
         </linearGradient>
       </defs>
+      <circle cx={size/2} cy={size/2} r={r} fill="none"
+        stroke="rgba(200,123,82,0.12)" strokeWidth={stroke} />
+      <circle cx={size/2} cy={size/2} r={r} fill="none"
+        stroke={`url(#${gradId})`} strokeWidth={stroke}
+        strokeLinecap="round"
+        strokeDasharray={`${dash} ${circ}`}
+        style={{ transition: 'stroke-dasharray 0.5s ease' }}
+      />
     </svg>
   )
 }
@@ -91,7 +93,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
         borderRadius: 20,
         padding: '18px 16px',
         marginBottom: 12,
-        backdropFilter: 'blur(18px)',
+        backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
       }}
     >
       {/* Header section */}
@@ -184,11 +186,11 @@ function NutritionCard({ nutrition }) {
         background: 'rgba(255,235,210,0.22)',
         border: '1px solid rgba(255,220,160,0.28)',
         borderRadius: 20, padding: '18px 16px', marginBottom: 12,
-        backdropFilter: 'blur(18px)',
+        backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-        <span style={{ fontSize: 22 }}>🥗</span>
+        <span style={{ display:'flex' }}><LightbulbIcon size={22} color="#C87B52" /></span>
         <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
           {nutrition.titre || 'Nutrition du jour'}
         </div>
@@ -215,8 +217,8 @@ function NutritionCard({ nutrition }) {
 
       {nutrition.supplements?.length > 0 && (
         <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(200,123,82,0.06)', borderRadius: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
-            💊 Suppléments
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
+            <SparkleIcon size={11} color="rgba(200,123,82,0.70)" /> Suppléments
           </div>
           {nutrition.supplements.map((s, i) => (
             <div key={i} style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
@@ -451,14 +453,14 @@ export default function RoutineTab({ userId, profil }) {
         {showCelebration && (
           <div style={{
             position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
-            background: 'rgba(255,248,235,0.97)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(40,20,5,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             borderRadius: 20, padding: '16px 28px', textAlign: 'center',
-            boxShadow: '0 16px 48px rgba(200,123,82,0.28), 0 4px 12px rgba(0,0,0,0.08)',
-            border: '1.5px solid rgba(200,123,82,0.22)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.40), 0 4px 12px rgba(200,123,82,0.18)',
+            border: '1.5px solid rgba(255,220,160,0.22)',
             animation: 'celebPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
             display: 'flex', alignItems: 'center', gap: 12,
           }}>
-            <span style={{ fontSize: 28 }}>🏆</span>
+            <span style={{ display:'flex' }}><StarIcon size={28} color="#E8962A" /></span>
             <div>
               <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
               <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
@@ -473,7 +475,7 @@ export default function RoutineTab({ userId, profil }) {
             borderRadius: 12, padding: '12px 16px', marginBottom: 12,
             fontSize: 13, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
           }}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
@@ -615,7 +617,7 @@ export default function RoutineTab({ userId, profil }) {
                       borderRadius: 20, marginTop: 8,
                     }}
                   >
-                    <div style={{ fontSize: 36, marginBottom: 8 }}>🎉</div>
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom: 8 }}><StarIcon size={36} color="#E8962A" /></div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif' }}>
                       Journée accomplie !
                     </div>

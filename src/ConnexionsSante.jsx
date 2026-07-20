@@ -12,15 +12,42 @@ const HK_KEY = 'vitacoach_healthkit_connected'
 
 const C = {
   bg:       'rgba(255,248,244,0.0)',
-  card:     'rgba(255,240,228,0.18)',
-  border:   'rgba(200,123,82,0.15)',
+  card:     'rgba(255,235,210,0.22)',
+  border:   'rgba(255,220,160,0.28)',
   orange:   '#C87B52',
   or:       '#E8962A',
-  nuit:     '#0A1633',
-  texte:    'rgba(10,22,51,0.88)',
-  texte2:   'rgba(10,22,51,0.55)',
+  nuit:     'rgba(255,238,220,0.92)',
+  texte:    'rgba(255,238,220,0.92)',
+  texte2:   'rgba(200,123,82,0.70)',
   vert:     '#22c55e',
   rouge:    '#ef4444',
+}
+
+// ─── Icônes SVG providers ─────────────────────────────────────────────────────
+const ICONS = {
+  withings: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="8" r="4" stroke="#C87B52" strokeWidth="1.5"/>
+      <path d="M5 20h14M8 20l4-12 4 12" stroke="#C87B52" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  oura: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="7" stroke="#C87B52" strokeWidth="2"/>
+      <circle cx="12" cy="12" r="3" stroke="#C87B52" strokeWidth="1.5"/>
+    </svg>
+  ),
+  garmin: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="7" y="4" width="10" height="16" rx="4" stroke="#C87B52" strokeWidth="1.5"/>
+      <path d="M9 2h6M9 22h6M12 8v4l2 2" stroke="#C87B52" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  apple_health: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="#C87B52" strokeWidth="1.5" fill="none"/>
+    </svg>
+  ),
 }
 
 // ─── Définition des providers ─────────────────────────────────────────────────
@@ -28,9 +55,9 @@ const PROVIDERS = [
   {
     id:          'withings',
     nom:         'Withings',
-    emoji:       '⚖️',
+    icon:        ICONS.withings,
     description: 'Balance, tensiomètre, montre — marque française',
-    couleur:     '#0A1633',
+    couleur:     '#C87B52',
     donnees:     ['Poids', 'Tension artérielle', 'FC repos', 'Sommeil', 'Température'],
     methode:     'oauth',   // redirect OAuth
     disponible:  true,
@@ -38,7 +65,7 @@ const PROVIDERS = [
   {
     id:          'oura',
     nom:         'Oura Ring',
-    emoji:       '💍',
+    icon:        ICONS.oura,
     description: 'Meilleure qualité de données sommeil au monde',
     couleur:     '#6C63FF',
     donnees:     ['Sommeil (stades)', 'HRV', 'Readiness', 'Pas', 'FC'],
@@ -48,17 +75,17 @@ const PROVIDERS = [
   {
     id:          'garmin',
     nom:         'Garmin',
-    emoji:       '⌚',
+    icon:        ICONS.garmin,
     description: 'GPS, sport, stress, fréquence cardiaque',
     couleur:     '#007CC3',
     donnees:     ['Pas', 'Calories', 'Stress', 'Sommeil', 'FC'],
     methode:     'oauth',
-    disponible:  false,     // bientôt
+    disponible:  true,
   },
   {
     id:          'apple_health',
     nom:         'Apple Santé',
-    emoji:       '🍎',
+    icon:        ICONS.apple_health,
     description: 'Via l\'app native iOS — sync automatique',
     couleur:     '#ef4444',
     donnees:     ['Pas', 'Sommeil', 'FC', 'Calories', 'Poids'],
@@ -104,9 +131,9 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
           background: `${provider.couleur}18`,
           border: `1px solid ${provider.couleur}30`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 22, flexShrink: 0,
+          flexShrink: 0,
         }}>
-          {provider.emoji}
+          {provider.icon}
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: C.texte, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -128,8 +155,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
         {provider.donnees.map(d => (
           <span key={d} style={{
             fontSize: 11, color: C.texte2,
-            background: 'rgba(10,22,51,0.05)',
-            border: '1px solid rgba(10,22,51,0.08)',
+            background: 'rgba(200,123,82,0.08)',
+            border: '1px solid rgba(200,123,82,0.16)',
             borderRadius: 12, padding: '2px 8px',
           }}>
             {d}
@@ -151,7 +178,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
             disabled ? (
               <div style={{
                 flex: 1, padding: '10px 16px', borderRadius: 12, textAlign: 'center',
-                background: 'rgba(10,22,51,0.05)', border: '1px solid rgba(10,22,51,0.10)',
+                background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.16)',
                 fontSize: 13, color: C.texte2, fontWeight: 500,
               }}>
                 {disabledLabel || 'Non disponible'}
@@ -161,7 +188,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               onClick={() => onConnect(provider)}
               style={{
                 flex: 1, padding: '10px 16px',
-                background: `linear-gradient(135deg, ${provider.couleur}, ${provider.couleur}CC)`,
+                background: 'linear-gradient(135deg, #C87B52, #E8962A)',
                 border: 'none', borderRadius: 12, color: '#fff',
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
@@ -184,7 +211,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                   fontFamily: 'Poppins, sans-serif',
                 }}
               >
-                {loading ? '⏳ Sync…' : '🔄 Sync'}
+                {loading ? 'Sync…' : 'Sync'}
               </button>
               <button
                 onClick={() => {
@@ -193,8 +220,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                 }}
                 style={{
                   padding: '9px 14px',
-                  background: confirmeDeconnect ? 'rgba(239,68,68,0.12)' : 'rgba(10,22,51,0.05)',
-                  border: `1px solid ${confirmeDeconnect ? 'rgba(239,68,68,0.30)' : 'rgba(10,22,51,0.10)'}`,
+                  background: confirmeDeconnect ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.08)',
+                  border: `1px solid ${confirmeDeconnect ? 'rgba(239,68,68,0.30)' : 'rgba(200,123,82,0.16)'}`,
                   borderRadius: 12,
                   color: confirmeDeconnect ? C.rouge : C.texte2,
                   fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
@@ -240,8 +267,9 @@ function ModalOura({ userId, onSuccess, onClose }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 200,
-        background: 'rgba(10,22,51,0.50)',
+        background: 'rgba(0,0,0,0.65)',
         backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24,
       }}
@@ -250,13 +278,20 @@ function ModalOura({ userId, onSuccess, onClose }) {
       <motion.div
         initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
         style={{
-          background: '#FFF8F4', borderRadius: 20,
+          background: 'rgba(40,20,5,0.92)', borderRadius: 20,
+          backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255,220,160,0.28)',
           padding: 28, width: '100%', maxWidth: 380,
-          boxShadow: '0 24px 60px rgba(10,22,51,0.18)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.50)',
         }}
       >
-        <div style={{ fontSize: 28, marginBottom: 8 }}>💍</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: C.nuit, marginBottom: 6 }}>
+        <div style={{ marginBottom: 8 }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="7" stroke="#C87B52" strokeWidth="2"/>
+            <circle cx="12" cy="12" r="3" stroke="#C87B52" strokeWidth="1.5"/>
+          </svg>
+        </div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.texte, marginBottom: 6 }}>
           Connecter Oura Ring
         </div>
         <div style={{ fontSize: 13, color: C.texte2, marginBottom: 20, lineHeight: 1.5 }}>
@@ -288,8 +323,8 @@ function ModalOura({ userId, onSuccess, onClose }) {
 
         <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
           <button onClick={onClose} style={{
-            flex: 1, padding: '11px', background: 'rgba(10,22,51,0.06)',
-            border: '1px solid rgba(10,22,51,0.10)', borderRadius: 12,
+            flex: 1, padding: '11px', background: 'rgba(200,123,82,0.08)',
+            border: '1px solid rgba(200,123,82,0.16)', borderRadius: 12,
             color: C.texte2, fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins',
           }}>Annuler</button>
           <button onClick={connecter} disabled={loading || !token.trim()} style={{
@@ -299,7 +334,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
             color: '#fff', fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',
           }}>
-            {loading ? '⏳ Vérification…' : 'Connecter'}
+            {loading ? 'Vérification…' : 'Connecter'}
           </button>
         </div>
       </motion.div>
@@ -380,7 +415,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       if (provider.id === 'oura') setModalOura(true)
     } else if (provider.methode === 'native' && provider.id === 'apple_health') {
       if (!hkAvailable) {
-        showToast('💡 Disponible uniquement dans l\'app iOS Solenn')
+        showToast('Disponible uniquement dans l\'app iOS Solenn')
         return
       }
       setLoadingSync('apple_health')
@@ -388,10 +423,10 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         await requestHealthKitPermissions()
         localStorage.setItem(HK_KEY, 'true')
         setHkConnected(true)
-        showToast('🍎 Apple Santé connecté !')
+        showToast('Apple Santé connecté !')
         await syncAppleHealth()
       } catch (e) {
-        showToast('❌ Autorisation refusée')
+        showToast('Autorisation refusée')
       } finally {
         setLoadingSync(null)
       }
@@ -428,9 +463,9 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       const now = new Date().toISOString()
       localStorage.setItem(HK_KEY + '_last', now)
       setHkLastSync(now)
-      showToast(`✅ ${synced} métriques synchronisées depuis Apple Santé`)
+      showToast(`${synced} métriques synchronisées depuis Apple Santé`)
     } catch (e) {
-      showToast('❌ Erreur de sync Apple Santé')
+      showToast('Erreur de sync Apple Santé')
     } finally {
       setLoadingSync(null)
     }
@@ -456,9 +491,9 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       })
       const data = await res.json()
       await chargerIntegrations()
-      showToast(`✅ ${data.synced || 0} métriques synchronisées`)
+      showToast(`${data.synced || 0} métriques synchronisées`)
     } catch (e) {
-      showToast('❌ Erreur de synchronisation')
+      showToast('Erreur de synchronisation')
     } finally {
       setLoadingSync(null)
     }
@@ -490,20 +525,23 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               fontFamily:   'Poppins, sans-serif',
             }}
           >
-            <span style={{ fontSize: 26, flexShrink: 0 }}>✅</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="10" fill="rgba(34,197,94,0.15)" stroke="#22c55e" strokeWidth="1.5"/>
+              <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#15803d', lineHeight: 1.3 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#22c55e', lineHeight: 1.3 }}>
                 Withings connecté !
               </div>
-              <div style={{ fontSize: 12, color: '#166534', marginTop: 2, opacity: 0.85 }}>
-                {syncing ? '⏳ Synchronisation en cours…' : 'Synchronisation lancée — données disponibles dans quelques secondes.'}
+              <div style={{ fontSize: 12, color: '#22c55e', marginTop: 2, opacity: 0.85 }}>
+                {syncing ? 'Synchronisation en cours…' : 'Synchronisation lancée — données disponibles dans quelques secondes.'}
               </div>
             </div>
             <button
               onClick={() => setOauthBanner(null)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 18, color: '#15803d', opacity: 0.6, padding: '0 4px',
+                fontSize: 18, color: '#22c55e', opacity: 0.6, padding: '0 4px',
                 flexShrink: 0,
               }}
               aria-label="Fermer"
@@ -532,12 +570,15 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               fontFamily:   'Poppins, sans-serif',
             }}
           >
-            <span style={{ fontSize: 26, flexShrink: 0 }}>❌</span>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="10" fill="rgba(239,68,68,0.15)" stroke="#ef4444" strokeWidth="1.5"/>
+              <path d="M8 8l8 8M16 8l-8 8" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#b91c1c', lineHeight: 1.3 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#ef4444', lineHeight: 1.3 }}>
                 Erreur de connexion Withings
               </div>
-              <div style={{ fontSize: 12, color: '#991b1b', marginTop: 2, opacity: 0.85 }}>
+              <div style={{ fontSize: 12, color: '#ef4444', marginTop: 2, opacity: 0.85 }}>
                 Réessaye depuis le bouton ci-dessous, ou vérifie ton compte Withings.
               </div>
             </div>
@@ -545,7 +586,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               onClick={() => setOauthBanner(null)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 18, color: '#b91c1c', opacity: 0.6, padding: '0 4px',
+                fontSize: 18, color: '#ef4444', opacity: 0.6, padding: '0 4px',
                 flexShrink: 0,
               }}
               aria-label="Fermer"
@@ -595,7 +636,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             onSuccess={async (provider) => {
               setModalOura(false)
               await chargerIntegrations()
-              showToast('💍 Oura Ring connecté !')
+              showToast('Oura Ring connecté !')
             }}
             onClose={() => setModalOura(false)}
           />
@@ -616,17 +657,18 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               bottom:         'calc(env(safe-area-inset-bottom, 0px) + 100px)',
               left:           '50%',
               transform:      'translateX(-50%)',
-              background:     'rgba(10,22,51,0.92)',
-              backdropFilter: 'blur(20px)',
-              color:          '#fff',
-              borderRadius:   16,
-              padding:        '13px 22px',
-              fontSize:       14,
-              fontWeight:     600,
-              fontFamily:     'Poppins, sans-serif',
-              zIndex:         300,
-              whiteSpace:     'nowrap',
-              boxShadow:      '0 8px 32px rgba(10,22,51,0.35)',
+              background:           'rgba(40,20,5,0.96)',
+              backdropFilter:       'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              color:                '#fff',
+              borderRadius:         16,
+              padding:              '13px 22px',
+              fontSize:             14,
+              fontWeight:           600,
+              fontFamily:           'Poppins, sans-serif',
+              zIndex:               300,
+              whiteSpace:           'nowrap',
+              boxShadow:            '0 8px 32px rgba(0,0,0,0.50)',
               border:         '1px solid rgba(255,255,255,0.10)',
             }}
           >

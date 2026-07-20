@@ -9,6 +9,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
+  const [confirmReset, setConfirmReset] = useState(false)
 
   const fetchChallenge = async () => {
     try {
@@ -62,10 +63,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
     }
   }
 
-  const handleNouveauChallenge = async () => {
-    if (!window.confirm('Créer un nouveau challenge ? Le challenge actuel sera remplacé.')) return
-    await handleCreerChallenge()
-  }
+  const handleNouveauChallenge = () => setConfirmReset(true)
 
   // ── Calcul des données ──────────────────────────────────────────
   let jourActuel = 1
@@ -102,17 +100,19 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const styles = {
     container: {
       fontFamily: "'Poppins', sans-serif",
-      color: '#0A1633',
+      color: 'rgba(200,123,82,0.92)',
       padding: '24px',
       maxWidth: '700px',
       margin: '0 auto',
     },
     card: {
-      background: '#FFF8F4',
+      background: 'rgba(255,235,210,0.22)',
+      backdropFilter: 'blur(18px)',
+      WebkitBackdropFilter: 'blur(18px)',
       borderRadius: '20px',
       padding: '28px',
-      border: '1px solid rgba(200,123,82,0.15)',
-      boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
+      border: '1px solid rgba(255,220,160,0.28)',
+      boxShadow: '0 4px 24px rgba(200,123,82,0.10)',
     },
   }
 
@@ -165,7 +165,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               fontStyle: 'italic',
               fontSize: '26px',
               fontWeight: 700,
-              color: '#0A1633',
+              color: 'rgba(200,123,82,0.95)',
               marginBottom: '8px',
             }}
           >
@@ -173,7 +173,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           </h2>
           <p
             style={{
-              color: 'rgba(10,22,51,0.6)',
+              color: 'rgba(200,123,82,0.65)',
               fontSize: '14px',
               marginBottom: '24px',
               lineHeight: 1.6,
@@ -203,7 +203,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   marginBottom: i < 2 ? '8px' : 0,
                   background: 'rgba(200,123,82,0.08)',
                   borderRadius: '12px',
-                  color: 'rgba(10,22,51,0.35)',
+                  color: 'rgba(200,123,82,0.35)',
                   fontSize: '13px',
                   filter: 'blur(1.5px)',
                   userSelect: 'none',
@@ -248,14 +248,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           transition={{ duration: 0.5 }}
           style={{ ...styles.card, textAlign: 'center' }}
         >
-          <div style={{ fontSize: '52px', marginBottom: '12px' }}>🚀</div>
+          <div style={{ display:'flex', justifyContent:'center', marginBottom: '12px' }}><SparkleIcon size={52} color="#E8962A" /></div>
           <h2
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontStyle: 'italic',
               fontSize: '26px',
               fontWeight: 700,
-              color: '#0A1633',
+              color: 'rgba(200,123,82,0.92)',
               marginBottom: '8px',
             }}
           >
@@ -263,7 +263,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           </h2>
           <p
             style={{
-              color: 'rgba(10,22,51,0.6)',
+              color: 'rgba(200,123,82,0.65)',
               fontSize: '14px',
               marginBottom: '28px',
               lineHeight: 1.6,
@@ -308,7 +308,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               transition: 'all 0.2s',
             }}
           >
-            {creating ? '⏳ Création en cours…' : '🎯 Créer mon challenge'}
+            {creating ? 'Création en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon challenge</span>}
           </motion.button>
         </motion.div>
       </div>
@@ -329,7 +329,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           {/* ── HEADER ── */}
           <div
             style={{
-              background: '#FFF8F4',
+              background: 'rgba(255,235,210,0.22)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
               borderRadius: '20px',
               padding: '24px 28px',
               border: '1px solid rgba(200,123,82,0.15)',
@@ -352,7 +354,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   fontStyle: 'italic',
                   fontSize: '22px',
                   fontWeight: 700,
-                  color: '#0A1633',
+                  color: 'rgba(200,123,82,0.92)',
                   margin: 0,
                   flex: 1,
                 }}
@@ -399,7 +401,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               <p
                 style={{
                   fontSize: '11px',
-                  color: 'rgba(10,22,51,0.45)',
+                  color: 'rgba(200,123,82,0.50)',
                   marginTop: '6px',
                   textAlign: 'right',
                 }}
@@ -412,7 +414,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           {/* ── GRILLE 21 JOURS ── */}
           <div
             style={{
-              background: '#FFF8F4',
+              background: 'rgba(255,235,210,0.22)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
               borderRadius: '20px',
               padding: '24px 28px',
               border: '1px solid rgba(200,123,82,0.15)',
@@ -424,7 +428,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 fontFamily: "'Poppins', sans-serif",
                 fontSize: '13px',
                 fontWeight: 600,
-                color: 'rgba(10,22,51,0.5)',
+                color: 'rgba(200,123,82,0.55)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
                 marginBottom: '16px',
@@ -450,7 +454,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
 
                 let bgColor = 'rgba(200,123,82,0.04)'
                 let borderColor = 'rgba(200,123,82,0.08)'
-                let textColor = 'rgba(10,22,51,0.3)'
+                let textColor = 'rgba(200,123,82,0.35)'
                 let borderWidth = '1px'
 
                 if (estPasse && estComplete) {
@@ -555,7 +559,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               style={{
-                background: '#FFF8F4',
+                background: 'rgba(255,235,210,0.22)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
                 borderRadius: '20px',
                 padding: '24px 28px',
                 border: '1px solid rgba(200,123,82,0.2)',
@@ -566,7 +572,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 style={{
                   fontSize: '11px',
                   fontWeight: 600,
-                  color: 'rgba(10,22,51,0.45)',
+                  color: 'rgba(200,123,82,0.50)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   marginBottom: '10px',
@@ -580,7 +586,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   fontFamily: "'Poppins', sans-serif",
                   fontSize: '15px',
                   fontWeight: 700,
-                  color: '#0A1633',
+                  color: 'rgba(200,123,82,0.92)',
                   marginBottom: '10px',
                   lineHeight: 1.5,
                 }}
@@ -601,7 +607,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     marginBottom: '12px',
                   }}
                 >
-                  ⏱ {jourActuelData.duree}
+                  {jourActuelData.duree}
                 </span>
               )}
 
@@ -611,7 +617,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: 'italic',
                     fontSize: '14px',
-                    color: 'rgba(10,22,51,0.55)',
+                    color: 'rgba(200,123,82,0.60)',
                     marginBottom: '20px',
                     lineHeight: 1.6,
                   }}
@@ -685,16 +691,16 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               style={{
-                background: 'rgba(10,22,51,0.03)',
+                background: 'rgba(200,123,82,0.05)',
                 borderRadius: '16px',
                 padding: '16px 20px',
-                border: '1px solid rgba(10,22,51,0.08)',
+                border: '1px solid rgba(200,123,82,0.12)',
                 backdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(10,22,51,0.6)', margin: 0 }}>
-                <span style={{ fontWeight: 700, color: '#0A1633' }}>
-                  🎯 Prochain milestone — Jour {prochainMilestone.jour} :
+              <p style={{ fontSize: '13px', color: 'rgba(200,123,82,0.65)', margin: 0 }}>
+                <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
+                  Prochain milestone — Jour {prochainMilestone.jour} :
                 </span>{' '}
                 {prochainMilestone.message}
               </p>
@@ -722,10 +728,78 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 transition: 'all 0.2s',
               }}
             >
-              {creating ? '⏳ Création…' : '🔄 Nouveau challenge'}
+              {creating ? 'Création…' : 'Nouveau challenge'}
             </motion.button>
           </div>
         </motion.div>
+      </AnimatePresence>
+
+      {/* Dialog de confirmation reset */}
+      <AnimatePresence>
+        {confirmReset && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: 24,
+            }}
+            onClick={() => setConfirmReset(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: 'rgba(22,9,2,0.92)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255,220,160,0.22)',
+                borderRadius: 24, padding: '28px 24px',
+                maxWidth: 340, width: '100%',
+                fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#E8962A" /></div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,238,220,0.92)', textAlign: 'center', marginBottom: 8 }}>
+                Nouveau challenge ?
+              </div>
+              <div style={{ fontSize: 13, color: 'rgba(255,210,160,0.60)', textAlign: 'center', marginBottom: 24 }}>
+                Le challenge actuel sera remplacé et ta progression perdue.
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={() => setConfirmReset(false)}
+                  style={{
+                    flex: 1, padding: '12px', borderRadius: 14,
+                    background: 'rgba(255,235,210,0.08)',
+                    border: '1px solid rgba(255,220,160,0.18)',
+                    color: 'rgba(255,210,160,0.70)', fontSize: 14,
+                    fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
+                  }}
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => { setConfirmReset(false); handleCreerChallenge() }}
+                  style={{
+                    flex: 1, padding: '12px', borderRadius: 14,
+                    background: 'linear-gradient(110deg, rgba(180,90,35,0.80), rgba(200,123,82,0.80))',
+                    border: '1px solid rgba(255,220,160,0.30)',
+                    color: 'rgba(255,248,235,0.95)', fontSize: 14, fontWeight: 600,
+                    fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
+                  }}
+                >
+                  Confirmer
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )

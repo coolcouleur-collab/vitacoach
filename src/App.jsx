@@ -477,6 +477,8 @@ export default function App() {
     return safeParse('vitacoach_user', null)
   })
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
+  const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < 7 * 24 * 3600 * 1000)
+  const hasFullAccess = isPro || isFreeTrial
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
   const [profilLoading, setProfilLoading] = useState(() => {
     const u = safeParse('vitacoach_user', null)
@@ -538,6 +540,7 @@ const [messages, setMessages] = useState(() => {
   })
   const [loading, setLoading]   = useState(false)
   const [onglet, setOnglet]     = useState(() => localStorage.getItem('vitacoach_onglet') || 'accueil')
+  const [refreshKey, setRefreshKey] = useState(0)
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
@@ -581,6 +584,7 @@ const [messages, setMessages] = useState(() => {
   const scrollTimerRef = useRef(null)
   // Pull-to-refresh
   const pullStartY  = useRef(null)
+  const pullDistRef = useRef(0)
   const [pullDist, setPullDist] = useState(0)
   const [pullRefreshing, setPullRefreshing] = useState(false)
   const PULL_THRESHOLD = 72
@@ -674,24 +678,27 @@ const [messages, setMessages] = useState(() => {
       if (pullStartY.current === null) return
       const dy = e.touches[0].clientY - pullStartY.current
       if (dy > 0) {
-        setPullDist(Math.min(dy * 0.45, PULL_THRESHOLD + 20))
+        const v = Math.min(dy * 0.45, PULL_THRESHOLD + 20)
+        pullDistRef.current = v
+        setPullDist(v)
       } else {
         pullStartY.current = null
+        pullDistRef.current = 0
         setPullDist(0)
       }
     }
     function onTouchEnd() {
-      if (pullStartY.current !== null && pullDist >= PULL_THRESHOLD) {
+      if (pullStartY.current !== null && pullDistRef.current >= PULL_THRESHOLD) {
         setPullRefreshing(true)
         import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
           Haptics.impact({ style: ImpactStyle.Medium })
         }).catch(() => {})
-        // Reload : on simule un changement d'onglet pour refetch
-        const cur = onglet
-        setOnglet('__refresh__')
-        setTimeout(() => { setOnglet(cur); setPullRefreshing(false) }, 800)
+        // Forcer le rechargement des données du tab courant
+        setRefreshKey(k => k + 1)
+        setTimeout(() => setPullRefreshing(false), 400)
       }
       pullStartY.current = null
+      pullDistRef.current = 0
       setPullDist(0)
     }
     el.addEventListener('touchstart', onTouchStart, { passive: true })
@@ -702,7 +709,7 @@ const [messages, setMessages] = useState(() => {
       el.removeEventListener('touchmove', onTouchMove)
       el.removeEventListener('touchend', onTouchEnd)
     }
-  }, [onglet, pullDist])
+  }, [onglet])
 
   // Scroll to last message when user navigates back to chat tab
   useEffect(() => {
@@ -1010,6 +1017,10 @@ const [messages, setMessages] = useState(() => {
 
   // ── Notifications Push ────────────────────────────────────────────────────
   async function activerNotifications() {
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      alert('Les notifications sont configurées via les paramètres de l\'app.')
+      return
+    }
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
       alert('Ton navigateur ne supporte pas les notifications push.')
       return
@@ -1100,7 +1111,7 @@ const [messages, setMessages] = useState(() => {
     isSendingRef.current = true
 
     // Warning à 1 message de la limite
-    if (!isPro && getMsgCount() === FREE_LIMIT - 1) {
+    if (!hasFullAccess && getMsgCount() === FREE_LIMIT - 1) {
       // On laisse passer mais on avertit
       setTimeout(() => {
         setMessages(prev => [...prev, {
@@ -1110,7 +1121,7 @@ const [messages, setMessages] = useState(() => {
       }, 800)
     }
 
-    if (!isPro && getMsgCount() >= FREE_LIMIT) {
+    if (!hasFullAccess && getMsgCount() >= FREE_LIMIT) {
       setMessages(prev => {
         const last = prev[prev.length - 1]
         if (last?.content?.includes('messages gratuits')) return prev
@@ -1121,7 +1132,7 @@ const [messages, setMessages] = useState(() => {
     }
     setMessages(prev => [...prev, { role:'user', content: msg }])
     setLoading(true)
-    if (!isPro) incrementMsgCount()
+    if (!hasFullAccess) incrementMsgCount()
     detectSOS(msg)
 
     try {
@@ -1426,7 +1437,7 @@ const [messages, setMessages] = useState(() => {
             notifsEnabled={notifEnabled}
             isPro={isPro}
             onPasserPro={passerPro}
-            msgsRestants={isPro ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
+            msgsRestants={hasFullAccess ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
             onClose={() => setShowSettings(false)}
             onSaveProfil={async (updated) => {
               setProfil(updated)
@@ -1463,7 +1474,6 @@ const [messages, setMessages] = useState(() => {
         {showChatHistory && user?.id && (
           <Suspense fallback={null}><ChatHistory
             userId={user.id}
-            supabase={supabase}
             onClose={() => setShowChatHistory(false)}
             onLoadSession={msgs => {
               setMessages(msgs)
@@ -1568,7 +1578,7 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
-        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : '48px 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
@@ -1755,6 +1765,7 @@ const [messages, setMessages] = useState(() => {
                 borderLeft:'1px solid rgba(210,145,40,0.09)',
                 boxShadow:'none',
                 display:'flex', flexDirection:'column',
+                overflowY:'auto', WebkitOverflowScrolling:'touch',
                 padding:'22px 22px 90px',
                 paddingTop: 'calc(env(safe-area-inset-top, 0px) + 22px)',
                 paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
@@ -1819,7 +1830,7 @@ const [messages, setMessages] = useState(() => {
                   </button>
                 ))}
                 {/* Bottom actions */}
-                <div style={{ marginTop:'auto', display:'flex', flexDirection:'column', gap:2, borderTop:'1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
+                <div style={{ marginTop:'28px', display:'flex', flexDirection:'column', gap:2, borderTop:'1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
                   {!isPro && (
                     <button onClick={() => { passerPro(); setMenuOpen(false) }} style={{
                       display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
@@ -1873,7 +1884,7 @@ const [messages, setMessages] = useState(() => {
           )}
 
           {/* ── Tab content (keyed for fade-in animation on tab switch) ── */}
-          <div key={onglet} style={{ animation:'tabFade 0.28s ease both', flex:1, display:'flex', flexDirection:'column' }}>
+          <div key={`${onglet}-${refreshKey}`} style={{ animation:'tabFade 0.28s ease both', flex:1, display:'flex', flexDirection:'column' }}>
 
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (
@@ -2064,12 +2075,12 @@ const [messages, setMessages] = useState(() => {
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
-                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#ef4444" /> Suivi Santé</div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Suivi Santé</div>
                     <div style={s.pageSubtitle}>Tes métriques du jour</div>
                   </div>
                 </div>
               )}
-              <Suspense fallback={<GlowLoader fullPage />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={isPro} onPasserPro={passerPro} /></Suspense>
+              <Suspense fallback={<GlowLoader fullPage />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={hasFullAccess} onPasserPro={passerPro} /></Suspense>
             </div>
           )}
 
@@ -2194,8 +2205,7 @@ const [messages, setMessages] = useState(() => {
 
       {/* Global animations */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
-        @keyframes oravBlink {
+@keyframes oravBlink {
           0%, 85%, 100% { transform: scaleY(1); }
           91% { transform: scaleY(0.07); }
           96% { transform: scaleY(1); }
@@ -2981,10 +2991,10 @@ const s = {
     backdropFilter:'none', WebkitBackdropFilter:'none',
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
-    display:'flex', flexDirection:'column',
+    display:'block',
     padding:'1.2rem 1rem',
     position:'fixed', top:0, left:0, height:'100vh',
-    zIndex:50, overflowY:'auto',
+    zIndex:50, overflowY:'auto', WebkitOverflowScrolling:'touch',
   },
   sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {

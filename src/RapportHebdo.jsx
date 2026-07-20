@@ -116,7 +116,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
           fontSize: 16,
-          color: '#0A1633',
+          color: 'rgba(255,238,220,0.92)',
           margin: 0,
         }}>
           Rapport hebdomadaire
@@ -124,7 +124,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(10, 22, 51, 0.55)',
+          color: 'rgba(200,123,82,0.70)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -175,7 +175,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
           fontSize: 16,
-          color: '#0A1633',
+          color: 'rgba(255,238,220,0.92)',
           margin: 0,
         }}>
           Pas encore de rapport cette semaine
@@ -183,7 +183,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(10, 22, 51, 0.50)',
+          color: 'rgba(200,123,82,0.70)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -245,7 +245,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,
                 fontSize: 15,
-                color: '#0A1633',
+                color: 'rgba(255,238,220,0.92)',
                 margin: 0,
                 lineHeight: 1.3,
               }}>
@@ -281,7 +281,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             <p style={{
               fontFamily: 'Poppins, sans-serif',
               fontSize: 10,
-              color: 'rgba(10,22,51,0.45)',
+              color: 'rgba(200,123,82,0.55)',
               margin: '2px 0 0',
               textAlign: 'right',
             }}>
@@ -313,7 +313,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
             fontSize: 15,
-            color: '#0A1633',
+            color: 'rgba(255,238,220,0.92)',
             margin: 0,
             lineHeight: 1.5,
           }}>
@@ -333,12 +333,12 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           gap: 10,
           border: '1px solid rgba(232, 150, 42, 0.20)',
         }}>
-          <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>⚡</span>
+          <span style={{ flexShrink: 0, marginTop: 1, display:'flex' }}><SparkleIcon size={16} color="#E8962A" /></span>
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 600,
             fontSize: 13,
-            color: '#0A1633',
+            color: 'rgba(255,238,220,0.92)',
             margin: 0,
             lineHeight: 1.5,
           }}>
@@ -350,7 +350,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Analyse — Cette semaine */}
       {rapport.analyse && (
         <div style={{
-          background: 'rgba(10, 22, 51, 0.06)',
+          background: 'rgba(200,123,82,0.06)',
           borderRadius: 16,
           padding: '14px 16px',
         }}>
@@ -368,7 +368,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontSize: 13,
-            color: 'rgba(10, 22, 51, 0.65)',
+            color: 'rgba(200,123,82,0.80)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -402,7 +402,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: 12,
-                color: '#0A1633',
+                color: 'rgba(255,238,220,0.92)',
                 margin: 0,
                 lineHeight: 1.5,
               }}>
@@ -433,7 +433,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: 12,
-                color: '#0A1633',
+                color: 'rgba(255,238,220,0.92)',
                 margin: 0,
                 lineHeight: 1.5,
               }}>
@@ -447,26 +447,28 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Focus semaine prochaine */}
       {rapport.focus_prochain && (
         <div style={{
-          background: 'rgba(10, 22, 51, 0.88)',
+          background: 'rgba(200,123,82,0.15)',
           borderRadius: 16,
           padding: '16px 18px',
-          backdropFilter: 'blur(8px)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          border: '1px solid rgba(255,220,160,0.28)',
         }}>
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 600,
             fontSize: 12,
-            color: 'rgba(255, 248, 244, 0.70)',
+            color: 'rgba(200,123,82,0.80)',
             margin: '0 0 6px',
             textTransform: 'uppercase',
             letterSpacing: 0.8,
           }}>
-            La semaine prochaine 🎯
+            La semaine prochaine
           </p>
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontSize: 13,
-            color: '#FFF8F4',
+            color: 'rgba(255,238,220,0.92)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -487,7 +489,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
             fontSize: 16,
-            color: '#0A1633',
+            color: 'rgba(255,238,220,0.92)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -516,8 +518,8 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           disabled={generating}
           style={{
             background: 'transparent',
-            color: 'rgba(10, 22, 51, 0.45)',
-            border: '1px solid rgba(10, 22, 51, 0.18)',
+            color: 'rgba(200,123,82,0.55)',
+            border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12,
             padding: '8px 18px',
             fontFamily: 'Poppins, sans-serif',

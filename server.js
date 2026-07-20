@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import express from 'express'
 import Groq from 'groq-sdk'
 import Stripe from 'stripe'
@@ -16,7 +17,7 @@ import {
   genererContexteMeteo, genererConseilsNutrition,
   extraireMoments, sauvegarderMoments,
 } from './agents/index.js'
-import { runSyncSante, syncWithings, syncOura, refreshWithingsToken } from './agents/sync-sante.js'
+import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken } from './agents/sync-sante.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 
@@ -1000,6 +1001,7 @@ app.post('/api/sync-now', async (req, res) => {
     let result
     if (provider === 'withings') result = await syncWithings(userId, integ)
     else if (provider === 'oura') result = await syncOura(userId, integ)
+    else if (provider === 'garmin') result = await syncGarmin(userId, integ)
     else return res.status(400).json({ error: `Provider ${provider} non supporté` })
     await supabase.from('integrations_sante')
       .update({ last_sync_at: new Date().toISOString() })
@@ -1099,9 +1101,109 @@ app.post('/api/connect/oura', async (req, res) => {
   }
 })
 
-// ── GARMIN OAuth (à venir) ────────────────────────────────────────────────────
-app.get('/api/connect/garmin', (req, res) => {
-  res.json({ message: 'Garmin OAuth 1.0a — disponible prochainement', disponible: false })
+// ── GARMIN OAuth 1.0a ────────────────────────────────────────────────────────
+function garminOAuthHeader(method, url, extraParams, tokenSecret = '') {
+  const params = {
+    oauth_consumer_key:     process.env.GARMIN_CONSUMER_KEY,
+    oauth_nonce:            crypto.randomBytes(16).toString('hex'),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp:        String(Math.floor(Date.now() / 1000)),
+    oauth_version:          '1.0',
+    ...extraParams,
+  }
+  const base = [
+    method.toUpperCase(),
+    encodeURIComponent(url),
+    encodeURIComponent(
+      Object.keys(params).sort()
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .join('&')
+    ),
+  ].join('&')
+  const sigKey = `${encodeURIComponent(process.env.GARMIN_CONSUMER_SECRET)}&${encodeURIComponent(tokenSecret)}`
+  params.oauth_signature = crypto.createHmac('sha1', sigKey).update(base).digest('base64')
+
+  return 'OAuth ' + Object.keys(params).sort()
+    .map(k => `${encodeURIComponent(k)}="${encodeURIComponent(params[k])}"`)
+    .join(', ')
+}
+
+// GET /api/connect/garmin?userId=... → redirige vers Garmin pour autorisation
+app.get('/api/connect/garmin', async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  if (!process.env.GARMIN_CONSUMER_KEY) {
+    return res.json({ message: 'Garmin non configuré — GARMIN_CONSUMER_KEY manquant', disponible: false })
+  }
+  try {
+    const cbUrl = `${process.env.API_BASE_URL}/api/connect/garmin/callback`
+    const authHeader = garminOAuthHeader('POST', 'https://connectapi.garmin.com/oauth-service/oauth/request_token', {
+      oauth_callback: cbUrl,
+    })
+    const { data: raw } = await axios.post(
+      'https://connectapi.garmin.com/oauth-service/oauth/request_token',
+      null,
+      { headers: { Authorization: authHeader, 'Content-Type': 'application/x-www-form-urlencoded' } }
+    )
+    const parsed = Object.fromEntries(new URLSearchParams(raw))
+    const reqToken = parsed.oauth_token
+    const reqSecret = parsed.oauth_token_secret
+    // Stocker le secret temporairement pour le callback
+    await supabase.from('integrations_sante').upsert({
+      user_id:       userId,
+      provider:      'garmin_pending',
+      access_token:  reqToken,
+      refresh_token: reqSecret,
+      actif:         false,
+      connected_at:  new Date().toISOString(),
+    }, { onConflict: 'user_id,provider' })
+    res.redirect(`https://connect.garmin.com/oauthConfirm?oauth_token=${reqToken}`)
+  } catch (e) {
+    console.error('[Garmin connect]', e.response?.data || e.message)
+    res.redirect(`${process.env.VITE_APP_URL || 'https://meet-solenn.com'}/?integration=garmin&status=error`)
+  }
+})
+
+// GET /api/connect/garmin/callback?oauth_token=...&oauth_verifier=...
+app.get('/api/connect/garmin/callback', async (req, res) => {
+  const { oauth_token, oauth_verifier } = req.query
+  if (!oauth_token || !oauth_verifier) return res.status(400).send('Paramètres manquants')
+  try {
+    // Récupérer le secret stocké + userId
+    const { data: pending } = await supabase.from('integrations_sante')
+      .select('user_id, refresh_token')
+      .eq('provider', 'garmin_pending')
+      .eq('access_token', oauth_token)
+      .single()
+    if (!pending) return res.status(400).send('Session expirée')
+
+    const reqSecret = pending.refresh_token
+    const authHeader = garminOAuthHeader('POST', 'https://connectapi.garmin.com/oauth-service/oauth/access_token', {
+      oauth_token,
+      oauth_verifier,
+    }, reqSecret)
+    const { data: raw } = await axios.post(
+      'https://connectapi.garmin.com/oauth-service/oauth/access_token',
+      null,
+      { headers: { Authorization: authHeader, 'Content-Type': 'application/x-www-form-urlencoded' } }
+    )
+    const parsed = Object.fromEntries(new URLSearchParams(raw))
+    // Supprimer l'entrée pending et upsert le vrai token
+    await supabase.from('integrations_sante').delete()
+      .eq('user_id', pending.user_id).eq('provider', 'garmin_pending')
+    await supabase.from('integrations_sante').upsert({
+      user_id:       pending.user_id,
+      provider:      'garmin',
+      access_token:  parsed.oauth_token,
+      refresh_token: parsed.oauth_token_secret,
+      actif:         true,
+      connected_at:  new Date().toISOString(),
+    }, { onConflict: 'user_id,provider' })
+    res.redirect(`${process.env.VITE_APP_URL || 'https://meet-solenn.com'}/?integration=garmin&status=ok`)
+  } catch (e) {
+    console.error('[Garmin callback]', e.response?.data || e.message)
+    res.redirect(`${process.env.VITE_APP_URL || 'https://meet-solenn.com'}/?integration=garmin&status=error`)
+  }
 })
 
 // ── Sync globale (tous les users, tous les providers) ─────────────────────────

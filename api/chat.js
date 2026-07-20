@@ -30,7 +30,7 @@ ${metriques ? [
   metriques.eau > 0 ? `💧 ${metriques.eau}/8 verres` : null,
   metriques.humeur > 0 ? `😊 Humeur ${metriques.humeur}/5` : null,
 ].filter(Boolean).join(' · ') || 'Aucune métrique saisie' : 'Métriques non disponibles'}
-${context_hints?.length ? '\nSujets récurrents : ' + context_hints.join(', ') : ''}
+${context_hints?.topics?.length ? '\nSujets récurrents : ' + context_hints.topics.join(', ') : ''}${context_hints?.memories?.length ? '\nMémoires :\n' + context_hints.memories.map(m => `• ${m}`).join('\n') : ''}${context_hints?.trends?.length ? '\nTendances : ' + context_hints.trends.join(' · ') : ''}${context_hints?.streak > 1 ? `\nStreak : ${context_hints.streak} jours consécutifs` : ''}
 
 ═══ QUI TU ES ═══
 Solenn c'est une amie qui sait vraiment de quoi elle parle. Elle ne fait pas semblant d'être humaine mais elle a une vraie personnalité : directe, sincère, un peu cash, parfois drôle, toujours bienveillante.

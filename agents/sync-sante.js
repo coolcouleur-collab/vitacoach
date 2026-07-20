@@ -15,6 +15,7 @@
  *   garmin   — pas, calories, stress, sommeil, fréquence cardiaque
  */
 
+import crypto from 'crypto'
 import axios from 'axios'
 import { createClient } from '@supabase/supabase-js'
 
@@ -249,14 +250,97 @@ export async function syncOura(userId, integration) {
 
 // ─── GARMIN ───────────────────────────────────────────────────────────────────
 // Docs : https://developer.garmin.com/gc-developer-program/
-// OAuth 1.0a — plus complexe, via Garmin Connect API
+// OAuth 1.0a — token stocké : access_token = oauth_token, refresh_token = oauth_token_secret
+
+function garminAuthHeader(method, url, oauthToken, oauthTokenSecret, extraParams = {}) {
+  const params = {
+    oauth_consumer_key:     process.env.GARMIN_CONSUMER_KEY,
+    oauth_nonce:            crypto.randomBytes(16).toString('hex'),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp:        String(Math.floor(Date.now() / 1000)),
+    oauth_token:            oauthToken,
+    oauth_version:          '1.0',
+    ...extraParams,
+  }
+  const base = [
+    method.toUpperCase(),
+    encodeURIComponent(url),
+    encodeURIComponent(
+      Object.keys(params).sort()
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .join('&')
+    ),
+  ].join('&')
+  const sigKey = `${encodeURIComponent(process.env.GARMIN_CONSUMER_SECRET)}&${encodeURIComponent(oauthTokenSecret)}`
+  params.oauth_signature = crypto.createHmac('sha1', sigKey).update(base).digest('base64')
+
+  return 'OAuth ' + Object.keys(params).sort()
+    .map(k => `${encodeURIComponent(k)}="${encodeURIComponent(params[k])}"`)
+    .join(', ')
+}
 
 export async function syncGarmin(userId, integration) {
-  const supabase = getSupabase()
-  // Garmin utilise OAuth 1.0a — implémentation complète à venir
-  // Pour l'instant : placeholder qui retourne les données déjà stockées
-  console.log('[SyncGarmin] En cours d\'implémentation...')
-  return { synced: 0, note: 'Garmin OAuth 1.0a — en cours' }
+  const supabase  = getSupabase()
+  const oToken    = integration.access_token
+  const oSecret   = integration.refresh_token
+  if (!oToken || !oSecret) return { error: 'no token' }
+
+  const endSec   = Math.floor(Date.now() / 1000)
+  const startSec = endSec - 7 * 86400
+  const base     = 'https://apis.garmin.com/wellness-api/rest'
+  let synced     = 0
+
+  try {
+    // ── Activité journalière (pas, calories, distance) ────────────────────────
+    const actUrl = `${base}/dailies?uploadStartTimeInSeconds=${startSec}&uploadEndTimeInSeconds=${endSec}`
+    const { data: actData } = await axios.get(actUrl, {
+      headers: { Authorization: garminAuthHeader('GET', actUrl, oToken, oSecret) }
+    })
+    for (const d of (actData || [])) {
+      const date = new Date(d.startTimeInSeconds * 1000).toISOString().split('T')[0]
+      if (d.steps)           { await upsertMetrique(supabase, userId, 'garmin', 'steps',    date, d.steps,           null, 'steps', `g_steps_${date}`,   null); synced++ }
+      if (d.activeKilocalories) { await upsertMetrique(supabase, userId, 'garmin', 'calories', date, d.activeKilocalories, null, 'kcal',  `g_cal_${date}`,     null); synced++ }
+      if (d.averageHeartRateInBeatsPerMinute) {
+        await upsertMetrique(supabase, userId, 'garmin', 'heart_rate', date, d.averageHeartRateInBeatsPerMinute, null, 'bpm', `g_hr_${date}`, null)
+        synced++
+      }
+    }
+
+    // ── Sommeil ───────────────────────────────────────────────────────────────
+    const sleepUrl = `${base}/sleeps?uploadStartTimeInSeconds=${startSec}&uploadEndTimeInSeconds=${endSec}`
+    const { data: sleepData } = await axios.get(sleepUrl, {
+      headers: { Authorization: garminAuthHeader('GET', sleepUrl, oToken, oSecret) }
+    })
+    for (const s of (sleepData || [])) {
+      const date = new Date(s.startTimeInSeconds * 1000).toISOString().split('T')[0]
+      if (s.durationInSeconds) {
+        const h = +(s.durationInSeconds / 3600).toFixed(1)
+        await upsertMetrique(supabase, userId, 'garmin', 'sleep', date, h, null, 'h', `g_sleep_${date}`, null)
+        synced++
+      }
+    }
+
+    // ── Stress ────────────────────────────────────────────────────────────────
+    const stressUrl = `${base}/stressDetails?uploadStartTimeInSeconds=${startSec}&uploadEndTimeInSeconds=${endSec}`
+    const { data: stressData } = await axios.get(stressUrl, {
+      headers: { Authorization: garminAuthHeader('GET', stressUrl, oToken, oSecret) }
+    })
+    for (const s of (stressData || [])) {
+      const date = new Date(s.startTimeInSeconds * 1000).toISOString().split('T')[0]
+      if (s.averageStressLevel != null && s.averageStressLevel >= 0) {
+        await upsertMetrique(supabase, userId, 'garmin', 'stress', date, s.averageStressLevel, null, '/100', `g_stress_${date}`, null)
+        synced++
+      }
+    }
+
+    console.log(`[SyncGarmin] ✅ ${synced} métriques synchronisées`)
+    return { synced }
+
+  } catch (e) {
+    console.error('[SyncGarmin]', e.response?.data || e.message)
+    if (e.response?.status === 401) return { error: 'token_invalid' }
+    return { error: e.message }
+  }
 }
 
 // ─── Fusion vers user_metrics ─────────────────────────────────────────────────

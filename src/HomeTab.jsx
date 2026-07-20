@@ -1910,24 +1910,26 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
   const tc = isNight ? nightText : warmText
   const h = new Date().getHours()
 
+  const TC = '#C87B52'
+
   // Style — toujours en premier (featured)
   const styleCard = {
-    icon: <SparkleIcon size={18} color="#818cf8" />,
+    icon: <SparkleIcon size={18} color={TC} />,
     label: h < 12 ? 'Style du jour' : h < 18 ? 'Inspiration style' : 'Style de demain',
     sub: 'Tenues · looks · inspirations',
-    tab: 'style', color: '#818cf8',
+    tab: 'style', color: TC,
   }
 
   // 2 suggestions contextuelles selon heure + métriques (sans Solenn)
   const contextual = [
-    h >= 5  && h < 12 && { icon:<SunIcon size={15} color="#f97316" />,  label:'Routine matinale',       sub:'Démarre bien ta journée',              tab:'routine', color:'#f97316' },
-    h >= 5  && h < 12 && { icon:<LeafIcon size={15} color="#34d399" />, label:'Recette petit-déj',       sub:'Protéines + énergie durable',          tab:'herbal',  color:'#34d399' },
-    h >= 12 && h < 18 && { icon:<FoodIcon size={15} color="#fbbf24" />, label:'Repas équilibré',         sub:'Légumes · protéines · glucides lents', tab:'herbal',  color:'#fbbf24' },
-    h >= 12 && h < 18 && { icon:<RunIcon size={15} color="#C87B52" />,  label:"Boost de l'après-midi",  sub:"10 min de marche = autant qu'un café", tab:'sante',   color:'#C87B52' },
-    h >= 18 && h < 22 && { icon:<MoonIcon size={15} color="#818cf8" />, label:'Routine du soir',         sub:'Déconnecte et récupère',               tab:'routine', color:'#818cf8' },
-    h >= 22            && { icon:<MoonIcon size={15} color="#818cf8" />, label:'Prépare ton sommeil',     sub:'Écrans off · respiration · détente',   tab:'sante',   color:'#818cf8' },
-    (metriques?.eau||0) < 6 && { icon:<WaterIcon size={15} color="#38bdf8" />, label:'Hydratation en retard', sub:`${metriques?.eau||0}/8 verres · rattrape-toi !`, tab:'sante', color:'#38bdf8' },
-    (metriques?.pas||0) < 5000 && h >= 9 && h < 20 && { icon:<RunIcon size={15} color="#C87B52" />, label:'Objectif pas', sub:`${Math.round((metriques?.pas||0)/1000*10)/10}k / 10k pas`, tab:'sante', color:'#C87B52' },
+    h >= 5  && h < 12 && { icon:<SunIcon size={15} color={TC} />,   label:'Routine matinale',       sub:'Démarre bien ta journée',              tab:'routine', color:TC },
+    h >= 5  && h < 12 && { icon:<LeafIcon size={15} color={TC} />,  label:'Recette petit-déj',       sub:'Protéines + énergie durable',          tab:'herbal',  color:TC },
+    h >= 12 && h < 18 && { icon:<FoodIcon size={15} color={TC} />,  label:'Repas équilibré',         sub:'Légumes · protéines · glucides lents', tab:'herbal',  color:TC },
+    h >= 12 && h < 18 && { icon:<RunIcon size={15} color={TC} />,   label:"Boost de l'après-midi",  sub:"10 min de marche = autant qu'un café", tab:'sante',   color:TC },
+    h >= 18 && h < 22 && { icon:<MoonIcon size={15} color={TC} />,  label:'Routine du soir',         sub:'Déconnecte et récupère',               tab:'routine', color:TC },
+    h >= 22            && { icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',     sub:'Écrans off · respiration · détente',   tab:'sante',   color:TC },
+    (metriques?.eau||0) < 6 && { icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard', sub:`${metriques?.eau||0}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
+    (metriques?.pas||0) < 5000 && h >= 9 && h < 20 && { icon:<RunIcon size={15} color={TC} />, label:'Objectif pas', sub:`${Math.round((metriques?.pas||0)/1000*10)/10}k / 10k pas`, tab:'sante', color:TC },
   ].filter(Boolean).slice(0, 2)
 
   const allSuggestions = [styleCard, ...contextual]

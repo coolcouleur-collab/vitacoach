@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon } from './Icons'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
-  bg: 'rgba(255,248,244,0.28)',
-  bgCard: 'rgba(255,240,228,0.22)',
-  bgCardHover: 'rgba(255,232,212,0.38)',
-  border: 'rgba(200,123,82,0.18)',
-  borderStrong: 'rgba(200,123,82,0.35)',
+  bg: 'rgba(22,9,2,0.82)',
+  bgCard: 'rgba(255,235,210,0.09)',
+  bgCardHover: 'rgba(255,232,212,0.15)',
+  border: 'rgba(255,220,160,0.16)',
+  borderStrong: 'rgba(200,123,82,0.38)',
   accent: '#C87B52',
-  accentLight: 'rgba(200,123,82,0.12)',
-  accentMid: 'rgba(200,123,82,0.22)',
-  text: '#0A1633',
-  textMuted: 'rgba(26,10,0,0.52)',
-  textLight: 'rgba(26,10,0,0.36)',
-  handle: 'rgba(200,123,82,0.28)',
-  shadow: '0 -20px 60px rgba(200,100,40,0.10), 0 -4px 20px rgba(200,100,40,0.06)',
+  accentLight: 'rgba(200,123,82,0.16)',
+  accentMid: 'rgba(200,123,82,0.28)',
+  text: 'rgba(255,238,220,0.92)',
+  textMuted: 'rgba(255,220,180,0.52)',
+  textLight: 'rgba(255,210,160,0.35)',
+  handle: 'rgba(255,220,160,0.28)',
+  shadow: '0 -24px 64px rgba(0,0,0,0.50), 0 -4px 20px rgba(200,100,40,0.14)',
   font: "'Poppins', system-ui, sans-serif",
 }
 
@@ -172,7 +173,7 @@ function ToggleSwitch({ enabled, onToggle }) {
         borderRadius: 12,
         background: enabled
           ? `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`
-          : 'rgba(26,10,0,0.14)',
+          : 'rgba(255,255,255,0.12)',
         position: 'relative',
         cursor: 'pointer',
         transition: 'background 0.28s ease',
@@ -197,7 +198,7 @@ function ToggleSwitch({ enabled, onToggle }) {
 }
 
 // ─── PRESET BUTTON ───────────────────────────────────────────────────────────
-function PresetBtn({ emoji, label, value, active, onClick }) {
+function PresetBtn({ icon, label, value, active, onClick }) {
   return (
     <button
       onClick={() => onClick(value)}
@@ -212,14 +213,14 @@ function PresetBtn({ emoji, label, value, active, onClick }) {
         border: active
           ? `1.5px solid ${C.accent}`
           : `1px solid ${C.border}`,
-        background: active ? C.accentLight : 'rgba(255,248,244,0.60)',
+        background: active ? C.accentLight : 'rgba(255,235,210,0.08)',
         cursor: 'pointer',
         transition: 'all 0.20s ease',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <span style={{ fontSize: 20, lineHeight: 1 }}>{emoji}</span>
+      <span style={{ display:'flex', lineHeight: 1 }}>{icon}</span>
       <span style={{
         fontFamily: C.font,
         fontSize: 10,
@@ -234,7 +235,7 @@ function PresetBtn({ emoji, label, value, active, onClick }) {
 }
 
 // ─── ACTION BUTTON ────────────────────────────────────────────────────────────
-function ActionBtn({ emoji, label, onClick, danger }) {
+function ActionBtn({ icon, label, onClick, danger }) {
   return (
     <button
       onClick={onClick}
@@ -263,7 +264,7 @@ function ActionBtn({ emoji, label, onClick, danger }) {
       onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
       onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
     >
-      <span style={{ fontSize: 18, lineHeight: 1 }}>{emoji}</span>
+      <span style={{ display:'flex', lineHeight: 1 }}>{icon}</span>
       <span style={{
         fontFamily: C.font,
         fontSize: 13,
@@ -419,10 +420,10 @@ export default function SettingsSheet({
   }
 
   const PRESETS = [
-    { emoji: '☀️', label: 'Jour', value: 'day' },
-    { emoji: '🌅', label: 'Lever', value: 'sunrise' },
-    { emoji: '🌇', label: 'Coucher', value: 'sunset' },
-    { emoji: '🌙', label: 'Nuit', value: 'night' },
+    { icon: <SunIcon size={20} color="#E8962A" />,  label: 'Jour',    value: 'day' },
+    { icon: <SunIcon size={20} color="#C87B52" />,  label: 'Lever',   value: 'sunrise' },
+    { icon: <MoonIcon size={20} color="#C87B52" />, label: 'Coucher', value: 'sunset' },
+    { icon: <MoonIcon size={20} color="#8B7AB8" />, label: 'Nuit',    value: 'night' },
   ]
 
   return (
@@ -521,6 +522,7 @@ export default function SettingsSheet({
           <div style={{
             overflowY: 'auto',
             flex: 1,
+            minHeight: 0,
             padding: '4px 18px 48px',
             paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 48px)',
             WebkitOverflowScrolling: 'touch',
@@ -569,9 +571,9 @@ export default function SettingsSheet({
                     </div>
                   )}
                   <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
-                    <InfoRow label="🌅 Réveil" value={fmtHeure(profil.heure_lever ?? profil.heureReveil)} />
+                    <InfoRow label="Réveil" value={fmtHeure(profil.heure_lever ?? profil.heureReveil)} />
                     <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-                      <InfoRow label="🌙 Coucher" value={fmtHeure(profil.heure_coucher ?? profil.heureCoucher)} />
+                      <InfoRow label="Coucher" value={fmtHeure(profil.heure_coucher ?? profil.heureCoucher)} />
                     </div>
                   </div>
                 </>
@@ -582,15 +584,15 @@ export default function SettingsSheet({
                 <div>
                   <style>{`
                     .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
-                      border:1px solid ${C.border}; background:rgba(255,248,244,0.60);
-                      font-family:${C.font}; font-size:14px; color:${C.accent}; outline:none;
+                      border:1px solid rgba(255,220,160,0.20); background:rgba(255,235,210,0.10);
+                      font-family:'Poppins',system-ui,sans-serif; font-size:14px; color:rgba(255,238,220,0.90); outline:none;
                       transition:border-color 0.18s; }
-                    .ss-edit-input:focus { border-color:${C.accent}; }
-                    .ss-edit-input::placeholder { color:${C.textLight}; }
-                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid ${C.border};
-                      background:rgba(255,248,244,0.60); font-family:${C.font}; font-size:14px;
-                      color:${C.accent}; outline:none; }
-                    .ss-time-input:focus { border-color:${C.accent}; }
+                    .ss-edit-input:focus { border-color:#C87B52; }
+                    .ss-edit-input::placeholder { color:rgba(255,210,160,0.35); }
+                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(255,220,160,0.20);
+                      background:rgba(255,235,210,0.10); font-family:'Poppins',system-ui,sans-serif; font-size:14px;
+                      color:rgba(255,238,220,0.90); outline:none; }
+                    .ss-time-input:focus { border-color:#C87B52; }
                   `}</style>
 
                   <EditField label="Prénom / Pseudo">
@@ -628,7 +630,7 @@ export default function SettingsSheet({
                   </EditField>
 
                   <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-                    <EditField label="🌅 Réveil">
+                    <EditField label="Réveil">
                       <input
                         type="time"
                         className="ss-time-input"
@@ -636,7 +638,7 @@ export default function SettingsSheet({
                         onChange={e => setEditValues(v => ({ ...v, heure_lever: parseHeure(e.target.value) ?? v.heure_lever }))}
                       />
                     </EditField>
-                    <EditField label="🌙 Coucher">
+                    <EditField label="Coucher">
                       <input
                         type="time"
                         className="ss-time-input"
@@ -688,7 +690,7 @@ export default function SettingsSheet({
                     fontWeight: 700,
                     color: '#E8962A',
                   }}>
-                    ✨ Solenn Pro
+                    <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#E8962A" /> Solenn Pro</span>
                   </span>
                 </div>
                 {/* Avantages */}
@@ -775,7 +777,7 @@ export default function SettingsSheet({
                       <span style={{
                         width: 18, height: 18,
                         borderRadius: '50%',
-                        background: 'rgba(26,10,0,0.06)',
+                        background: 'rgba(255,235,210,0.08)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 11, flexShrink: 0, color: C.textLight,
                       }}>
@@ -816,7 +818,7 @@ export default function SettingsSheet({
                   onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
                   onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
                 >
-                  ⭐ Passer à Solenn Pro · 4,99€/mois
+                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="white" /> Passer à Solenn Pro · 4,99€/mois</span>
                 </button>
                 {/* Sous-texte */}
                 <div style={{
@@ -838,7 +840,7 @@ export default function SettingsSheet({
                 {PRESETS.map(p => (
                   <PresetBtn
                     key={p.value}
-                    emoji={p.emoji}
+                    icon={p.icon}
                     label={p.label}
                     value={p.value}
                     active={preset === p.value}
@@ -872,13 +874,13 @@ export default function SettingsSheet({
             <SectionTitle>Mes Données</SectionTitle>
             <div>
               <ActionBtn
-                emoji="🔄"
+                icon={<RefreshIcon size={18} color={confirmReset ? 'rgba(200,50,20,0.85)' : '#C87B52'} />}
                 label={confirmReset ? 'Confirmer la réinitialisation ?' : 'Réinitialiser mémoire IA'}
                 onClick={handleResetClick}
                 danger={confirmReset}
               />
               <ActionBtn
-                emoji="📤"
+                icon={<SparkleIcon size={18} color="#C87B52" />}
                 label="Exporter mes données"
                 onClick={onExportData}
               />

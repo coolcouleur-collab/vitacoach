@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { supabase } from './supabase'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
@@ -240,7 +241,6 @@ function GroupSection({ title, sessions, onSelect }) {
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 export default function ChatHistory({
   userId,
-  supabase,
   onClose,
   onLoadSession,
 }) {
@@ -279,7 +279,7 @@ export default function ChatHistory({
 
     load()
     return () => { cancelled = true }
-  }, [userId, supabase])
+  }, [userId])
 
   const groups = groupByWeek(sessions)
   const totalSessions = sessions.length
