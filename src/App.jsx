@@ -1578,7 +1578,7 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
-        <div ref={contentRef} data-lenis-prevent style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
