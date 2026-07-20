@@ -2993,6 +2993,7 @@ const s = {
     boxShadow:'none',
     display:'block',
     padding:'1.2rem 1rem',
+    boxSizing:'border-box',
     position:'fixed', top:0, left:0, height:'100vh',
     zIndex:50, overflowY:'auto', WebkitOverflowScrolling:'touch',
   },
