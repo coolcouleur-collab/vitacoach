@@ -124,7 +124,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(200,123,82,0.70)',
+          color: 'rgba(255,238,220,0.75)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -183,7 +183,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(200,123,82,0.70)',
+          color: 'rgba(255,238,220,0.75)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -239,7 +239,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-            <span style={{ fontSize: 36, lineHeight: 1 }}>{rapport.emoji_semaine}</span>
+            <span style={{ flexShrink: 0, display: 'flex' }}><CalendarIcon size={32} color="#E8962A" /></span>
             <div>
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
@@ -281,7 +281,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             <p style={{
               fontFamily: 'Poppins, sans-serif',
               fontSize: 10,
-              color: 'rgba(200,123,82,0.55)',
+              color: 'rgba(255,238,220,0.55)',
               margin: '2px 0 0',
               textAlign: 'right',
             }}>
@@ -343,7 +343,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             lineHeight: 1.5,
           }}>
             {typeof rapport.stat_phare === 'object'
-              ? `${rapport.stat_phare.emoji || ''} ${rapport.stat_phare.valeur || ''} — ${rapport.stat_phare.label || ''}`.trim()
+              ? [rapport.stat_phare.valeur, rapport.stat_phare.label].filter(Boolean).join(' — ')
               : rapport.stat_phare}
           </p>
         </div>
@@ -370,7 +370,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontSize: 13,
-            color: 'rgba(200,123,82,0.80)',
+            color: 'rgba(255,238,220,0.85)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -460,7 +460,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 600,
             fontSize: 12,
-            color: 'rgba(200,123,82,0.80)',
+            color: '#E8962A',
             margin: '0 0 6px',
             textTransform: 'uppercase',
             letterSpacing: 0.8,
@@ -520,7 +520,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           disabled={generating}
           style={{
             background: 'transparent',
-            color: 'rgba(200,123,82,0.55)',
+            color: 'rgba(255,238,220,0.60)',
             border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12,
             padding: '8px 18px',
@@ -532,7 +532,14 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             transition: 'opacity 0.2s',
           }}
         >
-          {generating ? 'Génération…' : '↺ Regénérer'}
+          {generating ? 'Génération…' : (
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 12a9 9 0 1 0 2.6-6.4"/><polyline points="3 2 3 8 9 8"/>
+              </svg>
+              Regénérer
+            </span>
+          )}
         </button>
       </div>
     </motion.div>

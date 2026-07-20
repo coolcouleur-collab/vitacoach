@@ -176,7 +176,7 @@ export async function runRapportHebdo(pushSubscriptions) {
       if (sub) {
         try {
           await webpush.sendNotification(sub, JSON.stringify({
-            title: `📊 ${rapport.emoji_semaine} Ton rapport de la semaine`,
+            title: 'Ton rapport de la semaine',
             body:  rapport.victoire_semaine || rapport.message_solenn || 'Ton bilan personnalisé est prêt',
             icon:  '/icon-192.png',
             data:  { url: '/?onglet=rapport' },
