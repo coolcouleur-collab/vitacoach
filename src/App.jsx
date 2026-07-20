@@ -1511,7 +1511,6 @@ const [messages, setMessages] = useState(() => {
       {/* ══ SIDEBAR (desktop) ══ */}
       {!isMobile && (
         <aside style={s.sidebar}>
-          <div style={{ flex:1, minHeight:0, overflowY:'auto', WebkitOverflowScrolling:'touch', padding:'1.2rem 1rem', boxSizing:'border-box' }}>
           <style>{`@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.35)}}`}</style>
 
           {/* Logo */}
@@ -1573,7 +1572,6 @@ const [messages, setMessages] = useState(() => {
                 Déconnexion
               </button>
             </div>
-          </div>
           </div>
         </aside>
       )}
@@ -2988,14 +2986,15 @@ const s = {
 
   // ── Sidebar ──────────────────────────────────────────────────────────────────
   sidebar: {
-    width:260, flexShrink:0,
+    width:260,
     background:'transparent',
     backdropFilter:'none', WebkitBackdropFilter:'none',
     borderRight:'1px solid rgba(200,123,82,0.12)',
     boxShadow:'none',
-    display:'flex', flexDirection:'column',
     position:'fixed', top:0, left:0, height:'100vh',
-    zIndex:50, overflow:'hidden',
+    zIndex:50,
+    overflowY:'auto', overflowX:'hidden',
+    padding:'1.2rem 1rem', boxSizing:'border-box',
   },
   sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
