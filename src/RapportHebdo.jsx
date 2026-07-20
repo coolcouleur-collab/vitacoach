@@ -342,7 +342,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             margin: 0,
             lineHeight: 1.5,
           }}>
-            {rapport.stat_phare}
+            {typeof rapport.stat_phare === 'object'
+              ? `${rapport.stat_phare.emoji || ''} ${rapport.stat_phare.valeur || ''} — ${rapport.stat_phare.label || ''}`.trim()
+              : rapport.stat_phare}
           </p>
         </div>
       )}
