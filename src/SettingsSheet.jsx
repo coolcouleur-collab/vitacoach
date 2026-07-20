@@ -519,7 +519,7 @@ export default function SettingsSheet({
           </div>
 
           {/* Contenu scrollable */}
-          <div style={{
+          <div data-lenis-prevent style={{
             overflowY: 'auto',
             flex: 1,
             minHeight: 0,

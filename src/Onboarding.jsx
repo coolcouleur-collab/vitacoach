@@ -422,7 +422,7 @@ export default function Onboarding({ onTermine, onBack }) {
       profession:       '',
       poids:            0,
       taille:           0,
-      sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Aucune condition particulière'),
+      sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Tout va bien de ce côté'),
       sante_conditions: a.sante_conditions || [],
       cycle:            a.cycle === true,
       isPro:            false,
@@ -850,12 +850,12 @@ export default function Onboarding({ onTermine, onBack }) {
     // ── Étape 9 : Santé (multi-select) ───────────────────────────────────────
     if (step === 9) {
       const toggleSante = (label) => {
-        if (label === 'Aucune condition particulière') {
-          setSanteSelections(['Aucune condition particulière'])
+        if (label === 'Tout va bien de ce côté') {
+          setSanteSelections(['Tout va bien de ce côté'])
           return
         }
         setSanteSelections(prev => {
-          const without = prev.filter(s => s !== 'Aucune condition particulière')
+          const without = prev.filter(s => s !== 'Tout va bien de ce côté')
           return without.includes(label) ? without.filter(s => s !== label) : [...without, label]
         })
       }

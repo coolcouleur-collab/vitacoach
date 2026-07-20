@@ -580,6 +580,7 @@ const [messages, setMessages] = useState(() => {
   const contentRef = useRef(null)
   const messagesEndRef = useRef(null)
   const isSendingRef   = useRef(false)   // verrou anti-doublon
+  const messagesRef    = useRef([])      // miroir de messages pour lectures hors-render
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimerRef = useRef(null)
   // Pull-to-refresh
@@ -724,12 +725,13 @@ const [messages, setMessages] = useState(() => {
       const toSave = messages.filter(m => !m.content?.includes('messages gratuits'))
       localStorage.setItem('vitacoach_historique', JSON.stringify(toSave.slice(-50)))
     }
+    messagesRef.current = messages
   }, [messages, profil])
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     if (p.get('subscribed') === 'true') {
-      setIsPro(true)
-      localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+      // Le statut Pro n'est JAMAIS accordé sur simple paramètre d'URL :
+      // on stocke le session_id Stripe et l'effet check-subscription vérifie côté serveur.
       const sessionId = p.get('session_id')
       if (sessionId) localStorage.setItem('vitacoach_stripe_session', sessionId)
       window.history.replaceState({}, '', '/')
@@ -745,8 +747,8 @@ const [messages, setMessages] = useState(() => {
         if (data.active) {
           setIsPro(true)
           localStorage.setItem('vitacoach_pro', JSON.stringify(true))
-        } else if (!data.active && isPro) {
-          // Abonnement annulé
+        } else {
+          // Abonnement annulé ou jamais activé
           setIsPro(false)
           localStorage.setItem('vitacoach_pro', JSON.stringify(false))
         }
@@ -1110,8 +1112,8 @@ const [messages, setMessages] = useState(() => {
     if (isSendingRef.current) return     // verrou : un seul envoi à la fois
     isSendingRef.current = true
 
-    // Warning à 1 message de la limite
-    if (!hasFullAccess && getMsgCount() === FREE_LIMIT - 1) {
+    // Warning quand il ne restera qu'un message après cet envoi
+    if (!hasFullAccess && getMsgCount() === FREE_LIMIT - 2) {
       // On laisse passer mais on avertit
       setTimeout(() => {
         setMessages(prev => [...prev, {
@@ -1199,14 +1201,11 @@ const [messages, setMessages] = useState(() => {
         // Sauvegarde Supabase de la conversation (fire & forget)
         if (user?.id) {
           setTimeout(() => {
-            setMessages(current => {
-              fetch('/api/chat-save', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.id, messages: current }),
-              }).catch(() => {})
-              return current
-            })
+            fetch('/api/chat-save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId: user.id, messages: messagesRef.current }),
+            }).catch(() => {})
           }, 500)
         }
       }

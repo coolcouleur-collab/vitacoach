@@ -4,7 +4,9 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
-  const { section, selections, texteLibre } = req.body
+  const { section } = req.body || {}
+  const selections = Array.isArray(req.body?.selections) ? req.body.selections.map(s => String(s).slice(0, 100)).slice(0, 20) : []
+  const texteLibre = String(req.body?.texteLibre || '').slice(0, 2000)
 
   const prompts = {
     alimentation: `Tu es un nutritionniste expert. L'utilisateur a sélectionné ces habitudes alimentaires : ${selections.join(', ')}.
@@ -23,15 +25,17 @@ Réponds en JSON avec ce format exact :
 {"resume": "résumé court", "details": "détails complets pour personnaliser ses conseils bien-être"}`
   }
 
-  const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
-    messages: [
-      { role: 'system', content: 'Tu es un assistant qui extrait et structure des informations de profil. Réponds toujours en JSON valide.' },
-      { role: 'user', content: prompts[section] }
-    ]
-  })
+  if (!prompts[section]) return res.status(400).json({ erreur: 'section invalide' })
 
   try {
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: 600,
+      messages: [
+        { role: 'system', content: 'Tu es un assistant qui extrait et structure des informations de profil. Réponds toujours en JSON valide.' },
+        { role: 'user', content: prompts[section] }
+      ]
+    })
     const text = response.choices[0].message.content
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const result = JSON.parse(jsonMatch[0])

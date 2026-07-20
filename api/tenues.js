@@ -60,7 +60,8 @@ TENDANCES ÉTÉ 2026 :
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
-  const { profil, ville, occasion } = req.body
+  const { profil = {}, ville, occasion } = req.body || {}
+  if (!ville || typeof ville !== 'string') return res.status(400).json({ erreur: 'ville manquante' })
 
   // ── Météo + LLaMA en parallèle ───────────────────────────────────────────
   const [meteoResult, llmResponse] = await Promise.allSettled([

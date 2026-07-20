@@ -20,9 +20,12 @@ const MAX_CHARS = 600
 const MAX_TITLE = 120
 
 function checkContent(text) {
+  // Match sur mots entiers uniquement — "conseil" ne doit pas matcher "con",
+  // "violon" ne doit pas matcher "viol". Frontières = tout sauf lettres/chiffres.
   const lower = text.toLowerCase()
   for (const word of BANNED_WORDS) {
-    if (lower.includes(word)) return { ok: false, word }
+    const re = new RegExp(`(^|[^a-z0-9àâäéèêëîïôöùûüç])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^a-z0-9àâäéèêëîïôöùûüç])`, 'i')
+    if (re.test(lower)) return { ok: false, word }
   }
   return { ok: true }
 }
@@ -285,9 +288,11 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
   async function signaler() {
     if (reported) return
     setReported(true)
-    await supabase.from('forum_reports').insert({
-      reply_id: r.id, post_id: postId, reporter_id: userId, reason: 'user_report',
-    }).catch(() => {}) // silently fail si la table n'existe pas encore
+    try {
+      await supabase.from('forum_reports').insert({
+        reply_id: r.id, post_id: postId, reporter_id: userId, reason: 'user_report',
+      })
+    } catch { /* silently fail si la table n'existe pas encore */ }
   }
 
   return (
@@ -844,10 +849,12 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
     for (const name of names) {
       const entry = authorMap[name.toLowerCase()]
       if (entry?.userId && entry.userId !== userId) {
-        await supabase.from('forum_mentions').insert({
-          post_id: postId, reply_id: replyId,
-          mentioned_user_id: entry.userId, mentioned_by: userId,
-        }).catch(() => {})
+        try {
+          await supabase.from('forum_mentions').insert({
+            post_id: postId, reply_id: replyId,
+            mentioned_user_id: entry.userId, mentioned_by: userId,
+          })
+        } catch { /* table absente ou RLS — ne bloque pas l'envoi */ }
       }
     }
   }
@@ -892,11 +899,11 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       .subscribe()
 
     return () => supabase.removeChannel(channel)
-  }, [fetchPosts])
+  }, [fetchPosts, userId, fetchMentions])
 
   // ── Add post ─────────────────────────────────────────────────────────────────
   async function addPost({ title, body, category }) {
-    const { data, err } = await supabase
+    const { data, error: err } = await supabase
       .from('forum_posts')
       .insert({ user_id: userId, author: authorName, title, body, category })
       .select()

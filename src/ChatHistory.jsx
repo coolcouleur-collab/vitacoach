@@ -395,9 +395,10 @@ export default function ChatHistory({
           </div>
 
           {/* Contenu scrollable */}
-          <div style={{
+          <div data-lenis-prevent style={{
             overflowY: 'auto',
             flex: 1,
+            minHeight: 0,
             padding: '4px 18px 48px',
             paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 48px)',
             WebkitOverflowScrolling: 'touch',
