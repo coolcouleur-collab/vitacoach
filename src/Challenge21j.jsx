@@ -148,98 +148,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
     )
   }
 
-  // ── 2. PAYWALL ───────────────────────────────────────────────────
-  if (!isPro && !challenge) {
-    return (
-      <div style={styles.container}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{ ...styles.card, textAlign: 'center' }}
-        >
-          <div style={{ marginBottom: '12px', display:'flex', justifyContent:'center' }}><TargetIcon size={52} color="#C87B52" /></div>
-          <h2
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: 'italic',
-              fontSize: '26px',
-              fontWeight: 700,
-              color: 'rgba(200,123,82,0.95)',
-              marginBottom: '8px',
-            }}
-          >
-            Challenge 21 jours
-          </h2>
-          <p
-            style={{
-              color: 'rgba(200,123,82,0.65)',
-              fontSize: '14px',
-              marginBottom: '24px',
-              lineHeight: 1.6,
-            }}
-          >
-            Un défi personnalisé pour ancrer une nouvelle habitude en 3 semaines
-          </p>
-
-          <div
-            style={{
-              background: 'rgba(200,123,82,0.06)',
-              borderRadius: '16px',
-              padding: '16px',
-              marginBottom: '24px',
-              textAlign: 'left',
-            }}
-          >
-            {[
-              'Jour 1 : 10 min de marche matinale',
-              'Jour 7 : Méditation 5 min',
-              'Jour 14 : Challenge nutrition',
-            ].map((exemple, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: '10px 14px',
-                  marginBottom: i < 2 ? '8px' : 0,
-                  background: 'rgba(200,123,82,0.08)',
-                  borderRadius: '12px',
-                  color: 'rgba(200,123,82,0.35)',
-                  fontSize: '13px',
-                  filter: 'blur(1.5px)',
-                  userSelect: 'none',
-                }}
-              >
-                {exemple}
-              </div>
-            ))}
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onPasserPro}
-            style={{
-              background: 'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '16px',
-              padding: '14px 32px',
-              fontSize: '15px',
-              fontWeight: 700,
-              fontFamily: "'Poppins', sans-serif",
-              cursor: 'pointer',
-              boxShadow: '0 4px 20px rgba(200,123,82,0.35)',
-            }}
-          >
-            <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Passer Pro pour débloquer</span>
-          </motion.button>
-        </motion.div>
-      </div>
-    )
-  }
-
-  // ── 3. PRO SANS CHALLENGE ────────────────────────────────────────
-  if (isPro && !challenge) {
+  // ── 2. PAS DE CHALLENGE (tout le monde peut créer le premier) ───
+  if (!challenge) {
     return (
       <div style={styles.container}>
         <motion.div
@@ -707,7 +617,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
             </motion.div>
           )}
 
-          {/* ── BOUTON NOUVEAU CHALLENGE ── */}
+          {/* ── BOUTON NOUVEAU CHALLENGE (Pro only) ── */}
+          {isPro && (
           <div style={{ textAlign: 'center' }}>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -731,6 +642,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               {creating ? 'Création…' : 'Nouveau challenge'}
             </motion.button>
           </div>
+          )}
         </motion.div>
       </AnimatePresence>
 
