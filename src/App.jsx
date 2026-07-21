@@ -1362,7 +1362,7 @@ const [messages, setMessages] = useState(() => {
     { id:'style',      Icon: StyleIcon,      label:'Style' },
     { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
-    { id:'forum',      Icon: ForumIcon,      label:'Forum' },
+    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
   ]
 
   return (
