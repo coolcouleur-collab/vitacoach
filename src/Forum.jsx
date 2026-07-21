@@ -102,19 +102,19 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
       {suggestions.length > 0 && (
         <div style={{
           position:'absolute', top:'100%', left:0, right:0, zIndex:300, marginTop:4,
-          background:'rgba(22,9,2,0.92)', backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-          border:'1px solid rgba(255,220,160,0.22)', borderRadius:12,
-          boxShadow:'0 4px 18px rgba(0,0,0,0.35)', overflow:'hidden',
+          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(20px)',
+          border:'1px solid rgba(200,123,82,0.22)', borderRadius:12,
+          boxShadow:'0 4px 18px rgba(200,123,82,0.13)', overflow:'hidden',
         }}>
           {suggestions.map(name => (
             <button key={name} onMouseDown={e => { e.preventDefault(); pick(name) }} style={{
               display:'block', width:'100%', textAlign:'left',
               padding:'8px 14px', background:'none', border:'none',
               cursor:'pointer', fontFamily:'var(--font)',
-              fontSize:'max(1.2rem,12px)', color:'rgba(255,238,220,0.92)',
-              borderBottom:'1px solid rgba(255,220,160,0.12)',
+              fontSize:'max(1.2rem,12px)', color:'rgba(140,70,20,0.88)',
+              borderBottom:'1px solid rgba(200,123,82,0.08)',
             }}>
-              <span style={{ color:'rgba(200,123,82,0.90)', fontWeight:700 }}>@</span>{name}
+              <span style={{ color:'rgba(200,123,82,0.80)', fontWeight:700 }}>@</span>{name}
             </button>
           ))}
         </div>
@@ -127,13 +127,12 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
 const inputBase = {
   width: '100%', boxSizing: 'border-box',
   padding: '1rem 1.4rem', borderRadius: '1.4rem',
-  border: '1.5px solid rgba(255,220,160,0.25)',
-  background: 'rgba(255,235,210,0.10)',
-  backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+  border: '1.5px solid rgba(200,123,82,0.22)',
+  background: 'rgba(255,246,238,0.96)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,16px)',
-  color: 'rgba(255,238,220,0.90)', lineHeight: 1.6,
-  boxShadow: 'none',
+  color: 'rgba(200,123,82,0.88)', lineHeight: 1.6,
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
 }
 
 // ─── Reply form ───────────────────────────────────────────────────────────────
@@ -167,7 +166,7 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
   }
 
   return (
-    <div ref={taRef} style={{ marginTop: '1.2rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(255,220,160,0.18)' }}>
+    <div ref={taRef} style={{ marginTop: '1.2rem', paddingTop: '1.2rem', borderTop: '1px solid rgba(200,123,82,0.13)' }}>
       <MentionTextarea
         className="forum-reply-ta"
         value={text}
@@ -175,20 +174,20 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
         placeholder="Écris ta réponse… (@ pour mentionner)"
         rows={3}
         authors={authors}
-        style={{ ...inputBase, resize:'vertical', border:`1.5px solid ${error ? '#ef4444' : 'rgba(255,220,160,0.25)'}` }}
+        style={{ ...inputBase, resize:'vertical', border:`1.5px solid ${error ? '#ef4444' : 'rgba(200,123,82,0.22)'}` }}
       />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '.6rem' }}>
-        <span style={{ fontSize: 'max(1.1rem,11px)', color: text.length > MAX_CHARS ? '#ef4444' : 'rgba(255,238,220,0.55)' }}>
+        <span style={{ fontSize: 'max(1.1rem,11px)', color: text.length > MAX_CHARS ? '#ef4444' : 'rgba(155,100,70,0.50)' }}>
           {text.length}/{MAX_CHARS}
         </span>
         <button onClick={submit} disabled={!text.trim() || loading} style={{
-          background: text.trim() ? 'linear-gradient(135deg,#C87B52,#E8962A)' : 'rgba(255,235,210,0.10)',
-          color: text.trim() ? '#fff' : 'rgba(255,238,220,0.35)',
-          border: text.trim() ? 'none' : '1px solid rgba(255,220,160,0.18)',
+          background: text.trim() ? 'rgba(255,255,255,0.25)' : 'rgba(200,123,82,0.06)',
+          color: text.trim() ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.30)',
+          border: text.trim() ? '1px solid rgba(200,123,82,0.25)' : '1px solid rgba(200,123,82,0.12)',
           borderRadius: '2rem', padding: '.6rem 1.8rem',
           fontSize: 'max(1.2rem,12px)', fontWeight: 700,
           cursor: text.trim() ? 'pointer' : 'default', fontFamily: 'var(--font)',
-          boxShadow: text.trim() ? '0 4px 12px rgba(200,123,82,0.32)' : 'none',
+          boxShadow: text.trim() ? '0 4px 12px rgba(200,123,82,0.28)' : 'none',
           transition: 'all .18s ease',
         }}>
           {loading ? '...' : 'Répondre'}
@@ -196,7 +195,7 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
         {onCancel && (
           <button onClick={onCancel} style={{
             background:'none', border:'none', cursor:'pointer', padding:'.6rem .8rem',
-            fontSize:'max(1.1rem,11px)', color:'rgba(255,238,220,0.55)', fontFamily:'var(--font)',
+            fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.45)', fontFamily:'var(--font)',
           }}>Annuler</button>
         )}
       </div>
@@ -213,11 +212,10 @@ function PostCard({ post, onLike, onOpen, userId }) {
 
   return (
     <div onClick={() => onOpen(post)} style={{
-      background: 'rgba(255,235,210,0.10)',
-      backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+      background: 'rgba(255,248,242,0.96)',
       borderRadius: 20, padding: '1.4rem 1.6rem',
-      border: '1px solid rgba(255,220,160,0.22)',
-      boxShadow: '0 2px 14px rgba(0,0,0,0.18)',
+      border: '1px solid rgba(200,123,82,0.16)',
+      boxShadow: '0 2px 14px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.70)',
       cursor: 'pointer', transition: 'all .18s ease',
     }}>
       {/* Header */}
@@ -225,21 +223,21 @@ function PostCard({ post, onLike, onOpen, userId }) {
         <Avatar name={post.author} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '.3rem' }}>
-            <span style={{ fontWeight: 600, fontSize: 'max(1.2rem,12px)', color: 'rgba(255,238,220,0.92)' }}>{post.author}</span>
+            <span style={{ fontWeight: 600, fontSize: 'max(1.2rem,12px)', color: 'rgba(100,55,20,0.85)' }}>{post.author}</span>
             <span style={{
-              fontSize: 'max(1rem,10px)', fontWeight: 500, color: 'rgba(232,150,42,0.92)',
-              background: 'rgba(200,123,82,0.16)', padding: '.15rem .65rem',
-              borderRadius: 20, border: '1px solid rgba(255,220,160,0.24)',
+              fontSize: 'max(1rem,10px)', fontWeight: 500, color: 'rgba(200,123,82,0.72)',
+              background: 'rgba(200,123,82,0.08)', padding: '.15rem .65rem',
+              borderRadius: 20, border: '1px solid rgba(200,123,82,0.18)',
             }}>{post.category}</span>
-            <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(255,238,220,0.55)' }}>{timeAgo(post.created_at)}</span>
+            <span style={{ fontSize: 'max(1rem,10px)', color: 'rgba(200,123,82,0.65)' }}>{timeAgo(post.created_at)}</span>
           </div>
-          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 400, color: 'rgba(255,238,220,0.92)', lineHeight: 1.35, fontFamily:'var(--font)', margin:0 }}>
+          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 400, color: 'rgba(100,55,20,0.75)', lineHeight: 1.35, fontFamily:'var(--font)', margin:0 }}>
             {post.title}
           </h3>
         </div>
       </div>
       {/* Preview body */}
-      <p style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(255,238,220,0.70)', lineHeight: 1.65, marginBottom: '1rem',
+      <p style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(180,100,40,0.65)', lineHeight: 1.65, marginBottom: '1rem',
         overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
         {post.body}
       </p>
@@ -247,19 +245,19 @@ function PostCard({ post, onLike, onOpen, userId }) {
       <div style={{ display: 'flex', gap: '.8rem', alignItems: 'center' }}>
         <button onClick={e => { e.stopPropagation(); onLike(post.id) }} style={{
           display: 'flex', alignItems: 'center', gap: '.4rem',
-          background: liked ? 'rgba(200,123,82,0.22)' : 'rgba(255,235,210,0.06)',
-          border: `1px solid ${liked ? 'rgba(232,150,42,0.45)' : 'rgba(255,220,160,0.20)'}`,
+          background: liked ? 'rgba(200,123,82,0.12)' : 'transparent',
+          border: `1px solid ${liked ? 'rgba(200,123,82,0.28)' : 'rgba(200,123,82,0.14)'}`,
           borderRadius: 20, padding: '.35rem .85rem',
           cursor: 'pointer', fontFamily: 'var(--font)', transition: 'all .18s ease',
         }}>
-          <span style={{ fontSize: '1.1rem', color: liked ? '#E8962A' : 'rgba(255,238,220,0.45)' }}>♥</span>
-          <span style={{ fontSize: 'max(1.1rem,11px)', fontWeight: 500, color: liked ? '#E8962A' : 'rgba(255,238,220,0.60)' }}>{likesCount}</span>
+          <span style={{ fontSize: '1.1rem', color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)' }}>♥</span>
+          <span style={{ fontSize: 'max(1.1rem,11px)', fontWeight: 500, color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>{likesCount}</span>
         </button>
-        <div style={{ display:'flex', alignItems:'center', gap:'.4rem', color:'rgba(255,238,220,0.60)', fontSize:'max(1.1rem,11px)' }}>
-          <ChatIcon size={16} color="rgba(255,238,220,0.60)" />
+        <div style={{ display:'flex', alignItems:'center', gap:'.4rem', color:'rgba(200,123,82,0.50)', fontSize:'max(1.1rem,11px)' }}>
+          <ChatIcon size={16} color="rgba(200,123,82,0.50)" />
           <span>{repliesCount} réponse{repliesCount !== 1 ? 's' : ''}</span>
         </div>
-        <div style={{ marginLeft:'auto', fontSize:'max(1.1rem,11px)', color:'rgba(232,150,42,0.85)' }}>Lire →</div>
+        <div style={{ marginLeft:'auto', fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.62)' }}>Lire →</div>
       </div>
     </div>
   )
@@ -300,25 +298,24 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
   return (
     <div style={{
       display:'flex', gap:'.8rem', padding:'1rem 1.2rem',
-      background:'rgba(255,235,210,0.10)', borderRadius:16,
-      backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-      border:'1px solid rgba(255,220,160,0.22)',
+      background:'rgba(255,246,238,0.50)', borderRadius:16,
+      border:'1px solid rgba(200,123,82,0.12)',
     }}>
       <Avatar name={r.author} size={28} />
       <div style={{ flex:1, minWidth:0 }}>
         {/* Header ligne */}
         <div style={{ display:'flex', gap:'.5rem', alignItems:'center', marginBottom:'.25rem', flexWrap:'wrap' }}>
-          <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'rgba(255,238,220,0.92)' }}>{r.author}</span>
-          <span style={{ fontSize:'max(1rem,10px)', color:'rgba(255,238,220,0.55)' }}>{timeAgo(r.created_at)}</span>
+          <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'rgba(100,55,20,0.85)' }}>{r.author}</span>
+          <span style={{ fontSize:'max(1rem,10px)', color:'rgba(200,123,82,0.65)' }}>{timeAgo(r.created_at)}</span>
           {r.edited_at && (
-            <span style={{ fontSize:'max(0.9rem,9px)', color:'rgba(255,238,220,0.50)', fontStyle:'italic' }}>· modifié</span>
+            <span style={{ fontSize:'max(0.9rem,9px)', color:'rgba(200,123,82,0.62)', fontStyle:'italic' }}>· modifié</span>
           )}
           {/* Actions owner */}
           {isOwner && !editing && (
             <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
               <button onClick={() => setEditing(true)} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'2px 6px',
-                fontSize:'max(1rem,10px)', color:'rgba(255,238,220,0.65)', fontFamily:'var(--font)',
+                fontSize:'max(1rem,10px)', color:'rgba(200,123,82,0.55)', fontFamily:'var(--font)',
               }}>Modifier</button>
               <button onClick={() => onDelete(postId, r.id)} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'2px 6px',
@@ -340,41 +337,41 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
             />
             <div style={{ display:'flex', gap:8 }}>
               <button onClick={save} disabled={loading} style={{
-                background:'linear-gradient(135deg,#C87B52,#E8962A)', border:'none',
+                background:'rgba(200,123,82,0.15)', border:'1px solid rgba(200,123,82,0.28)',
                 borderRadius:20, padding:'.3rem .9rem', fontSize:'max(1.1rem,11px)',
-                color:'#fff', fontWeight:700, cursor:'pointer', fontFamily:'var(--font)',
+                color:'rgba(180,90,25,0.85)', cursor:'pointer', fontFamily:'var(--font)',
               }}>{loading ? '...' : 'Sauvegarder'}</button>
               <button onClick={() => { setEditing(false); setEditText(r.body) }} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'.3rem .9rem',
-                fontSize:'max(1.1rem,11px)', color:'rgba(255,238,220,0.55)', fontFamily:'var(--font)',
+                fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.50)', fontFamily:'var(--font)',
               }}>Annuler</button>
             </div>
           </div>
         ) : (
           <>
-            <p style={{ fontSize:'max(1.2rem,12px)', color:'rgba(255,238,220,0.88)', lineHeight:1.65, margin:'0 0 .6rem' }}>{r.body}</p>
+            <p style={{ fontSize:'max(1.2rem,12px)', color:'rgba(180,100,40,0.75)', lineHeight:1.65, margin:'0 0 .6rem' }}>{r.body}</p>
             {/* Actions footer */}
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
               {/* Vote widget */}
               <div style={{ display:'flex', alignItems:'center', gap:2 }}>
                 <button onClick={() => onVote?.(postId, r.id, 1)} style={{
-                  background: userVote === 1 ? 'rgba(232,150,42,0.20)' : 'none',
+                  background: userVote === 1 ? 'rgba(200,123,82,0.14)' : 'none',
                   border: 'none', cursor: userId ? 'pointer' : 'default',
                   borderRadius:7, padding:'2px 7px',
                   fontSize:11, fontWeight:700,
-                  color: userVote === 1 ? '#E8962A' : 'rgba(255,238,220,0.42)',
+                  color: userVote === 1 ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.32)',
                   fontFamily:'var(--font)', lineHeight:1, transition:'all .15s',
                 }}>▲</button>
                 <span style={{
                   fontSize:'max(1rem,10px)', fontWeight:700, minWidth:14, textAlign:'center',
-                  color: userVote === 1 ? '#E8962A' : userVote === -1 ? 'rgba(255,238,220,0.45)' : 'rgba(255,238,220,0.70)',
+                  color: userVote === 1 ? 'rgba(200,123,82,0.85)' : userVote === -1 ? 'rgba(150,100,70,0.40)' : 'rgba(200,123,82,0.52)',
                 }}>{score}</span>
                 <button onClick={() => onVote?.(postId, r.id, -1)} style={{
-                  background: userVote === -1 ? 'rgba(255,235,210,0.12)' : 'none',
+                  background: userVote === -1 ? 'rgba(120,80,50,0.10)' : 'none',
                   border: 'none', cursor: userId ? 'pointer' : 'default',
                   borderRadius:7, padding:'2px 7px',
                   fontSize:11, fontWeight:700,
-                  color: userVote === -1 ? 'rgba(255,238,220,0.80)' : 'rgba(255,238,220,0.32)',
+                  color: userVote === -1 ? 'rgba(150,80,50,0.75)' : 'rgba(200,123,82,0.22)',
                   fontFamily:'var(--font)', lineHeight:1, transition:'all .15s',
                 }}>▼</button>
               </div>
@@ -383,7 +380,7 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
                 <button onClick={signaler} disabled={reported} style={{
                   background:'none', border:'none', cursor: reported ? 'default' : 'pointer',
                   padding:0, fontSize:'max(0.95rem,9.5px)',
-                  color: reported ? 'rgba(255,238,220,0.55)' : 'rgba(239,68,68,0.75)',
+                  color: reported ? 'rgba(200,123,82,0.60)' : 'rgba(239,68,68,0.75)',
                   fontFamily:'var(--font)', transition:'color .15s',
                 }}>
                   {reported ? '✓ Signalé' : 'Signaler'}
@@ -423,7 +420,7 @@ function InlineReplyItem({ r, postId, onEdit, onDelete, onVote, onReply, userId,
         padding:'2px 0 6px 46px', display:'block',
         fontSize: isChild ? 'max(0.9rem,9px)' : 'max(1rem,10px)',
         fontFamily:'var(--font)',
-        color: open ? '#E8962A' : 'rgba(255,238,220,0.60)',
+        color: open ? 'rgba(200,123,82,0.75)' : 'rgba(200,123,82,0.42)',
         transition:'color .15s',
       }}>
         {open ? '✕ Annuler' : '↩ Répondre'}
@@ -449,7 +446,7 @@ function ChildReplies({ replies, postId, onEdit, onDelete, onVote, onReply, user
   const hidden   = replies.length - CHILD_VISIBLE
 
   return (
-    <div style={{ marginLeft:20, marginTop:4, paddingLeft:12, borderLeft:'2px solid rgba(255,220,160,0.22)', display:'flex', flexDirection:'column', gap:4 }}>
+    <div style={{ marginLeft:20, marginTop:4, paddingLeft:12, borderLeft:'2px solid rgba(200,123,82,0.15)', display:'flex', flexDirection:'column', gap:4 }}>
       {visible.map((child, j) => (
         <InlineReplyItem
           key={child.id || j}
@@ -463,7 +460,7 @@ function ChildReplies({ replies, postId, onEdit, onDelete, onVote, onReply, user
         <button onClick={() => setExpanded(true)} style={{
           background:'none', border:'none', cursor:'pointer', padding:'4px 0',
           fontSize:'max(1rem,10px)', fontFamily:'var(--font)',
-          color:'rgba(255,238,220,0.70)', fontWeight:600, textAlign:'left',
+          color:'rgba(200,123,82,0.55)', fontWeight:600, textAlign:'left',
         }}>
           ↓ Afficher {hidden} réponse{hidden > 1 ? 's' : ''} de plus
         </button>
@@ -472,7 +469,7 @@ function ChildReplies({ replies, postId, onEdit, onDelete, onVote, onReply, user
         <button onClick={() => setExpanded(false)} style={{
           background:'none', border:'none', cursor:'pointer', padding:'4px 0',
           fontSize:'max(1rem,10px)', fontFamily:'var(--font)',
-          color:'rgba(255,238,220,0.55)', textAlign:'left',
+          color:'rgba(200,123,82,0.45)', textAlign:'left',
         }}>
           ↑ Réduire
         </button>
@@ -509,7 +506,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
       {/* Back */}
       <button onClick={onBack} style={{
         display:'flex', alignItems:'center', gap:6, background:'none', border:'none',
-        color:'rgba(255,238,220,0.75)', cursor:'pointer', fontFamily:'var(--font)',
+        color:'rgba(180,90,25,0.60)', cursor:'pointer', fontFamily:'var(--font)',
         fontSize:'max(1.1rem,11px)', fontWeight:400, marginBottom:'1rem', padding:0,
       }}>
         ← Retour
@@ -517,54 +514,53 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
 
       {/* Post */}
       <div style={{
-        background:'rgba(255,235,210,0.12)', borderRadius:20, padding:'1.6rem',
-        backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-        border:'1px solid rgba(255,220,160,0.24)',
-        boxShadow:'0 4px 20px rgba(0,0,0,0.20)',
+        background:'rgba(255,248,242,0.70)', borderRadius:20, padding:'1.6rem',
+        border:'1px solid rgba(200,123,82,0.18)',
+        boxShadow:'0 4px 20px rgba(200,123,82,0.07), inset 0 1px 0 rgba(255,255,255,0.80)',
         marginBottom:'1.4rem',
       }}>
         <div style={{ display:'flex', gap:'.8rem', alignItems:'flex-start', marginBottom:'1rem' }}>
           <Avatar name={post.author} />
           <div style={{ flex:1, minWidth:0 }}>
             <div style={{ display:'flex', gap:'.5rem', alignItems:'center', flexWrap:'wrap', marginBottom:'.3rem' }}>
-              <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'rgba(255,238,220,0.92)' }}>{post.author}</span>
+              <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'rgba(100,55,20,0.85)' }}>{post.author}</span>
               <span style={{
-                fontSize:'max(1rem,10px)', color:'rgba(232,150,42,0.92)',
-                background:'rgba(200,123,82,0.16)', padding:'.15rem .65rem',
-                borderRadius:20, border:'1px solid rgba(255,220,160,0.24)',
+                fontSize:'max(1rem,10px)', color:'rgba(200,123,82,0.72)',
+                background:'rgba(200,123,82,0.08)', padding:'.15rem .65rem',
+                borderRadius:20, border:'1px solid rgba(200,123,82,0.18)',
               }}>{post.category}</span>
-              <span style={{ fontSize:'max(1rem,10px)', color:'rgba(255,238,220,0.55)' }}>{timeAgo(post.created_at)}</span>
+              <span style={{ fontSize:'max(1rem,10px)', color:'rgba(200,123,82,0.65)' }}>{timeAgo(post.created_at)}</span>
             </div>
-            <h2 style={{ fontSize:'max(1.6rem,16px)', fontWeight:400, color:'rgba(255,238,220,0.92)', lineHeight:1.35,
+            <h2 style={{ fontSize:'max(1.6rem,16px)', fontWeight:400, color:'rgba(100,55,20,0.78)', lineHeight:1.35,
               fontFamily:'var(--font)', margin:0 }}>
               {post.title}
             </h2>
           </div>
         </div>
-        <p style={{ fontSize:'max(1.3rem,13px)', color:'rgba(255,238,220,0.88)', lineHeight:1.75, marginBottom:'1.2rem' }}>
+        <p style={{ fontSize:'max(1.3rem,13px)', color:'rgba(180,100,40,0.75)', lineHeight:1.75, marginBottom:'1.2rem' }}>
           {post.body}
         </p>
         {/* Actions : like + commenter */}
         <div style={{ display:'flex', gap:'.7rem', alignItems:'center' }}>
           <button onClick={() => onLike(post.id)} style={{
             display:'flex', alignItems:'center', gap:'.4rem',
-            background: liked ? 'rgba(200,123,82,0.22)' : 'rgba(255,235,210,0.06)',
-            border:`1px solid ${liked ? 'rgba(232,150,42,0.45)' : 'rgba(255,220,160,0.20)'}`,
+            background: liked ? 'rgba(200,123,82,0.12)' : 'transparent',
+            border:`1px solid ${liked ? 'rgba(200,123,82,0.28)' : 'rgba(200,123,82,0.14)'}`,
             borderRadius:20, padding:'.35rem .85rem',
             cursor:'pointer', fontFamily:'var(--font)', transition:'all .18s ease',
           }}>
-            <span style={{ fontSize:'1.1rem', color: liked ? '#E8962A' : 'rgba(255,238,220,0.45)' }}>♥</span>
-            <span style={{ fontSize:'max(1.1rem,11px)', fontWeight:500, color: liked ? '#E8962A' : 'rgba(255,238,220,0.60)' }}>{likesCount}</span>
+            <span style={{ fontSize:'1.1rem', color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)' }}>♥</span>
+            <span style={{ fontSize:'max(1.1rem,11px)', fontWeight:500, color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>{likesCount}</span>
           </button>
           <button onClick={() => setShowReplyForm(v => !v)} style={{
             display:'flex', alignItems:'center', gap:'.4rem',
-            background: showReplyForm ? 'rgba(200,123,82,0.22)' : 'rgba(255,235,210,0.06)',
-            border:`1px solid ${showReplyForm ? 'rgba(232,150,42,0.45)' : 'rgba(255,220,160,0.20)'}`,
+            background: showReplyForm ? 'rgba(200,123,82,0.12)' : 'transparent',
+            border:`1px solid ${showReplyForm ? 'rgba(200,123,82,0.28)' : 'rgba(200,123,82,0.14)'}`,
             borderRadius:20, padding:'.35rem .85rem',
             cursor:'pointer', fontFamily:'var(--font)', transition:'all .18s ease',
           }}>
-            <ChatIcon size={16} color={showReplyForm ? '#E8962A' : 'rgba(255,238,220,0.45)'} />
-            <span style={{ fontSize:'max(1.1rem,11px)', fontWeight:500, color: showReplyForm ? '#E8962A' : 'rgba(255,238,220,0.60)' }}>Commenter</span>
+            <ChatIcon size={16} color={showReplyForm ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)'} />
+            <span style={{ fontSize:'max(1.1rem,11px)', fontWeight:500, color: showReplyForm ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>Commenter</span>
           </button>
         </div>
       </div>
@@ -582,7 +578,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
 
       {/* Replies */}
       <div>
-        <div style={{ fontSize:'max(1.3rem,13px)', fontWeight:500, color:'rgba(255,238,220,0.80)', marginBottom:'.8rem' }}>
+        <div style={{ fontSize:'max(1.3rem,13px)', fontWeight:500, color:'rgba(180,90,25,0.70)', marginBottom:'.8rem' }}>
           {post.replies?.length || 0} commentaire{post.replies?.length !== 1 ? 's' : ''}
         </div>
         {post.replies?.length > 0 && (() => {
@@ -634,15 +630,15 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
           aria-label="Retour en haut"
           style={{
             position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
-            background: 'rgba(255,235,210,0.14)',
-            backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
-            border: '1px solid rgba(255,220,160,0.26)',
+            background: 'rgba(255,248,242,0.82)',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 100,
             width: 40, height: 40,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16, color: 'rgba(255,238,220,0.92)',
+            fontSize: 16, color: 'rgba(200,123,82,0.72)',
             cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+            boxShadow: '0 4px 16px rgba(200,123,82,0.14), inset 0 1px 0 rgba(255,255,255,0.80)',
             zIndex: 200,
             animation: 'fadeUp .22s ease both',
             transition: 'opacity .2s ease',
@@ -678,19 +674,17 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
 
   return (
     <div style={{
-      background: 'rgba(255,235,210,0.12)',
-      backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+      background: 'rgba(255,248,242,0.98)',
       borderRadius: 20, padding: '2.2rem 2rem',
-      border: '1.5px solid rgba(255,220,160,0.26)',
-      boxShadow: '0 8px 36px rgba(0,0,0,0.28)',
+      border: '1.5px solid rgba(200,123,82,0.22)',
+      boxShadow: '0 8px 36px rgba(200,123,82,0.13), inset 0 1px 0 rgba(255,255,255,0.88)',
       marginBottom: '2rem',
     }}>
-      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 700, color: 'rgba(255,238,220,0.92)', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem', fontFamily:'var(--font)' }}>
-        <span style={{ color: '#E8962A', fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
+      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 700, color: 'rgba(100,55,20,0.85)', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem', fontFamily:'var(--font)' }}>
+        <span style={{ color: 'rgba(200,123,82,0.72)', fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
       </div>
 
       <input
-        className="forum-search"
         value={title}
         onChange={e => { setTitle(e.target.value); setError('') }}
         placeholder="Titre de ta discussion..."
@@ -698,7 +692,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
         style={{
           ...inputBase, marginBottom: '1rem',
           fontSize: 'max(1.4rem,16px)', fontWeight: 700,
-          border: `1.5px solid ${error && !title.trim() ? '#ef4444' : 'rgba(255,220,160,0.25)'}`,
+          border: `1.5px solid ${error && !title.trim() ? '#ef4444' : 'rgba(200,123,82,0.22)'}`,
         }}
       />
 
@@ -709,10 +703,10 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
             padding: '.4rem 1.1rem', borderRadius: 20,
             fontSize: 'max(1.1rem,11px)', fontWeight: 700,
             cursor: 'pointer', fontFamily: 'var(--font)',
-            background: category === c ? 'linear-gradient(135deg,#C87B52,#E8962A)' : 'rgba(255,235,210,0.10)',
-            color: category === c ? '#fff' : 'rgba(255,238,220,0.70)',
-            border: category === c ? 'none' : '1px solid rgba(255,220,160,0.22)',
-            boxShadow: category === c ? '0 3px 10px rgba(200,123,82,0.32)' : 'none',
+            background: category === c ? 'linear-gradient(135deg, rgba(200,123,82,0.70), rgba(190,112,30,0.80))' : 'rgba(200,123,82,0.08)',
+            color: category === c ? 'rgba(255,245,225,0.92)' : 'rgba(200,123,82,0.55)',
+            border: category === c ? 'none' : '1px solid rgba(200,123,82,0.18)',
+            boxShadow: category === c ? '0 3px 10px rgba(200,123,82,0.28)' : 'none',
             transition: 'all .18s ease',
           }}>
             {c}
@@ -721,24 +715,23 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
       </div>
 
       <MentionTextarea
-        className="forum-reply-ta"
         value={body}
         onChange={e => { setBody(e.target.value); setError('') }}
         placeholder="Décris ta question… (@ pour mentionner)"
         rows={4}
         authors={authors}
-        style={{ ...inputBase, resize:'vertical', marginBottom:'.6rem', border:`1.5px solid ${error && !body.trim() ? '#ef4444' : 'rgba(255,220,160,0.25)'}` }}
+        style={{ ...inputBase, resize:'vertical', marginBottom:'.6rem', border:`1.5px solid ${error && !body.trim() ? '#ef4444' : 'rgba(200,123,82,0.22)'}` }}
       />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <span style={{ fontSize: 'max(1.1rem,11px)', color: body.length > MAX_CHARS ? '#ef4444' : 'rgba(255,238,220,0.65)' }}>
+        <span style={{ fontSize: 'max(1.1rem,11px)', color: body.length > MAX_CHARS ? '#ef4444' : 'rgba(155,100,70,0.65)' }}>
           {body.length}/{MAX_CHARS}
         </span>
       </div>
 
       {error && (
         <div style={{
-          background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.32)',
+          background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.28)',
           color: '#ef4444', borderRadius: 12, padding: '.65rem 1.2rem',
           fontSize: 'max(1.1rem,11px)', marginBottom: '1rem',
         }}>
@@ -748,19 +741,19 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
 
       <div style={{ display: 'flex', gap: '.8rem', justifyContent: 'flex-end' }}>
         <button onClick={onCancel} style={{
-          background: 'rgba(255,235,210,0.10)', color: 'rgba(255,238,220,0.70)',
-          border: '1px solid rgba(255,220,160,0.22)', borderRadius: 20,
+          background: 'rgba(200,123,82,0.08)', color: 'rgba(200,123,82,0.62)',
+          border: '1px solid rgba(200,123,82,0.18)', borderRadius: 20,
           padding: '.7rem 1.8rem', fontSize: 'max(1.2rem,12px)', fontWeight: 600,
           cursor: 'pointer', fontFamily: 'var(--font)',
         }}>
           Annuler
         </button>
         <button onClick={submit} disabled={loading} style={{
-          background: 'linear-gradient(135deg,#C87B52,#E8962A)',
-          color: '#fff', border: 'none', borderRadius: 20,
+          background: 'rgba(255,255,255,0.25)',
+          color: 'rgba(200,123,82,0.72)', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
-          boxShadow: '0 4px 16px rgba(200,123,82,0.35)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
           opacity: loading ? 0.7 : 1,
         }}>
           {loading ? 'Publication...' : 'Publier →'}
@@ -776,20 +769,19 @@ function Skeleton() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
       {[1, 2, 3].map(i => (
         <div key={i} style={{
-          background: 'rgba(255,235,210,0.10)', borderRadius: 20,
-          backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
-          padding: '1.8rem', border: '1.5px solid rgba(255,220,160,0.22)',
+          background: 'rgba(255,248,242,0.60)', borderRadius: 20,
+          padding: '1.8rem', border: '1.5px solid rgba(200,123,82,0.10)',
           animation: 'pulse 1.5s ease infinite',
         }}>
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-            <div style={{ width: 34, height: 34, borderRadius: 11, background: 'rgba(255,235,210,0.18)' }} />
+            <div style={{ width: 34, height: 34, borderRadius: 11, background: 'rgba(200,123,82,0.12)' }} />
             <div style={{ flex: 1 }}>
-              <div style={{ height: 12, background: 'rgba(255,235,210,0.16)', borderRadius: 8, width: '40%', marginBottom: 8 }} />
-              <div style={{ height: 16, background: 'rgba(255,235,210,0.16)', borderRadius: 8, width: '75%' }} />
+              <div style={{ height: 12, background: 'rgba(200,123,82,0.10)', borderRadius: 8, width: '40%', marginBottom: 8 }} />
+              <div style={{ height: 16, background: 'rgba(200,123,82,0.10)', borderRadius: 8, width: '75%' }} />
             </div>
           </div>
-          <div style={{ height: 12, background: 'rgba(255,235,210,0.12)', borderRadius: 8, marginBottom: 8 }} />
-          <div style={{ height: 12, background: 'rgba(255,235,210,0.12)', borderRadius: 8, width: '80%' }} />
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 8, marginBottom: 8 }} />
+          <div style={{ height: 12, background: 'rgba(200,123,82,0.08)', borderRadius: 8, width: '80%' }} />
         </div>
       ))}
     </div>
@@ -1049,24 +1041,23 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
         @keyframes fadeUp { from{opacity:0;transform:translateY(1.4rem)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.55} }
         .forum-in { animation: fadeUp .3s ease both; }
-        .forum-search::placeholder { color: rgba(255,238,220,0.55) !important; }
-        .forum-reply-ta::placeholder { color: rgba(255,238,220,0.55) !important; }
-        .forum-search:focus, .forum-reply-ta:focus { border-color: #C87B52 !important; }
+        .forum-search::placeholder { color: rgba(200,123,82,0.55) !important; }
+        .forum-reply-ta::placeholder { color: rgba(180,100,40,0.65) !important; }
       `}</style>
 
       {/* ── Top action bar ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: 'rgba(255,238,220,0.65)', fontWeight: 500 }}>
+        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: 'rgba(200,123,82,0.55)', fontWeight: 500 }}>
           Communauté · entraide · bienveillance
         </div>
         {/* Cloche mentions */}
         <button onClick={() => { setShowNotifs(v => !v); if (!showNotifs) markAllRead() }} style={{
-          position:'relative', background: showNotifs ? 'rgba(200,123,82,0.24)' : 'rgba(255,235,210,0.10)',
-          border:'1px solid rgba(255,220,160,0.24)', borderRadius:20,
+          position:'relative', background: showNotifs ? 'rgba(200,123,82,0.14)' : 'rgba(200,123,82,0.07)',
+          border:'1px solid rgba(200,123,82,0.22)', borderRadius:20,
           width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center',
           cursor:'pointer', flexShrink:0,
         }}>
-          <BellIcon size={15} color="#E8962A" />
+          <BellIcon size={15} color="rgba(200,123,82,0.80)" />
           {unreadCount > 0 && (
             <span style={{
               position:'absolute', top:-4, right:-4,
@@ -1077,46 +1068,46 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           )}
         </button>
         <button onClick={() => setShowRules(r => !r)} style={{
-          background: showRules ? 'rgba(200,123,82,0.24)' : 'rgba(255,235,210,0.10)',
-          border:'1px solid rgba(255,220,160,0.24)', borderRadius:20,
+          background: showRules ? 'rgba(200,123,82,0.14)' : 'rgba(200,123,82,0.09)',
+          border:'1px solid rgba(200,123,82,0.28)', borderRadius:20,
           padding:'.45rem 1rem', fontSize:'max(1.1rem,11px)', fontWeight:600,
-          color:'rgba(255,238,220,0.92)', cursor:'pointer', fontFamily:'var(--font)', whiteSpace:'nowrap',
+          color:'rgba(200,123,82,0.80)', cursor:'pointer', fontFamily:'var(--font)', whiteSpace:'nowrap',
         }}>Règles</button>
       </div>
 
       {/* ── Panel notifications ── */}
       {showNotifs && (
         <div className="forum-in" style={{
-          background:'rgba(22,9,2,0.92)', borderRadius:20, marginBottom:'1.2rem',
-          border:'1px solid rgba(255,220,160,0.22)', overflow:'hidden',
-          backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)', boxShadow:'0 4px 20px rgba(0,0,0,0.30)',
+          background:'rgba(255,248,242,0.92)', borderRadius:20, marginBottom:'1.2rem',
+          border:'1px solid rgba(200,123,82,0.18)', overflow:'hidden',
+          backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
         }}>
-          <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'rgba(255,238,220,0.92)', borderBottom:'1px solid rgba(255,220,160,0.14)' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color="#E8962A" /> Mentions</span>
+          <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'rgba(140,70,20,0.85)', borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
+            <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color="rgba(140,70,20,0.85)" /> Mentions</span>
           </div>
           {mentions.length === 0 ? (
-            <div style={{ padding:'1.4rem', textAlign:'center', fontSize:'max(1.1rem,11px)', color:'rgba(255,238,220,0.55)' }}>
+            <div style={{ padding:'1.4rem', textAlign:'center', fontSize:'max(1.1rem,11px)', color:'rgba(200,123,82,0.50)' }}>
               Aucune mention pour l'instant
             </div>
           ) : mentions.map(m => (
             <div key={m.id} onClick={() => { const p = posts.find(p => p.id === m.post_id); if (p) { setSelectedPost(p); setShowNotifs(false) } }}
               style={{
                 display:'flex', gap:10, padding:'.85rem 1.2rem', cursor:'pointer',
-                borderBottom:'1px solid rgba(255,220,160,0.10)',
-                background: m.read ? 'transparent' : 'rgba(200,123,82,0.14)',
+                borderBottom:'1px solid rgba(200,123,82,0.07)',
+                background: m.read ? 'transparent' : 'rgba(200,123,82,0.05)',
               }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0 }}>
-                <circle cx="12" cy="8" r="4" fill="rgba(232,150,42,0.85)"/>
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(232,150,42,0.85)" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="12" cy="8" r="4" fill="rgba(200,123,82,0.70)"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(200,123,82,0.70)" strokeWidth="2" strokeLinecap="round"/>
               </svg>
               <div style={{ minWidth:0 }}>
-                <div style={{ fontSize:'max(1.1rem,11px)', color:'rgba(255,238,220,0.88)', lineHeight:1.5 }}>
+                <div style={{ fontSize:'max(1.1rem,11px)', color:'rgba(140,70,20,0.80)', lineHeight:1.5 }}>
                   Tu as été mentionné(e) dans{' '}
-                  <span style={{ fontWeight:700, color:'#E8962A' }}>
+                  <span style={{ fontWeight:700, color:'rgba(200,123,82,0.85)' }}>
                     « {m.post?.title || 'une discussion'} »
                   </span>
                 </div>
-                <div style={{ fontSize:'max(0.95rem,9.5px)', color:'rgba(255,238,220,0.55)', marginTop:2 }}>
+                <div style={{ fontSize:'max(0.95rem,9.5px)', color:'rgba(200,123,82,0.50)', marginTop:2 }}>
                   {timeAgo(m.created_at)}
                 </div>
               </div>
@@ -1138,13 +1129,13 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* Rules panel */}
       {showRules && (
         <div className="forum-in" style={{
-          background: 'rgba(255,235,210,0.12)', borderRadius: 20,
+          background: 'rgba(255,248,242,0.80)', borderRadius: 20,
           padding: '1.6rem 1.8rem',
-          border: '1.5px solid rgba(255,220,160,0.24)', marginBottom: '1.4rem',
-          backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
-          boxShadow: '0 5px 24px rgba(0,0,0,0.24)',
+          border: '1.5px solid rgba(200,123,82,0.17)', marginBottom: '1.4rem',
+          backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          boxShadow: '0 5px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.82)',
         }}>
-          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: '#E8962A', marginBottom: '1rem' }}>
+          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: 'rgba(200,123,82,0.72)', marginBottom: '1rem' }}>
             Règlement du forum
           </div>
           {[
@@ -1155,11 +1146,11 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             ['Limites', `Max ${MAX_CHARS} caractères / message, ${MAX_TITLE} pour le titre.`],
             ['Pas de spam', 'Ne publie pas le même message plusieurs fois.'],
           ].map(([t, d]) => (
-            <div key={t} style={{ display: 'flex', gap: '.9rem', padding: '.65rem 0', borderTop: '1px solid rgba(255,220,160,0.16)' }}>
-              <span style={{ color: '#E8962A', fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
+            <div key={t} style={{ display: 'flex', gap: '.9rem', padding: '.65rem 0', borderTop: '1px solid rgba(200,123,82,0.11)' }}>
+              <span style={{ color: 'rgba(200,123,82,0.72)', fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: 'rgba(255,238,220,0.92)', marginBottom: '.15rem' }}>{t}</div>
-                <div style={{ fontSize: 'max(1.1rem,11px)', color: 'rgba(255,238,220,0.70)', lineHeight: 1.6 }}>{d}</div>
+                <div style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: 'rgba(55,22,5,0.88)', marginBottom: '.15rem' }}>{t}</div>
+                <div style={{ fontSize: 'max(1.1rem,11px)', color: 'rgba(200,123,82,0.68)', lineHeight: 1.6 }}>{d}</div>
               </div>
             </div>
           ))}
@@ -1185,10 +1176,10 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             fontSize: 'max(1.1rem,11px)', fontWeight: 600,
             cursor: 'pointer', fontFamily: 'var(--font)',
             flexShrink: 0,
-            background: filter === c ? 'linear-gradient(135deg,#C87B52,#E8962A)' : 'rgba(255,235,210,0.10)',
-            color: filter === c ? '#fff' : 'rgba(255,238,220,0.70)',
-            border: filter === c ? 'none' : '1px solid rgba(255,220,160,0.22)',
-            boxShadow: filter === c ? '0 3px 10px rgba(200,123,82,0.32)' : 'none',
+            background: filter === c ? 'rgba(255,255,255,0.30)' : 'rgba(200,123,82,0.06)',
+            color: filter === c ? 'rgba(200,123,82,0.95)' : 'rgba(200,123,82,0.65)',
+            border: filter === c ? '1px solid rgba(200,123,82,0.28)' : '1px solid rgba(200,123,82,0.14)',
+            boxShadow: filter === c ? 'inset 0 1px 0 rgba(255,255,255,0.8)' : 'none',
             transition: 'all .18s ease',
           }}>
             {c}
@@ -1199,19 +1190,18 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* Error */}
       {error && (
         <div style={{
-          background: 'rgba(255,235,210,0.10)', border: '1px solid rgba(255,220,160,0.22)',
-          backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+          background: 'rgba(200,123,82,0.06)', border: '1px solid rgba(200,123,82,0.18)',
           borderRadius: 16, padding: '1.4rem 1.6rem',
           fontSize: 'max(1.2rem,12px)', marginBottom: '1.4rem', textAlign: 'center',
-          color: 'rgba(255,238,220,0.88)',
+          color: 'rgba(160,80,30,0.75)',
         }}>
           {error}
           <button onClick={fetchPosts} style={{
             display: 'block', margin: '.8rem auto 0',
-            background: 'linear-gradient(135deg,#C87B52,#E8962A)', border: 'none',
+            background: 'rgba(200,123,82,0.10)', border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 20, padding: '.4rem 1.4rem',
             fontSize: 'max(1.1rem,11px)', fontWeight: 600,
-            color: '#fff', cursor: 'pointer', fontFamily: 'var(--font)',
+            color: 'rgba(180,90,25,0.75)', cursor: 'pointer', fontFamily: 'var(--font)',
           }}>Recharger</button>
         </div>
       )}
@@ -1219,11 +1209,11 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* Posts */}
       {loading ? <Skeleton /> : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
-          <div style={{ fontSize: '2.2rem', marginBottom: '1rem', opacity: 0.40, color: 'rgba(255,238,220,0.92)' }}>○</div>
-          <div style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 600, color: 'rgba(255,238,220,0.92)', marginBottom: '.5rem' }}>
+          <div style={{ fontSize: '2.2rem', marginBottom: '1rem', opacity: 0.40 }}>○</div>
+          <div style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 600, color: 'rgba(100,55,20,0.65)', marginBottom: '.5rem' }}>
             {search ? 'Aucun résultat pour cette recherche' : 'Aucune discussion pour le moment'}
           </div>
-          <div style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(255,238,220,0.65)', lineHeight: 1.75 }}>
+          <div style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(180,110,60,0.65)', lineHeight: 1.75 }}>
             {search ? "Essaie avec d'autres mots." : 'Lance la première — la communauté t\'attend.'}
           </div>
         </div>

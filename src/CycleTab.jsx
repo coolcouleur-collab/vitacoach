@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon } from './Icons'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(255,238,220,${a})`
+const am = (a) => `rgba(200,123,82,${a})`
 
 // Phase de lune en SVG (cercle avec remplissage partiel selon la phase)
-function MoonPhaseSVG({ phase, size = 16, color = 'rgba(255,238,220,0.85)' }) {
+function MoonPhaseSVG({ phase, size = 16, color = 'rgba(200,123,82,0.85)' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" style={{ display: 'block' }}>
       <circle cx="8" cy="8" r="7" fill="none" stroke={color} strokeWidth="1.3" />
@@ -267,7 +267,7 @@ export default function CycleTab({ profil }) {
             style={{ ...CARD, textAlign: 'center', padding: '40px 24px' }}
           >
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-              <MoonIcon size={36} color="rgba(255,238,220,0.75)" />
+              <MoonIcon size={36} color="rgba(200,123,82,0.75)" />
             </div>
             <div style={{ fontSize: 15, fontWeight: 600, color: am(0.80), marginBottom: 8 }}>
               Entre la date de tes dernières règles

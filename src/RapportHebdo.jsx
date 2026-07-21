@@ -119,7 +119,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
           fontSize: 16,
-          color: 'rgba(255,238,220,0.92)',
+          color: 'rgba(200,123,82,0.92)',
           margin: 0,
         }}>
           Rapport hebdomadaire
@@ -127,7 +127,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(255,238,220,0.75)',
+          color: 'rgba(200,123,82,0.75)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -181,7 +181,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 700,
           fontSize: 16,
-          color: 'rgba(255,238,220,0.92)',
+          color: 'rgba(200,123,82,0.92)',
           margin: 0,
         }}>
           Pas encore de rapport cette semaine
@@ -189,7 +189,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 13,
-          color: 'rgba(255,238,220,0.75)',
+          color: 'rgba(200,123,82,0.75)',
           margin: 0,
           lineHeight: 1.5,
         }}>
@@ -254,7 +254,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,
                 fontSize: 15,
-                color: 'rgba(255,238,220,0.92)',
+                color: 'rgba(200,123,82,0.92)',
                 margin: 0,
                 lineHeight: 1.3,
               }}>
@@ -290,7 +290,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             <p style={{
               fontFamily: 'Poppins, sans-serif',
               fontSize: 10,
-              color: 'rgba(255,238,220,0.55)',
+              color: 'rgba(200,123,82,0.55)',
               margin: '2px 0 0',
               textAlign: 'right',
             }}>
@@ -322,7 +322,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
             fontSize: 15,
-            color: 'rgba(255,238,220,0.92)',
+            color: 'rgba(200,123,82,0.92)',
             margin: 0,
             lineHeight: 1.5,
           }}>
@@ -347,7 +347,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: 'Poppins, sans-serif',
             fontWeight: 600,
             fontSize: 13,
-            color: 'rgba(255,238,220,0.92)',
+            color: 'rgba(200,123,82,0.92)',
             margin: 0,
             lineHeight: 1.5,
           }}>
@@ -379,7 +379,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontSize: 13,
-            color: 'rgba(255,238,220,0.85)',
+            color: 'rgba(200,123,82,0.85)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -413,7 +413,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: 12,
-                color: 'rgba(255,238,220,0.92)',
+                color: 'rgba(200,123,82,0.92)',
                 margin: 0,
                 lineHeight: 1.5,
               }}>
@@ -444,7 +444,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: 12,
-                color: 'rgba(255,238,220,0.92)',
+                color: 'rgba(200,123,82,0.92)',
                 margin: 0,
                 lineHeight: 1.5,
               }}>
@@ -479,7 +479,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           <p style={{
             fontFamily: 'Poppins, sans-serif',
             fontSize: 13,
-            color: 'rgba(255,238,220,0.92)',
+            color: 'rgba(200,123,82,0.92)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -500,7 +500,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
             fontSize: 16,
-            color: 'rgba(255,238,220,0.92)',
+            color: 'rgba(200,123,82,0.92)',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -529,7 +529,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           disabled={generating}
           style={{
             background: 'transparent',
-            color: 'rgba(255,238,220,0.60)',
+            color: 'rgba(200,123,82,0.60)',
             border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12,
             padding: '8px 18px',

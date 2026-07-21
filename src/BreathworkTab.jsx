@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(255,238,220,${a})`
+const am = (a) => `rgba(200,123,82,${a})`
 
 const CARD = {
   background: 'rgba(255,235,210,0.22)',

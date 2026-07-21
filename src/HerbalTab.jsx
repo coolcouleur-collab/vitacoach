@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 
-// ─── PALETTE (dark glassmorphism) ────────────────────────────────────────────
-const GLASS_BG     = 'rgba(255,235,210,0.22)'
-const GLASS_BORDER = '1px solid rgba(255,220,160,0.28)'
-const TXT_MAIN     = 'rgba(255,238,220,0.92)'
-const TXT_SOFT     = 'rgba(255,238,220,0.72)'
+// ─── PALETTE (clair — fond de page abricot) ──────────────────────────────────
+const GLASS_BG     = 'rgba(255,248,242,0.75)'
+const GLASS_BORDER = '1px solid rgba(200,123,82,0.18)'
+const TXT_MAIN     = 'rgba(200,123,82,0.90)'
+const TXT_SOFT     = 'rgba(200,123,82,0.70)'
 const ACCENT       = '#E8962A'
 const GREEN        = '#22c55e'
 const CTA_GRAD     = 'linear-gradient(135deg, #C87B52, #E8962A)'
@@ -85,7 +85,7 @@ function HeroBg() {
       {/* Animated aurora gradient — subtle warm/green glow on dark */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(-45deg, rgba(34,197,94,0.14), rgba(255,235,210,0.06), rgba(232,150,42,0.12), rgba(34,197,94,0.08), rgba(200,123,82,0.12))',
+        background:'linear-gradient(-45deg, rgba(34,197,94,0.14), rgba(255,248,242,0.10), rgba(232,150,42,0.12), rgba(34,197,94,0.08), rgba(200,123,82,0.12))',
         backgroundSize:'400% 400%',
         animation:'heroGradient 10s ease infinite',
       }} />
@@ -102,7 +102,7 @@ function HeroBg() {
       }} />
       <div style={{
         position:'absolute', top:'35%', left:'18%', width:120, height:120,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,238,220,0.14) 0%, transparent 65%)',
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,255,255,0.30) 0%, transparent 65%)',
         animation:'floatOrb 6s ease-in-out infinite', filter:'blur(8px)',
       }} />
     </div>
@@ -172,7 +172,7 @@ function AIRecoCard({ r, onChat, index }) {
               <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
                 <span style={{display:'flex',alignItems:'center',gap:4}}><TargetIcon size={9} color={ACCENT} /> Pourquoi pour toi ?</span>
               </div>
-              <div style={{ fontSize:12, color:'rgba(255,238,220,0.85)', lineHeight:1.72 }}>{r.pourquoi}</div>
+              <div style={{ fontSize:12, color:'rgba(200,123,82,0.85)', lineHeight:1.72 }}>{r.pourquoi}</div>
             </div>
           )}
 
@@ -197,7 +197,7 @@ function AIRecoCard({ r, onChat, index }) {
           {r.precaution && (
             <div style={{
               display:'flex', gap:8, alignItems:'flex-start',
-              fontSize:11.5, color:'rgba(255,238,220,0.85)',
+              fontSize:11.5, color:'rgba(200,123,82,0.85)',
               background:'rgba(239,68,68,0.10)', borderRadius:12,
               padding:'8px 11px', marginBottom:8,
               border:'1px solid rgba(239,68,68,0.25)', lineHeight:1.55,
@@ -211,7 +211,7 @@ function AIRecoCard({ r, onChat, index }) {
           {r.synergie && (
             <div style={{
               display:'flex', gap:8, alignItems:'flex-start',
-              fontSize:11.5, color:'rgba(255,238,220,0.85)',
+              fontSize:11.5, color:'rgba(200,123,82,0.85)',
               background:'rgba(232,150,42,0.08)', borderRadius:12,
               padding:'8px 11px', marginBottom:10,
               border:'1px solid rgba(232,150,42,0.20)', lineHeight:1.55,
@@ -296,7 +296,7 @@ function AIReco({ profil, onChat }) {
         </div>
 
         {items && (
-          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(255,220,160,0.22)', paddingTop:14 }}>
+          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(200,123,82,0.18)', paddingTop:14 }}>
             {items.map((r, i) => (
               <AIRecoCard key={i} r={r} onChat={onChat} index={i} />
             ))}
@@ -361,12 +361,12 @@ function HerbItem({ item, onChat }) {
         {/* Chevron in glass circle */}
         <div style={{
           width:30, height:30, borderRadius:'50%', flexShrink:0,
-          background:'rgba(255,235,210,0.16)', border:'1px solid rgba(255,220,160,0.28)',
+          background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.20)',
           display:'flex', alignItems:'center', justifyContent:'center',
           transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
           transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
         }}>
-          <ChevronIcon color="rgba(255,238,220,0.8)" size={13} direction="down" />
+          <ChevronIcon color="rgba(200,123,82,0.70)" size={13} direction="down" />
         </div>
       </div>
 
@@ -378,7 +378,7 @@ function HerbItem({ item, onChat }) {
       }}>
         <div style={{
           padding:'0 15px 15px',
-          borderTop:'1px solid rgba(255,220,160,0.22)',
+          borderTop:'1px solid rgba(200,123,82,0.18)',
         }}>
           {/* Usage box — green identity tint */}
           <div style={{
@@ -467,7 +467,7 @@ export default function HerbalTab({ profil, onChat, onBack }) {
             backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
             border:GLASS_BORDER,
             borderRadius:20, padding:'5px 14px',
-            fontSize:11, color:'rgba(255,238,220,0.80)', fontWeight:600,
+            fontSize:11, color:'rgba(200,123,82,0.75)', fontWeight:600,
           }}>
             <LeafIcon color={GREEN} size={13} /> Plantes · Médecine Chinoise · Holistic
           </div>
@@ -486,15 +486,15 @@ export default function HerbalTab({ profil, onChat, onBack }) {
               key={c.id}
               style={{
                 flexShrink:0, padding:'10px 20px', borderRadius:20,
-                border: active ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(255,220,160,0.25)',
+                border: active ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(200,123,82,0.16)',
                 fontSize:12, fontWeight:700,
                 cursor:'pointer', fontFamily:'Poppins,sans-serif',
                 whiteSpace:'nowrap',
                 background: active
                   ? CTA_GRAD
-                  : 'rgba(255,235,210,0.14)',
+                  : 'rgba(200,123,82,0.06)',
                 backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-                color: active ? '#fff' : 'rgba(255,238,220,0.75)',
+                color: active ? '#fff' : 'rgba(200,123,82,0.65)',
                 boxShadow: active
                   ? '0 6px 20px rgba(200,123,82,0.35)'
                   : 'none',
@@ -575,7 +575,7 @@ const hb = {
     display:'flex', alignItems:'center', justifyContent:'center',
   },
   aiTitle: { fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' },
-  aiSub: { fontSize:10, color:'rgba(255,238,220,0.65)', fontWeight:600, marginTop:1 },
+  aiSub: { fontSize:10, color:'rgba(200,123,82,0.65)', fontWeight:600, marginTop:1 },
   aiCta: {
     background:CTA_GRAD,
     color:'#fff', border:'none',
@@ -592,7 +592,7 @@ const hb = {
   },
   aiResults: {
     marginTop:14, display:'flex', flexDirection:'column', gap:8,
-    borderTop:'1px solid rgba(255,220,160,0.22)', paddingTop:14,
+    borderTop:'1px solid rgba(200,123,82,0.18)', paddingTop:14,
   },
   aiItem: {
     display:'flex', alignItems:'center', gap:11,
@@ -620,10 +620,10 @@ const hb = {
     padding:'2px 16px 10px',
   },
   countText: {
-    fontSize:10, color:'rgba(255,238,220,0.60)', fontWeight:700,
+    fontSize:10, color:'rgba(200,123,82,0.60)', fontWeight:700,
     textTransform:'uppercase', letterSpacing:'0.5px',
   },
-  countSep: { fontSize:10, color:'rgba(255,238,220,0.40)' },
+  countSep: { fontSize:10, color:'rgba(200,123,82,0.35)' },
 
   // ── Items list
   list: { display:'flex', flexDirection:'column', gap:0, padding:'0 16px' },
@@ -633,10 +633,10 @@ const hb = {
     display:'flex', gap:8, alignItems:'flex-start',
     margin:'14px 16px 0',
     padding:'10px 14px',
-    background:'rgba(255,235,210,0.10)',
-    border:'1px solid rgba(255,220,160,0.20)',
+    background:'rgba(200,123,82,0.05)',
+    border:'1px solid rgba(200,123,82,0.14)',
     borderRadius:12,
-    fontSize:10, color:'rgba(255,238,220,0.65)', lineHeight:1.6,
+    fontSize:10, color:'rgba(200,123,82,0.65)', lineHeight:1.6,
     fontStyle:'italic',
   },
 }

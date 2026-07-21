@@ -100,7 +100,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const styles = {
     container: {
       fontFamily: "'Poppins', sans-serif",
-      color: 'rgba(255,238,220,0.85)',
+      color: 'rgba(200,123,82,0.92)',
       padding: '24px',
       maxWidth: '700px',
       margin: '0 auto',
@@ -173,7 +173,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           </h2>
           <p
             style={{
-              color: 'rgba(255,238,220,0.85)',
+              color: 'rgba(200,123,82,0.65)',
               fontSize: '14px',
               marginBottom: '28px',
               lineHeight: 1.6,
@@ -311,7 +311,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               <p
                 style={{
                   fontSize: '11px',
-                  color: 'rgba(255,238,220,0.85)',
+                  color: 'rgba(200,123,82,0.50)',
                   marginTop: '6px',
                   textAlign: 'right',
                 }}
@@ -338,7 +338,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 fontFamily: "'Poppins', sans-serif",
                 fontSize: '13px',
                 fontWeight: 600,
-                color: 'rgba(255,238,220,0.85)',
+                color: 'rgba(200,123,82,0.55)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
                 marginBottom: '16px',
@@ -482,7 +482,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 style={{
                   fontSize: '11px',
                   fontWeight: 600,
-                  color: 'rgba(255,238,220,0.85)',
+                  color: 'rgba(200,123,82,0.50)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   marginBottom: '10px',
@@ -527,7 +527,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: 'italic',
                     fontSize: '14px',
-                    color: 'rgba(255,238,220,0.75)',
+                    color: 'rgba(200,123,82,0.60)',
                     marginBottom: '20px',
                     lineHeight: 1.6,
                   }}
@@ -608,7 +608,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(255,238,220,0.75)', margin: 0 }}>
+              <p style={{ fontSize: '13px', color: 'rgba(200,123,82,0.65)', margin: 0 }}>
                 <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
                   Prochain milestone — Jour {prochainMilestone.jour} :
                 </span>{' '}

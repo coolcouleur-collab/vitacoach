@@ -63,7 +63,7 @@ function Sparkline({ history, metricKey, color, goal }) {
   const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
   const hasData = last7.some(d => d.val > 0)
   if (!hasData) return (
-    <div style={{ fontSize:10, color:'rgba(255,238,220,0.80)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
+    <div style={{ fontSize:10, color:'rgba(200,123,82,0.65)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
       Pas encore de données
     </div>
   )
@@ -78,7 +78,7 @@ function Sparkline({ history, metricKey, color, goal }) {
               width:'100%', height:`${pct}%`, minHeight: d.val > 0 ? 4 : 2,
               background: d.val > 0
                 ? isToday ? `linear-gradient(to top, ${color}, ${color}cc)` : `${color}55`
-                : 'rgba(255,238,220,0.10)',
+                : 'rgba(0,0,0,0.05)',
               borderRadius:'12px 12px 0 0',
               boxShadow: isToday && d.val > 0 ? `0 0 8px ${color}60` : 'none',
               transition:'height 0.5s ease',
@@ -116,7 +116,7 @@ function HistoriqueSection({ history }) {
           display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color="#C87B52" /></div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.72)' }}>Historique 7 jours</div>
-          <div style={{ fontSize:11, color:'rgba(255,238,220,0.77)', marginTop:1 }}>Progression de tes métriques</div>
+          <div style={{ fontSize:11, color:'rgba(200,123,82,0.62)', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
           fontSize:10, fontWeight:700, color:'rgba(200,123,82,0.60)',
@@ -138,7 +138,7 @@ function HistoriqueSection({ history }) {
                 </div>
                 <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} />
                 <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
-                  <span style={{ fontSize:9, color:'rgba(255,238,220,0.60)' }}>il y a 6j</span>
+                  <span style={{ fontSize:9, color:'rgba(200,123,82,0.45)' }}>il y a 6j</span>
                   <span style={{ fontSize:9, color:m.color, fontWeight:700 }}>Aujourd'hui</span>
                 </div>
               </div>
@@ -188,7 +188,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
           </div>
         )}
         <div style={{
-          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(255,238,220,0.85)', lineHeight: 1.4,
+          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(200,123,82,0.82)', lineHeight: 1.4,
           marginBottom: action ? 10 : 0,
           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>
@@ -199,7 +199,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
             display: 'inline-flex', alignItems: 'center', gap: 5,
             background: h2r(accent, 0.10), border: `1px solid ${h2r(accent, 0.22)}`,
             borderRadius: 99, padding: '5px 12px',
-            fontSize: 10.5, fontWeight: 700, color: 'rgba(255,238,220,0.85)', letterSpacing: '0.03em',
+            fontSize: 10.5, fontWeight: 700, color: accent, letterSpacing: '0.03em',
             alignSelf: 'flex-start', maxWidth: '100%', overflow: 'hidden',
           }}>
             <span style={{ flexShrink: 0 }}>↗</span>
@@ -265,7 +265,7 @@ function InsightsCarousel({ insights, onClose }) {
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 10, color: 'rgba(255,238,220,0.60)', fontWeight: 600, letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: 10, color: 'rgba(200,123,82,0.45)', fontWeight: 600, letterSpacing: '0.05em' }}>
             {activeIdx + 1} / {items.length}
           </span>
           <button onClick={onClose} style={{
@@ -294,7 +294,7 @@ function InsightsCarousel({ insights, onClose }) {
       </div>
 
       {/* ── Hint glisse ── */}
-      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(255,238,220,0.55)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
+      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(200,123,82,0.30)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
         ← glisse →
       </div>
     </div>
@@ -480,8 +480,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{displayScore}</div>
-              <div style={{ fontSize: 9, color: 'rgba(255,238,220,0.60)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
-              <div style={{ fontSize: 8, color: 'rgba(255,238,220,0.77)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
+              <div style={{ fontSize: 9, color: 'rgba(200,123,82,0.45)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
+              <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.62)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
                 {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
               </div>
             </div>
@@ -675,7 +675,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                   background: 'rgba(200,123,82,0.06)',
                   border: '1px solid rgba(200,123,82,0.12)',
                   borderRadius: 12, padding: '10px 14px',
-                  fontSize: 12, color: 'rgba(255,238,220,0.85)',
+                  fontSize: 12, color: '#C87B52',
                   fontFamily: 'Poppins,sans-serif', fontWeight: 500, lineHeight: 1.5,
                 }}>
                   {tip}
