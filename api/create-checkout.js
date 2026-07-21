@@ -22,7 +22,8 @@ export default async function handler(req, res) {
     const origin = req.headers.origin || 'https://meet-solenn.com'
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      // Pas de payment_method_types : moyens de paiement pilotés par le
+      // Dashboard Stripe (carte, Apple Pay, Google Pay, PayPal, Link…)
       mode: 'subscription',
       locale: 'fr',
       customer_email: email,

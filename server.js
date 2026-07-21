@@ -823,7 +823,9 @@ app.post('/api/create-checkout', async (req, res) => {
     const planKey = STRIPE_PLANS[req.body.plan] ? req.body.plan : 'annual'
     const plan = STRIPE_PLANS[planKey]
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      // Pas de payment_method_types : Stripe propose automatiquement tous les
+      // moyens activés dans le Dashboard (carte, Apple Pay, Google Pay, PayPal,
+      // Link…) selon l'appareil du visiteur. Forcer ['card'] les masquait.
       mode: 'subscription',
       locale: 'fr',
       line_items: [{
