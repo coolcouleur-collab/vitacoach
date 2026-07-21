@@ -537,7 +537,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ flex:1 }}>
                   <span style={{
@@ -583,7 +583,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <AgeIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <AgeIcon color='#C87B52' size={20}/>
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
@@ -624,7 +624,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
@@ -670,7 +670,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -710,7 +710,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -750,7 +750,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -790,7 +790,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -830,7 +830,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                  <OptIcon color='#C87B52' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -882,7 +882,7 @@ export default function Onboarding({ onTermine, onBack }) {
                   style={optStyle(isSel)}
                 >
                   <div style={iconCircleStyle(isSel)}>
-                    <OptIcon color='rgba(190,100,35,0.92)' size={20}/>
+                    <OptIcon color='#C87B52' size={20}/>
                   </div>
                   <div style={{ display:'flex', flexDirection:'column', gap:1, flex:1 }}>
                     <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
@@ -945,11 +945,11 @@ export default function Onboarding({ onTermine, onBack }) {
                 <div style={iconCircleStyle(isSel)}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
-                      stroke="rgba(190,100,35,0.92)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                       fill="rgba(190,100,35,0.18)"/>
-                    <circle cx="8.5" cy="11.5" r="1.2" fill="rgba(190,100,35,0.92)"/>
-                    <circle cx="12"  cy="7.5"  r="1.2" fill="rgba(190,100,35,0.92)"/>
-                    <circle cx="15.5" cy="11.5" r="1.2" fill="rgba(190,100,35,0.92)"/>
+                    <circle cx="8.5" cy="11.5" r="1.2" fill="#C87B52"/>
+                    <circle cx="12"  cy="7.5"  r="1.2" fill="#C87B52"/>
+                    <circle cx="15.5" cy="11.5" r="1.2" fill="#C87B52"/>
                   </svg>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>

@@ -72,7 +72,7 @@ class MsgBoundary extends Component {
   render() {
     if (this.state.crashed) {
       return (
-        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'rgba(55,22,5,0.90)' }}>
+        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'rgba(200,123,82,0.95)' }}>
           {this.props.fallback}
         </span>
       )
@@ -1968,7 +1968,7 @@ const [messages, setMessages] = useState(() => {
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
-                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(180,100,30,0.75)', display:'flex', alignItems:'center', gap:5 }}>
+                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(200,123,82,0.80)', display:'flex', alignItems:'center', gap:5 }}>
                           {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
@@ -2439,13 +2439,13 @@ function NutritionCard({ nutrition }) {
     <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
       <div style={sr.cardHeader}>
         <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#22c55e" /></span>
-        <span style={{ ...sr.cardTitre, color:'rgba(30,140,60,0.85)', fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
+        <span style={{ ...sr.cardTitre, color:'rgba(34,197,94,0.95)', fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
           <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(34,197,94,0.55)" /></span>
-          <div style={{ fontSize:12, color:'rgba(155,100,58,0.65)', lineHeight:1.5 }}>
-            <strong style={{ color:'rgba(80,40,10,0.80)', fontWeight:500 }}>{r.moment}</strong> — {r.suggestion}
+          <div style={{ fontSize:12, color:'rgba(200,123,82,0.65)', lineHeight:1.5 }}>
+            <strong style={{ color:'rgba(200,123,82,0.90)', fontWeight:500 }}>{r.moment}</strong> — {r.suggestion}
           </div>
         </div>
       ))}
@@ -2492,10 +2492,12 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
               display:'flex', alignItems:'center', justifyContent:'center' }}>
               {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
             </div>
-            <span style={{ fontSize:18, minWidth:26, flexShrink:0 }}>{e.emoji}</span>
+            <span style={{ minWidth:26, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#C87B52" fillOpacity="0.65"/></svg>
+            </span>
             <div>
-              <div style={{ fontWeight:500, fontSize:13, color:'rgba(80,40,10,0.85)', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
-              <div style={{ fontSize:11, color:'rgba(155,100,58,0.60)', marginTop:2 }}>{e.detail || e.description}</div>
+              <div style={{ fontWeight:500, fontSize:13, color:'rgba(200,123,82,0.92)', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
+              <div style={{ fontSize:11, color:'rgba(200,123,82,0.60)', marginTop:2 }}>{e.detail || e.description}</div>
             </div>
           </div>
         )
@@ -2506,8 +2508,8 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
 
 const sr = {
   header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0', flexWrap:'wrap', gap:10 },
-  date: { fontSize:11, color:'rgba(180,110,50,0.65)', textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
-  titre: { fontSize:17, fontWeight:500, color:'rgba(100,55,20,0.80)', marginTop:2, letterSpacing:'-0.1px' },
+  date: { fontSize:11, color:'rgba(200,123,82,0.65)', textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
+  titre: { fontSize:17, fontWeight:500, color:'rgba(200,123,82,0.90)', marginTop:2, letterSpacing:'-0.1px' },
   btnGen: {
     background:'rgba(200,123,82,0.10)', color:'rgba(200,123,82,0.90)',
     border:'1.5px solid rgba(200,123,82,0.25)',
@@ -2525,7 +2527,7 @@ const sr = {
   card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(200,123,82,0.10)', borderRadius:18, padding:'14px 16px',
     boxShadow:'none' },
   cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
-  cardTitre: { fontSize:14, fontWeight:700, color:'rgba(55,22,5,0.90)' },
+  cardTitre: { fontSize:14, fontWeight:700, color:'rgba(200,123,82,0.95)' },
   etapeRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'9px 0',
     borderTop:'1px solid #f8f4f0', cursor:'pointer' },
   repasRow: { display:'flex', gap:10, alignItems:'center', padding:'6px 0',
@@ -3087,7 +3089,7 @@ const s = {
     transition:'color 0.2s ease, border-color 0.2s ease',
   },
   proBadge: {
-    background:'rgba(245,212,184,0.35)', color:'rgba(180,100,40,0.70)',
+    background:'rgba(245,212,184,0.35)', color:'rgba(200,123,82,0.70)',
     border:'1px solid rgba(200,123,82,.15)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
@@ -3154,7 +3156,7 @@ const s = {
   userBubble: {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
-    color:'rgba(180,100,40,0.80)',
+    color:'rgba(200,123,82,0.80)',
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
     fontSize:14, lineHeight:1.65,
     boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
@@ -3162,7 +3164,7 @@ const s = {
   botBubble: {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
-    color:'rgba(180,100,40,0.80)',
+    color:'rgba(200,123,82,0.80)',
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
     fontSize:14, lineHeight:1.65, fontWeight:400, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',

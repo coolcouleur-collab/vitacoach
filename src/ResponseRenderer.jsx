@@ -118,7 +118,7 @@ function BookingCard({ data }) {
             borderRadius:14, padding:'12px 14px',
           }}>
             <span style={{ flexShrink:0, display:'flex' }}><ChatIcon size={18} color="#C87B52" /></span>
-            <span style={{ fontSize:13, color:'#6b5042', lineHeight:1.65 }}>{data.note}</span>
+            <span style={{ fontSize:13, color:'rgba(200,123,82,0.85)', lineHeight:1.65 }}>{data.note}</span>
           </div>
         )}
 
@@ -151,7 +151,7 @@ function BookingCard({ data }) {
                 style={{ textDecoration:'none' }}>
                 <div style={{
                   padding:'12px 16px', borderRadius:16,
-                  background:'#fff', color:'#1a0a00',
+                  background:'#fff', color:'#C87B52',
                   border:'1.5px solid #f0e8e0',
                   fontSize:13, fontWeight:600,
                   boxShadow:'0 4px 14px rgba(0,0,0,0.06)',
@@ -225,7 +225,7 @@ function RichCard({ item, accent, index }) {
             </span>
           )}
         </div>
-        {item.desc && <div style={{ fontSize:12, color:'rgba(120,90,70,0.75)', lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
+        {item.desc && <div style={{ fontSize:12, color:'rgba(200,123,82,0.78)', lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
         {item.sub && (
           <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:`${color}cc`, fontWeight:600, background:`${color}12`, borderRadius:6, padding:'3px 8px' }}>
             {item.sub}
@@ -296,7 +296,7 @@ export default function ResponseRenderer({ content }) {
       {items.length > 0 && <TypeHeader cfg={cfg} count={items.length} />}
 
       {data.intro && (
-        <p style={{ margin:'0 0 14px', fontSize:13, color:'rgba(120,90,70,0.80)', lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
+        <p style={{ margin:'0 0 14px', fontSize:13, color:'rgba(200,123,82,0.82)', lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
           {data.intro}
         </p>
       )}
@@ -310,7 +310,7 @@ export default function ResponseRenderer({ content }) {
       {data.outro && (
         <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'11px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
           <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={15} color={`${cfg.accent}99`} /></span>
-          <span style={{ fontSize:12, color:'rgba(120,90,70,0.72)', lineHeight:1.6 }}>{data.outro}</span>
+          <span style={{ fontSize:12, color:'rgba(200,123,82,0.75)', lineHeight:1.6 }}>{data.outro}</span>
         </div>
       )}
 
