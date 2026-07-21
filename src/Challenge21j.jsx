@@ -100,7 +100,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const styles = {
     container: {
       fontFamily: "'Poppins', sans-serif",
-      color: 'rgba(200,123,82,0.92)',
+      color: 'rgba(255,238,220,0.85)',
       padding: '24px',
       maxWidth: '700px',
       margin: '0 auto',
@@ -173,7 +173,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
           </h2>
           <p
             style={{
-              color: 'rgba(200,123,82,0.65)',
+              color: 'rgba(255,238,220,0.85)',
               fontSize: '14px',
               marginBottom: '28px',
               lineHeight: 1.6,
@@ -244,7 +244,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               WebkitBackdropFilter: 'blur(18px)',
               borderRadius: '20px',
               padding: '24px 28px',
-              border: '1px solid rgba(200,123,82,0.15)',
+              border: '1px solid rgba(255,220,160,0.28)',
               boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
             }}
           >
@@ -311,7 +311,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               <p
                 style={{
                   fontSize: '11px',
-                  color: 'rgba(200,123,82,0.50)',
+                  color: 'rgba(255,238,220,0.85)',
                   marginTop: '6px',
                   textAlign: 'right',
                 }}
@@ -329,7 +329,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               WebkitBackdropFilter: 'blur(18px)',
               borderRadius: '20px',
               padding: '24px 28px',
-              border: '1px solid rgba(200,123,82,0.15)',
+              border: '1px solid rgba(255,220,160,0.28)',
               boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
             }}
           >
@@ -338,7 +338,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 fontFamily: "'Poppins', sans-serif",
                 fontSize: '13px',
                 fontWeight: 600,
-                color: 'rgba(200,123,82,0.55)',
+                color: 'rgba(255,238,220,0.85)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
                 marginBottom: '16px',
@@ -474,7 +474,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               WebkitBackdropFilter: 'blur(18px)',
                 borderRadius: '20px',
                 padding: '24px 28px',
-                border: '1px solid rgba(200,123,82,0.2)',
+                border: '1px solid rgba(255,220,160,0.28)',
                 boxShadow: '0 4px 32px rgba(200,123,82,0.12)',
               }}
             >
@@ -482,7 +482,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 style={{
                   fontSize: '11px',
                   fontWeight: 600,
-                  color: 'rgba(200,123,82,0.50)',
+                  color: 'rgba(255,238,220,0.85)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   marginBottom: '10px',
@@ -680,7 +680,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,238,220,0.92)', textAlign: 'center', marginBottom: 8 }}>
                 Nouveau challenge ?
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,210,160,0.60)', textAlign: 'center', marginBottom: 24 }}>
+              <div style={{ fontSize: 13, color: 'rgba(255,238,220,0.60)', textAlign: 'center', marginBottom: 24 }}>
                 Le challenge actuel sera remplacé et ta progression perdue.
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
@@ -690,7 +690,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(255,235,210,0.08)',
                     border: '1px solid rgba(255,220,160,0.18)',
-                    color: 'rgba(255,210,160,0.70)', fontSize: 14,
+                    color: 'rgba(255,238,220,0.70)', fontSize: 14,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
                 >
@@ -700,9 +700,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   onClick={() => { setConfirmReset(false); handleCreerChallenge() }}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
-                    background: 'linear-gradient(110deg, rgba(180,90,35,0.80), rgba(200,123,82,0.80))',
+                    background: 'linear-gradient(135deg, #C87B52, #E8962A)',
                     border: '1px solid rgba(255,220,160,0.30)',
-                    color: 'rgba(255,248,235,0.95)', fontSize: 14, fontWeight: 600,
+                    color: '#fff', fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
                 >

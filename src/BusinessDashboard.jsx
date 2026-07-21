@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { BrainIcon, MoonIcon, FlashIcon } from './Icons'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const T = {
@@ -55,9 +56,9 @@ function statutLabel(statut) {
 }
 
 function alerteIcon(type) {
-  if (type === 'stress')  return '🧠'
-  if (type === 'sommeil') return '🌙'
-  return '⚡'
+  if (type === 'stress')  return <BrainIcon size={22} color={T.copper} />
+  if (type === 'sommeil') return <MoonIcon  size={22} color={T.copper} />
+  return <FlashIcon size={22} color={T.amber} />
 }
 
 // ─── Sparkline SVG (8 semaines) ───────────────────────────────────────────────
@@ -348,7 +349,7 @@ export default function BusinessDashboard({ orgId, token }) {
                   gap: 16,
                   alignItems: 'flex-start',
                 }}>
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>{alerteIcon(al.type)}</span>
+                  <span style={{ display: 'flex', fontSize: 22, lineHeight: 1 }}>{alerteIcon(al.type)}</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                       <span style={{

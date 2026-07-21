@@ -209,10 +209,10 @@ function NutritionCard({ nutrition }) {
               <circle cx="6" cy="6" r="1.8" fill="#C87B52" opacity="0.75" />
             </svg>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {r.moment}
               </div>
-              <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12.5, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
                 {r.suggestion}
               </div>
             </div>
@@ -222,11 +222,11 @@ function NutritionCard({ nutrition }) {
 
       {nutrition.supplements?.length > 0 && (
         <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(200,123,82,0.06)', borderRadius: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
             <SparkleIcon size={11} color="rgba(200,123,82,0.70)" /> Suppléments
           </div>
           {nutrition.supplements.map((s, i) => (
-            <div key={i} style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
+            <div key={i} style={{ fontSize: 12, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
           ))}
         </div>
       )}
@@ -478,7 +478,7 @@ export default function RoutineTab({ userId, profil }) {
           <div style={{
             background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12, padding: '12px 16px', marginBottom: 12,
-            fontSize: 13, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
+            fontSize: 13, color: '#ef4444', fontFamily: 'Poppins,sans-serif',
           }}>
             {error}
           </div>
@@ -529,7 +529,7 @@ export default function RoutineTab({ userId, profil }) {
                 <div style={{ flex: 1 }}>
                   {routine.motivation && (
                     <div style={{
-                      fontSize: 12.5, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
+                      fontSize: 12.5, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif',
                       lineHeight: 1.55, fontStyle: 'italic', marginBottom: 8,
                       fontWeight: 500,
                     }}>
@@ -596,9 +596,9 @@ export default function RoutineTab({ userId, profil }) {
                     display: 'flex', gap: 12, alignItems: 'flex-start',
                   }}
                 >
-                  <LightbulbIcon size={22} color="rgba(200,100,20,0.80)" />
+                  <LightbulbIcon size={22} color="#E8962A" />
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,100,20,0.80)', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#E8962A', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
                     </div>
                     <div style={{ fontSize: 12.5, color: 'rgba(255,238,220,0.75)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
@@ -626,7 +626,7 @@ export default function RoutineTab({ userId, profil }) {
                     <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif' }}>
                       Journée accomplie !
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
+                    <div style={{ fontSize: 12.5, color: 'rgba(255,238,220,0.80)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
                       Tu as terminé toutes tes étapes. Solenn est fière de toi !
                     </div>
                   </motion.div>

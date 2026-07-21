@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon } from './Icons'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(255,248,235,${a})`
+const am = (a) => `rgba(255,238,220,${a})`
 
 // Phase de lune en SVG (cercle avec remplissage partiel selon la phase)
 function MoonPhaseSVG({ phase, size = 16, color = 'rgba(255,238,220,0.85)' }) {
@@ -84,8 +84,8 @@ const PHASES = [
     name: 'Phase lutéale',
     days: [17, 28],
     moonPhase: 'waning',
-    color: 'rgba(160,100,220,0.75)',
-    bgColor: 'rgba(160,100,220,0.12)',
+    color: 'rgba(200,123,82,0.75)',
+    bgColor: 'rgba(200,123,82,0.12)',
     energy: 'Déclinante',
     description: "L'énergie baisse progressivement. Ton corps prépare le prochain cycle.",
     tips: [
@@ -133,7 +133,7 @@ export default function CycleTab({ profil }) {
 
       {/* Phase timeline */}
       <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>Phases du cycle</div>
+        <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>Phases du cycle</div>
         <div style={{ display: 'flex', gap: 4 }}>
           {PHASES.map((p) => {
             const active = currentPhase?.id === p.id
@@ -159,7 +159,7 @@ export default function CycleTab({ profil }) {
 
       {/* Date input */}
       <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+        <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
           Début des dernières règles
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -177,8 +177,8 @@ export default function CycleTab({ profil }) {
           />
           <button onClick={saveDate} style={{
             padding: '10px 18px',
-            background: 'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 100%)',
-            color: am(1), border: '1px solid rgba(255,220,160,0.38)',
+            background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+            color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 14, fontSize: 13, fontWeight: 600,
             cursor: 'pointer', fontFamily: F, flexShrink: 0,
           }}>
@@ -219,7 +219,7 @@ export default function CycleTab({ profil }) {
 
             {/* Tips */}
             <div style={{ ...CARD, marginBottom: 16 }}>
-              <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                 Conseils du moment
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -237,7 +237,7 @@ export default function CycleTab({ profil }) {
 
             {/* Symptom log */}
             <div style={{ ...CARD }}>
-              <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                 Symptômes aujourd'hui
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>

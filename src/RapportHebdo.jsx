@@ -102,6 +102,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         transition={{ duration: 0.4 }}
         style={{
           background: 'rgba(200, 123, 82, 0.08)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          border: '1px solid rgba(255,220,160,0.28)',
           borderRadius: 20,
           padding: '28px 24px',
           textAlign: 'center',
@@ -161,6 +164,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         transition={{ duration: 0.4 }}
         style={{
           background: 'rgba(200, 123, 82, 0.08)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          border: '1px solid rgba(255,220,160,0.28)',
           borderRadius: 20,
           padding: '28px 24px',
           textAlign: 'center',
@@ -231,6 +237,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Header card */}
       <div style={{
         background: 'rgba(200, 123, 82, 0.10)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        border: '1px solid rgba(255,220,160,0.28)',
         borderRadius: 20,
         padding: '20px 20px 16px',
         display: 'flex',

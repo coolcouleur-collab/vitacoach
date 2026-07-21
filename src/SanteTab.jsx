@@ -78,7 +78,7 @@ function Sparkline({ history, metricKey, color, goal }) {
               width:'100%', height:`${pct}%`, minHeight: d.val > 0 ? 4 : 2,
               background: d.val > 0
                 ? isToday ? `linear-gradient(to top, ${color}, ${color}cc)` : `${color}55`
-                : 'rgba(0,0,0,0.05)',
+                : 'rgba(255,238,220,0.10)',
               borderRadius:'12px 12px 0 0',
               boxShadow: isToday && d.val > 0 ? `0 0 8px ${color}60` : 'none',
               transition:'height 0.5s ease',
@@ -188,7 +188,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
           </div>
         )}
         <div style={{
-          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(200,123,82,0.82)', lineHeight: 1.4,
+          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(255,238,220,0.85)', lineHeight: 1.4,
           marginBottom: action ? 10 : 0,
           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>
@@ -199,7 +199,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
             display: 'inline-flex', alignItems: 'center', gap: 5,
             background: h2r(accent, 0.10), border: `1px solid ${h2r(accent, 0.22)}`,
             borderRadius: 99, padding: '5px 12px',
-            fontSize: 10.5, fontWeight: 700, color: accent, letterSpacing: '0.03em',
+            fontSize: 10.5, fontWeight: 700, color: 'rgba(255,238,220,0.85)', letterSpacing: '0.03em',
             alignSelf: 'flex-start', maxWidth: '100%', overflow: 'hidden',
           }}>
             <span style={{ flexShrink: 0 }}>↗</span>
@@ -425,27 +425,27 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           position: absolute; inset: 0;
           border-radius: inherit;
           background: linear-gradient(145deg,
-            rgba(255,255,255,0.52) 0%,
-            rgba(255,255,255,0.06) 45%,
-            rgba(255,255,255,0.12) 100%
+            rgba(255,235,210,0.12) 0%,
+            rgba(255,235,210,0.04) 45%,
+            rgba(255,235,210,0.08) 100%
           );
           pointer-events: none;
           z-index: 1;
         }
 
-        /* Bordure chromatique iridescente */
+        /* Bordure chaude — dégradé de la charte */
         .lg-card::after {
           content: '';
           position: absolute; inset: 0;
           border-radius: inherit;
           padding: 1px;
           background: linear-gradient(130deg,
-            rgba(255,120,90,0.55)  0%,
-            rgba(255,210,70,0.38) 18%,
-            rgba(70,240,150,0.42) 38%,
-            rgba(80,145,255,0.52) 62%,
-            rgba(210,75,255,0.42) 82%,
-            rgba(255,120,90,0.55) 100%
+            rgba(200,123,82,0.55)  0%,
+            rgba(232,150,42,0.38) 18%,
+            rgba(200,123,82,0.42) 38%,
+            rgba(232,150,42,0.52) 62%,
+            rgba(200,123,82,0.42) 82%,
+            rgba(232,150,42,0.55) 100%
           );
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: destination-out;
@@ -675,7 +675,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                   background: 'rgba(200,123,82,0.06)',
                   border: '1px solid rgba(200,123,82,0.12)',
                   borderRadius: 12, padding: '10px 14px',
-                  fontSize: 12, color: '#C87B52',
+                  fontSize: 12, color: 'rgba(255,238,220,0.85)',
                   fontFamily: 'Poppins,sans-serif', fontWeight: 500, lineHeight: 1.5,
                 }}>
                   {tip}
@@ -804,8 +804,8 @@ const ss = {
   },
   btnInsights: {
     width: 'auto',
-    background: 'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 100%)',
-    color: 'rgba(255,248,235,1)',
+    background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+    color: '#fff',
     border: '1px solid rgba(255,220,160,0.28)',
     padding: '11px 34px',
     borderRadius: 100,
@@ -829,9 +829,9 @@ const ss = {
     display: 'flex', alignItems: 'center', gap: 12,
   },
   btnWater: {
-    background: 'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 100%)',
+    background: 'linear-gradient(135deg, #C87B52, #E8962A)',
     border: '1px solid rgba(255,220,160,0.28)',
-    color: 'rgba(255,248,235,1)', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
+    color: '#fff', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
     boxShadow: 'none',
     transition: 'transform 0.15s ease',
@@ -898,7 +898,7 @@ const ss = {
     flex: 1, padding: '15px', background: 'rgba(255,235,210,0.08)',
     border: '1px solid rgba(255,220,160,0.20)', borderRadius: 16, fontSize: 13,
     fontWeight: 700, cursor: 'pointer', color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)'
+    boxShadow: 'inset 0 1px 0 rgba(255,235,210,0.10)'
   },
   btnSave: {
     flex: 2, padding: '15px', border: 'none', borderRadius: 16, fontSize: 13,

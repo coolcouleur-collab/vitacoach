@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(255,248,235,${a})`
+const am = (a) => `rgba(255,238,220,${a})`
 
 const CARD = {
   background: 'rgba(255,235,210,0.22)',
@@ -235,8 +235,8 @@ export default function BreathworkTab() {
         {!isActive && !done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
-            color: am(1), border: '1px solid rgba(255,220,160,0.38)',
+            background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+            color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>
@@ -257,8 +257,8 @@ export default function BreathworkTab() {
         {done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
-            color: am(1), border: '1px solid rgba(255,220,160,0.38)',
+            background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+            color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>
@@ -269,7 +269,7 @@ export default function BreathworkTab() {
 
       {/* Phase breakdown */}
       <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
+        <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
         <div style={{ display: 'flex', gap: 8 }}>
           {tech.phases.map((p, i) => {
             const active = isActive && phaseIdx === i
@@ -292,7 +292,7 @@ export default function BreathworkTab() {
       {/* History */}
       {sessions.length > 0 && (
         <div style={{ ...CARD }}>
-          <div style={{ fontSize: 11, color: am(0.45), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Sessions récentes</div>
+          <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Sessions récentes</div>
           {sessions.slice(0, 5).map((s, i) => (
             <div key={i} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',

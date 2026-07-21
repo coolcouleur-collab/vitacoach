@@ -67,7 +67,7 @@ const PROVIDERS = [
     nom:         'Oura Ring',
     icon:        ICONS.oura,
     description: 'Meilleure qualité de données sommeil au monde',
-    couleur:     '#6C63FF',
+    couleur:     '#E8962A',
     donnees:     ['Sommeil (stades)', 'HRV', 'Readiness', 'Pas', 'FC'],
     methode:     'token',   // Personal Access Token
     disponible:  true,
@@ -77,7 +77,7 @@ const PROVIDERS = [
     nom:         'Garmin',
     icon:        ICONS.garmin,
     description: 'GPS, sport, stress, fréquence cardiaque',
-    couleur:     '#007CC3',
+    couleur:     '#C87B52',
     donnees:     ['Pas', 'Calories', 'Stress', 'Sommeil', 'FC'],
     methode:     'oauth',
     disponible:  true,
@@ -103,6 +103,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
       layout
       style={{
         background:    C.card,
+        backdropFilter:       'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
         border:        `1px solid ${connecte ? 'rgba(34,197,94,0.25)' : C.border}`,
         borderRadius:  16,
         padding:       '16px',
@@ -329,7 +331,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
           }}>Annuler</button>
           <button onClick={connecter} disabled={loading || !token.trim()} style={{
             flex: 1, padding: '11px',
-            background: 'linear-gradient(135deg,#6C63FF,#8B5CF6)',
+            background: 'linear-gradient(135deg,#C87B52,#E8962A)',
             border: 'none', borderRadius: 12,
             color: '#fff', fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',

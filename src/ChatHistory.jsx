@@ -4,18 +4,18 @@ import { supabase } from './supabase'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
-  bg: '#FFF8F4',
-  bgCard: 'rgba(255,240,228,0.72)',
-  bgCardHover: 'rgba(255,228,206,0.95)',
-  border: 'rgba(200,123,82,0.18)',
-  borderStrong: 'rgba(200,123,82,0.30)',
+  bg: 'rgba(22,9,2,0.82)',
+  bgCard: 'rgba(255,235,210,0.09)',
+  bgCardHover: 'rgba(255,235,210,0.16)',
+  border: 'rgba(255,220,160,0.16)',
+  borderStrong: 'rgba(200,123,82,0.38)',
   accent: '#C87B52',
-  accentLight: 'rgba(200,123,82,0.10)',
-  text: '#0A1633',
-  textMuted: 'rgba(26,10,0,0.52)',
-  textLight: 'rgba(26,10,0,0.36)',
-  handle: 'rgba(200,123,82,0.28)',
-  shadow: '0 -20px 60px rgba(200,100,40,0.10), 0 -4px 20px rgba(200,100,40,0.06)',
+  accentLight: 'rgba(200,123,82,0.16)',
+  text: 'rgba(255,238,220,0.92)',
+  textMuted: 'rgba(255,220,180,0.52)',
+  textLight: 'rgba(255,210,160,0.35)',
+  handle: 'rgba(255,220,160,0.28)',
+  shadow: '0 -24px 64px rgba(0,0,0,0.50), 0 -4px 20px rgba(200,100,40,0.14)',
   font: "'Poppins', system-ui, sans-serif",
 }
 
@@ -25,7 +25,7 @@ function HandleBar() {
     <div style={{
       width: 44, height: 5,
       background: C.handle,
-      borderRadius: 12,
+      borderRadius: 8,
       margin: '14px auto 8px',
       flexShrink: 0,
     }} />
@@ -132,7 +132,7 @@ function SessionItem({ session, onSelect }) {
         flexDirection: 'column',
         gap: 5,
         padding: '13px 15px',
-        borderRadius: 12,
+        borderRadius: 16,
         border: `1px solid ${hovered ? C.borderStrong : C.border}`,
         background: hovered ? C.bgCardHover : C.bgCard,
         cursor: 'pointer',
@@ -303,7 +303,7 @@ export default function ChatHistory({
           position: 'fixed',
           inset: 0,
           zIndex: 1200,
-          background: 'rgba(26,10,0,0.28)',
+          background: 'rgba(26,10,0,0.32)',
           backdropFilter: 'blur(8px)',
           WebkitBackdropFilter: 'blur(8px)',
         }}
@@ -330,6 +330,8 @@ export default function ChatHistory({
           width: '100%',
           maxWidth: 520,
           background: C.bg,
+          backdropFilter: 'blur(32px)',
+          WebkitBackdropFilter: 'blur(32px)',
           borderRadius: '28px 28px 0 0',
           boxShadow: C.shadow,
           border: `1px solid ${C.border}`,
@@ -432,8 +434,8 @@ export default function ChatHistory({
                 margin: '24px 0',
                 padding: '16px',
                 borderRadius: 12,
-                background: 'rgba(220,60,30,0.06)',
-                border: '1px solid rgba(220,60,30,0.18)',
+                background: 'rgba(239,68,68,0.10)',
+                border: '1px solid rgba(239,68,68,0.25)',
                 textAlign: 'center',
               }}>
                 <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>
@@ -446,7 +448,7 @@ export default function ChatHistory({
                 <div style={{
                   fontFamily: C.font,
                   fontSize: 13,
-                  color: 'rgba(180,40,20,0.80)',
+                  color: '#ef4444',
                   fontWeight: 500,
                 }}>
                   {error}
