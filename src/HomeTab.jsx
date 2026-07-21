@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback, startTransiti
 import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
+import CheckinCard from './CheckinCard'
 
 // ─── Icône vélo (inline — absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -2160,7 +2161,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
 }
 
 // ─── HOME TAB EXPORT ──────────────────────────────────────────────────────────
-export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange }) {
+export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, userId }) {
   const [showSheet, setShowSheet] = useState(false)
   const [initialMetric, setInitialMetric] = useState('eau')
 
@@ -2206,6 +2207,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
       />
+      <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
       <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
       <DailyTasks profil={profil} metriques={metriques} onSwitchTab={onSwitchTab} isNight={isNight} preset={currentPreset} />
       <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight}

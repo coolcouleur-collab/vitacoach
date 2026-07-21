@@ -21,6 +21,7 @@ import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken 
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 import { ownerGuard, adminGuard } from './api/_auth.js'
+import { consumeQuota } from './api/_quota.js'
 
 dotenv.config()
 
@@ -81,14 +82,19 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
     const session = event.data.object
     const userId = session.metadata?.userId
     if (userId && supabase) {
-      await supabase.from('profils')
-        .update({ profil: supabase.rpc('jsonb_set_key', { /* fallback ci-dessous */ }) })
-        .eq('user_id', userId)
-      // Fallback simple : marquer isPro dans profil JSONB
       const { data: existing } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
-      const updatedProfil = { ...(existing?.profil || {}), isPro: true, proSince: new Date().toISOString(), stripeSessionId: session.id }
+      const updatedProfil = {
+        ...(existing?.profil || {}),
+        isPro: true,
+        proSince: new Date().toISOString(),
+        proPlan: session.metadata?.plan || 'monthly',
+        stripeSessionId: session.id,
+        // Indispensable pour retrouver l'utilisateur quand customer.subscription.deleted arrive
+        stripeCustomerId: session.customer || null,
+        stripeSubscriptionId: session.subscription || null,
+      }
       await supabase.from('profils').upsert({ user_id: userId, profil: updatedProfil }, { onConflict: 'user_id' })
-      console.log('[Webhook] User', userId, '→ Pro ✅')
+      console.log('[Webhook] User', userId, '→ Pro ✅ (plan', updatedProfil.proPlan + ')')
     }
   }
 
@@ -156,6 +162,12 @@ app.get('/api/charger-profil', ownerGuard, async (req, res) => {
 // Chat principal
 app.post('/api/chat', ownerGuard, async (req, res) => {
   const { message, profil, historique = [], context_hints, metriques } = req.body
+
+  // ── Quota serveur des messages gratuits (SOS toujours exempté) ────────────
+  const quota = await consumeQuota(req.authUser, message)
+  if (!quota.ok) {
+    return res.status(429).json({ error: 'quota_atteint', limit: quota.limit })
+  }
 
   // ── Détection SOS ─────────────────────────────────────────────────────────
   const SOS_PATTERN = /\b(à bout|j'en peux plus|plus envie|tout lâcher|envie de rien|tellement triste|je pleure|vraiment mal|je crack|j'ai craqué|épuisé[e]? complètement|j'abandonne|plus la force|suicide|mourir|veux mourir|veux disparaître|fin de tout|à bout de force)\b/i
@@ -699,23 +711,34 @@ app.get('/api/vapid-public-key', (req, res) => {
   res.json({ key: process.env.VAPID_PUBLIC_KEY })
 })
 
-// ── Sauvegarder subscription push ────────────────────────────────────────────
-app.post('/api/push-subscribe', ownerGuard, (req, res) => {
+// ── Sauvegarder subscription push (mémoire + base, survit aux redémarrages) ──
+app.post('/api/push-subscribe', ownerGuard, async (req, res) => {
   const { subscription, userId, profil, streak, score } = req.body
   if (!subscription?.endpoint) return res.status(400).json({ error: 'Subscription invalide' })
-  // Stocker subscription + metadata profil pour notifications personnalisées
-  pushSubscriptions.set(userId || subscription.endpoint, {
+  const key = userId || subscription.endpoint
+  const entry = {
     ...subscription,
     _meta: { profil, streak: streak || 0, score: score || 0, subscribedAt: Date.now() }
-  })
+  }
+  pushSubscriptions.set(key, entry)
+  if (supabase && userId) {
+    try {
+      await supabase.from('push_subscriptions').upsert({
+        user_id: userId, subscription, meta: entry._meta, updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' })
+    } catch (e) { console.warn('[Push] Persistance subscription échouée:', e.message) }
+  }
   console.log(`Push subscription sauvegardee (total: ${pushSubscriptions.size})`)
   res.json({ ok: true })
 })
 
 // ── Supprimer subscription ────────────────────────────────────────────────────
-app.post('/api/push-unsubscribe', ownerGuard, (req, res) => {
+app.post('/api/push-unsubscribe', ownerGuard, async (req, res) => {
   const { userId, endpoint } = req.body
   pushSubscriptions.delete(userId || endpoint)
+  if (supabase && userId) {
+    try { await supabase.from('push_subscriptions').delete().eq('user_id', userId) } catch { /* ignore */ }
+  }
   res.json({ ok: true })
 })
 
@@ -788,9 +811,17 @@ app.post('/api/push-broadcast', adminGuard, async (req, res) => {
 })
 
 // ── Stripe Checkout ──────────────────────────────────────────────────────────
+// Deux plans : annuel (offre principale, ~3,75 €/mois) et mensuel (repli).
+const STRIPE_PLANS = {
+  annual:  { unit_amount: 4499, interval: 'year',  label: 'Solenn Pro — Annuel' },
+  monthly: { unit_amount: 799,  interval: 'month', label: 'Solenn Pro — Mensuel' },
+}
+
 app.post('/api/create-checkout', async (req, res) => {
   try {
     const origin = req.headers.origin || `http://${req.headers.host}` || 'http://152.228.131.218'
+    const planKey = STRIPE_PLANS[req.body.plan] ? req.body.plan : 'annual'
+    const plan = STRIPE_PLANS[planKey]
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
@@ -799,18 +830,18 @@ app.post('/api/create-checkout', async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'Solenn Pro',
+            name: plan.label,
             description: 'Coach IA illimité · Analyses personnalisées · Toutes les fonctionnalités',
             images: [],
           },
-          unit_amount: 499,
-          recurring: { interval: 'month' },
+          unit_amount: plan.unit_amount,
+          recurring: { interval: plan.interval },
         },
         quantity: 1,
       }],
       success_url: `${origin}/?subscribed=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${origin}/?subscribed=cancel`,
-      metadata: { userId: req.body.userId || 'anonymous' },
+      metadata: { userId: req.body.userId || 'anonymous', plan: planKey },
     })
     res.json({ url: session.url })
   } catch (e) {
@@ -840,6 +871,110 @@ app.get('/api/verify-pro', ownerGuard, async (req, res) => {
     res.json({ isPro: data?.profil?.isPro === true, proSince: data?.profil?.proSince || null })
   } catch {
     res.json({ isPro: false })
+  }
+})
+
+// ── Dashboard rétention (admin) ──────────────────────────────────────────────
+// Les 3 métriques de survie identifiées par l'étude de marché : complétion du
+// challenge 21j, actifs J7/J30, premier renouvellement (objectif ≥ 67 %).
+app.get('/api/admin/retention', adminGuard, async (req, res) => {
+  if (!supabase) return res.status(500).json({ error: 'Supabase non configuré' })
+  try {
+    const now = Date.now()
+    const d7  = new Date(now - 7  * 864e5).toISOString().split('T')[0]
+    const d30 = new Date(now - 30 * 864e5).toISOString().split('T')[0]
+
+    const { count: totalUsers } = await supabase.from('profils').select('*', { count: 'exact', head: true })
+
+    // Actifs = au moins une métrique enregistrée sur la période
+    const { data: rows7 }  = await supabase.from('user_metrics').select('user_id').gte('date', d7)
+    const { data: rows30 } = await supabase.from('user_metrics').select('user_id').gte('date', d30)
+    const actifsJ7  = new Set((rows7  || []).map(r => r.user_id)).size
+    const actifsJ30 = new Set((rows30 || []).map(r => r.user_id)).size
+
+    const { data: challenges } = await supabase.from('challenges').select('user_id, progression, date_debut, actif')
+    let chTotal = 0, chTermines = 0, chEnCours = 0, completionCumulee = 0
+    for (const c of challenges || []) {
+      chTotal++
+      const faits = (c.progression || []).filter(Boolean).length
+      if (faits >= 21) chTermines++
+      if (c.actif) {
+        chEnCours++
+        const joursEcoules = Math.min(Math.max(Math.floor((now - new Date(c.date_debut).getTime()) / 864e5) + 1, 1), 21)
+        completionCumulee += faits / joursEcoules
+      }
+    }
+
+    // Premier renouvellement : parmi les abonnements ayant dépassé leur 1re
+    // échéance, part toujours active (données Stripe, 100 derniers)
+    let premierRenouvellement = null
+    try {
+      const subs = await stripe.subscriptions.list({ status: 'all', limit: 100 })
+      let eligibles = 0, renouveles = 0
+      for (const s of subs.data) {
+        const periodeMs = (s.items?.data?.[0]?.plan?.interval === 'year' ? 366 : 32) * 864e5
+        if (now - s.created * 1000 > periodeMs) {
+          eligibles++
+          if (s.status === 'active') renouveles++
+        }
+      }
+      premierRenouvellement = { eligibles, renouveles, taux: eligibles ? Math.round(100 * renouveles / eligibles) : null }
+    } catch (e) {
+      premierRenouvellement = { error: e.message }
+    }
+
+    let prosActifs = 0
+    try {
+      const { count } = await supabase.from('profils').select('*', { count: 'exact', head: true }).contains('profil', { isPro: true })
+      prosActifs = count || 0
+    } catch { /* filtre jsonb indisponible → 0 */ }
+
+    res.json({
+      generatedAt: new Date().toISOString(),
+      utilisateurs: { total: totalUsers ?? null, actifsJ7, actifsJ30 },
+      challenge21j: {
+        total: chTotal, enCours: chEnCours, termines: chTermines,
+        tauxCompletionMoyen: chEnCours ? Math.round(100 * (completionCumulee / chEnCours)) : null,
+      },
+      abonnements: { prosActifs, premierRenouvellement },
+    })
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Message matinal proactif (généré par l'agent morning-brief) ──────────────
+app.get('/api/morning-message', ownerGuard, async (req, res) => {
+  const { userId } = req.query
+  if (!userId || !supabase) return res.json({ message: null })
+  try {
+    const today = new Date().toISOString().split('T')[0]
+    const { data } = await supabase.from('morning_messages')
+      .select('message, date').eq('user_id', userId).eq('date', today).maybeSingle()
+    res.json({ message: data?.message || null, date: data?.date || null })
+  } catch {
+    res.json({ message: null })
+  }
+})
+
+// ── Tokens push natifs (iOS/Android) ─────────────────────────────────────────
+// Le client (useCapacitor.js) envoie déjà son token FCM/APNs ici — la route
+// n'existait pas (404 silencieux). On persiste le token en base pour le jour
+// où l'envoi FCM/APNs sera branché ; en attendant ça évite l'erreur.
+app.post('/api/push-native-subscribe', ownerGuard, async (req, res) => {
+  const { userId, token, platform } = req.body
+  if (!userId || !token) return res.status(400).json({ error: 'userId et token requis' })
+  try {
+    if (supabase) {
+      await supabase.from('push_tokens').upsert(
+        { user_id: userId, token, platform: platform || 'unknown', updated_at: new Date().toISOString() },
+        { onConflict: 'user_id,token' }
+      )
+    }
+    res.json({ ok: true })
+  } catch (e) {
+    // Table pas encore créée → non bloquant
+    res.json({ ok: false, note: e.message })
   }
 })
 
@@ -1334,7 +1469,10 @@ app.post('/api/challenge-progress', ownerGuard, async (req, res) => {
     if (!data) return res.status(404).json({ error: 'Aucun challenge actif' })
 
     const progression = [...(data.progression || [])]
-    progression[jour - 1] = complete
+    // `jour` arrive déjà en index 0-based depuis le client (Challenge21j.jsx
+    // envoie jourActuel - 1) — ne pas re-soustraire 1, sinon le jour 1 écrit
+    // progression[-1] et chaque jour marque la case du jour précédent.
+    progression[jour] = complete
     await supabase.from('challenges').update({ progression }).eq('id', data.id)
     res.json({ succes: true, progression })
   } catch (e) {
@@ -1520,6 +1658,19 @@ if (!process.env.VERCEL) {
     if (routes.length) {
       console.log(`📋 ${routes.length} routes enregistrées :`)
       routes.forEach(r => console.log(`   ${r}`))
+    }
+    // Recharger les subscriptions push depuis la base (survit aux redémarrages
+    // Render — la Map seule était vidée à chaque deploy/réveil)
+    if (supabase) {
+      supabase.from('push_subscriptions').select('user_id, subscription, meta').then(({ data, error }) => {
+        if (error) { console.warn('[Push] Rechargement subscriptions impossible:', error.message); return }
+        for (const row of data || []) {
+          if (row.subscription?.endpoint && !pushSubscriptions.has(row.user_id)) {
+            pushSubscriptions.set(row.user_id, { ...row.subscription, _meta: row.meta || {} })
+          }
+        }
+        console.log(`[Push] ${pushSubscriptions.size} subscriptions rechargées depuis la base`)
+      })
     }
     // Démarrer les sous-agents autonomes
     startAgents(pushSubscriptions)

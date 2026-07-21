@@ -31,6 +31,7 @@ const RoutineTab    = lazy(() => import('./RoutineTab'))
 const ChatHistory   = lazy(() => import('./ChatHistory'))
 const BreathworkTab = lazy(() => import('./BreathworkTab'))
 const CycleTab      = lazy(() => import('./CycleTab'))
+const PaywallOffre  = lazy(() => import('./PaywallOffre'))
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 
@@ -496,7 +497,10 @@ export default function App() {
     return safeParse('vitacoach_user', null)
   })
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
-  const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < 7 * 24 * 3600 * 1000)
+  // ?paywall=1 → prévisualisation directe de l'écran d'offre (test/design)
+  const [showPaywall, setShowPaywall] = useState(() => new URLSearchParams(window.location.search).has('paywall'))
+  // Essai complet 21 jours — aligné sur le serveur (api/_quota.js TRIAL_DAYS)
+  const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < 21 * 24 * 3600 * 1000)
   const hasFullAccess = isPro || isFreeTrial
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
   const [profilLoading, setProfilLoading] = useState(() => {
@@ -1114,11 +1118,42 @@ const [messages, setMessages] = useState(() => {
     localStorage.setItem('vitacoach_notif', JSON.stringify(false))
   }
 
-  async function passerPro() {
+  // ── Message matinal proactif (agent morning-brief, généré à 06:45) ─────────
+  // Affiché comme message de Solenn dans le chat, une fois par jour.
+  useEffect(() => {
+    if (!user?.id || !profil) return
+    const key = 'vitacoach_morning_' + new Date().toDateString()
+    if (localStorage.getItem(key)) return
+    ;(async () => {
+      try {
+        const res = await fetch(`/api/morning-message?userId=${user.id}`, { headers: await authHeaders() })
+        const data = await res.json()
+        if (data?.message) {
+          localStorage.setItem(key, '1')
+          setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+        }
+      } catch {}
+    })()
+  }, [user?.id, profil])
+
+  async function passerPro(plan) {
+    // Souvent appelé via onClick : le 1er argument peut être l'event → filtrer
+    const planKey = plan === 'monthly' ? 'monthly' : 'annual'
+    // Conformité stores (Apple 3.1.1 / Google Play Billing) : aucun checkout
+    // Stripe embarqué dans les builds natifs. L'abonnement se gère sur le web,
+    // le statut Pro est synchronisé via Supabase au prochain chargement.
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Pour passer à Solenn Pro, rends-toi sur meet-solenn.com depuis un navigateur. Ton compte sera synchronisé automatiquement ici.`
+      }])
+      setOnglet('chat')
+      return
+    }
     try {
       const res = await fetch('/api/create-checkout', {
         method:'POST', headers:{'Content-Type':'application/json', ...(await authHeaders())},
-        body: JSON.stringify({ userId:user?.id, email:user?.email })
+        body: JSON.stringify({ userId:user?.id, email:user?.email, plan: planKey })
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
@@ -1137,7 +1172,7 @@ const [messages, setMessages] = useState(() => {
       setTimeout(() => {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: `Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 4,99€/mois, résiliable à tout moment.`
+          content: `Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 44,99€/an (soit 3,75€/mois), résiliable à tout moment.`
         }])
       }, 800)
     }
@@ -1162,10 +1197,19 @@ const [messages, setMessages] = useState(() => {
 
       const resp = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-        body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() }),
+        body: JSON.stringify({ message: msg, user_id: user?.id, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() }),
         signal: controller.signal,
       })
       clearTimeout(timeoutId)
+
+      // Quota serveur atteint → aligner le compteur local et afficher l'offre Pro
+      if (resp.status === 429) {
+        localStorage.setItem('vitacoach_msg_count', JSON.stringify({ date: new Date().toDateString(), count: FREE_LIMIT }))
+        setMessages(prev => [...prev, { role:'assistant', content:`Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Solenn Pro pour des conseils illimités !` }])
+        setLoading(false)
+        isSendingRef.current = false
+        return
+      }
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
 
       // ── Streaming SSE ──────────────────────────────────────────────────────
@@ -1344,7 +1388,23 @@ const [messages, setMessages] = useState(() => {
         }
         introParts.push((p.baseline && baselineQ[p.baseline]) || 'Par quoi on commence ?')
         setMessages([{ role:'assistant', content: introParts.join(' ') }])
+        // Paywall d'onboarding « 21 jours offerts » — une seule fois
+        if (!localStorage.getItem('vitacoach_paywall_vu')) setShowPaywall(true)
       }} />
+      </Suspense>
+    )
+  }
+
+  // ── PAYWALL POST-ONBOARDING — « 21 jours offerts » ─────────────────────────
+  if (showPaywall && !isPro) {
+    return (
+      <Suspense fallback={<GlowLoader fullPage />}>
+        <PaywallOffre
+          nom={profil?.nom}
+          isNative={!!window?.Capacitor?.isNativePlatform?.()}
+          onStart={() => { localStorage.setItem('vitacoach_paywall_vu', '1'); setShowPaywall(false) }}
+          onSubscribe={(plan) => { localStorage.setItem('vitacoach_paywall_vu', '1'); passerPro(plan) }}
+        />
       </Suspense>
     )
   }
@@ -1459,6 +1519,7 @@ const [messages, setMessages] = useState(() => {
             isPro={isPro}
             onPasserPro={passerPro}
             msgsRestants={hasFullAccess ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
+            trialDaysLeft={isFreeTrial ? Math.max(0, 21 - Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)) : null}
             onClose={() => setShowSettings(false)}
             onSaveProfil={async (updated) => {
               setProfil(updated)
@@ -1568,7 +1629,7 @@ const [messages, setMessages] = useState(() => {
                 {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#C87B52" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
-            {!isPro && <button style={s.btnPro} onClick={passerPro}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 4.99€/mois</button>}
+            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 44,99€/an</button>}
             {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
@@ -1858,7 +1919,7 @@ const [messages, setMessages] = useState(() => {
                 {/* Bottom actions */}
                 <div style={{ marginTop:'28px', display:'flex', flexDirection:'column', gap:2, borderTop:'1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
                   {!isPro && (
-                    <button onClick={() => { passerPro(); setMenuOpen(false) }} style={{
+                    <button onClick={() => { passerPro('annual'); setMenuOpen(false) }} style={{
                       display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                       border:'none', background:'transparent', cursor:'pointer',
                       fontFamily:F, width:'100%', textAlign:'left',
@@ -1930,6 +1991,7 @@ const [messages, setMessages] = useState(() => {
               history={history}
               onPresetChange={setHomePreset}
               isScrolling={isScrolling}
+              userId={user?.id}
             />
             </Suspense>
           )}
@@ -1971,6 +2033,10 @@ const [messages, setMessages] = useState(() => {
                       {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${((profil.prenom || profil.nom) || '').charAt(0).toUpperCase() + ((profil.prenom || profil.nom) || '').slice(1).toLowerCase()} ?` : `Comment je peux t'aider ?`}
                     </div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
+                    {/* Transparence IA — AI Act art. 50 (obligatoire août 2026) + confiance */}
+                    <div style={{ fontSize:10.5, color:'rgba(200,123,82,0.55)', marginTop:-8, marginBottom:16 }}>
+                      Solenn est une intelligence artificielle — ses conseils ne remplacent pas un avis médical.
+                    </div>
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
@@ -2152,7 +2218,7 @@ const [messages, setMessages] = useState(() => {
 
           {/* ── Cycle ── */}
           {onglet === 'cycle' && profil?.cycle && (
-            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} userId={user?.id} /></Suspense>
           )}
 
           {/* ── Routine ── */}

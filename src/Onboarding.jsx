@@ -866,6 +866,11 @@ export default function Onboarding({ onTermine, onBack }) {
             <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }} style={S.sub}>
               Ces infos restent privées et aident Solenn à mieux t'accompagner.
             </motion.p>
+            {/* Disclaimer requis stores : Solenn n'est pas un dispositif médical */}
+            <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.45 }}
+              style={{ ...S.sub, fontSize:11.5, opacity:0.75 }}>
+              Solenn n'est pas un dispositif médical et ne remplace pas l'avis d'un professionnel de santé.
+            </motion.p>
           </div>
           <div style={{display:'flex', flexDirection:'column', gap:10}}>
             {SANTE_OPTIONS.map((opt, i) => {

@@ -1,13 +1,19 @@
 import Groq from 'groq-sdk'
 import { requireOwner } from './_auth.js'
+import { consumeQuota } from './_quota.js'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
-  const authUser = await requireOwner(req, res, null)
+  const authUser = await requireOwner(req, res, req.body?.user_id || req.body?.userId || null)
   if (!authUser) return
   const { message, profil, historique = [], metriques, context_hints } = req.body
+
+  const quota = await consumeQuota(authUser, message)
+  if (!quota.ok) {
+    return res.status(429).json({ error: 'quota_atteint', limit: quota.limit })
+  }
 
   const now  = new Date()
   const heure = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit', timeZone:'Europe/Paris' })

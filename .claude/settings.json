@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NonInteractive -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\Jean\\Desktop\\coach-AI\\.claude\\scripts\\solenn-check.ps1\"",
+            "timeout": 10,
+            "statusMessage": "Verification Solenn..."
+          }
+        ]
+      }
+    ]
+  }
+}

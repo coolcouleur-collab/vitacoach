@@ -150,7 +150,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             letterSpacing: 0.2,
           }}
         >
-          <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={13} color="white" />Disponible avec Pro · 4,99€/mois</span>
+          <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={13} color="white" />Disponible avec Pro · 44,99€/an</span>
         </button>
       </motion.div>
     )

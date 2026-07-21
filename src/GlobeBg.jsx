@@ -155,7 +155,7 @@ export default function GlobeBg({ style, size = 0.80, opacity = 0.42, variant = 
       let raf
       function animate() {
         raf = requestAnimationFrame(animate)
-        if (!isVisibleRef.current) return
+        if (!isVisibleRef.current || document.hidden) return
         mesh.rotation.y += 0.0022
         renderer.render(scene, camera)
       }

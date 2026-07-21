@@ -5,7 +5,22 @@
       "name": "coach-AI",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 5173
+      "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "coach-AI-cycle",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5180,
+      "autoPort": true
+    },
+    {
+      "name": "coach-AI-paywall",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5199,
+      "autoPort": true
     }
   ]
 }

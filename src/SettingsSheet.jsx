@@ -346,6 +346,7 @@ export default function SettingsSheet({
   isPro = false,
   onPasserPro,
   msgsRestants = null,
+  trialDaysLeft = null,
   onClose,
   onSaveProfil,
   onPresetChange,
@@ -730,7 +731,7 @@ export default function SettingsSheet({
                 {/* En-tête */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <span style={{ fontFamily: C.font, fontSize: 14, fontWeight: 700, color: C.text }}>
-                    Plan Gratuit
+                    {trialDaysLeft !== null ? 'Essai complet' : 'Plan Gratuit'}
                   </span>
                   <span style={{
                     display: 'inline-flex',
@@ -744,7 +745,9 @@ export default function SettingsSheet({
                     fontWeight: 700,
                     color: C.accent,
                   }}>
-                    5 msg/jour
+                    {trialDaysLeft !== null
+                      ? `${trialDaysLeft} jour${trialDaysLeft > 1 ? 's' : ''} restant${trialDaysLeft > 1 ? 's' : ''}`
+                      : '5 msg/jour'}
                   </span>
                 </div>
                 {/* Barre de progression */}
@@ -818,7 +821,7 @@ export default function SettingsSheet({
                   onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
                   onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
                 >
-                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="white" /> Passer à Solenn Pro · 4,99€/mois</span>
+                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="white" /> Passer à Solenn Pro · 44,99€/an</span>
                 </button>
                 {/* Sous-texte */}
                 <div style={{
@@ -828,8 +831,20 @@ export default function SettingsSheet({
                   fontWeight: 500,
                   textAlign: 'center',
                 }}>
-                  Résiliable à tout moment
+                  Soit 3,75 €/mois · Résiliable à tout moment
                 </div>
+                <button
+                  onClick={() => onPasserPro && onPasserPro('monthly')}
+                  style={{
+                    width: '100%', marginTop: 6, padding: '6px 0',
+                    background: 'transparent', border: 'none', cursor: 'pointer',
+                    fontFamily: C.font, fontSize: 11.5, fontWeight: 500,
+                    color: C.textMuted, textDecoration: 'underline', textUnderlineOffset: 3,
+                    outline: 'none', WebkitTapHighlightColor: 'transparent',
+                  }}
+                >
+                  Ou 7,99 €/mois sans engagement
+                </button>
               </Card>
             )}
 
@@ -870,6 +885,29 @@ export default function SettingsSheet({
               </div>
             </Card>
 
+            {/* ── SUIVI DU CYCLE ──────────────────────────────────────── */}
+            <SectionTitle>Suivi du cycle</SectionTitle>
+            <Card>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <div>
+                  <div style={{ fontFamily: C.font, fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 2 }}>
+                    Suivi du cycle menstruel
+                  </div>
+                  <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
+                    {profil.cycle ? "Activé — l'onglet Cycle est visible" : 'Désactivé — active-le quand tu veux'}
+                  </div>
+                </div>
+                <ToggleSwitch
+                  enabled={!!profil.cycle}
+                  onToggle={() => onSaveProfil && onSaveProfil({ ...profil, cycle: !profil.cycle })}
+                />
+              </div>
+            </Card>
+
             {/* ── 4. MES DONNÉES ──────────────────────────────────────── */}
             <SectionTitle>Mes Données</SectionTitle>
             <div>
@@ -885,6 +923,32 @@ export default function SettingsSheet({
                 onClick={onExportData}
               />
             </div>
+
+            {/* ── À PROPOS — transparence IA + disclaimer médical ──────────
+                Requis : Google Play (disclaimer non-dispositif médical),
+                AI Act art. 50 (divulgation IA), Apple 1.4 (rappel médecin). */}
+            <SectionTitle>À propos de Solenn</SectionTitle>
+            <Card>
+              <div style={{ fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.65 }}>
+                Solenn est un coach bien-être basé sur une <strong style={{ color: C.text }}>intelligence artificielle</strong>.
+                Ce n'est pas un dispositif médical : Solenn ne diagnostique, ne traite, ne guérit
+                ni ne prévient aucune maladie ou condition médicale. Ses conseils ne remplacent
+                jamais l'avis d'un professionnel de santé — en cas de symptôme ou de doute,
+                consulte un médecin.
+              </div>
+              <a
+                href="/confidentialite"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block', marginTop: 10,
+                  fontFamily: C.font, fontSize: 12, fontWeight: 600,
+                  color: C.accent, textDecoration: 'underline', textUnderlineOffset: 3,
+                }}
+              >
+                Politique de confidentialité
+              </a>
+            </Card>
 
           </div>
         </div>

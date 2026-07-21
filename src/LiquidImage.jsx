@@ -204,8 +204,11 @@ export default function LiquidImage({
     if (src)      imageTexture(gl, src, setTex)
     else          setTex(gradientTexture(gl, gradient, width, height))
 
-    // ── Render loop ──
+    // ── Render loop — pausé quand le canvas est hors écran ou l'onglet caché
+    // (double boucle WebGL avec GlobeBg = surchauffe GPU mobile)
     let last = 0
+    let running = false
+    let onScreen = true
     function frame(ts) {
       const dt = Math.min((ts - last) / 1000, 0.05)
       last = ts
@@ -226,10 +229,29 @@ export default function LiquidImage({
       }
       rafRef.current = requestAnimationFrame(frame)
     }
-    rafRef.current = requestAnimationFrame(frame)
+    function start() {
+      if (running) return
+      running = true
+      last = performance.now()
+      rafRef.current = requestAnimationFrame(frame)
+    }
+    function stop() {
+      running = false
+      cancelAnimationFrame(rafRef.current)
+    }
+    const io = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting
+      onScreen && !document.hidden ? start() : stop()
+    }, { threshold: 0.01 })
+    io.observe(canvas)
+    const onVis = () => { document.hidden ? stop() : (onScreen && start()) }
+    document.addEventListener('visibilitychange', onVis)
+    start()
 
     return () => {
-      cancelAnimationFrame(rafRef.current)
+      io.disconnect()
+      document.removeEventListener('visibilitychange', onVis)
+      stop()
       if (texRef.current) gl.deleteTexture(texRef.current)
       gl.deleteBuffer(buf)
       gl.deleteProgram(prog)

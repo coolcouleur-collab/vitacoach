@@ -28,6 +28,7 @@ import { runMeteoRoutine, genererContexteMeteo } from './meteo-routine.js'
 import { runNutritionnel, genererConseilsNutrition } from './nutritionnel.js'
 import { runMomentsCheck, extraireMoments, sauvegarderMoments } from './moments.js'
 import { runSyncSante } from './sync-sante.js'
+import { runMorningBrief } from './morning-brief.js'
 
 // ─── État des agents (pour le dashboard /api/agents-status) ──────────────────
 const agentsStatus = {
@@ -42,6 +43,7 @@ const agentsStatus = {
   nutritionnel:  { dernierRun: null, derniersResultats: null, actif: false },
   moments:       { dernierRun: null, derniersResultats: null, actif: false },
   syncSante:     { dernierRun: null, derniersResultats: null, actif: false },
+  morningBrief:  { dernierRun: null, derniersResultats: null, actif: false },
 }
 
 function logRun(agent, resultats) {
@@ -209,6 +211,19 @@ export function startAgents(pushSubscriptions) {
       console.error('[Agents] SyncSanté erreur:', e.message)
     }
   }, { timezone: 'Europe/Paris' })
+
+  // ── Agent 12 : Morning Brief — quotidien 06:45 (message matinal en base,
+  //    affiché dans le chat à l'ouverture — le push seul ne suffit pas) ───────
+  cron.schedule('45 6 * * *', async () => {
+    console.log('[Agents] Morning Brief → déclenchement')
+    try {
+      const res = await runMorningBrief()
+      logRun('morningBrief', res)
+    } catch (e) {
+      console.error('[Agents] MorningBrief erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+  console.log('   🌅 MorningBrief  : quotidien 06:45')
 }
 
 // ─── API : status de tous les agents ─────────────────────────────────────────
@@ -243,6 +258,8 @@ export async function triggerAgent(agentName, pushSubscriptions, options = {}) {
       return runMomentsCheck(pushSubscriptions)
     case 'sync-sante':
       return runSyncSante()
+    case 'morning-brief':
+      return runMorningBrief()
     default:
       throw new Error(`Agent inconnu: ${agentName}`)
   }

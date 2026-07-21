@@ -32,14 +32,20 @@ function raf(time) {
 }
 requestAnimationFrame(raf)
 
-// Routing minimal — /business → BusinessLanding, /confidentialite → politique, sinon App
+// Routing minimal — /business → BusinessLanding, /confidentialite → politique,
+// /admin → dashboard rétention (clé admin requise), sinon App
 const isBusiness = window.location.pathname.startsWith('/business')
 const isPrivacy  = window.location.pathname.startsWith('/confidentialite')
+const isAdmin    = window.location.pathname.startsWith('/admin')
+
+const AdminRetention = React.lazy(() => import('./AdminRetention'))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RootBoundary>
-      {isPrivacy ? <Confidentialite /> : isBusiness ? <BusinessLanding /> : <App />}
+      {isAdmin
+        ? <React.Suspense fallback={null}><AdminRetention /></React.Suspense>
+        : isPrivacy ? <Confidentialite /> : isBusiness ? <BusinessLanding /> : <App />}
     </RootBoundary>
   </React.StrictMode>
 )

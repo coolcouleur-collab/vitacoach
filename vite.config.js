@@ -23,6 +23,7 @@ export default defineConfig({
   // ─── Dev server ───────────────────────────────────────────────────────────
   server: {
     host: true,  // expose sur le réseau local (pour test sur téléphone)
+    port: Number(process.env.PORT) || 5173,  // PORT injecté par l'outil de preview si 5173 occupé
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
