@@ -3137,8 +3137,8 @@ const s = {
   chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
-  emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(100,65,25,0.88)', marginBottom:6, letterSpacing:'-0.03em' },
-  emptyChatSub: { fontSize:13, color:'rgba(160,120,60,0.65)', marginBottom:32, lineHeight:1.7 },
+  emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },
+  emptyChatSub: { fontSize:13, color:'rgba(200,123,82,0.65)', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
     background:'rgba(255,248,242,0.96)',
@@ -3190,7 +3190,7 @@ const s = {
     border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
-  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'rgba(140,75,30,0.80)' },
+  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'rgba(200,123,82,0.90)' },
   sendBtn: {
     background:'transparent', border:'none',
     width:36, height:36, borderRadius:12, cursor:'pointer',
