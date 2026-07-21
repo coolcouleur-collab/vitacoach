@@ -1,5 +1,9 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- SOLENN — Policies RLS (Row Level Security)
+-- SOLENN — Policies RLS — EXÉCUTÉ EN PRODUCTION le 2026-07-21 ✅
+-- La version exécutée incluait aussi la CRÉATION des tables manquantes :
+-- solenn_chats, integrations_sante, metriques_integrations, forum_reports
+-- (elles n'existaient pas — l'historique de chat et les connexions montres
+-- n'avaient jamais été persistés). Voir git log pour le script complet.
 -- À exécuter dans Supabase : Dashboard → SQL Editor → New query → coller → Run
 --
 -- ⚠️ IMPORTANT : ajouter D'ABORD la variable SUPABASE_SERVICE_ROLE_KEY sur
