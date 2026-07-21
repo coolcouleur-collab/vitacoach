@@ -20,6 +20,7 @@ import {
 import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken } from './agents/sync-sante.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
+import { ownerGuard, adminGuard } from './api/_auth.js'
 
 dotenv.config()
 
@@ -48,7 +49,7 @@ const pushSubscriptions = new Map()
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_ANON_KEY
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
 console.log('SUPABASE_URL:', supabaseUrl ? '✅ défini' : '❌ manquant')
 console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY ? '✅ défini' : '❌ manquant')
 
@@ -111,8 +112,8 @@ app.use(express.json())
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Content-Type')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-agents-key')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
   if (req.method === 'OPTIONS') return res.sendStatus(200)
   next()
 })
@@ -137,7 +138,7 @@ app.post('/api/connexion', async (req, res) => {
 })
 
 // Sauvegarder profil en base
-app.post('/api/sauvegarder-profil', async (req, res) => {
+app.post('/api/sauvegarder-profil', ownerGuard, async (req, res) => {
   const { user_id, profil } = req.body
   const { error } = await supabase.from('profils').upsert({ user_id, profil }, { onConflict: 'user_id' })
   if (error) return res.json({ erreur: error.message })
@@ -145,7 +146,7 @@ app.post('/api/sauvegarder-profil', async (req, res) => {
 })
 
 // Charger profil depuis la base
-app.get('/api/charger-profil', async (req, res) => {
+app.get('/api/charger-profil', ownerGuard, async (req, res) => {
   const { user_id } = req.query
   const { data, error } = await supabase.from('profils').select('profil').eq('user_id', user_id).single()
   if (error) return res.json({ profil: null })
@@ -153,7 +154,7 @@ app.get('/api/charger-profil', async (req, res) => {
 })
 
 // Chat principal
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', ownerGuard, async (req, res) => {
   const { message, profil, historique = [], context_hints, metriques } = req.body
 
   // ── Détection SOS ─────────────────────────────────────────────────────────
@@ -344,7 +345,7 @@ FORMAT 3 — TOUT LE RESTE : texte pur, 3 phrases max, empathique si besoin, tou
 })
 
 // IA qui analyse et enrichit le profil
-app.post('/api/analyser-profil', async (req, res) => {
+app.post('/api/analyser-profil', ownerGuard, async (req, res) => {
   const { section, selections, texteLibre } = req.body
 
   const prompts = {
@@ -387,7 +388,7 @@ Réponds en JSON avec ce format exact :
 })
 
 // Module tenues avec météo
-app.post('/api/tenues', async (req, res) => {
+app.post('/api/tenues', ownerGuard, async (req, res) => {
   const { profil, ville, occasion } = req.body
 
   let meteo = 'météo inconnue'
@@ -576,7 +577,7 @@ app.get('/api/image', async (req, res) => {
 })
 
 // ── Routine du jour ──────────────────────────────────────────────────────────
-app.post('/api/routine', async (req, res) => {
+app.post('/api/routine', ownerGuard, async (req, res) => {
   const { profil, metriques } = req.body
   const prompt = `Tu es Solenn, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
 Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
@@ -617,7 +618,7 @@ Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
 })
 
 // ── Insights santé ───────────────────────────────────────────────────────────
-app.post('/api/health-insights', async (req, res) => {
+app.post('/api/health-insights', ownerGuard, async (req, res) => {
   const { metriques, profil } = req.body
   const prompt = `Tu es Solenn, coach santé. Analyse les métriques de ${profil.nom} et donne 3 insights personnalisés.
 Métriques : pas=${metriques.pas || 0}, sommeil=${metriques.sommeil || 0}h, eau=${metriques.eau || 0} verres, humeur=${metriques.humeur || 0}/5, FC=${metriques.fc || 0}bpm, poids=${metriques.poids || 0}kg.
@@ -647,7 +648,7 @@ Maximum 3 insights, pertinents et actionnables.`
 })
 
 // ── Recommandations herbal IA ─────────────────────────────────────────────────
-app.post('/api/herbal', async (req, res) => {
+app.post('/api/herbal', ownerGuard, async (req, res) => {
   const { profil } = req.body
   const prompt = `Tu es Solenn, expert en phytothérapie et médecine naturelle. Analyse le profil de ${profil.nom} et propose des plantes/remèdes VRAIMENT personnalisés.
 
@@ -699,7 +700,7 @@ app.get('/api/vapid-public-key', (req, res) => {
 })
 
 // ── Sauvegarder subscription push ────────────────────────────────────────────
-app.post('/api/push-subscribe', (req, res) => {
+app.post('/api/push-subscribe', ownerGuard, (req, res) => {
   const { subscription, userId, profil, streak, score } = req.body
   if (!subscription?.endpoint) return res.status(400).json({ error: 'Subscription invalide' })
   // Stocker subscription + metadata profil pour notifications personnalisées
@@ -712,14 +713,14 @@ app.post('/api/push-subscribe', (req, res) => {
 })
 
 // ── Supprimer subscription ────────────────────────────────────────────────────
-app.post('/api/push-unsubscribe', (req, res) => {
+app.post('/api/push-unsubscribe', ownerGuard, (req, res) => {
   const { userId, endpoint } = req.body
   pushSubscriptions.delete(userId || endpoint)
   res.json({ ok: true })
 })
 
 // ── Envoyer notif a un utilisateur ───────────────────────────────────────────
-app.post('/api/push-send', async (req, res) => {
+app.post('/api/push-send', adminGuard, async (req, res) => {
   const { userId, title, body, url, tag } = req.body
   const entry = pushSubscriptions.get(userId)
   if (!entry) return res.status(404).json({ error: 'Subscription introuvable' })
@@ -734,7 +735,7 @@ app.post('/api/push-send', async (req, res) => {
 })
 
 // ── Notif personnalisée IA pour un utilisateur ────────────────────────────────
-app.post('/api/smart-notif', async (req, res) => {
+app.post('/api/smart-notif', adminGuard, async (req, res) => {
   const { userId } = req.body
   const entry = pushSubscriptions.get(userId)
   if (!entry) return res.status(404).json({ error: 'Subscription introuvable' })
@@ -775,7 +776,7 @@ app.post('/api/smart-notif', async (req, res) => {
 })
 
 // ── Broadcast toutes les subscriptions ───────────────────────────────────────
-app.post('/api/push-broadcast', async (req, res) => {
+app.post('/api/push-broadcast', adminGuard, async (req, res) => {
   const { title, body, url, tag } = req.body
   const payload = JSON.stringify({ title, body, url: url || '/', tag })
   let ok = 0, fail = 0
@@ -831,7 +832,7 @@ app.get('/api/check-subscription', async (req, res) => {
 })
 
 // GET /api/verify-pro?userId=... → vérifie le statut Pro dans profils
-app.get('/api/verify-pro', async (req, res) => {
+app.get('/api/verify-pro', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId || !supabase) return res.json({ isPro: false })
   try {
@@ -859,10 +860,7 @@ app.get('/api/agents-status', (req, res) => {
 if (!process.env.AGENTS_TRIGGER_KEY) {
   console.warn('[AgentsTrigger] AGENTS_TRIGGER_KEY non défini — /api/agents-trigger accessible sans authentification')
 }
-app.post('/api/agents-trigger', async (req, res) => {
-  if (process.env.AGENTS_TRIGGER_KEY && req.headers['x-agents-key'] !== process.env.AGENTS_TRIGGER_KEY) {
-    return res.status(401).json({ error: 'Non autorisé' })
-  }
+app.post('/api/agents-trigger', adminGuard, async (req, res) => {
   const { agent, moment } = req.body
   if (!agent) return res.status(400).json({ error: 'agent requis' })
   try {
@@ -874,7 +872,7 @@ app.post('/api/agents-trigger', async (req, res) => {
 })
 
 // ── Routine pré-générée depuis le cache ──────────────────────────────────────
-app.get('/api/routine-cache', (req, res) => {
+app.get('/api/routine-cache', ownerGuard, (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   const entry = routineCache.get(userId)
@@ -887,7 +885,7 @@ app.get('/api/routine-cache', (req, res) => {
 })
 
 // ── Forcer la régénération de la routine d'un user ───────────────────────────
-app.post('/api/routine-regenerer', async (req, res) => {
+app.post('/api/routine-regenerer', ownerGuard, async (req, res) => {
   const { userId, profil: profilBody, metriques: metriquesBody } = req.body
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -913,7 +911,7 @@ app.post('/api/routine-regenerer', async (req, res) => {
 // ── Rapport hebdomadaire (cache → Supabase → vide) — route déplacée plus bas
 
 // ── Mise à jour des métriques (alimente le monitoring agent) ─────────────────
-app.post('/api/metriques-update', (req, res) => {
+app.post('/api/metriques-update', ownerGuard, (req, res) => {
   const { userId, metriques } = req.body
   if (!userId || !metriques) return res.status(400).json({ error: 'userId et metriques requis' })
   updateMetriques(pushSubscriptions, userId, metriques)
@@ -928,7 +926,7 @@ app.post('/api/metriques-update', (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Sauvegarder les messages du jour
-app.post('/api/chat-save', async (req, res) => {
+app.post('/api/chat-save', ownerGuard, async (req, res) => {
   const { userId, messages } = req.body
   if (!userId || !messages) return res.status(400).json({ error: 'userId et messages requis' })
   try {
@@ -947,7 +945,7 @@ app.post('/api/chat-save', async (req, res) => {
 })
 
 // Charger l'historique des sessions
-app.get('/api/chat-history', async (req, res) => {
+app.get('/api/chat-history', ownerGuard, async (req, res) => {
   const { userId, limit = 20 } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -965,7 +963,7 @@ app.get('/api/chat-history', async (req, res) => {
 })
 
 // Charger une session spécifique
-app.get('/api/chat-session', async (req, res) => {
+app.get('/api/chat-session', ownerGuard, async (req, res) => {
   const { userId, date } = req.query
   if (!userId || !date) return res.status(400).json({ error: 'userId et date requis' })
   try {
@@ -987,7 +985,7 @@ app.get('/api/chat-session', async (req, res) => {
 // ═════════════════════════════════════════════════════════════════════════════
 
 // GET /api/integrations?userId=... — liste les intégrations connectées
-app.get('/api/integrations', async (req, res) => {
+app.get('/api/integrations', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   const { data } = await supabase
@@ -999,7 +997,7 @@ app.get('/api/integrations', async (req, res) => {
 })
 
 // POST /api/sync-now — sync immédiate d'un provider pour un user
-app.post('/api/sync-now', async (req, res) => {
+app.post('/api/sync-now', ownerGuard, async (req, res) => {
   const { userId, provider } = req.body
   if (!userId || !provider) return res.status(400).json({ error: 'userId et provider requis' })
   const { data: integ } = await supabase
@@ -1022,7 +1020,7 @@ app.post('/api/sync-now', async (req, res) => {
 })
 
 // DELETE /api/disconnect?userId=...&provider=... — déconnecte une intégration
-app.delete('/api/disconnect', async (req, res) => {
+app.delete('/api/disconnect', ownerGuard, async (req, res) => {
   const { userId, provider } = req.query
   await supabase.from('integrations_sante')
     .update({ actif: false, access_token: null, refresh_token: null })
@@ -1032,7 +1030,7 @@ app.delete('/api/disconnect', async (req, res) => {
 
 // ── WITHINGS OAuth 2.0 ────────────────────────────────────────────────────────
 // GET /api/connect/withings?userId=... → redirect vers Withings
-app.get('/api/connect/withings', (req, res) => {
+app.get('/api/connect/withings', ownerGuard, (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).send('userId manquant')
   const params = new URLSearchParams({
@@ -1086,7 +1084,7 @@ app.get('/api/connect/withings/callback', async (req, res) => {
 
 // ── OURA Personal Access Token ────────────────────────────────────────────────
 // POST /api/connect/oura { userId, token } → sauvegarde le PAT
-app.post('/api/connect/oura', async (req, res) => {
+app.post('/api/connect/oura', ownerGuard, async (req, res) => {
   const { userId, token } = req.body
   if (!userId || !token) return res.status(400).json({ error: 'userId et token requis' })
   try {
@@ -1138,7 +1136,7 @@ function garminOAuthHeader(method, url, extraParams, tokenSecret = '') {
 }
 
 // GET /api/connect/garmin?userId=... → redirige vers Garmin pour autorisation
-app.get('/api/connect/garmin', async (req, res) => {
+app.get('/api/connect/garmin', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   if (!process.env.GARMIN_CONSUMER_KEY) {
@@ -1216,7 +1214,7 @@ app.get('/api/connect/garmin/callback', async (req, res) => {
 })
 
 // ── Sync globale (tous les users, tous les providers) ─────────────────────────
-app.post('/api/sync-all', async (req, res) => {
+app.post('/api/sync-all', ownerGuard, async (req, res) => {
   try {
     const result = await runSyncSante()
     res.json(result)
@@ -1226,7 +1224,7 @@ app.post('/api/sync-all', async (req, res) => {
 })
 
 // ─── Design Advisor ───────────────────────────────────────────────────────────
-app.get('/api/design-review', async (req, res) => {
+app.get('/api/design-review', adminGuard, async (req, res) => {
   try {
     console.log('[DesignAdvisor] 🎨 Lancement audit design...')
     const rapport = await runDesignAudit()
@@ -1240,7 +1238,7 @@ app.get('/api/design-review', async (req, res) => {
 app.get('/api/design-tokens', (req, res) => res.json(DESIGN_TOKENS))
 
 // ─── Mémoire Longue ───────────────────────────────────────────────────────────
-app.get('/api/memoire', async (req, res) => {
+app.get('/api/memoire', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1254,7 +1252,7 @@ app.get('/api/memoire', async (req, res) => {
 // ─── Rapport Hebdo ────────────────────────────────────────────────────────────
 // GET  /api/rapport-hebdo?userId=... → cache mémoire → Supabase → vide
 // POST /api/rapport-hebdo            → génère un rapport immédiatement
-app.get('/api/rapport-hebdo', async (req, res) => {
+app.get('/api/rapport-hebdo', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   // 1. Cache mémoire (rapport généré ce dimanche par le cron)
@@ -1275,7 +1273,7 @@ app.get('/api/rapport-hebdo', async (req, res) => {
   }
 })
 
-app.post('/api/rapport-hebdo', async (req, res) => {
+app.post('/api/rapport-hebdo', ownerGuard, async (req, res) => {
   const { userId } = req.body
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1292,7 +1290,7 @@ app.post('/api/rapport-hebdo', async (req, res) => {
 // GET  /api/challenge?userId=...   → challenge actif
 // POST /api/challenge-create       → créer un nouveau challenge
 // POST /api/challenge-progress     → marquer un jour comme complété
-app.get('/api/challenge', async (req, res) => {
+app.get('/api/challenge', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1310,7 +1308,7 @@ app.get('/api/challenge', async (req, res) => {
   }
 })
 
-app.post('/api/challenge-create', async (req, res) => {
+app.post('/api/challenge-create', ownerGuard, async (req, res) => {
   const { userId, duree = 21 } = req.body
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1323,7 +1321,7 @@ app.post('/api/challenge-create', async (req, res) => {
   }
 })
 
-app.post('/api/challenge-progress', async (req, res) => {
+app.post('/api/challenge-progress', ownerGuard, async (req, res) => {
   const { userId, jour, complete } = req.body
   if (!userId || jour == null) return res.status(400).json({ error: 'userId et jour requis' })
   try {
@@ -1356,7 +1354,7 @@ app.get('/api/meteo', async (req, res) => {
 })
 
 // ─── Nutrition ────────────────────────────────────────────────────────────────
-app.get('/api/nutrition-conseil', async (req, res) => {
+app.get('/api/nutrition-conseil', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1369,7 +1367,7 @@ app.get('/api/nutrition-conseil', async (req, res) => {
   }
 })
 
-app.post('/api/nutrition-conseil', async (req, res) => {
+app.post('/api/nutrition-conseil', ownerGuard, async (req, res) => {
   const { userId } = req.body
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1381,7 +1379,7 @@ app.post('/api/nutrition-conseil', async (req, res) => {
 })
 
 // ─── Moments & Anniversaires ──────────────────────────────────────────────────
-app.get('/api/moments', async (req, res) => {
+app.get('/api/moments', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
@@ -1449,7 +1447,7 @@ app.post('/api/demo-request', async (req, res) => {
 })
 
 // ── B2B : Dashboard RH (données mock) ────────────────────────────────────────
-app.get('/api/business/dashboard', async (req, res) => {
+app.get('/api/business/dashboard', adminGuard, async (req, res) => {
   const { orgId, token } = req.query
   // TODO: vérifier le token org en base
   res.json({

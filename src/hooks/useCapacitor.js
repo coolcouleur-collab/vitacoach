@@ -12,6 +12,7 @@
  */
 
 import { useEffect, useState, useCallback } from 'react'
+import { authHeaders } from '../supabase'
 
 // ─── Détection environnement ──────────────────────────────────────────────────
 export function isNativeApp() {
@@ -89,7 +90,7 @@ export function useCapacitor() {
         try {
           await fetch('/api/push-native-subscribe', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
             body: JSON.stringify({ token: token.value, platform: getPlatform() }),
           })
         } catch (_) {}

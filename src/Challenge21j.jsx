@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
+import { authHeaders } from './supabase'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -15,7 +16,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
     try {
       setLoading(true)
       setError(null)
-      const res = await fetch(`${API}/api/challenge?userId=${userId}`)
+      const res = await fetch(`${API}/api/challenge?userId=${userId}`, { headers: await authHeaders() })
       if (!res.ok) throw new Error('Erreur lors du chargement')
       const data = await res.json()
       setChallenge(data.challenge || null)
@@ -37,7 +38,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
       setError(null)
       const res = await fetch(`${API}/api/challenge-create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, duree: 21 }),
       })
       if (!res.ok) throw new Error('Erreur lors de la création')
@@ -53,7 +54,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
     try {
       const res = await fetch(`${API}/api/challenge-progress`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, jour: jourIndex, complete: true }),
       })
       if (!res.ok) throw new Error('Erreur lors de la mise à jour')

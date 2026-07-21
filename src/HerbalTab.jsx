@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
+import { authHeaders } from './supabase'
 
 // ─── PALETTE (clair — fond de page abricot) ──────────────────────────────────
 const GLASS_BG     = 'rgba(255,248,242,0.75)'
@@ -251,7 +252,7 @@ function AIReco({ profil, onChat }) {
     setLoading(true); setErr(false)
     try {
       const res = await fetch('/api/herbal', {
-        method:'POST', headers:{'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json', ...(await authHeaders())},
         body: JSON.stringify({ profil })
       })
       const data = await res.json()

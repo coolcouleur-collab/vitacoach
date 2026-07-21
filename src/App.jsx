@@ -10,6 +10,12 @@ async function getSupabase() {
   return _sb
 }
 
+// Header Authorization avec le token de session Supabase (import lazy — ne bloque pas le démarrage).
+// Ne throw jamais.
+async function authHeaders() {
+  try { const m = await import('./supabase'); return await m.authHeaders() } catch { return {} }
+}
+
 const MorningCheckin = lazy(() => import('./MorningCheckin'))
 const SettingsSheet  = lazy(() => import('./SettingsSheet'))
 
@@ -1062,7 +1068,7 @@ const [messages, setMessages] = useState(() => {
       // Envoie la subscription au serveur avec métadonnées profil
       await fetch('/api/push-subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({
           subscription: sub.toJSON(),
           userId: user?.id || profil?.nom || 'user',
@@ -1097,7 +1103,7 @@ const [messages, setMessages] = useState(() => {
         const sub = await reg.pushManager.getSubscription()
         if (sub) {
           await fetch('/api/push-unsubscribe', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
             body: JSON.stringify({ userId: profil?.nom || 'user', endpoint: sub.endpoint })
           })
           await sub.unsubscribe()
@@ -1111,7 +1117,7 @@ const [messages, setMessages] = useState(() => {
   async function passerPro() {
     try {
       const res = await fetch('/api/create-checkout', {
-        method:'POST', headers:{'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json', ...(await authHeaders())},
         body: JSON.stringify({ userId:user?.id, email:user?.email })
       })
       const data = await res.json()
@@ -1155,7 +1161,7 @@ const [messages, setMessages] = useState(() => {
       const timeoutId = setTimeout(() => controller.abort(), 30000)
 
       const resp = await fetch('/api/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ message: msg, profil, historique: messages.slice(-14).filter(m => m.content), metriques, context_hints: buildContextHints() }),
         signal: controller.signal,
       })
@@ -1213,10 +1219,10 @@ const [messages, setMessages] = useState(() => {
         checkMilestones()
         // Sauvegarde Supabase de la conversation (fire & forget)
         if (user?.id) {
-          setTimeout(() => {
+          setTimeout(async () => {
             fetch('/api/chat-save', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
               body: JSON.stringify({ userId: user.id, messages: messagesRef.current }),
             }).catch(() => {})
           }, 500)
@@ -2837,7 +2843,7 @@ function TenuesModule({ profil }) {
     setLoading(true); setTenues([])
     try {
       const res = await fetch('/api/tenues', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ profil, ville: v, occasion })
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)

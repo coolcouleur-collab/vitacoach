@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
+import { authHeaders } from './supabase'
 
 const HK_KEY = 'vitacoach_healthkit_connected'
 
@@ -251,7 +252,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
     try {
       const res  = await fetch('/api/connect/oura', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, token: token.trim() }),
       })
       const data = await res.json()
@@ -370,11 +371,13 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         // Déclencher sync automatique
         if (userId) {
           setSyncing(true)
-          fetch('/api/sync-now', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ userId, provider: 'withings' }),
-          }).finally(() => setSyncing(false))
+          authHeaders()
+            .then(h => fetch('/api/sync-now', {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json', ...h },
+              body:    JSON.stringify({ userId, provider: 'withings' }),
+            }))
+            .finally(() => setSyncing(false))
         }
         // Recharger la liste après 2 s
         setTimeout(() => {
@@ -390,7 +393,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
 
   async function chargerIntegrations() {
     try {
-      const res = await fetch(`/api/integrations?userId=${userId}`)
+      const res = await fetch(`/api/integrations?userId=${userId}`, { headers: await authHeaders() })
       if (!res.ok) { setIntegrations([]); return }
       const data = await res.json()
       setIntegrations(data.integrations || [])
@@ -480,7 +483,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   }
 
   async function deconnecter(providerId) {
-    await fetch(`/api/disconnect?userId=${userId}&provider=${providerId}`, { method: 'DELETE' })
+    await fetch(`/api/disconnect?userId=${userId}&provider=${providerId}`, { method: 'DELETE', headers: await authHeaders() })
     await chargerIntegrations()
     showToast('Intégration déconnectée')
   }
@@ -494,7 +497,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
     try {
       const res  = await fetch('/api/sync-now', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, provider: providerId }),
       })
       const data = await res.json()

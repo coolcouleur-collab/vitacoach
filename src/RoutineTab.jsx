@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useCallback, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon, StarIcon } from './Icons'
+import { authHeaders } from './supabase'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -293,7 +294,7 @@ export default function RoutineTab({ userId, profil }) {
     if (!userId) { setLoading(false); return }
     setLoading(true); setError(null)
     try {
-      const res = await fetch(`/api/routine-cache?userId=${encodeURIComponent(userId)}`)
+      const res = await fetch(`/api/routine-cache?userId=${encodeURIComponent(userId)}`, { headers: await authHeaders() })
       const data = await res.json()
       if (data.routine) {
         setRoutine(data.routine)
@@ -322,7 +323,7 @@ export default function RoutineTab({ userId, profil }) {
     try {
       const res = await fetch('/api/routine-regenerer', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, profil }),
       })
       const data = await res.json()

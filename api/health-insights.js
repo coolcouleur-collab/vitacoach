@@ -1,9 +1,12 @@
 import Groq from 'groq-sdk'
+import { requireOwner } from './_auth.js'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
+  const authUser = await requireOwner(req, res, null)
+  if (!authUser) return
   const { metriques, profil } = req.body
 
   function scoreMetrique(key, val) {

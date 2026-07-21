@@ -23,8 +23,8 @@ function getGroq() {
 
 // ─── Supabase (optionnel — dégradé gracieux si absent) ───────────────────────
 function getSupabase() {
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) return null
-  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+  if (!process.env.SUPABASE_URL || !(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)) return null
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)
 }
 
 // ─── Récupère l'historique des métriques depuis Supabase ─────────────────────

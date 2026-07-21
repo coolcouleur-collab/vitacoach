@@ -1,4 +1,5 @@
 import Groq from 'groq-sdk'
+import { requireOwner } from './_auth.js'
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
@@ -60,6 +61,8 @@ TENDANCES ÉTÉ 2026 :
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
+  const authUser = await requireOwner(req, res, null)
+  if (!authUser) return
   const { profil = {}, ville, occasion } = req.body || {}
   if (!ville || typeof ville !== 'string') return res.status(400).json({ erreur: 'ville manquante' })
 

@@ -4,6 +4,7 @@ import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, Phone
 import ConnexionsSante from './ConnexionsSante'
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
+import { authHeaders } from './supabase'
 
 // hex → rgba helper
 function h2r(hex, a) {
@@ -348,7 +349,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
     setLoadingInsights(true)
     try {
       const res = await fetch('/api/health-insights', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ metriques, profil })
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
+import { authHeaders } from './supabase'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -15,7 +16,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`${API}/api/rapport-hebdo?userId=${userId}`)
+      const res = await fetch(`${API}/api/rapport-hebdo?userId=${userId}`, { headers: await authHeaders() })
       if (!res.ok) throw new Error('Erreur lors du chargement du rapport')
       const data = await res.json()
       setRapport(data.rapport || null)
@@ -38,7 +39,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     try {
       const res = await fetch(`${API}/api/rapport-hebdo`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId }),
       })
       if (!res.ok) throw new Error('Erreur lors de la génération du rapport')
