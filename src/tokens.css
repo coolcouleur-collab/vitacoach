@@ -13,11 +13,11 @@
   /* Accents — cuivré chaud pour CTAs et états actifs */
   --accent:       #C87B52;
   --accent-2:     #9E5C35;
-  --accent-green: #0F4223;
-  --accent-red:   #FF303C;
+  --accent-green: #22c55e;
+  --accent-red:   #ef4444;
 
   /* Transparences */
-  --glass-bg:     rgba(128,128,128,0.30);
+  --glass-bg:     rgba(255,235,210,0.22);
   --glass-white:  rgba(255,255,255,0.96);
 
   /* ── Typographie ── */
@@ -57,7 +57,7 @@ html { box-sizing: border-box; scroll-behavior: auto; height: 100%; }
 html.lenis { height: auto; }
 body {
   background: var(--bg);
-  color: var(--text-body);
+  color: rgba(255,238,220,0.92);
   font-family: var(--font);
   line-height: 1.6;
   overflow: hidden;

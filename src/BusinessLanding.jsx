@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { SparkleIcon, BrainIcon, MoonIcon, FoodIcon } from "./Icons";
 
 /* ─────────────────────────────────────────────
    DESIGN TOKENS
@@ -35,7 +36,7 @@ const GLOBAL_CSS = `
 
   html { scroll-behavior: smooth; }
 
-  body {
+  .bl-root {
     font-family: 'Poppins', sans-serif;
     background: ${T.creme};
     color: ${T.nuit};
@@ -297,6 +298,9 @@ const GLOBAL_CSS = `
   }
 
   .bl-popular-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     position: absolute;
     top: -14px;
     left: 50%;
@@ -417,7 +421,10 @@ function HeroSection({ onDemanderDemo }) {
       >
         {/* Badge */}
         <div className="bl-fade-in">
-          <span className="bl-badge">✨ Nouveau — Solenn pour les entreprises</span>
+          <span className="bl-badge">
+            <SparkleIcon color={T.creme} size={15} />
+            Nouveau — Solenn pour les entreprises
+          </span>
         </div>
 
         {/* H1 */}
@@ -510,17 +517,17 @@ function HeroSection({ onDemanderDemo }) {
 ───────────────────────────────────────────── */
 const problemCards = [
   {
-    icon: "🧠",
+    Icon: BrainIcon,
     title: "Burnout en hausse",
     desc: "1 salarié sur 3 est en détresse psychologique. Les RH n'ont aucun outil d'alerte précoce.",
   },
   {
-    icon: "😴",
+    Icon: MoonIcon,
     title: "Sommeil et productivité",
     desc: "Un collaborateur qui dort mal coûte 3x plus cher en absences et erreurs.",
   },
   {
-    icon: "🍔",
+    Icon: FoodIcon,
     title: "Habitudes non suivies",
     desc: "Les programmes bien-être corporate ont 12% d'adoption en moyenne.",
   },
@@ -550,7 +557,16 @@ function ProblemSection() {
         >
           {problemCards.map((c, i) => (
             <div className="bl-problem-card" key={i}>
-              <div style={{ fontSize: "36px", marginBottom: "16px" }}>{c.icon}</div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <c.Icon color={T.orange} size={36} />
+              </div>
               <h3
                 style={{
                   fontFamily: "'Poppins', sans-serif",
@@ -790,7 +806,12 @@ function PricingSection({ onDemanderDemo }) {
               className={`bl-pricing-card${plan.featured ? " featured" : ""}`}
               style={{ width: "320px", minWidth: "260px" }}
             >
-              {plan.featured && <div className="bl-popular-badge">✨ Populaire</div>}
+              {plan.featured && (
+                <div className="bl-popular-badge">
+                  <SparkleIcon color="#fff" size={13} />
+                  Populaire
+                </div>
+              )}
 
               <div style={{ marginBottom: "8px" }}>
                 <span
@@ -984,7 +1005,33 @@ function DemoFormSection() {
               padding: "40px 32px",
             }}
           >
-            <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎉</div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "16px",
+              }}
+            >
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  stroke={T.or}
+                  strokeWidth="2"
+                  fill={T.or}
+                  fillOpacity="0.15"
+                />
+                <path
+                  d="M8 12.5l2.6 2.5L16 9.5"
+                  stroke={T.or}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
             <h3
               style={{
                 fontFamily: "'Poppins', sans-serif",
@@ -1153,7 +1200,7 @@ export default function BusinessLanding({ onDemanderDemo }) {
   return (
     <>
       <GlobalStyles />
-      <div style={{ minHeight: "100vh", background: T.creme }}>
+      <div className="bl-root" style={{ minHeight: "100vh", background: T.creme }}>
         <HeroSection onDemanderDemo={handleDemanderDemo} />
         <ProblemSection />
         <SolutionSection />

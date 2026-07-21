@@ -30,7 +30,7 @@ export default function SplashScreen({ onDone }) {
       transition={{ duration: 0.65, ease: EASE_OUT_QUART }}
       style={{
         position: 'fixed', inset: 0, zIndex: 9999,
-        background: 'linear-gradient(160deg, #FFFAF5 0%, #FFF3E8 55%, #FFFAF5 100%)',
+        background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         pointerEvents: exiting ? 'none' : 'all',
       }}
@@ -104,7 +104,7 @@ export default function SplashScreen({ onDone }) {
             fontSize: 12.5, fontWeight: 400,
             letterSpacing: '0.22em',
             color: 'rgba(200,123,82,0.42)',
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "'Poppins', system-ui, sans-serif",
             marginBottom: 30,
           }}
         >

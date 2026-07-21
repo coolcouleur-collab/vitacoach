@@ -122,7 +122,7 @@ function RevealScreen({ answers, onEnter }) {
       background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       padding:'40px 28px',
-      fontFamily:"'DM Sans', sans-serif",
+      fontFamily:"'Poppins', sans-serif",
     }}>
       <BgBlobs />
       <div style={{
@@ -165,7 +165,7 @@ function RevealScreen({ answers, onEnter }) {
           <div style={{fontSize:12, fontWeight:700, color:'rgba(255,248,235,1)', letterSpacing:'1.8px', textTransform:'uppercase', marginBottom:10}}>
             Profil créé
           </div>
-          <h1 style={{fontSize:'clamp(26px,7vw,38px)', fontWeight:900, color:'rgba(255,248,235,1)', letterSpacing:'-0.03em', marginBottom:8, lineHeight:1.1}}>
+          <h1 style={{fontSize:'clamp(26px,7vw,38px)', fontWeight:500, color:'rgba(255,248,235,1)', letterSpacing:'-0.02em', marginBottom:8, lineHeight:1.2, fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic'}}>
             Bonjour, {nom} !
           </h1>
           <p style={{fontSize:15, color:'rgba(255,248,235,1)', marginBottom:28, lineHeight:1.6}}>
@@ -204,9 +204,8 @@ function RevealScreen({ answers, onEnter }) {
             onClick={onEnter}
             style={{
               width:'100%', height:52,
-              background:'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
-              backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-              color:'rgba(255,248,235,1)', border:'1px solid rgba(255,220,160,0.45)', borderRadius:30,
+              background:'linear-gradient(135deg, #C87B52, #E8962A)',
+              color:'#FFFFFF', border:'1px solid rgba(255,220,160,0.45)', borderRadius:30,
               fontSize:15, fontWeight:600, cursor:'pointer',
               fontFamily:'Poppins, sans-serif',
               display:'flex', alignItems:'center', justifyContent:'center', gap:8,
@@ -302,30 +301,29 @@ const RYTHME_OPTIONS = [
 const S = {
   question: {
     fontSize:'clamp(22px,5vw,28px)', fontWeight:600, lineHeight:1.35,
-    color:'rgba(255,248,235,0.95)', fontFamily:"'DM Sans', sans-serif",
+    color:'rgba(255,248,235,0.95)', fontFamily:"'Poppins', sans-serif",
     letterSpacing:'-0.01em',
   },
   sub: {
     fontSize:14, fontWeight:400, color:'rgba(255,248,235,0.65)',
-    fontFamily:"'DM Sans', sans-serif", lineHeight:1.55,
+    fontFamily:"'Poppins', sans-serif", lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
     border:'1px solid rgba(255,220,160,0.35)',
     background:'rgba(255,235,200,0.15)',
     backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
-    fontSize:16, fontFamily:"'DM Sans', sans-serif", color:'rgba(255,248,235,1)',
+    fontSize:16, fontFamily:"'Poppins', sans-serif", color:'rgba(255,248,235,1)',
     outline:'none', fontWeight:500,
     boxShadow:'0 2px 14px rgba(180,80,20,0.08)',
     transition:'border-color 0.2s, box-shadow 0.2s',
   },
   cta: {
     width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,220,160,0.38)',
-    background:'linear-gradient(110deg, rgba(180,90,35,0.68) 0%, rgba(200,123,82,0.68) 55%, rgba(180,90,35,0.68) 100%)',
+    background:'linear-gradient(135deg, #C87B52, #E8962A)',
     backgroundSize:'250% 100%',
-    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-    color:'rgba(255,248,235,1)', fontSize:16, fontWeight:600, cursor:'pointer',
-    fontFamily:"'DM Sans', sans-serif", letterSpacing:'0.3px',
+    color:'#FFFFFF', fontSize:16, fontWeight:600, cursor:'pointer',
+    fontFamily:"'Poppins', sans-serif", letterSpacing:'0.3px',
     boxShadow:'0 8px 24px rgba(180,80,30,0.22)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
@@ -342,7 +340,7 @@ function optStyle(isSel) {
     boxShadow: isSel ? '0 6px 24px rgba(220,160,90,0.18)' : '0 2px 12px rgba(180,80,20,0.08)',
     transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
     cursor:'pointer', display:'flex', alignItems:'center', gap:14,
-    fontFamily:"'DM Sans', sans-serif", textAlign:'left', outline:'none',
+    fontFamily:"'Poppins', sans-serif", textAlign:'left', outline:'none',
   }
 }
 
@@ -975,7 +973,7 @@ export default function Onboarding({ onTermine, onBack }) {
     <div className="ob-outer" style={{
       minHeight:'100vh',
       background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
-      fontFamily:"'DM Sans', sans-serif",
+      fontFamily:"'Poppins', sans-serif",
       display:'flex', flexDirection:'column',
       position:'relative', overflowX:'hidden', overflowY:'auto',
     }}>

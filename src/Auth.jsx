@@ -375,8 +375,9 @@ export default function Auth({ onConnecte, onBack }) {
           <div key={message} style={{
             padding: '10px 14px', borderRadius: 10, marginBottom: 14,
             animation: message.startsWith('✓') ? 'msgSlideIn 0.35s ease both' : 'msgShake 0.42s ease both',
-            background: message.startsWith('✓') ? 'rgba(80,140,60,0.18)' : 'rgba(180,80,30,0.22)',
-            borderLeft: `2px solid ${message.startsWith('✓') ? 'rgba(160,220,140,0.60)' : 'rgba(255,180,120,0.65)'}`,
+            background: message.startsWith('✓') ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
+            border: `1px solid ${message.startsWith('✓') ? 'rgba(34,197,94,0.30)' : 'rgba(239,68,68,0.30)'}`,
+            borderLeft: `2px solid ${message.startsWith('✓') ? '#22c55e' : '#ef4444'}`,
           }}>
             <span style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
@@ -393,20 +394,18 @@ export default function Auth({ onConnecte, onBack }) {
         <button style={{ ...s.btn, opacity: loading ? 0.7 : 1 }}
           onClick={soumettre} disabled={loading}
           onMouseEnter={e => {
-            e.currentTarget.style.borderColor = 'rgba(212,149,106,0.50)'
-            e.currentTarget.style.background = 'rgba(200,123,82,0.05)'
+            e.currentTarget.style.borderColor = 'rgba(255,225,170,0.90)'
             const arrow = e.currentTarget.querySelector('.btn-arrow')
             if (arrow) { arrow.style.animation = 'none'; arrow.style.transform = 'translateX(6px)' }
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.borderColor = 'rgba(255,245,225,0.75)'
-            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.borderColor = 'rgba(255,220,160,0.30)'
             const arrow = e.currentTarget.querySelector('.btn-arrow')
             if (arrow) { arrow.style.animation = ''; arrow.style.transform = '' }
           }}>
           <span style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center'}}>
             {loading
-              ? <><LoadingIcon size={16} color="#C87B52" /> {T.loading}</>
+              ? <><LoadingIcon size={16} color="#FFFFFF" /> {T.loading}</>
               : mode==='connexion'
                 ? <>{T.ctaLogin} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>
                 : <>{T.ctaSignup} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>}
@@ -449,7 +448,7 @@ const s = {
     border:'1px solid rgba(255,220,160,0.30)',
     animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', marginBottom:6 },
-  tagline: { textAlign:'center', fontSize:13, color:'rgba(255,248,235,0.42)', marginBottom:36 },
+  tagline: { textAlign:'center', fontSize:13, color:'rgba(255,248,235,0.60)', marginBottom:36 },
   tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
     borderBottom:'1px solid rgba(255,220,160,0.20)' },
   tab: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
@@ -465,13 +464,13 @@ const s = {
     borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:16, fontFamily:'Poppins, sans-serif',
     boxSizing:'border-box', outline:'none', color:'rgba(255,248,235,1)', transition:'border-color 0.2s, background 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
-  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'rgba(200,100,40,0.06)', display:'block', margin:'12px auto 0',
-    color:'rgba(255,248,235,1)', border:'1px solid rgba(255,220,160,0.30)', borderRadius:'2rem',
+  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'linear-gradient(135deg, #C87B52, #E8962A)', display:'block', margin:'12px auto 0',
+    color:'#FFFFFF', border:'1px solid rgba(255,220,160,0.30)', borderRadius:'2rem',
     fontSize:'clamp(1.3rem, 1.2vw, 1.6rem)', fontWeight:500, fontStyle:'italic',
     cursor:'pointer', fontFamily:"'Cormorant Garamond', Georgia, serif",
     letterSpacing:'0.10em', marginTop:0,
     transition:'background 0.25s, border-color 0.25s' },
-  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:'rgba(255,248,235,0.35)', letterSpacing:'0.02em' },
+  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:'rgba(255,248,235,0.60)', letterSpacing:'0.02em' },
   footer: { marginTop:20, textAlign:'center', fontSize:14, color:'rgba(255,248,235,0.78)', lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,

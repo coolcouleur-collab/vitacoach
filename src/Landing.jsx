@@ -10,7 +10,7 @@ function Splash({ done }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 200,
-      background: 'linear-gradient(160deg, #FFF8F2 0%, #F2E2CE 50%, #FFF8F2 100%)',
+      background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       display: 'grid', placeItems: 'center',
       opacity: done ? 0 : 1,
       pointerEvents: done ? 'none' : 'all',
@@ -163,16 +163,16 @@ function CinematicSlider({ onCommencer }) {
         {onCommencer && (
           <button
             onClick={onCommencer}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,215,155,0.32)'; e.currentTarget.style.borderColor = 'rgba(255,225,170,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,215,155,0.15)'; e.currentTarget.style.borderColor = 'rgba(255,220,160,0.65)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,225,170,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,220,160,0.65)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
-              background: 'rgba(255,215,155,0.15)',
+              background: 'linear-gradient(135deg, #C87B52, #E8962A)',
               border: '1px solid rgba(255,220,160,0.65)',
               borderRadius: '2rem',
               boxShadow: '0 0 24px rgba(232,150,42,0.25), inset 0 1px 0 rgba(255,240,200,0.18)',
-              color: 'rgba(255,248,235,1)',
+              color: '#FFFFFF',
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: 'clamp(1.3rem,1.4vw,1.65rem)',
@@ -452,7 +452,7 @@ function EarlyAccessSection() {
 
   return (
     <section style={{
-      background: 'linear-gradient(160deg, #F5DDB0 0%, #FFF6E8 60%, #F0D09C 100%)',
+      background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       padding: 'clamp(5rem, 10vw, 9rem) 1.5rem',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -470,104 +470,117 @@ function EarlyAccessSection() {
         pointerEvents: 'none',
       }} />
 
-      <p style={{
-        fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-        fontSize: 'clamp(0.7rem, 1vw, 0.82rem)',
-        letterSpacing: '0.24em', textTransform: 'uppercase',
-        color: 'rgba(200,123,82,0.70)', marginBottom: '1.2rem',
+      <div style={{
+        position: 'relative', zIndex: 1,
+        width: '100%', maxWidth: 640,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        background: 'rgba(200,100,40,0.14)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,220,160,0.50)',
+        boxShadow: '0 8px 32px rgba(140,65,15,0.20)',
+        borderRadius: 24,
+        padding: 'clamp(2.4rem, 5vw, 3.6rem) clamp(1.4rem, 4vw, 2.8rem)',
+        boxSizing: 'border-box',
       }}>
-        Communauté
-      </p>
+        <p style={{
+          fontFamily: 'Poppins, sans-serif', fontWeight: 500,
+          fontSize: 'clamp(0.7rem, 1vw, 0.82rem)',
+          letterSpacing: '0.24em', textTransform: 'uppercase',
+          color: 'rgba(255,248,235,0.75)', marginBottom: '1.2rem',
+        }}>
+          Communauté
+        </p>
 
-      <h2 style={{
-        fontFamily: "'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontWeight: 300,
-        fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
-        color: 'rgba(140,75,40,0.88)',
-        lineHeight: 1.2, marginBottom: '1.1rem',
-        maxWidth: 640,
-      }}>
-        Rejoins la communauté Solenn.
-      </h2>
-
-      <p style={{
-        fontFamily: 'Poppins, sans-serif', fontWeight: 400,
-        fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)',
-        color: 'rgba(160,90,45,0.80)',
-        lineHeight: 1.7, marginBottom: '2.8rem',
-        maxWidth: 480,
-      }}>
-        Reçois chaque semaine des conseils bien-être, sommeil et nutrition — <span style={{ color: 'rgba(200,123,82,0.90)', fontWeight: 500 }}>signés Solenn.</span>
-      </p>
-
-      {status === 'success' ? (
-        <div style={{
+        <h2 style={{
           fontFamily: "'Cormorant Garamond', Georgia, serif",
-          fontStyle: 'italic', fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
-          color: 'rgba(140,75,40,0.90)',
+          fontStyle: 'italic', fontWeight: 300,
+          fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
+          color: 'rgba(255,248,235,0.92)',
+          lineHeight: 1.2, marginBottom: '1.1rem',
+          maxWidth: 640,
         }}>
-          C'est noté — on te contacte en premier.
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} style={{
-          display: 'flex', gap: '0.75rem', flexWrap: 'wrap',
-          justifyContent: 'center', width: '100%', maxWidth: 480,
+          Rejoins la communauté Solenn.
+        </h2>
+
+        <p style={{
+          fontFamily: 'Poppins, sans-serif', fontWeight: 400,
+          fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)',
+          color: 'rgba(255,248,235,0.75)',
+          lineHeight: 1.7, marginBottom: '2.8rem',
+          maxWidth: 480,
         }}>
-          <input
-            type="email" required
-            placeholder="ton@email.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{
-              flex: '1 1 220px',
-              background: 'rgba(200,100,40,0.08)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(200,123,82,0.35)',
-              borderRadius: '2rem',
-              color: 'rgba(120,60,25,0.90)',
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '1rem', fontWeight: 400,
-              padding: '0.82rem 1.4rem',
-              outline: 'none',
-            }}
-          />
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            style={{
-              background: 'rgba(200,100,40,0.22)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255,220,160,0.60)',
-              borderRadius: '2rem',
-              boxShadow: '0 0 22px rgba(232,150,42,0.22)',
-              color: 'rgba(255,248,235,1)',
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontStyle: 'italic',
-              fontSize: 'clamp(1.1rem, 1.4vw, 1.3rem)',
-              fontWeight: 500,
-              padding: '0.82rem 2.2rem',
-              cursor: status === 'loading' ? 'wait' : 'pointer',
-              letterSpacing: '0.08em',
-              whiteSpace: 'nowrap',
-              transition: 'background 0.25s, box-shadow 0.25s',
-              outline: 'none',
-            }}
-          >
-            {status === 'loading' ? '...' : "Je m'abonne"}
-          </button>
-          {status === 'error' && (
-            <p style={{
-              width: '100%', textAlign: 'center',
-              fontFamily: 'Poppins, sans-serif', fontSize: '0.88rem',
-              color: 'rgba(180,80,40,0.80)', marginTop: '0.5rem',
-            }}>
-              Une erreur est survenue, réessaie.
-            </p>
-          )}
-        </form>
-      )}
+          Reçois chaque semaine des conseils bien-être, sommeil et nutrition — <span style={{ color: 'rgba(255,248,235,0.92)', fontWeight: 500 }}>signés Solenn.</span>
+        </p>
+
+        {status === 'success' ? (
+          <div style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic', fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
+            color: 'rgba(255,248,235,0.92)',
+          }}>
+            C'est noté — on te contacte en premier.
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{
+            display: 'flex', gap: '0.75rem', flexWrap: 'wrap',
+            justifyContent: 'center', width: '100%', maxWidth: 480,
+          }}>
+            <input
+              type="email" required
+              placeholder="ton@email.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="early-access-input"
+              style={{
+                flex: '1 1 220px',
+                background: 'rgba(255,235,200,0.14)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,220,160,0.45)',
+                borderRadius: '2rem',
+                color: 'rgba(255,248,235,0.95)',
+                fontFamily: 'Poppins, sans-serif',
+                fontSize: '1rem', fontWeight: 400,
+                padding: '0.82rem 1.4rem',
+                outline: 'none',
+              }}
+            />
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              style={{
+                background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                border: '1px solid rgba(255,220,160,0.60)',
+                borderRadius: '2rem',
+                boxShadow: '0 0 22px rgba(232,150,42,0.22)',
+                color: '#FFFFFF',
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(1.1rem, 1.4vw, 1.3rem)',
+                fontWeight: 500,
+                padding: '0.82rem 2.2rem',
+                cursor: status === 'loading' ? 'wait' : 'pointer',
+                letterSpacing: '0.08em',
+                whiteSpace: 'nowrap',
+                transition: 'background 0.25s, box-shadow 0.25s',
+                outline: 'none',
+              }}
+            >
+              {status === 'loading' ? '...' : "Je m'abonne"}
+            </button>
+            {status === 'error' && (
+              <p style={{
+                width: '100%', textAlign: 'center',
+                fontFamily: 'Poppins, sans-serif', fontSize: '0.88rem',
+                color: '#ef4444', marginTop: '0.5rem',
+              }}>
+                Une erreur est survenue, réessaie.
+              </p>
+            )}
+          </form>
+        )}
+      </div>
     </section>
   )
 }
@@ -619,6 +632,7 @@ export default function Landing({ onCommencer }) {
           50%     { transform: translateX(-50%) scale(1.015); }
         }
         .commencer-arrow { display:inline-block; margin-left:6px; animation: arrowSlide 1.6s ease-in-out infinite; }
+        .early-access-input::placeholder { color: rgba(255,248,235,0.55); }
 
         /* ── MOBILE ── */
         @media (max-width: 640px) {
