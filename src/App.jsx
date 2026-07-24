@@ -1834,7 +1834,7 @@ const [messages, setMessages] = useState(() => {
                 </span>
               </div>
 
-              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8, pointerEvents:'auto' }}>
                 {/* ── Nouveau chat (visible seulement sur onglet chat avec messages) ── */}
                 {onglet === 'chat' && messages.length > 0 && (
                   <button
@@ -3228,12 +3228,11 @@ const s = {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'8px 18px 8px',
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
-    borderBottom:'1px solid rgba(200,123,82,0.06)',
-    // Verre translucide au lieu de la « barre blanche » opaque (retour Jean
-    // 2026-07-24) — la page se voit à travers, comme sur l'accueil
-    background:'rgba(255,240,225,0.45)',
-    backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
+    // Plus de bande du tout (retour Jean 2026-07-24) : header flottant
+    // transparent sur TOUS les onglets, comme sur l'accueil
+    background:'transparent',
     position:'fixed', top:0, left:0, right:0, zIndex:50,
+    pointerEvents:'none',
   },
   backBtn: {
     width:36, height:36, borderRadius:12,

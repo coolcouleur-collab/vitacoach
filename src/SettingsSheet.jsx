@@ -4,20 +4,23 @@ import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
+// Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
+// pas avec l'univers translucide de Solenn). Textes terracotta sur fond clair,
+// conformément à la règle des surfaces claires.
 const C = {
-  bg: 'rgba(22,9,2,0.82)',
-  bgCard: 'rgba(255,235,210,0.09)',
-  bgCardHover: 'rgba(255,232,212,0.15)',
-  border: 'rgba(255,220,160,0.16)',
+  bg: 'rgba(255,244,232,0.90)',
+  bgCard: 'rgba(255,235,210,0.45)',
+  bgCardHover: 'rgba(255,232,212,0.60)',
+  border: 'rgba(200,123,82,0.20)',
   borderStrong: 'rgba(200,123,82,0.38)',
   accent: '#C87B52',
-  accentLight: 'rgba(200,123,82,0.16)',
+  accentLight: 'rgba(200,123,82,0.14)',
   accentMid: 'rgba(200,123,82,0.28)',
-  text: 'rgba(255,238,220,0.92)',
-  textMuted: 'rgba(255,220,180,0.52)',
-  textLight: 'rgba(255,210,160,0.35)',
-  handle: 'rgba(255,220,160,0.28)',
-  shadow: '0 -24px 64px rgba(0,0,0,0.50), 0 -4px 20px rgba(200,100,40,0.14)',
+  text: 'rgba(178,102,62,0.95)',
+  textMuted: 'rgba(200,123,82,0.62)',
+  textLight: 'rgba(200,123,82,0.40)',
+  handle: 'rgba(200,123,82,0.30)',
+  shadow: '0 -24px 64px rgba(180,100,40,0.18), 0 -4px 20px rgba(200,100,40,0.10)',
   font: "'Poppins', system-ui, sans-serif",
 }
 
@@ -174,7 +177,7 @@ function ToggleSwitch({ enabled, onToggle }) {
         borderRadius: 12,
         background: enabled
           ? `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`
-          : 'rgba(255,255,255,0.12)',
+          : 'rgba(200,123,82,0.18)',
         position: 'relative',
         cursor: 'pointer',
         transition: 'background 0.28s ease',
@@ -214,7 +217,7 @@ function PresetBtn({ icon, label, value, active, onClick }) {
         border: active
           ? `1.5px solid ${C.accent}`
           : `1px solid ${C.border}`,
-        background: active ? C.accentLight : 'rgba(255,235,210,0.08)',
+        background: active ? C.accentLight : 'rgba(255,235,210,0.40)',
         cursor: 'pointer',
         transition: 'all 0.20s ease',
         outline: 'none',
@@ -431,14 +434,16 @@ export default function SettingsSheet({
   ]
 
   return (
-    <AnimatePresence>
+    <>
+      {/* Animations CSS — remplacent framer-motion dont l'animation de montage
+          ne se déclenchait pas (sheet coincée hors écran sur mobile, retour
+          Jean 2026-07-24). Même mécanisme fiable que le menu hamburger. */}
+      <style>{`
+        @keyframes settingsFade { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes settingsUp   { from { transform: translateY(100%) } to { transform: translateY(0) } }
+      `}</style>
       {/* Backdrop */}
-      <motion.div
-        key="settings-backdrop"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.22 }}
+      <div
         onClick={onClose}
         style={{
           position: 'fixed',
@@ -447,16 +452,12 @@ export default function SettingsSheet({
           background: 'rgba(26,10,0,0.32)',
           backdropFilter: 'blur(8px)',
           WebkitBackdropFilter: 'blur(8px)',
+          animation: 'settingsFade 0.22s ease both',
         }}
       />
 
       {/* Sheet */}
-      <motion.div
-        key="settings-sheet"
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ type: 'spring', stiffness: 340, damping: 38, mass: 1 }}
+      <div
         style={{
           position: 'fixed',
           bottom: 0,
@@ -465,6 +466,7 @@ export default function SettingsSheet({
           zIndex: 1201,
           display: 'flex',
           justifyContent: 'center',
+          animation: 'settingsUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both',
         }}
       >
         <div style={{
@@ -813,21 +815,23 @@ export default function SettingsSheet({
                     background: 'rgba(255,235,210,0.32)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
-                    color: '#FFF6E8',
+                    // Texte terracotta ici : le panneau Réglages est clair, le
+                    // crème y serait illisible (règle des surfaces claires)
+                    color: '#B2663E',
                     fontFamily: C.font,
                     fontSize: 14,
                     fontWeight: 700,
                     cursor: 'pointer',
                     outline: 'none',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 8px 24px rgba(158,88,52,0.26), inset 0 1px 0 rgba(255,248,235,0.32)',
+                    boxShadow: '0 8px 24px rgba(158,88,52,0.20), inset 0 1px 0 rgba(255,248,235,0.32)',
                     marginBottom: 8,
                     transition: 'opacity 0.15s ease, transform 0.12s ease',
                   }}
                   onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
                   onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
                 >
-                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="white" /> Passer à Solenn Pro · 44,99€/an</span>
+                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="#B2663E" /> Passer à Solenn Pro · 44,99€/an</span>
                 </button>
                 {/* Sous-texte */}
                 <div style={{
@@ -969,7 +973,7 @@ export default function SettingsSheet({
 
           </div>
         </div>
-      </motion.div>
-    </AnimatePresence>
+      </div>
+    </>
   )
 }
