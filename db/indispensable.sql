@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS repas (
   user_id     uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date        date NOT NULL DEFAULT CURRENT_DATE,
   moment      text,                  -- petit-dej / dejeuner / diner / snack
-  analyse     jsonb NOT NULL,        -- {plats[], calories, proteines, glucides, lipides, qualite, conseil}
+  -- "analyse" entre guillemets : ANALYSE est un mot réservé PostgreSQL (alias d'ANALYZE)
+  "analyse"   jsonb NOT NULL,        -- {plats[], calories, proteines, glucides, lipides, qualite, conseil}
   resume      text,                  -- phrase de Solenn affichée dans le chat
   created_at  timestamptz DEFAULT now()
 );
