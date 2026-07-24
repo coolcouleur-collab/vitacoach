@@ -100,7 +100,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact. Utilise les vrais horai
 }`
 
   const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role:'system', content:'Tu es un expert en bien-être holistique. Réponds TOUJOURS en JSON valide et complet. Ne mets pas de texte avant ou après le JSON.' },
       { role:'user', content:prompt }

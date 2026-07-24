@@ -85,7 +85,7 @@ Réponds UNIQUEMENT en JSON valide :
 Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
 
   const response = await getGroq().chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: 'Tu génères des routines personnalisées. Réponds UNIQUEMENT en JSON valide, sans balises markdown.' },
       { role: 'user', content: prompt }

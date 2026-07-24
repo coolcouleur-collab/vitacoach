@@ -119,7 +119,7 @@ Format JSON :
 }`
 
   const res = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: 'Tu es Solenn. Réponds uniquement en JSON valide, sans markdown.' },
       { role: 'user',   content: prompt }

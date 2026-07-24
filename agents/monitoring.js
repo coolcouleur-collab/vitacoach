@@ -56,7 +56,7 @@ async function genererMessageAlerte(profil, alertes) {
   const resumeAlertes = alertes.map(a => `${a.emoji} ${a.label} (${a.valeur}${a.unite})`).join(', ')
 
   const resp = await getGroq().chat.completions.create({
-    model: 'llama-3.1-8b-instant',
+    model: 'openai/gpt-oss-20b',
     messages: [
       {
         role: 'system',

@@ -73,7 +73,7 @@ export default async function handler(req, res) {
     ).then(r => r.json()).then(w => `${Math.round(w.main.temp)}°C, ${w.weather[0].description}`),
 
     groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       response_format: { type: 'json_object' },
       messages: [
         {

@@ -214,7 +214,7 @@ RÈGLES ABSOLUES MODE SOS :
     ]
     try {
       const stream = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: messagesAPI,
         temperature: 0.60,
         max_tokens: 300,
@@ -328,8 +328,8 @@ FORMAT 3 — TOUT LE RESTE : texte pur, 3 phrases max, empathique si besoin, tou
   try {
     const stream = await groq.chat.completions.create({
       model: (message.length > 60 || /programme|plan |routine|recette|détail|complet|semaine|explique|compare|liste|symptôme|douleur|sommeil|stress|fatigue|anxieux|anxiété|digestion|plante|naturel|complément|vitamine|carence|mal |j'ai|je me sens|j'en peux/i.test(message))
-        ? 'llama-3.3-70b-versatile'
-        : 'llama-3.1-8b-instant',
+        ? 'openai/gpt-oss-120b'
+        : 'openai/gpt-oss-20b',
       messages: messagesAPI,
       temperature: 0.72,
       max_tokens: 1200,
@@ -382,7 +382,7 @@ Réponds en JSON avec ce format exact :
   }
 
   const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: 'Tu es un assistant qui extrait et structure des informations de profil. Réponds toujours en JSON valide.' },
       { role: 'user', content: prompts[section] }
@@ -463,7 +463,7 @@ Propose 6 tenues. Réponds UNIQUEMENT en JSON valide :
 }`
 
   const response = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: 'Tu es un styliste expert. Réponds toujours en JSON valide.' },
       { role: 'user', content: prompt }
@@ -608,7 +608,7 @@ Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
 
   try {
     const response = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: 'Tu génères des routines personnalisées. Réponds UNIQUEMENT en JSON valide, sans balises markdown, sans texte avant ou après le JSON.' },
         { role: 'user', content: prompt }
@@ -641,7 +641,7 @@ Maximum 3 insights, pertinents et actionnables.`
 
   try {
     const response = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: 'Tu analyses des données de santé. Réponds UNIQUEMENT en JSON valide, sans balises markdown.' },
         { role: 'user', content: prompt }
@@ -691,7 +691,7 @@ Donne 6 recommandations vraiment différentes et adaptées. Sois précis et scie
 
   try {
     const response = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: 'Tu es un expert herbal. Réponds UNIQUEMENT en JSON valide.' },
         { role: 'user', content: prompt }
@@ -780,7 +780,7 @@ app.post('/api/smart-notif', adminGuard, async (req, res) => {
 
   try {
     const resp = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       messages: [
         { role:'system', content:'Tu génères une notification push courte et personnalisée pour une app de coaching santé. 1 ligne max (60 chars). Chaleureux, concret, motivant. Pas de guillemets.' },
         { role:'user',   content: `Contexte : ${contextDesc}. Génère le corps de la notification.` }
@@ -982,7 +982,7 @@ app.post('/api/analyser-repas', ownerGuard, async (req, res) => {
 
     const completion = await groq.chat.completions.create({
       // Scout déprécié par Groq (17/06/2026) — Maverick est le modèle vision restant
-      model: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+      model: 'qwen/qwen3.6-27b',
       messages: [{
         role: 'user',
         content: [

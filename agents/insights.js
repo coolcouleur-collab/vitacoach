@@ -113,7 +113,7 @@ export function detecterPatterns(rows) {
 // ─── Formulation par Solenn ──────────────────────────────────────────────────
 async function formuler(patterns, prenom) {
   const completion = await getGroq().chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [{
       role: 'system',
       content: `Tu es Solenn, coach bien-être. On te donne des patterns détectés dans les données de ${prenom || 'ton utilisateur'} (JSON). Pour CHACUN, écris UNE phrase percutante en tutoiement qui révèle le pattern avec ses chiffres — le genre de phrase qu'on ne peut dire que quand on connaît vraiment quelqu'un. Pas de conseil moralisateur, pas d'emoji. Réponds UNIQUEMENT en JSON : {"insights":[{"type":"...","phrase":"..."}]} dans le même ordre.`,

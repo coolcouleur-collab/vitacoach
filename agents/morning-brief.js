@@ -127,7 +127,7 @@ export async function runMorningBrief() {
       const contexte = decrireContexte(ctx)
 
       const completion = await getGroq().chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'openai/gpt-oss-20b',
         messages: [{
           role: 'system',
           content: `Tu es Solenn, coach bien-être. Écris LE message du matin pour ${profil.nom || 'ton utilisateur'} — 2 à 3 phrases maximum, chaleureux, concret, en tutoiement. Appuie-toi sur le contexte réel fourni (c'est ta force : personne d'autre ne le fait). Une seule micro-action proposée pour la journée. Pas d'emoji, pas de guillemets, pas de signature.${profil.objectif ? ` Objectif de la personne : ${profil.objectif}.` : ''}`,

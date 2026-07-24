@@ -73,7 +73,7 @@ export async function creerChallenge(userId, duree = 21) {
   if (memoire?.points_attention?.length) faiblesses.push(...memoire.points_attention.slice(0, 2))
 
   const res = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       {
         role: 'system',

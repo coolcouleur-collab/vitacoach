@@ -135,7 +135,7 @@ async function genererMessage(moment, profil, contextLines) {
   ].join('\n')
 
   const resp = await getGroq().chat.completions.create({
-    model: 'llama-3.1-8b-instant',
+    model: 'openai/gpt-oss-20b',
     messages: [
       { role: 'system', content: ctx.systemInstruction },
       { role: 'user',   content: userContent }

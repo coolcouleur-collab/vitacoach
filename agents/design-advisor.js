@@ -229,7 +229,7 @@ Format JSON :
 }`
 
   const res = await getGroq().chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: 'Tu es un expert design UI premium. Réponds uniquement en JSON valide, sans markdown.' },
       { role: 'user', content: prompt }

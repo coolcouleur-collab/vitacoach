@@ -89,7 +89,7 @@ Si ${nom} parle d'une victoire : célèbre-la vraiment, 1-2 phrases, sans en fai
 
   try {
     const stream = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: messagesAPI,
       temperature: 0.88,
       max_tokens: 1200,
