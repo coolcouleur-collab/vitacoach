@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
 import CheckinCard from './CheckinCard'
+import JourneePrete from './JourneePrete'
 
 // ─── Icône vélo (inline — absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -2207,6 +2208,8 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
       />
+      {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
+      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} />
       <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
       <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
       <DailyTasks profil={profil} metriques={metriques} onSwitchTab={onSwitchTab} isNight={isNight} preset={currentPreset} />

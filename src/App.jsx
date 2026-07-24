@@ -745,7 +745,8 @@ const [messages, setMessages] = useState(() => {
   useEffect(() => {
     if (profil && messages.length > 0) {
       // Ne jamais sauvegarder les messages de limite dans l'historique
-      const toSave = messages.filter(m => !m.content?.includes('messages gratuits'))
+      // (et retirer les images : un data URL exploserait le quota localStorage)
+      const toSave = messages.filter(m => !m.content?.includes('messages gratuits')).map(({ image, ...m }) => m)
       localStorage.setItem('vitacoach_historique', JSON.stringify(toSave.slice(-50)))
     }
     messagesRef.current = messages
@@ -1159,6 +1160,34 @@ const [messages, setMessages] = useState(() => {
       if (data.url) window.location.href = data.url
       // Stripe pas encore configuré — silencieux
     } catch {}
+  }
+
+  // ── Photo de repas → analyse vision + mémoire nutritionnelle ───────────────
+  async function envoyerPhotoRepas(dataUrl) {
+    if (isSendingRef.current) return
+    if (!hasFullAccess && getMsgCount() >= FREE_LIMIT) {
+      setMessages(prev => [...prev, { role:'assistant', content:`Tu as utilisé tes ${FREE_LIMIT} messages gratuits aujourd'hui. Passe à Solenn Pro pour des analyses illimitées !` }])
+      return
+    }
+    isSendingRef.current = true
+    setMessages(prev => [...prev, { role:'user', content:'', image: dataUrl }])
+    setLoading(true)
+    if (!hasFullAccess) incrementMsgCount()
+    try {
+      const heure = new Date().getHours()
+      const moment = heure < 11 ? 'petit-dej' : heure < 15 ? 'dejeuner' : heure < 18 ? 'snack' : 'diner'
+      const resp = await fetch('/api/analyser-repas', {
+        method:'POST', headers:{ 'Content-Type':'application/json', ...(await authHeaders()) },
+        body: JSON.stringify({ userId: user?.id, image: dataUrl, moment }),
+      })
+      const data = await resp.json()
+      setMessages(prev => [...prev, { role:'assistant', content: data.message || data.error || `Je n'ai pas réussi à analyser cette photo, tu peux réessayer ?` }])
+    } catch {
+      setMessages(prev => [...prev, { role:'assistant', content:`Je n'ai pas réussi à analyser la photo — vérifie ta connexion et réessaie.` }])
+    } finally {
+      setLoading(false)
+      isSendingRef.current = false
+    }
   }
 
   async function envoyerMessage(msg) {
@@ -2074,7 +2103,10 @@ const [messages, setMessages] = useState(() => {
                           : isRich(msg.content) ? s.botBubbleRich : s.botBubble
                       }>
                         {msg.role==='user'
-                          ? msg.content
+                          ? (<>
+                              {msg.image && <img src={msg.image} alt="Photo de repas" style={{ maxWidth:'100%', maxHeight:220, borderRadius:12, display:'block', marginBottom: msg.content ? 6 : 0, objectFit:'cover' }} />}
+                              {msg.content}
+                            </>)
                           : (
                             <MsgBoundary fallback={msg.content}>
                               <ResponseRenderer content={msg.content} />
@@ -2154,6 +2186,7 @@ const [messages, setMessages] = useState(() => {
 
               <ChatInputBar
                 onSend={envoyerMessage}
+                onSendImage={envoyerPhotoRepas}
                 disabled={loading}
                 kbOffset={kbOffset}
                 isMobile={isMobile}
@@ -3289,13 +3322,35 @@ const s = {
 
 // Composant isolé : l'état `input` reste ici et ne remonte jamais dans App
 // → chaque frappe clavier ne re-render que ce composant (~10 lignes), pas les 2900 lignes d'App
-const ChatInputBar = React.memo(function ChatInputBar({ onSend, disabled, kbOffset, isMobile, showScrollBtn, onScrollDown }) {
+const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, disabled, kbOffset, isMobile, showScrollBtn, onScrollDown }) {
   const [input, setInput] = React.useState('')
+  const fileRef = React.useRef(null)
   function send() {
     const msg = input.trim()
     if (!msg || disabled) return
     setInput('')
     onSend(msg)
+  }
+  // Photo de repas : compression canvas (max 1024px, jpeg 0.75) avant envoi —
+  // assez précis pour l'analyse vision, assez léger pour la 4G
+  function handleFile(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file || disabled || !onSendImage) return
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      const max = 1024
+      const scale = Math.min(1, max / Math.max(img.width, img.height))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(img.width * scale)
+      canvas.height = Math.round(img.height * scale)
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+      URL.revokeObjectURL(url)
+      onSendImage(canvas.toDataURL('image/jpeg', 0.75))
+    }
+    img.onerror = () => URL.revokeObjectURL(url)
+    img.src = url
   }
   return (
     <div style={{ ...s.inputRow, marginBottom: isMobile && kbOffset > 0 ? kbOffset : 0 }}>
@@ -3308,6 +3363,14 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, disabled, kbOffs
             boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
       )}
       <div style={s.inputBox}>
+        <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:'none' }} />
+        <button style={{ ...s.sendBtn, marginRight:-4 }} title="Photographier mon repas"
+          onClick={() => { triggerHaptic('light'); fileRef.current?.click() }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.58)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </button>
         <input className="chat-input" style={s.inputChat}
           value={input}
           onChange={e => setInput(e.target.value)}

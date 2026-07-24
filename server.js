@@ -952,10 +952,88 @@ app.get('/api/morning-message', ownerGuard, async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0]
     const { data } = await supabase.from('morning_messages')
-      .select('message, date').eq('user_id', userId).eq('date', today).maybeSingle()
-    res.json({ message: data?.message || null, date: data?.date || null })
+      .select('message, date, adaptations').eq('user_id', userId).eq('date', today).maybeSingle()
+    res.json({ message: data?.message || null, date: data?.date || null, adaptations: data?.adaptations || [] })
   } catch {
     res.json({ message: null })
+  }
+})
+
+// ── Analyse photo de repas (Groq vision) ─────────────────────────────────────
+// La « nutrition intuitive » de la landing, pour de vrai : photo → analyse →
+// mémoire nutritionnelle (table repas) que le brief matinal et les insights
+// peuvent relire. Remplace la saisie manuelle, corvée n°1 du wellness.
+app.post('/api/analyser-repas', ownerGuard, async (req, res) => {
+  const { userId, image, moment } = req.body
+  if (!userId || !image) return res.status(400).json({ error: 'userId et image requis' })
+  if (typeof image !== 'string' || !image.startsWith('data:image/')) {
+    return res.status(400).json({ error: 'image doit être un data URL' })
+  }
+  if (image.length > 6_000_000) return res.status(413).json({ error: 'image trop lourde (max ~4 Mo)' })
+  // Même quota que le chat : essai 21j et Pro illimités, sinon 5/jour
+  const quota = await consumeQuota(req.authUser)
+  if (!quota.ok) return res.status(429).json({ error: 'quota_atteint', limit: quota.limit })
+  try {
+    let prenom = ''
+    try {
+      const { data: prof } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+      prenom = prof?.profil?.nom || ''
+    } catch {}
+
+    const completion = await groq.chat.completions.create({
+      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: `Tu es Solenn, coach nutrition bienveillante (tutoiement, jamais culpabilisante, pas d'emoji). Analyse cette photo de repas${prenom ? ` de ${prenom}` : ''}. Réponds UNIQUEMENT en JSON :
+{"plats": ["..."], "calories": 000, "proteines_g": 0, "glucides_g": 0, "lipides_g": 0, "qualite": 1-5, "points_forts": "...", "conseil": "...", "resume": "2-3 phrases chaleureuses de Solenn : ce qu'elle voit, un point positif sincère, UN conseil concret pour la suite de la journée"}
+Estimations approximatives assumées. Si la photo n'est pas un repas, {"erreur": "description de ce que tu vois"}.`,
+          },
+          { type: 'image_url', image_url: { url: image } },
+        ],
+      }],
+      max_tokens: 600,
+      temperature: 0.5,
+      response_format: { type: 'json_object' },
+    })
+
+    let analyse
+    try { analyse = JSON.parse(completion.choices[0].message.content) } catch {
+      return res.status(502).json({ error: 'analyse illisible, réessaie' })
+    }
+    if (analyse.erreur) return res.json({ ok: false, message: `Hmm, je ne vois pas bien de repas sur cette photo (${analyse.erreur}). Tu peux réessayer avec l'assiette bien visible ?` })
+
+    const resume = analyse.resume || 'Repas noté !'
+    // Mémoire nutritionnelle — non bloquant si la table n'existe pas encore
+    try {
+      await supabase.from('repas').insert({
+        user_id: userId,
+        moment: moment || null,
+        analyse: { plats: analyse.plats, calories: analyse.calories, proteines_g: analyse.proteines_g, glucides_g: analyse.glucides_g, lipides_g: analyse.lipides_g, qualite: analyse.qualite, conseil: analyse.conseil },
+        resume,
+      })
+    } catch (e) { console.warn('[Repas] insert:', e.message) }
+
+    res.json({ ok: true, message: resume, analyse })
+  } catch (e) {
+    console.error('[Repas] erreur:', e.message)
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ── Insights longitudinaux de l'utilisateur ──────────────────────────────────
+app.get('/api/insights', ownerGuard, async (req, res) => {
+  const { userId } = req.query
+  if (!userId || !supabase) return res.json({ insights: [] })
+  try {
+    const { data } = await supabase.from('user_insights')
+      .select('type, insight, data, computed_at')
+      .eq('user_id', userId).order('computed_at', { ascending: false }).limit(6)
+    res.json({ insights: data || [] })
+  } catch {
+    res.json({ insights: [] })
   }
 })
 

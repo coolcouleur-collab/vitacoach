@@ -43,15 +43,45 @@ async function contexteVeille(sb, userId) {
   const hier = dateStr(new Date(Date.now() - 24 * 3600 * 1000))
   const today = dateStr(new Date())
   try {
-    const [mHier, mJour, challenge] = await Promise.all([
+    const [mHier, mJour, challenge, insight, dernierRepas] = await Promise.all([
       sb.from('user_metrics').select('sommeil, pas, humeur, eau').eq('user_id', userId).eq('date', hier).maybeSingle(),
       sb.from('user_metrics').select('sommeil').eq('user_id', userId).eq('date', today).maybeSingle(),
       sb.from('challenges').select('challenge, progression, date_debut').eq('user_id', userId).eq('actif', true).maybeSingle(),
+      sb.from('user_insights').select('insight, type').eq('user_id', userId).order('computed_at', { ascending: false }).limit(1).maybeSingle(),
+      sb.from('repas').select('resume, analyse').eq('user_id', userId).eq('date', hier).order('created_at', { ascending: false }).limit(1).maybeSingle(),
     ])
-    return { hier: mHier?.data || null, nuit: mJour?.data || null, challenge: challenge?.data || null }
+    return {
+      hier: mHier?.data || null, nuit: mJour?.data || null, challenge: challenge?.data || null,
+      insight: insight?.data || null, repasHier: dernierRepas?.data || null,
+    }
   } catch {
     return {}
   }
+}
+
+// ─── Adaptations structurées de la journée (calculées en code) ───────────────
+// C'est la card « Ta journée est prête » du HomeTab : chaque adaptation dit
+// CE QUE Solenn a ajusté et POURQUOI (la raison = les données de l'utilisateur).
+function calculerAdaptations(ctx) {
+  const adaptations = []
+  const sommeil = ctx.nuit?.sommeil || 0
+  if (sommeil > 0 && sommeil < 6.5) {
+    adaptations.push({ type: 'allege', titre: 'Journée allégée', raison: `Nuit courte (${sommeil}h) — objectifs réduits, récupération en priorité` })
+  } else if (sommeil >= 8) {
+    adaptations.push({ type: 'boost', titre: 'Journée ambitieuse', raison: `Belle nuit (${sommeil}h) — c'est le jour pour pousser un peu plus` })
+  }
+  if (ctx.hier?.humeur > 0 && ctx.hier.humeur <= 2) {
+    adaptations.push({ type: 'soft', titre: 'Douceur au programme', raison: `Humeur difficile hier (${ctx.hier.humeur}/5) — pas de pression aujourd'hui` })
+  }
+  if (ctx.challenge) {
+    const jour = Math.min(Math.max(Math.floor((Date.now() - new Date(ctx.challenge.date_debut).getTime()) / 864e5) + 1, 1), 21)
+    const action = ctx.challenge.challenge?.jours?.[jour - 1]?.action
+    if (action) adaptations.push({ type: 'challenge', titre: `Challenge — jour ${jour}/21`, raison: action })
+  }
+  if (ctx.hier?.pas > 0 && ctx.hier.pas >= 10000) {
+    adaptations.push({ type: 'bravo', titre: 'Objectif pas atteint hier', raison: `${ctx.hier.pas} pas — on garde la lancée` })
+  }
+  return adaptations
 }
 
 function decrireContexte(ctx) {
@@ -65,6 +95,8 @@ function decrireContexte(ctx) {
     const action = ctx.challenge.challenge?.jours?.[jour - 1]?.action
     lines.push(`Challenge 21 jours : jour ${jour}/21${action ? ` — action du jour : ${action}` : ''}`)
   }
+  if (ctx.repasHier?.analyse?.qualite) lines.push(`Dernier repas photographié hier : qualité ${ctx.repasHier.analyse.qualite}/5${ctx.repasHier.analyse.qualite <= 2 ? ' — suggère un déjeuner équilibré sans culpabiliser' : ''}`)
+  if (ctx.insight?.insight) lines.push(`Pattern détecté sur son historique (à glisser naturellement si pertinent) : « ${ctx.insight.insight} »`)
   return lines
 }
 
@@ -110,8 +142,9 @@ export async function runMorningBrief() {
       const message = completion.choices?.[0]?.message?.content?.trim()
       if (!message) continue
 
+      const adaptations = calculerAdaptations(ctx)
       await sb.from('morning_messages').upsert(
-        { user_id: userId, date: today, message, created_at: new Date().toISOString() },
+        { user_id: userId, date: today, message, adaptations, created_at: new Date().toISOString() },
         { onConflict: 'user_id,date' }
       )
       generes++

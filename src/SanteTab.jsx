@@ -4,6 +4,7 @@ import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, Phone
 import ConnexionsSante from './ConnexionsSante'
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
+import TesProgres from './TesProgres'
 import { authHeaders } from './supabase'
 
 // hex → rgba helper
@@ -652,6 +653,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
       {/* ── Historique 7 jours ── */}
       <HistoriqueSection history={history} />
+
+      {/* ── Tes progrès avec Solenn — preuve mesurable + insights ── */}
+      <TesProgres history={history} userId={userId} />
 
       {/* ── Conseils personnalisés ── */}
       {(() => {

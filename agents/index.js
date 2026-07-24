@@ -29,6 +29,7 @@ import { runNutritionnel, genererConseilsNutrition } from './nutritionnel.js'
 import { runMomentsCheck, extraireMoments, sauvegarderMoments } from './moments.js'
 import { runSyncSante } from './sync-sante.js'
 import { runMorningBrief } from './morning-brief.js'
+import { runInsights } from './insights.js'
 
 // ─── État des agents (pour le dashboard /api/agents-status) ──────────────────
 const agentsStatus = {
@@ -44,6 +45,7 @@ const agentsStatus = {
   moments:       { dernierRun: null, derniersResultats: null, actif: false },
   syncSante:     { dernierRun: null, derniersResultats: null, actif: false },
   morningBrief:  { dernierRun: null, derniersResultats: null, actif: false },
+  insights:      { dernierRun: null, derniersResultats: null, actif: false },
 }
 
 function logRun(agent, resultats) {
@@ -224,6 +226,19 @@ export function startAgents(pushSubscriptions) {
     }
   }, { timezone: 'Europe/Paris' })
   console.log('   🌅 MorningBrief  : quotidien 06:45')
+
+  // ── Agent 13 : Insights longitudinaux — dimanche 07:00 (patterns détectés
+  //    sur 60 jours de user_metrics, formulés par Solenn → user_insights) ─────
+  cron.schedule('0 7 * * 0', async () => {
+    console.log('[Agents] Insights → déclenchement')
+    try {
+      const res = await runInsights()
+      logRun('insights', res)
+    } catch (e) {
+      console.error('[Agents] Insights erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+  console.log('   🔎 Insights      : dimanche 07:00')
 }
 
 // ─── API : status de tous les agents ─────────────────────────────────────────
@@ -260,6 +275,8 @@ export async function triggerAgent(agentName, pushSubscriptions, options = {}) {
       return runSyncSante()
     case 'morning-brief':
       return runMorningBrief()
+    case 'insights':
+      return runInsights()
     default:
       throw new Error(`Agent inconnu: ${agentName}`)
   }
