@@ -802,19 +802,22 @@ export default function SettingsSheet({
                 <button
                   onClick={onPasserPro}
                   style={{
+                    // Verre de cuivre profond — CTA unifié Solenn (2026-07-24)
                     width: '100%',
                     padding: '14px',
                     borderRadius: 16,
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
-                    color: '#fff',
+                    border: '1px solid rgba(255,235,210,0.45)',
+                    background: 'linear-gradient(150deg, rgba(184,105,64,0.88), rgba(150,82,48,0.90))',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    color: '#FFF6E8',
                     fontFamily: C.font,
                     fontSize: 14,
                     fontWeight: 700,
                     cursor: 'pointer',
                     outline: 'none',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 4px 18px rgba(200,123,82,0.38), 0 1px 4px rgba(200,100,40,0.18)',
+                    boxShadow: '0 8px 24px rgba(158,88,52,0.26), inset 0 1px 0 rgba(255,248,235,0.32)',
                     marginBottom: 8,
                     transition: 'opacity 0.15s ease, transform 0.12s ease',
                   }}

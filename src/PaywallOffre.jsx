@@ -92,8 +92,9 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
                   {p.badge && (
                     <div style={{
                       position: 'absolute', top: -9, left: 12, fontSize: 9.5, fontWeight: 600,
-                      letterSpacing: '0.06em', textTransform: 'uppercase', color: '#fff',
-                      background: 'linear-gradient(135deg, #E8962A, #C87B52)',
+                      letterSpacing: '0.06em', textTransform: 'uppercase', color: '#FFF6E8',
+                      background: 'rgba(158,88,52,0.90)',
+                      border: '1px solid rgba(255,235,210,0.40)',
                       padding: '2px 9px', borderRadius: 99,
                     }}>{p.badge}</div>
                   )}
@@ -108,10 +109,13 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
 
         {/* CTA principal : entrer dans l'essai */}
         <button onClick={onStart} style={{
+          // Verre de cuivre profond — fond clair ici, opacité plus forte pour la lisibilité
           width: '100%', cursor: 'pointer', fontFamily: F, fontWeight: 600, fontSize: 15,
-          color: '#fff', border: 'none', borderRadius: 16, padding: '15px 20px',
-          background: 'linear-gradient(135deg, #E8962A 0%, #C87B52 100%)',
-          boxShadow: '0 10px 30px rgba(200,123,82,0.35)',
+          color: '#FFF6E8', borderRadius: 16, padding: '15px 20px',
+          background: 'linear-gradient(150deg, rgba(184,105,64,0.88), rgba(150,82,48,0.90))',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,235,210,0.45)',
+          boxShadow: '0 10px 28px rgba(158,88,52,0.28), inset 0 1px 0 rgba(255,248,235,0.32)',
         }}>
           Commencer mes 21 jours offerts
         </button>

@@ -319,12 +319,13 @@ const S = {
     transition:'border-color 0.2s, box-shadow 0.2s',
   },
   cta: {
-    width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,220,160,0.38)',
-    background:'linear-gradient(135deg, #C87B52, #E8962A)',
-    backgroundSize:'250% 100%',
-    color:'#FFFFFF', fontSize:16, fontWeight:600, cursor:'pointer',
+    // Verre de cuivre profond — translucide + texte crème (palette Solenn)
+    width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,235,210,0.45)',
+    background:'linear-gradient(150deg, rgba(184,105,64,0.62), rgba(150,82,48,0.68))',
+    backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+    color:'#FFF6E8', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'Poppins', sans-serif", letterSpacing:'0.3px',
-    boxShadow:'0 8px 24px rgba(180,80,30,0.22)',
+    boxShadow:'0 8px 24px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,248,235,0.30)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
   },
@@ -434,7 +435,11 @@ export default function Onboarding({ onTermine, onBack }) {
   }
 
   if (showReveal) {
-    return <RevealScreen answers={answers} onEnter={() => onTermine(answers)} />
+    // Passer le PROFIL CONSTRUIT (window._solennProfil, posé par finishOnboarding),
+    // pas les réponses brutes : `answers` (state) ne contient pas le choix de
+    // cycle de l'étape 10 (passé en argument, jamais setAnswers) — App écrasait
+    // le bon profil localStorage et l'onglet Cycle n'apparaissait jamais.
+    return <RevealScreen answers={answers} onEnter={() => onTermine(window._solennProfil || answers)} />
   }
 
   const slideVariants = {

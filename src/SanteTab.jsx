@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
-import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, LightbulbIcon, PhoneIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon, SparkleIcon } from './Icons'
-import ConnexionsSante from './ConnexionsSante'
+import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon, SparkleIcon } from './Icons'
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
@@ -657,50 +656,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Tes progrès avec Solenn — preuve mesurable + insights ── */}
       <TesProgres history={history} userId={userId} />
 
-      {/* ── Conseils personnalisés ── */}
-      {(() => {
-        const eau     = metriques.eau     || 0
-        const sommeil = metriques.sommeil || 0
-        const pas     = metriques.pas     || 0
-
-        const tips = []
-        if (eau < 4)      tips.push('Bois plus d\'eau — objectif 8 verres par jour')
-        if (sommeil < 6)  tips.push('Tu dors peu — vise 7-8h pour récupérer')
-        if (pas < 3000)   tips.push('Bouge plus — 10 min de marche changent tout')
-        if (tips.length === 0) tips.push('Tes habitudes sont bonnes — continue !')
-
-        return (
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '0.3px' }}>
-              <span style={{display:'flex',alignItems:'center',gap:5}}><LightbulbIcon size={12} color="rgba(200,123,82,0.70)" />Conseils personnalisés</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {tips.map((tip, i) => (
-                <div key={i} style={{
-                  background: 'rgba(200,123,82,0.06)',
-                  border: '1px solid rgba(200,123,82,0.12)',
-                  borderRadius: 12, padding: '10px 14px',
-                  fontSize: 12, color: '#C87B52',
-                  fontFamily: 'Poppins,sans-serif', fontWeight: 500, lineHeight: 1.5,
-                }}>
-                  {tip}
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      })()}
-
-      {/* ── Appareils & Intégrations Santé ── */}
-      <div style={{ marginBottom: 14 }}>
-        <div style={{
-          fontSize: 12, fontWeight: 700, color: 'rgba(200,123,82,0.70)',
-          fontFamily: 'Poppins,sans-serif', marginBottom: 12, letterSpacing: '0.3px'
-        }}>
-          <span style={{display:'flex',alignItems:'center',gap:5}}><PhoneIcon size={12} color="rgba(200,123,82,0.70)" />Appareils connectés</span>
-        </div>
-        <ConnexionsSante userId={userId} onMetriqueUpdate={onUpdate} />
-      </div>
+      {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
+           « Conseils personnalisés » → remplacés par Tes progrès + insights ;
+           « Appareils connectés » (ConnexionsSante) → accessible dans Réglages. ── */}
 
       {/* ── Rapport Hebdomadaire ── */}
       {userId && (
