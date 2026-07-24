@@ -1119,6 +1119,18 @@ const [messages, setMessages] = useState(() => {
     localStorage.setItem('vitacoach_notif', JSON.stringify(false))
   }
 
+  // ── Lenis ne doit JAMAIS tourner dans l'app connectée ──────────────────────
+  // (html.lenis { height:auto } casse le layout à scroll interne — bas des
+  // pages coupé sur mobile). Détruit si la session a démarré déconnectée.
+  useEffect(() => {
+    if (!user) return
+    try {
+      window.__solennLenis?.destroy?.()
+      window.__solennLenis = null
+      document.documentElement.classList.remove('lenis', 'lenis-smooth', 'lenis-scrolling', 'lenis-stopped')
+    } catch {}
+  }, [user])
+
   // ── Message matinal proactif (agent morning-brief, généré à 06:45) ─────────
   // Affiché comme message de Solenn dans le chat, une fois par jour.
   useEffect(() => {
@@ -1549,6 +1561,8 @@ const [messages, setMessages] = useState(() => {
             onPasserPro={passerPro}
             msgsRestants={hasFullAccess ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
             trialDaysLeft={isFreeTrial ? Math.max(0, 21 - Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)) : null}
+            userId={user?.id}
+            onMetriqueUpdate={mettreAJourMetrique}
             onClose={() => setShowSettings(false)}
             onSaveProfil={async (updated) => {
               setProfil(updated)
@@ -1664,7 +1678,7 @@ const [messages, setMessages] = useState(() => {
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
             <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(188,118,28,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
               </svg>
               Modifier mon profil
@@ -3199,7 +3213,7 @@ const s = {
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:'rgba(188,118,28,0.65)', border:'1px solid rgba(200,123,82,0.14)',
+    background:'rgba(245,235,215,0.22)', color:'rgba(200,123,82,0.90)', border:'1px solid rgba(200,123,82,0.14)',
     padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
@@ -3215,7 +3229,10 @@ const s = {
     padding:'8px 18px 8px',
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
     borderBottom:'1px solid rgba(200,123,82,0.06)',
-    background:'rgba(250,245,240,0.97)',
+    // Verre translucide au lieu de la « barre blanche » opaque (retour Jean
+    // 2026-07-24) — la page se voit à travers, comme sur l'accueil
+    background:'rgba(255,240,225,0.45)',
+    backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
     position:'fixed', top:0, left:0, right:0, zIndex:50,
   },
   backBtn: {

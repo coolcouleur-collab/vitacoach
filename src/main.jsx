@@ -24,13 +24,21 @@ class RootBoundary extends Component {
   }
 }
 
-// Smooth scroll global (Lenis)
-const lenis = new Lenis({ lerp: 0.08, smoothWheel: true })
-function raf(time) {
-  lenis.raf(time)
+// Smooth scroll (Lenis) — UNIQUEMENT pour la landing publique. Dans l'app
+// connectée, html.lenis { height:auto } casse la chaîne height:100% →
+// le layout à scroll interne ne fonctionne plus et le bas des pages est
+// coupé sur mobile (bug Respiration, 2026-07-24). Lenis avait déjà causé
+// le bug de scroll de la sidebar le 21/07.
+const hasSession = (() => { try { return !!localStorage.getItem('vitacoach_user') } catch { return false } })()
+if (!hasSession) {
+  const lenis = new Lenis({ lerp: 0.08, smoothWheel: true })
+  window.__solennLenis = lenis
+  function raf(time) {
+    lenis.raf(time)
+    requestAnimationFrame(raf)
+  }
   requestAnimationFrame(raf)
 }
-requestAnimationFrame(raf)
 
 // Routing minimal — /business → BusinessLanding, /confidentialite → politique,
 // /admin → dashboard rétention (clé admin requise), sinon App

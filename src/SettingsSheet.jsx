@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon } from './Icons'
+import ConnexionsSante from './ConnexionsSante'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
@@ -347,6 +348,8 @@ export default function SettingsSheet({
   onPasserPro,
   msgsRestants = null,
   trialDaysLeft = null,
+  userId = null,
+  onMetriqueUpdate,
   onClose,
   onSaveProfil,
   onPresetChange,
@@ -910,6 +913,17 @@ export default function SettingsSheet({
                 />
               </div>
             </Card>
+
+            {/* ── CONNEXIONS SANTÉ (Garmin, Withings, Apple Health…) ────
+                Déplacée ici depuis l'onglet Santé le 2026-07-24 (allègement). */}
+            {userId && (
+              <>
+                <SectionTitle>Connexions santé</SectionTitle>
+                <Card>
+                  <ConnexionsSante userId={userId} onMetriqueUpdate={onMetriqueUpdate} />
+                </Card>
+              </>
+            )}
 
             {/* ── 4. MES DONNÉES ──────────────────────────────────────── */}
             <SectionTitle>Mes Données</SectionTitle>

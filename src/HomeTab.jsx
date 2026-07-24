@@ -1606,11 +1606,42 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
 }
 
 // ─── INSIGHTS CAROUSEL — ImmersiveCarousel (Framer) port ────────────────────
-function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
+function InsightsCarousel({ profil, metriques, onChat, isNight = false, userId }) {
   const tc = isNight ? nightText : warmText
   const h = new Date().getHours()
 
+  // Insights personnels de l'agent (patterns détectés sur les données de
+  // l'utilisateur) — affichés en PREMIER, avant les conseils génériques.
+  // C'est ce que personne d'autre ne peut lui dire.
+  const [persoInsights, setPersoInsights] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('solenn_insights_home') || '[]') } catch { return [] }
+  })
+  useEffect(() => {
+    if (!userId || persoInsights.length) return
+    ;(async () => {
+      try {
+        const m = await import('./supabase')
+        const res = await fetch(`/api/insights?userId=${userId}`, { headers: await m.authHeaders() })
+        const d = await res.json()
+        if (d?.insights?.length) {
+          setPersoInsights(d.insights)
+          sessionStorage.setItem('solenn_insights_home', JSON.stringify(d.insights))
+        }
+      } catch {}
+    })()
+  }, [userId])
+
+  const persoCards = persoInsights.slice(0, 3).map(ins => ({
+    image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&auto=format&q=72',
+    title: 'Solenn a remarqué',
+    body: ins.insight,
+    action: 'En parler',
+    chatPrompt: `Tu as remarqué que : « ${ins.insight} ». Dis-m'en plus, qu'est-ce que j'en fais ?`,
+    from: '#C87B52',
+  }))
+
   const allCards = [
+    ...persoCards,
     h < 10 ? {
       image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&q=72',
       title:'Débute bien ta journée',
@@ -1630,7 +1661,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
       image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
       title:'Prépare ton sommeil',
       body:"Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l'obscurité.",
-      action:'Routine soir', from:'#0C2040',
+      action:'Routine soir', from:'#C87B52',
     },
     {
       image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&auto=format&q=72',
@@ -1638,7 +1669,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
       body: (metriques?.eau||0) > 0
         ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Un verre maintenant !' : 'Continue comme ça !'}`
         : "Objectif : 8 verres/jour. Pose un grand verre devant toi maintenant.",
-      action:'Mettre à jour', from:'#22c55e',
+      action:'Mettre à jour', from:'#C87B52',
     },
     {
       image:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&q=72',
@@ -1694,8 +1725,9 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
     return               { scale:0.76, opacity:0,    blur:3,   zIndex:1,  x:direction*offset, y:30 }
   }, [activeIndex])
 
-  function handleAction(e, action) {
+  function handleAction(e, action, card) {
     e.stopPropagation()
+    if (card?.chatPrompt) { onChat(card.chatPrompt); return }
     if (action === 'Mettre à jour') onChat('sante')
     else onChat(action)
   }
@@ -1785,7 +1817,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false }) {
                           alignSelf:'flex-start',
                           boxShadow:'0 0 0 1px rgba(200,123,82,0.22)',
                         }}
-                        onClick={e => handleAction(e, card.action)}
+                        onClick={e => handleAction(e, card.action, card)}
                       >
                         <div style={{
                           padding:'7px 18px',
@@ -2213,7 +2245,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
       <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
       <DailyTasks profil={profil} metriques={metriques} onSwitchTab={onSwitchTab} isNight={isNight} preset={currentPreset} />
-      <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight}
+      <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight} userId={userId}
         onChat={action => {
           if (action === 'herbal') { onSwitchTab('herbal'); return }
           if (action === 'sante')  { onSwitchTab('sante');  return }

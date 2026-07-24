@@ -1,89 +1,54 @@
 /**
- * GlowLoader.jsx
- * Fidèle au composant Framer GlowLoader :
- * dots animés en vague + glow box-shadow, propulsé par framer-motion.
+ * GlowLoader.jsx — halo de soleil qui respire
+ * Remplace les dots animés (2026-07-24, retour Jean : animation buggée).
+ * Une seule forme, animation CSS pure (pas de framer-motion, pas de calcul
+ * de box-shadow par frame) : calme, fluide, et dans l'univers Solenn (soleil).
  *
- * Props:
- *   count      {number}  Nombre de dots (défaut 7)
- *   size       {number}  Taille d'un dot en px (défaut 8)
- *   color      {string}  Couleur principale (défaut copper)
- *   glowStyle  {string}  'soft' | 'strong' | 'neon' | 'bloom' (défaut 'soft')
- *   speed      {number}  Multiplicateur de vitesse (défaut 1)
- *   gap        {number}  Espacement entre dots en px (défaut 6)
+ * Props (compatibles avec l'ancien composant — les props dots sont ignorées) :
+ *   size     {number}  Diamètre du soleil en px (défaut 34)
+ *   color    {string}  Couleur principale (défaut copper #C87B52)
+ *   fullPage {boolean} Overlay plein écran centré
  */
-import { useEffect } from 'react'
-import { motion, useAnimationControls } from 'framer-motion'
-
-function buildGlow(color, style) {
-  const map = {
-    soft:   `0 0 6px 1px ${color}66, 0 0 12px 2px ${color}33`,
-    strong: `0 0 8px 2px ${color}99, 0 0 18px 4px ${color}55`,
-    neon:   `0 0 6px 1px ${color}cc, 0 0 14px 3px ${color}88, 0 0 28px 6px ${color}44`,
-    bloom:  `0 0 10px 3px ${color}bb, 0 0 24px 6px ${color}66, 0 0 40px 10px ${color}22`,
-  }
-  return map[style] || map.soft
-}
-
-function Dot({ delay, size, color, glowStyle, speed }) {
-  const ctrl = useAnimationControls()
-
-  useEffect(() => {
-    ctrl.start({
-      scale:     [1, 1.55, 1],
-      opacity:   [0.35, 1, 0.35],
-      boxShadow: [
-        buildGlow(color, glowStyle).replace(/[^,]+/g, s => s.replace(/[\d.]+(?=px\s+\d)/g, n => String(+n * 0.4))),
-        buildGlow(color, glowStyle),
-        buildGlow(color, glowStyle).replace(/[^,]+/g, s => s.replace(/[\d.]+(?=px\s+\d)/g, n => String(+n * 0.4))),
-      ],
-      transition: {
-        duration: 1.1 / speed,
-        delay,
-        repeat:   Infinity,
-        ease:     'easeInOut',
-      },
-    })
-  }, [color, glowStyle, speed, delay])
-
-  return (
-    <motion.div
-      animate={ctrl}
-      style={{
-        width:        size,
-        height:       size,
-        borderRadius: '50%',
-        background:   color,
-        flexShrink:   0,
-      }}
-    />
-  )
-}
 
 export default function GlowLoader({
-  count     = 7,
-  size      = 8,
-  color     = '#C87B52',
-  glowStyle = 'soft',
-  speed     = 1,
-  gap       = 6,
-  fullPage  = false,
+  size = 34,
+  color = '#C87B52',
+  fullPage = false,
 }) {
+  const halo = size * 2.4
   return (
     <div style={{
-      ...(fullPage ? { position:'fixed', inset:0, zIndex:99 } : {}),
-      display:'flex', alignItems:'center', justifyContent:'center',
+      ...(fullPage ? { position: 'fixed', inset: 0, zIndex: 99 } : {}),
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: fullPage ? undefined : size * 3,
     }}>
-      <div style={{ display:'flex', alignItems:'center', gap }}>
-        {Array.from({ length: count }, (_, i) => (
-          <Dot
-            key={i}
-            delay={(i / count) * (1.1 / speed)}
-            size={size}
-            color={color}
-            glowStyle={glowStyle}
-            speed={speed}
-          />
-        ))}
+      <style>{`
+        @keyframes solennBreath {
+          0%, 100% { transform: scale(0.92); opacity: 0.55; }
+          50%       { transform: scale(1.08); opacity: 1; }
+        }
+        @keyframes solennHalo {
+          0%, 100% { transform: scale(0.85); opacity: 0.30; }
+          50%       { transform: scale(1.15); opacity: 0.60; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .solenn-loader-core, .solenn-loader-halo { animation: none !important; }
+        }
+      `}</style>
+      <div style={{ position: 'relative', width: halo, height: halo, display: 'grid', placeItems: 'center' }}>
+        {/* Halo extérieur */}
+        <div className="solenn-loader-halo" style={{
+          position: 'absolute', inset: 0, borderRadius: '50%',
+          background: `radial-gradient(circle, ${color}44 0%, ${color}1a 45%, transparent 70%)`,
+          animation: 'solennHalo 2.4s ease-in-out infinite',
+        }} />
+        {/* Cœur du soleil */}
+        <div className="solenn-loader-core" style={{
+          width: size, height: size, borderRadius: '50%',
+          background: `radial-gradient(circle at 38% 34%, #F5DDB0 0%, #E8962A 55%, ${color} 100%)`,
+          boxShadow: `0 0 ${size * 0.7}px ${color}55`,
+          animation: 'solennBreath 2.4s ease-in-out infinite',
+        }} />
       </div>
     </div>
   )

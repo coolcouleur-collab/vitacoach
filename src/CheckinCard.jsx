@@ -35,7 +35,9 @@ function todayStr() {
 }
 
 export default function CheckinCard({ userId, onUpdate, isNight = false, preset = 'day' }) {
-  const tc = isNight ? nightText : preset === 'sunset' ? sunsetText : warmText
+  // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit, pas de
+  // variante sunset — source d'incohérence relevée par Jean le 2026-07-24)
+  const tc = isNight ? nightText : warmText
 
   const [saved, setSaved] = useState(() => {
     try {
