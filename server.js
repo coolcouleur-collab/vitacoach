@@ -981,7 +981,8 @@ app.post('/api/analyser-repas', ownerGuard, async (req, res) => {
     } catch {}
 
     const completion = await groq.chat.completions.create({
-      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+      // Scout déprécié par Groq (17/06/2026) — Maverick est le modèle vision restant
+      model: 'meta-llama/llama-4-maverick-17b-128e-instruct',
       messages: [{
         role: 'user',
         content: [
