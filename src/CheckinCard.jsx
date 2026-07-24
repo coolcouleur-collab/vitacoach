@@ -169,7 +169,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                     whileTap={{ scale: 0.97 }}
                     style={{
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                      background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                      background: 'rgba(255,235,210,0.32)',
                       color: '#fff', fontSize: 13, fontWeight: 700, fontFamily: F,
                       boxShadow: '0 3px 14px rgba(200,123,82,0.30)', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',

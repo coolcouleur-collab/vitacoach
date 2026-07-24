@@ -69,8 +69,8 @@ export default function JourneePrete({ userId, onOpenRoutine }) {
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
             <div style={{ marginTop: 1 }}><AdaptIcon type={a.type} /></div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(60,40,25,0.88)' }}>{a.titre}</div>
-              <div style={{ fontSize: 11.5, color: 'rgba(60,40,25,0.55)', lineHeight: 1.45 }}>{a.raison}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)' }}>{a.titre}</div>
+              <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', lineHeight: 1.45 }}>{a.raison}</div>
             </div>
           </div>
         ))}

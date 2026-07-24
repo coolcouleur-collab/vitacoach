@@ -464,7 +464,7 @@ const s = {
     borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:16, fontFamily:'Poppins, sans-serif',
     boxSizing:'border-box', outline:'none', color:'rgba(255,248,235,1)', transition:'border-color 0.2s, background 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
-  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'linear-gradient(135deg, #C87B52, #E8962A)', display:'block', margin:'12px auto 0',
+  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'rgba(255,235,210,0.32)', display:'block', margin:'12px auto 0',
     color:'#FFFFFF', border:'1px solid rgba(255,220,160,0.30)', borderRadius:'2rem',
     fontSize:'clamp(1.3rem, 1.2vw, 1.6rem)', fontWeight:500, fontStyle:'italic',
     cursor:'pointer', fontFamily:"'Cormorant Garamond', Georgia, serif",

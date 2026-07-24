@@ -169,7 +169,7 @@ function CinematicSlider({ onCommencer }) {
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               // Verre de cuivre profond — translucide + texte crème (palette Solenn)
-              background: 'linear-gradient(150deg, rgba(184,105,64,0.62), rgba(150,82,48,0.68))',
+              background: 'rgba(255,235,210,0.32)',
               backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
               border: '1px solid rgba(255,235,210,0.50)',
               borderRadius: '2rem',
@@ -552,7 +552,7 @@ function EarlyAccessSection() {
               type="submit"
               disabled={status === 'loading'}
               style={{
-                background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                background: 'rgba(255,235,210,0.32)',
                 border: '1px solid rgba(255,220,160,0.60)',
                 borderRadius: '2rem',
                 boxShadow: '0 0 22px rgba(232,150,42,0.22)',

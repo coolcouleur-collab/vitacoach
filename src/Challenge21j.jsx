@@ -206,7 +206,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
             style={{
               background: creating
                 ? 'rgba(200,123,82,0.4)'
-                : 'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
+                : 'rgba(255,235,210,0.32)',
               color: '#fff',
               border: 'none',
               borderRadius: '16px',
@@ -576,7 +576,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleMarquerFait(jourActuel - 1)}
                   style={{
-                    background: 'linear-gradient(135deg, #C87B52 0%, #E8962A 100%)',
+                    background: 'rgba(255,235,210,0.32)',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '16px',
@@ -701,7 +701,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   onClick={() => { setConfirmReset(false); handleCreerChallenge() }}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
-                    background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                    background: 'rgba(255,235,210,0.32)',
                     border: '1px solid rgba(255,220,160,0.30)',
                     color: '#fff', fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',

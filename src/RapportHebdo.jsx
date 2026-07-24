@@ -139,7 +139,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           style={{
             // Verre de cuivre profond — CTA unifié Solenn (2026-07-24)
             marginTop: 8,
-            background: 'linear-gradient(150deg, rgba(184,105,64,0.88), rgba(150,82,48,0.90))',
+            background: 'rgba(255,235,210,0.32)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             color: '#FFF6E8',

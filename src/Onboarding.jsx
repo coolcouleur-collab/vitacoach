@@ -204,7 +204,7 @@ function RevealScreen({ answers, onEnter }) {
             onClick={onEnter}
             style={{
               width:'100%', height:52,
-              background:'linear-gradient(135deg, #C87B52, #E8962A)',
+              background:'rgba(255,235,210,0.32)',
               color:'#FFFFFF', border:'1px solid rgba(255,220,160,0.45)', borderRadius:30,
               fontSize:15, fontWeight:600, cursor:'pointer',
               fontFamily:'Poppins, sans-serif',
@@ -321,7 +321,7 @@ const S = {
   cta: {
     // Verre de cuivre profond — translucide + texte crème (palette Solenn)
     width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,235,210,0.45)',
-    background:'linear-gradient(150deg, rgba(184,105,64,0.62), rgba(150,82,48,0.68))',
+    background:'rgba(255,235,210,0.32)',
     backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
     color:'#FFF6E8', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'Poppins', sans-serif", letterSpacing:'0.3px',

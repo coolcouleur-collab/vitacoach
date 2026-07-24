@@ -81,15 +81,15 @@ export default function TesProgres({ history, userId }) {
               background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
-              <div style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(60,40,25,0.50)' }}>{st.label}</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(200,123,82,0.60)' }}>{st.label}</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: st.positif ? '#2E7D5B' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
-              <div style={{ fontSize: 10, color: 'rgba(60,40,25,0.45)', lineHeight: 1.4 }}>{st.detail}</div>
+              <div style={{ fontSize: 10, color: 'rgba(200,123,82,0.55)', lineHeight: 1.4 }}>{st.detail}</div>
             </div>
           ))}
         </div>
       )}
       {progres && (
-        <div style={{ fontSize: 11, color: 'rgba(60,40,25,0.45)', fontFamily: F, marginBottom: insights.length ? 12 : 0 }}>
+        <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.55)', fontFamily: F, marginBottom: insights.length ? 12 : 0 }}>
           {progres.joursSuivis} jours suivis · comparaison première semaine vs 7 derniers jours
         </div>
       )}
@@ -101,7 +101,7 @@ export default function TesProgres({ history, userId }) {
             <div key={i} style={{
               background: 'linear-gradient(135deg, rgba(232,150,42,0.08), rgba(200,123,82,0.08))',
               border: '1px solid rgba(232,150,42,0.22)', borderRadius: 14, padding: '12px 15px',
-              fontFamily: F, fontSize: 12.5, color: 'rgba(60,40,25,0.80)', lineHeight: 1.55,
+              fontFamily: F, fontSize: 12.5, color: 'rgba(200,123,82,0.85)', lineHeight: 1.55,
               display: 'flex', gap: 9, alignItems: 'flex-start',
             }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>

@@ -30,7 +30,7 @@ function CheckSVG({ checked }) {
     <div style={{
       width: 22, height: 22, borderRadius: 12, flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: checked ? 'linear-gradient(135deg,#C87B52,#E8962A)' : 'rgba(200,123,82,0.06)',
+      background: checked ? 'rgba(255,235,210,0.32)' : 'rgba(200,123,82,0.06)',
       border: checked ? '2px solid transparent' : '2px solid rgba(200,123,82,0.35)',
       boxShadow: checked ? '0 2px 8px rgba(200,123,82,0.40)' : 'none',
       transition: 'all 0.2s ease',
@@ -258,7 +258,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         disabled={generating}
         style={{
           padding: '14px 28px', borderRadius: 16, border: 'none',
-          background: generating ? 'rgba(200,123,82,0.20)' : 'linear-gradient(135deg,#C87B52,#E8962A)',
+          background: generating ? 'rgba(200,123,82,0.20)' : 'rgba(255,235,210,0.32)',
           color: generating ? 'rgba(200,123,82,0.60)' : 'white',
           fontSize: 14, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
           cursor: generating ? 'default' : 'pointer',

@@ -21,7 +21,7 @@ function parseRich(text) {
 
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
-  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color="#C87B52" /> Repas</>,      gradient:'linear-gradient(135deg,#C87B52,#E8962A)' },
+  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color="#C87B52" /> Repas</>,      gradient:'rgba(255,235,210,0.32)' },
   exercises: { accent:'#F59E0B', labelEl:<><MuscleIcon size={13} color="#F59E0B" /> Exercices</>,  gradient:'linear-gradient(135deg,#F59E0B,#D97706)' },
   tips:      { accent:'#C87B52', labelEl:<><LightbulbIcon size={13} color="#C87B52" /> Conseils</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
   plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },

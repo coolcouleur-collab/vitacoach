@@ -235,7 +235,7 @@ export default function BreathworkTab() {
         {!isActive && !done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+            background: 'rgba(255,235,210,0.32)',
             color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
@@ -257,7 +257,7 @@ export default function BreathworkTab() {
         {done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+            background: 'rgba(255,235,210,0.32)',
             color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,

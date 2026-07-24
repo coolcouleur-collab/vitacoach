@@ -279,7 +279,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
 
               <button onClick={handleSubmit} style={{
                 ...btnFullStyle,
-                background: 'linear-gradient(135deg, #C87B52, #E8962A)',
+                background: 'rgba(255,235,210,0.32)',
                 color: '#fff',
               }}>
                 <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Lancer ma journée</span>

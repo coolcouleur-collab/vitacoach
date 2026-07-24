@@ -9,7 +9,7 @@ const TXT_MAIN     = 'rgba(200,123,82,0.90)'
 const TXT_SOFT     = 'rgba(200,123,82,0.70)'
 const ACCENT       = '#E8962A'
 const GREEN        = '#22c55e'
-const CTA_GRAD     = 'linear-gradient(135deg, #C87B52, #E8962A)'
+const CTA_GRAD     = 'rgba(255,235,210,0.32)'
 
 // ─── LOCAL SVG ICONS (style Icons.jsx : viewBox 24, stroke) ──────────────────
 function WarnTriangleIcon({ color = '#ef4444', size = 14 }) {
