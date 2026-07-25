@@ -29,8 +29,12 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
 
 - [ ] **Déclaration « Health apps »** : Play Console → App content → Health apps
       → cocher les catégories : wellness / sleep / nutrition / mindfulness.
-- [ ] **Compte développeur Organisation vérifié** (obligatoire pour les apps
-      santé depuis le 28/01/2026 — un compte individuel ne suffit plus).
+- [x] **Type de compte développeur** : vérifié le 2026-07-25 sur la doc
+      officielle Google — le compte Organisation n'est exigé QUE pour les
+      catégories « Applications médicales » et « Recherche sur sujets
+      humains ». Solenn est déclarée bien-être uniquement (activité,
+      nutrition, sommeil, stress, cycle) → **le compte personnel suffit**.
+      Ne pas déclarer de catégorie médicale sans migrer d'abord.
 - [ ] **Politique de confidentialité** : URL publique non géo-bloquée, pas de
       PDF → https://meet-solenn.com/confidentialite ✅ (page déjà en ligne).
 - [ ] **Permissions Health Connect** : ne demander QUE les types de données
