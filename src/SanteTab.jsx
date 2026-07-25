@@ -307,6 +307,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
   const [loadingInsights, setLoadingInsights] = useState(false)
+  const [showHistorique, setShowHistorique] = useState(false)
   const [showApple, setShowApple]         = useState(false)
   const [displayScore, setDisplayScore]   = useState(0)
   const animRef    = useRef(null)
@@ -493,30 +494,6 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         </div>
       )}
 
-      {/* ── Bouton Analyse IA ── */}
-      <div style={{ padding: '8px 0 28px', display:'flex', justifyContent:'center' }}>
-        <button
-          className="ia-glow"
-          style={ss.btnInsights}
-          onClick={getInsights}
-          disabled={loadingInsights}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          <span style={{ display:'flex', alignItems:'center', gap:6, justifyContent:'center' }}>
-            {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
-          </span>
-        </button>
-      </div>
-
-      {/* ── AI Insights ── */}
-      {insights && (
-        <div style={ss.insightsCard}>
-          <InsightsCarousel insights={insights} onClose={() => setInsights(null)} />
-        </div>
-      )}
-
       {/* ── Quick Water Bar ── */}
       <div style={ss.waterBar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
@@ -650,11 +627,52 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         })}
       </div>
 
-      {/* ── Historique 7 jours ── */}
-      <HistoriqueSection history={history} />
-
       {/* ── Tes progrès avec Solenn — preuve mesurable + insights ── */}
       <TesProgres history={history} userId={userId} />
+
+      {/* ── Analyse IA à la demande — dans la zone « évolution » ── */}
+      <div style={{ padding: '0 0 20px', display:'flex', justifyContent:'center' }}>
+        <button
+          className="ia-glow"
+          style={ss.btnInsights}
+          onClick={getInsights}
+          disabled={loadingInsights}
+          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
+          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          <span style={{ display:'flex', alignItems:'center', gap:6, justifyContent:'center' }}>
+            {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
+          </span>
+        </button>
+      </div>
+      {insights && (
+        <div style={ss.insightsCard}>
+          <InsightsCarousel insights={insights} onClose={() => setInsights(null)} />
+        </div>
+      )}
+
+      {/* ── Historique 7 jours — replié par défaut (allègement de la page) ── */}
+      <button
+        onClick={() => setShowHistorique(v => !v)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          borderRadius: 16, padding: '13px 16px', marginBottom: 14, cursor: 'pointer',
+          fontFamily: 'Poppins,sans-serif', fontSize: 12, fontWeight: 700,
+          color: 'rgba(200,123,82,0.85)', letterSpacing: '0.3px',
+        }}
+      >
+        <span style={{ display:'flex', alignItems:'center', gap:6 }}>
+          <CalendarIcon size={13} color="rgba(200,123,82,0.75)" /> Historique 7 jours
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transform: showHistorique ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s ease' }}>
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      {showHistorique && <HistoriqueSection history={history} />}
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;

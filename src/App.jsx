@@ -2657,30 +2657,10 @@ const sr = {
 
 // ─── TENUES MODULE — CAPSULE SLIDER 3D ───────────────────────────────────────
 
+// Cartes capsule SANS photos de stock (retour Jean 2026-07-25 : les images
+// de banques ne correspondaient pas aux descriptions et cassaient la palette
+// avec leur fond sombre). Le texte EST l'idée de tenue — carte claire Solenn.
 function TenueCard({ tenue, style: extraStyle }) {
-  const [imgSrc, setImgSrc] = useState(null)
-  const [imgLoading, setImgLoading] = useState(true)
-  const [imgError, setImgError] = useState(false)
-
-  useEffect(() => {
-    // Image déjà fournie par l'API tenues → pas de fetch supplémentaire
-    if (tenue.imageUrl) {
-      setImgSrc(tenue.imageUrl)
-      setImgLoading(false)
-      return
-    }
-    const q   = tenue.searchQuery    || tenue.imagePrompt || tenue.description || tenue.titre
-    const alt = tenue.searchQueryAlt || ''
-    const url = `/api/image?prompt=${encodeURIComponent(q)}${alt ? `&alt=${encodeURIComponent(alt)}` : ''}`
-    fetch(url)
-      .then(r => r.json())
-      .then(d => {
-        if (d.url) { setImgSrc(d.url); setImgLoading(false) }
-        else { setImgError(true); setImgLoading(false) }
-      })
-      .catch(() => { setImgError(true); setImgLoading(false) })
-  }, [])
-
   return (
     <div style={{
       width: 280,
@@ -2689,73 +2669,55 @@ function TenueCard({ tenue, style: extraStyle }) {
       overflow: 'hidden',
       position: 'relative',
       flexShrink: 0,
-      boxShadow: '0 16px 52px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.25)',
-      border: '1px solid rgba(255,220,160,0.22)',
-      background: '#1A0D07',
+      display: 'flex', flexDirection: 'column',
+      boxShadow: '0 16px 48px rgba(180,100,40,0.18), 0 2px 8px rgba(180,100,40,0.10)',
+      border: '1px solid rgba(255,220,160,0.45)',
+      background: 'linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%)',
+      backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       ...extraStyle,
     }}>
-      {/* Skeleton */}
-      {imgLoading && (
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(110deg, #2A1508 30%, #3D2010 50%, #2A1508 70%)',
-          backgroundSize: '200% 100%',
-          animation: 'capsuleSkeleton 1.4s ease infinite',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.55)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
-            <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
-            <path d="M12 6 L5 13 h14 L12 6Z"/>
-            <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
-          </svg>
-        </div>
-      )}
-      {/* Error */}
-      {imgError && !imgLoading && (
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(160deg, #2A1508 0%, #1A0D07 100%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
-        }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.60)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
-            <path d="M12 6 L5 13 h14 L12 6Z"/>
-            <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
-          </svg>
-          <span style={{ fontSize: 13, color: 'rgba(255,220,160,0.80)', fontWeight: 600, textAlign: 'center', padding: '0 20px', fontFamily: F }}>{tenue.titre}</span>
-        </div>
-      )}
-      {/* Image plein cadre */}
-      {imgSrc && (
-        <img
-          src={imgSrc}
-          alt={tenue.titre}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', display: 'block' }}
-          onError={() => { setImgError(true); setImgSrc(null) }}
-        />
-      )}
-      {/* Gradient overlay — lisibilité texte */}
+      {/* Halo décoratif */}
       <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'linear-gradient(0deg, rgba(12,4,1,0.97) 0%, rgba(12,4,1,0.78) 30%, rgba(12,4,1,0.20) 55%, transparent 75%)',
+        position: 'absolute', top: -70, right: -70, width: 220, height: 220, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(232,150,42,0.20) 0%, transparent 70%)',
+        pointerEvents: 'none',
       }} />
-      {/* Texte en bas */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
-        <div style={{ fontWeight: 700, color: 'rgba(255,248,235,0.96)', fontSize: 15, letterSpacing: '-0.01em', fontFamily: F, marginBottom: 5 }}>
+      {/* Icône vêtement */}
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 38, paddingBottom: 20 }}>
+        <div style={{
+          width: 84, height: 84, borderRadius: '50%',
+          background: 'rgba(255,235,210,0.55)',
+          border: '1px solid rgba(255,220,160,0.55)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 0 0 10px rgba(200,123,82,0.06), 0 0 0 20px rgba(200,123,82,0.03)',
+        }}>
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+          </svg>
+        </div>
+      </div>
+      {/* Texte */}
+      <div style={{ padding: '0 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{
+          fontWeight: 500, color: 'rgba(178,102,62,0.96)', fontSize: 20, letterSpacing: '-0.01em',
+          fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic',
+          textAlign: 'center', marginBottom: 10, lineHeight: 1.2,
+        }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 11, color: 'rgba(255,248,235,0.72)', lineHeight: 1.55, fontFamily: F, marginBottom: 8,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.80)', lineHeight: 1.65, fontFamily: F, textAlign: 'center',
+          display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
+        <div style={{ flex: 1 }} />
         <div style={{
-          display: 'flex', alignItems: 'flex-start', gap: 5,
-          background: 'rgba(255,200,100,0.12)', borderRadius: 9, padding: '5px 9px',
-          border: '1px solid rgba(255,220,160,0.14)',
+          display: 'flex', alignItems: 'flex-start', gap: 6,
+          background: 'rgba(255,235,210,0.50)', borderRadius: 12, padding: '9px 12px',
+          border: '1px solid rgba(255,220,160,0.40)', marginBottom: 18,
         }}>
-          <LightbulbIcon size={11} color="rgba(255,220,130,0.70)" style={{ flexShrink: 0, marginTop: 2 }} />
-          <span style={{ fontSize: 10, color: 'rgba(255,248,235,0.58)', lineHeight: 1.50, fontFamily: F,
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          <LightbulbIcon size={12} color="#E8962A" style={{ flexShrink: 0, marginTop: 2 }} />
+          <span style={{ fontSize: 10.5, color: 'rgba(178,102,62,0.85)', lineHeight: 1.55, fontFamily: F,
+            display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {tenue.pourquoi}
           </span>
         </div>
@@ -2773,29 +2735,29 @@ function SkeletonCard({ style: extraStyle }) {
       borderRadius: 24,
       overflow: 'hidden',
       position: 'relative',
-      background: '#1A0D07',
-      boxShadow: '0 16px 52px rgba(0,0,0,0.55)',
-      border: '1px solid rgba(255,220,160,0.22)',
+      background: 'rgba(255,246,232,0.90)',
+      boxShadow: '0 16px 48px rgba(180,100,40,0.14)',
+      border: '1px solid rgba(255,220,160,0.45)',
       flexShrink: 0,
       ...extraStyle,
     }}>
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(110deg, #2A1508 30%, #3D2010 50%, #2A1508 70%)',
+        background: 'linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%)',
         backgroundSize: '200% 100%',
         animation: 'capsuleSkeleton 1.4s ease infinite',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,220,160,0.55)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.45)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
           <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
           <path d="M12 6 L5 13 h14 L12 6Z"/>
           <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
         </svg>
       </div>
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
-        <div style={{ height: 14, borderRadius: 7, background: 'rgba(255,220,160,0.15)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 9, borderRadius: 5, background: 'rgba(255,220,160,0.08)', marginBottom: 5, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 9, borderRadius: 5, background: 'rgba(255,220,160,0.08)', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 14, borderRadius: 7, background: 'rgba(200,123,82,0.18)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(200,123,82,0.10)', marginBottom: 5, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(200,123,82,0.10)', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
       </div>
     </div>
   )
