@@ -1782,16 +1782,27 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false, userId }
                     : 'linear-gradient(150deg,rgba(255,246,238,0.72) 0%,rgba(255,240,225,0.68) 50%,rgba(255,234,214,0.65) 100%)',
                   boxShadow: isNight ? 'inset 0 1px 0 rgba(180,210,255,0.15)' : 'inset 0 1px 0 rgba(255,255,255,0.60)',
                 }}>
-                  {/* Image */}
-                  <div style={{ margin:'8px 8px 0', height:120, borderRadius:20, overflow:'hidden', position:'relative' }}>
-                    <img src={card.image} alt={card.title}
-                      style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
-                      loading="lazy" />
+                  {/* Visuel — dégradé chaud + soleil (plus de photos de stock,
+                      retour Jean 2026-07-25 : les photoshoots cassaient l'univers) */}
+                  <div style={{
+                    margin:'8px 8px 0', height:120, borderRadius:20, overflow:'hidden', position:'relative',
+                    background: isNight
+                      ? 'linear-gradient(150deg, rgba(20,40,85,0.55), rgba(10,22,50,0.45))'
+                      : 'linear-gradient(150deg, rgba(255,225,175,0.75) 0%, rgba(245,195,130,0.65) 55%, rgba(232,150,42,0.45) 100%)',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                  }}>
                     <div style={{
-                      position:'absolute', bottom:0, left:0, right:0, height:'52%',
-                      background:`linear-gradient(0deg,${card.from}99 0%,transparent 100%)`,
-                      pointerEvents:'none',
-                    }} />
+                      width:58, height:58, borderRadius:'50%',
+                      background: isNight ? 'rgba(180,210,255,0.12)' : 'rgba(255,248,235,0.45)',
+                      border: `1px solid ${isNight ? 'rgba(180,210,255,0.25)' : 'rgba(255,240,215,0.70)'}`,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      boxShadow: isNight ? '0 0 26px rgba(140,180,255,0.20)' : '0 0 26px rgba(232,150,42,0.35)',
+                    }}>
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={isNight ? 'rgba(180,210,255,0.85)' : '#C87B52'} strokeWidth="1.6" strokeLinecap="round">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
+                      </svg>
+                    </div>
                   </div>
                   {/* Text — active card only */}
                   {isActive && <div style={{ padding:'8px 14px 12px' }}>
@@ -2105,7 +2116,8 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                 : preset === 'sunset'
                   ? `radial-gradient(circle 320px at ${posB.x}% ${posB.y}%, rgba(210,60,20,0.50), rgba(180,40,10,0.20) 42%, rgba(150,20,0,0.06) 68%)`
                   : `radial-gradient(circle 320px at ${posB.x}% ${posB.y}%, rgba(217,119,6,0.45), rgba(217,119,6,0.18) 42%, rgba(217,119,6,0.06) 68%)`
-            : isNight ? 'rgba(100,150,255,0.10)' : preset === 'day' ? 'rgba(220,120,20,0.45)' : preset === 'sunset' ? 'rgba(200,70,20,0.38)' : 'rgba(200,150,80,0.35)',
+            // Verre ambré clair au lieu du bloc orange saturé (retour Jean 2026-07-25)
+            : isNight ? 'rgba(100,150,255,0.10)' : preset === 'day' ? 'rgba(255,225,185,0.38)' : preset === 'sunset' ? 'rgba(245,190,140,0.32)' : 'rgba(255,235,205,0.32)',
           transition: glowB ? 'background 0s' : 'background 0.5s ease',
         }}
       >

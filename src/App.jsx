@@ -2277,7 +2277,7 @@ const [messages, setMessages] = useState(() => {
 
           {/* ── Cycle ── */}
           {onglet === 'cycle' && profil?.cycle && (
-            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} userId={user?.id} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} userId={user?.id} onChat={msg => { setOnglet('chat'); setTimeout(() => envoyerMessage(msg), 400) }} /></Suspense>
           )}
 
           {/* ── Routine ── */}
@@ -2715,8 +2715,8 @@ function TenueCard({ tenue, style: extraStyle }) {
         }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.80)', lineHeight: 1.65, fontFamily: F, textAlign: 'center',
-          display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.82)', lineHeight: 1.6, fontFamily: F, textAlign: 'center',
+          display: '-webkit-box', WebkitLineClamp: 9, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
         <div style={{ flex: 1 }} />

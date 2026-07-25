@@ -149,7 +149,89 @@ function buildPhases(cycleLength, periodLength) {
   ].map(p => ({ ...p, ...PHASE_CONTENT[p.id] }))
 }
 
-export default function CycleTab({ profil, userId }) {
+// ── Explorateur de douleur — « creuser pourquoi » (demande Jean 2026-07-25) ──
+// 3 questions guidées, puis Solenn explique les pistes possibles de façon
+// pédagogique dans le chat. Éducatif uniquement : jamais de diagnostic, et
+// toujours l'orientation médecin pour les signaux d'alerte.
+function DouleurExplorer({ onChat, phaseNom }) {
+  const [etape, setEtape] = useState(0)
+  const [ou, setOu] = useState(null)
+  const [niveau, setNiveau] = useState(null)
+
+  const OU = ['Bas-ventre', 'Dos / reins', 'Tête', 'Seins', 'Autre']
+  const MOMENTS = ['Pendant mes règles', 'Quelques jours avant', 'En milieu de cycle', 'Ça ne suit pas mon cycle']
+
+  const chip = (sel) => ({
+    padding: '9px 15px', borderRadius: 20,
+    border: `1px solid ${sel ? 'rgba(200,123,82,0.55)' : 'rgba(200,123,82,0.25)'}`,
+    background: sel ? 'rgba(255,235,210,0.50)' : 'rgba(255,235,210,0.20)',
+    color: am(sel ? 0.95 : 0.70), fontSize: 12.5, fontWeight: sel ? 600 : 400,
+    cursor: 'pointer', fontFamily: F, transition: 'all 0.18s',
+  })
+
+  function envoyer(moment) {
+    const msg = `J'ai mal aujourd'hui. Localisation : ${ou.toLowerCase()}. Intensité : ${niveau}/5. Moment : ${moment.toLowerCase()}.${phaseNom ? ` Phase actuelle de mon cycle : ${phaseNom}.` : ''} Aide-moi à comprendre : explique-moi de façon pédagogique les causes possibles de cette douleur à ce moment du cycle, ce qui peut l'accentuer, ce qui peut la soulager concrètement aujourd'hui — et surtout, dis-moi clairement quels signes devraient me pousser à consulter un médecin. Mets-moi sur des pistes, sans poser de diagnostic.`
+    setEtape(0); setOu(null); setNiveau(null)
+    onChat && onChat(msg)
+  }
+
+  return (
+    <div style={{ ...CARD, marginBottom: 16 }}>
+      <div style={LABEL}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={am(0.85)} strokeWidth="2" strokeLinecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 3-2 5-4 7l-3 6-3-6c-2-2-4-4-4-7a7 7 0 0 1 7-7z" opacity="0"/><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          J'ai mal aujourd'hui
+        </span>
+      </div>
+      {etape === 0 && (
+        <>
+          <div style={{ fontSize: 12.5, color: am(0.72), fontFamily: F, lineHeight: 1.55, marginBottom: 12 }}>
+            Décris ta douleur en 3 taps — Solenn t'aide à comprendre ce qui se passe et te met sur des pistes.
+          </div>
+          <button onClick={() => setEtape(1)} style={{
+            padding: '10px 20px', borderRadius: 14, cursor: 'pointer', fontFamily: F,
+            background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,220,160,0.45)', color: '#B2663E', fontSize: 12.5, fontWeight: 600,
+          }}>
+            Comprendre ma douleur
+          </button>
+        </>
+      )}
+      {etape === 1 && (
+        <>
+          <div style={{ fontSize: 12.5, color: am(0.80), fontFamily: F, marginBottom: 10 }}>Où as-tu mal ?</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {OU.map(o => <button key={o} style={chip(ou === o)} onClick={() => { setOu(o); setEtape(2) }}>{o}</button>)}
+          </div>
+        </>
+      )}
+      {etape === 2 && (
+        <>
+          <div style={{ fontSize: 12.5, color: am(0.80), fontFamily: F, marginBottom: 10 }}>Quelle intensité ?</div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {[1, 2, 3, 4, 5].map(n => <button key={n} style={{ ...chip(niveau === n), minWidth: 40, textAlign: 'center' }} onClick={() => { setNiveau(n); setEtape(3) }}>{n}</button>)}
+          </div>
+          <div style={{ fontSize: 10.5, color: am(0.55), fontFamily: F, marginTop: 8 }}>1 = gêne légère · 5 = très forte</div>
+        </>
+      )}
+      {etape === 3 && (
+        <>
+          <div style={{ fontSize: 12.5, color: am(0.80), fontFamily: F, marginBottom: 10 }}>À quel moment de ton cycle ?</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {MOMENTS.map(m => <button key={m} style={chip(false)} onClick={() => envoyer(m)}>{m}</button>)}
+          </div>
+        </>
+      )}
+      {niveau >= 4 && etape === 3 && (
+        <div style={{ fontSize: 11, color: am(0.70), fontFamily: F, marginTop: 12, lineHeight: 1.5 }}>
+          Une douleur forte ou inhabituelle mérite l'avis d'un professionnel de santé, sans attendre.
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function CycleTab({ profil, userId, onChat }) {
   const [periods, setPeriods] = useState(() => {
     try { return JSON.parse(localStorage.getItem('solenn_cycle_periods') || '[]') } catch { return [] }
   })
@@ -441,6 +523,9 @@ export default function CycleTab({ profil, userId }) {
                   ))}
                 </div>
               </div>
+
+              {/* ── J'ai mal — explorateur guidé ── */}
+              <DouleurExplorer onChat={onChat} phaseNom={currentPhase?.name || currentPhase?.nom || null} />
 
               {/* Symptômes du jour */}
               <div style={{ ...CARD, marginBottom: 16 }}>

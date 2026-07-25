@@ -10,6 +10,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
 
+const ExercicesGuide = React.lazy(() => import('./ExercicesGuide'))
+
 const EASE = [0.22, 1, 0.36, 1]
 
 // ─── Icônes inline légères ────────────────────────────────────────────────────
@@ -269,7 +271,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         }}
       >
         <RefreshSVG spinning={generating} />
-        {generating ? 'Génération en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Générer ma routine</span>}
+        {generating ? 'Génération en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="#B2663E" />Générer ma routine</span>}
       </button>
     </motion.div>
   )
@@ -398,11 +400,18 @@ export default function RoutineTab({ userId, profil }) {
     } catch { return '' }
   }
 
+  const [showExos, setShowExos] = useState(false)
+
   return (
     <div style={{
       minHeight: '100vh',
       paddingBottom: 120,
     }}>
+      {showExos && (
+        <React.Suspense fallback={null}>
+          <ExercicesGuide onClose={() => setShowExos(false)} />
+        </React.Suspense>
+      )}
       {/* ── Header ── */}
       <div style={{
         padding: '20px 20px 0',
@@ -415,6 +424,16 @@ export default function RoutineTab({ userId, profil }) {
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </div>
+          <button onClick={() => setShowExos(true)} style={{
+            marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,220,160,0.40)', borderRadius: 99,
+            padding: '7px 14px', cursor: 'pointer',
+            fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B2663E" strokeWidth="2" strokeLinecap="round"><path d="M6.5 6.5h11v11h-11z" opacity="0"/><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
+            Guide des exercices
+          </button>
         </div>
 
         {routine && (

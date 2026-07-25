@@ -145,11 +145,11 @@ export default function BreathworkTab() {
               flexShrink: 0,
               padding: '7px 14px',
               borderRadius: 20,
-              border: `1px solid ${sel ? 'rgba(255,220,160,0.55)' : 'rgba(255,220,160,0.20)'}`,
-              background: sel ? 'rgba(255,235,210,0.30)' : 'rgba(255,235,210,0.10)',
+              border: `1px solid ${sel ? 'rgba(255,220,160,0.55)' : 'rgba(200,123,82,0.35)'}`,
+              background: sel ? 'rgba(255,235,210,0.30)' : 'rgba(255,235,210,0.35)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
-              color: sel ? am(0.95) : am(0.50),
+              color: sel ? am(0.95) : am(0.78),
               fontSize: 12, fontWeight: sel ? 600 : 400,
               cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap',
               transition: 'all 0.18s',
@@ -162,7 +162,7 @@ export default function BreathworkTab() {
 
       {/* Subtitle */}
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
-        <div style={{ fontSize: 13, color: am(0.55), letterSpacing: '0.01em' }}>{tech.subtitle}</div>
+        <div style={{ fontSize: 13, color: am(0.82), letterSpacing: '0.01em' }}>{tech.subtitle}</div>
       </div>
 
       {/* Breathing circle */}
@@ -171,7 +171,7 @@ export default function BreathworkTab() {
           {/* Outer ring (static) */}
           <div style={{
             position: 'absolute', inset: 0, borderRadius: '50%',
-            border: '1px solid rgba(255,220,160,0.18)',
+            border: '1px solid rgba(200,123,82,0.32)',
           }}/>
 
           {/* Animated circle */}
@@ -180,13 +180,13 @@ export default function BreathworkTab() {
             transition={{ duration: phase.dur, ease: 'easeInOut' }}
             style={{
               width: 200, height: 200, borderRadius: '50%',
-              background: `radial-gradient(circle, ${tech.accent.replace('0.80', '0.22')} 0%, ${tech.accent.replace('0.80', '0.10')} 60%, transparent 100%)`,
-              border: `1.5px solid ${tech.accent.replace('0.80', '0.45')}`,
+              background: `radial-gradient(circle, ${tech.accent.replace('0.80', '0.34')} 0%, ${tech.accent.replace('0.80', '0.16')} 60%, transparent 100%)`,
+              border: `1.5px solid ${tech.accent.replace('0.80', '0.62')}`,
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center',
-              boxShadow: isActive ? `0 0 50px ${tech.accent.replace('0.80', '0.18')}` : 'none',
+              boxShadow: isActive ? `0 0 50px ${tech.accent.replace('0.80', '0.28')}` : 'none',
               transition: 'box-shadow 0.5s',
             }}
           >
@@ -207,13 +207,13 @@ export default function BreathworkTab() {
                 {!done && isActive && (
                   <>
                     <div style={{ fontSize: 16, fontWeight: 600, color: am(0.92) }}>{phase.label}</div>
-                    <div style={{ fontSize: 22, fontWeight: 300, color: am(0.72), marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
+                    <div style={{ fontSize: 22, fontWeight: 300, color: am(0.88), marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
                       {remaining}
                     </div>
                   </>
                 )}
                 {!done && !isActive && (
-                  <div style={{ fontSize: 14, color: am(0.45) }}>Prêt</div>
+                  <div style={{ fontSize: 14, color: am(0.75) }}>Prêt</div>
                 )}
               </motion.div>
             </AnimatePresence>
@@ -224,7 +224,7 @@ export default function BreathworkTab() {
       {/* Cycle counter */}
       {isActive && (
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
-          <span style={{ fontSize: 13, color: am(0.50), fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontSize: 13, color: am(0.78), fontVariantNumeric: 'tabular-nums' }}>
             Cycle {cycleCount + 1} / {tech.totalCycles}
           </span>
         </div>
@@ -247,7 +247,7 @@ export default function BreathworkTab() {
         {isActive && (
           <button onClick={stop} style={{
             padding: '13px 36px',
-            background: 'rgba(255,235,210,0.15)', color: am(0.72),
+            background: 'rgba(255,235,210,0.15)', color: am(0.88),
             border: '1px solid rgba(255,220,160,0.25)',
             borderRadius: 50, fontSize: 14, fontWeight: 500,
             cursor: 'pointer', fontFamily: F,
@@ -270,15 +270,15 @@ export default function BreathworkTab() {
 
       {/* Phase breakdown */}
       <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
+        <div style={{ fontSize: 11, color: am(0.80), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
         <div style={{ display: 'flex', gap: 8 }}>
           {tech.phases.map((p, i) => {
             const active = isActive && phaseIdx === i
             return (
               <div key={i} style={{
                 flex: 1, textAlign: 'center',
-                background: active ? 'rgba(255,235,210,0.28)' : 'rgba(255,235,210,0.10)',
-                border: `1px solid ${active ? 'rgba(255,220,160,0.48)' : 'rgba(255,220,160,0.16)'}`,
+                background: active ? 'rgba(255,235,210,0.55)' : 'rgba(255,235,210,0.35)',
+                border: `1px solid ${active ? 'rgba(200,123,82,0.50)' : 'rgba(200,123,82,0.28)'}`,
                 borderRadius: 14, padding: '10px 4px',
                 transition: 'all 0.3s ease',
               }}>
@@ -293,7 +293,7 @@ export default function BreathworkTab() {
       {/* History */}
       {sessions.length > 0 && (
         <div style={{ ...CARD }}>
-          <div style={{ fontSize: 11, color: am(0.60), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Sessions récentes</div>
+          <div style={{ fontSize: 11, color: am(0.80), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Sessions récentes</div>
           {sessions.slice(0, 5).map((s, i) => (
             <div key={i} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
