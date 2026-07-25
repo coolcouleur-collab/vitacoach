@@ -3266,8 +3266,11 @@ const s = {
     display:'flex', flexDirection:'column', flex:1, minHeight:0, padding:'2rem 1.4rem 0 1.8rem', position:'relative',
   },
   // minHeight:0 (pas 300) : avec le verrou overflow:hidden du parent, la zone
-  // de messages doit pouvoir rétrécir (clavier ouvert) sans pousser la barre
-  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
+  // de messages doit pouvoir rétrécir (clavier ouvert) sans pousser la barre.
+  // WebkitOverflowScrolling + touchAction : indispensables pour que le doigt
+  // « prenne » sur iOS dans un parent verrouillé (fix « je ne peux pas
+  // remonter dans le fil », 2026-07-25)
+  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'contain', touchAction:'pan-y' },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
   emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },

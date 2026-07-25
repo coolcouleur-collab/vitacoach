@@ -11,6 +11,7 @@ import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon, StarIcon } from './Icons
 import { authHeaders } from './supabase'
 
 const ExercicesGuide = React.lazy(() => import('./ExercicesGuide'))
+import { matchExercice } from './ExercicesGuide'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -418,6 +419,35 @@ export default function RoutineTab({ userId, profil }) {
 
   const [showExos, setShowExos] = useState(false)
 
+  // ── Défi 21 jours : l'action du jour s'exécute ici, dans la routine ──
+  const [defi, setDefi] = useState(null)
+  const [defiSaving, setDefiSaving] = useState(false)
+  useEffect(() => {
+    if (!userId) return
+    ;(async () => {
+      try {
+        const r = await fetch(`/api/challenge?userId=${encodeURIComponent(userId)}`, { headers: await authHeaders() })
+        const d = await r.json()
+        if (d.challenge) setDefi(d.challenge)
+      } catch {}
+    })()
+  }, [userId])
+  const defiJour = defi ? Math.min(Math.max(Math.floor((Date.now() - new Date(defi.date_debut).getTime()) / 864e5) + 1, 1), 21) : 1
+  const defiAction = defi?.challenge?.jours?.[defiJour - 1]?.action || null
+  const defiFait = defi ? !!(defi.progression || [])[defiJour - 1] : false
+  async function marquerDefiFait() {
+    if (!defi || defiSaving) return
+    setDefiSaving(true)
+    try {
+      await fetch('/api/challenge-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+        body: JSON.stringify({ userId, jour: defiJour - 1, complete: true }),
+      })
+      setDefi(prev => { const pr = [...(prev.progression || [])]; pr[defiJour - 1] = true; return { ...prev, progression: pr } })
+    } catch {} finally { setDefiSaving(false) }
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -425,7 +455,7 @@ export default function RoutineTab({ userId, profil }) {
     }}>
       {showExos && (
         <React.Suspense fallback={null}>
-          <ExercicesGuide onClose={() => setShowExos(false)} />
+          <ExercicesGuide initial={typeof showExos === 'string' ? showExos : null} onClose={() => setShowExos(false)} />
         </React.Suspense>
       )}
       {/* ── Header ── */}
@@ -472,6 +502,50 @@ export default function RoutineTab({ userId, profil }) {
 
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
+
+        {/* ── Action du défi 21 jours — la routine est la page de l'exécution
+             quotidienne, le défi en fait partie (décision Jean 2026-07-25) ── */}
+        {defi && defiAction && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(232,150,42,0.10), rgba(200,123,82,0.10))',
+            border: '1px solid rgba(232,150,42,0.30)',
+            borderRadius: 18, padding: '13px 16px', marginBottom: 16,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+              <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.85)', fontFamily: 'Poppins,sans-serif', display: 'flex', alignItems: 'center', gap: 5 }}>
+                <StarIcon size={11} color="rgba(232,150,42,0.90)" /> Ton défi — jour {defiJour}/21
+              </span>
+              {defiFait && <span style={{ fontSize: 10.5, fontWeight: 700, color: '#2E7D5B', fontFamily: 'Poppins,sans-serif' }}>Fait ✓</span>}
+            </div>
+            <div style={{ fontSize: 13.5, fontWeight: 600, color: defiFait ? 'rgba(200,123,82,0.45)' : 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, textDecoration: defiFait ? 'line-through' : 'none', marginBottom: 10 }}>
+              {defiAction}
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {!defiFait && (
+                <button onClick={marquerDefiFait} disabled={defiSaving} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '7px 14px',
+                  cursor: 'pointer', fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
+                  opacity: defiSaving ? 0.6 : 1,
+                }}>
+                  {defiSaving ? 'Enregistrement…' : 'C\'est fait !'}
+                </button>
+              )}
+              {matchExercice(defiAction) && (
+                <button onClick={() => setShowExos(matchExercice(defiAction))} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  background: 'rgba(255,235,210,0.30)', border: '1px solid rgba(255,220,160,0.40)',
+                  borderRadius: 99, padding: '7px 14px', cursor: 'pointer',
+                  fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
+                }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
+                  Voir le geste
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Skeleton loader */}
         {loading && (
@@ -582,7 +656,7 @@ export default function RoutineTab({ userId, profil }) {
 
               {/* ── Matin ── */}
               {routine.matin?.etapes?.length > 0 && (
-                <Section
+                <Section onVoirGeste={id => setShowExos(id)}
                   icon={<SunIcon size={22} color="#E8962A" />}
                   titre={routine.matin.titre || 'Matin'}
                   heure={routine.matin.heure}
@@ -597,7 +671,7 @@ export default function RoutineTab({ userId, profil }) {
 
               {/* ── Après-midi ── */}
               {routine.apresmidi?.etapes?.length > 0 && (
-                <Section
+                <Section onVoirGeste={id => setShowExos(id)}
                   icon={<SunIcon size={22} color="#E8962A" />}
                   titre={routine.apresmidi.titre || 'Après-midi'}
                   heure={routine.apresmidi.heure}
@@ -609,7 +683,7 @@ export default function RoutineTab({ userId, profil }) {
 
               {/* ── Soir ── */}
               {routine.soir?.etapes?.length > 0 && (
-                <Section
+                <Section onVoirGeste={id => setShowExos(id)}
                   icon={<MoonIcon size={22} color="#C87B52" />}
                   titre={routine.soir.titre || 'Soir'}
                   heure={routine.soir.heure}

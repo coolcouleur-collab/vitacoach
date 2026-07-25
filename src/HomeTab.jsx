@@ -1391,7 +1391,7 @@ export function StreakXP({ streak, xp, level }) {
 
 // ─── DAILY TASK ITEM — même style que ContextualShortcuts ────────────────────
 function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
-  const tc = isNight ? nightText : preset === 'sunset' ? sunsetText : warmText
+  const tc = isNight ? nightText : warmText
   return (
     <motion.div
       initial={{ opacity:0, y:8 }}
@@ -1522,7 +1522,9 @@ function generateDailyTasks(profil, metriques) {
 }
 
 function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 'day' }) {
-  const tc = isNight ? nightText : preset === 'sunset' ? sunsetText : warmText
+  // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit — la
+  // variante sunset créait l'incohérence de couleurs signalée par Jean)
+  const tc = isNight ? nightText : warmText
   const [done, setDone] = useState({})
   const [collapsed, setCollapsed] = useState(true)
   const tasks = useMemo(() => generateDailyTasks(profil, metriques), [profil?.nom, profil?.objectifs?.[0], profil?.niveau, profil?.regime, profil?.reveil, profil?.coucher])
@@ -1564,8 +1566,8 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
             animate={{ rotate: collapsed ? 0 : 45 }}
             transition={{ type:'spring', stiffness:420, damping:26 }}
           >
-            <line x1="6" y1="1" x2="6" y2="11" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(180,90,30,0.80)"} strokeWidth="1.6" strokeLinecap="round"/>
-            <line x1="1" y1="6" x2="11" y2="6" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(180,90,30,0.80)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="6" y1="1" x2="6" y2="11" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(200,123,82,0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="1" y1="6" x2="11" y2="6" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(200,123,82,0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
           </motion.svg>
         </motion.button>
       </div>
@@ -2085,7 +2087,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
 // ─── 14-DAY SPARKLINE ─────────────────────────────────────────────────────────
 
 function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
-  const tc = isNight ? nightText : preset === 'sunset' ? sunsetText : warmText
+  const tc = isNight ? nightText : warmText
   const BAR_H = 28
   const today = new Date()
   const days = Array.from({ length: 14 }, (_, i) => {

@@ -37,10 +37,37 @@ function DeuxPoses({ poseA, poseB, labelA, labelB, duree = 2.6 }) {
   )
 }
 
+// Trois poses en séquence (départ → milieu → fin) — pour les gestes où le
+// trajet du mouvement doit être explicite (retour Jean 2026-07-25)
+function TroisPoses({ poses, labels, duree = 3.3 }) {
+  const anims = [
+    `@keyframes exoP1 { 0%, 26% { opacity: 1 } 33%, 93% { opacity: 0 } 100% { opacity: 1 } }`,
+    `@keyframes exoP2 { 0%, 26% { opacity: 0 } 33%, 59% { opacity: 1 } 66%, 100% { opacity: 0 } }`,
+    `@keyframes exoP3 { 0%, 59% { opacity: 0 } 66%, 93% { opacity: 1 } 100% { opacity: 0 } }`,
+  ]
+  return (
+    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+      <style>{`${anims.join('\n')}
+        @media (prefers-reduced-motion: reduce) { .exo-p { animation: none !important; opacity: 0.45 !important } }`}</style>
+      {SOL}
+      {poses.map((pose, i) => (
+        <g key={i} className="exo-p" style={{ animation: `exoP${i + 1} ${duree}s ease-in-out infinite` }}>
+          {pose}
+          {labels?.[i] && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="rgba(200,123,82,0.85)" fontFamily="Poppins, sans-serif">{labels[i]}</text>}
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 const AnimSquat = () => (
-  <DeuxPoses labelA="Debout" labelB="Descends"
-    poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L62 40 M50 56 L48 74 L48 92 M50 56 L54 74 L54 92" {...S} /></>}
-    poseB={<><circle cx="44" cy="34" r="7" {...S} /><path d="M45 41 L48 62 M46 48 L60 52 M48 62 L64 66 L60 92 M48 62 L36 70 L40 92" {...S} /></>}
+  <TroisPoses
+    labels={['Debout', 'Fléchis…', 'Assieds-toi dans le vide']}
+    poses={[
+      <><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L62 40 M50 56 L48 74 L48 92 M50 56 L54 74 L54 92" {...S} /></>,
+      <><circle cx="47" cy="24" r="7" {...S} /><path d="M48 31 L49 58 M48 38 L61 45 M49 58 L56 72 L52 92 M49 58 L40 72 L44 92" {...S} /></>,
+      <><circle cx="44" cy="34" r="7" {...S} /><path d="M45 41 L48 62 M46 48 L60 52 M48 62 L64 66 L60 92 M48 62 L36 70 L40 92" {...S} /></>,
+    ]}
   />
 )
 
