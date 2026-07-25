@@ -2,7 +2,11 @@
 
 :root {
   /* ── Couleurs — palette neutre beige/blanc ── */
-  --bg:           #EDE8DC;   /* beige chaud */
+  /* Aligné sur le calque de base de l'app (#EDD8CC) : c'est la couleur qui
+     apparaît quand le viewport mobile dépasse les calques (barre iOS,
+     overscroll) — l'ancien beige-gris #EDE8DC faisait une « bande grise »
+     sous l'écran (retour Jean 2026-07-25) */
+  --bg:           #EDD8CC;   /* abricot chaud — base de l'app */
   --bg-card:      #FFFFFF;
   --text-strong:  #111111;
   --text-body:    #333333;
@@ -66,6 +70,14 @@ body {
   height: 100%;
 }
 #root { height: 100%; overflow: hidden; }
+
+/* Sur mobile, le viewport réel bouge (barre d'adresse iOS/Android qui se
+   rétracte) : 100% = viewport « layout », trop court → bande vide sous
+   l'app. 100dvh suit le viewport dynamique et remplit tout l'écran. */
+@supports (height: 100dvh) {
+  body, #root { height: 100dvh; }
+  html.lenis body, html.lenis #root { height: auto; }
+}
 
 /* Scroll reveal */
 .IO {
