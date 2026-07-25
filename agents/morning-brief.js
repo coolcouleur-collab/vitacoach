@@ -43,16 +43,19 @@ async function contexteVeille(sb, userId) {
   const hier = dateStr(new Date(Date.now() - 24 * 3600 * 1000))
   const today = dateStr(new Date())
   try {
-    const [mHier, mJour, challenge, insight, dernierRepas] = await Promise.all([
+    const moisDernier = dateStr(new Date(Date.now() - 30 * 864e5))
+    const [mHier, mJour, challenge, insight, dernierRepas, pesees] = await Promise.all([
       sb.from('user_metrics').select('sommeil, pas, humeur, eau').eq('user_id', userId).eq('date', hier).maybeSingle(),
       sb.from('user_metrics').select('sommeil').eq('user_id', userId).eq('date', today).maybeSingle(),
       sb.from('challenges').select('challenge, progression, date_debut').eq('user_id', userId).eq('actif', true).maybeSingle(),
       sb.from('user_insights').select('insight, type').eq('user_id', userId).order('computed_at', { ascending: false }).limit(1).maybeSingle(),
       sb.from('repas').select('resume, analyse').eq('user_id', userId).eq('date', hier).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      sb.from('user_metrics').select('date, poids').eq('user_id', userId).gt('poids', 0).gte('date', moisDernier).order('date', { ascending: true }),
     ])
     return {
       hier: mHier?.data || null, nuit: mJour?.data || null, challenge: challenge?.data || null,
       insight: insight?.data || null, repasHier: dernierRepas?.data || null,
+      pesees: pesees?.data || [],
     }
   } catch {
     return {}
@@ -96,6 +99,10 @@ function decrireContexte(ctx) {
     lines.push(`Challenge 21 jours : jour ${jour}/21${action ? ` — action du jour : ${action}` : ''}`)
   }
   if (ctx.repasHier?.analyse?.qualite) lines.push(`Dernier repas photographié hier : qualité ${ctx.repasHier.analyse.qualite}/5${ctx.repasHier.analyse.qualite <= 2 ? ' — suggère un déjeuner équilibré sans culpabiliser' : ''}`)
+  if (ctx.pesees?.length >= 2) {
+    const p0 = Number(ctx.pesees[0].poids), p1 = Number(ctx.pesees[ctx.pesees.length - 1].poids)
+    if (Math.abs(p1 - p0) >= 0.3) lines.push(`Poids sur 30 jours : ${p0.toFixed(1)} → ${p1.toFixed(1)} kg (n'en parle QUE si son objectif concerne le corps/poids, et TOUJOURS sans jugement ni félicitation chiffrée — ton apaisé, jamais de culpabilisation)`)
+  }
   if (ctx.insight?.insight) lines.push(`Pattern détecté sur son historique (à glisser naturellement si pertinent) : « ${ctx.insight.insight} »`)
   return lines
 }

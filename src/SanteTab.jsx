@@ -692,7 +692,10 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {userId && (
         <div style={{ padding: '0 16px 24px' }}>
           <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-            <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />Challenge 21 jours</span>
+            <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
+              {/^.*(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
+                ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
+                : 'Challenge 21 jours'}</span>
           </div>
           <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>

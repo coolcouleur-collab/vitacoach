@@ -30,7 +30,17 @@ function calculerProgres(history) {
   const pas = delta('pas')
   const humeur = delta('humeur')
 
+  // Poids : première et dernière mesure disponibles (pas de moyenne — une
+  // pesée n'est pas quotidienne), présenté SANS jugement (positionnement
+  // « réconciliation », jamais de culpabilisation)
+  const pesees = entries.map(e => Number(e.poids) || 0).filter(v => v > 0)
+  const poids = pesees.length >= 2 ? { avant: pesees[0], apres: pesees[pesees.length - 1], serie: pesees } : null
+
   const stats = []
+  if (poids && Math.abs(poids.apres - poids.avant) >= 0.3) {
+    const diff = poids.apres - poids.avant
+    stats.push({ label: 'Poids', valeur: `${diff > 0 ? '+' : ''}${diff.toFixed(1)} kg`, detail: `${poids.avant.toFixed(1)} → ${poids.apres.toFixed(1)} kg`, positif: null, serie: poids.serie })
+  }
   if (sommeil && Math.abs(sommeil.apres - sommeil.avant) >= 0.2) {
     const diffMin = Math.round((sommeil.apres - sommeil.avant) * 60)
     stats.push({ label: 'Sommeil moyen', valeur: `${diffMin > 0 ? '+' : ''}${diffMin} min`, detail: `${sommeil.avant.toFixed(1)}h → ${sommeil.apres.toFixed(1)}h par nuit`, positif: diffMin > 0 })
@@ -82,8 +92,18 @@ export default function TesProgres({ history, userId }) {
               border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
               <div style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(200,123,82,0.60)' }}>{st.label}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif ? '#2E7D5B' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#2E7D5B' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
               <div style={{ fontSize: 10, color: 'rgba(200,123,82,0.55)', lineHeight: 1.4 }}>{st.detail}</div>
+              {st.serie && st.serie.length >= 3 && (() => {
+                const min = Math.min(...st.serie), max = Math.max(...st.serie)
+                const range = (max - min) || 1
+                const pts = st.serie.map((v, j) => `${(j / (st.serie.length - 1)) * 100},${24 - ((v - min) / range) * 20}`).join(' ')
+                return (
+                  <svg viewBox="0 0 100 26" style={{ width: '100%', height: 22, marginTop: 5, display: 'block' }} preserveAspectRatio="none">
+                    <polyline points={pts} fill="none" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" vectorEffect="non-scaling-stroke" />
+                  </svg>
+                )
+              })()}
             </div>
           ))}
         </div>
