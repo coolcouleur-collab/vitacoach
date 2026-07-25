@@ -133,9 +133,24 @@ export default function AdminRetention() {
           />
         </div>
 
+        {data.refSources && Object.keys(data.refSources).length > 0 && (
+          <div style={{ ...card, marginTop: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(10,22,51,0.45)', marginBottom: 10 }}>
+              Inscriptions par créateur (liens ?ref=)
+            </div>
+            {Object.entries(data.refSources).sort((a, b) => b[1] - a[1]).map(([code, n]) => (
+              <div key={code} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(200,123,82,0.10)', fontSize: 13 }}>
+                <span style={{ fontWeight: 600, color: '#C87B52' }}>{code}</span>
+                <span style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(10,22,51,0.70)' }}>{n} inscription{n > 1 ? 's' : ''}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div style={{ fontSize: 11, color: 'rgba(10,22,51,0.40)', marginTop: 22, lineHeight: 1.5 }}>
           Généré le {data.generatedAt ? new Date(data.generatedAt).toLocaleString('fr-FR') : '—'}.
           Actifs = au moins une métrique enregistrée sur la période. Renouvellement calculé sur les 100 derniers abonnements Stripe.
+          Conversions par code promo : Dashboard Stripe → Produits → Codes promotionnels.
         </div>
       </div>
     </div>

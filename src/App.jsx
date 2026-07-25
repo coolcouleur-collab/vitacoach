@@ -486,6 +486,13 @@ export default function App() {
     try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb } catch { return fb }
   }
 
+  // Attribution influence : ?ref=CODE (lien créateur) mémorisé au premier
+  // passage, rattaché au profil à l'inscription puis visible dans /admin
+  try {
+    const _ref = new URLSearchParams(window.location.search).get('ref')
+    if (_ref) localStorage.setItem('vitacoach_ref', _ref.slice(0, 32))
+  } catch {}
+
   const [user, setUser]         = useState(() => {
     if (localStorage.getItem('solenn_remember_me') === 'false' && !sessionStorage.getItem('solenn_active_session')) {
       // "Don't remember me" session ended — clear stale auth
@@ -1166,7 +1173,7 @@ const [messages, setMessages] = useState(() => {
     try {
       const res = await fetch('/api/create-checkout', {
         method:'POST', headers:{'Content-Type':'application/json', ...(await authHeaders())},
-        body: JSON.stringify({ userId:user?.id, email:user?.email, plan: planKey })
+        body: JSON.stringify({ userId:user?.id, email:user?.email, plan: planKey, ref: localStorage.getItem('vitacoach_ref') || undefined })
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
@@ -1378,6 +1385,9 @@ const [messages, setMessages] = useState(() => {
         localStorage.removeItem('vitacoach_profil')
         setUser(null); setProfil(null)
       }} onTermine={p => {
+        // Attribution influence — rattachée une seule fois, à l'inscription
+        const refSource = localStorage.getItem('vitacoach_ref')
+        if (refSource) p = { ...p, refSource }
         setProfil(p)
         
         localStorage.setItem('vitacoach_profil', JSON.stringify(p))

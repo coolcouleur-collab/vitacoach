@@ -843,7 +843,10 @@ app.post('/api/create-checkout', async (req, res) => {
       }],
       success_url: `${origin}/?subscribed=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${origin}/?subscribed=cancel`,
-      metadata: { userId: req.body.userId || 'anonymous', plan: planKey },
+      // Codes promo (influence) : les codes créés dans le Dashboard Stripe
+      // sont saisissables directement sur la page de paiement
+      allow_promotion_codes: true,
+      metadata: { userId: req.body.userId || 'anonymous', plan: planKey, ref: req.body.ref || null },
     })
     res.json({ url: session.url })
   } catch (e) {
@@ -931,6 +934,16 @@ app.get('/api/admin/retention', adminGuard, async (req, res) => {
       prosActifs = count || 0
     } catch { /* filtre jsonb indisponible → 0 */ }
 
+    // Attribution influence : inscriptions par code créateur (?ref=CODE)
+    const refSources = {}
+    try {
+      const { data: allProf } = await supabase.from('profils').select('profil')
+      for (const r of allProf || []) {
+        const s = r.profil?.refSource
+        if (s) refSources[s] = (refSources[s] || 0) + 1
+      }
+    } catch { /* non bloquant */ }
+
     res.json({
       generatedAt: new Date().toISOString(),
       utilisateurs: { total: totalUsers ?? null, actifsJ7, actifsJ30 },
@@ -939,6 +952,7 @@ app.get('/api/admin/retention', adminGuard, async (req, res) => {
         tauxCompletionMoyen: chEnCours ? Math.round(100 * (completionCumulee / chEnCours)) : null,
       },
       abonnements: { prosActifs, premierRenouvellement },
+      refSources,
     })
   } catch (e) {
     res.status(500).json({ error: e.message })

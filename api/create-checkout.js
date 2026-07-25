@@ -43,7 +43,8 @@ export default async function handler(req, res) {
       // vérification serveur via check-subscription, jamais au paramètre d'URL.
       success_url: `${origin}/?subscribed=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?cancelled=true`,
-      metadata: { userId: userId || 'anonymous', plan: planKey },
+      allow_promotion_codes: true,
+      metadata: { userId: userId || 'anonymous', plan: planKey, ref: req.body?.ref || null },
     })
 
     res.json({ url: session.url })
