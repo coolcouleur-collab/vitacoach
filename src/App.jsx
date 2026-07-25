@@ -1718,7 +1718,11 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
-        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0 0 130px' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY:'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+        {/* Accueil : padding bas 0 — le ciel de HomeTab doit toucher le bord de
+            l'écran (le padding 130 laissait une bande abricot sous le ciel).
+            Chat : overflow hidden — SEULE la zone de messages scrolle, la barre
+            de saisie ne bouge jamais (retours Jean 2026-07-25). */}
+        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
@@ -2667,10 +2671,26 @@ const sr = {
 
 // ─── TENUES MODULE — CAPSULE SLIDER 3D ───────────────────────────────────────
 
-// Cartes capsule SANS photos de stock (retour Jean 2026-07-25 : les images
-// de banques ne correspondaient pas aux descriptions et cassaient la palette
-// avec leur fond sombre). Le texte EST l'idée de tenue — carte claire Solenn.
+// Cartes capsule claires AVEC photo (retour Jean 2026-07-25 : elle veut des
+// images — mais des vêtements posés à plat, pas des photoshoots de personnes).
+// Requête biaisée « flat lay clothing » ; si l'image manque, la carte reste
+// belle avec l'icône. Skeleton clair (fini le fond sombre).
 function TenueCard({ tenue, style: extraStyle }) {
+  const [imgSrc, setImgSrc] = useState(null)
+  const [imgState, setImgState] = useState('loading') // loading | ok | ko
+
+  useEffect(() => {
+    if (tenue.imageUrl) { setImgSrc(tenue.imageUrl); setImgState('ok'); return }
+    const base = tenue.searchQuery || tenue.imagePrompt || tenue.titre || ''
+    // « flat lay » force les photos de vêtements posés, sans mannequin
+    const q = `flat lay clothing outfit ${base}`
+    const alt = `flat lay fashion clothes ${tenue.searchQueryAlt || ''}`.trim()
+    fetch(`/api/image?prompt=${encodeURIComponent(q)}&alt=${encodeURIComponent(alt)}`)
+      .then(r => r.json())
+      .then(d => { if (d.url) { setImgSrc(d.url); setImgState('ok') } else setImgState('ko') })
+      .catch(() => setImgState('ko'))
+  }, [])
+
   return (
     <div style={{
       width: 280,
@@ -2686,26 +2706,35 @@ function TenueCard({ tenue, style: extraStyle }) {
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       ...extraStyle,
     }}>
-      {/* Halo décoratif */}
-      <div style={{
-        position: 'absolute', top: -70, right: -70, width: 220, height: 220, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,150,42,0.20) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-      {/* Icône vêtement */}
-      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 38, paddingBottom: 20 }}>
-        <div style={{
-          width: 84, height: 84, borderRadius: '50%',
-          background: 'rgba(255,235,210,0.55)',
-          border: '1px solid rgba(255,220,160,0.55)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 0 10px rgba(200,123,82,0.06), 0 0 0 20px rgba(200,123,82,0.03)',
-        }}>
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
-          </svg>
-        </div>
+      {/* Zone visuelle : photo flat-lay, skeleton clair, ou icône en secours */}
+      <div style={{ height: 178, margin: '8px 8px 0', borderRadius: 18, overflow: 'hidden', position: 'relative', flexShrink: 0, background: 'rgba(255,240,220,0.60)' }}>
+        {imgState === 'loading' && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%)',
+            backgroundSize: '200% 100%', animation: 'capsuleSkeleton 1.4s ease infinite',
+          }} />
+        )}
+        {imgState === 'ok' && imgSrc && (
+          <img src={imgSrc} alt={tenue.titre}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            onError={() => { setImgSrc(null); setImgState('ko') }} />
+        )}
+        {(imgState === 'ko' || imgState === 'loading') && (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+            <div style={{
+              width: 74, height: 74, borderRadius: '50%',
+              background: 'rgba(255,235,210,0.70)', border: '1px solid rgba(255,220,160,0.60)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
+      <div style={{ height: 14, flexShrink: 0 }} />
       {/* Texte */}
       <div style={{ padding: '0 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{
@@ -2716,7 +2745,7 @@ function TenueCard({ tenue, style: extraStyle }) {
           {tenue.titre}
         </div>
         <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.82)', lineHeight: 1.6, fontFamily: F, textAlign: 'center',
-          display: '-webkit-box', WebkitLineClamp: 9, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
         <div style={{ flex: 1 }} />
@@ -3234,7 +3263,9 @@ const s = {
     // saisie hors de l'écran (bug « la barre se déplace », 2026-07-25)
     display:'flex', flexDirection:'column', flex:1, minHeight:0, padding:'2rem 1.4rem 0 1.8rem', position:'relative',
   },
-  chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
+  // minHeight:0 (pas 300) : avec le verrou overflow:hidden du parent, la zone
+  // de messages doit pouvoir rétrécir (clavier ouvert) sans pousser la barre
+  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
   emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },
