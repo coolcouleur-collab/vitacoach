@@ -1,199 +1,176 @@
 // ─── GUIDE DES EXERCICES — démonstrations animées ────────────────────────────
-// Demande Jean (2026-07-25) : des exercices qui MONTRENT quoi faire.
-// Pas de photos de stock (rejetées sur les tenues) : silhouettes en trait
-// animées (SVG + CSS keyframes), style ligne terracotta cohérent avec la
-// charte Icons.jsx. Chaque fiche : le geste animé, les étapes, les erreurs
-// courantes. Bibliothèque v1 : 8 exercices doux orientés programme poids /
-// bien-être (aucune promesse, aucun vocabulaire de performance).
+// Silhouettes en trait terracotta, animation par ALTERNANCE DE 2 POSES
+// (crossfade opacity — compatible Safari/iOS, contrairement aux animations de
+// tracés `d: path()` qui restent figées sur iPhone — corrigé 2026-07-25).
+// Exporte matchExercice(texte) pour afficher « Voir le geste » sur les actions
+// du challenge / de la routine qui mentionnent un exercice.
 
 import React, { useState } from 'react'
 
 const F = "'Poppins', system-ui, sans-serif"
 const T = '#C87B52'
+const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
+const SOL = <path d="M12 92 L88 92" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
 
-// ── Silhouettes animées ──────────────────────────────────────────────────────
-// Figure filaire : tête (cercle) + segments. Chaque exercice anime le groupe
-// entre 2 poses par CSS. viewBox 100x100, trait 4, bout rond.
-const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', fill: 'none' }
-
-function AnimSquat() {
+// Deux poses en alternance — le cœur du système, 100 % compatible mobile
+function DeuxPoses({ poseA, poseB, duree = 2.6 }) {
   return (
     <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
       <style>{`
-        @keyframes exoSquat { 0%,100% { transform: translateY(0) } 50% { transform: translateY(14px) } }
-        @keyframes exoSquatJambe { 0%,100% { d: path('M42 62 L42 78 L40 94') } 50% { d: path('M42 62 L30 74 L40 94') } }
-        .sq-corps { animation: exoSquat 2.6s ease-in-out infinite; }
+        @keyframes exoPoseA { 0%, 40% { opacity: 1 } 50%, 90% { opacity: 0 } 100% { opacity: 1 } }
+        @keyframes exoPoseB { 0%, 40% { opacity: 0 } 50%, 90% { opacity: 1 } 100% { opacity: 0 } }
+        @media (prefers-reduced-motion: reduce) { .exo-a, .exo-b { animation: none !important } .exo-b { opacity: 0.35 !important } }
       `}</style>
-      <g className="sq-corps">
-        <circle cx="46" cy="18" r="7" {...S} />
-        <path d="M46 25 L44 52" {...S} />
-        <path d="M45 32 L62 40" {...S} />
-      </g>
-      <path {...S} style={{ animation: 'exoSquatJambe 2.6s ease-in-out infinite' }} d="M42 62 L42 78 L40 94" />
-      <path d="M18 94 L82 94" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
+      {SOL}
+      <g className="exo-a" style={{ animation: `exoPoseA ${duree}s ease-in-out infinite` }}>{poseA}</g>
+      <g className="exo-b" style={{ animation: `exoPoseB ${duree}s ease-in-out infinite` }}>{poseB}</g>
     </svg>
   )
 }
 
-function AnimGainage() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`@keyframes exoPlankBreath { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }`}</style>
-      <g style={{ animation: 'exoPlankBreath 3s ease-in-out infinite' }}>
-        <circle cx="20" cy="58" r="7" {...S} />
-        <path d="M27 62 L68 70" {...S} />
-        <path d="M32 64 L30 82" {...S} />
-        <path d="M68 70 L88 82" {...S} />
-      </g>
-      <path d="M10 88 L92 88" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimSquat = () => (
+  <DeuxPoses
+    poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L62 40 M50 56 L48 74 L48 92 M50 56 L54 74 L54 92" {...S} /></>}
+    poseB={<><circle cx="44" cy="34" r="7" {...S} /><path d="M45 41 L48 62 M46 48 L60 52 M48 62 L64 66 L60 92 M48 62 L36 70 L40 92" {...S} /></>}
+  />
+)
 
-function AnimFente() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`
-        @keyframes exoFente { 0%,100% { transform: translateY(0) } 50% { transform: translateY(11px) } }
-        @keyframes exoFenteAv { 0%,100% { d: path('M48 60 L60 74 L60 92') } 50% { d: path('M48 66 L64 76 L60 92') } }
-        @keyframes exoFenteAr { 0%,100% { d: path('M48 60 L38 76 L34 92') } 50% { d: path('M48 66 L36 80 L28 92') } }
-      `}</style>
-      <g style={{ animation: 'exoFente 2.8s ease-in-out infinite' }}>
-        <circle cx="50" cy="16" r="7" {...S} />
-        <path d="M50 23 L48 52" {...S} />
-      </g>
-      <path {...S} style={{ animation: 'exoFenteAv 2.8s ease-in-out infinite' }} d="M48 60 L60 74 L60 92" />
-      <path {...S} style={{ animation: 'exoFenteAr 2.8s ease-in-out infinite' }} d="M48 60 L38 76 L34 92" />
-      <path d="M12 92 L88 92" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimGainage = () => (
+  <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+    <style>{`@keyframes exoPlankBreath { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }`}</style>
+    {SOL}
+    <g style={{ animation: 'exoPlankBreath 3s ease-in-out infinite' }}>
+      <circle cx="20" cy="62" r="7" {...S} />
+      <path d="M27 66 L66 72 M31 68 L30 84 M66 72 L86 84" {...S} />
+    </g>
+  </svg>
+)
 
-function AnimPont() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`@keyframes exoPont { 0%,100% { d: path('M26 80 Q50 76 66 78 L82 84') } 45%,65% { d: path('M26 80 Q50 52 66 62 L82 84') } }`}</style>
-      <circle cx="18" cy="76" r="7" {...S} />
-      <path {...S} style={{ animation: 'exoPont 3.2s ease-in-out infinite' }} d="M26 80 Q50 76 66 78 L82 84" />
-      <path d="M10 90 L92 90" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimFente = () => (
+  <DeuxPoses
+    poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L61 41 M50 56 L46 74 L46 92 M50 56 L55 74 L55 92" {...S} /></>}
+    poseB={<><circle cx="52" cy="28" r="7" {...S} /><path d="M52 35 L51 60 M52 42 L64 48 M51 60 L66 70 L66 92 M51 60 L40 76 L32 90" {...S} /></>}
+  />
+)
 
-function AnimChaise() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`@keyframes exoChaise { 0%,100% { transform: translateY(0) } 50% { transform: translateY(2px) } }`}</style>
-      <path d="M74 30 L74 92" stroke="rgba(200,123,82,0.30)" strokeWidth="4" strokeLinecap="round" fill="none" />
-      <g style={{ animation: 'exoChaise 2.4s ease-in-out infinite' }}>
-        <circle cx="62" cy="26" r="7" {...S} />
-        <path d="M64 33 L68 58" {...S} />
-        <path d="M68 58 L46 62 L46 90" {...S} />
-      </g>
-      <path d="M20 92 L88 92" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimPont = () => (
+  <DeuxPoses
+    poseA={<><circle cx="20" cy="82" r="6" {...S} /><path d="M26 84 L58 84 L66 74 L68 92" {...S} /></>}
+    poseB={<><circle cx="20" cy="82" r="6" {...S} /><path d="M26 84 L44 66 L58 62 L66 74 L68 92" {...S} /></>}
+    duree={3.2}
+  />
+)
 
-function AnimChatVache() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`@keyframes exoChat { 0%,100% { d: path('M30 62 Q50 52 72 62') } 50% { d: path('M30 62 Q50 74 72 62') } }`}</style>
-      <circle cx="22" cy="60" r="7" {...S} />
-      <path {...S} style={{ animation: 'exoChat 3.4s ease-in-out infinite' }} d="M30 62 Q50 52 72 62" />
-      <path d="M34 66 L34 88 M66 66 L66 88" {...S} />
-      <path d="M14 90 L88 90" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimChaise = () => (
+  <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+    <style>{`@keyframes exoChaise { 0%,100% { transform: translateY(0) } 50% { transform: translateY(2px) } }`}</style>
+    {SOL}
+    <path d="M72 28 L72 92" stroke="rgba(200,123,82,0.30)" strokeWidth="4" strokeLinecap="round" fill="none" />
+    <g style={{ animation: 'exoChaise 2.4s ease-in-out infinite' }}>
+      <circle cx="62" cy="24" r="7" {...S} />
+      <path d="M64 31 L68 56 M68 56 L46 60 L46 92" {...S} />
+    </g>
+  </svg>
+)
 
-function AnimMarche() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`
-        @keyframes exoMarcheJ1 { 0%,100% { d: path('M50 58 L60 74 L58 92') } 50% { d: path('M50 58 L42 76 L48 92') } }
-        @keyframes exoMarcheJ2 { 0%,100% { d: path('M50 58 L40 74 L34 92') } 50% { d: path('M50 58 L58 76 L66 92') } }
-        @keyframes exoMarcheB { 0%,100% { transform: rotate(6deg) } 50% { transform: rotate(-6deg) } }
-      `}</style>
-      <circle cx="50" cy="16" r="7" {...S} />
-      <path d="M50 23 L50 52" {...S} />
-      <path d="M50 32 L60 44" {...S} style={{ animation: 'exoMarcheB 1.6s ease-in-out infinite', transformOrigin: '50px 32px' }} />
-      <path {...S} style={{ animation: 'exoMarcheJ1 1.6s ease-in-out infinite' }} d="M50 58 L60 74 L58 92" />
-      <path {...S} style={{ animation: 'exoMarcheJ2 1.6s ease-in-out infinite' }} d="M50 58 L40 74 L34 92" />
-    </svg>
-  )
-}
+const AnimChatVache = () => (
+  <DeuxPoses
+    poseA={<><circle cx="24" cy="52" r="6" {...S} /><path d="M31 56 Q52 46 70 60 M36 60 L36 88 M66 62 L66 88" {...S} /></>}
+    poseB={<><circle cx="24" cy="64" r="6" {...S} /><path d="M31 62 Q52 76 70 62 M36 66 L36 88 M66 64 L66 88" {...S} /></>}
+    duree={3.4}
+  />
+)
 
-function AnimEtirement() {
-  return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-      <style>{`@keyframes exoEtire { 0%,100% { transform: rotate(0deg) } 50% { transform: rotate(-14deg) } }`}</style>
-      <g style={{ animation: 'exoEtire 3.6s ease-in-out infinite', transformOrigin: '50px 60px' }}>
-        <circle cx="50" cy="18" r="7" {...S} />
-        <path d="M50 25 L50 60" {...S} />
-        <path d="M50 30 L38 14 M50 30 L64 16" {...S} />
-      </g>
-      <path d="M50 60 L42 92 M50 60 L58 92" {...S} />
-      <path d="M18 94 L82 94" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    </svg>
-  )
-}
+const AnimMarche = () => (
+  <DeuxPoses
+    poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 54 M50 32 L62 42 M50 32 L40 44 M50 54 L62 72 L60 92 M50 54 L40 72 L34 90" {...S} /></>}
+    poseB={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 54 M50 32 L38 42 M50 32 L60 44 M50 54 L38 72 L36 92 M50 54 L60 72 L68 90" {...S} /></>}
+    duree={1.7}
+  />
+)
 
-// ── Bibliothèque v1 ──────────────────────────────────────────────────────────
+const AnimEtirement = () => (
+  <DeuxPoses
+    poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 60 M50 30 L38 14 M50 30 L62 14 M50 60 L42 92 M50 60 L58 92" {...S} /></>}
+    poseB={<><circle cx="60" cy="20" r="7" {...S} /><path d="M58 27 L50 60 M56 32 L44 18 M56 32 L72 24 M50 60 L42 92 M50 60 L58 92" {...S} /></>}
+    duree={3.6}
+  />
+)
+
+// ── Bibliothèque ─────────────────────────────────────────────────────────────
 const EXOS = [
   {
     id: 'squat', nom: 'Squat', duree: '3 × 10', cible: 'Jambes · fessiers',
+    mots: ['squat', 'flexion'],
     Anim: AnimSquat,
     etapes: ['Pieds largeur d\'épaules, dos droit, regard devant', 'Descends comme pour t\'asseoir, poids dans les talons', 'Remonte en poussant dans le sol, sans verrouiller les genoux'],
     erreurs: ['Les genoux qui rentrent vers l\'intérieur', 'Le dos qui s\'arrondit en bas du mouvement'],
   },
   {
     id: 'gainage', nom: 'Gainage', duree: '3 × 30 s', cible: 'Centre du corps',
+    mots: ['gainage', 'planche', 'plank'],
     Anim: AnimGainage,
     etapes: ['Avant-bras au sol, coudes sous les épaules', 'Corps aligné des épaules aux talons', 'Respire calmement, serre le ventre sans bloquer'],
     erreurs: ['Les hanches qui montent ou qui creusent', 'Retenir sa respiration'],
   },
   {
     id: 'fente', nom: 'Fentes alternées', duree: '2 × 8 / jambe', cible: 'Jambes · équilibre',
+    mots: ['fente', 'lunge'],
     Anim: AnimFente,
     etapes: ['Grand pas en avant, buste droit', 'Descends jusqu\'à ce que les deux genoux soient à 90°', 'Repousse le sol pour revenir, change de jambe'],
     erreurs: ['Le genou avant qui dépasse trop les orteils', 'Le buste qui penche en avant'],
   },
   {
     id: 'pont', nom: 'Pont fessier', duree: '3 × 12', cible: 'Fessiers · dos',
+    mots: ['pont', 'bridge', 'bassin'],
     Anim: AnimPont,
     etapes: ['Allongé·e sur le dos, pieds à plat près des fessiers', 'Soulève le bassin jusqu\'à aligner épaules-genoux', 'Redescends lentement, vertèbre par vertèbre'],
     erreurs: ['Pousser avec le cou ou les épaules', 'Cambrer excessivement en haut'],
   },
   {
     id: 'chaise', nom: 'Chaise au mur', duree: '3 × 30 s', cible: 'Cuisses',
+    mots: ['chaise'],
     Anim: AnimChaise,
     etapes: ['Dos entier collé au mur', 'Glisse jusqu\'à avoir les genoux à 90°', 'Tiens la position en respirant normalement'],
     erreurs: ['Les mains sur les cuisses (elles trichent !)', 'Les talons décollés du sol'],
   },
   {
     id: 'chatvache', nom: 'Chat-vache', duree: '8 respirations', cible: 'Dos · détente',
+    mots: ['chat-vache', 'chat vache', 'dos rond', 'mobilité du dos'],
     Anim: AnimChatVache,
     etapes: ['À quatre pattes, mains sous les épaules', 'Inspire en creusant doucement le dos, regard devant', 'Expire en arrondissant le dos, tête relâchée'],
     erreurs: ['Aller trop vite — le mouvement suit la respiration', 'Forcer l\'amplitude'],
   },
   {
     id: 'marche', nom: 'Marche active', duree: '20-30 min', cible: 'Cardio doux',
+    mots: ['marche', 'marcher', 'pas rapide', 'balade'],
     Anim: AnimMarche,
     etapes: ['Rythme où parler reste possible mais chanter non', 'Bras qui accompagnent naturellement', 'Régularité avant intensité : mieux vaut 20 min chaque jour'],
     erreurs: ['Confondre marche active et flânerie', 'Zapper les jours de pluie — prévois un plan B intérieur'],
   },
   {
     id: 'etirement', nom: 'Étirement latéral', duree: '4 × 20 s / côté', cible: 'Souplesse · détente',
+    mots: ['étirement', 'etirement', 'stretch', 's\'étirer'],
     Anim: AnimEtirement,
     etapes: ['Debout, bras au-dessus de la tête', 'Penche-toi doucement sur le côté en expirant', 'Reste dans une tension agréable, jamais douloureuse'],
     erreurs: ['Rebondir pour aller plus loin', 'Tourner le buste au lieu de rester de profil'],
   },
 ]
 
+// Détecte si un texte d'action (challenge, routine) mentionne un exercice du
+// guide → permet d'afficher « Voir le geste » à côté du conseil
+export function matchExercice(texte) {
+  if (!texte) return null
+  const t = texte.toLowerCase()
+  for (const e of EXOS) {
+    if (e.mots.some(m => t.includes(m))) return e.id
+  }
+  return null
+}
+
 // ── UI ───────────────────────────────────────────────────────────────────────
-export default function ExercicesGuide({ onClose }) {
-  const [actif, setActif] = useState(null)
+export default function ExercicesGuide({ onClose, initial = null }) {
+  const [actif, setActif] = useState(initial)
   const exo = EXOS.find(e => e.id === actif)
 
   return (
@@ -201,10 +178,10 @@ export default function ExercicesGuide({ onClose }) {
       position: 'fixed', inset: 0, zIndex: 1300,
       background: 'rgba(26,10,0,0.32)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-      animation: 'settingsFade 0.22s ease both',
+      animation: 'exoFade 0.22s ease both',
     }}>
       <style>{`
-        @keyframes settingsFade { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes exoFade { from { opacity: 0 } to { opacity: 1 } }
         @keyframes exoSheetUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
       `}</style>
       <div onClick={e => e.stopPropagation()} style={{
@@ -246,12 +223,8 @@ export default function ExercicesGuide({ onClose }) {
               background: 'none', border: 'none', cursor: 'pointer', fontFamily: F,
               fontSize: 12, fontWeight: 600, color: 'rgba(200,123,82,0.75)', padding: '2px 0 10px',
             }}>← Tous les exercices</button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 }}>
-              <div>
-                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)' }}>{exo.nom}</div>
-                <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)' }}>{exo.cible} · {exo.duree}</div>
-              </div>
-            </div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)' }}>{exo.nom}</div>
+            <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
             <div style={{
               height: 190, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,

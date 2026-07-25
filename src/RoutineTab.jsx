@@ -83,7 +83,7 @@ function ProgressRing({ pct, size = 72, stroke = 6 }) {
 }
 
 // ─── Section avec étapes cochables ────────────────────────────────────────────
-function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B52' }) {
+function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, color = '#C87B52' }) {
   const done = etapes.filter(e => checked[e.id]).length
   return (
     <motion.div
@@ -170,6 +170,22 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, color = '#C87B
                 }}>
                   {e.description}
                 </div>
+              )}
+              {/* « Voir le geste » — si l'étape mentionne un exercice du guide */}
+              {onVoirGeste && matchExercice(`${e.titre} ${e.description || ''}`) && !checked[e.id] && (
+                <span
+                  role="button"
+                  onClick={ev => { ev.stopPropagation(); onVoirGeste(matchExercice(`${e.titre} ${e.description || ''}`)) }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6,
+                    background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.45)',
+                    borderRadius: 99, padding: '5px 12px', cursor: 'pointer',
+                    fontFamily: 'Poppins,sans-serif', fontSize: 10.5, fontWeight: 600, color: '#B2663E',
+                  }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
+                  Voir le geste
+                </span>
               )}
             </div>
           </button>

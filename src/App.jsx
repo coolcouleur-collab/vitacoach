@@ -3231,9 +3231,11 @@ const s = {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'8px 18px 8px',
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
-    // Plus de bande du tout (retour Jean 2026-07-24) : header flottant
-    // transparent sur TOUS les onglets, comme sur l'accueil
-    background:'transparent',
+    // Voile dégradé (pas une barre) : le logo et le menu restent lisibles quand
+    // le contenu scrolle dessous, et le fond fond en transparent vers le bas
+    // (retour Jean 2026-07-25 : « le Solenn en haut disparaît au scroll »)
+    background:'linear-gradient(180deg, rgba(240,220,203,0.92) 0%, rgba(240,220,203,0.60) 55%, rgba(240,220,203,0) 100%)',
+    paddingBottom: 18,
     position:'fixed', top:0, left:0, right:0, zIndex:50,
     pointerEvents:'none',
   },

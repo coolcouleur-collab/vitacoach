@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
+import { matchExercice } from './ExercicesGuide'
+
+const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -11,6 +14,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
+  const [exoGuide, setExoGuide] = useState(null)
 
   const fetchChallenge = async () => {
     try {
@@ -464,6 +468,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
             </div>
           </div>
 
+          {/* ── Guide des exercices (ouvert depuis « Voir le geste ») ── */}
+          {exoGuide && (
+            <Suspense fallback={null}>
+              <ExercicesGuide initial={exoGuide} onClose={() => setExoGuide(null)} />
+            </Suspense>
+          )}
+
           {/* ── ACTION DU JOUR ── */}
           {jourActuelData && (
             <motion.div
@@ -505,6 +516,20 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               >
                 {jourActuelData.action}
               </p>
+
+              {/* « Voir le geste » — si l'action mentionne un exercice du guide */}
+              {matchExercice(jourActuelData.action) && (
+                <button onClick={() => setExoGuide(matchExercice(jourActuelData.action))} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10,
+                  background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99,
+                  padding: '7px 14px', cursor: 'pointer',
+                  fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: '#B2663E',
+                }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
+                  Voir le geste
+                </button>
+              )}
 
               {jourActuelData.duree && (
                 <span

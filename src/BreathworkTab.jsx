@@ -17,7 +17,7 @@ const TECHNIQUES = [
   {
     id: 'coherence',
     name: 'Cohérence cardiaque',
-    subtitle: '6 cycles/min · Réduit le stress',
+    subtitle: '6 cycles/min · Anti-stress',
     phases: [
       { label: 'Inspire', dur: 5, big: true },
       { label: 'Expire',  dur: 5, big: false },

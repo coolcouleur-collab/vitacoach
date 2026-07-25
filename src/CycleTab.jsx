@@ -170,7 +170,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
   })
 
   function envoyer(moment) {
-    const msg = `J'ai mal aujourd'hui. Localisation : ${ou.toLowerCase()}. Intensité : ${niveau}/5. Moment : ${moment.toLowerCase()}.${phaseNom ? ` Phase actuelle de mon cycle : ${phaseNom}.` : ''} Aide-moi à comprendre : explique-moi de façon pédagogique les causes possibles de cette douleur à ce moment du cycle, ce qui peut l'accentuer, ce qui peut la soulager concrètement aujourd'hui — et surtout, dis-moi clairement quels signes devraient me pousser à consulter un médecin. Mets-moi sur des pistes, sans poser de diagnostic.`
+    const msg = `J'ai mal aujourd'hui. Localisation : ${ou.toLowerCase()}. Intensité : ${niveau}/5. Moment : ${moment.toLowerCase()}.${phaseNom ? ` Phase actuelle de mon cycle : ${phaseNom}.` : ''} Mets-moi sur des pistes SANS poser de diagnostic, et réponds COURT et aéré : 2-3 causes possibles en phrases simples, 2 gestes concrets qui peuvent soulager aujourd'hui, puis en 2 lignes les signes qui doivent faire consulter un médecin. Pas de pavé.`
     setEtape(0); setOu(null); setNiveau(null)
     onChat && onChat(msg)
   }
