@@ -12,8 +12,11 @@ const T = '#C87B52'
 const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
 const SOL = <path d="M12 92 L88 92" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
 
-// Deux poses en alternance — le cœur du système, 100 % compatible mobile
-function DeuxPoses({ poseA, poseB, duree = 2.6 }) {
+// Deux poses en alternance — le cœur du système, 100 % compatible mobile.
+// labelA/labelB : mot-clé synchronisé avec chaque pose (« Descends » quand la
+// silhouette descend) pour que le mouvement soit compris sans ambiguïté
+// (retour Jean 2026-07-25 : les bonshommes seuls pourraient ne pas suffire).
+function DeuxPoses({ poseA, poseB, labelA, labelB, duree = 2.6 }) {
   return (
     <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
       <style>{`
@@ -22,14 +25,20 @@ function DeuxPoses({ poseA, poseB, duree = 2.6 }) {
         @media (prefers-reduced-motion: reduce) { .exo-a, .exo-b { animation: none !important } .exo-b { opacity: 0.35 !important } }
       `}</style>
       {SOL}
-      <g className="exo-a" style={{ animation: `exoPoseA ${duree}s ease-in-out infinite` }}>{poseA}</g>
-      <g className="exo-b" style={{ animation: `exoPoseB ${duree}s ease-in-out infinite` }}>{poseB}</g>
+      <g className="exo-a" style={{ animation: `exoPoseA ${duree}s ease-in-out infinite` }}>
+        {poseA}
+        {labelA && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="rgba(200,123,82,0.85)" fontFamily="Poppins, sans-serif">{labelA}</text>}
+      </g>
+      <g className="exo-b" style={{ animation: `exoPoseB ${duree}s ease-in-out infinite` }}>
+        {poseB}
+        {labelB && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="rgba(200,123,82,0.85)" fontFamily="Poppins, sans-serif">{labelB}</text>}
+      </g>
     </svg>
   )
 }
 
 const AnimSquat = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Debout" labelB="Descends"
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L62 40 M50 56 L48 74 L48 92 M50 56 L54 74 L54 92" {...S} /></>}
     poseB={<><circle cx="44" cy="34" r="7" {...S} /><path d="M45 41 L48 62 M46 48 L60 52 M48 62 L64 66 L60 92 M48 62 L36 70 L40 92" {...S} /></>}
   />
@@ -47,14 +56,14 @@ const AnimGainage = () => (
 )
 
 const AnimFente = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Debout" labelB="Grand pas"
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L61 41 M50 56 L46 74 L46 92 M50 56 L55 74 L55 92" {...S} /></>}
     poseB={<><circle cx="52" cy="28" r="7" {...S} /><path d="M52 35 L51 60 M52 42 L64 48 M51 60 L66 70 L66 92 M51 60 L40 76 L32 90" {...S} /></>}
   />
 )
 
 const AnimPont = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Allonge-toi" labelB="Soulève le bassin"
     poseA={<><circle cx="20" cy="82" r="6" {...S} /><path d="M26 84 L58 84 L66 74 L68 92" {...S} /></>}
     poseB={<><circle cx="20" cy="82" r="6" {...S} /><path d="M26 84 L44 66 L58 62 L66 74 L68 92" {...S} /></>}
     duree={3.2}
@@ -74,7 +83,7 @@ const AnimChaise = () => (
 )
 
 const AnimChatVache = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Inspire, dos creux" labelB="Expire, dos rond"
     poseA={<><circle cx="24" cy="52" r="6" {...S} /><path d="M31 56 Q52 46 70 60 M36 60 L36 88 M66 62 L66 88" {...S} /></>}
     poseB={<><circle cx="24" cy="64" r="6" {...S} /><path d="M31 62 Q52 76 70 62 M36 66 L36 88 M66 64 L66 88" {...S} /></>}
     duree={3.4}
@@ -82,7 +91,7 @@ const AnimChatVache = () => (
 )
 
 const AnimMarche = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Un pas" labelB="Deux pas"
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 54 M50 32 L62 42 M50 32 L40 44 M50 54 L62 72 L60 92 M50 54 L40 72 L34 90" {...S} /></>}
     poseB={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 54 M50 32 L38 42 M50 32 L60 44 M50 54 L38 72 L36 92 M50 54 L60 72 L68 90" {...S} /></>}
     duree={1.7}
@@ -90,7 +99,7 @@ const AnimMarche = () => (
 )
 
 const AnimEtirement = () => (
-  <DeuxPoses
+  <DeuxPoses labelA="Bras levés" labelB="Penche-toi"
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 60 M50 30 L38 14 M50 30 L62 14 M50 60 L42 92 M50 60 L58 92" {...S} /></>}
     poseB={<><circle cx="60" cy="20" r="7" {...S} /><path d="M58 27 L50 60 M56 32 L44 18 M56 32 L72 24 M50 60 L42 92 M50 60 L58 92" {...S} /></>}
     duree={3.6}

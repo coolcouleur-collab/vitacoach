@@ -627,28 +627,14 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         })}
       </div>
 
-      {/* ── Tes progrès avec Solenn — preuve mesurable + insights ── */}
+      {/* ── TON ÉVOLUTION — une seule zone : progrès + insights + bilan hebdo.
+           (Taille du 2026-07-25, décision Jean : le bouton « Analyse IA » et
+           son carrousel étaient redondants avec Tes progrès et le rapport —
+           trois analyses qui disaient la même chose.) ── */}
       <TesProgres history={history} userId={userId} />
-
-      {/* ── Analyse IA à la demande — dans la zone « évolution » ── */}
-      <div style={{ padding: '0 0 20px', display:'flex', justifyContent:'center' }}>
-        <button
-          className="ia-glow"
-          style={ss.btnInsights}
-          onClick={getInsights}
-          disabled={loadingInsights}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          <span style={{ display:'flex', alignItems:'center', gap:6, justifyContent:'center' }}>
-            {loadingInsights ? 'Analyse en cours…' : insights ? '↻ Rafraîchir l\'analyse' : '✦ Analyse IA personnalisée'}
-          </span>
-        </button>
-      </div>
-      {insights && (
-        <div style={ss.insightsCard}>
-          <InsightsCarousel insights={insights} onClose={() => setInsights(null)} />
+      {userId && (
+        <div style={{ marginBottom: 22 }}>
+          <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>
       )}
 
@@ -677,16 +663,6 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;
            « Appareils connectés » (ConnexionsSante) → accessible dans Réglages. ── */}
-
-      {/* ── Rapport Hebdomadaire ── */}
-      {userId && (
-        <div style={{ padding: '0 16px 8px' }}>
-          <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-            <span style={{display:'flex',alignItems:'center',gap:5}}><CalendarIcon size={12} color="rgba(200,123,82,0.70)" />Rapport hebdomadaire</span>
-          </div>
-          <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
-        </div>
-      )}
 
       {/* ── Challenge 21 jours ── */}
       {userId && (
