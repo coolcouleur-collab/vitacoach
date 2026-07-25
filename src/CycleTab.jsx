@@ -286,7 +286,8 @@ export default function CycleTab({ profil, userId }) {
   const btnPrimary = {
     padding: '12px 18px',
     background: 'rgba(255,235,210,0.32)',
-    color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
+    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+    color: '#B2663E', border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 14, fontSize: 13, fontWeight: 600,
     cursor: 'pointer', fontFamily: F,
   }

@@ -259,7 +259,8 @@ function EmptyRoutine({ generating, onGenerate }) {
         style={{
           padding: '14px 28px', borderRadius: 16, border: 'none',
           background: generating ? 'rgba(200,123,82,0.20)' : 'rgba(255,235,210,0.32)',
-          color: generating ? 'rgba(200,123,82,0.60)' : 'white',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          color: generating ? 'rgba(200,123,82,0.60)' : '#B2663E',
           fontSize: 14, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
           cursor: generating ? 'default' : 'pointer',
           display: 'flex', alignItems: 'center', gap: 8,

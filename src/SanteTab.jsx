@@ -768,7 +768,7 @@ const ss = {
   btnInsights: {
     width: 'auto',
     background: 'rgba(255,235,210,0.32)',
-    color: '#fff',
+    color: '#B2663E',
     border: '1px solid rgba(255,220,160,0.28)',
     padding: '11px 34px',
     borderRadius: 100,
@@ -794,7 +794,7 @@ const ss = {
   btnWater: {
     background: 'rgba(255,235,210,0.32)',
     border: '1px solid rgba(255,220,160,0.28)',
-    color: '#fff', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
+    color: '#B2663E', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
     boxShadow: 'none',
     transition: 'transform 0.15s ease',

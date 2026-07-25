@@ -207,8 +207,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               background: creating
                 ? 'rgba(200,123,82,0.4)'
                 : 'rgba(255,235,210,0.32)',
-              color: '#fff',
-              border: 'none',
+              backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+              color: '#B2663E',
+              border: '1px solid rgba(255,220,160,0.38)',
               borderRadius: '16px',
               padding: '14px 32px',
               fontSize: '15px',
@@ -577,8 +578,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   onClick={() => handleMarquerFait(jourActuel - 1)}
                   style={{
                     background: 'rgba(255,235,210,0.32)',
-                    color: '#fff',
-                    border: 'none',
+                    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                    color: '#B2663E',
+                    border: '1px solid rgba(255,220,160,0.38)',
                     borderRadius: '16px',
                     padding: '12px 24px',
                     fontSize: '14px',
@@ -703,7 +705,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(255,235,210,0.32)',
                     border: '1px solid rgba(255,220,160,0.30)',
-                    color: '#fff', fontSize: 14, fontWeight: 600,
+                    color: '#B2663E', fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
                 >

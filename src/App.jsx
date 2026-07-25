@@ -2043,12 +2043,14 @@ const [messages, setMessages] = useState(() => {
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
 
-              {/* Bouton historique chat */}
+              {/* Bouton historique chat — dans le flux (plus d'absolu qui
+                  chevauchait les bulles, retour Jean 2026-07-25) */}
               {user?.id && (
-                <div style={{ position:'absolute', top:12, right:16, zIndex:10 }}>
+                <div style={{ display:'flex', justifyContent:'flex-end', paddingBottom:8, flexShrink:0 }}>
                   <button onClick={() => setShowChatHistory(true)} title="Historique" style={{
-                    background:'rgba(255,255,255,0.92)',
-                    border:'1px solid rgba(200,123,82,0.18)', borderRadius:10,
+                    background:'rgba(255,235,210,0.32)',
+                    backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+                    border:'1px solid rgba(200,123,82,0.22)', borderRadius:10,
                     padding:'6px 10px', cursor:'pointer', display:'flex', alignItems:'center', gap:5,
                     fontSize:11, fontWeight:600, color:'rgba(200,123,82,0.75)', fontFamily:'Poppins,sans-serif',
                   }}>
@@ -3255,7 +3257,10 @@ const s = {
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
   chatWrap: {
-    display:'flex', flexDirection:'column', flex:1, padding:'2rem 1.4rem 0 1.8rem', position:'relative',
+    // minHeight:0 indispensable : sans lui, le flex-child refuse de rétrécir,
+    // la zone de messages grandit avec la conversation et pousse la barre de
+    // saisie hors de l'écran (bug « la barre se déplace », 2026-07-25)
+    display:'flex', flexDirection:'column', flex:1, minHeight:0, padding:'2rem 1.4rem 0 1.8rem', position:'relative',
   },
   chatBox: { flex:1, minHeight:300, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1 },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },

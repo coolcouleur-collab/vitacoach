@@ -172,7 +172,8 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                     style={{
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
                       background: 'rgba(255,235,210,0.32)',
-                      color: '#fff', fontSize: 13, fontWeight: 700, fontFamily: F,
+                      backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                      color: '#B2663E', fontSize: 13, fontWeight: 700, fontFamily: F,
                       boxShadow: '0 3px 14px rgba(200,123,82,0.30)', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',
                     }}

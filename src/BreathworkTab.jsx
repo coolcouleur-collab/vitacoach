@@ -236,7 +236,8 @@ export default function BreathworkTab() {
           <button onClick={start} style={{
             padding: '13px 40px',
             background: 'rgba(255,235,210,0.32)',
-            color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            color: '#B2663E', border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>
