@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
 import { authHeaders } from './supabase'
 
@@ -11,6 +11,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState(null)
+  // Section dépliée du bilan (une seule à la fois) — le bilan était un mur
+  // d'infos affiché d'un coup, retour Jean 2026-07-27
+  const [openSection, setOpenSection] = useState(null)
 
   const fetchRapport = async () => {
     setLoading(true)
@@ -228,8 +231,15 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     )
   }
 
-  // ─── État 4 : Rapport complet ─────────────────────────────────────────────
+  // ─── État 4 : Rapport complet — compact, sections dépliables ──────────────
   const scoreColor = getScoreColor(rapport.score_global)
+
+  const sections = [
+    { key: 'semaine',  label: 'Cette semaine',       texte: rapport.analyse,       icon: <CalendarIcon size={15} color="#C87B52" /> },
+    { key: 'fort',     label: 'Ton point fort',      texte: rapport.point_fort,    icon: <SparkleIcon size={15} color="#22c55e" /> },
+    { key: 'mieux',    label: 'À améliorer',         texte: rapport.point_progres, icon: <LightbulbIcon size={15} color="#E8962A" /> },
+    { key: 'focus',    label: 'La semaine prochaine', texte: rapport.focus_prochain, icon: <StarIcon size={15} color="#E8962A" /> },
+  ].filter(s => s.texte)
 
   return (
     <motion.div
@@ -304,24 +314,18 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         </div>
       </div>
 
-      {/* Victoire de la semaine */}
-      {rapport.victoire_semaine && (
+      {/* Une seule phrase mise en avant : la victoire (ou la stat phare) */}
+      {(rapport.victoire_semaine || rapport.stat_phare) && (
         <div style={{
           background: 'rgba(34, 197, 94, 0.08)',
           borderRadius: 16,
-          padding: '14px 16px',
+          padding: '12px 16px',
           display: 'flex',
           alignItems: 'flex-start',
           gap: 10,
           border: '1px solid rgba(34, 197, 94, 0.18)',
         }}>
-          <span style={{
-            fontSize: 16,
-            color: '#22c55e',
-            fontWeight: 700,
-            flexShrink: 0,
-            marginTop: 1,
-          }}>✓</span>
+          <span style={{ fontSize: 15, color: '#22c55e', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
           <p style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
@@ -330,188 +334,69 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             margin: 0,
             lineHeight: 1.5,
           }}>
-            {rapport.victoire_semaine}
+            {rapport.victoire_semaine
+              || (typeof rapport.stat_phare === 'object'
+                ? [rapport.stat_phare.valeur, rapport.stat_phare.label].filter(Boolean).join(' — ')
+                : rapport.stat_phare)}
           </p>
         </div>
       )}
 
-      {/* Stat phare */}
-      {rapport.stat_phare && (
-        <div style={{
-          background: 'rgba(232, 150, 42, 0.10)',
-          borderRadius: 16,
-          padding: '14px 16px',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: 10,
-          border: '1px solid rgba(232, 150, 42, 0.20)',
-        }}>
-          <span style={{ flexShrink: 0, marginTop: 1, display:'flex' }}><SparkleIcon size={16} color="#E8962A" /></span>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 600,
-            fontSize: 13,
-            color: 'rgba(200,123,82,0.92)',
-            margin: 0,
-            lineHeight: 1.5,
+      {/* Sections dépliables — un titre par ligne, tape pour lire le détail */}
+      {sections.map(s => {
+        const ouvert = openSection === s.key
+        return (
+          <div key={s.key} style={{
+            background: ouvert ? 'rgba(200,123,82,0.10)' : 'rgba(255,235,210,0.22)',
+            border: '1px solid rgba(255,220,160,0.28)',
+            borderRadius: 16,
+            overflow: 'hidden',
+            transition: 'background 0.2s',
           }}>
-            {typeof rapport.stat_phare === 'object'
-              ? [rapport.stat_phare.valeur, rapport.stat_phare.label].filter(Boolean).join(' — ')
-              : rapport.stat_phare}
-          </p>
-        </div>
-      )}
-
-      {/* Analyse — Cette semaine */}
-      {rapport.analyse && (
-        <div style={{
-          background: 'rgba(200,123,82,0.06)',
-          borderRadius: 16,
-          padding: '14px 16px',
-        }}>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 600,
-            fontSize: 11,
-            color: '#C87B52',
-            margin: '0 0 6px',
-            textTransform: 'uppercase',
-            letterSpacing: 0.8,
-          }}>
-            Cette semaine
-          </p>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: 13,
-            color: 'rgba(200,123,82,0.85)',
-            margin: 0,
-            lineHeight: 1.6,
-          }}>
-            {rapport.analyse}
-          </p>
-        </div>
-      )}
-
-      {/* 2 colonnes : point fort + point progrès */}
-      {(rapport.point_fort || rapport.point_progres) && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          {/* Point fort */}
-          {rapport.point_fort && (
-            <div style={{
-              background: 'rgba(34, 197, 94, 0.08)',
-              borderRadius: 16,
-              padding: '14px 14px',
-              border: '1px solid rgba(34, 197, 94, 0.15)',
-            }}>
-              <p style={{
+            <button
+              onClick={() => setOpenSection(ouvert ? null : s.key)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                padding: '13px 16px', textAlign: 'left',
                 fontFamily: 'Poppins, sans-serif',
-                fontWeight: 600,
-                fontSize: 11,
-                color: '#22c55e',
-                margin: '0 0 6px',
-                textTransform: 'uppercase',
-                letterSpacing: 0.6,
-              }}>
-                <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={11} color="#22c55e" />Point fort</span>
-              </p>
-              <p style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: 12,
-                color: 'rgba(200,123,82,0.92)',
-                margin: 0,
-                lineHeight: 1.5,
-              }}>
-                {rapport.point_fort}
-              </p>
-            </div>
-          )}
-
-          {/* Point progrès */}
-          {rapport.point_progres && (
-            <div style={{
-              background: 'rgba(200, 123, 82, 0.09)',
-              borderRadius: 16,
-              padding: '14px 14px',
-              border: '1px solid rgba(200, 123, 82, 0.18)',
-            }}>
-              <p style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 600,
-                fontSize: 11,
-                color: '#C87B52',
-                margin: '0 0 6px',
-                textTransform: 'uppercase',
-                letterSpacing: 0.6,
-              }}>
-                <span style={{display:'flex',alignItems:'center',gap:5}}><LightbulbIcon size={11} color="rgba(200,123,82,0.70)" />À améliorer</span>
-              </p>
-              <p style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: 12,
-                color: 'rgba(200,123,82,0.92)',
-                margin: 0,
-                lineHeight: 1.5,
-              }}>
-                {rapport.point_progres}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Focus semaine prochaine */}
-      {rapport.focus_prochain && (
-        <div style={{
-          background: 'rgba(200,123,82,0.15)',
-          borderRadius: 16,
-          padding: '16px 18px',
-          backdropFilter: 'blur(18px)',
-          WebkitBackdropFilter: 'blur(18px)',
-          border: '1px solid rgba(255,220,160,0.28)',
-        }}>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 600,
-            fontSize: 12,
-            color: '#E8962A',
-            margin: '0 0 6px',
-            textTransform: 'uppercase',
-            letterSpacing: 0.8,
-          }}>
-            La semaine prochaine
-          </p>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: 13,
-            color: 'rgba(200,123,82,0.92)',
-            margin: 0,
-            lineHeight: 1.6,
-          }}>
-            {rapport.focus_prochain}
-          </p>
-        </div>
-      )}
-
-      {/* Message Solenn */}
-      {rapport.message_solenn && (
-        <div style={{
-          borderLeft: '3px solid #C87B52',
-          paddingLeft: 16,
-          marginLeft: 4,
-          textAlign: 'center',
-        }}>
-          <p style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontStyle: 'italic',
-            fontSize: 16,
-            color: 'rgba(200,123,82,0.92)',
-            margin: 0,
-            lineHeight: 1.6,
-          }}>
-            {rapport.message_solenn}
-          </p>
-        </div>
-      )}
+              }}
+            >
+              <span style={{ display: 'flex', flexShrink: 0 }}>{s.icon}</span>
+              <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)' }}>
+                {s.label}
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.55)"
+                strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+                style={{ transform: ouvert ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <AnimatePresence initial={false}>
+              {ouvert && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <p style={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontSize: 13,
+                    color: 'rgba(200,123,82,0.85)',
+                    margin: 0,
+                    padding: '0 16px 14px',
+                    lineHeight: 1.6,
+                  }}>
+                    {s.texte}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )
+      })}
 
       {/* Erreur éventuelle */}
       {error && (

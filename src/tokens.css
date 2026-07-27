@@ -58,11 +58,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 /* background sur html : FILET DE SÉCURITÉ ABSOLU — la zone que l'app ne
-   couvre pas sur iOS (bande du bas PWA) est peinte à la couleur EXACTE du
-   bas de page après application des halos (#EDD8CC × halos = #EDD2B8),
-   mesurée sur la capture de Jean du 2026-07-27 : continuité parfaite,
-   plus aucune démarcation possible. */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #EDD2B8; }
+   couvre pas sur iOS (bande du bas PWA) est peinte à la couleur du fond de
+   l'app : jamais de blanc système possible. Halos d'origine restaurés
+   (2026-07-27, retour Jean) → le bord de page = --bg, donc raccord exact. */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: var(--bg); }
 html.lenis { height: auto; }
 body {
   background: var(--bg);

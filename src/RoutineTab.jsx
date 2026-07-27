@@ -590,6 +590,33 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 </div>
               </motion.div>
 
+              {/* ── Astuce du jour — juste sous l'intro de la journée
+                   (elle flottait en bas de page, retour Jean 2026-07-27) ── */}
+              {routine.astuce && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  style={{
+                    background: 'rgba(232,150,42,0.08)',
+                    border: '1px solid rgba(232,150,42,0.18)',
+                    borderRadius: 16, padding: '14px 16px',
+                    marginBottom: 16,
+                    display: 'flex', gap: 12, alignItems: 'flex-start',
+                  }}
+                >
+                  <LightbulbIcon size={22} color="#E8962A" />
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#E8962A', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
+                      {routine.astuce.titre || 'Astuce du jour'}
+                    </div>
+                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
+                      {routine.astuce.conseil}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
               {/* ── Matin ── */}
               {routine.matin?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
@@ -627,32 +654,6 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                   checked={checked}
                   onToggle={toggleStep}
                 />
-              )}
-
-              {/* ── Astuce du jour ── */}
-              {routine.astuce && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  style={{
-                    background: 'rgba(232,150,42,0.08)',
-                    border: '1px solid rgba(232,150,42,0.18)',
-                    borderRadius: 16, padding: '14px 16px',
-                    marginBottom: 12,
-                    display: 'flex', gap: 12, alignItems: 'flex-start',
-                  }}
-                >
-                  <LightbulbIcon size={22} color="#E8962A" />
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#E8962A', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
-                      {routine.astuce.titre || 'Astuce du jour'}
-                    </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
-                      {routine.astuce.conseil}
-                    </div>
-                  </div>
-                </motion.div>
               )}
 
               {/* ── 100% complété ── */}

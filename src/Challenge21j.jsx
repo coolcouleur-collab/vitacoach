@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
@@ -738,8 +739,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dialog de confirmation reset */}
-      <AnimatePresence>
+      {/* Dialog de confirmation reset — portail vers <body> : rendu dans une
+          carte animée (transform), un position:fixed serait piégé et invisible
+          → le tap sur « Nouveau challenge » semblait ne rien faire */}
+      {createPortal(<AnimatePresence>
         {confirmReset && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -804,7 +807,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </div>
   )
 }

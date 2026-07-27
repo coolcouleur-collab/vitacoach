@@ -248,16 +248,35 @@ function TypeHeader({ cfg, count }) {
   )
 }
 
+// ─── Nettoyage du texte libre de Solenn ──────────────────────────────────────
+// Filet de sécurité : même si le modèle désobéit au prompt, aucune bulle ne
+// doit afficher de markdown brut (**titre**) ni d'emojis-puces (retour Jean
+// 2026-07-27). Ne touche PAS aux blocs JSON (les cartes utilisent des icônes).
+function nettoyerTexte(t) {
+  if (!t) return t
+  return t
+    .replace(/\*\*(.+?)\*\*/g, '$1')          // **gras** → texte simple
+    .replace(/(^|\n)\s*#+\s*/g, '$1')          // ## titres
+    .replace(/\p{Extended_Pictographic}/gu, '') // emojis
+    .replace(/️|‍/g, '')             // sélecteurs de variante orphelins
+    .replace(/[ \t]+([,.!?;:])/g, '$1')        // espaces laissés par un emoji retiré
+    .replace(/(^|\n)[ \t]+/g, '$1')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 // ─── Main renderer ────────────────────────────────────────────────────────────
 export default function ResponseRenderer({ content }) {
   if (!content) return null
   const parsed = parseRich(content)
 
   if (!parsed) {
-    return <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72 }}>{content}</span>
+    return <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72 }}>{nettoyerTexte(content)}</span>
   }
 
-  const { before, data, after } = parsed
+  const { data } = parsed
+  const before = nettoyerTexte(parsed.before)
+  const after = nettoyerTexte(parsed.after)
 
   // ── Booking ──────────────────────────────────────────────────────────────────
   if (data.type === 'booking') {

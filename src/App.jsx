@@ -1645,19 +1645,19 @@ const [messages, setMessages] = useState(() => {
       <div style={{
         position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
       }}>
-        {/* Halos chauds étendus jusqu'aux BORDS de l'écran — les cercles
-            centrés d'origine devenaient transparents avant le bas sur mobile,
-            laissant une bande pâle en bas de TOUTES les pages (la « barre »
-            signalée par Jean, enfin identifiée le 2026-07-25) */}
+        {/* Halos D'ORIGINE (cercles centrés) — la version « étendue aux bords »
+            saturait l'accueil en orange et créait un décalage de couleur entre
+            pages (retour Jean 2026-07-27). Le raccord des bords est assuré par
+            le fond var(--bg) sur html/body, pas par les halos. */}
         <div style={{
           position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(140% 110% at 50% 42%, #FFF991 0%, rgba(255,249,145,0.55) 55%, rgba(255,249,145,0.22) 100%)',
+          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
           opacity:0.6,
           mixBlendMode:'multiply',
         }} />
         <div style={{
           position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(150% 120% at 50% 45%, #FF7112 0%, rgba(255,113,18,0.40) 60%, rgba(255,113,18,0.15) 100%)',
+          backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
           opacity:0.3,
           mixBlendMode:'multiply',
         }} />
@@ -3254,10 +3254,13 @@ const s = {
     display:'flex', justifyContent:'space-between', alignItems:'center',
     padding:'8px 18px 8px',
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
-    // Voile dégradé (pas une barre) : le logo et le menu restent lisibles quand
-    // le contenu scrolle dessous, et le fond fond en transparent vers le bas
-    // (retour Jean 2026-07-25 : « le Solenn en haut disparaît au scroll »)
-    background:'linear-gradient(180deg, rgba(240,220,203,0.92) 0%, rgba(240,220,203,0.60) 55%, rgba(240,220,203,0) 100%)',
+    // Voile dégradé + flou progressif : le logo et le menu restent lisibles quand
+    // le contenu scrolle dessous (les bulles du chat passaient encore sur le
+    // logo, capture Jean 2026-07-27 — voile renforcé + backdrop blur masqué)
+    background:'linear-gradient(180deg, rgba(240,220,203,0.96) 0%, rgba(240,220,203,0.72) 55%, rgba(240,220,203,0) 100%)',
+    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    WebkitMaskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
+    maskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
     paddingBottom: 18,
     position:'fixed', top:0, left:0, right:0, zIndex:50,
     pointerEvents:'none',

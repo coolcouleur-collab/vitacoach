@@ -6,6 +6,7 @@
 // du challenge / de la routine qui mentionnent un exercice.
 
 import React, { useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const F = "'Poppins', system-ui, sans-serif"
 const T = '#C87B52'
@@ -209,7 +210,10 @@ export default function ExercicesGuide({ onClose, initial = null }) {
   const [actif, setActif] = useState(initial)
   const exo = EXOS.find(e => e.id === actif)
 
-  return (
+  // Portail vers <body> : rendu depuis une carte animée (transform), un
+  // position:fixed serait piégé et invisible — bug « rien ne se passe »
+  // au tap sur Voir le geste (2026-07-27)
+  return createPortal(
     <div onClick={onClose} style={{
       position: 'fixed', inset: 0, zIndex: 1300,
       background: 'rgba(26,10,0,0.32)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
@@ -292,6 +296,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
