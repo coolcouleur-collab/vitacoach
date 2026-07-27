@@ -307,7 +307,6 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
   const [loadingInsights, setLoadingInsights] = useState(false)
-  const [showHistorique, setShowHistorique] = useState(false)
   const [showApple, setShowApple]         = useState(false)
   const [displayScore, setDisplayScore]   = useState(0)
   const animRef    = useRef(null)
@@ -638,27 +637,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         </div>
       )}
 
-      {/* ── Historique 7 jours — replié par défaut (allègement de la page) ── */}
-      <button
-        onClick={() => setShowHistorique(v => !v)}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
-          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          borderRadius: 16, padding: '13px 16px', marginBottom: 14, cursor: 'pointer',
-          fontFamily: 'Poppins,sans-serif', fontSize: 12, fontWeight: 700,
-          color: 'rgba(200,123,82,0.85)', letterSpacing: '0.3px',
-        }}
-      >
-        <span style={{ display:'flex', alignItems:'center', gap:6 }}>
-          <CalendarIcon size={13} color="rgba(200,123,82,0.75)" /> Historique 7 jours
-        </span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
-          style={{ transform: showHistorique ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s ease' }}>
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-      {showHistorique && <HistoriqueSection history={history} />}
+      {/* ── Historique 7 jours — HistoriqueSection est déjà repliable en
+           interne (bouton en double supprimé, retour Jean 2026-07-25) ── */}
+      <HistoriqueSection history={history} />
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;
