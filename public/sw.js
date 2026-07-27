@@ -19,7 +19,7 @@ self.addEventListener('push', e => {
       body:    data.body,
       icon:    data.icon || '/icon-192.png',
       badge:   data.badge || '/icon-192.png',
-      tag: data.tag || 'solenn'',
+      tag: data.tag || 'solenn',
       data:    data.url ? { url: data.url } : {},
       vibrate: [200, 100, 200],
       actions: data.actions || [],
