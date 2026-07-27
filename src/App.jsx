@@ -1645,17 +1645,19 @@ const [messages, setMessages] = useState(() => {
       <div style={{
         position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
       }}>
-        {/* background-components.tsx — Soft Yellow Glow */}
+        {/* Halos chauds étendus jusqu'aux BORDS de l'écran — les cercles
+            centrés d'origine devenaient transparents avant le bas sur mobile,
+            laissant une bande pâle en bas de TOUTES les pages (la « barre »
+            signalée par Jean, enfin identifiée le 2026-07-25) */}
         <div style={{
           position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
+          backgroundImage:'radial-gradient(140% 110% at 50% 42%, #FFF991 0%, rgba(255,249,145,0.55) 55%, rgba(255,249,145,0.22) 100%)',
           opacity:0.6,
           mixBlendMode:'multiply',
         }} />
-        {/* demo.tsx — Orange Soft Glow */}
         <div style={{
           position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
+          backgroundImage:'radial-gradient(150% 120% at 50% 45%, #FF7112 0%, rgba(255,113,18,0.40) 60%, rgba(255,113,18,0.15) 100%)',
           opacity:0.3,
           mixBlendMode:'multiply',
         }} />

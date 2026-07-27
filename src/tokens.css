@@ -57,7 +57,10 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; }
+/* background sur html : FILET DE SÉCURITÉ ABSOLU — si iOS expose une zone
+   que l'app ne couvre pas (barre du bas PWA), elle est abricot, jamais
+   blanche (fix « l'app ne prend pas toute la page », 2026-07-25) */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: var(--bg); }
 html.lenis { height: auto; }
 body {
   background: var(--bg);
@@ -75,6 +78,7 @@ body {
    rétracte) : 100% = viewport « layout », trop court → bande vide sous
    l'app. 100dvh suit le viewport dynamique et remplit tout l'écran. */
 @supports (height: 100dvh) {
+  html:not(.lenis) { height: 100dvh; }
   body, #root { height: 100dvh; }
   html.lenis body, html.lenis #root { height: auto; }
 }
