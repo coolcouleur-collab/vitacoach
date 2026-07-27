@@ -57,10 +57,12 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-/* background sur html : FILET DE SÉCURITÉ ABSOLU — si iOS expose une zone
-   que l'app ne couvre pas (barre du bas PWA), elle est abricot, jamais
-   blanche (fix « l'app ne prend pas toute la page », 2026-07-25) */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: var(--bg); }
+/* background sur html : FILET DE SÉCURITÉ ABSOLU — la zone que l'app ne
+   couvre pas sur iOS (bande du bas PWA) est peinte à la couleur EXACTE du
+   bas de page après application des halos (#EDD8CC × halos = #EDD2B8),
+   mesurée sur la capture de Jean du 2026-07-27 : continuité parfaite,
+   plus aucune démarcation possible. */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #EDD2B8; }
 html.lenis { height: auto; }
 body {
   background: var(--bg);
