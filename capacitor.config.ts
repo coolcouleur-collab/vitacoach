@@ -15,8 +15,13 @@ const config: CapacitorConfig = {
   // ─── iOS ──────────────────────────────────────────────────────────────────
   ios: {
     scheme:              'Solenn',
-    backgroundColor:     '#FFF8F4',
-    contentInset:        'always',
+    // Fond natif = couleur de base de l'app (l'ancien #FFF8F4 blanc cassé
+    // faisait une « barre blanche » en bas sur toutes les pages)
+    backgroundColor:     '#EDD8CC',
+    // 'never' : la page web remplit TOUT l'écran (elle gère elle-même les
+    // safe areas via env()) — 'always' l'encadrait dans les zones sûres et
+    // laissait le fond natif visible en bas (bug barre blanche, 2026-07-25)
+    contentInset:        'never',
     allowsLinkPreview:   false,
     scrollEnabled:       true,
     limitsNavigationsToAppBoundDomains: true,
@@ -24,7 +29,7 @@ const config: CapacitorConfig = {
 
   // ─── Android ──────────────────────────────────────────────────────────────
   android: {
-    backgroundColor:     '#FFF8F4',
+    backgroundColor:     '#EDD8CC',
     allowMixedContent:   false,
     captureInput:        true,
     webContentsDebuggingEnabled: false, // true en dev
@@ -44,11 +49,12 @@ const config: CapacitorConfig = {
       splashImmersive:         true,
     },
 
-    // Barre de statut iOS/Android
+    // Barre de statut iOS/Android — en overlay : la page passe dessous
+    // (elle gère le safe-area-inset-top), plus de bande native en haut
     StatusBar: {
-      style:           'DARK',       // texte foncé sur fond crème
-      backgroundColor: '#FFF8F4',
-      overlaysWebView: false,
+      style:           'DARK',       // texte foncé sur fond clair
+      backgroundColor: '#EDD8CC',
+      overlaysWebView: true,
     },
 
     // Push Notifications natives (remplace web-push dans l'app)
