@@ -420,34 +420,6 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
 
   const [showExos, setShowExos] = useState(false)
 
-  // ── Défi 21 jours : l'action du jour s'exécute ici, dans la routine ──
-  const [defi, setDefi] = useState(null)
-  const [defiSaving, setDefiSaving] = useState(false)
-  useEffect(() => {
-    if (!userId) return
-    ;(async () => {
-      try {
-        const r = await fetch(`/api/challenge?userId=${encodeURIComponent(userId)}`, { headers: await authHeaders() })
-        const d = await r.json()
-        if (d.challenge) setDefi(d.challenge)
-      } catch {}
-    })()
-  }, [userId])
-  const defiJour = defi ? Math.min(Math.max(Math.floor((Date.now() - new Date(defi.date_debut).getTime()) / 864e5) + 1, 1), 21) : 1
-  const defiAction = defi?.challenge?.jours?.[defiJour - 1]?.action || null
-  const defiFait = defi ? !!(defi.progression || [])[defiJour - 1] : false
-  async function marquerDefiFait() {
-    if (!defi || defiSaving) return
-    setDefiSaving(true)
-    try {
-      await fetch('/api/challenge-progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-        body: JSON.stringify({ userId, jour: defiJour - 1, complete: true }),
-      })
-      setDefi(prev => { const pr = [...(prev.progression || [])]; pr[defiJour - 1] = true; return { ...prev, progression: pr } })
-    } catch {} finally { setDefiSaving(false) }
-  }
 
   return (
     <div style={{
@@ -471,16 +443,6 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </div>
-          <button onClick={() => setShowExos(true)} style={{
-            marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,220,160,0.40)', borderRadius: 99,
-            padding: '7px 14px', cursor: 'pointer',
-            fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B2663E" strokeWidth="2" strokeLinecap="round"><path d="M6.5 6.5h11v11h-11z" opacity="0"/><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
-            Guide des exercices
-          </button>
         </div>
 
         {routine && (
@@ -504,47 +466,20 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
 
-        {/* ── Action du défi 21 jours — raccourci cochable en tête de routine ;
-             le module complet du défi est plus bas dans la page ── */}
-        {defi && defiAction && (
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(232,150,42,0.10), rgba(200,123,82,0.10))',
-            border: '1px solid rgba(232,150,42,0.30)',
-            borderRadius: 18, padding: '13px 16px', marginBottom: 16,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.85)', fontFamily: 'Poppins,sans-serif', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <StarIcon size={11} color="rgba(232,150,42,0.90)" /> Ton défi — jour {defiJour}/21
-              </span>
-              {defiFait && <span style={{ fontSize: 10.5, fontWeight: 700, color: '#2E7D5B', fontFamily: 'Poppins,sans-serif' }}>Fait ✓</span>}
+        {/* ── 1. LE DÉFI 21 JOURS — c'est LE programme, il ouvre la page.
+             Une seule instance (le raccourci doublon a été supprimé,
+             retour Jean 2026-07-25). ── */}
+        {userId && (
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
+              <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
+                {/(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
+                  ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
+                  : 'Ton défi 21 jours'}</span>
             </div>
-            <div style={{ fontSize: 13.5, fontWeight: 600, color: defiFait ? 'rgba(200,123,82,0.45)' : 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, textDecoration: defiFait ? 'line-through' : 'none', marginBottom: 10 }}>
-              {defiAction}
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {!defiFait && (
-                <button onClick={marquerDefiFait} disabled={defiSaving} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '7px 14px',
-                  cursor: 'pointer', fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
-                  opacity: defiSaving ? 0.6 : 1,
-                }}>
-                  {defiSaving ? 'Enregistrement…' : 'C\'est fait !'}
-                </button>
-              )}
-              {matchExercice(defiAction) && (
-                <button onClick={() => setShowExos(matchExercice(defiAction))} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  background: 'rgba(255,235,210,0.30)', border: '1px solid rgba(255,220,160,0.40)',
-                  borderRadius: 99, padding: '7px 14px', cursor: 'pointer',
-                  fontFamily: 'Poppins,sans-serif', fontSize: 11.5, fontWeight: 600, color: '#B2663E',
-                }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
-                  Voir le geste
-                </button>
-              )}
-            </div>
+            <React.Suspense fallback={null}>
+              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
+            </React.Suspense>
           </div>
         )}
 
@@ -749,21 +684,23 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           )}
         </AnimatePresence>
 
-        {/* ── Défi 21 jours — module complet (déménagé depuis Santé,
-             décision Jean 2026-07-25) ── */}
-        {userId && (
-          <div style={{ marginTop: 8, paddingBottom: 8 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-              <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
-                {/(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
-                  ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
-                  : 'Défi 21 jours'}</span>
-            </div>
-            <React.Suspense fallback={null}>
-              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
-            </React.Suspense>
+        {/* ── 3. Ressource : le guide des gestes, en pied de page ── */}
+        <button onClick={() => setShowExos(true)} style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+          background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+          padding: '14px 16px', cursor: 'pointer', marginTop: 4, marginBottom: 8,
+          fontFamily: 'Poppins,sans-serif', textAlign: 'left',
+        }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.8" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
           </div>
-        )}
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.90)' }}>Guide des exercices</div>
+            <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Les 8 gestes montrés et expliqués</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
 
       {/* ── CSS spin ── */}

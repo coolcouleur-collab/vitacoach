@@ -423,7 +423,7 @@ export default function CycleTab({ profil, userId, onChat }) {
               </button>
             )}
             <button onClick={() => { setPickDate(todayStr()); setShowPicker(true) }} style={btnGhost}>
-              Autre date
+              Elles ont commencé un autre jour
             </button>
           </div>
         ) : (
@@ -620,11 +620,14 @@ export default function CycleTab({ profil, userId, onChat }) {
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
             <MoonIcon size={36} color="rgba(200,123,82,0.75)" />
           </div>
-          <div style={{ fontSize: 15, fontWeight: 600, color: am(0.80), marginBottom: 8 }}>
-            Enregistre le début de tes dernières règles
+          <div style={{ fontSize: 17, fontWeight: 600, color: am(0.90), marginBottom: 8, fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' }}>
+            Une seule question pour démarrer :
           </div>
-          <div style={{ fontSize: 13, color: am(0.50), lineHeight: 1.6 }}>
-            Solenn suivra ton cycle réel, apprendra sa durée et te préviendra avant tes prochaines règles.
+          <div style={{ fontSize: 14, fontWeight: 600, color: am(0.85), marginBottom: 8 }}>
+            Quand ont commencé tes dernières règles ?
+          </div>
+          <div style={{ fontSize: 12.5, color: am(0.60), lineHeight: 1.6 }}>
+            Réponds avec un des boutons juste au-dessus — c'est aujourd'hui, ou tu choisis la date. À partir de là, Solenn apprend TON cycle et te prévient avant tes prochaines règles.
           </div>
         </motion.div>
       )}

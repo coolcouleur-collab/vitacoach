@@ -322,7 +322,11 @@ FORMAT PLANTES — dès qu'un problème de santé/bien-être récurrent est ment
 |||END|||
 3-4 alternatives max · Toujours ancré dans le profil (age, carences, objectifs, maladies connues)
 
-FORMAT 3 — TOUT LE RESTE : texte pur, 2-3 phrases courtes max, aéré, dynamique, ancré dans le profil — et une question ou un mini-défi pour finir.`
+FORMAT 3 — TOUT LE RESTE : texte pur, 2-3 phrases courtes max, aéré, dynamique, ancré dans le profil — et une question ou un mini-défi pour finir.
+
+INTERACTIVITÉ — OBLIGATOIRE À CHAQUE RÉPONSE : termine par 2-3 réponses rapides que l'utilisateur peut taper d'un doigt, au format EXACT (dernière ligne de ta réponse) :
+|||CHOIX|||["Oui, montre-moi","Plus tard","Pourquoi ?"]|||END|||
+Règles des choix : max 4 mots chacun, toujours cohérents avec ta dernière phrase (si tu poses une question, ce sont ses réponses possibles ; si tu proposes un défi : « Je le fais » / « Trop dur » / « Autre idée »). C'est ce qui rend la conversation interactive — ne l'oublie JAMAIS.`
 
   const messagesAPI = [
     { role: 'system', content: systemPrompt },

@@ -1309,7 +1309,25 @@ const [messages, setMessages] = useState(() => {
         setLoading(false)
       }
       if (reply) {
-        setFollowUps(genFollowUps(reply))
+        // ── Réponses rapides interactives émises par Solenn ────────────────
+        // Format : |||CHOIX|||["Oui","Plus tard"]|||END||| en fin de réponse.
+        // On les extrait en chips tapables et on les retire du texte affiché.
+        let choix = null
+        const mChoix = reply.match(/\|\|\|CHOIX\|\|\|([\s\S]*?)\|\|\|END\|\|\|\s*$/)
+        if (mChoix) {
+          try {
+            const arr = JSON.parse(mChoix[1])
+            if (Array.isArray(arr) && arr.length) choix = arr.slice(0, 3).map(String)
+          } catch {}
+          reply = reply.replace(/\|\|\|CHOIX\|\|\|[\s\S]*?\|\|\|END\|\|\|\s*$/, '').trimEnd()
+          setMessages(prev => {
+            const copy = [...prev]
+            const last = copy[copy.length - 1]
+            if (last?.role === 'assistant') copy[copy.length - 1] = { ...last, content: reply }
+            return copy
+          })
+        }
+        setFollowUps(choix || genFollowUps(reply))
         sauverMemoire(msg, reply)
         checkMilestones()
         // Sauvegarde Supabase de la conversation (fire & forget)

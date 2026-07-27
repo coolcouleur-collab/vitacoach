@@ -188,7 +188,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           color: 'rgba(200,123,82,0.92)',
           margin: 0,
         }}>
-          Pas encore de rapport cette semaine
+          Ton bilan de la semaine
         </p>
         <p style={{
           fontFamily: 'Poppins, sans-serif',
@@ -197,7 +197,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           margin: 0,
           lineHeight: 1.5,
         }}>
-          Ton rapport sera généré automatiquement dimanche soir
+          Chaque dimanche soir, Solenn résume ta semaine : ton score, tes victoires, et UN focus pour la suivante.
         </p>
         {error && (
           <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#ef4444', margin: 0 }}>
@@ -222,7 +222,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             transition: 'opacity 0.2s',
           }}
         >
-          {generating ? 'Génération en cours…' : 'Générer maintenant'}
+          {generating ? 'Solenn analyse ta semaine…' : 'Voir mon bilan dès maintenant'}
         </button>
       </motion.div>
     )
@@ -550,7 +550,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 12a9 9 0 1 0 2.6-6.4"/><polyline points="3 2 3 8 9 8"/>
               </svg>
-              Regénérer
+              Mettre à jour avec mes dernières données
             </span>
           )}
         </button>

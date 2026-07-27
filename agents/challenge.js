@@ -31,6 +31,52 @@ function getSupabase() {
 }
 
 // ─── Génère un challenge personnalisé ────────────────────────────────────────
+// ─── PROGRAMME POIDS 21 JOURS — écrit en dur, pas généré par IA ──────────────
+// Demande Jean (2026-07-25) : un VRAI programme d'entraînement progressif
+// (séances structurées avec exercices du guide, séries/répétitions, conseils
+// nutrition consistants), pas des micro-actions génériques. Qualité garantie
+// et identique pour tous — la personnalisation vient du coaching autour.
+// Les ids de `seance` correspondent aux fiches du Guide des exercices.
+const PROGRAMME_POIDS = {
+  titre: '21 jours pour te réconcilier avec ton corps',
+  emoji: '🌱',
+  description: 'Trois semaines progressives : on construit la base, on monte en puissance, on ancre les habitudes. Jamais dans la douleur, toujours dans la régularité.',
+  objectif_final: 'Un corps plus fort, des habitudes installées, et la preuve chiffrée que tu peux tenir un programme.',
+  jours: [
+    // ── SEMAINE 1 — Fondations ──
+    { jour: 1,  titre: 'On pose la première pierre', action: 'Marche active 20 minutes, à un rythme où parler reste possible mais chanter non', duree: '20 min', seance: [{ exo: 'marche', reps: '20 min' }], nutrition: 'Aujourd\'hui, bois un grand verre d\'eau avant chaque repas — la satiété arrive plus vite.', pourquoi: 'La marche active brûle des graisses sans épuiser : c\'est la fondation de tout le programme.' },
+    { jour: 2,  titre: 'Première séance — découverte', action: 'Séance A : squats, pont fessier et gainage — en douceur, la technique avant tout', duree: '12 min', seance: [{ exo: 'squat', reps: '2 × 8' }, { exo: 'pont', reps: '2 × 10' }, { exo: 'gainage', reps: '2 × 20 s' }], nutrition: 'Ajoute une source de protéines au petit-déjeuner (œuf, yaourt grec, fromage blanc) : moins de fringales à 11h.', pourquoi: 'Squats et gainage recrutent les plus gros muscles — ceux qui consomment le plus d\'énergie, même au repos.' },
+    { jour: 3,  titre: 'Cardio doux', action: 'Marche active 25 minutes + 8 verres d\'eau dans la journée', duree: '25 min', seance: [{ exo: 'marche', reps: '25 min' }], nutrition: 'Remplis la moitié de ton assiette du midi avec des légumes — volume, fibres, satiété.', pourquoi: 'Alterner effort et récupération accélère les progrès plus que forcer tous les jours.' },
+    { jour: 4,  titre: 'Séance B — équilibre', action: 'Séance B : fentes, chaise au mur et chat-vache pour finir en douceur', duree: '12 min', seance: [{ exo: 'fente', reps: '2 × 6 / jambe' }, { exo: 'chaise', reps: '2 × 20 s' }, { exo: 'chatvache', reps: '8 respirations' }], nutrition: 'Prépare une collation prête à l\'avance (fruits + amandes) pour éviter le distributeur.', pourquoi: 'Les fentes travaillent l\'équilibre et corrigent les asymétries — la base d\'un corps solide.' },
+    { jour: 5,  titre: 'Récupération active', action: '10 minutes d\'étirements complets, en respirant profondément', duree: '10 min', seance: [{ exo: 'etirement', reps: '4 × 20 s / côté' }, { exo: 'chatvache', reps: '8 respirations' }], nutrition: 'Ce soir, dîne 2-3h avant le coucher : la digestion nocturne perturbe le sommeil, et le sommeil pilote l\'appétit.', pourquoi: 'C\'est pendant la récupération que le corps se transforme — la négliger, c\'est freiner tes résultats.' },
+    { jour: 6,  titre: 'Séance A — on monte', action: 'Séance A en 3 tours cette fois : ton corps connaît déjà les mouvements', duree: '15 min', seance: [{ exo: 'squat', reps: '3 × 8' }, { exo: 'pont', reps: '3 × 10' }, { exo: 'gainage', reps: '3 × 20 s' }], nutrition: 'Regarde les étiquettes aujourd\'hui : les sucres cachés (sauces, jus, céréales) sabotent plus que les desserts assumés.', pourquoi: 'Passer de 2 à 3 séries : +50 % de volume — c\'est comme ça qu\'on progresse sans se blesser.' },
+    { jour: 7,  titre: 'Grande marche + bilan', action: 'Marche longue 40 minutes + note comment tu te sens après cette première semaine', duree: '40 min', seance: [{ exo: 'marche', reps: '40 min' }], nutrition: 'Repas libre ce soir, sans culpabilité : un programme tenable inclut du plaisir.', pourquoi: 'Une semaine complète — ton corps a déjà commencé à changer, même si la balance ne le dit pas encore.' },
+    // ── SEMAINE 2 — Montée en puissance ──
+    { jour: 8,  titre: 'Séance B renforcée', action: 'Séance B : plus de répétitions, gainage plus long', duree: '15 min', seance: [{ exo: 'fente', reps: '3 × 8 / jambe' }, { exo: 'chaise', reps: '3 × 30 s' }, { exo: 'gainage', reps: '3 × 30 s' }], nutrition: 'Protéines à CHAQUE repas cette semaine : elles protègent tes muscles pendant la perte de poids.', pourquoi: 'Semaine 2 : ton corps s\'est adapté, on lui donne une nouvelle raison de progresser.' },
+    { jour: 9,  titre: 'Marche rapide', action: 'Marche 30 minutes à rythme soutenu — un peu essoufflée, c\'est le but', duree: '30 min', seance: [{ exo: 'marche', reps: '30 min rapide' }], nutrition: 'Troque une boisson sucrée contre de l\'eau pétillante citronnée — 100-150 kcal évitées sans frustration.', pourquoi: 'Le rythme soutenu élève le métabolisme pendant des heures après l\'effort.' },
+    { jour: 10, titre: 'Séance complète', action: 'Première séance complète : squats, fentes et pont enchaînés', duree: '18 min', seance: [{ exo: 'squat', reps: '3 × 10' }, { exo: 'fente', reps: '2 × 8 / jambe' }, { exo: 'pont', reps: '3 × 12' }], nutrition: 'Mange lentement ce midi : 20 minutes minimum — le cerveau met ce temps à percevoir la satiété.', pourquoi: 'Enchaîner les exercices garde le cœur haut : renforcement ET cardio en une séance.' },
+    { jour: 11, titre: 'Pause qui construit', action: 'Récupération active : mobilité du dos et étirements, 12 minutes', duree: '12 min', seance: [{ exo: 'chatvache', reps: '10 respirations' }, { exo: 'etirement', reps: '4 × 25 s / côté' }], nutrition: 'Fais le point sur ton sommeil : moins de 7h = plus de ghréline (hormone de la faim) demain.', pourquoi: 'Mi-programme : la récupération d\'aujourd\'hui paie les séances de demain.' },
+    { jour: 12, titre: 'Circuit chrono', action: 'Circuit ×3 : squats, gainage, pont — le moins de pause possible entre les tours', duree: '15 min', seance: [{ exo: 'squat', reps: '10' }, { exo: 'gainage', reps: '25 s' }, { exo: 'pont', reps: '12' }], nutrition: 'Ajoute une poignée de légumineuses (lentilles, pois chiches) à un repas : rassasiantes et riches en fibres.', pourquoi: 'Le format circuit maximise la dépense en un minimum de temps — parfait les jours chargés.' },
+    { jour: 13, titre: 'Marche fractionnée', action: '35 minutes : alterne 4 min rapides / 2 min tranquilles', duree: '35 min', seance: [{ exo: 'marche', reps: '3 × (4 min rapide + 2 min lente)' }], nutrition: 'Prépare tes repas de demain à l\'avance : les décisions de dernière minute sont rarement les bonnes.', pourquoi: 'Le fractionné brûle plus que la même durée à rythme constant — et fait passer le temps plus vite.' },
+    { jour: 14, titre: 'Bilan de mi-parcours', action: 'Étirements 10 min + regarde tes progrès dans l\'onglet Progrès : 2 semaines tenues !', duree: '10 min', seance: [{ exo: 'etirement', reps: '4 × 20 s / côté' }], nutrition: 'Compare ton assiette type d\'aujourd\'hui à celle d\'il y a 2 semaines — mesure le chemin parcouru.', pourquoi: '14 jours de tenue : statistiquement, tu fais déjà partie de celles et ceux qui vont au bout.' },
+    // ── SEMAINE 3 — Consolidation ──
+    { jour: 15, titre: 'Séance complète +', action: 'Ta plus grosse séance : squats, fentes, chaise — tu es prête pour ça', duree: '18 min', seance: [{ exo: 'squat', reps: '3 × 12' }, { exo: 'fente', reps: '3 × 8 / jambe' }, { exo: 'chaise', reps: '3 × 35 s' }], nutrition: 'Cette semaine, un fruit en dessert le midi au lieu du sucré — l\'habitude qui reste après le programme.', pourquoi: 'Semaine 3 : on consolide. Ce que tu fais 21 jours, tu peux le faire toute l\'année.' },
+    { jour: 16, titre: 'Marche endurance', action: 'Marche rapide 40 minutes — mets un podcast et profite', duree: '40 min', seance: [{ exo: 'marche', reps: '40 min rapide' }], nutrition: 'Hydratation max aujourd\'hui : 8 verres minimum, la marche longue déshydrate plus qu\'on ne croit.', pourquoi: 'L\'endurance construite ces 3 semaines se voit : compare avec ta marche du jour 1.' },
+    { jour: 17, titre: 'Circuit final', action: 'Le grand circuit ×3 : squats, pont, gainage, fentes — tout ce que tu as appris', duree: '20 min', seance: [{ exo: 'squat', reps: '12' }, { exo: 'pont', reps: '12' }, { exo: 'gainage', reps: '35 s' }, { exo: 'fente', reps: '8 / jambe' }], nutrition: 'Assiette du sportif ce soir : 1/2 légumes, 1/4 protéines, 1/4 féculents complets.', pourquoi: 'Ce circuit aurait été impossible au jour 1. Il est ta preuve.' },
+    { jour: 18, titre: 'Récupération profonde', action: '15 minutes : étirements complets + 10 grandes respirations au calme', duree: '15 min', seance: [{ exo: 'etirement', reps: '5 × 25 s / côté' }, { exo: 'chatvache', reps: '10 respirations' }], nutrition: 'Zéro écran pendant les repas aujourd\'hui : on mange 20 % de moins quand on mange en conscience.', pourquoi: 'Les 3 derniers jours arrivent — on y va reposée, pas épuisée.' },
+    { jour: 19, titre: 'Ta séance préférée', action: 'Refais la séance que tu as préférée du programme + 2 000 pas bonus dans la journée', duree: '15-20 min', seance: [{ exo: 'squat', reps: 'ta séance préférée' }], nutrition: 'Cuisine quelque chose que tu aimes VRAIMENT, version équilibrée — le plaisir est une stratégie, pas une triche.', pourquoi: 'Choisir sa séance, c\'est le début de l\'autonomie — le programme se termine, pas la pratique.' },
+    { jour: 20, titre: 'Avant-dernière marche', action: 'Marche 45 minutes, ton record du programme', duree: '45 min', seance: [{ exo: 'marche', reps: '45 min' }], nutrition: 'Note tes 3 habitudes alimentaires préférées de ces 3 semaines : ce sont elles que tu gardes.', pourquoi: '45 minutes : impensable il y a 3 semaines. Regarde d\'où tu viens.' },
+    { jour: 21, titre: 'Jour 21 — la preuve', action: 'Séance de célébration : un tour de tout, puis va voir tes progrès chiffrés dans Progrès', duree: '15 min', seance: [{ exo: 'squat', reps: '10' }, { exo: 'fente', reps: '6 / jambe' }, { exo: 'pont', reps: '10' }, { exo: 'gainage', reps: '30 s' }, { exo: 'etirement', reps: '2 × 20 s / côté' }], nutrition: 'Célèbre — et planifie : quelles séances gardes-tu la semaine prochaine ?', pourquoi: '21 jours. Tu ne t\'es pas réconciliée avec ton corps en le punissant, mais en le renforçant. C\'est ça, la différence.' },
+  ],
+  milestones: [
+    { jour: 7,  titre: 'Première semaine tenue', message: 'Les fondations sont posées — ton corps a déjà commencé à changer.' },
+    { jour: 14, titre: 'Deux semaines — le cap décisif', message: 'Statistiquement, tu fais maintenant partie de celles et ceux qui vont au bout.' },
+    { jour: 21, titre: 'Programme accompli', message: 'La preuve est faite : tu peux tenir un programme. La suite t\'appartient.' },
+  ],
+}
+
+const OBJECTIF_POIDS_RE = /poids|mincir|maigrir|corps|réconcilier|silhouette/i
+
 export async function creerChallenge(userId, duree = 21) {
   const supabase = getSupabase()
   const groq     = getGroq()
@@ -45,6 +91,28 @@ export async function creerChallenge(userId, duree = 21) {
   const profil  = profilRow?.profil || {}
   const memoire = profil?.memoire_longue || {}
   const nom     = profil?.nom || profil?.prenom || 'toi'
+
+  // ── Objectif lié au corps/poids → LE programme structuré écrit en dur
+  // (séances réelles, progression 3 semaines) au lieu de la génération IA ──
+  const objectifTxt = [profil?.objectifs?.[0], profil?.objectif].filter(Boolean).join(' ')
+  if (OBJECTIF_POIDS_RE.test(objectifTxt)) {
+    const dateDebutProg = new Date().toISOString().split('T')[0]
+    const { data: savedProg } = await supabase
+      .from('challenges')
+      .insert({
+        user_id:    userId,
+        duree:      21,
+        challenge:  PROGRAMME_POIDS,
+        progression: Array(21).fill(false),
+        date_debut:  dateDebutProg,
+        actif:       true,
+        created_at:  new Date().toISOString(),
+      })
+      .select()
+      .single()
+    console.log(`[Challenge] ✅ Programme poids 21j (structuré) créé pour ${userId.slice(0, 8)}`)
+    return savedProg || { challenge: PROGRAMME_POIDS, date_debut: dateDebutProg }
+  }
 
   // Métriques des 7 derniers jours pour détecter les faiblesses
   const dateDebut = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]

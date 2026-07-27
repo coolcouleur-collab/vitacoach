@@ -8,6 +8,48 @@ const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
 const API = import.meta.env.VITE_API_URL || ''
 
+// ─── Ligne d'exercice d'une séance du programme (photo + reps + fiche) ───────
+const EXO_INFOS = {
+  squat:     { nom: 'Squat',          recherche: 'woman doing squat exercise fitness' },
+  gainage:   { nom: 'Gainage',        recherche: 'plank exercise fitness demonstration' },
+  fente:     { nom: 'Fentes',         recherche: 'lunge exercise fitness demonstration' },
+  pont:      { nom: 'Pont fessier',   recherche: 'glute bridge exercise fitness' },
+  chaise:    { nom: 'Chaise au mur',  recherche: 'wall sit exercise fitness' },
+  chatvache: { nom: 'Chat-vache',     recherche: 'cat cow yoga stretch pose' },
+  marche:    { nom: 'Marche active',  recherche: 'brisk walking outdoor exercise' },
+  etirement: { nom: 'Étirements',     recherche: 'side stretch exercise fitness' },
+}
+
+function SeanceRow({ item, onFiche }) {
+  const info = EXO_INFOS[item.exo] || { nom: item.exo, recherche: `${item.exo} exercise` }
+  const [img, setImg] = useState(null)
+  useEffect(() => {
+    fetch(`${API}/api/image?prompt=${encodeURIComponent(info.recherche)}`)
+      .then(r => r.json()).then(d => { if (d.url) setImg(d.url) }).catch(() => {})
+  }, [])
+  return (
+    <button onClick={onFiche} style={{
+      width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+      background: 'rgba(255,235,210,0.30)', border: '1px solid rgba(255,220,160,0.35)',
+      borderRadius: 14, padding: '8px 10px', marginBottom: 8, cursor: 'pointer',
+      fontFamily: "'Poppins', sans-serif", textAlign: 'left',
+    }}>
+      <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(255,240,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {img
+          ? <img src={img} alt={info.nom} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={() => setImg(null)} />
+          : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.6" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)' }}>{info.nom}</div>
+        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.60)' }}>{item.reps}</div>
+      </div>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: '#B2663E', background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
+        Voir le geste
+      </span>
+    </button>
+  )
+}
+
 export default function Challenge21j({ userId, isPro, onPasserPro }) {
   const [challenge, setChallenge] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -517,8 +559,30 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 {jourActuelData.action}
               </p>
 
-              {/* « Voir le geste » — si l'action mentionne un exercice du guide */}
-              {matchExercice(jourActuelData.action) && (
+              {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
+              {jourActuelData.seance?.length > 0 && (
+                <div style={{ margin: '4px 0 10px' }}>
+                  {jourActuelData.seance.map((s, i) => (
+                    <SeanceRow key={i} item={s} onFiche={() => setExoGuide(EXO_INFOS[s.exo] ? s.exo : null)} />
+                  ))}
+                </div>
+              )}
+              {/* ── Conseil nutrition du jour ── */}
+              {jourActuelData.nutrition && (
+                <div style={{
+                  display: 'flex', gap: 8, alignItems: 'flex-start',
+                  background: 'rgba(255,235,210,0.35)', border: '1px solid rgba(255,220,160,0.40)',
+                  borderRadius: 12, padding: '9px 12px', marginBottom: 12,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                  <span style={{ fontSize: 11.5, color: 'rgba(178,102,62,0.88)', lineHeight: 1.55, fontFamily: "'Poppins', sans-serif" }}>
+                    {jourActuelData.nutrition}
+                  </span>
+                </div>
+              )}
+              {/* « Voir le geste » — si l'action mentionne un exercice du guide
+                  (masqué quand une séance structurée est déjà affichée) */}
+              {!jourActuelData.seance?.length && matchExercice(jourActuelData.action) && (
                 <button onClick={() => setExoGuide(matchExercice(jourActuelData.action))} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10,
                   background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
