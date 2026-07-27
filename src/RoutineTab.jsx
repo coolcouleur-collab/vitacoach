@@ -11,6 +11,7 @@ import { SunIcon, MoonIcon, LightbulbIcon, SparkleIcon, StarIcon } from './Icons
 import { authHeaders } from './supabase'
 
 const ExercicesGuide = React.lazy(() => import('./ExercicesGuide'))
+const Challenge21j = React.lazy(() => import('./Challenge21j'))
 import { matchExercice } from './ExercicesGuide'
 
 const EASE = [0.22, 1, 0.36, 1]
@@ -295,7 +296,7 @@ function EmptyRoutine({ generating, onGenerate }) {
 }
 
 // ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
-export default function RoutineTab({ userId, profil }) {
+export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
   const todayKey = new Date().toDateString()
   const storageKey = `vitacoach_routine_checked_${todayKey}`
 
@@ -503,8 +504,8 @@ export default function RoutineTab({ userId, profil }) {
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
 
-        {/* ── Action du défi 21 jours — la routine est la page de l'exécution
-             quotidienne, le défi en fait partie (décision Jean 2026-07-25) ── */}
+        {/* ── Action du défi 21 jours — raccourci cochable en tête de routine ;
+             le module complet du défi est plus bas dans la page ── */}
         {defi && defiAction && (
           <div style={{
             background: 'linear-gradient(135deg, rgba(232,150,42,0.10), rgba(200,123,82,0.10))',
@@ -747,6 +748,22 @@ export default function RoutineTab({ userId, profil }) {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ── Défi 21 jours — module complet (déménagé depuis Santé,
+             décision Jean 2026-07-25) ── */}
+        {userId && (
+          <div style={{ marginTop: 8, paddingBottom: 8 }}>
+            <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
+              <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
+                {/(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
+                  ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
+                  : 'Défi 21 jours'}</span>
+            </div>
+            <React.Suspense fallback={null}>
+              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
+            </React.Suspense>
+          </div>
+        )}
       </div>
 
       {/* ── CSS spin ── */}

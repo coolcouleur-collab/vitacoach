@@ -2244,8 +2244,11 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   // Nuit : gradient long + couleur de base sombre jusqu'en bas
   const skyBg = currentPreset === 'night'
     ? `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 462px, rgba(9,24,48,0.68) 560px, rgba(9,24,48,0.42) 800px, rgba(9,24,48,0.18) 1100px, rgba(9,24,48,0.10) 1400px)`
-    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 460px, ${skyBottomColor}00 660px)`
-  const nightBaseBg = currentPreset === 'night' ? '#070f1e' : 'transparent'
+    // Fondu vers la couleur EXACTE du fond de l'app (#EDD8CC) et non vers du
+    // transparent : plus aucun raccord possible en bas d'écran, quelle que
+    // soit la hauteur du téléphone (fix « barre en bas », 2026-07-25)
+    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 460px, #EDD8CC 680px)`
+  const nightBaseBg = currentPreset === 'night' ? '#070f1e' : '#EDD8CC'
   const isNight = currentPreset === 'night'
 
   return (

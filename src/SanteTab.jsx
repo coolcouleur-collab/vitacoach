@@ -664,18 +664,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;
            « Appareils connectés » (ConnexionsSante) → accessible dans Réglages. ── */}
 
-      {/* ── Challenge 21 jours ── */}
-      {userId && (
-        <div style={{ padding: '0 16px 24px' }}>
-          <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-            <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
-              {/^.*(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
-                ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
-                : 'Challenge 21 jours'}</span>
-          </div>
-          <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
-        </div>
-      )}
+      {/* ── Le défi 21 jours vit désormais dans Ma Routine (décision Jean
+           2026-07-25) : Santé = bilan, Routine = exécution quotidienne ── */}
 
       {/* ── Edit Modal ── */}
       {editMode && editMetric && (

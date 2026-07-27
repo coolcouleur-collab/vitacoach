@@ -2286,7 +2286,7 @@ const [messages, setMessages] = useState(() => {
 
           {/* ── Routine ── */}
           {onglet === 'routine' && (
-            <Suspense fallback={<GlowLoader fullPage />}><RoutineTab userId={user?.id} profil={profil} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><RoutineTab userId={user?.id} profil={profil} isPro={hasFullAccess} onPasserPro={passerPro} /></Suspense>
           )}
 
           {/* ── Forum ── */}
