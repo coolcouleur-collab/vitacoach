@@ -2260,8 +2260,11 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} />
       <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
-      <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
-      <DailyTasks profil={profil} metriques={metriques} onSwitchTab={onSwitchTab} isNight={isNight} preset={currentPreset} />
+      {/* Évolution = raccourci vers Progrès ; les « 7 tâches » (doublon de la
+          routine) sont supprimées — architecture clarifiée 2026-07-25 */}
+      <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
+        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
+      </div>
       <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight} userId={userId}
         onChat={action => {
           if (action === 'herbal') { onSwitchTab('herbal'); return }

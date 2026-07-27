@@ -81,7 +81,7 @@ export default function JourneePrete({ userId, onOpenRoutine }) {
           border: '1px solid rgba(200,123,82,0.30)', background: 'rgba(255,255,255,0.35)',
           fontFamily: F, fontSize: 12.5, fontWeight: 600, color: '#C87B52',
         }}>
-          Voir ma routine adaptée
+          Voir mon programme du jour
         </button>
       )}
     </div>

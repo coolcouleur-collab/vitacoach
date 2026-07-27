@@ -324,11 +324,14 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 // ─── DYNAMIC NAV ─────────────────────────────────────────────────────────────
+// Architecture clarifiée (2026-07-25) : chaque onglet répond à UNE question —
+// Accueil « comment je vais ? » · Programme « que faire aujourd'hui ? » ·
+// Progrès « est-ce que ça marche ? » · Solenn « j'ai une question »
 const NAV_ITEMS = [
   { id:'accueil',   label:'Accueil',    Icon: HomeIcon },
   { id:'chat',      label:'Solenn',     Icon: ChatIcon },
-  { id:'routine',   label:'Routine',    Icon: RoutineIcon },
-  { id:'sante',     label:'Santé',      Icon: HeartIcon },
+  { id:'routine',   label:'Programme',  Icon: RoutineIcon },
+  { id:'sante',     label:'Progrès',    Icon: HeartIcon },
   { id:'style',     label:'Style',      Icon: StyleIcon },
   { id:'breathwork',label:'Respiration',Icon: BreathworkIcon },
   { id:'forum',     label:'Forum',      Icon: ForumIcon },
@@ -1468,8 +1471,8 @@ const [messages, setMessages] = useState(() => {
   const navItems = [
     { id:'accueil',    Icon: HomeIcon,       label:'Accueil' },
     { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
-    { id:'routine',    Icon: RoutineIcon,    label:'Routine' },
-    { id:'sante',      Icon: HeartIcon,      label:'Santé' },
+    { id:'routine',    Icon: RoutineIcon,    label:'Programme' },
+    { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
     { id:'style',      Icon: StyleIcon,      label:'Style' },
     { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
@@ -2232,8 +2235,8 @@ const [messages, setMessages] = useState(() => {
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
-                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Suivi Santé</div>
-                    <div style={s.pageSubtitle}>Tes métriques du jour</div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Mes Progrès</div>
+                    <div style={s.pageSubtitle}>Tes mesures et ton évolution</div>
                   </div>
                 </div>
               )}
