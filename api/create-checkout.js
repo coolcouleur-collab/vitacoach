@@ -11,7 +11,10 @@ const PLANS = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
-  const stripeKey = process.env.STRIPE_SECRET_KEY
+  // Voir server.js : une clé collée depuis un dashboard embarque souvent un
+  // retour à la ligne invisible, ce qui rend l'en-tête Authorization illégal
+  // et fait échouer la requête AVANT l'envoi (erreur « connection to Stripe »).
+  const stripeKey = (process.env.STRIPE_SECRET_KEY || '').replace(/[\s​-‍﻿]/g, '')
   if (!stripeKey) return res.status(500).json({ erreur: 'STRIPE_SECRET_KEY manquant' })
 
   try {
@@ -49,6 +52,18 @@ export default async function handler(req, res) {
 
     res.json({ url: session.url })
   } catch (e) {
-    res.status(500).json({ erreur: e.message })
+    // Diagnostic sans fuite : ni la clé ni aucun fragment exploitable, juste
+    // sa forme. Permet de distinguer « clé absente / tronquée / polluée » d'une
+    // vraie erreur Stripe sans avoir à manipuler le secret.
+    const raw = process.env.STRIPE_SECRET_KEY || ''
+    res.status(500).json({
+      erreur: e.message,
+      diag: {
+        prefixe:    stripeKey.slice(0, 8),
+        longueur:   stripeKey.length,
+        brutLongueur: raw.length,
+        nonAscii:   /[^\x21-\x7e]/.test(raw),
+      },
+    })
   }
 }

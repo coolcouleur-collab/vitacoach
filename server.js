@@ -27,7 +27,15 @@ dotenv.config()
 
 const app = express()
 const groq   = new Groq({ apiKey: process.env.GROQ_API_KEY })
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
+// Les clés collées dans un dashboard (Render/Vercel) embarquent souvent un
+// retour à la ligne ou une espace invisible. Un tel caractère rend l'en-tête
+// Authorization illégal : la requête n'est jamais envoyée et la lib remonte
+// « An error occurred with our connection to Stripe » — trompeur, on croit à
+// une panne réseau (diagnostiqué le 2026-08-08, aucune requête reçue côté
+// Stripe). On nettoie systématiquement.
+const cleanKey = v => (v || '').replace(/[\s​-‍﻿]/g, '')
+const stripe = new Stripe(cleanKey(process.env.STRIPE_SECRET_KEY))
 
 // Web Push VAPID (optional — skip if keys not configured)
 try {
