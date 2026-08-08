@@ -2084,8 +2084,17 @@ const [messages, setMessages] = useState(() => {
             </>
           )}
 
-          {/* ── Tab content (keyed for fade-in animation on tab switch) ── */}
-          <div key={`${onglet}-${refreshKey}`} style={{ animation:'tabFade 0.28s ease both', flex:1, display:'flex', flexDirection:'column' }}>
+          {/* ── Tab content (keyed for fade-in animation on tab switch) ──
+              minHeight:0 est OBLIGATOIRE ici. Un enfant flex vaut
+              min-height:auto par défaut : il refuse de devenir plus petit que
+              son contenu. Sans cette ligne, ce conteneur grandissait avec la
+              conversation, donc chatWrap et chatBox aussi — chatBox n'avait
+              jamais de hauteur bornée et son overflowY:auto n'avait rien à
+              scroller. Le trop-plein était coupé par main{overflow:hidden} :
+              on voyait la fin du fil et remonter était impossible. Le maillon
+              manquant était ici, pas dans le chat (bug signalé 3 fois par Jean,
+              enfin trouvé le 2026-08-08). */}
+          <div key={`${onglet}-${refreshKey}`} style={{ animation:'tabFade 0.28s ease both', flex:1, minHeight:0, display:'flex', flexDirection:'column' }}>
 
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (
