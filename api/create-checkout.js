@@ -52,18 +52,6 @@ export default async function handler(req, res) {
 
     res.json({ url: session.url })
   } catch (e) {
-    // Diagnostic sans fuite : ni la clé ni aucun fragment exploitable, juste
-    // sa forme. Permet de distinguer « clé absente / tronquée / polluée » d'une
-    // vraie erreur Stripe sans avoir à manipuler le secret.
-    const raw = process.env.STRIPE_SECRET_KEY || ''
-    res.status(500).json({
-      erreur: e.message,
-      diag: {
-        prefixe:    stripeKey.slice(0, 8),
-        longueur:   stripeKey.length,
-        brutLongueur: raw.length,
-        nonAscii:   /[^\x21-\x7e]/.test(raw),
-      },
-    })
+    res.status(500).json({ erreur: e.message })
   }
 }
