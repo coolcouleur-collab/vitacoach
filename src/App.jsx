@@ -1676,8 +1676,17 @@ const [messages, setMessages] = useState(() => {
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
            Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
+      {/* height:100lvh au lieu de inset:0 — « large viewport height », c'est-à-dire
+          la hauteur de l'écran barres système rétractées. Avec inset:0, le calque
+          s'arrêtait au viewport de mise en page, plus court que l'écran en PWA
+          iOS : la bande du bas laissait voir le fond nu, non teinté par les
+          halos, donc plus clair que le reste. C'est LA cause de la démarcation
+          que Jean signale depuis des jours. Le débordement de 140px garantit la
+          couverture même si 100lvh n'est pas supporté. */}
       <div style={{
-        position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
+        position:'fixed', top:0, left:0, right:0, zIndex:0,
+        height:'100lvh', minHeight:'calc(100% + 140px)',
+        background:'#EDD8CC', pointerEvents:'none',
       }}>
         {/* Halos D'ORIGINE (cercles centrés) — la version « étendue aux bords »
             saturait l'accueil en orange et créait un décalage de couleur entre
@@ -1779,7 +1788,13 @@ const [messages, setMessages] = useState(() => {
             l'écran (le padding 130 laissait une bande abricot sous le ciel).
             Chat : overflow hidden — SEULE la zone de messages scrolle, la barre
             de saisie ne bouge jamais (retours Jean 2026-07-25). */}
-        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 64px) 0 130px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+        <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, /* 64px ne suffisait plus : le header fixe fait environ safe-area + 66px, donc
+   le titre de page et le bouton Historique du chat passaient sous le logo et
+   sous le menu. 92px laisse le contenu démarrer proprement sous le voile.
+   En bas, 168px au lieu de 130 : la barre d'onglets dépliée est plus haute que
+   l'ancienne pastille et recouvrait le dernier bloc de chaque page — le
+   « Guide des exercices » devenait même impossible à toucher. */
+padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 92px) 0 168px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
@@ -2094,7 +2109,7 @@ const [messages, setMessages] = useState(() => {
               on voyait la fin du fil et remonter était impossible. Le maillon
               manquant était ici, pas dans le chat (bug signalé 3 fois par Jean,
               enfin trouvé le 2026-08-08). */}
-          <div key={`${onglet}-${refreshKey}`} style={{ animation:'tabFade 0.28s ease both', flex:1, minHeight:0, display:'flex', flexDirection:'column' }}>
+          <div key={`${onglet}-${refreshKey}`} style={{ animation:'tabFade 0.28s ease both', flex:1, minHeight: onglet === 'chat' ? 0 : undefined, display:'flex', flexDirection:'column' }}>
 
           {/* ── Accueil ── */}
           {onglet === 'accueil' && (

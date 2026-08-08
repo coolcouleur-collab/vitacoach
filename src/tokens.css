@@ -57,14 +57,16 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-/* background sur html : FILET DE SÉCURITÉ ABSOLU — la zone que l'app ne
-   couvre pas sur iOS (bande du bas PWA) est peinte à la couleur du fond de
-   l'app : jamais de blanc système possible. Halos d'origine restaurés
-   (2026-07-27, retour Jean) → le bord de page = --bg, donc raccord exact. */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: var(--bg); }
+/* background sur html : FILET DE SÉCURITÉ. Ce n'est PAS --bg mais la couleur
+   du BAS de la page une fois les halos multiply appliqués (#EDD8CC assombri
+   par le halo orange) : peindre --bg brut ici recréait justement la bande plus
+   claire, puisque la page, elle, est teintée. Si les halos changent un jour,
+   cette valeur doit être remesurée. */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #EAD0BE; }
 html.lenis { height: auto; }
 body {
-  background: var(--bg);
+  /* même raison que html : couleur du bas de page halos compris, pas --bg brut */
+  background: #EAD0BE;
   color: rgba(255,238,220,0.92);
   font-family: var(--font);
   line-height: 1.6;

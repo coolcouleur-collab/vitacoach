@@ -424,7 +424,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
   return (
     <div style={{
       minHeight: '100vh',
-      paddingBottom: 120,
+      paddingBottom: 40,
     }}>
       {showExos && (
         <React.Suspense fallback={null}>

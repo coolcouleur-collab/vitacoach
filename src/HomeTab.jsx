@@ -590,13 +590,13 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
   const isNight = preset === 'night'
   const runC  = isNight ? '#7BB0E0' : '#C87B52'   // bleu acier nuit / orange jour
-  const moodC = isNight ? '#a78bfa' : '#fbbf24'   // violet doux nuit / jaune jour
+  const moodC = isNight ? '#a78bfa' : '#E8962A'   // violet doux nuit / jaune jour
   const METRICS = [
-    { iconEl:<WaterIcon size={22} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
+    { iconEl:<WaterIcon size={22} color="#8FAFBC" />, val:metriques?.eau,     color:'#8FAFBC', key:'eau',     fmt: v => v+'v' },
     { iconEl:<RunIcon   size={22} color={runC}   />,  val:metriques?.pas,     color:runC,      key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color="#818cf8" />, val:metriques?.sommeil, color:'#818cf8', key:'sommeil', fmt: v => v+'h' },
+    { iconEl:<MoonIcon  size={22} color="#AE9BB5" />, val:metriques?.sommeil, color:'#AE9BB5', key:'sommeil', fmt: v => v+'h' },
     { iconEl:<MoodIcon  size={22} color={moodC}  />,  val:metriques?.humeur,  color:moodC,     key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color="#ef4444" />, val:metriques?.fc,      color:'#ef4444', key:'fc',      fmt: v => v },
+    { iconEl:<HeartIcon size={22} color="#C9736A" />, val:metriques?.fc,      color:'#C9736A', key:'fc',      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
@@ -917,9 +917,9 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
   const [activeIdx, setActiveIdx] = useState(METRIC_KEY_IDX[initialKey] ?? 0)
 
   const ITEMS = [
-    { key:'eau',     icon:<WaterIcon size={22} color="#72B8D4" />, iconLg:<WaterIcon size={52} color="#72B8D4" />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:'#72B8D4', fmt: v => Math.round(v) },
+    { key:'eau',     icon:<WaterIcon size={22} color="#8FAFBC" />, iconLg:<WaterIcon size={52} color="#8FAFBC" />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:'#8FAFBC', fmt: v => Math.round(v) },
     { key:'pas',     icon:<RunIcon   size={22} color="#C87B52" />, iconLg:<RunIcon   size={52} color="#C87B52" />, label:'Pas',     unit:'',   min:0, max:25000, step:500, color:'#C87B52', fmt: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v },
-    { key:'sommeil', icon:<MoonIcon  size={22} color="#9A96CC" />, iconLg:<MoonIcon  size={52} color="#9A96CC" />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:'#9A96CC', fmt: v => Number(v).toFixed(1) },
+    { key:'sommeil', icon:<MoonIcon  size={22} color="#AE9BB5" />, iconLg:<MoonIcon  size={52} color="#AE9BB5" />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:'#AE9BB5', fmt: v => Number(v).toFixed(1) },
     { key:'humeur',  icon:<MoodIcon  size={22} color="#E8962A" />, iconLg:<MoodIcon  size={52} color="#E8962A" />, label:'Humeur',  unit:'/5', min:1, max:5,     step:1,   color:'#E8962A', fmt: v => v },
   ]
   const m = ITEMS[activeIdx]
@@ -1252,10 +1252,10 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 
 function MetricRings({ metriques }) {
   const items = [
-    { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
+    { iconEl:<WaterIcon size={17} color="#8FAFBC" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#8FAFBC', fmt: v => `${v}/8` },
     { iconEl:<RunIcon size={17} color="#C87B52" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#C87B52', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
-    { iconEl:<MoonIcon size={17} color="#818cf8" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#818cf8', fmt: v => `${v}h` },
-    { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
+    { iconEl:<MoonIcon size={17} color="#AE9BB5" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#AE9BB5', fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={17} color="#E8962A" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#E8962A', fmt: v => `${v}/5` },
   ]
   return (
     <div style={{ display:'flex', gap:6, padding:'8px 14px' }}>
@@ -1307,7 +1307,7 @@ export function StreakXP({ streak, xp, level }) {
           <div style={{ padding:'10px 12px', height:'100%', display:'flex', alignItems:'center', gap:10, position:'relative', zIndex:3 }}>
             <div style={{
               width:34, height:34, borderRadius:11, flexShrink:0,
-              background:'linear-gradient(135deg,#f97316,#ea580c)',
+              background:'linear-gradient(135deg,#E8962A,#C87B52)',
               display:'flex', alignItems:'center', justifyContent:'center',
               boxShadow:'0 4px 12px rgba(249,115,22,0.28)',
             }}>
@@ -1354,7 +1354,7 @@ export function StreakXP({ streak, xp, level }) {
               </div>
               <div style={{
                 width:28, height:28, borderRadius:9,
-                background:'linear-gradient(135deg,#fbbf24,#d97706)',
+                background:'linear-gradient(135deg,#E8962A,#C87B52)',
                 display:'flex', alignItems:'center', justifyContent:'center',
                 boxShadow:'0 3px 10px rgba(217,119,6,0.30)',
               }}><StarIcon size={14} color="#fff" /></div>
@@ -1369,7 +1369,7 @@ export function StreakXP({ streak, xp, level }) {
                     flex: filled ? 1.4 : 1,
                     height:3.5, borderRadius:2,
                     background: filled
-                      ? 'linear-gradient(90deg,#fbbf24,#d97706)'
+                      ? 'linear-gradient(90deg,#E8962A,#C87B52)'
                       : active ? 'rgba(217,119,6,0.28)' : 'rgba(217,119,6,0.10)',
                     boxShadow: filled ? '0 0 5px rgba(217,119,6,0.55)' : 'none',
                     transition:'all 0.45s cubic-bezier(0.34,1.56,0.64,1)',
@@ -1470,7 +1470,7 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', Icon: WaterIcon, color:'#38bdf8',
+      id:'eau', Icon: WaterIcon, color:'#8FAFBC',
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
@@ -1482,7 +1482,7 @@ function generateDailyTasks(profil, metriques) {
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', Icon: SunIcon, color:'#fbbf24',
+      id:'matin', Icon: SunIcon, color:'#E8962A',
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil} — 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2199,10 +2199,10 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                 const barColor = isNight
                   ? s >= 70 ? 'linear-gradient(180deg,#60a5fa,#3b82f6)'
                   : s >= 40 ? 'linear-gradient(180deg,#34d399,#10b981)'
-                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
-                  : s >= 70 ? 'linear-gradient(180deg,#fbbf24,#f97316)'
-                  : s >= 40 ? 'linear-gradient(180deg,#fb923c,#ea580c)'
-                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
+                  : s > 0   ? 'linear-gradient(180deg,#D08A6A,#C9736A)' : null
+                  : s >= 70 ? 'linear-gradient(180deg,#E8962A,#E8962A)'
+                  : s >= 40 ? 'linear-gradient(180deg,#D89A5C,#C87B52)'
+                  : s > 0   ? 'linear-gradient(180deg,#D08A6A,#C9736A)' : null
                 return (
                   <div key={i} style={{ flex:1, height:BAR_H, display:'flex', alignItems:'flex-end' }}>
                     <div style={{
@@ -2324,7 +2324,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hc = {
-  page: { display:'flex', flexDirection:'column', paddingBottom:120 },
+  page: { display:'flex', flexDirection:'column', paddingBottom:150 },
 
   hero: { position:'relative', minHeight:360, display:'flex', flexDirection:'column',
     alignItems:'center', justifyContent:'flex-end', paddingBottom:18 },
