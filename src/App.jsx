@@ -2732,6 +2732,8 @@ const sr = {
 function TenueCard({ tenue, style: extraStyle }) {
   const [imgSrc, setImgSrc] = useState(null)
   const [imgState, setImgState] = useState('loading') // loading | ok | ko
+  // Unsplash impose de créditer le photographe quand on affiche ses photos
+  const [credit, setCredit] = useState(null)
 
   useEffect(() => {
     if (tenue.imageUrl) { setImgSrc(tenue.imageUrl); setImgState('ok'); return }
@@ -2741,7 +2743,10 @@ function TenueCard({ tenue, style: extraStyle }) {
     const alt = `flat lay fashion clothes ${tenue.searchQueryAlt || ''}`.trim()
     fetch(`/api/image?prompt=${encodeURIComponent(q)}&alt=${encodeURIComponent(alt)}`)
       .then(r => r.json())
-      .then(d => { if (d.url) { setImgSrc(d.url); setImgState('ok') } else setImgState('ko') })
+      .then(d => {
+        if (d.url) { setImgSrc(d.url); setImgState('ok'); setCredit(d.credit || null) }
+        else setImgState('ko')
+      })
       .catch(() => setImgState('ko'))
   }, [])
 
@@ -2770,9 +2775,23 @@ function TenueCard({ tenue, style: extraStyle }) {
           }} />
         )}
         {imgState === 'ok' && imgSrc && (
-          <img src={imgSrc} alt={tenue.titre}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            onError={() => { setImgSrc(null); setImgState('ko') }} />
+          <>
+            <img src={imgSrc} alt={tenue.titre}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              onError={() => { setImgSrc(null); setImgState('ko') }} />
+            {credit?.nom && (
+              <a href={credit.lien} target="_blank" rel="noopener noreferrer"
+                style={{
+                  position: 'absolute', right: 6, bottom: 5, zIndex: 2,
+                  fontSize: 8.5, lineHeight: 1.2, letterSpacing: '0.02em',
+                  color: 'rgba(255,248,236,0.82)', textDecoration: 'none',
+                  textShadow: '0 1px 3px rgba(60,30,10,0.55)',
+                  fontFamily: 'Poppins,sans-serif',
+                }}>
+                {credit.nom}
+              </a>
+            )}
+          </>
         )}
         {(imgState === 'ko' || imgState === 'loading') && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
