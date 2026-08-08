@@ -1993,6 +1993,39 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         ))}
       </div>
 
+      {/* ── Tes outils — accès permanent aux sections sorties de la barre ──
+           Style, Respiration et Cycle ne sont plus des onglets : ce sont des
+           outils qu'on ouvre quand on en a besoin. Cette rangée garantit
+           qu'ils restent visibles et atteignables depuis l'Accueil, quelle que
+           soit l'heure (les cartes ci-dessus, elles, changent selon le moment
+           de la journée). */}
+      <div style={{ marginTop:18 }}>
+        <span style={{ ...hc.cardsTitle, color:tc(0.90) }}>Tes outils</span>
+        <div style={{ display:'flex', gap:8, marginTop:10 }}>
+          {[
+            { tab:'style',      label:'Style',       icon:<SparkleIcon size={17} color={TC} /> },
+            { tab:'breathwork', label:'Respiration', icon:<MeditateIcon size={17} color={TC} /> },
+            ...(profil?.cycle ? [{ tab:'cycle', label:'Cycle', icon:<MoonIcon size={17} color={TC} /> }] : []),
+          ].map(o => (
+            <motion.button
+              key={o.tab}
+              whileTap={{ scale:0.96 }}
+              onClick={() => onNavigate(o.tab)}
+              style={{
+                flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6,
+                padding:'13px 6px', borderRadius:18, cursor:'pointer',
+                background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(255,246,238,0.62)',
+                border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.26)',
+                fontFamily:"'Poppins',system-ui,sans-serif",
+              }}
+            >
+              {o.icon}
+              <span style={{ fontSize:11.5, fontWeight:500, color:tc(0.90) }}>{o.label}</span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
       {/* ── CTA Demander à Solenn — toujours en bas ── */}
       <motion.div
         initial={{ opacity:0, y:14 }}

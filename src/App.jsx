@@ -337,8 +337,14 @@ const NAV_ITEMS = [
   { id:'forum',     label:'Forum',      Icon: ForumIcon },
 ]
 
+// Barre d'onglets TOUJOURS dépliée. Avant, la nav n'affichait qu'une pastille
+// (« Accueil ··· ») et les destinations n'apparaissaient qu'après un tap :
+// personne ne pouvait deviner que Programme, Progrès ou Solenn existaient, et
+// on ne savait jamais où on se trouvait. L'app paraissait à la fois vide et
+// compliquée (retour Jean 2026-08-08). Même esthétique de verre, mais les
+// destinations sont visibles en permanence.
 function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items = NAV_ITEMS }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(true)
   const ref = React.useRef(null)
   const active = items.find(i => i.id === onglet) || items[0]
 
@@ -351,12 +357,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   const divider   = isNight ? 'rgba(160,200,255,0.18)'   : 'rgba(255,238,228,0.18)'
   const activeBg  = isNight ? 'rgba(160,200,255,0.14)'   : 'rgba(255,238,228,0.14)'
 
-  React.useEffect(() => {
-    if (!open) return
-    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
-    const t = setTimeout(() => window.addEventListener('click', handler), 80)
-    return () => { clearTimeout(t); window.removeEventListener('click', handler) }
-  }, [open])
+  // (plus de fermeture au clic extérieur : la barre reste dépliée)
 
   const spring = { type:'spring', damping:32, stiffness:280, mass:0.6 }
   const contentSpring = { type:'spring', damping:28, stiffness:260, mass:0.5 }
@@ -366,13 +367,12 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
       ref={ref}
       layout
       layoutTransition={spring}
-      onClick={!open ? () => setOpen(true) : undefined}
       style={{
         position:'fixed', bottom:'calc(env(safe-area-inset-bottom, 0px) + 16px)', left:16, right:16,
         marginLeft:'auto', marginRight:'auto',
         width:'fit-content',
         maxWidth:'calc(100vw - 32px)',
-        zIndex:100, cursor: open ? 'default' : 'pointer',
+        zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
         border:'1px solid rgba(255,255,255,0.12)',
@@ -411,7 +411,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
             initial={{ opacity:0 }}
             animate={{ opacity:1, transition:{ duration:0.18, ease:'easeOut' } }}
             exit={{ opacity:0, transition:{ duration:0.1 } }}
-            style={{ display:'flex', alignItems:'flex-start', gap:1, flexWrap:'wrap', maxWidth:280, justifyContent:'center' }}
+            style={{ display:'flex', alignItems:'flex-start', gap:2, justifyContent:'center' }}
           >
             {items.map((item, i) => {
               const isActive = onglet === item.id
@@ -419,7 +419,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
                 <motion.button key={item.id}
                   initial={{ opacity:0, filter:'blur(10px)' }}
                   animate={{ opacity:1, filter:'blur(0px)', transition:{ delay: 0.06 + i * 0.04, duration:0.22, ease:[0.22,1,0.36,1] } }}
-                  onClick={() => { triggerHaptic('light'); setOnglet(item.id); setOpen(false) }}
+                  onClick={() => { triggerHaptic('light'); setOnglet(item.id) }}
                   style={{
                     background: isActive ? activeBg : 'transparent',
                     border:'none', cursor:'pointer', borderRadius:14,
@@ -428,8 +428,8 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
                     position:'relative',
                   }}
                 >
-                  <item.Icon color={isActive ? txtHigh : txtDim} size={15} />
-                  <span style={{ fontSize:8.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.25px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
+                  <item.Icon color={isActive ? txtHigh : txtDim} size={17} />
+                  <span style={{ fontSize:9.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.2px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
                     {item.label}
                   </span>
                   {item.id === 'forum' && forumUnread > 0 && (
@@ -1517,10 +1517,18 @@ const [messages, setMessages] = useState(() => {
     { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
     { id:'routine',    Icon: RoutineIcon,    label:'Programme' },
     { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
+    // Style, Respiration et Cycle ne sont PAS dans la barre : ce sont des
+    // outils qu'on ouvre ponctuellement, pas des destinations quotidiennes.
+    // Ils vivent sur l'Accueil (rangée « Tes outils »). Quatre onglets tiennent
+    // lisiblement sur un écran de téléphone, sept non.
+    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
+  ]
+
+  // Outils secondaires, présentés sur l'Accueil
+  const outils = [
     { id:'style',      Icon: StyleIcon,      label:'Style' },
     { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
-    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
   ]
 
   return (
@@ -1740,7 +1748,7 @@ const [messages, setMessages] = useState(() => {
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
               </svg>
-              Modifier mon profil
+              Modifier ton profil
             </button>
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
@@ -2049,7 +2057,7 @@ const [messages, setMessages] = useState(() => {
                     fontFamily:F, width:'100%', textAlign:'left',
                     color:'rgba(255,238,228,0.55)', fontWeight:400, fontSize:14,
                   }}>
-                    <SparkleIcon size={18} color="rgba(255,238,228,0.46)" /> Modifier mon profil
+                    <SparkleIcon size={18} color="rgba(255,238,228,0.46)" /> Modifier ton profil
                   </button>
                   <button onClick={async () => {
                     const sb = await getSupabase()
@@ -2286,7 +2294,7 @@ const [messages, setMessages] = useState(() => {
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
-                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Mes Progrès</div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Tes progrès</div>
                     <div style={s.pageSubtitle}>Tes mesures et ton évolution</div>
                   </div>
                 </div>

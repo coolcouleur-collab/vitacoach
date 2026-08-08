@@ -438,7 +438,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 800, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
-            Mon Programme
+            Ton programme
           </div>
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}

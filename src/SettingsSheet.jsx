@@ -534,7 +534,7 @@ export default function SettingsSheet({
             WebkitOverflowScrolling: 'touch',
           }}>
 
-            {/* ── 1. MON PROFIL ───────────────────────────────────────── */}
+            {/* ── 1. TON PROFIL ───────────────────────────────────────── */}
             <SectionTitle>Mon Profil</SectionTitle>
             <Card>
               {/* Avatar + nom + bouton édition */}
@@ -673,7 +673,7 @@ export default function SettingsSheet({
               )}
             </Card>
 
-            {/* ── 2. MON ABONNEMENT ────────────────────────────────── */}
+            {/* ── 2. TON ABONNEMENT ────────────────────────────────── */}
             <SectionTitle>Mon Abonnement</SectionTitle>
             {isPro ? (
               /* Card Pro */
@@ -929,7 +929,7 @@ export default function SettingsSheet({
               </>
             )}
 
-            {/* ── 4. MES DONNÉES ──────────────────────────────────────── */}
+            {/* ── 4. TES DONNÉES ──────────────────────────────────────── */}
             <SectionTitle>Mes Données</SectionTitle>
             <div>
               <ActionBtn

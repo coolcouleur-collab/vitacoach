@@ -412,7 +412,7 @@ export default function CycleTab({ profil, userId, onChat }) {
 
       {/* ── Actions règles ── */}
       <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={LABEL}>Mes règles</div>
+        <div style={LABEL}>Tes règles</div>
         {!showPicker ? (
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {cycleInfo?.ongoing ? (
