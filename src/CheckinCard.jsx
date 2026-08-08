@@ -7,12 +7,17 @@ const nightText  = (op) => `rgba(180,210,255,${op})`
 const warmText   = (op) => `rgba(200,123,82,${op})`
 const sunsetText = (op) => `rgba(255,225,200,${op})`
 
+// Palette alignée sur l'univers Solenn : un seul dégradé, du terracotta sourd
+// vers l'ambre lumineux. L'ancienne version mélangeait un rouge froid
+// (#C85050) et un jaune olive (#C9A24E) qui n'existent nulle part ailleurs dans
+// l'app (retour Jean 2026-08-08). Aucun rouge : dire qu'on va mal n'est pas une
+// faute, c'est une information — même principe que le score et la grille du défi.
 const MOODS = [
-  { val: 1, label: 'Très mal',   color: '#C85050', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
-  { val: 2, label: 'Pas top',    color: '#D08050', mouth: 'M8 16 Q11 14.5 14 16' },
-  { val: 3, label: 'Ça va',      color: '#C9A24E', mouth: 'M8 15.5 L14 15.5' },
+  { val: 1, label: 'Très mal',   color: '#A9614A', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
+  { val: 2, label: 'Pas top',    color: '#C07551', mouth: 'M8 16 Q11 14.5 14 16' },
+  { val: 3, label: 'Ça va',      color: '#D48F52', mouth: 'M8 15.5 L14 15.5' },
   { val: 4, label: 'Bien',       color: '#E8962A', mouth: 'M8 14.5 Q11 16.5 14 14.5' },
-  { val: 5, label: 'Très bien',  color: '#E8B02A', mouth: 'M8 14 Q11 17.5 14 14' },
+  { val: 5, label: 'Très bien',  color: '#F2B64E', mouth: 'M8 14 Q11 17.5 14 14' },
 ]
 
 const TAGS = ['Énergie', 'Motivation', 'Sérénité', 'Gratitude', 'Stress', 'Fatigue', 'Anxiété', 'Douleurs']
