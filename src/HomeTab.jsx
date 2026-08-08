@@ -1307,7 +1307,7 @@ export function StreakXP({ streak, xp, level }) {
           <div style={{ padding:'10px 12px', height:'100%', display:'flex', alignItems:'center', gap:10, position:'relative', zIndex:3 }}>
             <div style={{
               width:34, height:34, borderRadius:11, flexShrink:0,
-              background:'linear-gradient(135deg,#E8962A,#C87B52)',
+              background:'linear-gradient(135deg,#f97316,#ea580c)',
               display:'flex', alignItems:'center', justifyContent:'center',
               boxShadow:'0 4px 12px rgba(249,115,22,0.28)',
             }}>
@@ -1354,7 +1354,7 @@ export function StreakXP({ streak, xp, level }) {
               </div>
               <div style={{
                 width:28, height:28, borderRadius:9,
-                background:'linear-gradient(135deg,#E8962A,#C87B52)',
+                background:'linear-gradient(135deg,#fbbf24,#d97706)',
                 display:'flex', alignItems:'center', justifyContent:'center',
                 boxShadow:'0 3px 10px rgba(217,119,6,0.30)',
               }}><StarIcon size={14} color="#fff" /></div>
@@ -1369,7 +1369,7 @@ export function StreakXP({ streak, xp, level }) {
                     flex: filled ? 1.4 : 1,
                     height:3.5, borderRadius:2,
                     background: filled
-                      ? 'linear-gradient(90deg,#E8962A,#C87B52)'
+                      ? 'linear-gradient(90deg,#fbbf24,#d97706)'
                       : active ? 'rgba(217,119,6,0.28)' : 'rgba(217,119,6,0.10)',
                     boxShadow: filled ? '0 0 5px rgba(217,119,6,0.55)' : 'none',
                     transition:'all 0.45s cubic-bezier(0.34,1.56,0.64,1)',
@@ -1482,7 +1482,7 @@ function generateDailyTasks(profil, metriques) {
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', Icon: SunIcon, color:'#E8962A',
+      id:'matin', Icon: SunIcon, color:'#fbbf24',
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil} — 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2199,10 +2199,10 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                 const barColor = isNight
                   ? s >= 70 ? 'linear-gradient(180deg,#60a5fa,#3b82f6)'
                   : s >= 40 ? 'linear-gradient(180deg,#34d399,#10b981)'
-                  : s > 0   ? 'linear-gradient(180deg,#D08A6A,#C9736A)' : null
-                  : s >= 70 ? 'linear-gradient(180deg,#E8962A,#E8962A)'
-                  : s >= 40 ? 'linear-gradient(180deg,#D89A5C,#C87B52)'
-                  : s > 0   ? 'linear-gradient(180deg,#D08A6A,#C9736A)' : null
+                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
+                  : s >= 70 ? 'linear-gradient(180deg,#fbbf24,#f97316)'
+                  : s >= 40 ? 'linear-gradient(180deg,#fb923c,#ea580c)'
+                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
                 return (
                   <div key={i} style={{ flex:1, height:BAR_H, display:'flex', alignItems:'flex-end' }}>
                     <div style={{
