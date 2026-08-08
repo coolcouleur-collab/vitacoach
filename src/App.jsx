@@ -761,6 +761,14 @@ const [messages, setMessages] = useState(() => {
     }
     messagesRef.current = messages
   }, [messages, profil])
+  // L'instance Render est en plan Free : elle s'endort après inactivité et met
+  // ~50 s à répondre au réveil. On la réveille dès l'ouverture de l'app, pour
+  // qu'elle soit chaude quand le premier appel arrive (notamment
+  // check-subscription au retour d'un paiement). Gratuit, aucun service tiers.
+  useEffect(() => {
+    fetch('https://solenn-api.onrender.com/ping', { mode: 'no-cors' }).catch(() => {})
+  }, [])
+
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     if (p.get('subscribed') === 'true') {
@@ -1173,6 +1181,10 @@ const [messages, setMessages] = useState(() => {
       setOnglet('chat')
       return
     }
+    // Réveil de Render pendant que l'utilisateur saisit sa carte : au retour de
+    // Stripe, check-subscription répond tout de suite au lieu d'attendre le
+    // démarrage à froid de l'instance Free.
+    fetch('https://solenn-api.onrender.com/ping', { mode: 'no-cors' }).catch(() => {})
     try {
       const res = await fetch('/api/create-checkout', {
         method:'POST', headers:{'Content-Type':'application/json', ...(await authHeaders())},

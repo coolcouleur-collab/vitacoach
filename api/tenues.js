@@ -66,11 +66,25 @@ export default async function handler(req, res) {
   const { profil = {}, ville, occasion } = req.body || {}
   if (!ville || typeof ville !== 'string') return res.status(400).json({ erreur: 'ville manquante' })
 
-  // ── Météo + LLaMA en parallèle ───────────────────────────────────────────
+  // ── Météo + LLM en parallèle ─────────────────────────────────────────────
+  // OPENWEATHER_API_KEY n'existe que sur Render : cette fonction tourne sur
+  // Vercel (les Serverless Functions de /api passent avant les rewrites), d'où
+  // le « météo non disponible » affiché en permanence sur Style. On passe donc
+  // par la route météo de Render, qui détient la clé — aucune clé à dupliquer.
+  const meteoFromApi = () => fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(ville)}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=fr`
+  ).then(r => r.json()).then(w => `${Math.round(w.main.temp)}°C, ${w.weather[0].description}`)
+
+  const meteoFromRender = () => fetch(
+    `https://solenn-api.onrender.com/api/meteo?ville=${encodeURIComponent(ville)}`
+  ).then(r => r.json()).then(d => {
+    if (!d?.meteo?.description) throw new Error('meteo indisponible')
+    return `${Math.round(d.meteo.temp)}°C, ${d.meteo.description}`
+  })
+
   const [meteoResult, llmResponse] = await Promise.allSettled([
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(ville)}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=fr`
-    ).then(r => r.json()).then(w => `${Math.round(w.main.temp)}°C, ${w.weather[0].description}`),
+    (process.env.OPENWEATHER_API_KEY ? meteoFromApi() : Promise.reject())
+      .catch(meteoFromRender),
 
     groq.chat.completions.create({
       model: 'openai/gpt-oss-120b',
