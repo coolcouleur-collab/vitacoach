@@ -589,14 +589,18 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
 
   const isNight = preset === 'night'
-  const runC  = isNight ? '#7BB0E0' : '#C87B52'   // bleu acier nuit / orange jour
-  const moodC = isNight ? '#a78bfa' : '#E8962A'   // violet doux nuit / jaune jour
+  // Les cinq icônes en orbite autour du soleil sont TOUTES de la même couleur.
+  // Chaque métrique se reconnaît à sa forme (goutte, coureur, lune, visage,
+  // cœur), pas à sa teinte : la couleur n'apportait aucune information et
+  // faisait cohabiter du bleu, du violet et du rouge au milieu d'une palette
+  // chaude (retour Jean 2026-08-08 — « il y avait du rouge, du bleu »).
+  const orbitC = isNight ? '#9FC4E8' : '#C87B52'
   const METRICS = [
-    { iconEl:<WaterIcon size={22} color="#8FAFBC" />, val:metriques?.eau,     color:'#8FAFBC', key:'eau',     fmt: v => v+'v' },
-    { iconEl:<RunIcon   size={22} color={runC}   />,  val:metriques?.pas,     color:runC,      key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color="#AE9BB5" />, val:metriques?.sommeil, color:'#AE9BB5', key:'sommeil', fmt: v => v+'h' },
-    { iconEl:<MoodIcon  size={22} color={moodC}  />,  val:metriques?.humeur,  color:moodC,     key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color="#C9736A" />, val:metriques?.fc,      color:'#C9736A', key:'fc',      fmt: v => v },
+    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau',     fmt: v => v+'v' },
+    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', fmt: v => v+'h' },
+    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur',  fmt: v => v+'/5' },
+    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc',      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
