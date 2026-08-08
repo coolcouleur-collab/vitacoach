@@ -1676,16 +1676,21 @@ const [messages, setMessages] = useState(() => {
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
            Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
-      {/* height:100lvh au lieu de inset:0 — « large viewport height », c'est-à-dire
-          la hauteur de l'écran barres système rétractées. Avec inset:0, le calque
-          s'arrêtait au viewport de mise en page, plus court que l'écran en PWA
-          iOS : la bande du bas laissait voir le fond nu, non teinté par les
-          halos, donc plus clair que le reste. C'est LA cause de la démarcation
-          que Jean signale depuis des jours. Le débordement de 140px garantit la
-          couverture même si 100lvh n'est pas supporté. */}
+      {/* Couche unie de secours, volontairement plus haute que l'écran : elle
+          seule déborde. Les halos NE doivent PAS être dessinés dedans — ils
+          sont en pourcentage de leur conteneur, donc les étaler sur une surface
+          plus grande les dilue et délave tout le fond (erreur commise le
+          2026-08-08 : l'accueil est passé du doré au rose pâle). */}
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:0,
-        height:'100lvh', minHeight:'calc(100% + 140px)',
+        height:'100lvh', minHeight:'calc(100% + 160px)',
+        background:'#EAD0BE', pointerEvents:'none',
+      }} />
+
+      {/* Couche des halos — géométrie STRICTEMENT d'origine (inset:0). Ne jamais
+          modifier sa taille : c'est elle qui donne sa couleur à toute l'app. */}
+      <div style={{
+        position:'fixed', inset:0, zIndex:0,
         background:'#EDD8CC', pointerEvents:'none',
       }}>
         {/* Halos D'ORIGINE (cercles centrés) — la version « étendue aux bords »
