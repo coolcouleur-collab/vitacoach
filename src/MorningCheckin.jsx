@@ -5,11 +5,15 @@ import { MoonIcon, SparkleIcon, SunIcon, TargetIcon, SadIcon, NeutralIcon, Happy
 const EASE = [0.22, 1, 0.36, 1]
 
 const HUMEURS = [
-  { val: 1, label: 'Vide',      color: 'rgba(148,163,184,0.90)', icon: <NeutralIcon size={30} color="rgba(148,163,184,0.90)" /> },
-  { val: 2, label: 'Difficile', color: 'rgba(251,146,60,0.90)',  icon: <SadIcon     size={30} color="rgba(251,146,60,0.90)"  /> },
-  { val: 3, label: 'Neutre',    color: 'rgba(251,191,36,0.90)',  icon: <NeutralIcon size={30} color="rgba(251,191,36,0.90)"  /> },
-  { val: 4, label: 'Bien',      color: 'rgba(34,197,94,0.90)',   icon: <HappyIcon   size={30} color="rgba(34,197,94,0.90)"   /> },
-  { val: 5, label: 'Super',     color: 'rgba(200,123,82,0.90)',  icon: <HappyIcon   size={30} color="rgba(200,123,82,0.90)"  /> },
+  // Même dégradé que le check-in de l'accueil : du terracotta sourd à l'ambre
+  // doré. Avant, cet écran mêlait un gris ardoise, un vert et deux jaunes
+  // Tailwind — du bleu, du vert et du gris au milieu d'une palette chaude
+  // (retour Jean 2026-08-08).
+  { val: 1, label: 'Vide',      color: 'rgba(169,97,74,0.95)',  icon: <NeutralIcon size={30} color="rgba(169,97,74,0.95)"  /> },
+  { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color="rgba(192,117,81,0.95)" /> },
+  { val: 3, label: 'Neutre',    color: 'rgba(212,143,82,0.95)', icon: <NeutralIcon size={30} color="rgba(212,143,82,0.95)" /> },
+  { val: 4, label: 'Bien',      color: 'rgba(232,150,42,0.95)', icon: <HappyIcon   size={30} color="rgba(232,150,42,0.95)" /> },
+  { val: 5, label: 'Super',     color: 'rgba(242,182,78,0.95)', icon: <HappyIcon   size={30} color="rgba(242,182,78,0.95)" /> },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
@@ -54,7 +58,10 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
       exit={{ opacity: 0, transition: { duration: 0.3 } }}
       style={{
         position: 'fixed', inset: 0, zIndex: 800,
-        background: 'rgba(10,4,0,0.72)',
+        // Voile chaud : le noir neutre laissait transparaître l'app en dessous
+        // et virait au bleu-pétrole. Ici un brun-terracotta profond, cohérent
+        // avec l'univers, qui garde le focus sur la question posée.
+        background: 'linear-gradient(165deg, rgba(58,26,12,0.90) 0%, rgba(38,16,7,0.94) 100%)',
         backdropFilter: 'blur(32px)',
         WebkitBackdropFilter: 'blur(32px)',
         display: 'flex', flexDirection: 'column',
@@ -136,7 +143,8 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color="rgba(162,192,248,0.90)" /></div>
+              {/* La lune était bleu-lavande : seule tache froide de l'écran */}
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color="rgba(255,220,140,0.90)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
@@ -320,11 +328,13 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
   )
 }
 
+// Recette CTA validée par Jean : verre ambré CLAIR. L'ancien terracotta à 18 %
+// sur fond sombre donnait un brun foncé éteint, exactement ce qu'elle refuse.
 const btnFullStyle = {
-  width: '100%', padding: '16px', borderRadius: 16, border: 'none',
-  background: 'rgba(200,123,82,0.18)',
-  color: 'rgba(255,255,255,0.90)', fontSize: 15, fontWeight: 700,
+  width: '100%', padding: '16px', borderRadius: 16,
+  background: 'rgba(255,235,210,0.32)',
+  color: '#FFF6E8', fontSize: 15, fontWeight: 700,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
-  letterSpacing: '-0.2px', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-  border: '1px solid rgba(200,123,82,0.25)',
+  letterSpacing: '-0.2px', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+  border: '1px solid rgba(255,220,160,0.60)',
 }
