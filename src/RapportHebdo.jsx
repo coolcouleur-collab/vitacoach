@@ -57,7 +57,11 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   const getScoreColor = (score) => {
     if (score > 70) return '#22c55e'
     if (score > 50) return '#E8962A'
-    return '#ef4444'
+    // En dessous de 20 on est presque toujours face à une semaine sans données
+    // saisies, pas à un échec : un gros 0 rouge accueille l'utilisateur par une
+    // sanction dès sa première semaine (retour Jean 2026-08-08).
+    if (score > 20) return '#ef4444'
+    return 'rgba(200,123,82,0.55)'
   }
 
   const formatSemaine = (semaine) => {

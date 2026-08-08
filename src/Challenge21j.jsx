@@ -421,9 +421,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   borderColor = '#22c55e'
                   textColor = '#22c55e'
                 } else if (estPasse && !estComplete) {
-                  bgColor = 'rgba(239,68,68,0.08)'
-                  borderColor = 'rgba(239,68,68,0.3)'
-                  textColor = '#ef4444'
+                  // Jour passé non fait : simplement estompé, jamais rouge.
+                  // Une grille de 13 cases rouges transforme un programme raté
+                  // en mur d'échecs et donne envie de fermer l'app — l'inverse
+                  // de ce qu'un coach doit produire (retour Jean 2026-08-08).
+                  bgColor = 'rgba(200,123,82,0.05)'
+                  borderColor = 'rgba(200,123,82,0.12)'
+                  textColor = 'rgba(200,123,82,0.28)'
                 } else if (estAujourdhui) {
                   bgColor = 'rgba(232,150,42,0.18)'
                   borderColor = '#E8962A'

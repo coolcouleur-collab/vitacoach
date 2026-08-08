@@ -107,7 +107,7 @@ ${memoire?.objectifs_mentionnes?.length ? 'Objectifs : ' + memoire.objectifs_men
 Génère un rapport chaleureux, honnête, motivant. Pas de faux enthousiasme si les données sont mauvaises.
 Format JSON :
 {
-  "titre": "Ton rapport de la semaine, [prénom]",
+  "titre": "Ton bilan de la semaine${nom && nom !== 'toi' ? `, ${nom}` : ''}",
   "score_global": 0-100,
   "victoire_semaine": "1 victoire concrète à célébrer (même petite)",
   "stat_phare": { "valeur": "...", "label": "..." },
