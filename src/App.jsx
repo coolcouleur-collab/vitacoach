@@ -582,6 +582,8 @@ const [messages, setMessages] = useState(() => {
   const [kbOffset,  setKbOffset]    = useState(0)
   const [showScrollBtn, setShowScrollBtn] = useState(false)
   const chatBoxRef = useRef(null)
+  // Vrai tant que l'utilisateur n'a pas remonté le fil : conditionne l'auto-scroll
+  const isAtBottomRef = useRef(true)
   const [celebrate, setCelebrate]   = useState(false)
   const celebInitRef = useRef(false)
   const [showHealthPerm, setShowHealthPerm] = useState(false)
@@ -687,7 +689,17 @@ const [messages, setMessages] = useState(() => {
     }
   }, [])
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }) }, [messages])
+  // Auto-scroll SEULEMENT si l'utilisateur est déjà en bas du fil. Sans cette
+  // garde, chaque token du streaming relançait un scroll « smooth » : le geste
+  // du doigt était annulé en continu et remonter la conversation devenait
+  // impossible (retour Jean 2026-08-08). On écrit scrollTop directement plutôt
+  // que scrollIntoView, qui déplace aussi les conteneurs parents.
+  useEffect(() => {
+    if (!isAtBottomRef.current) return
+    const el = chatBoxRef.current
+    if (el) el.scrollTop = el.scrollHeight
+    else messagesEndRef.current?.scrollIntoView({ behavior:'auto' })
+  }, [messages])
   // ── Pause animations pendant le scroll ──────────────────────────────────────
   useEffect(() => {
     const el = contentRef.current
@@ -1204,6 +1216,7 @@ const [messages, setMessages] = useState(() => {
       return
     }
     isSendingRef.current = true
+    isAtBottomRef.current = true
     setMessages(prev => [...prev, { role:'user', content:'', image: dataUrl }])
     setLoading(true)
     if (!hasFullAccess) incrementMsgCount()
@@ -1249,6 +1262,7 @@ const [messages, setMessages] = useState(() => {
       isSendingRef.current = false
       return
     }
+    isAtBottomRef.current = true   // on redescend toujours sur SON propre message
     setMessages(prev => [...prev, { role:'user', content: msg }])
     setLoading(true)
     if (!hasFullAccess) incrementMsgCount()
@@ -2114,7 +2128,9 @@ const [messages, setMessages] = useState(() => {
               <div ref={chatBoxRef} style={s.chatBox}
                 onScroll={e => {
                   const el = e.currentTarget
-                  setShowScrollBtn(el.scrollHeight - el.scrollTop - el.clientHeight > 120)
+                  const distanceDuBas = el.scrollHeight - el.scrollTop - el.clientHeight
+                  isAtBottomRef.current = distanceDuBas <= 120
+                  setShowScrollBtn(distanceDuBas > 120)
                 }}>
                 {messages.length === 0 && (
                   <div style={s.emptyChat}>
@@ -2256,7 +2272,10 @@ const [messages, setMessages] = useState(() => {
                 kbOffset={kbOffset}
                 isMobile={isMobile}
                 showScrollBtn={showScrollBtn}
-                onScrollDown={() => messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })}
+                onScrollDown={() => {
+                  isAtBottomRef.current = true
+                  messagesEndRef.current?.scrollIntoView({ behavior:'smooth' })
+                }}
               />
             </div>
           )}

@@ -105,9 +105,9 @@ Profil : ${profil.activite || profil.rythme || 'actif'}
 Propose 3 tenues tendance été 2026, chacune dans un style distinct.
 
 RÈGLES CRITIQUES pour les champs image (Pexels API) :
-- "searchQuery" : 3-4 mots SIMPLES en anglais, format "[couleur] [vêtement] [style]". Exemples corrects: "white linen dress", "camel blazer outfit", "summer casual style", "chic minimalist look". JAMAIS de noms de tendance obscurs, JAMAIS plus de 4 mots.
-- "searchQueryAlt" : 2-3 mots TRÈS génériques. Exemples: "summer outfit", "chic fashion", "casual style", "elegant look".
-- JAMAIS "woman", "girl", "face", "portrait", "person".
+- "searchQuery" : 3-4 mots SIMPLES en anglais nommant LA PIÈCE PRINCIPALE de la tenue, format "[couleur] [vêtement] [matière ou style]". Exemples corrects: "white linen dress", "camel blazer outfit", "beige trench coat", "striped cotton shirt". Le mot du vêtement est OBLIGATOIRE (dress, blazer, coat, shirt, skirt, trousers, jumpsuit, cardigan...) : c'est lui qui permet de retrouver une photo qui montre vraiment ce vêtement.
+- "searchQueryAlt" : 2-3 mots, toujours avec un nom de vêtement. Exemples: "linen dress", "wool coat", "denim jacket". JAMAIS "summer outfit" ni "chic fashion" — trop vagues, ça donne des photos sans rapport.
+- JAMAIS "woman", "girl", "face", "portrait", "person", ni aucun mot de contexte (bed, beach, pool, party).
 
 Réponds avec ce JSON :
 {

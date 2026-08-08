@@ -1,20 +1,62 @@
 const PEXELS = 'https://api.pexels.com/v1/search'
 const HEADERS = () => ({ Authorization: process.env.PEXELS_API_KEY })
 
-async function pexelsSearch(query, perPage = 15) {
+// Photos manifestement hors sujet pour une app bien-être : chambre, lingerie,
+// plage, poses suggestives. C'est ce qui produisait les images « random » de la
+// page Style (retour Jean 2026-08-08 : une tenue en lin illustrée par une photo
+// de chambre à coucher).
+const INTERDITS = [
+  'bed', 'bedroom', 'sleep', 'pillow', 'blanket', 'sheet',
+  'lingerie', 'underwear', 'bra', 'nude', 'naked', 'topless',
+  'bikini', 'swimsuit', 'swimwear', 'pool', 'beach', 'sand',
+  'sensual', 'erotic', 'boudoir', 'seductive', 'sexy',
+]
+
+const motsUtiles = q => q.toLowerCase()
+  .split(/[^a-z]+/)
+  .filter(m => m.length > 3 && !['with', 'that', 'this', 'from', 'photo', 'image', 'style'].includes(m))
+
+async function pexelsSearch(query, perPage = 20) {
   const q = encodeURIComponent(query.slice(0, 100))
   const r = await fetch(`${PEXELS}?query=${q}&per_page=${perPage}&orientation=portrait`, { headers: HEADERS() })
   const d = await r.json()
   return d.photos || []
 }
 
-function bestPhoto(photos) {
-  // Préfère les photos vraiment portrait (hauteur > 1.2 × largeur) parmi les 5 premiers
-  const top = photos.slice(0, 5)
-  const portraits = top.filter(p => p.height > p.width * 1.2)
-  const pool = portraits.length >= 2 ? portraits : top
-  const pick = pool[Math.floor(Math.random() * pool.length)]
-  return pick?.src?.large2x || pick?.src?.large || null
+// Choisit la photo la PLUS PERTINENTE, pas une au hasard. L'ancienne version
+// tirait au sort parmi les 5 premiers résultats : Pexels classant déjà par
+// pertinence, ça revenait à préférer volontairement une moins bonne photo, et
+// l'image changeait à chaque rechargement.
+function meilleurePhoto(photos, query) {
+  const mots = motsUtiles(query)
+
+  const notees = photos.map((p, rang) => {
+    const alt = (p.alt || '').toLowerCase()
+
+    // Rédhibitoire : sujet hors contexte
+    if (INTERDITS.some(mot => alt.includes(mot))) return { p, score: -1 }
+
+    let score = 0
+    // Pertinence sémantique : recoupement entre l'alt de la photo et la requête
+    score += mots.filter(m => alt.includes(m)).length * 10
+    // Vrai format portrait (les cartes sont verticales)
+    if (p.height > p.width * 1.2) score += 4
+    // À pertinence égale, on respecte le classement de Pexels
+    score += Math.max(0, 10 - rang)
+
+    return { p, score }
+  }).filter(x => x.score >= 0)
+
+  if (!notees.length) return null
+  notees.sort((a, b) => b.score - a.score)
+  const gagnante = notees[0]
+
+  // Aucun mot de la requête retrouvé nulle part : la recherche n'a rien donné
+  // de pertinent. On préfère ne rien afficher plutôt qu'une image au hasard —
+  // les cartes ont déjà un visuel de repli propre.
+  if (mots.length && gagnante.score < 10) return null
+
+  return gagnante.p.src?.large2x || gagnante.p.src?.large || null
 }
 
 export default async function handler(req, res) {
@@ -23,30 +65,21 @@ export default async function handler(req, res) {
     const primary = (req.query.prompt || '').trim()
     const alt     = (req.query.alt || '').trim()
 
-    // 1. Requête principale (courte, précise — 5-7 mots de LLaMA)
+    // 1. Requête principale (courte et précise, produite par le LLM)
     if (primary) {
-      const photos = await pexelsSearch(primary)
-      if (photos.length >= 3) {
-        const url = bestPhoto(photos)
-        if (url) return res.json({ url })
-      }
+      const url = meilleurePhoto(await pexelsSearch(primary), primary)
+      if (url) return res.json({ url })
     }
 
     // 2. Requête alternative (catégorie plus large)
     if (alt) {
-      const photos2 = await pexelsSearch(alt)
-      if (photos2.length >= 2) {
-        const url = bestPhoto(photos2)
-        if (url) return res.json({ url })
-      }
+      const url = meilleurePhoto(await pexelsSearch(alt), alt)
+      if (url) return res.json({ url })
     }
 
-    // 3. Fallback générique tendance
-    const photos3 = await pexelsSearch('trendy street style fashion outfit lookbook 2024')
-    if (photos3.length > 0) {
-      return res.json({ url: bestPhoto(photos3) })
-    }
-
+    // Plus de repli « street style » générique : il renvoyait des photos sans
+    // aucun rapport avec la tenue décrite. Pas d'image vaut mieux qu'une image
+    // qui ment sur le contenu de la carte.
     res.json({ url: null })
   } catch {
     res.json({ url: null })
