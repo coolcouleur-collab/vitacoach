@@ -2038,9 +2038,18 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           marginTop:8, marginBottom:8,
           padding:'13px 16px', minHeight:68,
           borderRadius:20, cursor:'pointer',
+          // Même grammaire visuelle que les cartes voisines (fond ambré +
+          // bordure + ombre colorée), mais un cran plus soutenu : c'est
+          // l'action principale de l'app. Avant, ce bloc était en terracotta
+          // pâle et sans bordure, ce qui le faisait paraître gris et éteint à
+          // côté de ses voisines (retour Jean 2026-08-08).
           background: isNight
             ? 'linear-gradient(135deg, rgba(200,220,255,0.10) 0%, rgba(180,210,255,0.05) 100%)'
-            : 'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(200,123,82,0.08) 60%, rgba(200,123,82,0.05) 100%)',
+            : 'linear-gradient(135deg, rgba(232,150,42,0.30) 0%, rgba(232,150,42,0.15) 60%, rgba(232,150,42,0.08) 100%)',
+          border: isNight ? '1.5px solid rgba(180,210,255,0.24)' : '1.5px solid rgba(232,150,42,0.58)',
+          boxShadow: isNight
+            ? '0 6px 22px rgba(0,0,0,0.25), inset 0 1px 0 rgba(180,210,255,0.08)'
+            : '0 6px 22px rgba(232,150,42,0.28), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >
