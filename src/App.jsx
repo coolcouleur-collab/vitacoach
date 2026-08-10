@@ -374,13 +374,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
         // Le padding bas intègre la safe-area pour que les libellés restent
         // au-dessus de la barre d'accueil.
-        // MESURÉ le 2026-08-08 sur l'iPhone de Jean : écran 956 px, mais
-        // viewport de mise en page 894 px. Les position:fixed se calent sur ce
-        // 894, donc bottom:0 laisse 62 px d'écran inatteignables — la fameuse
-        // « barre du bas ». calc(100% - 100vh) vaut ici -62px et pousse la
-        // barre jusqu'au bord physique ; le padding bas rattrape ces 62 px pour
-        // que les libellés restent au-dessus de la barre d'accueil iOS.
-        position:'fixed', bottom:'calc(100% - 100vh)', left:0, right:0,
+        position:'fixed', bottom:0, left:0, right:0,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
@@ -389,7 +383,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        padding:'10px 6px calc(100vh - 100% + env(safe-area-inset-bottom, 0px) + 6px)',
+        padding:'10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px)',
         whiteSpace:'nowrap',
       }}
       transition={spring}
