@@ -384,7 +384,11 @@ const sunsetText = (op) => `rgba(255,225,200,${op})`
 const OCEAN_PRESETS = {
   // sky covers the FULL hero height — no separate "water" block, no demarcation
   day: {
-    sky:          'linear-gradient(180deg,#3B8FCC 0%,#6BB8E8 38%,#A8D8F0 65%,#B8E2F5 82%,#C8EBF8 100%)',
+    // Bleu ADOUCI qui glisse vers l'abricot de l'app au lieu de s'arrêter net sur
+    // du bleu clair : le Jour était la seule ambiance à introduire une couleur
+    // froide saturée, et la rupture avec le fond doré se voyait (option B
+    // choisie par Jean le 2026-08-08 parmi quatre maquettes).
+    sky:          'linear-gradient(180deg,#7FB5D8 0%,#A8CFE4 38%,#CFE3E8 65%,#E6E0DC 82%,#EDD8CC 100%)',
     sunMoonY:     'calc(100% - 163px)',
     bodyColor:    '#FFD900',
     bodyGlow:     'rgba(255,215,0,0.60)',
@@ -395,7 +399,7 @@ const OCEAN_PRESETS = {
     starOp:       0,
     reflectColor: 'rgba(255,220,60,0.35)',
     skyBiteColor: null,
-    skyBottom:    '#C8EBF8',
+    skyBottom:    '#EDD8CC',   // raccord direct avec le fond de l'app
     ringColor1:   [1.0, 0.58, 0.20],   /* orange vif */
     ringColor2:   [1.0, 0.78, 0.38],   /* doré */
   },
