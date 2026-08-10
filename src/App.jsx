@@ -1545,18 +1545,10 @@ const [messages, setMessages] = useState(() => {
     { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
     { id:'routine',    Icon: RoutineIcon,    label:'Programme' },
     { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
-    // Style, Respiration et Cycle ne sont PAS dans la barre : ce sont des
-    // outils qu'on ouvre ponctuellement, pas des destinations quotidiennes.
-    // Ils vivent sur l'Accueil (rangée « Tes outils »). Quatre onglets tiennent
-    // lisiblement sur un écran de téléphone, sept non.
-    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
-  ]
-
-  // Outils secondaires, présentés sur l'Accueil
-  const outils = [
     { id:'style',      Icon: StyleIcon,      label:'Style' },
     { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
+    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
   ]
 
   return (

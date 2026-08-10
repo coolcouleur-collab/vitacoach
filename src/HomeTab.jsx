@@ -589,18 +589,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
 
   const isNight = preset === 'night'
-  // Les cinq icônes en orbite autour du soleil sont TOUTES de la même couleur.
-  // Chaque métrique se reconnaît à sa forme (goutte, coureur, lune, visage,
-  // cœur), pas à sa teinte : la couleur n'apportait aucune information et
-  // faisait cohabiter du bleu, du violet et du rouge au milieu d'une palette
-  // chaude (retour Jean 2026-08-08 — « il y avait du rouge, du bleu »).
-  const orbitC = isNight ? '#9FC4E8' : '#C87B52'
+  const runC  = isNight ? '#7BB0E0' : '#C87B52'   // bleu acier nuit / orange jour
+  const moodC = isNight ? '#a78bfa' : '#fbbf24'   // violet doux nuit / jaune jour
   const METRICS = [
-    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau',     fmt: v => v+'v' },
-    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', fmt: v => v+'h' },
-    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc',      fmt: v => v },
+    { iconEl:<WaterIcon size={22} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
+    { iconEl:<RunIcon   size={22} color={runC}   />,  val:metriques?.pas,     color:runC,      key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { iconEl:<MoonIcon  size={22} color="#818cf8" />, val:metriques?.sommeil, color:'#818cf8', key:'sommeil', fmt: v => v+'h' },
+    { iconEl:<MoodIcon  size={22} color={moodC}  />,  val:metriques?.humeur,  color:moodC,     key:'humeur',  fmt: v => v+'/5' },
+    { iconEl:<HeartIcon size={22} color="#ef4444" />, val:metriques?.fc,      color:'#ef4444', key:'fc',      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
@@ -921,10 +917,10 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
   const [activeIdx, setActiveIdx] = useState(METRIC_KEY_IDX[initialKey] ?? 0)
 
   const ITEMS = [
-    { key:'eau',     icon:<WaterIcon size={22} color="#8FAFBC" />, iconLg:<WaterIcon size={52} color="#8FAFBC" />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:'#8FAFBC', fmt: v => Math.round(v) },
+    { key:'eau',     icon:<WaterIcon size={22} color="#72B8D4" />, iconLg:<WaterIcon size={52} color="#72B8D4" />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:'#72B8D4', fmt: v => Math.round(v) },
     { key:'pas',     icon:<RunIcon   size={22} color="#C87B52" />, iconLg:<RunIcon   size={52} color="#C87B52" />, label:'Pas',     unit:'',   min:0, max:25000, step:500, color:'#C87B52', fmt: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v },
-    { key:'sommeil', icon:<MoonIcon  size={22} color="#AE9BB5" />, iconLg:<MoonIcon  size={52} color="#AE9BB5" />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:'#AE9BB5', fmt: v => Number(v).toFixed(1) },
-    { key:'humeur',  icon:<MoodIcon  size={22} color="#E8962A" />, iconLg:<MoodIcon  size={52} color="#E8962A" />, label:'Humeur',  unit:'/5', min:1, max:5,     step:1,   color:'#E8962A', fmt: v => v },
+    { key:'sommeil', icon:<MoonIcon  size={22} color="#9A96CC" />, iconLg:<MoonIcon  size={52} color="#9A96CC" />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:'#9A96CC', fmt: v => Number(v).toFixed(1) },
+    { key:'humeur',  icon:<MoodIcon  size={22} color="#C9A24E" />, iconLg:<MoodIcon  size={52} color="#C9A24E" />, label:'Humeur',  unit:'/5', min:1, max:5,     step:1,   color:'#C9A24E', fmt: v => v },
   ]
   const m = ITEMS[activeIdx]
 
@@ -1256,10 +1252,10 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 
 function MetricRings({ metriques }) {
   const items = [
-    { iconEl:<WaterIcon size={17} color="#8FAFBC" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#8FAFBC', fmt: v => `${v}/8` },
+    { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
     { iconEl:<RunIcon size={17} color="#C87B52" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#C87B52', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
-    { iconEl:<MoonIcon size={17} color="#AE9BB5" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#AE9BB5', fmt: v => `${v}h` },
-    { iconEl:<MoodIcon size={17} color="#E8962A" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#E8962A', fmt: v => `${v}/5` },
+    { iconEl:<MoonIcon size={17} color="#818cf8" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#818cf8', fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
   return (
     <div style={{ display:'flex', gap:6, padding:'8px 14px' }}>
@@ -1474,7 +1470,7 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', Icon: WaterIcon, color:'#8FAFBC',
+      id:'eau', Icon: WaterIcon, color:'#38bdf8',
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
@@ -1997,39 +1993,6 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         ))}
       </div>
 
-      {/* ── Tes outils — accès permanent aux sections sorties de la barre ──
-           Style, Respiration et Cycle ne sont plus des onglets : ce sont des
-           outils qu'on ouvre quand on en a besoin. Cette rangée garantit
-           qu'ils restent visibles et atteignables depuis l'Accueil, quelle que
-           soit l'heure (les cartes ci-dessus, elles, changent selon le moment
-           de la journée). */}
-      <div style={{ marginTop:18 }}>
-        <span style={{ ...hc.cardsTitle, color:tc(0.90) }}>Tes outils</span>
-        <div style={{ display:'flex', gap:8, marginTop:10 }}>
-          {[
-            { tab:'style',      label:'Style',       icon:<SparkleIcon size={17} color={TC} /> },
-            { tab:'breathwork', label:'Respiration', icon:<MeditateIcon size={17} color={TC} /> },
-            ...(profil?.cycle ? [{ tab:'cycle', label:'Cycle', icon:<MoonIcon size={17} color={TC} /> }] : []),
-          ].map(o => (
-            <motion.button
-              key={o.tab}
-              whileTap={{ scale:0.96 }}
-              onClick={() => onNavigate(o.tab)}
-              style={{
-                flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6,
-                padding:'13px 6px', borderRadius:18, cursor:'pointer',
-                background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(255,246,238,0.62)',
-                border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.26)',
-                fontFamily:"'Poppins',system-ui,sans-serif",
-              }}
-            >
-              {o.icon}
-              <span style={{ fontSize:11.5, fontWeight:500, color:tc(0.90) }}>{o.label}</span>
-            </motion.button>
-          ))}
-        </div>
-      </div>
-
       {/* ── CTA Demander à Solenn — toujours en bas ── */}
       <motion.div
         initial={{ opacity:0, y:14 }}
@@ -2042,18 +2005,9 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           marginTop:8, marginBottom:8,
           padding:'13px 16px', minHeight:68,
           borderRadius:20, cursor:'pointer',
-          // Même grammaire visuelle que les cartes voisines (fond ambré +
-          // bordure + ombre colorée), mais un cran plus soutenu : c'est
-          // l'action principale de l'app. Avant, ce bloc était en terracotta
-          // pâle et sans bordure, ce qui le faisait paraître gris et éteint à
-          // côté de ses voisines (retour Jean 2026-08-08).
           background: isNight
             ? 'linear-gradient(135deg, rgba(200,220,255,0.10) 0%, rgba(180,210,255,0.05) 100%)'
-            : 'linear-gradient(135deg, rgba(232,150,42,0.30) 0%, rgba(232,150,42,0.15) 60%, rgba(232,150,42,0.08) 100%)',
-          border: isNight ? '1.5px solid rgba(180,210,255,0.24)' : '1.5px solid rgba(232,150,42,0.58)',
-          boxShadow: isNight
-            ? '0 6px 22px rgba(0,0,0,0.25), inset 0 1px 0 rgba(180,210,255,0.08)'
-            : '0 6px 22px rgba(232,150,42,0.28), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75)',
+            : 'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(200,123,82,0.08) 60%, rgba(200,123,82,0.05) 100%)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >
@@ -2337,7 +2291,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hc = {
-  page: { display:'flex', flexDirection:'column', paddingBottom:150 },
+  page: { display:'flex', flexDirection:'column', paddingBottom:120 },
 
   hero: { position:'relative', minHeight:360, display:'flex', flexDirection:'column',
     alignItems:'center', justifyContent:'flex-end', paddingBottom:18 },
