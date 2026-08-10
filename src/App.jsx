@@ -1737,7 +1737,13 @@ const [messages, setMessages] = useState(() => {
             userId={user.id}
             onClose={() => setShowChatHistory(false)}
             onLoadSession={msgs => {
-              setMessages(msgs)
+              // Même filtre que partout ailleurs : une conversation archivée
+              // peut contenir des fragments de réponses interrompues.
+              setMessages((msgs || []).filter(m => {
+                if (m.role !== 'assistant') return true
+                const t = (m.content || '').trim()
+                return t && (t.length >= 12 || /[.!?…:)]$/.test(t))
+              }))
               setShowChatHistory(false)
             }}
           /></Suspense>
@@ -3435,7 +3441,7 @@ const s = {
   // WebkitOverflowScrolling + touchAction : indispensables pour que le doigt
   // « prenne » sur iOS dans un parent verrouillé (fix « je ne peux pas
   // remonter dans le fil », 2026-07-25)
-  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
+  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:22, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
   emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },
