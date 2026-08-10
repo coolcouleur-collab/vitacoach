@@ -69,7 +69,7 @@
    le 2026-08-08. Instagram et les apps natives n'ont pas ce rebond. */
 html {
   box-sizing: border-box; scroll-behavior: auto; height: 100%;
-  background: #ffffff;
+  background: var(--bg);
   overscroll-behavior: none;
   overflow: hidden;
 }
@@ -84,7 +84,7 @@ body {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%;
-  background: #ffffff;
+  background: var(--bg);
   color: rgba(255,238,220,0.92);
   font-family: var(--font);
   line-height: 1.6;

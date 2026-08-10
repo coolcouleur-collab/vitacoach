@@ -1703,46 +1703,28 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
-           Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
-      {/* UN SEUL calque, volontairement plus haut que l'écran pour couvrir la
-          zone que le viewport de mise en page n'atteint pas en PWA iOS (la
-          fameuse bande du bas). La base reste #EDD8CC : c'est la palette ambre
-          officielle depuis le 2026-05-15, et c'est elle qui fait le fondu avec
-          le ciel du hero — la passer en blanc casse le raccord.
-          Les halos, eux, gardent leur taille d'origine grâce à
-          backgroundSize:'100% 100vh' : sans ça, ils s'étireraient avec le
-          conteneur et délaveraient tout le fond. La zone du bas reçoit donc la
-          continuation naturelle du dégradé, sans démarcation possible et sans
-          couleur à deviner. */}
+           Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3
+
+           ⚠️ CE BLOC EST RESTAURÉ À L'IDENTIQUE de son état d'avant le 2026-07-17.
+           Il a été modifié six fois en deux jours en cherchant à masquer la bande
+           du bas (base teintée, calque agrandi, backgroundSize figé, halo étendu à
+           88 %) : chaque essai a délavé ou rosi le fond. La bande a finalement été
+           réglée ailleurs, en verrouillant body en position:fixed. NE PLUS TOUCHER
+           À CE CALQUE — ni sa base, ni sa taille, ni les portées des halos. */}
       <div style={{
-        position:'fixed', top:0, left:0, right:0, zIndex:0,
-        // 100vh = écran physique (956 px mesurés), là où le conteneur de
-        // référence des position:fixed n'en fait que 894. Sans ça le calque
-        // s'arrêtait 62 px avant le bas de l'écran.
-        height:'100vh', minHeight:'100vh',
-        background:'#ffffff', pointerEvents:'none',
+        position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
       }}>
-        {/* Halos D'ORIGINE (cercles centrés). backgroundSize:'100% 100vh' les
-            fige à la taille d'un écran : le conteneur peut déborder sans les
-            étirer. Sans ça, agrandir le conteneur dilue le dégradé et délave
-            tout le fond (erreur du 2026-08-08). La version « étendue aux bords »
-            avait été refusée le 2026-07-27 : elle saturait l'accueil en orange. */}
+        {/* background-components.tsx — Soft Yellow Glow */}
         <div style={{
           position:'absolute', inset:0,
-          // Transparence repoussée de 70 % à 88 % : le doré descend nettement
-          // plus bas dans la page au lieu de s'éteindre à mi-hauteur. Intensité
-          // inchangée (opacity 0.6) — seule l'étendue bouge, à la demande de
-          // Jean le 2026-08-08. La version poussée à 140 % avait été refusée le
-          // 2026-07-27 : elle saturait tout en orange.
-          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 88%)',
-          backgroundSize:'100% 100vh', backgroundPosition:'top center', backgroundRepeat:'no-repeat',
+          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
           opacity:0.6,
           mixBlendMode:'multiply',
         }} />
+        {/* demo.tsx — Orange Soft Glow */}
         <div style={{
           position:'absolute', inset:0,
           backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
-          backgroundSize:'100% 100vh', backgroundPosition:'top center', backgroundRepeat:'no-repeat',
           opacity:0.3,
           mixBlendMode:'multiply',
         }} />

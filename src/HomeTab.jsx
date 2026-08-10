@@ -651,7 +651,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
                 <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
                   color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
                   marginTop:2, textTransform:'uppercase',
-                  fontFamily:"'Poppins',system-ui,sans-serif" }}>score</span>
+                  fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>score</span>
               </>}
             </div>
           </div>
@@ -1814,7 +1814,7 @@ function InsightsCarousel({ profil, metriques, onChat, isNight = false, userId }
                   {isActive && <div style={{ padding:'8px 14px 12px' }}>
                     <div style={{ fontSize:13, fontWeight:600, color:tc(0.90),
                       letterSpacing:'-0.01em', marginBottom:4, lineHeight:1.3,
-                      fontFamily:"'Poppins',system-ui,sans-serif" }}>
+                      fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>
                       {card.title}
                     </div>
                     <div style={{ fontSize:11, color:tc(0.80), lineHeight:1.6,
@@ -1984,7 +1984,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
             </div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontSize:14, fontWeight:500, color:tc(0.90), lineHeight:1.2,
-                fontFamily:"'Poppins',system-ui,sans-serif" }}>{s.label}</div>
+                fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>{s.label}</div>
               <div style={{ fontSize:11, color:tc(0.75), marginTop:3 }}>{s.sub}</div>
             </div>
             <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
@@ -2060,7 +2060,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         <SolennFace size={38} isNight={isNight} />
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ fontSize:14, fontWeight:500, color:tc(0.90), lineHeight:1.2,
-            fontFamily:"'Poppins',system-ui,sans-serif" }}>Demander à Solenn</div>
+            fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>Demander à Solenn</div>
           <div style={{ fontSize:11, color:tc(0.75), marginTop:3, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>Disponible · répond en quelques secondes</div>
         </div>
         <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
@@ -2114,14 +2114,14 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                 <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
               </>
             ) : (
-              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>—</span>
+              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>—</span>
             )}
           </div>
           <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
             Score bien-être du jour
           </div>
           <div style={{ fontSize:12, fontWeight:500, color:tc(0.88),
-            fontFamily:"'Poppins',system-ui,sans-serif" }}>
+            fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>
             {score > 50 ? 'Continue comme ça !' : 'Chaque jour compte'}
           </div>
         </div>
