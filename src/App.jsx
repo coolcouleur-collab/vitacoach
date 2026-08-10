@@ -1703,34 +1703,23 @@ const [messages, setMessages] = useState(() => {
         )}
       </AnimatePresence>
 
-      {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
-           Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
-           Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3
+      {/* ══ GLOBAL BACKGROUND ══════════════════════════════════════════════
+           Un seul dégradé, SANS mixBlendMode. Le fond était auparavant composé
+           de deux halos (#FFF991 à .6 et #FF7112 à .3) en mixBlendMode:multiply
+           par-dessus #EDD8CC. Ce rendu est correct sur navigateur de bureau,
+           mais iOS applique mal — voire ignore — le mode multiply en PWA
+           installée : les deux calques se posaient alors en simple
+           semi-transparence, ce qui pâlissait le fond et le faisait virer au
+           rose. C'est le fond rose que Jean voyait alors que le code semblait
+           juste (diagnostiqué le 2026-08-08 en comparant une planche de test).
 
-           ⚠️ CE BLOC EST RESTAURÉ À L'IDENTIQUE de son état d'avant le 2026-07-17.
-           Il a été modifié six fois en deux jours en cherchant à masquer la bande
-           du bas (base teintée, calque agrandi, backgroundSize figé, halo étendu à
-           88 %) : chaque essai a délavé ou rosi le fond. La bande a finalement été
-           réglée ailleurs, en verrouillant body en position:fixed. NE PLUS TOUCHER
-           À CE CALQUE — ni sa base, ni sa taille, ni les portées des halos. */}
+           Les couleurs ci-dessous sont le résultat EXACT du calcul multiply
+           d'origine, figé en dur : rendu identique partout, aucune dépendance à
+           un mode de fusion. Ne pas réintroduire de mixBlendMode ici. */}
       <div style={{
-        position:'fixed', inset:0, zIndex:0, background:'#EDD8CC', pointerEvents:'none',
-      }}>
-        {/* background-components.tsx — Soft Yellow Glow */}
-        <div style={{
-          position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
-          opacity:0.6,
-          mixBlendMode:'multiply',
-        }} />
-        {/* demo.tsx — Orange Soft Glow */}
-        <div style={{
-          position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
-          opacity:0.3,
-          mixBlendMode:'multiply',
-        }} />
-      </div>
+        position:'fixed', inset:0, zIndex:0, pointerEvents:'none',
+        background:'radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%)',
+      }} />
 
       {/* ══ AURORA — plein écran fixe, actif uniquement sur l'onglet chat ══ */}
       {onglet === 'chat' && <div className="aurora-bg" style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none' }} />}
