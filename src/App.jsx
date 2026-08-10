@@ -374,7 +374,13 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
         // Le padding bas intègre la safe-area pour que les libellés restent
         // au-dessus de la barre d'accueil.
-        position:'fixed', bottom:0, left:0, right:0,
+        // MESURÉ le 2026-08-08 sur l'iPhone de Jean : écran 956 px, mais
+        // viewport de mise en page 894 px. Les position:fixed se calent sur ce
+        // 894, donc bottom:0 laisse 62 px d'écran inatteignables — la fameuse
+        // « barre du bas ». calc(100% - 100vh) vaut ici -62px et pousse la
+        // barre jusqu'au bord physique ; le padding bas rattrape ces 62 px pour
+        // que les libellés restent au-dessus de la barre d'accueil iOS.
+        position:'fixed', bottom:'calc(100% - 100vh)', left:0, right:0,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
@@ -383,7 +389,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        padding:'10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px)',
+        padding:'10px 6px calc(100vh - 100% + env(safe-area-inset-bottom, 0px) + 6px)',
         whiteSpace:'nowrap',
       }}
       transition={spring}
@@ -1536,20 +1542,6 @@ const [messages, setMessages] = useState(() => {
 
   return (
     <div style={s.app}>
-      {/* ⚠️ TEMPORAIRE — diagnostic de la bande du bas. À SUPPRIMER dès que la
-          mesure est relevée. Affiche les dimensions réelles de l'écran et du
-          viewport, impossibles à obtenir autrement : le décalage n'existe qu'en
-          PWA iOS installée. */}
-      <div style={{
-        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 2px)', left:4, right:4,
-        zIndex:99999, pointerEvents:'none',
-        background:'rgba(0,0,0,0.82)', color:'#0f0',
-        fontSize:9.5, lineHeight:1.35, fontFamily:'monospace',
-        padding:'3px 5px', borderRadius:5, textAlign:'center',
-      }}>
-        {`screen ${window.screen?.height} | inner ${window.innerHeight} | vv ${Math.round(window.visualViewport?.height || 0)} | dvh ${document.documentElement.clientHeight} | root ${document.getElementById('root')?.offsetHeight} | safeB ${getComputedStyle(document.documentElement).getPropertyValue('--sab') || 'n/a'} | standalone ${window.matchMedia('(display-mode: standalone)').matches ? 'OUI' : 'NON'} | navMode ${window.navigator.standalone ? 'OUI' : 'NON'}`}
-      </div>
-
       {/* ── Morning Check-in ── */}
       <AnimatePresence>
         {showCheckin && profil && (
@@ -1705,7 +1697,10 @@ const [messages, setMessages] = useState(() => {
           couleur à deviner. */}
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:0,
-        height:'100lvh', minHeight:'calc(100% + 160px)',
+        // 100vh = écran physique (956 px mesurés), là où le conteneur de
+        // référence des position:fixed n'en fait que 894. Sans ça le calque
+        // s'arrêtait 62 px avant le bas de l'écran.
+        height:'100vh', minHeight:'100vh',
         background:'#ffffff', pointerEvents:'none',
       }}>
         {/* Halos D'ORIGINE (cercles centrés). backgroundSize:'100% 100vh' les
