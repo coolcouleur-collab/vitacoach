@@ -1536,6 +1536,20 @@ const [messages, setMessages] = useState(() => {
 
   return (
     <div style={s.app}>
+      {/* ⚠️ TEMPORAIRE — diagnostic de la bande du bas. À SUPPRIMER dès que la
+          mesure est relevée. Affiche les dimensions réelles de l'écran et du
+          viewport, impossibles à obtenir autrement : le décalage n'existe qu'en
+          PWA iOS installée. */}
+      <div style={{
+        position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 2px)', left:4, right:4,
+        zIndex:99999, pointerEvents:'none',
+        background:'rgba(0,0,0,0.82)', color:'#0f0',
+        fontSize:9.5, lineHeight:1.35, fontFamily:'monospace',
+        padding:'3px 5px', borderRadius:5, textAlign:'center',
+      }}>
+        {`screen ${window.screen?.height} | inner ${window.innerHeight} | vv ${Math.round(window.visualViewport?.height || 0)} | dvh ${document.documentElement.clientHeight} | root ${document.getElementById('root')?.offsetHeight} | safeB ${getComputedStyle(document.documentElement).getPropertyValue('--sab') || 'n/a'} | standalone ${window.matchMedia('(display-mode: standalone)').matches ? 'OUI' : 'NON'} | navMode ${window.navigator.standalone ? 'OUI' : 'NON'}`}
+      </div>
+
       {/* ── Morning Check-in ── */}
       <AnimatePresence>
         {showCheckin && profil && (

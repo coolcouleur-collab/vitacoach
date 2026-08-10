@@ -43,6 +43,7 @@
   /* ── Espacements ── */
   --padgrid: 4rem;
   --nav-top: 3.2rem;
+  --sab: env(safe-area-inset-bottom, 0px);
 
   /* ── Easing ── */
   --ease:        cubic-bezier(.55, 0, .1, 1);
