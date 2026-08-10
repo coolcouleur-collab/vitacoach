@@ -348,6 +348,28 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   const ref = React.useRef(null)
   const active = items.find(i => i.id === onglet) || items[0]
 
+  // Écart entre l'écran réel et le viewport de mise en page. Mesuré chez Jean
+  // le 2026-08-08 : 956 px d'écran pour 894 px de viewport, soit 62 px que les
+  // position:fixed ne peuvent pas atteindre — c'est la « bande du bas ».
+  // On le mesure en JS plutôt qu'avec un calc() CSS : la première tentative en
+  // calc(100% - 100vh) donnait une valeur positive et remontait la barre au
+  // milieu de l'écran. Ici la valeur est certaine, et vaut 0 partout où le
+  // problème n'existe pas (Safari, desktop, Android).
+  const [ecartBas, setEcartBas] = React.useState(0)
+  React.useEffect(() => {
+    const mesurer = () => {
+      const e = Math.round(window.innerHeight - document.documentElement.clientHeight)
+      setEcartBas(e > 0 && e < 200 ? e : 0)
+    }
+    mesurer()
+    window.addEventListener('resize', mesurer)
+    window.visualViewport?.addEventListener('resize', mesurer)
+    return () => {
+      window.removeEventListener('resize', mesurer)
+      window.visualViewport?.removeEventListener('resize', mesurer)
+    }
+  }, [])
+
   const isNight = preset === 'night' && onglet === 'accueil'
   // Couleurs adaptées au mode nuit / jour.
   const pillBg    = isNight ? 'rgba(10,22,58,0.60)'      : 'rgba(120,55,10,0.24)'
@@ -374,7 +396,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
         // Le padding bas intègre la safe-area pour que les libellés restent
         // au-dessus de la barre d'accueil.
-        position:'fixed', bottom:0, left:0, right:0,
+        position:'fixed', bottom:-ecartBas, left:0, right:0,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
@@ -383,7 +405,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        padding:'10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px)',
+        padding:`10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px + ${ecartBas}px)`,
         whiteSpace:'nowrap',
       }}
       transition={spring}
