@@ -85,6 +85,18 @@ body {
   html.lenis body, html.lenis #root { height: auto; }
 }
 
+/* ⚠️ PWA INSTALLÉE (écran d'accueil iOS) — NE PAS SUPPRIMER.
+   En mode standalone, iOS calcule 100dvh SANS la zone de la barre d'accueil :
+   il reste une quarantaine de points en bas d'écran qu'AUCUN élément de la page
+   ne peut atteindre, pas même un position:fixed bottom:0. C'est l'origine de la
+   « barre du bas » que Jean signalait depuis le 2026-07-25 — et la raison pour
+   laquelle repeindre html, body, le manifeste ou agrandir les calques ne
+   changeait rien : le problème n'était pas une couleur mais un viewport trop
+   court. 100vh, lui, couvre l'écran physique entier. */
+@media all and (display-mode: standalone) {
+  html:not(.lenis), body, #root { height: 100vh; }
+}
+
 /* Scroll reveal */
 .IO {
   opacity: 0;

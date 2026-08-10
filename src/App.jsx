@@ -349,7 +349,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   const active = items.find(i => i.id === onglet) || items[0]
 
   const isNight = preset === 'night' && onglet === 'accueil'
-  // Couleurs adaptées au mode nuit / jour
+  // Couleurs adaptées au mode nuit / jour.
   const pillBg    = isNight ? 'rgba(10,22,58,0.60)'      : 'rgba(120,55,10,0.24)'
   const txtHigh   = isNight ? 'rgba(160,200,255,0.92)'   : 'rgba(255,238,228,0.90)'
   const txtMid    = isNight ? 'rgba(160,200,255,0.88)'   : 'rgba(255,238,228,0.88)'
