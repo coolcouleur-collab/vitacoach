@@ -575,7 +575,7 @@ function OceanSceneBg({ preset: key }) {
 }
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
-function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null }) {
   const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
   const [circleHovered, setCircleHovered] = useState(false)
@@ -2261,6 +2261,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <NovaGlowScore
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
+        presetManuel={presetManuel}
       />
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} />
