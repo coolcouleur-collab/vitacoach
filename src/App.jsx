@@ -407,7 +407,12 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        padding:`10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px + ${ecartBas}px)`,
+        // Le décalage ecartBas descend déjà la barre jusqu'au bord physique :
+        // il ne doit PAS être ré-ajouté ici, sinon on empile deux compensations
+        // et la barre devient un bloc de 140px (retour Jean 2026-08-08).
+        // Seule la zone protégée compte, pour que les libellés restent
+        // au-dessus de la barre d'accueil.
+        padding:'8px 6px calc(env(safe-area-inset-bottom, 0px) + 4px)',
         whiteSpace:'nowrap',
       }}
       transition={spring}
