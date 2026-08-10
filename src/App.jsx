@@ -1830,7 +1830,7 @@ const [messages, setMessages] = useState(() => {
    En bas, 168px au lieu de 130 : la barre d'onglets dépliée est plus haute que
    l'ancienne pastille et recouvrait le dernier bloc de chaque page — le
    « Guide des exercices » devenait même impossible à toucher. */
-padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 92px) 0 168px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'contain' }}>
+padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 92px) 0 168px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'none' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
@@ -3414,7 +3414,7 @@ const s = {
   // WebkitOverflowScrolling + touchAction : indispensables pour que le doigt
   // « prenne » sur iOS dans un parent verrouillé (fix « je ne peux pas
   // remonter dans le fil », 2026-07-25)
-  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'contain', touchAction:'pan-y' },
+  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
   emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },

@@ -74,7 +74,16 @@ html {
   overflow: hidden;
 }
 html.lenis { height: auto; }
+/* position:fixed sur body — seule méthode qui supprime VRAIMENT le rebond
+   élastique d'iOS. overscroll-behavior ne suffit pas en PWA installée : le
+   document reste déplaçable au doigt et laisse apparaître le fond derrière
+   l'app (retour Jean 2026-08-08, deux tentatives infructueuses avant celle-ci).
+   Le document devient un cadre immobile ; tout le défilement se fait à
+   l'intérieur, dans .content et la zone de chat, qui ont leur propre overflow. */
 body {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
   background: #ffffff;
   color: rgba(255,238,220,0.92);
   font-family: var(--font);
