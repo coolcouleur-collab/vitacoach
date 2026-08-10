@@ -396,7 +396,10 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
         // Le padding bas intègre la safe-area pour que les libellés restent
         // au-dessus de la barre d'accueil.
-        position:'fixed', bottom:-ecartBas, left:0, right:0,
+        // bottom:0 simple. Le décalage mesuré (ecartBas) a été retiré : depuis
+        // que body est verrouillé en position:fixed, le viewport couvre l'écran
+        // et le décalage rendait la barre invisible sous le bord.
+        position:'fixed', bottom:0, left:0, right:0,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
