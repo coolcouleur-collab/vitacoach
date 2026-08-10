@@ -393,29 +393,22 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         // Barre ancrée au bord INFÉRIEUR de l'écran, comme Instagram : elle
         // recouvre la zone de la barre d'accueil iOS au lieu de flotter
         // au-dessus. C'est ce qui fait disparaître la bande du bas — il n'y a
-        // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
-        // Le padding bas intègre la safe-area pour que les libellés restent
-        // au-dessus de la barre d'accueil.
-        // bottom:0 simple. Le décalage mesuré (ecartBas) a été retiré : depuis
-        // que body est verrouillé en position:fixed, le viewport couvre l'écran
-        // et le décalage rendait la barre invisible sous le bord.
-        position:'fixed', bottom:0, left:0, right:0,
+        // PASTILLE FLOTTANTE façon Instagram : détachée des trois bords, coins
+        // très arrondis. La version pleine largeur avait été faite pour couvrir
+        // la bande du bas ; ce n'est plus nécessaire depuis que body est
+        // verrouillé en position:fixed, et un bandeau collé aux bords se lisait
+        // comme un bloc rectangulaire (retour Jean 2026-08-08).
+        position:'fixed', bottom:'calc(env(safe-area-inset-bottom, 0px) + 10px)',
+        left:14, right:14,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
-        borderTop:'1px solid rgba(255,255,255,0.12)',
-        // Coins généreusement arrondis façon Instagram : à 26px la barre
-        // pleine largeur ressemblait à un bloc rectangulaire (retour Jean).
-        borderRadius:'34px 34px 0 0',
-        boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
+        border:'1px solid rgba(255,255,255,0.14)',
+        borderRadius:30,
+        boxShadow:'0 8px 30px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        // Le décalage ecartBas descend déjà la barre jusqu'au bord physique :
-        // il ne doit PAS être ré-ajouté ici, sinon on empile deux compensations
-        // et la barre devient un bloc de 140px (retour Jean 2026-08-08).
-        // Seule la zone protégée compte, pour que les libellés restent
-        // au-dessus de la barre d'accueil.
-        padding:'8px 6px calc(env(safe-area-inset-bottom, 0px) + 4px)',
+        padding:'7px 6px',
         whiteSpace:'nowrap',
       }}
       transition={spring}
