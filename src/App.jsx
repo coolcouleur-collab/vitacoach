@@ -1676,39 +1676,37 @@ const [messages, setMessages] = useState(() => {
       {/* ══ GLOBAL BACKGROUND — background-components.tsx traduit en inline styles ══
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
            Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
-      {/* Couche unie de secours, volontairement plus haute que l'écran : elle
-          seule déborde, et elle est BLANCHE comme la base du calque. C'est ce
-          qui rend la zone du bas indétectable : elle a exactement la couleur
-          qu'a la page là où les halos sont déjà transparents. */}
+      {/* UN SEUL calque, volontairement plus haut que l'écran pour couvrir la
+          zone que le viewport de mise en page n'atteint pas en PWA iOS (la
+          fameuse bande du bas). La base reste #EDD8CC : c'est la palette ambre
+          officielle depuis le 2026-05-15, et c'est elle qui fait le fondu avec
+          le ciel du hero — la passer en blanc casse le raccord.
+          Les halos, eux, gardent leur taille d'origine grâce à
+          backgroundSize:'100% 100vh' : sans ça, ils s'étireraient avec le
+          conteneur et délaveraient tout le fond. La zone du bas reçoit donc la
+          continuation naturelle du dégradé, sans démarcation possible et sans
+          couleur à deviner. */}
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:0,
         height:'100lvh', minHeight:'calc(100% + 160px)',
-        background:'#ffffff', pointerEvents:'none',
-      }} />
-
-      {/* Couche des halos — géométrie ET base d'origine. La base doit rester
-          BLANCHE : les halos sont en mixBlendMode:multiply, donc multiplier par
-          du blanc restitue leur couleur pure et lumineuse. En la teintant en
-          #EDD8CC (tentative du 2026-08-08 pour masquer la bande du bas), on
-          multipliait deux teintes : tout le fond de l'app virait au rose délavé
-          et perdait sa profondeur. Ne jamais retoucher ni sa taille ni sa base. */}
-      <div style={{
-        position:'fixed', inset:0, zIndex:0,
-        background:'#ffffff', pointerEvents:'none',
+        background:'#EDD8CC', pointerEvents:'none',
       }}>
-        {/* Halos D'ORIGINE (cercles centrés) — la version « étendue aux bords »
-            saturait l'accueil en orange et créait un décalage de couleur entre
-            pages (retour Jean 2026-07-27). Le raccord des bords est assuré par
-            le fond var(--bg) sur html/body, pas par les halos. */}
+        {/* Halos D'ORIGINE (cercles centrés). backgroundSize:'100% 100vh' les
+            fige à la taille d'un écran : le conteneur peut déborder sans les
+            étirer. Sans ça, agrandir le conteneur dilue le dégradé et délave
+            tout le fond (erreur du 2026-08-08). La version « étendue aux bords »
+            avait été refusée le 2026-07-27 : elle saturait l'accueil en orange. */}
         <div style={{
           position:'absolute', inset:0,
           backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
+          backgroundSize:'100% 100vh', backgroundPosition:'top center', backgroundRepeat:'no-repeat',
           opacity:0.6,
           mixBlendMode:'multiply',
         }} />
         <div style={{
           position:'absolute', inset:0,
           backgroundImage:'radial-gradient(circle at center, #FF7112, transparent)',
+          backgroundSize:'100% 100vh', backgroundPosition:'top center', backgroundRepeat:'no-repeat',
           opacity:0.3,
           mixBlendMode:'multiply',
         }} />

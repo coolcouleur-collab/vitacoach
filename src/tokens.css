@@ -57,16 +57,15 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-/* html et body en BLANC, comme la base du calque de fond de l'app. Les halos
-   jaune et orange sont en mixBlendMode:multiply : la page est donc blanche
-   partout où ils sont transparents, c'est-à-dire en haut et en bas de l'écran.
-   Peindre ici une couleur teintée (--bg, #EAD0BE…) crée justement la
-   démarcation qu'on cherchait à faire disparaître : la zone hors calque cesse
-   de correspondre au bas de la page. Ne pas retoucher sans remesurer. */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #ffffff; }
+/* html et body reprennent --bg, la base du calque de fond (palette ambre
+   officielle du 2026-05-15). NE PAS mettre de blanc ici : le blanc casse le
+   fondu entre le ciel du hero et la page, et rend la zone du bas visible.
+   La couverture de cette zone est assurée par le calque lui-même, qui déborde
+   sous l'écran — pas par cette couleur. */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: var(--bg); }
 html.lenis { height: auto; }
 body {
-  background: #ffffff;
+  background: var(--bg);
   color: rgba(255,238,220,0.92);
   font-family: var(--font);
   line-height: 1.6;
