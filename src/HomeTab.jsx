@@ -2249,11 +2249,15 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   // Nuit : gradient long + couleur de base sombre jusqu'en bas
   const skyBg = currentPreset === 'night'
     ? `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 462px, rgba(9,24,48,0.68) 560px, rgba(9,24,48,0.42) 800px, rgba(9,24,48,0.18) 1100px, rgba(9,24,48,0.10) 1400px)`
-    // Fondu vers la couleur EXACTE du fond de l'app (#EDD8CC) et non vers du
-    // transparent : plus aucun raccord possible en bas d'écran, quelle que
-    // soit la hauteur du téléphone (fix « barre en bas », 2026-07-25)
-    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 460px, #EDD8CC 680px)`
-  const nightBaseBg = currentPreset === 'night' ? '#070f1e' : '#EDD8CC'
+    // Fondu vers TRANSPARENT : le ciel doit laisser réapparaître le halo doré
+    // du calque global. En le faisant fondre vers #EDD8CC opaque (ce que
+    // j'avais fait le 2026-07-25 pour masquer la bande du bas), l'accueil
+    // recouvrait entièrement ce halo d'un aplat abricot — d'où le fond « rose »
+    // que Jean ne voyait QUE sur l'accueil, les autres pages restant dorées.
+    // La bande du bas est réglée depuis par le verrouillage de body.
+    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 460px, transparent 680px)`
+  // transparent en journée pour la même raison : ne rien poser sur le halo
+  const nightBaseBg = currentPreset === 'night' ? '#070f1e' : 'transparent'
   const isNight = currentPreset === 'night'
 
   return (
