@@ -368,19 +368,22 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
       layout
       layoutTransition={spring}
       style={{
-        position:'fixed', bottom:'calc(env(safe-area-inset-bottom, 0px) + 16px)', left:16, right:16,
-        marginLeft:'auto', marginRight:'auto',
-        width:'fit-content',
-        maxWidth:'calc(100vw - 32px)',
+        // Barre ancrée au bord INFÉRIEUR de l'écran, comme Instagram : elle
+        // recouvre la zone de la barre d'accueil iOS au lieu de flotter
+        // au-dessus. C'est ce qui fait disparaître la bande du bas — il n'y a
+        // plus aucune zone d'écran laissée nue (demande Jean 2026-08-08).
+        // Le padding bas intègre la safe-area pour que les libellés restent
+        // au-dessus de la barre d'accueil.
+        position:'fixed', bottom:0, left:0, right:0,
         zIndex:100, cursor:'default',
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
-        border:'1px solid rgba(255,255,255,0.12)',
-        borderRadius:28,
-        boxShadow:'0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.12)',
-        display:'flex', alignItems:'center',
+        borderTop:'1px solid rgba(255,255,255,0.12)',
+        borderRadius:'26px 26px 0 0',
+        boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
+        display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
-        padding: open ? '8px 6px' : '11px 18px',
+        padding:'10px 6px calc(env(safe-area-inset-bottom, 0px) + 8px)',
         whiteSpace:'nowrap',
       }}
       transition={spring}
@@ -411,7 +414,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
             initial={{ opacity:0 }}
             animate={{ opacity:1, transition:{ duration:0.18, ease:'easeOut' } }}
             exit={{ opacity:0, transition:{ duration:0.1 } }}
-            style={{ display:'flex', alignItems:'flex-start', gap:2, justifyContent:'center' }}
+            style={{ display:'flex', alignItems:'flex-start', gap:2, justifyContent:'space-around', width:'100%', maxWidth:420 }}
           >
             {items.map((item, i) => {
               const isActive = onglet === item.id
@@ -1689,7 +1692,7 @@ const [messages, setMessages] = useState(() => {
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:0,
         height:'100lvh', minHeight:'calc(100% + 160px)',
-        background:'#EDD8CC', pointerEvents:'none',
+        background:'#ffffff', pointerEvents:'none',
       }}>
         {/* Halos D'ORIGINE (cercles centrés). backgroundSize:'100% 100vh' les
             fige à la taille d'un écran : le conteneur peut déborder sans les
