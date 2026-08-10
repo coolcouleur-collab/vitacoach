@@ -592,14 +592,17 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
 
   const isNight = preset === 'night'
-  const runC  = isNight ? '#7BB0E0' : '#C87B52'   // bleu acier nuit / orange jour
-  const moodC = isNight ? '#a78bfa' : '#fbbf24'   // violet doux nuit / jaune jour
+  // Les cinq icônes en orbite sont TOUTES de la même couleur : chaque métrique
+  // se reconnaît à sa forme, pas à sa teinte. Avant, elles mélangeaient un bleu
+  // ciel, un indigo, un rouge et un jaune Tailwind au milieu d'une palette
+  // chaude (demande Jean 2026-08-08).
+  const orbitC = isNight ? '#9FC4E8' : '#C87B52'
   const METRICS = [
-    { iconEl:<WaterIcon size={22} color="#38bdf8" />, val:metriques?.eau,     color:'#38bdf8', key:'eau',     fmt: v => v+'v' },
-    { iconEl:<RunIcon   size={22} color={runC}   />,  val:metriques?.pas,     color:runC,      key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color="#818cf8" />, val:metriques?.sommeil, color:'#818cf8', key:'sommeil', fmt: v => v+'h' },
-    { iconEl:<MoodIcon  size={22} color={moodC}  />,  val:metriques?.humeur,  color:moodC,     key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color="#ef4444" />, val:metriques?.fc,      color:'#ef4444', key:'fc',      fmt: v => v },
+    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau',     fmt: v => v+'v' },
+    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', fmt: v => v+'h' },
+    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur',  fmt: v => v+'/5' },
+    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc',      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
