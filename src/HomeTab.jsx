@@ -584,7 +584,10 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog }) {
 
   const _urlPreset = new URLSearchParams(window.location.search).get('preset')
   const hour   = _urlPreset === 'sunrise' ? 7 : _urlPreset === 'day' ? 11 : _urlPreset === 'sunset' ? 19 : _urlPreset === 'night' ? 23 : new Date().getHours()
-  const preset = getOceanPreset(hour)
+  // Le choix fait dans Réglages prime sur l'heure. Sans ça, sélectionner
+  // « Jour » ne changeait rien : l'ambiance était recalculée depuis l'horloge à
+  // chaque rendu (bug signalé par Jean le 2026-08-08).
+  const preset = presetManuel || getOceanPreset(hour)
   const greeting = hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
   const dayLabel = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })
 
@@ -2208,7 +2211,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
 }
 
 // ─── HOME TAB EXPORT ──────────────────────────────────────────────────────────
-export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, userId }) {
+export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, presetManuel = null, userId }) {
   const [showSheet, setShowSheet] = useState(false)
   const [initialMetric, setInitialMetric] = useState('eau')
 

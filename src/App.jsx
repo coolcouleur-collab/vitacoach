@@ -627,6 +627,12 @@ const [messages, setMessages] = useState(() => {
     return hr >= 6 && hr < 11 && lastCheckin !== todayStr
   })
   const [homePreset, setHomePreset] = useState('day')
+  // Ambiance choisie à la main dans Réglages. Distincte de homePreset, qui est
+  // l'ambiance COURANTE remontée par HomeTab : sans cette séparation le choix
+  // de l'utilisateur était aussitôt écrasé par l'heure (bug signalé 2026-08-08).
+  const [presetManuel, setPresetManuel] = useState(() => {
+    try { return localStorage.getItem('solenn_preset_manuel') || null } catch { return null }
+  })
 
   // ── Célébrations mémorables ──────────────────────────────────────────────────
   const [milestone, setMilestone]       = useState(null)   // { emoji, titre, texte }
@@ -1654,7 +1660,11 @@ const [messages, setMessages] = useState(() => {
               localStorage.setItem('vitacoach_profil', JSON.stringify(updated))
               if (user?.id) await syncProfilSupabase(user.id, updated)
             }}
-            onPresetChange={p => { setHomePreset(p); setShowSettings(false) }}
+            onPresetChange={p => {
+              setPresetManuel(p); setHomePreset(p)
+              try { localStorage.setItem('solenn_preset_manuel', p) } catch {}
+              setShowSettings(false)
+            }}
             onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}
             onResetMemoire={() => {
               localStorage.removeItem('vitacoach_memories')
@@ -2144,6 +2154,7 @@ padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top,
               level={level}
               history={history}
               onPresetChange={setHomePreset}
+              presetManuel={presetManuel}
               isScrolling={isScrolling}
               userId={user?.id}
             />
