@@ -1729,7 +1729,12 @@ const [messages, setMessages] = useState(() => {
             avait été refusée le 2026-07-27 : elle saturait l'accueil en orange. */}
         <div style={{
           position:'absolute', inset:0,
-          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 70%)',
+          // Transparence repoussée de 70 % à 88 % : le doré descend nettement
+          // plus bas dans la page au lieu de s'éteindre à mi-hauteur. Intensité
+          // inchangée (opacity 0.6) — seule l'étendue bouge, à la demande de
+          // Jean le 2026-08-08. La version poussée à 140 % avait été refusée le
+          // 2026-07-27 : elle saturait tout en orange.
+          backgroundImage:'radial-gradient(circle at center, #FFF991 0%, transparent 88%)',
           backgroundSize:'100% 100vh', backgroundPosition:'top center', backgroundRepeat:'no-repeat',
           opacity:0.6,
           mixBlendMode:'multiply',
