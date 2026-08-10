@@ -63,7 +63,16 @@
    teintée ils la multiplient et tout vire au rose délavé. La zone du bas n'est
    plus masquée par une couleur assortie mais recouverte par la barre de
    navigation, qui descend jusqu'au bord de l'écran (2026-08-08). */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #ffffff; }
+/* overscroll-behavior sur html AUSSI (pas seulement body) : sans lui, tirer la
+   page vers le bas déclenche le rebond élastique d'iOS et laisse apparaître le
+   fond du document derrière l'app — d'où le blanc au refresh signalé par Jean
+   le 2026-08-08. Instagram et les apps natives n'ont pas ce rebond. */
+html {
+  box-sizing: border-box; scroll-behavior: auto; height: 100%;
+  background: #ffffff;
+  overscroll-behavior: none;
+  overflow: hidden;
+}
 html.lenis { height: auto; }
 body {
   background: #ffffff;

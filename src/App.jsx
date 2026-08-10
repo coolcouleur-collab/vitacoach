@@ -401,7 +401,9 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         background: pillBg,
         backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
         borderTop:'1px solid rgba(255,255,255,0.12)',
-        borderRadius:'26px 26px 0 0',
+        // Coins généreusement arrondis façon Instagram : à 26px la barre
+        // pleine largeur ressemblait à un bloc rectangulaire (retour Jean).
+        borderRadius:'34px 34px 0 0',
         boxShadow:'0 -6px 28px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
