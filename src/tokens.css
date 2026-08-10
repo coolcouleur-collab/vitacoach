@@ -57,16 +57,16 @@
 @media (max-width: 768px)  { :root { --padgrid: 1.6rem; --nav-top: 1.6rem; } }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-/* background sur html : FILET DE SÉCURITÉ. Ce n'est PAS --bg mais la couleur
-   du BAS de la page une fois les halos multiply appliqués (#EDD8CC assombri
-   par le halo orange) : peindre --bg brut ici recréait justement la bande plus
-   claire, puisque la page, elle, est teintée. Si les halos changent un jour,
-   cette valeur doit être remesurée. */
-html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #EAD0BE; }
+/* html et body en BLANC, comme la base du calque de fond de l'app. Les halos
+   jaune et orange sont en mixBlendMode:multiply : la page est donc blanche
+   partout où ils sont transparents, c'est-à-dire en haut et en bas de l'écran.
+   Peindre ici une couleur teintée (--bg, #EAD0BE…) crée justement la
+   démarcation qu'on cherchait à faire disparaître : la zone hors calque cesse
+   de correspondre au bas de la page. Ne pas retoucher sans remesurer. */
+html { box-sizing: border-box; scroll-behavior: auto; height: 100%; background: #ffffff; }
 html.lenis { height: auto; }
 body {
-  /* même raison que html : couleur du bas de page halos compris, pas --bg brut */
-  background: #EAD0BE;
+  background: #ffffff;
   color: rgba(255,238,220,0.92);
   font-family: var(--font);
   line-height: 1.6;

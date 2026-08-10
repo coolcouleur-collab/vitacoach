@@ -1677,21 +1677,24 @@ const [messages, setMessages] = useState(() => {
            Couche fixe plein écran, derrière tout le contenu (zIndex:-1)
            Base blanche + jaune #FFF991 multiply opacity 0.6 + orange #FF7112 multiply opacity 0.3 */}
       {/* Couche unie de secours, volontairement plus haute que l'écran : elle
-          seule déborde. Les halos NE doivent PAS être dessinés dedans — ils
-          sont en pourcentage de leur conteneur, donc les étaler sur une surface
-          plus grande les dilue et délave tout le fond (erreur commise le
-          2026-08-08 : l'accueil est passé du doré au rose pâle). */}
+          seule déborde, et elle est BLANCHE comme la base du calque. C'est ce
+          qui rend la zone du bas indétectable : elle a exactement la couleur
+          qu'a la page là où les halos sont déjà transparents. */}
       <div style={{
         position:'fixed', top:0, left:0, right:0, zIndex:0,
         height:'100lvh', minHeight:'calc(100% + 160px)',
-        background:'#EAD0BE', pointerEvents:'none',
+        background:'#ffffff', pointerEvents:'none',
       }} />
 
-      {/* Couche des halos — géométrie STRICTEMENT d'origine (inset:0). Ne jamais
-          modifier sa taille : c'est elle qui donne sa couleur à toute l'app. */}
+      {/* Couche des halos — géométrie ET base d'origine. La base doit rester
+          BLANCHE : les halos sont en mixBlendMode:multiply, donc multiplier par
+          du blanc restitue leur couleur pure et lumineuse. En la teintant en
+          #EDD8CC (tentative du 2026-08-08 pour masquer la bande du bas), on
+          multipliait deux teintes : tout le fond de l'app virait au rose délavé
+          et perdait sa profondeur. Ne jamais retoucher ni sa taille ni sa base. */}
       <div style={{
         position:'fixed', inset:0, zIndex:0,
-        background:'#EDD8CC', pointerEvents:'none',
+        background:'#ffffff', pointerEvents:'none',
       }}>
         {/* Halos D'ORIGINE (cercles centrés) — la version « étendue aux bords »
             saturait l'accueil en orange et créait un décalage de couleur entre
