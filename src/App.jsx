@@ -550,8 +550,19 @@ const [messages, setMessages] = useState(() => {
     const p = safeParse('vitacoach_profil', null)
     const h = safeParse('vitacoach_historique', null)
     if (p && h) {
-      // Purge tous les vieux messages de limite (jamais utiles dans l'historique)
-      return h.filter(m => !m.content?.includes('messages gratuits'))
+      // Purge les vieux messages de limite (jamais utiles dans l'historique) ET
+      // les bulles d'assistant tronquées : quand un flux de réponse est coupé
+      // (perte de réseau, onglet quitté, app mise en arrière-plan), le fragment
+      // déjà reçu était enregistré tel quel et revenait à chaque ouverture —
+      // d'où les bulles « ta » ou « Commence ta » vues par Jean le 2026-08-08.
+      return h.filter(m => {
+        if (m.content?.includes('messages gratuits')) return false
+        if (m.role !== 'assistant') return true
+        const t = (m.content || '').trim()
+        if (!t) return false
+        // Un fragment coupé : très court ET sans ponctuation finale
+        return t.length >= 12 || /[.!?…:)]$/.test(t)
+      })
     }
     if (p) {
       const hr = new Date().getHours()
@@ -802,7 +813,17 @@ const [messages, setMessages] = useState(() => {
     if (profil && messages.length > 0) {
       // Ne jamais sauvegarder les messages de limite dans l'historique
       // (et retirer les images : un data URL exploserait le quota localStorage)
-      const toSave = messages.filter(m => !m.content?.includes('messages gratuits')).map(({ image, ...m }) => m)
+      // Même filtre à l'enregistrement : un fragment interrompu ne doit pas
+      // entrer dans l'historique, sinon il réapparaît à chaque ouverture.
+      const toSave = messages
+        .filter(m => {
+          if (m.content?.includes('messages gratuits')) return false
+          if (m.role !== 'assistant') return true
+          const t = (m.content || '').trim()
+          if (!t) return false
+          return t.length >= 12 || /[.!?…:)]$/.test(t)
+        })
+        .map(({ image, ...m }) => m)
       localStorage.setItem('vitacoach_historique', JSON.stringify(toSave.slice(-50)))
     }
     messagesRef.current = messages
@@ -1366,6 +1387,19 @@ const [messages, setMessages] = useState(() => {
       if (!started) {
         // Flux vide — message de fallback
         setMessages(prev => [...prev, { role: 'assistant', content: "Désolée, je n'ai pas pu répondre. Réessaie !" }])
+        setLoading(false)
+      } else if (reply.trim().length < 12 && !/[.!?…:)]$/.test(reply.trim())) {
+        // Flux interrompu en cours de route : on ne garde PAS le fragment reçu,
+        // il resterait affiché tel quel (« ta », « Commence ta ») et serait même
+        // enregistré dans l'historique. On le remplace par un message clair.
+        setMessages(prev => {
+          const copy = [...prev]
+          const last = copy[copy.length - 1]
+          if (last?.role === 'assistant') {
+            copy[copy.length - 1] = { ...last, content: "Ma réponse a été coupée. Tu peux me redemander ?" }
+          }
+          return copy
+        })
         setLoading(false)
       }
       if (reply) {
