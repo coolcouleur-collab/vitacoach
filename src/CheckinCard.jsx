@@ -128,13 +128,17 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
                       padding: '10px 4px', borderRadius: 16, cursor: 'pointer', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',
-                      background: active ? `${m.color}1C` : (isNight ? 'rgba(180,210,255,0.05)' : 'rgba(200,123,82,0.05)'),
-                      border: `1px solid ${active ? `${m.color}66` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(200,123,82,0.12)')}`,
-                      color: tc(active ? 0.95 : 0.45),
+                      // Contraste renforcé : à 5 % de fond, 12 % de bordure et
+                      // 45 % de texte, les cinq visages étaient à peine visibles
+                      // et ne semblaient pas cliquables (retour Jean 2026-08-08).
+                      // C'est pourtant la première interaction de la journée.
+                      background: active ? `${m.color}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(255,246,238,0.55)'),
+                      border: `1.5px solid ${active ? `${m.color}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(200,123,82,0.30)')}`,
+                      color: tc(active ? 0.95 : 0.72),
                     }}
                   >
                     <MoodFace mood={m} active={active} size={30} />
-                    <span style={{ fontSize: 9, fontWeight: active ? 700 : 500, color: active ? m.color : tc(0.55), fontFamily: F }}>
+                    <span style={{ fontSize: 9, fontWeight: active ? 700 : 500, color: active ? m.color : tc(0.75), fontFamily: F }}>
                       {m.label}
                     </span>
                   </motion.button>

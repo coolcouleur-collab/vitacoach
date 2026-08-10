@@ -1551,10 +1551,17 @@ const [messages, setMessages] = useState(() => {
     { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
     { id:'routine',    Icon: RoutineIcon,    label:'Programme' },
     { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
+    // Quatre onglets maximum : au-delà, les libellés deviennent illisibles sur
+    // un écran de téléphone. Style, Respiration et Cycle sont des outils qu'on
+    // ouvre ponctuellement — ils vivent dans la rangée « Tes outils » de
+    // l'Accueil, pas dans la barre.
+    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
+  ]
+
+  const outils = [
     { id:'style',      Icon: StyleIcon,      label:'Style' },
     { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
-    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
   ]
 
   return (
