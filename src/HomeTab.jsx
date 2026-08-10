@@ -2219,7 +2219,9 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
   const _urlP = new URLSearchParams(window.location.search).get('preset')
   const _h    = _urlP === 'sunrise' ? 7 : _urlP === 'day' ? 11 : _urlP === 'sunset' ? 19 : _urlP === 'night' ? 23 : new Date().getHours()
-  const currentPreset = getOceanPreset(_h)
+  // Second calcul d'ambiance, celui de HomeTab lui-même : il doit respecter le
+  // choix manuel exactement comme le composant interne, sinon il l'écrase.
+  const currentPreset = presetManuel || getOceanPreset(_h)
 
   // Remonte le preset actif vers App.jsx (pour colorer le logo)
   useEffect(() => { onPresetChange?.(currentPreset) }, [currentPreset])
