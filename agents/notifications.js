@@ -213,7 +213,16 @@ export async function runNotifications(pushSubscriptions, moment) {
       // les soirs, ce qui est le meilleur moyen de faire couper les
       // notifications (2026-08-12). Un compte deja Pro ne le recoit jamais.
       if (moment === 'bilan') {
-        if (meta.profil?.isPro) continue
+        // isPro lu en base et non dans les metadonnees de l'abonnement, qui
+        // datent du jour ou la personne a accepte les notifications : un
+        // abonne Pro depuis aurait recu un rappel de fin d'essai.
+        try {
+          const sb = getSupabase()
+          const { data } = await sb.from('profils').select('profil').eq('user_id', userId).single()
+          if (data?.profil?.isPro) continue
+        } catch {
+          if (meta.profil?.isPro) continue
+        }
         // La date de creation du compte n'est PAS dans _meta : elle vit dans
         // auth.users, la meme source que le front utilise pour calculer
         // l'essai. La lire ailleurs donnerait un jour 11 qui ne correspond a

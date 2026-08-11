@@ -157,7 +157,17 @@ export async function runTendances(pushSubscriptions) {
   for (const [userId, entry] of pushSubscriptions) {
     try {
       const meta = entry._meta || {}
-      const profil = meta.profil || { nom: 'toi', objectifs: [], age: '?' }
+      // Le profil venait UNIQUEMENT des metadonnees de l'abonnement push,
+      // figees au moment ou la personne a accepte les notifications. Sans
+      // elles, le rapport hebdo etait genere pour « toi », sans age ni
+      // objectif : impersonnel, donc inutile. Et meme presentes, elles peuvent
+      // dater de plusieurs semaines. La base fait foi (2026-08-12).
+      let profil = meta.profil || { nom: 'toi', objectifs: [], age: '?' }
+      try {
+        const sb = getSupabase()
+        const { data } = await sb.from('profils').select('profil').eq('user_id', userId).single()
+        if (data?.profil?.nom) profil = data.profil
+      } catch {}
 
       // Récupère historique Supabase (peut être null)
       const historique = await fetchHistoriqueMetriques(userId)
