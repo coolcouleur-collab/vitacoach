@@ -2237,7 +2237,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                 return (
                   <div key={i} style={{
                     flex:1, textAlign:'center', fontSize:7,
-                    color: isToday ? tc(0.85) : tc(isNight ? 0.35 : 0.65),
+                    color: isToday ? tc(0.92) : tc(isNight ? 0.55 : 0.80),
                     fontWeight: isToday ? 700 : 400,
                   }}>
                     {isToday ? '●' : i % 2 === 0 ? dayName : ''}

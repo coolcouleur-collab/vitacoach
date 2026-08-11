@@ -421,9 +421,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           onClick={handleGenerer}
           disabled={generating}
           style={{
-            background: 'transparent',
-            color: 'rgba(200,123,82,0.60)',
-            border: '1px solid rgba(200,123,82,0.22)',
+            background: 'rgba(255,235,210,0.32)',
+            color: 'rgba(178,102,62,0.92)',
+            border: '1px solid rgba(255,220,160,0.60)',
             borderRadius: 12,
             padding: '8px 18px',
             fontFamily: 'Poppins, sans-serif',
