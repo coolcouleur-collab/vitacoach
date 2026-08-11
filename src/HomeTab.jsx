@@ -579,6 +579,62 @@ function OceanSceneBg({ preset: key }) {
 }
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
+// ─── LE PONT ────────────────────────────────────────────────────
+// Relie ce que l'utilisateur a RACONTÉ dans le chat à ce que ses chiffres ont
+// fait depuis. C'est la seule chose qu'une app de suivi ne peut pas copier :
+// elle mesure, mais elle ne t'a jamais écouté parler.
+// Entièrement local et déterministe : les mémoires du chat portent déjà un
+// `topic` et une date (voir sauverMemoire dans App.jsx), il suffit de les
+// rapprocher de l'historique des métriques. Pas d'appel IA, pas de latence,
+// rien qui quitte l'appareil.
+const TOPIC_METRIQUE = {
+  sommeil: { cle: 'sommeil', label: 'tes nuits',  monte: 'sont passées de', baisse: 'sont descendues de', seuil: 0.6,  fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
+  énergie: { cle: 'sommeil', label: 'tes nuits',  monte: 'sont passées de', baisse: 'sont descendues de', seuil: 0.6,  fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
+  humeur:  { cle: 'humeur',  label: 'ton humeur', monte: 'est passée de',   baisse: 'est descendue de',   seuil: 0.5,  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
+  stress:  { cle: 'humeur',  label: 'ton humeur', monte: 'est passée de',   baisse: 'est descendue de',   seuil: 0.5,  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
+  fitness: { cle: 'pas',     label: 'tes pas',    monte: 'sont passés de',  baisse: 'sont descendus de',  seuil: 1500, fmt: v => `${Math.round(v / 100) / 10}k` },
+}
+
+function pontMemoire(memories, history) {
+  if (!memories?.length || !history?.length) return null
+  const jours = t => Math.floor((Date.now() - t) / 86400000)
+
+  for (const mem of memories) {
+    const conf = TOPIC_METRIQUE[mem?.topic]
+    if (!conf || !mem.ts) continue
+    // Moins de 12 jours : trop tôt pour qu'un changement veuille dire quelque
+    // chose. Plus de 90 : la conversation est trop loin pour être rappelée.
+    const age = jours(mem.ts)
+    if (age < 12 || age > 90) continue
+
+    const avant = [], depuis = []
+    for (const e of history) {
+      const v = e?.[conf.cle]
+      if (!(v > 0) || !e.date) continue
+      ;(new Date(e.date).getTime() < mem.ts ? avant : depuis).push(v)
+    }
+    if (avant.length < 3 || depuis.length < 3) continue
+
+    const mAvant  = avant.reduce((a, b) => a + b, 0) / avant.length
+    const mDepuis = depuis.reduce((a, b) => a + b, 0) / depuis.length
+    const delta = mDepuis - mAvant
+    if (Math.abs(delta) < conf.seuil) continue
+
+    return delta > 0
+      ? {
+          cle: null, ecart: 2.5,
+          quoi: `Tu m'en avais parlé il y a ${age} jours. Depuis, ${conf.label} ${conf.monte} ${conf.fmt(mAvant)} à ${conf.fmt(mDepuis)}.`,
+          action: "Ça, c'est toi qui l'as fait.",
+        }
+      : {
+          cle: null, ecart: 2.4,
+          quoi: `Tu m'en avais parlé il y a ${age} jours, et ${conf.label} ${conf.baisse} ${conf.fmt(mAvant)} à ${conf.fmt(mDepuis)}.`,
+          action: 'On reprend ce sujet ensemble ?',
+        }
+  }
+  return null
+}
+
 // ─── LA PHRASE DE SOLENN ──────────────────────────────────────────────────────
 // L'accueil s'ouvrait sur un nombre dans un cercle avec le mot « score » écrit
 // dessous : lisible, mais c'est un tableau de bord, pas un coach. On explique
@@ -588,7 +644,7 @@ function OceanSceneBg({ preset: key }) {
 // « Solenn te demande » dans JourneePrete.
 // Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
 // mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
-function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {} }) {
+function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {}, memories = [] }) {
   const m = metriques || {}
   const h = heure ?? new Date().getHours()
 
@@ -625,6 +681,11 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
   }
 
   const manques = [
+    // ── Le pont ── priorité la plus haute : c'est la seule phrase que Solenn
+    // est seule à pouvoir dire, parce qu'elle croise une conversation et des
+    // mesures. Elle prime donc sur tous les constats.
+    pontMemoire(memories, history),
+
     // ── Solenn revient sur ses propres conseils ──
     // Aucun coach numérique ne dit jamais « je t'ai conseillé ça, ça n'a rien
     // changé, on essaie autrement ». C'est pourtant le seul comportement qui
@@ -2366,7 +2427,13 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
     } catch { return {} }
   }, [])
 
-  const phrase = phraseCoach({ score, metriques, streak, history, repetitions })
+  // Les mémoires du chat, écrites par sauverMemoire dans App.jsx. Lues ici
+  // pour que l'accueil puisse relier ce qui a été dit à ce qui a été mesuré.
+  const memories = useMemo(() => {
+    try { return JSON.parse(localStorage.getItem('vitacoach_memories') || '[]') } catch { return [] }
+  }, [])
+
+  const phrase = phraseCoach({ score, metriques, streak, history, repetitions, memories })
 
   useEffect(() => {
     if (!phrase.cle) return
