@@ -1,7 +1,7 @@
-// ─── PAYWALL POST-ONBOARDING — « 21 jours offerts » ──────────────────────────
+// ─── PAYWALL POST-ONBOARDING — « 14 jours offerts » ──────────────────────────
 // Affiché une seule fois, juste après l'onboarding (le combo essai long +
 // paywall d'onboarding est le plus performant de la catégorie — étude de
-// marché 2026-07-21). L'essai de 21 jours démarre automatiquement à
+// marché 2026-07-21). L'essai de 14 jours (21 jusqu'au 2026-08-12) démarre automatiquement à
 // l'inscription (auth.users.created_at) : le bouton principal ne fait
 // qu'entrer dans l'app, aucun paiement demandé avant le jour 21.
 // Sur les builds natifs iOS/Android : pas de checkout Stripe (Apple 3.1.1 /
@@ -26,7 +26,7 @@ const CheckSvg = ({ size = 15 }) => (
 
 const AVANTAGES = [
   'Conversations illimitées avec Solenn',
-  'Challenge 21 jours personnalisé',
+  'Challenge 14 jours personnalisé',
   'Données santé connectées (Apple Health, Withings, Garmin)',
   'Routines et rapport hebdomadaire',
 ]
@@ -77,7 +77,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
             {prenom ? `${prenom}, tes` : 'Tes'} 21 premiers jours<br />sont offerts
           </div>
           <div style={{ fontSize: 13.5, color: CREME_70, marginTop: 10, lineHeight: 1.55 }}>
-            Tout Solenn, sans limite, pendant 21 jours.<br />Aucun paiement demandé aujourd'hui.
+            Tout Solenn, sans limite, pendant 14 jours.<br />Aucun paiement demandé aujourd'hui.
           </div>
         </div>
 
@@ -145,7 +145,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
           border: '1px solid rgba(255,220,160,0.60)',
           boxShadow: '0 0 26px rgba(232,190,100,0.25), inset 0 1px 0 rgba(255,240,200,0.28)',
         }}>
-          Commencer mes 21 jours offerts
+          Commencer mes 14 jours offerts
         </button>
 
         {/* CTA secondaire : s'abonner tout de suite (web uniquement) */}

@@ -13,7 +13,12 @@ import { createClient } from '@supabase/supabase-js'
 export const FREE_LIMIT = 5
 // Essai complet 21 jours — aligné sur le challenge 21 jours (jour 21 = fin de
 // challenge = moment de conversion). Après l'essai : retour au quota gratuit.
-export const TRIAL_DAYS = 21
+// 14 et non 21 (2026-08-12). L'essai couvrait exactement la periode ou Solenn
+// devient irremplacable : la phrase qui relie une conversation aux chiffres, le
+// verdict d'un essai de sept jours, la progression sur trois semaines. On
+// offrait donc la revelation puis on demandait de payer juste apres. A 14 jours
+// la decision tombe avant, quand l'envie est encore devant.
+export const TRIAL_DAYS = 14
 const TRIAL_MS = TRIAL_DAYS * 24 * 3600 * 1000
 
 let _sb = null

@@ -560,8 +560,11 @@ export default function App() {
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
   // ?paywall=1 → prévisualisation directe de l'écran d'offre (test/design)
   const [showPaywall, setShowPaywall] = useState(() => new URLSearchParams(window.location.search).has('paywall'))
-  // Essai complet 21 jours — aligné sur le serveur (api/_quota.js TRIAL_DAYS)
-  const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < 21 * 24 * 3600 * 1000)
+  // Durée de l'essai. DOIT rester égale à TRIAL_DAYS dans api/_quota.js : deux
+  // valeurs differentes donneraient un compte a rebours qui ment sur la date
+  // reelle de fin, cote serveur.
+  const ESSAI_JOURS = 14
+  const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < ESSAI_JOURS * 24 * 3600 * 1000)
   const hasFullAccess = isPro || isFreeTrial
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
   const [profilLoading, setProfilLoading] = useState(() => {
@@ -1609,14 +1612,14 @@ const [messages, setMessages] = useState(() => {
         }
         introParts.push((p.baseline && baselineQ[p.baseline]) || 'Par quoi on commence ?')
         setMessages([{ role:'assistant', content: introParts.join(' ') }])
-        // Paywall d'onboarding « 21 jours offerts » — une seule fois
+        // Paywall d'onboarding « 14 jours offerts » — une seule fois
         if (!localStorage.getItem('vitacoach_paywall_vu')) setShowPaywall(true)
       }} />
       </Suspense>
     )
   }
 
-  // ── PAYWALL POST-ONBOARDING — « 21 jours offerts » ─────────────────────────
+  // ── PAYWALL POST-ONBOARDING — « 14 jours offerts » ─────────────────────────
   if (showPaywall && !isPro) {
     return (
       <Suspense fallback={<GlowLoader fullPage />}>

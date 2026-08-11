@@ -1054,7 +1054,7 @@ app.post('/api/analyser-repas', ownerGuard, async (req, res) => {
     return res.status(400).json({ error: 'image doit être un data URL' })
   }
   if (image.length > 6_000_000) return res.status(413).json({ error: 'image trop lourde (max ~4 Mo)' })
-  // Même quota que le chat : essai 21j et Pro illimités, sinon 5/jour
+  // Même quota que le chat : essai (TRIAL_DAYS) et Pro illimités, sinon 5/jour
   const quota = await consumeQuota(req.authUser)
   if (!quota.ok) return res.status(429).json({ error: 'quota_atteint', limit: quota.limit })
   try {
