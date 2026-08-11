@@ -2423,7 +2423,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
     // recouvrait entièrement ce halo d'un aplat abricot — d'où le fond « rose »
     // que Jean ne voyait QUE sur l'accueil, les autres pages restant dorées.
     // La bande du bas est réglée depuis par le verrouillage de body.
-    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 460px, transparent 680px)`
+    : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 540px, transparent 820px)`
   // transparent en journée pour la même raison : ne rien poser sur le halo
   const nightBaseBg = currentPreset === 'night' ? '#070f1e' : 'transparent'
   const isNight = currentPreset === 'night'
@@ -2508,7 +2508,7 @@ const hc = {
   // se retrouve alors sous l'anneau au lieu d'être dedans. C'est ce qui est
   // arrivé le 2026-08-11 en plaçant la phrase de Solenn ici. Elle est
   // désormais rendue APRÈS le hero, hors de cette géométrie.
-  hero: { position:'relative', minHeight:360, display:'flex', flexDirection:'column',
+  hero: { position:'relative', minHeight:420, display:'flex', flexDirection:'column',
     alignItems:'center', justifyContent:'flex-end', paddingBottom:18 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
