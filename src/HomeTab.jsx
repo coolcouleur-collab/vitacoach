@@ -594,6 +594,7 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
 
   if (!score || (!m.sommeil && !m.eau && !m.pas && !m.humeur)) {
     return {
+      cle: null,
       quoi: "Pas encore de score aujourd'hui.",
       action: h < 12
         ? "Dis-moi juste combien tu as dormi, je m'occupe du reste."
@@ -603,22 +604,22 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
 
   const manques = [
     m.sommeil > 0 && m.sommeil < 7 && {
-      ecart: (7 - m.sommeil) / 7,
+      cle: 'sommeil', ecart: (7 - m.sommeil) / 7,
       quoi: `Ton sommeil tire le reste vers le bas, ${m.sommeil} h cette nuit.`,
       action: h < 18 ? 'Vise 30 minutes de plus ce soir.' : 'Ce soir, écrans coupés 30 minutes plus tôt.',
     },
     m.humeur > 0 && m.humeur < 3 && {
-      ecart: (3 - m.humeur) / 3,
+      cle: 'humeur', ecart: (3 - m.humeur) / 3,
       quoi: `Ton humeur est basse aujourd'hui, ${m.humeur} sur 5.`,
       action: 'Trois minutes de respiration, ça change déjà quelque chose.',
     },
     (m.eau || 0) < 8 && h >= 12 && {
-      ecart: (8 - (m.eau || 0)) / 8 * 0.8,
+      cle: 'eau', ecart: (8 - (m.eau || 0)) / 8 * 0.8,
       quoi: `Il te manque surtout l'eau, ${m.eau || 0} verres sur 8.`,
       action: 'Un verre maintenant, le retard se rattrape vite.',
     },
     (m.pas || 0) < 10000 && h >= 12 && h < 21 && {
-      ecart: (10000 - (m.pas || 0)) / 10000 * 0.7,
+      cle: 'pas', ecart: (10000 - (m.pas || 0)) / 10000 * 0.7,
       quoi: `C'est le mouvement qui manque, ${Math.round((m.pas || 0) / 100) / 10}k pas.`,
       action: '10 minutes de marche suffisent à débloquer le compteur.',
     },
@@ -626,13 +627,13 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
 
   if (!manques.length) {
     return streak >= 3
-      ? { quoi: `${streak} jours de suite, tu es sur ta meilleure série.`, action: 'Garde ce rythme, il commence à payer.' }
-      : { quoi: 'Tout est en place aujourd\'hui.', action: 'Rien à corriger, profite.' }
+      ? { cle: null, quoi: `${streak} jours de suite, tu es sur ta meilleure série.`, action: 'Garde ce rythme, il commence à payer.' }
+      : { cle: null, quoi: 'Tout est en place aujourd\'hui.', action: 'Rien à corriger, profite.' }
   }
   return manques[0]
 }
 
-function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, streak = 0 }) {
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, phrase }) {
   const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
   const [circleHovered, setCircleHovered] = useState(false)
@@ -780,7 +781,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
     {/* La phrase de Solenn — HORS du hero, voir le commentaire de hc.hero :
         à l'intérieur, elle décalait le cercle par rapport au soleil du décor. */}
     {(() => {
-          const p = phraseCoach({ score, metriques, streak })
+          const p = phrase
           return (
             <div style={{ maxWidth: 320, margin: '0 auto', textAlign: 'center', padding: '10px 22px 2px' }}>
               <div style={{
@@ -1704,7 +1705,11 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
 // déplacées sous le graphe d'Évolution, auquel elles se rapportent.
 
 // ─── CONTEXTUAL SHORTCUTS ──────────────────────────────────────────────────────
-function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, presetManuel = null }) {
+// dejaDit : la métrique que la phrase de Solenn vient de nommer en haut de
+// page. Sans ce filtre, l'accueil disait deux fois la même chose à quelques
+// centimètres d'écart, « Il te manque surtout l'eau, 4 verres sur 8 » puis
+// « Hydratation en retard · 4/8 verres » (2026-08-11).
+function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, presetManuel = null, dejaDit = null }) {
   const tc = isNight ? nightText : warmText
   // Le moment suit l'ambiance choisie dans Réglages, pas l'horloge : sans ça
   // l'app affichait « Nuit » et les suggestions du soir à 10 h du matin
@@ -1731,9 +1736,9 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
     // partir de midi, et on ne monte en tête qu'en fin d'après-midi, quand il
     // reste peu de temps pour rattraper. Borné à 22 h : conseiller de boire à
     // 2 h du matin dessert le sommeil.
-    eau < 6 && h >= 12 && h < 22 && { prio: (h >= 17 && eau < 4) ? 1 : 4,
+    eau < 6 && h >= 12 && h < 22 && dejaDit !== 'eau' && { prio: (h >= 17 && eau < 4) ? 1 : 4,
       icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard',   sub:`${eau}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
-    pas < 5000 && h >= 12 && h < 20 && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
+    pas < 5000 && h >= 12 && h < 20 && dejaDit !== 'pas' && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
       icon:<RunIcon size={15} color={TC} />,   label:'Objectif pas',            sub:`${Math.round(pas/1000*10)/10}k / 10k pas`, tab:'sante', color:TC },
 
     // Cartes du moment
@@ -2120,6 +2125,9 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
 export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, presetManuel = null, userId }) {
   const [showSheet, setShowSheet] = useState(false)
   const [modeJournee, setModeJournee] = useState(null)
+  // Calculée ici et non dans NovaGlowScore : les cartes du dessous doivent
+  // savoir de quelle métrique Solenn vient de parler pour ne pas la répéter.
+  const phrase = phraseCoach({ score, metriques, streak })
   const [initialMetric, setInitialMetric] = useState('eau')
 
   function handleLog(key) { setInitialMetric(key || 'eau'); setShowSheet(true) }
@@ -2172,7 +2180,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <NovaGlowScore
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
-        presetManuel={presetManuel} streak={streak}
+        presetManuel={presetManuel} phrase={phrase}
       />
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
@@ -2191,7 +2199,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           à faire — un tableau de bord, pas un coach. Les suggestions du moment
           remontent donc juste après le check-in ; l'historique et les analyses
           restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
-      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} />
+      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} dejaDit={phrase.cle} />
 
       {/* Évolution = raccourci vers Progrès. Toujours affichée, même sans
           donnée : Jean la garde pour l'équilibre visuel de la page. Elle porte

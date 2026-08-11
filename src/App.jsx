@@ -10,6 +10,12 @@ async function getSupabase() {
   return _sb
 }
 
+// Le marqueur des réponses rapides (|||CHOIX|||[...]|||END|||) arrive en fin de
+// flux et n'était retiré qu'une fois le streaming terminé : il s'affichait donc
+// en clair au bas de CHAQUE bulle pendant sa réception, le prompt le rendant
+// obligatoire à chaque réponse (2026-08-11). On coupe des les premiers |||.
+const sansMarqueur = t => t.replace(/\|\|\|[\s\S]*$/, '').trimEnd()
+
 // Retour sur une réponse de Solenn. Le pouce levé n'était qu'un état local,
 // perdu au rechargement et jamais envoyé nulle part : on demandait un avis pour
 // le jeter. C'est pourtant le seul signal qui dise quelles réponses aident
@@ -1418,14 +1424,14 @@ const [messages, setMessages] = useState(() => {
             reply += token
             if (!started) {
               // Premier token → masquer "réfléchit…" et ajouter la bulle
-              setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+              setMessages(prev => [...prev, { role: 'assistant', content: sansMarqueur(reply) }])
               setLoading(false)
               started = true
             } else {
               setMessages(prev => {
                 const copy = [...prev]
                 const last = copy[copy.length - 1]
-                if (last?.role === 'assistant') copy[copy.length - 1] = { ...last, content: reply }
+                if (last?.role === 'assistant') copy[copy.length - 1] = { ...last, content: sansMarqueur(reply) }
                 return copy
               })
             }
