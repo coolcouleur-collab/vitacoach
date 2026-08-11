@@ -10,6 +10,23 @@ async function getSupabase() {
   return _sb
 }
 
+// Retour sur une réponse de Solenn. Le pouce levé n'était qu'un état local,
+// perdu au rechargement et jamais envoyé nulle part : on demandait un avis pour
+// le jeter. C'est pourtant le seul signal qui dise quelles réponses aident
+// vraiment. Table chat_feedback (voir supabase-chat-feedback.sql).
+// Silencieux par construction : un retour perdu ne doit jamais casser le chat.
+async function enregistrerRetour({ userId, question, reponse, vote }) {
+  if (!userId || !reponse) return
+  try {
+    const supabase = await getSupabase()
+    if (vote === null) {
+      await supabase.from('chat_feedback').delete().match({ user_id: userId, reponse })
+      return
+    }
+    await supabase.from('chat_feedback').insert({ user_id: userId, question, reponse, vote })
+  } catch {}
+}
+
 // Header Authorization avec le token de session Supabase (import lazy — ne bloque pas le démarrage).
 // Ne throw jamais.
 async function authHeaders() {
@@ -1776,6 +1793,12 @@ const [messages, setMessages] = useState(() => {
                 const t = (m.content || '').trim()
                 return t && (t.length >= 12 || /[.!?…:)]$/.test(t))
               }))
+              // Les réactions sont indexées par position dans la liste : sans
+              // remise à zéro, les pouces levés de la conversation en cours se
+              // reposaient au hasard sur les messages de celle qu'on ouvre.
+              setReactions({})
+              setCopiedIdx(null)
+              setFollowUps([])
               setShowChatHistory(false)
             }}
           /></Suspense>
@@ -2354,7 +2377,16 @@ padding: isMobile
                               emoji={key}
                               icon={icon}
                               active={reactions[i] === key}
-                              onClick={() => setReactions(prev => ({ ...prev, [i]: prev[i]===key ? null : key }))}
+                              onClick={() => {
+                                const actif = reactions[i] === key
+                                setReactions(prev => ({ ...prev, [i]: actif ? null : key }))
+                                enregistrerRetour({
+                                  userId: user?.id,
+                                  question: messages[i-1]?.role === 'user' ? messages[i-1].content : null,
+                                  reponse: msg.content,
+                                  vote: actif ? null : 1,
+                                })
+                              }}
                             />
                           ))}
                           <button

@@ -1926,27 +1926,44 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
 
   const TC = '#C87B52'
 
-  // Style — toujours en premier (featured)
-  const styleCard = {
-    icon: <SparkleIcon size={18} color={TC} />,
-    label: h < 12 ? 'Style du jour' : h < 18 ? 'Inspiration style' : 'Style de demain',
-    sub: 'Tenues · looks · inspirations',
-    tab: 'style', color: TC,
-  }
+  // Chaque carte porte une PRIORITÉ (petit = urgent) et la liste est triée
+  // avant d'être coupée. Avant, elle était simplement coupée aux deux premières
+  // dans l'ordre d'écriture : les cartes horaires venant en tête, « Hydratation
+  // en retard » et « Objectif pas » ne pouvaient JAMAIS sortir entre 5 h et
+  // 18 h, c'est-à-dire exactement la plage où le retard est rattrapable. Elles
+  // n'apparaissaient que le soir, quand il est trop tard pour agir.
+  // Style descend en dernier pour la même raison : à 23 h, « Style de demain »
+  // passait avant « Prépare ton sommeil ». Il reste atteignable en permanence
+  // dans « Tes outils » juste en dessous (corrigé 2026-08-11).
+  const eau = metriques?.eau || 0
+  const pas = metriques?.pas || 0
 
-  // 2 suggestions contextuelles selon heure + métriques (sans Solenn)
-  const contextual = [
-    h >= 5  && h < 12 && { icon:<SunIcon size={15} color={TC} />,   label:'Routine matinale',       sub:'Démarre bien ta journée',              tab:'routine', color:TC },
-    h >= 5  && h < 12 && { icon:<LeafIcon size={15} color={TC} />,  label:'Recette petit-déj',       sub:'Protéines + énergie durable',          tab:'herbal',  color:TC },
-    h >= 12 && h < 18 && { icon:<FoodIcon size={15} color={TC} />,  label:'Repas équilibré',         sub:'Légumes · protéines · glucides lents', tab:'herbal',  color:TC },
-    h >= 12 && h < 18 && { icon:<RunIcon size={15} color={TC} />,   label:"Boost de l'après-midi",  sub:"10 min de marche = autant qu'un café", tab:'sante',   color:TC },
-    h >= 18 && h < 22 && { icon:<MoonIcon size={15} color={TC} />,  label:'Routine du soir',         sub:'Déconnecte et récupère',               tab:'routine', color:TC },
-    h >= 22            && { icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',     sub:'Écrans off · respiration · détente',   tab:'sante',   color:TC },
-    (metriques?.eau||0) < 6 && { icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard', sub:`${metriques?.eau||0}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
-    (metriques?.pas||0) < 5000 && h >= 9 && h < 20 && { icon:<RunIcon size={15} color={TC} />, label:'Objectif pas', sub:`${Math.round((metriques?.pas||0)/1000*10)/10}k / 10k pas`, tab:'sante', color:TC },
-  ].filter(Boolean).slice(0, 2)
+  const allSuggestions = [
+    // Retards rattrapables. Le seuil dépend de l'heure : à 9 h, zéro verre
+    // n'est pas un retard, c'est le début de la journée. On n'alerte donc qu'à
+    // partir de midi, et on ne monte en tête qu'en fin d'après-midi, quand il
+    // reste peu de temps pour rattraper. Borné à 22 h : conseiller de boire à
+    // 2 h du matin dessert le sommeil.
+    eau < 6 && h >= 12 && h < 22 && { prio: (h >= 17 && eau < 4) ? 1 : 4,
+      icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard',   sub:`${eau}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
+    pas < 5000 && h >= 12 && h < 20 && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
+      icon:<RunIcon size={15} color={TC} />,   label:'Objectif pas',            sub:`${Math.round(pas/1000*10)/10}k / 10k pas`, tab:'sante', color:TC },
 
-  const allSuggestions = [styleCard, ...contextual]
+    // Cartes du moment
+    h >= 5  && h < 12 && { prio:3, icon:<SunIcon size={15} color={TC} />,   label:'Routine matinale',      sub:'Démarre bien ta journée',              tab:'routine', color:TC },
+    h >= 5  && h < 12 && { prio:6, icon:<LeafIcon size={15} color={TC} />,  label:'Recette petit-déj',     sub:'Protéines + énergie durable',          tab:'herbal',  color:TC },
+    h >= 12 && h < 18 && { prio:3, icon:<FoodIcon size={15} color={TC} />,  label:'Repas équilibré',       sub:'Légumes · protéines · glucides lents', tab:'herbal',  color:TC },
+    h >= 12 && h < 18 && { prio:6, icon:<RunIcon size={15} color={TC} />,   label:"Boost de l'après-midi", sub:"10 min de marche = autant qu'un café", tab:'sante',   color:TC },
+    h >= 18 && h < 22 && { prio:3, icon:<MoonIcon size={15} color={TC} />,  label:'Routine du soir',       sub:'Déconnecte et récupère',               tab:'routine', color:TC },
+    // 22 h → 5 h : la nuit n'était couverte que jusqu'à minuit, il ne restait
+    // plus rien à proposer entre 0 h et 5 h.
+    (h >= 22 || h < 5) && { prio:2, icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',   sub:'Écrans off · respiration · détente',   tab:'sante',   color:TC },
+
+    // Style : toujours proposé, jamais prioritaire
+    { prio:8, icon:<SparkleIcon size={18} color={TC} />,
+      label: h < 12 ? 'Style du jour' : h < 18 ? 'Inspiration style' : 'Style de demain',
+      sub: 'Tenues · looks · inspirations', tab:'style', color:TC },
+  ].filter(Boolean).sort((a, b) => a.prio - b.prio).slice(0, 3)
 
   return (
     <div style={{ padding:'14px 18px 0' }}>
