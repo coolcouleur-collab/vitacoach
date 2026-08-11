@@ -579,6 +579,63 @@ function OceanSceneBg({ preset: key }) {
 }
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
+// ─── LA BOUCLE DU CONSEIL ─────────────────────────────────────────
+// Un coach humain propose un essai, puis revient avec le verdict. Aucune app
+// ne le fait, parce qu'aucune n'accepte d'être jugée sur ses résultats.
+// Quand Solenn constate qu'elle se répète depuis quatre jours, elle arrête de
+// répéter : elle ouvre une observation de sept jours, se tait sur le sujet, et
+// revient avec les deux moyennes. Réussite ou échec, elle le dit (2026-08-11).
+// Tout est local : l'essai vit dans localStorage, rien ne part sur le réseau.
+const DUREE_ESSAI = 7
+
+function lireEssai() {
+  try { return JSON.parse(localStorage.getItem('solenn_essai') || 'null') } catch { return null }
+}
+
+function moyenneMetrique(history, cle, depuis, jusqu) {
+  const l = (history || [])
+    .filter(e => e?.date && e[cle] > 0)
+    .filter(e => {
+      const t = new Date(e.date).getTime()
+      return (depuis === null || t >= depuis) && (jusqu === null || t < jusqu)
+    })
+    .map(e => e[cle])
+  return l.length ? { moy: l.reduce((a, b) => a + b, 0) / l.length, n: l.length } : { moy: 0, n: 0 }
+}
+
+const LIBELLE_ESSAI = {
+  sommeil: { nom: 'ton sommeil', fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
+  eau:     { nom: 'ton hydratation', fmt: v => `${Math.round(v * 10) / 10} verres` },
+  pas:     { nom: 'tes pas', fmt: v => `${Math.round(v / 100) / 10}k` },
+  humeur:  { nom: 'ton humeur', fmt: v => `${Math.round(v * 10) / 10} sur 5` },
+}
+
+// Renvoie la phrase du verdict quand les sept jours sont écoulés, sinon null.
+function verdictEssai(essai, history) {
+  if (!essai) return null
+  const jours = Math.floor((Date.now() - essai.debut) / 86400000)
+  if (jours < DUREE_ESSAI) return null
+
+  const L = LIBELLE_ESSAI[essai.cle]
+  if (!L) return null
+  const apres = moyenneMetrique(history, essai.cle, essai.debut, null)
+  // Moins de trois jours renseignés : on ne conclut pas sur du vide, on prolonge.
+  if (apres.n < 3) return null
+
+  const delta = apres.moy - essai.avant
+  const seuil = essai.cle === 'pas' ? 800 : essai.cle === 'eau' ? 0.8 : 0.4
+  if (delta >= seuil) return {
+    cle: null, ecart: 3.0, fini: true,
+    quoi: `Sept jours plus tard : ${L.nom} est passé de ${L.fmt(essai.avant)} à ${L.fmt(apres.moy)}.`,
+    action: 'Ça a marché. On garde ce réglage.',
+  }
+  return {
+    cle: null, ecart: 3.0, fini: true,
+    quoi: `Sept jours plus tard : ${L.nom} n'a pas bougé, ${L.fmt(essai.avant)} contre ${L.fmt(apres.moy)}.`,
+    action: "Mon approche ne suffit pas. Raconte-moi ta journée type, on cherche ailleurs.",
+  }
+}
+
 // ─── LE PONT ────────────────────────────────────────────────────
 // Relie ce que l'utilisateur a RACONTÉ dans le chat à ce que ses chiffres ont
 // fait depuis. C'est la seule chose qu'une app de suivi ne peut pas copier :
@@ -644,7 +701,7 @@ function pontMemoire(memories, history) {
 // « Solenn te demande » dans JourneePrete.
 // Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
 // mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
-function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {}, memories = [] }) {
+function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {}, memories = [], essai = null }) {
   const m = metriques || {}
   const h = heure ?? new Date().getHours()
 
@@ -680,6 +737,15 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     }
   }
 
+  // Le verdict passe avant tout : c'est un rendez-vous que Solenn a fixé.
+  const verdict = verdictEssai(essai, history)
+  if (verdict) return verdict
+
+  // Pendant l'essai, elle se TAIT sur le sujet observé. Continuer à conseiller
+  // pendant qu'on observe fausserait la mesure, et surtout trahirait la parole
+  // donnée (« je te laisse tranquille sept jours »).
+  const enCours = essai && Math.floor((Date.now() - essai.debut) / 86400000) < DUREE_ESSAI ? essai.cle : null
+
   const manques = [
     // ── Le pont ── priorité la plus haute : c'est la seule phrase que Solenn
     // est seule à pouvoir dire, parce qu'elle croise une conversation et des
@@ -691,15 +757,15 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     // changé, on essaie autrement ». C'est pourtant le seul comportement qui
     // prouve qu'il accompagne au lieu de réciter. On compte combien de jours
     // distincts Solenn a déjà posé le même diagnostic (2026-08-11).
-    m.sommeil > 0 && m.sommeil < 7 && (repetitions.sommeil || 0) >= 4 && {
-      cle: 'sommeil', ecart: 2.1,
+    m.sommeil > 0 && m.sommeil < 7 && (repetitions.sommeil || 0) >= 4 && !essai && {
+      cle: 'sommeil', ecart: 2.1, ouvrirEssai: 'sommeil',
       quoi: `Ça fait ${repetitions.sommeil} jours que je te parle de ton sommeil et rien ne bouge.`,
-      action: "Mon conseil ne marche pas. Dis-moi ce qui t'empêche vraiment de te coucher.",
+      action: "Je change de méthode : j'arrête d'en parler et j'observe sept jours. Rendez-vous pour le verdict.",
     },
-    (m.eau || 0) < 6 && h >= 12 && (repetitions.eau || 0) >= 4 && {
-      cle: 'eau', ecart: 2.0,
+    (m.eau || 0) < 6 && h >= 12 && (repetitions.eau || 0) >= 4 && !essai && {
+      cle: 'eau', ecart: 2.0, ouvrirEssai: 'eau',
       quoi: `${repetitions.eau} jours que je te rappelle de boire, et le compte ne monte pas.`,
-      action: "Le rappel ne suffit pas. On cherche un déclencheur qui tienne ?",
+      action: "Le rappel ne suffit pas. J'arrête d'insister et j'observe sept jours.",
     },
 
     // ── Progression mesurée sur trois semaines ──
@@ -750,7 +816,7 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
       quoi: `C'est le mouvement qui manque, ${Math.round((m.pas || 0) / 100) / 10}k pas.`,
       action: '10 minutes de marche suffisent à débloquer le compteur.',
     },
-  ].filter(Boolean).sort((a, b) => b.ecart - a.ecart)
+  ].filter(Boolean).filter(x => !enCours || x.cle !== enCours).sort((a, b) => b.ecart - a.ecart)
 
   if (!manques.length) {
     return streak >= 3
@@ -2433,7 +2499,25 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
     try { return JSON.parse(localStorage.getItem('vitacoach_memories') || '[]') } catch { return [] }
   }, [])
 
-  const phrase = phraseCoach({ score, metriques, streak, history, repetitions, memories })
+  const [essai, setEssai] = useState(lireEssai)
+  const phrase = phraseCoach({ score, metriques, streak, history, repetitions, memories, essai })
+
+  // Ouverture et clôture de l'essai. La moyenne d'AVANT est figée au moment de
+  // l'ouverture : la recalculer au verdict laisserait les jours d'observation
+  // contaminer la référence.
+  useEffect(() => {
+    if (phrase.ouvrirEssai && !essai) {
+      const cle = phrase.ouvrirEssai
+      const avant = moyenneMetrique(history, cle, Date.now() - 14 * 86400000, null)
+      if (avant.n < 3) return
+      const nouvel = { cle, debut: Date.now(), avant: avant.moy }
+      try { localStorage.setItem('solenn_essai', JSON.stringify(nouvel)) } catch {}
+      setEssai(nouvel)
+    } else if (phrase.fini && essai) {
+      try { localStorage.removeItem('solenn_essai') } catch {}
+      setEssai(null)
+    }
+  }, [phrase.ouvrirEssai, phrase.fini])
 
   useEffect(() => {
     if (!phrase.cle) return
