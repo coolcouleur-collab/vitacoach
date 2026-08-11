@@ -1825,7 +1825,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
             // AUCUNE entrée permanente : elle n'était atteignable que par deux
             // cartes horaires de « Pour toi maintenant », donc invisible en
             // dehors de leurs créneaux (constat Jean 2026-08-11).
-            { tab:'beaute',     label:'Beauté',      icon:<LeafIcon     size={17} color={TC} /> },
+            { tab:'beaute',     label:'Soins',       icon:<LeafIcon     size={17} color={TC} /> },
             ...(profil?.cycle ? [{ tab:'cycle', label:'Cycle', icon:<MoonIcon size={17} color={TC} /> }] : []),
           ].map(o => (
             <motion.button
