@@ -2498,6 +2498,33 @@ padding: isMobile
           )}
 
           {/* ── Style ── */}
+          {/* Retour — les pages outils (Style, Respiration, Soins, Cycle) ne
+              figurent pas dans la barre du bas : on y entre depuis l'accueil et
+              rien ne permettait d'en ressortir. Le balayage iOS existe mais il
+              n'est pas visible, et il n'existe pas du tout sur Android
+              (constat 2026-08-12). Un seul bouton pour les quatre pages. */}
+          {['style', 'breathwork', 'beaute', 'herbal', 'cycle'].includes(onglet) && (
+            <button
+              onClick={() => setOnglet('accueil')}
+              aria-label="Retour à l'accueil"
+              style={{
+                position:'fixed', zIndex:60,
+                top:'calc(env(safe-area-inset-top, 0px) + 14px)', left:14,
+                width:38, height:38, borderRadius:'50%', cursor:'pointer',
+                background:'rgba(255,246,238,0.82)',
+                backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                border:'1px solid rgba(200,123,82,0.30)',
+                boxShadow:'0 4px 16px rgba(200,123,82,0.18)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+              }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                stroke="rgba(200,123,82,0.95)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          )}
+
           {onglet === 'style' && (
             <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
               {!isMobile && (
@@ -3212,6 +3239,31 @@ function TenuesModule({ profil }) {
   const [villeError, setVilleError] = useState(false)
   const [apiError, setApiError] = useState(null)
   const occasions = ['Travail','Casual','Soirée','Sport','Rendez-vous','Voyage']
+
+  // Ville pre-remplie par geolocalisation. Elle etait saisie a la main a chaque
+  // premiere utilisation alors que le telephone connait la reponse : friction
+  // inutile sur un ecran qui ne sert a rien sans elle (constat 2026-08-12).
+  // On ne demande la permission QUE si le champ est vide, et le champ reste
+  // modifiable : la geolocalisation propose, elle n'impose pas.
+  useEffect(() => {
+    if (ville || !navigator.geolocation) return
+    let vivant = true
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${coords.latitude}&lon=${coords.longitude}`, {
+            headers: { 'Accept-Language': 'fr' },
+          })
+          const d = await r.json()
+          const v = d?.address?.city || d?.address?.town || d?.address?.village || d?.address?.municipality
+          if (vivant && v) { setVille(v); localStorage.setItem('vitacoach_ville', v) }
+        } catch {}
+      },
+      () => {},                                    // refus : on garde la saisie manuelle
+      { timeout: 8000, maximumAge: 3600000 },
+    )
+    return () => { vivant = false }
+  }, [])
 
   async function getTenues(villeArg) {
     const v = (villeArg || ville).trim()

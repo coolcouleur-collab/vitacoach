@@ -594,6 +594,15 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 {val > 0 ? m.fmt(val) : '–'}
                 {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}bb`, marginLeft: 4 }}>{m.unit}</span>}
               </div>
+              {/* Un tiret ne dit pas quoi faire. La frequence cardiaque et le
+                  poids restaient vides indefiniment quand aucune montre n'est
+                  connectee, sans jamais proposer la saisie manuelle qui existe
+                  pourtant (constat 2026-08-12). */}
+              {val === 0 && (
+                <div style={{ fontSize: 10, color: `${m.color}b0`, fontWeight: 600, marginBottom: 6 }}>
+                  {m.key === 'fc' ? 'Connecte ta montre ou saisis-la' : 'Appuie pour ajouter'}
+                </div>
+              )}
               <div style={{ fontSize: 11, color: `${m.color}`, marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
                 {m.key === 'humeur' && val > 0 && <span style={{ display:'flex', alignItems:'center' }}>{HUMEUR_ICONS[val]}</span>}

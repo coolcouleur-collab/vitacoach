@@ -102,6 +102,14 @@ export default function BreathworkTab() {
 
       setCycleCount(nextCycle)
       setPhaseIdx(nextIdx)
+      // Retour haptique au changement de phase. Un exercice de respiration qui
+      // oblige a fixer l'ecran est contre-productif : la vibration permet de
+      // fermer les yeux. Motif long pour inspirer, deux breves pour expirer,
+      // ce qui rend les phases distinguables sans regarder (2026-08-12).
+      try {
+        const suivante = tech.phases[nextIdx]
+        if (navigator.vibrate) navigator.vibrate(suivante?.big ? 120 : [50, 60, 50])
+      } catch {}
     }, phase.dur * 1000)
 
     const ticker = setInterval(() => setElapsed(e => e + 1), 1000)
@@ -110,6 +118,7 @@ export default function BreathworkTab() {
   }, [running, phaseIdx, cycleCount, techId])
 
   function start() {
+    try { if (navigator.vibrate) navigator.vibrate(120) } catch {}
     setPhaseIdx(0)
     setCycleCount(0)
     setElapsed(0)
@@ -208,6 +217,15 @@ export default function BreathworkTab() {
                 {!done && isActive && (
                   <>
                     <div style={{ fontSize: 16, fontWeight: 600, color: am(0.92) }}>{phase.label}</div>
+                    {/* `remaining` etait calcule depuis toujours et n'etait
+                        affiche nulle part : sans lui, impossible de savoir
+                        combien de temps tenir. */}
+                    {running && (
+                      <div style={{ fontSize: 30, fontWeight: 300, color: am(0.80), lineHeight: 1.1, marginTop: 2,
+                        fontFamily: "'Poppins', system-ui, sans-serif", fontVariantNumeric: 'tabular-nums' }}>
+                        {remaining}
+                      </div>
+                    )}
                     <div style={{ fontSize: 22, fontWeight: 300, color: am(0.88), marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
                       {remaining}
                     </div>
