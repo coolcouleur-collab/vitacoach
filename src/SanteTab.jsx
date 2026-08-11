@@ -51,7 +51,7 @@ function scoreJour(m) {
 }
 
 // ─── SPARKLINE 7 JOURS ────────────────────────────────────────────────────────
-function Sparkline({ history, metricKey, color, goal }) {
+function Sparkline({ history, metricKey, color, goal, onLog }) {
   const last7 = (() => {
     const days = []
     for (let i = 6; i >= 0; i--) {
@@ -63,10 +63,19 @@ function Sparkline({ history, metricKey, color, goal }) {
   })()
   const maxVal = Math.max(...last7.map(d => d.val), goal || 1)
   const hasData = last7.some(d => d.val > 0)
+  // État vide ACTIONNABLE : « Pas encore de données » ne faisait que constater
+  // un manque, sur quatre cartes à la fois. On propose maintenant le geste qui
+  // le comble (retour Jean 2026-08-08).
   if (!hasData) return (
-    <div style={{ fontSize:10, color:'rgba(200,123,82,0.65)', textAlign:'center', padding:'8px 0', fontStyle:'italic' }}>
-      Pas encore de données
-    </div>
+    <button
+      onClick={e => { e.stopPropagation(); onLog?.(metricKey) }}
+      style={{
+        width:'100%', marginTop:8, padding:'9px 0', borderRadius:10, cursor:'pointer',
+        background:`${color}14`, border:`1px dashed ${color}55`,
+        fontFamily:'Poppins,sans-serif', fontSize:10.5, fontWeight:600, color:`${color}`,
+      }}>
+      + Ajouter
+    </button>
   )
   return (
     <div style={{ display:'flex', alignItems:'flex-end', gap:3, height:36, marginTop:8 }}>
@@ -92,7 +101,7 @@ function Sparkline({ history, metricKey, color, goal }) {
 }
 
 // ─── HISTORIQUE SECTION ────────────────────────────────────────────────────────
-function HistoriqueSection({ history }) {
+function HistoriqueSection({ history, onLog }) {
   const [open, setOpen] = useState(false)
   const metricsToShow = [
     { key:'pas',     label:'Pas',     color:'#C87B52', goal:10000 },
@@ -137,7 +146,7 @@ function HistoriqueSection({ history }) {
                 <div style={{ fontSize:10, color:m.color, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:4 }}>
                   {m.label}
                 </div>
-                <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} />
+                <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} onLog={onLog} />
                 <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
                   <span style={{ fontSize:9, color:'rgba(200,123,82,0.45)' }}>il y a 6j</span>
                   <span style={{ fontSize:9, color:m.color, fontWeight:700 }}>Aujourd'hui</span>
@@ -639,7 +648,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
       {/* ── Historique 7 jours — HistoriqueSection est déjà repliable en
            interne (bouton en double supprimé, retour Jean 2026-07-25) ── */}
-      <HistoriqueSection history={history} />
+      <HistoriqueSection history={history} onLog={openEdit} />
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;
