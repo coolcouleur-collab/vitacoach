@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
 
@@ -575,7 +575,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
   // active restait hors champ : on voyait « Sommeil, Stress, Energie » en haut
   // et des recettes capillaires en dessous, sans comprendre le lien. On amene
   // donc la pastille active dans le champ de vision (2026-08-11).
-  const catRowRef = React.useRef(null)
+  const catRowRef = useRef(null)
   useEffect(() => {
     const el = catRowRef.current?.querySelector('[data-actif="1"]')
     if (el?.scrollIntoView) el.scrollIntoView({ inline: 'center', block: 'nearest' })
