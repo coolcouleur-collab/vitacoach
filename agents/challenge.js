@@ -85,6 +85,9 @@ const PROGRAMME_POIDS = {
   ],
 }
 
+// Conserve : RoutineTab s'en sert encore pour choisir le libelle du bloc,
+// « Ton programme » plutot que « Ton defi 21 jours ». Il ne pilote plus la
+// generation depuis le 2026-08-12.
 const OBJECTIF_POIDS_RE = /poids|mincir|maigrir|corps|réconcilier|silhouette/i
 
 export async function creerChallenge(userId, duree = 21) {
@@ -102,27 +105,11 @@ export async function creerChallenge(userId, duree = 21) {
   const memoire = profil?.memoire_longue || {}
   const nom     = profil?.nom || profil?.prenom || 'toi'
 
-  // ── Objectif lié au corps/poids → LE programme structuré écrit en dur
-  // (séances réelles, progression 3 semaines) au lieu de la génération IA ──
-  const objectifTxt = [profil?.objectifs?.[0], profil?.objectif].filter(Boolean).join(' ')
-  if (OBJECTIF_POIDS_RE.test(objectifTxt)) {
-    const dateDebutProg = new Date().toISOString().split('T')[0]
-    const { data: savedProg } = await supabase
-      .from('challenges')
-      .insert({
-        user_id:    userId,
-        duree:      21,
-        challenge:  PROGRAMME_POIDS,
-        progression: Array(21).fill(false),
-        date_debut:  dateDebutProg,
-        actif:       true,
-        created_at:  new Date().toISOString(),
-      })
-      .select()
-      .single()
-    console.log(`[Challenge] ✅ Programme poids 21j (structuré) créé pour ${userId.slice(0, 8)}`)
-    return savedProg || { challenge: PROGRAMME_POIDS, date_debut: dateDebutProg }
-  }
+  // Le programme ecrit en dur n'est plus reserve aux objectifs de poids : il
+  // devient le REPLI de tout le monde quand la generation echoue. Tant que le
+  // prompt etait pauvre, ce cas particulier se justifiait ; maintenant qu'il
+  // porte tout le profil, il n'y a plus de raison qu'un objectif recoive un
+  // programme fige et les autres un programme sur mesure (2026-08-12).
 
   // Métriques des 7 derniers jours pour détecter les faiblesses
   const dateDebut = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -228,11 +215,40 @@ Format JSON :
     max_tokens: 6000,
   })
 
-  const raw   = res.choices[0].message.content
-  const match = raw.match(/\{[\s\S]*\}/)
-  if (!match) throw new Error('JSON challenge invalide')
+  // Le programme genere doit passer trois controles avant d'etre servi. Un
+  // JSON valide ne suffit pas : un programme tronque a 6 jours ou entierement
+  // consacre a boire de l'eau est pire que le repli ecrit a la main.
+  function programmeValable(c) {
+    if (!c || !Array.isArray(c.jours) || c.jours.length < duree) return false
+    if (c.jours.some(j => !j?.action)) return false
+    // Anti mono-theme : si le meme mot-cle revient dans plus d'un tiers des
+    // jours, le modele a ignore la regle et on prefere le repli.
+    const THEMES = ['eau', 'boire', 'hydrat', 'marche', 'respir']
+    for (const t of THEMES) {
+      const n = c.jours.filter(j => (j.action || '').toLowerCase().includes(t)).length
+      if (n > Math.ceil(c.jours.length / 3)) return false
+    }
+    return true
+  }
 
-  const challenge = JSON.parse(match[0])
+  let challenge = null
+  try {
+    const raw   = res.choices[0].message.content
+    const match = raw.match(/\{[\s\S]*\}/)
+    if (match) {
+      const parse = JSON.parse(match[0])
+      if (programmeValable(parse)) challenge = parse
+      else console.warn('[Challenge] génération rejetée (incomplete ou mono-thème) → repli')
+    }
+  } catch (e) {
+    console.warn('[Challenge] JSON illisible → repli:', e.message)
+  }
+
+  // Repli : le programme ecrit a la main. Il vaut mieux un bon programme
+  // generique qu'un mauvais programme personnalise, et surtout mieux qu'une
+  // erreur qui laisse l'utilisateur sans rien.
+  if (!challenge) challenge = PROGRAMME_POIDS
+
   const dateDebutChallenge = new Date().toISOString().split('T')[0]
 
   // Sauvegarder dans Supabase
@@ -240,9 +256,9 @@ Format JSON :
     .from('challenges')
     .insert({
       user_id:    userId,
-      duree,
+      duree: challenge.jours?.length || duree,
       challenge,
-      progression: Array(duree).fill(false),
+      progression: Array(challenge.jours?.length || duree).fill(false),
       date_debut:  dateDebutChallenge,
       actif:       true,
       created_at:  new Date().toISOString(),
