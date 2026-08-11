@@ -385,6 +385,80 @@ export default function Onboarding({ onTermine, onBack }) {
     sessionStorage.setItem('solenn_onboarding_answers', JSON.stringify(answers))
   }, [step, answers])
 
+// ─── LA PREMIÈRE LECTURE ──────────────────────────────────────────────────────
+// Tout ce qui rend Solenn unique demande deux à trois semaines de données. Un
+// nouvel utilisateur ne voyait donc rien, et c'est là qu'on perd les gens :
+// l'inscription posait onze questions puis déposait la personne dans l'app sans
+// rien lui renvoyer (constat 2026-08-11).
+// Cet écran croise DEUX réponses pour dire quelque chose que la personne n'a pas
+// écrit elle-même. Une seule réponse redonnerait ce qu'elle vient de saisir ;
+// c'est le croisement qui surprend.
+// Calculé en local, sans appel IA : à ce moment du parcours, une latence ou une
+// erreur réseau coûte un utilisateur.
+function premiereLecture(a) {
+  const dit = (champ, ...mots) => mots.some(m => (a[champ] || '').toLowerCase().includes(m))
+
+  const regles = [
+    // Décalé + sommeil : le vrai sujet est la régularité, pas la durée
+    dit('rythme', 'décalé') && dit('objectif', 'dormir') && {
+      titre: 'Ton problème n\'est probablement pas la durée.',
+      texte: "Avec des horaires décalés, ce qui abîme le sommeil c'est rarement le nombre d'heures, c'est leur irrégularité. Ton corps ne sait jamais quand produire sa mélatonine. On va donc chercher un point fixe dans ta journée avant de toucher à ton coucher.",
+    },
+    // S'entraîne beaucoup + à bout : manque de récupération, pas d'effort
+    dit('activite', "c'est ma vie", 'sport') && dit('baseline', 'à bout') && {
+      titre: "Tu ne manques pas d'effort.",
+      texte: "Tu t'entraînes beaucoup et tu tournes à vide : ces deux choses vont souvent ensemble. Quand la récupération ne suit pas, l'entraînement creuse au lieu de construire. On va regarder tes nuits avant de toucher à tes séances.",
+    },
+    // Famille + moment à soi le matin : le créneau est le vrai obstacle
+    dit('vie', 'famille') && dit('moment', 'matin') && {
+      titre: 'Ton obstacle sera le créneau, pas la motivation.',
+      texte: "Tu veux ton moment le matin, et il y a des enfants dans ta vie. C'est le créneau le plus disputé de la journée. Plutôt qu'une routine de trente minutes qui sautera à la première urgence, on va en construire une de sept, qui tient même les mauvais jours.",
+    },
+    // Fatigue profonde + peu d'activité : ne pas prescrire du sport d'emblée
+    (a.sante_conditions || []).some(c => /fatigue profonde/i.test(c)) && dit('activite', 'pas vraiment') && {
+      titre: 'On ne va pas commencer par le sport.',
+      texte: "Une fatigue qui résiste au sommeil ne se répare pas en bougeant plus, au début elle s'aggrave. On va d'abord stabiliser tes nuits et ton énergie sur deux semaines. Le mouvement viendra après, quand il te rendra quelque chose.",
+    },
+    // Troubles du sommeil + soir : les écrans du soir sont le premier levier
+    (a.sante_conditions || []).some(c => /sommeil/i.test(c)) && dit('moment', 'soir') && {
+      titre: 'Ton moment à toi est aussi ton problème.',
+      texte: "Tu décompresses le soir, et tu as du mal à dormir. Ce n'est pas une coïncidence : ce moment est précieux, mais c'est lui qui repousse ton coucher. On ne va pas te le retirer, on va le déplacer d'une heure.",
+    },
+    // Bureau + reprendre le mouvement : la sédentarité continue prime
+    dit('rythme', 'bureau', 'télétravail') && dit('objectif', 'mouvement') && {
+      titre: "Ce n'est pas une séance qu'il te manque.",
+      texte: "Assis toute la journée, ce qui pèse le plus n'est pas l'absence de sport, c'est la position tenue sans interruption. Trois coupures de cinq minutes valent mieux qu'une heure de salle le samedi. On commence par là.",
+    },
+    // Rapport à la nourriture + manger sans culpabiliser : ne rien compter
+    (a.sante_conditions || []).some(c => /nourriture/i.test(c)) && dit('objectif', 'culpabilis') && {
+      titre: 'Je ne te ferai pas compter tes calories.',
+      texte: "Quand le rapport à la nourriture est déjà compliqué, compter aggrave presque toujours les choses. On va travailler sur les moments et les sensations, pas sur les quantités. Tu ne verras jamais de compteur ici.",
+    },
+    // Anxiété + tourner une page : commencer petit et régulier
+    (a.sante_conditions || []).some(c => /anxiété|stress chronique/i.test(c)) && dit('declencheur', 'tourner une page') && {
+      titre: 'On va commencer plus petit que tu ne le voudrais.',
+      texte: "Tu veux tourner une page, et tu vis avec un stress de fond. C'est exactement le mélange qui pousse à tout changer d'un coup, puis à tout lâcher en dix jours. Je vais volontairement te freiner au début.",
+    },
+  ].filter(Boolean)
+
+  if (regles.length) return regles[0]
+
+  // Repli : une lecture de l'objectif seul, toujours vraie mais moins fine.
+  if (dit('objectif', 'dormir')) return {
+    titre: 'On va commencer par ton réveil.',
+    texte: "Pour réparer un sommeil, on agit sur l'heure du lever avant celle du coucher : c'est elle qui règle l'horloge interne. C'est contre-intuitif, et c'est ce qui marche.",
+  }
+  if (dit('objectif', 'énergie')) return {
+    titre: "L'énergie ne se cherche pas, elle se cesse de fuir.",
+    texte: "Dans presque tous les cas, ce n'est pas d'un stimulant qu'il s'agit mais d'une fuite : nuit trop courte, déshydratation, journée sans coupure. On va trouver la tienne avant d'ajouter quoi que ce soit.",
+  }
+  return {
+    titre: 'Ce que je vais faire avec ça.',
+    texte: "Je vais suivre tes journées et te dire ce que je remarque, pas te réciter des conseils généraux. Au bout de deux semaines, je pourrai te montrer ce qui a bougé, chiffres à l'appui.",
+  }
+}
+
+
   function goNext(newAnswers) {
     setAnswers(newAnswers)
     setSlideDir(1)
@@ -948,7 +1022,7 @@ export default function Onboarding({ onTermine, onBack }) {
                 initial={{ opacity:0, x:40, scale:0.93 }}
                 animate={{ opacity:1, x:0, scale:1 }}
                 transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.08 }}
-                onClick={() => tapThen(String(opt.val), () => finishOnboarding({ ...answers, cycle: opt.val }))}
+                onClick={() => tapThen(String(opt.val), () => goNext({ ...answers, cycle: opt.val }))}
                 whileTap={{ scale:0.97 }}
                 style={optStyle(isSel)}
               >
@@ -975,6 +1049,57 @@ export default function Onboarding({ onTermine, onBack }) {
         </div>
       </div>
     )
+
+    // ── Étape finale : la première lecture ──────────────────────────────
+    // Le seul écran de l'inscription où Solenn DONNE au lieu de demander.
+    if (step === 11) {
+      const l = premiereLecture(answers)
+      return (
+        <div style={{display:'flex', flexDirection:'column', gap:26}}>
+          <div style={{display:'flex', flexDirection:'column', gap:10}}>
+            <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.15 }}
+              style={{ ...S.sub, marginBottom:0 }}>
+              Ce que je retiens déjà{nom ? `, ${nom}` : ''}
+            </motion.p>
+            <AnimatedQuestion text={l.titre} style={S.question} />
+          </div>
+
+          <motion.p
+            initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+            transition={{ delay:0.55, type:'spring', stiffness:300, damping:26 }}
+            style={{
+              fontSize:15, lineHeight:1.65, color:'rgba(255,248,235,0.92)',
+              background:'rgba(255,255,255,0.08)',
+              border:'1px solid rgba(255,220,160,0.28)',
+              borderRadius:18, padding:'16px 18px', margin:0,
+            }}>
+            {l.texte}
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity:0, y:14 }} animate={{ opacity:1, y:0 }}
+            transition={{ delay:0.85, type:'spring', stiffness:300, damping:24 }}
+            onClick={() => finishOnboarding(answers)}
+            whileTap={{ scale:0.97 }}
+            style={{
+              padding:'15px 26px', borderRadius:16, cursor:'pointer',
+              background:'rgba(255,235,210,0.32)',
+              backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+              border:'1px solid rgba(255,220,160,0.60)',
+              color:'rgba(255,248,235,1)', fontSize:15, fontWeight:600,
+              fontFamily:"'Poppins', system-ui, sans-serif",
+              boxShadow:'0 8px 28px rgba(200,123,82,0.30)',
+            }}>
+            On commence
+          </motion.button>
+
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.1 }}
+            style={{ fontSize:11.5, lineHeight:1.5, color:'rgba(255,248,235,0.55)', margin:0, textAlign:'center' }}>
+            Dans deux semaines je pourrai te montrer ce qui a bougé, chiffres à l'appui.
+          </motion.p>
+        </div>
+      )
+    }
 
     return null
   }
