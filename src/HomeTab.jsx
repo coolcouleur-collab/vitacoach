@@ -2312,11 +2312,14 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} />
       <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
-      {/* Évolution = raccourci vers Progrès ; les « 7 tâches » (doublon de la
-          routine) sont supprimées — architecture clarifiée 2026-07-25 */}
-      <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
-        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
-      </div>
+
+      {/* ORDRE : l'ACTION avant la DONNÉE. L'accueil ouvrait sur deux blocs de
+          statistiques (Évolution, Insights) avant de proposer quoi que ce soit
+          à faire — un tableau de bord, pas un coach. Les suggestions du moment
+          remontent donc juste après le check-in ; l'historique et les analyses
+          restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
+      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} />
+
       <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight} userId={userId}
         onChat={action => {
           if (action === 'herbal') { onSwitchTab('herbal'); return }
@@ -2324,7 +2327,15 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           onSwitchTab('chat'); onChat(action)
         }}
       />
-      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} />
+
+      {/* Évolution = raccourci vers Progrès. Masquée tant qu'il n'y a aucune
+          donnée : afficher un graphique vide avec un tiret n'apprend rien et
+          occupait un tiers de l'écran pour rien. */}
+      {history?.length > 0 && (
+        <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
+          <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
+        </div>
+      )}
 
       {/* Metric bottom sheet */}
       <AnimatePresence>

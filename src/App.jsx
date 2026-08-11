@@ -3454,7 +3454,9 @@ const s = {
     // Voile dégradé + flou progressif : le logo et le menu restent lisibles quand
     // le contenu scrolle dessous (les bulles du chat passaient encore sur le
     // logo, capture Jean 2026-07-27 — voile renforcé + backdrop blur masqué)
-    background:'linear-gradient(180deg, rgba(240,220,203,0.96) 0%, rgba(240,220,203,0.72) 55%, rgba(240,220,203,0) 100%)',
+    // Voile plus couvrant sur sa moitié haute : les cartes du carrousel
+    // passaient par-dessus le logo en scrollant (retour Jean 2026-08-08).
+    background:'linear-gradient(180deg, rgba(240,220,203,1) 0%, rgba(240,220,203,0.98) 48%, rgba(240,220,203,0.70) 72%, rgba(240,220,203,0) 100%)',
     backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
     WebkitMaskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
     maskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
