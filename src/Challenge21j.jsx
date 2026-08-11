@@ -136,6 +136,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   }
 
   const jourActuelData = jours[jourActuel - 1] || null
+  // Le jour en cours est le seul affiche, et les premiers jours sont
+  // volontairement legers pour ne pas cramer un debutant. Resultat : la
+  // personne qui decouvre son programme voit le jour le plus pauvre des 21 et
+  // juge sur celui-la. On lui montre donc ce qui arrive demain (2026-08-12).
+  const jourSuivantData = jours[jourActuel] || null
   const jourActuelComplete = progression[jourActuel - 1] || false
 
   const prochainsJoursMilestone = milestones
@@ -633,6 +638,34 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                 </p>
               )}
 
+              {/* Aperçu de demain — donne envie de revenir, et montre que le
+                  programme est plus riche que le jour qu'on a sous les yeux. */}
+              {jourSuivantData && jourActuel < 21 && (
+                <div style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 10,
+                  background: 'rgba(255,235,210,0.28)',
+                  border: '1px solid rgba(255,220,160,0.40)',
+                  borderRadius: 14, padding: '11px 13px', marginBottom: 20,
+                }}>
+                  <span style={{ flexShrink: 0, marginTop: 1 }}>
+                    <SparkleIcon size={14} color="rgba(200,123,82,0.70)" />
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 9.5, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: 'rgba(200,123,82,0.65)', marginBottom: 3 }}>
+                      Demain · jour {jourActuel + 1}
+                    </div>
+                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.88)', lineHeight: 1.45, fontWeight: 500 }}>
+                      {jourSuivantData.titre}
+                    </div>
+                    {jourSuivantData.seance?.length > 0 && (
+                      <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.62)', marginTop: 3 }}>
+                        {jourSuivantData.seance.map(x => EXO_INFOS[x.exo]?.nom || x.exo).join(' · ')}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {error && (
                 <p
                   style={{
@@ -725,8 +758,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               disabled={creating}
               style={{
                 background: 'transparent',
-                color: '#ef4444',
-                border: '1.5px solid rgba(239,68,68,0.35)',
+                // Terracotta et non #ef4444 : le rouge est reserve au danger
+                // (contre-indications, suppression de compte). Ici c'est une
+                // action normale, elle n'a pas a alarmer (2026-08-12).
+                color: 'rgba(200,123,82,0.85)',
+                border: '1.5px solid rgba(200,123,82,0.35)',
                 borderRadius: '12px',
                 padding: '8px 20px',
                 fontSize: '12px',
