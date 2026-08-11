@@ -166,14 +166,14 @@ function HeroBg() {
       {/* Animated aurora gradient — subtle warm/green glow on dark */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(-45deg, rgba(34,197,94,0.14), rgba(255,248,242,0.10), rgba(232,150,42,0.12), rgba(34,197,94,0.08), rgba(200,123,82,0.12))',
+        background:'linear-gradient(-45deg, rgba(232,150,42,0.14), rgba(255,248,242,0.10), rgba(232,150,42,0.12), rgba(255,220,160,0.10), rgba(200,123,82,0.14))',
         backgroundSize:'400% 400%',
         animation:'heroGradient 10s ease infinite',
       }} />
       {/* Floating orbs */}
       <div style={{
         position:'absolute', top:'-20%', right:'-6%', width:260, height:260,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(34,197,94,0.22) 0%, transparent 65%)',
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(255,199,120,0.26) 0%, transparent 65%)',
         animation:'floatOrb 8s ease-in-out infinite', filter:'blur(8px)',
       }} />
       <div style={{
@@ -469,12 +469,14 @@ function HerbItem({ item, onChat }) {
         {/* Chevron in glass circle */}
         <div style={{
           width:30, height:30, borderRadius:'50%', flexShrink:0,
-          background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.20)',
+          // 0.08 / 0.20 : le chevron ne se lisait pas comme un bouton et rien
+          // n'indiquait qu'on pouvait deplier la fiche.
+          background:'rgba(200,123,82,0.16)', border:'1px solid rgba(200,123,82,0.38)',
           display:'flex', alignItems:'center', justifyContent:'center',
           transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
           transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
         }}>
-          <ChevronIcon color="rgba(200,123,82,0.70)" size={13} direction="down" />
+          <ChevronIcon color="rgba(200,123,82,0.95)" size={14} direction="down" />
         </div>
       </div>
 
@@ -672,7 +674,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
             borderRadius:20, padding:'5px 14px',
             fontSize:11, color:'rgba(200,123,82,0.75)', fontWeight:600,
           }}>
-            <LeafIcon color={GREEN} size={13} /> Plantes · Médecine Chinoise · Holistic
+            <LeafIcon color={ACCENT} size={13} /> Plantes · Médecine chinoise · Holistique
           </div>
         </div>
       </div>
