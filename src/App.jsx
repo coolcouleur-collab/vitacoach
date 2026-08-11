@@ -623,6 +623,12 @@ const [messages, setMessages] = useState(() => {
   const chatBoxRef = useRef(null)
   // Vrai tant que l'utilisateur n'a pas remonté le fil : conditionne l'auto-scroll
   const isAtBottomRef = useRef(true)
+  // Vrai pendant un scroll déclenché par le code. Sans ce drapeau, le scroll
+  // automatique du streaming déclenche onScroll, qui mesure la position AVANT
+  // que le navigateur ait fini de peindre, en conclut que l'utilisateur a
+  // remonté le fil, et coupe l'auto-scroll : la réponse continuait à s'écrire
+  // hors de l'écran (retour Jean 2026-08-08).
+  const autoScrollRef = useRef(false)
   const [celebrate, setCelebrate]   = useState(false)
   const celebInitRef = useRef(false)
   const [showHealthPerm, setShowHealthPerm] = useState(false)
@@ -742,8 +748,11 @@ const [messages, setMessages] = useState(() => {
   useEffect(() => {
     if (!isAtBottomRef.current) return
     const el = chatBoxRef.current
+    autoScrollRef.current = true
     if (el) el.scrollTop = el.scrollHeight
     else messagesEndRef.current?.scrollIntoView({ behavior:'auto' })
+    const t = setTimeout(() => { autoScrollRef.current = false }, 80)
+    return () => clearTimeout(t)
   }, [messages])
   // ── Pause animations pendant le scroll ──────────────────────────────────────
   useEffect(() => {
@@ -1992,13 +2001,21 @@ padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top,
                       width:34, height:34, borderRadius:10,
                       background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
                       display:'flex', alignItems:'center', justifyContent:'center',
-                      cursor:'pointer', fontSize:15, color:'rgba(200,123,82,0.70)',
+                      cursor:'pointer', color:'rgba(200,123,82,0.90)',
                       transition:'all .15s ease',
                     }}
                     onMouseDown={e => e.currentTarget.style.transform='scale(0.92)'}
                     onMouseUp={e => e.currentTarget.style.transform='scale(1)'}
                     onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
-                  >✦</button>
+                  >
+                    {/* Icône « nouveau message » explicite : le losange ✦ ne
+                        disait rien de sa fonction (retour Jean 2026-08-08) */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 20h9"/>
+                      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                    </svg>
+                  </button>
                 )}
                 {/* ── Hamburger button ── */}
                 <button onClick={() => setMenuOpen(o => !o)} style={{
@@ -2222,6 +2239,7 @@ padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top,
 
               <div ref={chatBoxRef} style={s.chatBox}
                 onScroll={e => {
+                  if (autoScrollRef.current) return   // scroll déclenché par le code
                   const el = e.currentTarget
                   const distanceDuBas = el.scrollHeight - el.scrollTop - el.clientHeight
                   isAtBottomRef.current = distanceDuBas <= 120
@@ -2292,10 +2310,11 @@ padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top,
                       </div>
                       {msg.role === 'assistant' && (
                         <div style={{ display:'flex', gap:5, paddingLeft:4, alignItems:'center' }}>
+                          {/* Un seul retour + copier : quatre icônes sous chaque
+                              réponse faisaient beaucoup de bruit visuel pour une
+                              action rarement utilisée (retour Jean 2026-08-08) */}
                           {[
                             { key:'👍', icon: <ThumbsUpIcon  size={13} color="rgba(200,123,82,0.80)" /> },
-                            { key:'💡', icon: <LightbulbIcon size={13} color="rgba(200,123,82,0.80)" /> },
-                            { key:'❤️', icon: <HeartIcon     size={13} color="rgba(200,123,82,0.80)" /> },
                           ].map(({ key, icon }) => (
                             <ReactionBtn
                               key={key}
@@ -3441,7 +3460,7 @@ const s = {
   // WebkitOverflowScrolling + touchAction : indispensables pour que le doigt
   // « prenne » sur iOS dans un parent verrouillé (fix « je ne peux pas
   // remonter dans le fil », 2026-07-25)
-  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:22, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
+  chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
   emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },
