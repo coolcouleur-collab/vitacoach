@@ -134,6 +134,38 @@ const AnimEtirement = () => (
   />
 )
 
+const AnimPompe = () => (
+  <DeuxPoses labelA="Bras tendus" labelB="Descends"
+    poseA={<><circle cx="22" cy="54" r="6" {...S} /><path d="M28 57 L70 64 M32 58 L32 78 M66 63 L86 78" {...S} /></>}
+    poseB={<><circle cx="22" cy="66" r="6" {...S} /><path d="M28 69 L70 72 M32 70 L34 80 M66 71 L86 80" {...S} /></>}
+    duree={2.8}
+  />
+)
+
+const AnimPompeGenoux = () => (
+  <DeuxPoses labelA="Bras tendus" labelB="Descends"
+    poseA={<><circle cx="24" cy="52" r="6" {...S} /><path d="M30 55 L64 62 M34 56 L34 78 M62 61 L74 76 L88 80" {...S} /></>}
+    poseB={<><circle cx="24" cy="64" r="6" {...S} /><path d="M30 67 L64 70 M34 68 L36 80 M62 69 L74 78 L88 82" {...S} /></>}
+    duree={2.8}
+  />
+)
+
+const AnimSuperman = () => (
+  <DeuxPoses labelA="À plat ventre" labelB="Soulève"
+    poseA={<><circle cx="20" cy="80" r="6" {...S} /><path d="M26 82 L74 82 M26 82 L12 86 M74 82 L88 86" {...S} /></>}
+    poseB={<><circle cx="20" cy="72" r="6" {...S} /><path d="M26 75 L74 75 M26 74 L12 64 M74 75 L88 66" {...S} /></>}
+    duree={3.2}
+  />
+)
+
+const AnimDips = () => (
+  <DeuxPoses labelA="Bras tendus" labelB="Plie les coudes"
+    poseA={<><circle cx="46" cy="26" r="7" {...S} /><path d="M46 33 L46 58 M46 36 L30 46 L30 66 M46 58 L70 62 L70 88" {...S} /><path d="M22 66 L38 66" stroke="rgba(200,123,82,0.30)" strokeWidth="4" strokeLinecap="round" fill="none" /></>}
+    poseB={<><circle cx="46" cy="40" r="7" {...S} /><path d="M46 47 L46 66 M46 48 L30 52 L30 66 M46 66 L70 68 L70 88" {...S} /><path d="M22 66 L38 66" stroke="rgba(200,123,82,0.30)" strokeWidth="4" strokeLinecap="round" fill="none" /></>}
+    duree={2.8}
+  />
+)
+
 // ── Photos de démonstration ──────────────────────────────────────────────────
 // Photos CHOISIES À LA MAIN, pas cherchées à l'exécution. Le 2026-08-11 la
 // version qui appelait /api/image affichait la même photo de mode sur les huit
@@ -160,6 +192,17 @@ export const PHOTOS_EXOS = {
   chatvache: { url: P(6303431), pos: '50%' },
   marche:    { url: P(8539234), pos: '50%' },
   etirement: { url: P(7880157), pos: '25%' },
+  // Haut du corps, ajoute le 2026-08-12 : la bibliotheque n'avait AUCUN
+  // exercice de poussee ni de tirage. Un programme qui s'annonce complet et ne
+  // fait jamais travailler bras, epaules et dos se decredibilise.
+  pompe:       { url: P(7900673), pos: '50%' },
+  dips:        { url: P(6496123), pos: '50%' },
+  // Pompes sur genoux et Superman : aucune photo juste sur Pexels. Les
+  // resultats donnaient un cadrage sur les fesses et une posture qui n'est pas
+  // le mouvement. Mieux vaut l'animation, qui montre le bon geste, qu'une
+  // photo qui en montre un autre. Meme choix que pour le chat-vache.
+  pompegenoux: null,
+  superman:    null,
 }
 
 // Sans photo (ou si elle ne charge pas), on retombe sur la silhouette animée.
@@ -244,6 +287,34 @@ const EXOS = [
     Anim: AnimEtirement,
     etapes: ['Debout, bras au-dessus de la tête', 'Penche-toi doucement sur le côté en expirant', 'Reste dans une tension agréable, jamais douloureuse'],
     erreurs: ['Rebondir pour aller plus loin', 'Tourner le buste au lieu de rester de profil'],
+  },
+  {
+    id: 'pompe', nom: 'Pompes', duree: '3 × 8', cible: 'Pectoraux · bras',
+    mots: ['pompe', 'pompes', 'push-up'],
+    Anim: AnimPompe,
+    etapes: ['Mains un peu plus larges que les épaules, doigts vers l\'avant', 'Corps aligné de la tête aux talons, ventre serré', 'Descends jusqu\'à frôler le sol, coudes vers l\'arrière', 'Remonte en poussant, sans bloquer les coudes'],
+    erreurs: ['Les coudes qui partent à 90° sur les côtés, mauvais pour les épaules', 'Les hanches qui s\'affaissent ou qui remontent'],
+  },
+  {
+    id: 'pompegenoux', nom: 'Pompes sur genoux', duree: '3 × 10', cible: 'Pectoraux · débutant',
+    mots: ['pompe genou', 'pompes sur genoux', 'pompe facile'],
+    Anim: AnimPompeGenoux,
+    etapes: ['Genoux au sol, chevilles croisées et relevées', 'Mains sous les épaules, dos droit des genoux à la tête', 'Descends la poitrine vers le sol', 'Pousse pour remonter'],
+    erreurs: ['Casser la ligne au niveau des hanches', 'Descendre les fesses au lieu de la poitrine'],
+  },
+  {
+    id: 'superman', nom: 'Superman', duree: '3 × 12', cible: 'Dos · lombaires',
+    mots: ['superman', 'extension dos', 'lombaire'],
+    Anim: AnimSuperman,
+    etapes: ['À plat ventre, bras tendus devant toi', 'Soulève en même temps les bras, la poitrine et les jambes', 'Tiens deux secondes en respirant', 'Redescends lentement, sans relâcher d\'un coup'],
+    erreurs: ['Casser la nuque en levant le menton, garde le regard au sol', 'Monter trop haut : quelques centimètres suffisent'],
+  },
+  {
+    id: 'dips', nom: 'Dips sur chaise', duree: '3 × 8', cible: 'Triceps · épaules',
+    mots: ['dips', 'dip', 'triceps chaise'],
+    Anim: AnimDips,
+    etapes: ['Assieds-toi au bord d\'une chaise stable, mains de chaque côté des hanches', 'Avance le bassin dans le vide, jambes fléchies', 'Plie les coudes vers l\'arrière et descends', 'Remonte en poussant sur les paumes'],
+    erreurs: ['Écarter les coudes sur les côtés', 'S\'éloigner trop de la chaise, ce qui tire sur les épaules'],
   },
 ]
 

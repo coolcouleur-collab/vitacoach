@@ -179,9 +179,23 @@ ${memoire?.themes_recurrents?.length ? `Sujets qui reviennent dans vos échanges
 
 ═══ SÉANCES ═══
 Quand un jour comporte du mouvement, décris-le dans "seance" avec ces identifiants
-UNIQUEMENT : squat, gainage, fente, pont, chaise, chatvache, marche, etirement.
+UNIQUEMENT : squat, gainage, fente, pont, chaise, chatvache, marche, etirement,
+pompe, pompegenoux, superman, dips.
 Ils correspondent au guide des exercices de l'app, qui montre le geste en photo.
 Les jours sans mouvement (sommeil, respiration, nutrition) n'ont pas de "seance".
+
+ÉQUILIBRE DU CORPS : ne construis pas un programme qui ne travaille que les
+jambes. Sur l'ensemble des jours, fais revenir le haut du corps (pompe ou
+pompegenoux, superman, dips) au moins autant que le bas (squat, fente, chaise).
+Choisis pompegenoux plutôt que pompe si le niveau d'activité est faible.
+
+PROGRESSION CHIFFRÉE, jour après jour ET semaine après semaine :
+Les répétitions et les durées doivent AUGMENTER au fil du programme. Un même
+exercice ne doit jamais garder les mêmes chiffres du début à la fin.
+Repère : environ +10 % par semaine, et une petite marche entre deux séances
+consécutives du même exercice. Par exemple squat 3 × 8 au jour 2, 3 × 10 au
+jour 5, 3 × 12 au jour 9, 4 × 12 au jour 16.
+Les jours de récupération font exception : ils redescendent volontairement.
 
 Format JSON :
 {
