@@ -2328,14 +2328,11 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         }}
       />
 
-      {/* Évolution = raccourci vers Progrès. Masquée tant qu'il n'y a aucune
-          donnée : afficher un graphique vide avec un tiret n'apprend rien et
-          occupait un tiers de l'écran pour rien. */}
-      {history?.length > 0 && (
-        <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
-          <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
-        </div>
-      )}
+      {/* Évolution = raccourci vers Progrès. Toujours affichée, même sans
+          donnée : Jean la garde pour l'équilibre visuel de la page. */}
+      <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
+        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
+      </div>
 
       {/* Metric bottom sheet */}
       <AnimatePresence>
