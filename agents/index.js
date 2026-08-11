@@ -102,6 +102,20 @@ export function startAgents(pushSubscriptions) {
     }
   }, { timezone: 'Europe/Paris' })
 
+  // ── Agent 2d : Notifications Coucher — 22:15 ────────────────────────────
+  // Le seul moment où un rappel change encore quelque chose : après, la nuit
+  // est déjà jouée. « Tu te lèves à 6h30, en te couchant maintenant il te
+  // reste sept heures » vaut plus qu'un écran de plus dans l'app.
+  cron.schedule('15 22 * * *', async () => {
+    console.log('[Agents] Notifications Coucher → déclenchement')
+    try {
+      const res = await runNotifications(pushSubscriptions, 'coucher')
+      logRun('notifications', { ...res, moment: 'coucher' })
+    } catch (e) {
+      console.error('[Agents] Notifications coucher erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
   // ── Agent 3 : Analyse Tendances — dimanche 18:00 ─────────────────────────
   cron.schedule('0 18 * * 0', async () => {
     console.log('[Agents] Analyse Tendances → déclenchement')

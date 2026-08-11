@@ -588,7 +588,7 @@ function OceanSceneBg({ preset: key }) {
 // « Solenn te demande » dans JourneePrete.
 // Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
 // mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
-function phraseCoach({ score, metriques, streak = 0, heure, history = [] }) {
+function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {} }) {
   const m = metriques || {}
   const h = heure ?? new Date().getHours()
 
@@ -602,6 +602,18 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [] }) {
     .slice(-7)
   const compte = (f) => semaine.filter(f).length
 
+  // Moyenne d'une metrique sur une fenetre de jours, en ne comptant que les
+  // jours renseignes : une moyenne qui inclut les zeros ferait passer un oubli
+  // de saisie pour une regression.
+  const moyenne = (cle, depuis, jusqu) => {
+    const l = (history || []).slice(jusqu === 0 ? -depuis : -depuis, jusqu === 0 ? undefined : -jusqu)
+      .map(e => e?.[cle]).filter(v => v > 0)
+    return l.length ? l.reduce((a, b) => a + b, 0) / l.length : 0
+  }
+  const recent = moyenne('sommeil', 7, 0)
+  const ancien = moyenne('sommeil', 21, 7)
+  const heures = v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}`
+
   if (!score || (!m.sommeil && !m.eau && !m.pas && !m.humeur)) {
     return {
       cle: null,
@@ -613,6 +625,32 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [] }) {
   }
 
   const manques = [
+    // ── Solenn revient sur ses propres conseils ──
+    // Aucun coach numérique ne dit jamais « je t'ai conseillé ça, ça n'a rien
+    // changé, on essaie autrement ». C'est pourtant le seul comportement qui
+    // prouve qu'il accompagne au lieu de réciter. On compte combien de jours
+    // distincts Solenn a déjà posé le même diagnostic (2026-08-11).
+    m.sommeil > 0 && m.sommeil < 7 && (repetitions.sommeil || 0) >= 4 && {
+      cle: 'sommeil', ecart: 2.1,
+      quoi: `Ça fait ${repetitions.sommeil} jours que je te parle de ton sommeil et rien ne bouge.`,
+      action: "Mon conseil ne marche pas. Dis-moi ce qui t'empêche vraiment de te coucher.",
+    },
+    (m.eau || 0) < 6 && h >= 12 && (repetitions.eau || 0) >= 4 && {
+      cle: 'eau', ecart: 2.0,
+      quoi: `${repetitions.eau} jours que je te rappelle de boire, et le compte ne monte pas.`,
+      action: "Le rappel ne suffit pas. On cherche un déclencheur qui tienne ?",
+    },
+
+    // ── Progression mesurée sur trois semaines ──
+    // La seule chose qu'une app de suivi ne dit jamais : ce qui a changé sur la
+    // durée. On ne félicite que si la nuit du jour est bonne, sinon la phrase
+    // sonnerait faux.
+    recent > 0 && ancien > 0 && recent - ancien >= 0.7 && m.sommeil >= 7 && {
+      cle: null, ecart: 1.9,
+      quoi: `Tes nuits sont passées de ${heures(ancien)} à ${heures(recent)} en trois semaines.`,
+      action: "Ça, c'est toi qui l'as fait. Ne lâche pas maintenant.",
+    },
+
     // ── Motifs sur la semaine ── ecart majore : ils priment sur le constat du jour
     m.sommeil > 0 && m.sommeil < 7 && compte(e => e.sommeil > 0 && e.sommeil < 7) >= 2 && {
       cle: 'sommeil', ecart: 1.5,
@@ -833,7 +871,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   {streak >= 7
                     ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
                     : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />}
-                  {streak} jour{streak > 1 ? 's' : ''} de suite
+                  {streak === 1 ? 'Premier jour' : `${streak} jours de suite`}
                 </div>
               )}
               <div style={{
@@ -2315,7 +2353,34 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   const [modeJournee, setModeJournee] = useState(null)
   // Calculée ici et non dans NovaGlowScore : les cartes du dessous doivent
   // savoir de quelle métrique Solenn vient de parler pour ne pas la répéter.
-  const phrase = phraseCoach({ score, metriques, streak, history })
+  // Journal local des diagnostics de Solenn : une entree par jour et par sujet.
+  // Il sert uniquement a savoir si elle se repete, il ne quitte pas l'appareil.
+  const repetitions = useMemo(() => {
+    try {
+      const j = JSON.parse(localStorage.getItem('solenn_diagnostics') || '{}')
+      const limite = Date.now() - 10 * 86400000
+      const r = {}
+      for (const [cle, dates] of Object.entries(j))
+        r[cle] = (dates || []).filter(t => t > limite).length
+      return r
+    } catch { return {} }
+  }, [])
+
+  const phrase = phraseCoach({ score, metriques, streak, history, repetitions })
+
+  useEffect(() => {
+    if (!phrase.cle) return
+    try {
+      const j = JSON.parse(localStorage.getItem('solenn_diagnostics') || '{}')
+      const dates = j[phrase.cle] || []
+      const auj = new Date().toDateString()
+      // Une seule entree par jour, sinon un simple aller-retour sur l'accueil
+      // ferait croire a Solenn qu'elle s'est repetee.
+      if (dates.some(t => new Date(t).toDateString() === auj)) return
+      j[phrase.cle] = [...dates, Date.now()].slice(-30)
+      localStorage.setItem('solenn_diagnostics', JSON.stringify(j))
+    } catch {}
+  }, [phrase.cle])
   const [initialMetric, setInitialMetric] = useState('eau')
 
   function handleLog(key) { setInitialMetric(key || 'eau'); setShowSheet(true) }
