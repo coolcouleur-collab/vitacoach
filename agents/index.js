@@ -102,6 +102,20 @@ export function startAgents(pushSubscriptions) {
     }
   }, { timezone: 'Europe/Paris' })
 
+  // ── Agent 2e : Bilan avant fin d'essai — 18:00 ──────────────────────────
+  // Envoye tous les jours, mais runNotifications ne retient que les comptes
+  // qui en sont a leur 11e jour : c'est le moment ou il reste assez de temps
+  // pour decider sans que ce soit deja joue.
+  cron.schedule('0 18 * * *', async () => {
+    console.log('[Agents] Bilan avant fin d\'essai → déclenchement')
+    try {
+      const res = await runNotifications(pushSubscriptions, 'bilan')
+      logRun('notifications', { ...res, moment: 'bilan' })
+    } catch (e) {
+      console.error('[Agents] Bilan essai erreur:', e.message)
+    }
+  }, { timezone: 'Europe/Paris' })
+
   // ── Agent 2d : Notifications Coucher — 22:15 ────────────────────────────
   // Le seul moment où un rappel change encore quelque chose : après, la nuit
   // est déjà jouée. « Tu te lèves à 6h30, en te couchant maintenant il te

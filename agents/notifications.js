@@ -123,6 +123,25 @@ Ton : pratique et bienveillant. Pas d'emoji, pas de guillemets.`,
 Appuie-toi sur le contexte réel si présent (objectif pas atteint → félicite, humeur difficile → douceur, nuit courte hier → suggère un coucher plus tôt). Sinon : décompression et préparation au sommeil.
 Ton : chaleureux et apaisant. Pas d'emoji, pas de guillemets.`,
   },
+  // Rappel avant la fin de l'essai, au jour 11 sur 14. Ce n'est PAS une
+  // notification commerciale : elle rappelle ce qui a change, chiffres a
+  // l'appui, et laisse la personne en tirer la conclusion. Un rappel qui
+  // reclame de l'argent fait desinstaller ; un rappel qui montre le chemin
+  // parcouru fait ouvrir l'app (2026-08-12).
+  bilan: {
+    heure: '18h00',
+    tag: 'notif-bilan',
+    url: '/?tab=sante',
+    titlePrefix: 'Solenn',
+    systemInstruction: `Tu es Solenn, coach bien-être. Génère UNE notification push (max 110 chars).
+Contexte : la personne utilise Solenn depuis 11 jours et son essai se termine dans 3 jours.
+Ta mission : lui rappeler CE QUI A CHANGÉ chez elle, avec un chiffre concret tiré du contexte (sommeil, pas, hydratation, humeur, série de jours).
+Format : le constat d'abord, l'échéance ensuite, jamais l'inverse.
+INTERDIT : parler de prix, d'abonnement, de paiement, de "profite avant la fin", de "ne rate pas". Aucune urgence commerciale, aucun point d'exclamation.
+Si aucune donnée marquante n'est disponible, dis simplement ce que vous avez construit ensemble en 11 jours.
+Ton : sobre et factuel, comme quelqu'un qui constate. Pas d'emoji, pas de guillemets.`,
+  },
+
   coucher: {
     heure: '22h15',
     tag: 'notif-coucher',
@@ -188,6 +207,28 @@ export async function runNotifications(pushSubscriptions, moment) {
   for (const [userId, entry] of pushSubscriptions) {
     try {
       const meta = entry._meta || {}
+
+      // Le bilan d'essai ne concerne QUE les comptes a leur 11e jour. Sans ce
+      // filtre, le cron quotidien enverrait le meme rappel a tout le monde tous
+      // les soirs, ce qui est le meilleur moyen de faire couper les
+      // notifications (2026-08-12). Un compte deja Pro ne le recoit jamais.
+      if (moment === 'bilan') {
+        if (meta.profil?.isPro) continue
+        // La date de creation du compte n'est PAS dans _meta : elle vit dans
+        // auth.users, la meme source que le front utilise pour calculer
+        // l'essai. La lire ailleurs donnerait un jour 11 qui ne correspond a
+        // rien. Un appel par utilisateur, une fois par jour, uniquement pour
+        // ce moment.
+        let cree = null
+        try {
+          const sb = getSupabase()
+          const { data } = await sb.auth.admin.getUserById(userId)
+          cree = data?.user?.created_at || null
+        } catch {}
+        if (!cree) continue
+        const jours = Math.floor((Date.now() - new Date(cree).getTime()) / 86400000)
+        if (jours !== 11) continue
+      }
 
       // Contexte FRAIS relu en base — c'est ça qui rend le message pertinent
       const frais  = await contexteFrais(userId)
