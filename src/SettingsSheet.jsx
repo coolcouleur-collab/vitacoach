@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon } from './Icons'
+import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
@@ -361,6 +361,9 @@ export default function SettingsSheet({
   onExportData,
 }) {
   const [confirmReset, setConfirmReset] = useState(false)
+  const [confirmSuppr, setConfirmSuppr] = useState(false)
+  const [supprEnCours, setSupprEnCours] = useState(false)
+  const [supprErreur,  setSupprErreur]  = useState(null)
   const [editMode, setEditMode] = useState(false)
   const [editValues, setEditValues] = useState(() => ({
     nom: profil.nom || '',
@@ -406,6 +409,38 @@ export default function SettingsSheet({
     } else {
       setConfirmReset(true)
       setTimeout(() => setConfirmReset(false), 4000)
+    }
+  }
+
+  // Suppression de compte. Le premier appui demande confirmation et retombe
+  // seul au bout de six secondes ; le second declenche vraiment. On ne vide le
+  // stockage local qu'APRES la reponse du serveur : sinon un echec reseau
+  // laisserait un compte intact avec un appareil vide.
+  async function handleSupprimer() {
+    if (supprEnCours) return
+    if (!confirmSuppr) {
+      setSupprErreur(null)
+      setConfirmSuppr(true)
+      setTimeout(() => setConfirmSuppr(false), 6000)
+      return
+    }
+    setSupprEnCours(true)
+    setSupprErreur(null)
+    try {
+      const m = await import('./supabase')
+      const res = await fetch('/api/supprimer-compte', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await m.authHeaders()) },
+        body: JSON.stringify({ userId }),
+      })
+      if (!res.ok) throw new Error("Le serveur n'a pas pu supprimer le compte.")
+      try { localStorage.clear(); sessionStorage.clear() } catch {}
+      try { await m.supabase.auth.signOut() } catch {}
+      window.location.replace('/')
+    } catch (e) {
+      setSupprEnCours(false)
+      setConfirmSuppr(false)
+      setSupprErreur((e.message || 'Erreur') + ' Réessaie, ou écris-nous si ça persiste.')
     }
   }
 
@@ -943,6 +978,31 @@ export default function SettingsSheet({
                 label="Exporter mes données"
                 onClick={onExportData}
               />
+              {/* Suppression de compte — RGPD article 17 et App Store 5.1.1(v).
+                  Double confirmation : c'est irréversible, un seul appui de
+                  travers ne doit pas effacer des mois de données. */}
+              <ActionBtn
+                icon={<TrashIcon size={18} color={confirmSuppr ? 'rgba(200,50,20,0.95)' : '#C87B52'} />}
+                label={
+                  supprEnCours ? 'Suppression en cours…'
+                  : confirmSuppr ? 'Tout supprimer définitivement ?'
+                  : 'Supprimer mon compte'
+                }
+                onClick={handleSupprimer}
+                danger={confirmSuppr}
+              />
+              {confirmSuppr && !supprEnCours && (
+                <div style={{ fontFamily: C.font, fontSize: 11.5, color: 'rgba(200,50,20,0.85)', lineHeight: 1.55, padding: '2px 4px 8px' }}>
+                  Ton profil, tes mesures, tes conversations, ton programme et tes
+                  publications du forum seront effacés définitivement. Cette action
+                  est irréversible et ne peut pas être annulée.
+                </div>
+              )}
+              {supprErreur && (
+                <div style={{ fontFamily: C.font, fontSize: 11.5, color: 'rgba(200,50,20,0.85)', lineHeight: 1.55, padding: '2px 4px 8px' }}>
+                  {supprErreur}
+                </div>
+              )}
             </div>
 
             {/* ── À PROPOS — transparence IA + disclaimer médical ──────────

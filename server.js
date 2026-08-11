@@ -606,6 +606,58 @@ app.get('/api/image', async (req, res) => {
   }
 })
 
+
+// ─── SUPPRESSION DE COMPTE ────────────────────────────────────────────────────
+// Obligatoire : RGPD article 17 (droit à l'effacement) et App Store 5.1.1(v),
+// qui refuse toute app permettant de créer un compte sans permettre de le
+// supprimer. Il n'existait aucun moyen de supprimer ses données (2026-08-12).
+// L'ordre compte : on vide les tables AVANT de supprimer le compte
+// d'authentification, sinon on perd l'identifiant qui permet de les retrouver.
+const TABLES_UTILISATEUR = [
+  'user_metrics', 'checkins', 'solenn_chats', 'challenges', 'rapports_hebdo',
+  'cycle_periods', 'cycle_symptoms', 'chat_feedback',
+  'forum_likes', 'forum_reply_votes', 'forum_reports', 'forum_mentions',
+  'forum_replies', 'forum_posts',
+  'profils',
+]
+
+app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
+  const userId = req.authUser?.id || req.body?.userId
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  if (!supabase) return res.status(500).json({ error: 'base indisponible' })
+
+  const echecs = []
+  for (const table of TABLES_UTILISATEUR) {
+    try {
+      const { error } = await supabase.from(table).delete().eq('user_id', userId)
+      // Une table absente n'est pas un echec : le schema evolue.
+      if (error && !/does not exist|schema cache/i.test(error.message || '')) {
+        echecs.push(`${table}: ${error.message}`)
+      }
+    } catch (e) {
+      echecs.push(`${table}: ${e.message}`)
+    }
+  }
+
+  // Le compte d'authentification en dernier.
+  try {
+    const { error } = await supabase.auth.admin.deleteUser(userId)
+    if (error) echecs.push(`auth: ${error.message}`)
+  } catch (e) {
+    echecs.push(`auth: ${e.message}`)
+  }
+
+  // On retire aussi son abonnement aux notifications push.
+  try { pushSubscriptions.delete(userId) } catch {}
+
+  if (echecs.length) {
+    console.error('[Suppression compte] échecs partiels:', echecs)
+    return res.status(500).json({ error: 'suppression incomplète', details: echecs })
+  }
+  console.log('[Suppression compte] compte supprimé:', userId)
+  res.json({ ok: true })
+})
+
 // ── Routine du jour ──────────────────────────────────────────────────────────
 app.post('/api/routine', ownerGuard, async (req, res) => {
   const { profil, metriques } = req.body
