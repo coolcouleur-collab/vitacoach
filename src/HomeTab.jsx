@@ -579,7 +579,60 @@ function OceanSceneBg({ preset: key }) {
 }
 
 // ─── NOVA GLOW SCORE CIRCLE ───────────────────────────────────────────────────
-function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null }) {
+// ─── LA PHRASE DE SOLENN ──────────────────────────────────────────────────────
+// L'accueil s'ouvrait sur un nombre dans un cercle avec le mot « score » écrit
+// dessous : lisible, mais c'est un tableau de bord, pas un coach. On explique
+// donc le chiffre et on donne UNE action.
+// Calculée en local à partir des métriques du jour, pas par un appel à l'IA :
+// instantanée, gratuite, et elle marche hors ligne. Même mécanique que
+// « Solenn te demande » dans JourneePrete.
+// Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
+// mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
+function phraseCoach({ score, metriques, streak = 0, heure }) {
+  const m = metriques || {}
+  const h = heure ?? new Date().getHours()
+
+  if (!score || (!m.sommeil && !m.eau && !m.pas && !m.humeur)) {
+    return {
+      quoi: "Pas encore de score aujourd'hui.",
+      action: h < 12
+        ? "Dis-moi juste combien tu as dormi, je m'occupe du reste."
+        : 'Dis-moi où tu en es, je te donne la suite.',
+    }
+  }
+
+  const manques = [
+    m.sommeil > 0 && m.sommeil < 7 && {
+      ecart: (7 - m.sommeil) / 7,
+      quoi: `Ton sommeil tire le reste vers le bas, ${m.sommeil} h cette nuit.`,
+      action: h < 18 ? 'Vise 30 minutes de plus ce soir.' : 'Ce soir, écrans coupés 30 minutes plus tôt.',
+    },
+    m.humeur > 0 && m.humeur < 3 && {
+      ecart: (3 - m.humeur) / 3,
+      quoi: `Ton humeur est basse aujourd'hui, ${m.humeur} sur 5.`,
+      action: 'Trois minutes de respiration, ça change déjà quelque chose.',
+    },
+    (m.eau || 0) < 8 && h >= 12 && {
+      ecart: (8 - (m.eau || 0)) / 8 * 0.8,
+      quoi: `Il te manque surtout l'eau, ${m.eau || 0} verres sur 8.`,
+      action: 'Un verre maintenant, le retard se rattrape vite.',
+    },
+    (m.pas || 0) < 10000 && h >= 12 && h < 21 && {
+      ecart: (10000 - (m.pas || 0)) / 10000 * 0.7,
+      quoi: `C'est le mouvement qui manque, ${Math.round((m.pas || 0) / 100) / 10}k pas.`,
+      action: '10 minutes de marche suffisent à débloquer le compteur.',
+    },
+  ].filter(Boolean).sort((a, b) => b.ecart - a.ecart)
+
+  if (!manques.length) {
+    return streak >= 3
+      ? { quoi: `${streak} jours de suite, tu es sur ta meilleure série.`, action: 'Garde ce rythme, il commence à payer.' }
+      : { quoi: 'Tout est en place aujourd\'hui.', action: 'Rien à corriger, profite.' }
+  }
+  return manques[0]
+}
+
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, streak = 0 }) {
   const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
   const [circleHovered, setCircleHovered] = useState(false)
@@ -719,6 +772,29 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
             })}
           </div>
         </div>
+
+        {/* La phrase de Solenn — sous le cercle, avant tout le reste */}
+        {(() => {
+          const p = phraseCoach({ score, metriques, streak })
+          return (
+            <div style={{ maxWidth: 320, textAlign: 'center', padding: '0 22px', marginTop: -2, marginBottom: 6 }}>
+              <div style={{
+                fontSize: 14.5, lineHeight: 1.45, fontWeight: 500,
+                fontFamily: "'Poppins',system-ui,sans-serif",
+                color: isNight ? 'rgba(200,222,255,0.92)' : 'rgba(178,102,62,0.94)',
+              }}>
+                {score > 0 ? `${score}. ` : ''}{p.quoi}
+              </div>
+              <div style={{
+                fontSize: 12.5, lineHeight: 1.45, marginTop: 5,
+                fontFamily: "'Poppins',system-ui,sans-serif",
+                color: isNight ? 'rgba(180,205,240,0.66)' : 'rgba(200,123,82,0.74)',
+              }}>
+                {p.action}
+              </div>
+            </div>
+          )
+        })()}
 
       </div>
     </div>
@@ -2272,6 +2348,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
 // ─── HOME TAB EXPORT ──────────────────────────────────────────────────────────
 export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, presetManuel = null, userId }) {
   const [showSheet, setShowSheet] = useState(false)
+  const [modeJournee, setModeJournee] = useState(null)
   const [initialMetric, setInitialMetric] = useState('eau')
 
   function handleLog(key) { setInitialMetric(key || 'eau'); setShowSheet(true) }
@@ -2324,11 +2401,19 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <NovaGlowScore
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
-        presetManuel={presetManuel}
+        presetManuel={presetManuel} streak={streak}
       />
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
-      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate} />
-      <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
+      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
+        onMode={setModeJournee} />
+
+      {/* UNE SEULE demande de saisie à la fois. Quand Solenn pose sa question
+          ci-dessus (métrique manquante), le check-in attend son tour : la page
+          enchaînait sinon trois sollicitations d'affilée, ce qui donne
+          l'impression d'un formulaire, pas d'un coach (2026-08-11). */}
+      {modeJournee !== 'question' && (
+        <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
+      )}
 
       {/* ORDRE : l'ACTION avant la DONNÉE. L'accueil ouvrait sur deux blocs de
           statistiques (Évolution, Insights) avant de proposer quoi que ce soit

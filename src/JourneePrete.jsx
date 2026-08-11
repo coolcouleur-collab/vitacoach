@@ -26,7 +26,7 @@ function AdaptIcon({ type }) {
   }
 }
 
-export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdate }) {
+export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdate, onMode }) {
   const [data, setData] = useState(null)
 
   useEffect(() => {
@@ -53,8 +53,18 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
   // sans jamais découvrir ce que Solenn sait faire. Elle pose désormais UNE
   // question, dont la réponse tient en un geste — c'est aussi ce qui amorce la
   // collecte de données sans formulaire (refonte demandée par Jean 2026-08-08).
-  if (!data?.adaptations?.length) {
-    const manque = !metriques?.sommeil ? 'sommeil' : !metriques?.eau ? 'eau' : !metriques?.pas ? 'pas' : null
+  const sansAdaptations = !data?.adaptations?.length
+  const manqueMetrique = !metriques?.sommeil ? 'sommeil' : !metriques?.eau ? 'eau' : !metriques?.pas ? 'pas' : null
+
+  // Le parent doit savoir qu'une question est posée ici : l'accueil empilait
+  // trois demandes de saisie d'affilée (la phrase de Solenn, cette question,
+  // puis le check-in). Une seule à la fois (2026-08-11).
+  useEffect(() => {
+    onMode?.(sansAdaptations ? (manqueMetrique && onUpdate ? 'question' : 'rien') : 'adaptations')
+  }, [sansAdaptations, manqueMetrique, !!onUpdate])
+
+  if (sansAdaptations) {
+    const manque = manqueMetrique
     if (!manque || !onUpdate) return null
 
     const Q = {
