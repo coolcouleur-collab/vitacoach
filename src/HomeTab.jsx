@@ -2310,7 +2310,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         presetManuel={presetManuel}
       />
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
-      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} />
+      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate} />
       <CheckinCard userId={userId} onUpdate={onUpdate} isNight={isNight} preset={currentPreset} />
 
       {/* ORDRE : l'ACTION avant la DONNÉE. L'accueil ouvrait sur deux blocs de

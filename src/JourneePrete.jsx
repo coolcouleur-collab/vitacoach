@@ -26,7 +26,7 @@ function AdaptIcon({ type }) {
   }
 }
 
-export default function JourneePrete({ userId, onOpenRoutine }) {
+export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdate }) {
   const [data, setData] = useState(null)
 
   useEffect(() => {
@@ -47,7 +47,73 @@ export default function JourneePrete({ userId, onOpenRoutine }) {
     })()
   }, [userId])
 
-  if (!data?.adaptations?.length) return null
+  // ── Mode « Solenn ne sait rien encore » ────────────────────────────────────
+  // Sans adaptations, ce bloc disparaissait purement et simplement : une
+  // nouvelle utilisatrice ouvrait donc l'app sur un soleil et des cartes vides,
+  // sans jamais découvrir ce que Solenn sait faire. Elle pose désormais UNE
+  // question, dont la réponse tient en un geste — c'est aussi ce qui amorce la
+  // collecte de données sans formulaire (refonte demandée par Jean 2026-08-08).
+  if (!data?.adaptations?.length) {
+    const manque = !metriques?.sommeil ? 'sommeil' : !metriques?.eau ? 'eau' : !metriques?.pas ? 'pas' : null
+    if (!manque || !onUpdate) return null
+
+    const Q = {
+      sommeil: {
+        titre: 'Tu as dormi combien cette nuit ?',
+        sous:  "C'est la donnée qui explique le plus de choses — humeur, faim, énergie.",
+        choix: [5, 6, 7, 8, 9].map(v => ({ label: v === 9 ? '9h+' : `${v}h`, val: v })),
+      },
+      eau: {
+        titre: "Combien de verres d'eau depuis ce matin ?",
+        sous:  'Même approximatif, ça suffit pour voir la tendance.',
+        choix: [0, 2, 4, 6, 8].map(v => ({ label: `${v}`, val: v })),
+      },
+      pas: {
+        titre: "Tu as bougé aujourd'hui ?",
+        sous:  "Une estimation suffit — je m'occupe du reste.",
+        choix: [
+          { label: 'Peu',      val: 2000 },
+          { label: 'Un peu',   val: 5000 },
+          { label: 'Pas mal',  val: 8000 },
+          { label: 'Beaucoup', val: 12000 },
+        ],
+      },
+    }[manque]
+
+    return (
+      <div style={{
+        background: 'rgba(255,255,255,0.22)',
+        backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+        border: '1px solid rgba(200,123,82,0.22)',
+        borderRadius: 18, padding: '16px 18px', marginBottom: 14,
+        boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
+        fontFamily: F,
+      }}>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.90)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          Solenn te demande
+        </div>
+        <div style={{ fontSize: 14.5, fontWeight: 600, color: 'rgba(200,123,82,0.92)', marginBottom: 4, lineHeight: 1.4 }}>
+          {Q.titre}
+        </div>
+        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', lineHeight: 1.45, marginBottom: 12 }}>
+          {Q.sous}
+        </div>
+        <div style={{ display: 'flex', gap: 7 }}>
+          {Q.choix.map(c => (
+            <button key={c.label} onClick={() => onUpdate(manque, c.val)} style={{
+              flex: 1, padding: '11px 0', borderRadius: 14, cursor: 'pointer',
+              background: 'rgba(255,246,238,0.62)',
+              border: '1.5px solid rgba(200,123,82,0.30)',
+              fontFamily: F, fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)',
+            }}>
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{
