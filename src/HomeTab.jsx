@@ -633,7 +633,7 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
   return manques[0]
 }
 
-function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, phrase }) {
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, phrase, expliquerScore = false }) {
   const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
   const [circleHovered, setCircleHovered] = useState(false)
@@ -705,15 +705,19 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
             {/* Score au centre */}
             <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column',
               alignItems:'center', justifyContent:'center', zIndex:10, pointerEvents:'none' }}>
-              {score > 0 && <>
-                <span style={{ fontSize:26, fontWeight:500, lineHeight:1,
-                  fontFamily:"'Poppins',system-ui,sans-serif",
-                  color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score}</span>
-                <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
-                  color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
-                  marginTop:2, textTransform:'uppercase',
-                  fontFamily:"'Poppins',system-ui,sans-serif" }}>score</span>
-              </>}
+              {/* Un tiret plutôt que rien quand le score est à zéro : c'est le plus
+                  gros élément de l'écran, et à la première ouverture il était vide,
+                  donc purement décoratif. Un tiret et non un 0 : « 0 » se lit comme
+                  un mauvais résultat alors qu'il n'y a simplement pas encore de
+                  donnée (2026-08-11). */}
+              <span style={{ fontSize: score > 0 ? 26 : 24, fontWeight:500, lineHeight:1,
+                fontFamily:"'Poppins',system-ui,sans-serif",
+                opacity: score > 0 ? 1 : 0.55,
+                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '—'}</span>
+              <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
+                color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
+                marginTop:2, textTransform:'uppercase',
+                fontFamily:"'Poppins',system-ui,sans-serif" }}>score</span>
             </div>
           </div>
 
@@ -798,6 +802,19 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               }}>
                 {p.action}
               </div>
+
+              {/* Le mot « score » n'était explicité nulle part. Affiché tant que
+                  l'utilisateur n'a aucun historique, donc au tout début
+                  seulement : ensuite la phrase ci-dessus explique le chiffre. */}
+              {expliquerScore && (
+                <div style={{
+                  fontSize: 11, lineHeight: 1.45, marginTop: 9,
+                  fontFamily: "'Poppins',system-ui,sans-serif",
+                  color: isNight ? 'rgba(170,198,235,0.58)' : 'rgba(200,123,82,0.62)',
+                }}>
+                  Ton score se calcule sur ton sommeil, ton eau, tes pas et ton humeur.
+                </div>
+              )}
             </div>
           )
         })()}
@@ -2181,7 +2198,22 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
         presetManuel={presetManuel} phrase={phrase}
+        expliquerScore={history.length === 0}
       />
+
+      {/* Saisie explicite. NovaLogBtn existait dans le fichier mais n'était
+          rendu NULLE PART : le seul moyen d'entrer une donnée était de toucher
+          une des cinq icônes en orbite, sans libellé ni valeur tant qu'elles
+          sont vides, donc introuvable à la première ouverture (2026-08-11).
+          Rendu ICI et non dans le hero : le hero est aligné en bas et tout ce
+          qu'on y ajoute décale le cercle par rapport au soleil du décor.
+          Masqué quand Solenn pose déjà sa question juste en dessous, pour ne
+          pas empiler deux invitations à saisir. */}
+      {modeJournee !== 'question' && (
+        <div style={{ display:'flex', justifyContent:'center', marginTop:2, marginBottom:6 }}>
+          <NovaLogBtn onClick={() => handleLog('eau')} />
+        </div>
+      )}
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
         onMode={setModeJournee} />
