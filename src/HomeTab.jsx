@@ -1693,304 +1693,12 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
   )
 }
 
-// ─── INSIGHTS CAROUSEL — ImmersiveCarousel (Framer) port ────────────────────
-function InsightsCarousel({ profil, metriques, onChat, isNight = false, userId }) {
-  const tc = isNight ? nightText : warmText
-  const h = new Date().getHours()
-
-  // Insights personnels de l'agent (patterns détectés sur les données de
-  // l'utilisateur) — affichés en PREMIER, avant les conseils génériques.
-  // C'est ce que personne d'autre ne peut lui dire.
-  const [persoInsights, setPersoInsights] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem('solenn_insights_home') || '[]') } catch { return [] }
-  })
-  useEffect(() => {
-    if (!userId || persoInsights.length) return
-    ;(async () => {
-      try {
-        const m = await import('./supabase')
-        const res = await fetch(`/api/insights?userId=${userId}`, { headers: await m.authHeaders() })
-        const d = await res.json()
-        if (d?.insights?.length) {
-          setPersoInsights(d.insights)
-          sessionStorage.setItem('solenn_insights_home', JSON.stringify(d.insights))
-        }
-      } catch {}
-    })()
-  }, [userId])
-
-  const persoCards = persoInsights.slice(0, 3).map(ins => ({
-    image: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&auto=format&q=72',
-    title: 'Solenn a remarqué',
-    body: ins.insight,
-    action: 'En parler',
-    chatPrompt: `Tu as remarqué que : « ${ins.insight} ». Dis-m'en plus, qu'est-ce que j'en fais ?`,
-    from: '#C87B52',
-  }))
-
-  const allCards = [
-    ...persoCards,
-    h < 10 ? {
-      image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&q=72',
-      title:'Débute bien ta journée',
-      body:"1 verre d'eau + 5 min de lumière naturelle activent ton métabolisme dès le réveil.",
-      action:'Conseils matin', from:'#C87B52',
-    } : h < 14 ? {
-      image:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&q=72',
-      title:'Repas de midi équilibré',
-      body:"Protéines + légumes + glucides lents. Évite les sucres rapides qui fatiguent l'après-midi.",
-      action:'Idées repas', from:'#C87B52',
-    } : h < 18 ? {
-      image:'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&q=72',
-      title:"Regain d'énergie",
-      body:"10 min de marche = autant d'énergie qu'un café, sans le crash post-caféine.",
-      action:'Me remotiver', from:'#C87B52',
-    } : {
-      image:'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=600&auto=format&q=72',
-      title:'Prépare ton sommeil',
-      body:"Coupe les écrans 30 min avant de dormir. La mélatonine se libère dans l'obscurité.",
-      action:'Routine soir', from:'#C87B52',
-    },
-    {
-      image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&auto=format&q=72',
-      title: (metriques?.eau||0) >= 4 ? 'Hydratation OK !' : "Bois de l'eau",
-      body: (metriques?.eau||0) > 0
-        ? `${metriques.eau}/8 verres aujourd'hui. ${metriques.eau < 4 ? 'Un verre maintenant !' : 'Continue comme ça !'}`
-        : "Objectif : 8 verres/jour. Pose un grand verre devant toi maintenant.",
-      action:'Mettre à jour', from:'#C87B52',
-    },
-    {
-      image:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&auto=format&q=72',
-      title:'Respiration 5-5',
-      body:"2 min de cohérence cardiaque réduisent le cortisol de 20%. Inspire 5s, expire 5s.",
-      action:'En savoir plus', from:'#C87B52',
-    },
-  ]
-
-  const cardCount = allCards.length
-  const [activeIndex, setActiveIndex] = useState(0)
-  const containerRef = useRef(null)
-  const touchStartX  = useRef(null)
-
-  const goToCard = useCallback(index => {
-    const ni = Math.max(0, Math.min(cardCount - 1, index))
-    startTransition(() => setActiveIndex(ni))
-  }, [cardCount])
-
-  const handlePrevious = useCallback(() => goToCard(activeIndex - 1), [activeIndex, goToCard])
-  const handleNext     = useCallback(() => goToCard(activeIndex + 1), [activeIndex, goToCard])
-
-  // Mouse wheel horizontal scroll
-  useEffect(() => {
-    const onWheel = e => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault()
-        if (e.deltaX > 20) handleNext()
-        else if (e.deltaX < -20) handlePrevious()
-      }
-    }
-    const c = containerRef.current
-    if (c) c.addEventListener('wheel', onWheel, { passive: false })
-    return () => { if (c) c.removeEventListener('wheel', onWheel) }
-  }, [handleNext, handlePrevious])
-
-  function onTouchStart(e) { touchStartX.current = e.touches[0].clientX }
-  function onTouchEnd(e) {
-    if (touchStartX.current === null) return
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    if (dx < -40) handleNext()
-    else if (dx > 40) handlePrevious()
-    touchStartX.current = null
-  }
-
-  const getCardStyle = useCallback(index => {
-    const distance  = Math.abs(index - activeIndex)
-    const direction = index - activeIndex
-    const offset    = 72
-    if (distance === 0) return { scale:1,    opacity:1,    blur:0,   zIndex:10, x:0,              y:0  }
-    if (distance === 1) return { scale:0.90, opacity:0.45, blur:1,   zIndex:5,  x:direction*offset, y:12 }
-    if (distance === 2) return { scale:0.82, opacity:0.20, blur:2,   zIndex:3,  x:direction*offset, y:22 }
-    return               { scale:0.76, opacity:0,    blur:3,   zIndex:1,  x:direction*offset, y:30 }
-  }, [activeIndex])
-
-  function handleAction(e, action, card) {
-    e.stopPropagation()
-    if (card?.chatPrompt) { onChat(card.chatPrompt); return }
-    if (action === 'Mettre à jour') onChat('sante')
-    else onChat(action)
-  }
-
-  return (
-    <div style={{ padding:'14px 18px 0' }}>
-      {/* Header */}
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
-        <span style={{ ...hc.cardsTitle, color:tc(0.90) }}>Insights du jour</span>
-        <span style={{ fontSize:11, color:tc(0.60), fontWeight:300 }}>
-          {activeIndex + 1} / {cardCount}
-        </span>
-      </div>
-
-      {/* Stage */}
-      <div
-        ref={containerRef}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        style={{ position:'relative', height:270,
-          display:'flex', alignItems:'center', justifyContent:'center' }}>
-
-        {allCards.map((card, index) => {
-          const cs       = getCardStyle(index)
-          const isActive = index === activeIndex
-          return (
-            <motion.div
-              key={index}
-              style={{ position:'absolute', width:'100%', maxWidth:300, cursor: isActive ? 'default' : 'pointer' }}
-              animate={{ scale:cs.scale, opacity:cs.opacity, x:cs.x, y:cs.y,
-                filter:`blur(${cs.blur}px)`, zIndex:cs.zIndex }}
-              transition={{ type:'spring', stiffness:300, damping:30 }}
-              onClick={() => { if (!isActive) goToCard(index) }}
-            >
-              {/* Bronze ring */}
-              <div style={{
-                padding:3, borderRadius:27,
-                background: isNight
-                  ? 'linear-gradient(180deg,rgba(180,210,255,0.08) 0%,rgba(140,180,255,0.18) 32%,rgba(100,150,240,0.14) 73%,rgba(180,210,255,0.08) 100%)'
-                  : 'linear-gradient(180deg,rgba(255,243,236,0.30) 0%,rgba(232,196,168,0.25) 9%,rgba(200,123,82,0.28) 32%,rgba(158,92,53,0.22) 73%,rgba(245,200,170,0.28) 100%)',
-                boxShadow: isActive
-                  ? isNight
-                    ? '0 12px 40px rgba(0,0,0,0.30), 0 3px 10px rgba(0,0,0,0.15), 0 2px 12px rgba(100,160,255,0.15)'
-                    : '0 12px 40px rgba(0,0,0,0.10), 0 3px 10px rgba(0,0,0,0.05), 0 2px 12px rgba(200,123,82,0.18)'
-                  : '0 4px 18px rgba(0,0,0,0.05)',
-              }}>
-                {/* Glass inner — ivoire jour / verre sombre nuit */}
-                <div style={{
-                  borderRadius:20, overflow:'hidden', position:'relative',
-                  background: isNight
-                    ? 'linear-gradient(150deg,rgba(15,30,60,0.82) 0%,rgba(10,22,48,0.78) 50%,rgba(8,18,40,0.75) 100%)'
-                    : 'linear-gradient(150deg,rgba(255,246,238,0.72) 0%,rgba(255,240,225,0.68) 50%,rgba(255,234,214,0.65) 100%)',
-                  boxShadow: isNight ? 'inset 0 1px 0 rgba(180,210,255,0.15)' : 'inset 0 1px 0 rgba(255,255,255,0.60)',
-                }}>
-                  {/* Visuel — dégradé chaud + soleil (plus de photos de stock,
-                      retour Jean 2026-07-25 : les photoshoots cassaient l'univers) */}
-                  <div style={{
-                    margin:'8px 8px 0', height:120, borderRadius:20, overflow:'hidden', position:'relative',
-                    background: isNight
-                      ? 'linear-gradient(150deg, rgba(20,40,85,0.55), rgba(10,22,50,0.45))'
-                      : 'linear-gradient(150deg, rgba(255,225,175,0.75) 0%, rgba(245,195,130,0.65) 55%, rgba(232,150,42,0.45) 100%)',
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                  }}>
-                    <div style={{
-                      width:58, height:58, borderRadius:'50%',
-                      background: isNight ? 'rgba(180,210,255,0.12)' : 'rgba(255,248,235,0.45)',
-                      border: `1px solid ${isNight ? 'rgba(180,210,255,0.25)' : 'rgba(255,240,215,0.70)'}`,
-                      display:'flex', alignItems:'center', justifyContent:'center',
-                      boxShadow: isNight ? '0 0 26px rgba(140,180,255,0.20)' : '0 0 26px rgba(232,150,42,0.35)',
-                    }}>
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={isNight ? 'rgba(180,210,255,0.85)' : '#C87B52'} strokeWidth="1.6" strokeLinecap="round">
-                        <circle cx="12" cy="12" r="4"/>
-                        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
-                      </svg>
-                    </div>
-                  </div>
-                  {/* Text — active card only */}
-                  {isActive && <div style={{ padding:'8px 14px 12px' }}>
-                    <div style={{ fontSize:13, fontWeight:600, color:tc(0.90),
-                      letterSpacing:'-0.01em', marginBottom:4, lineHeight:1.3,
-                      fontFamily:"'Poppins',system-ui,sans-serif" }}>
-                      {card.title}
-                    </div>
-                    <div style={{ fontSize:11, color:tc(0.80), lineHeight:1.6,
-                      marginBottom:9,
-                      overflow:'hidden', display:'-webkit-box',
-                      WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
-                      {card.body}
-                    </div>
-                    {/* CTA */}
-                    {(
-                      <GlassyButtonWrap
-                        background="rgba(210,130,80,0.06)"
-                        hoverBackground="rgba(210,130,80,0.12)"
-                        borderRadius={100} blur={18} lightDirection="top"
-                        shadowHoverColor="rgba(200,123,82,0.10)" shadowHoverIntensity={0.6}
-                        style={{
-                          alignSelf:'flex-start',
-                          boxShadow:'0 0 0 1px rgba(200,123,82,0.22)',
-                        }}
-                        onClick={e => handleAction(e, card.action, card)}
-                      >
-                        <div style={{
-                          padding:'7px 18px',
-                          fontSize:11, fontWeight:500, color:tc(0.90),
-                          fontFamily:"'Poppins',system-ui,sans-serif", whiteSpace:'nowrap',
-                          position:'relative', zIndex:3,
-                        }}>
-                          {card.action} <span className="arrow-anim">→</span>
-                        </div>
-                      </GlassyButtonWrap>
-                    )}
-                  </div>}
-                </div>
-              </div>
-            </motion.div>
-          )
-        })}
-
-        {/* Prev arrow */}
-        <button onClick={handlePrevious} disabled={activeIndex === 0}
-          aria-label="Précédent"
-          style={{
-            position:'absolute', left:0, top:'50%', transform:'translateY(-50%)',
-            width:34, height:34, borderRadius:'50%', zIndex:20,
-            background: isNight ? 'rgba(8,18,45,0.88)' : 'rgba(255,246,238,0.92)',
-            border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
-            cursor: activeIndex === 0 ? 'not-allowed' : 'pointer',
-            opacity: activeIndex === 0 ? 0.3 : 1,
-            display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow: isNight ? '0 2px 10px rgba(0,0,0,0.30)' : '0 2px 10px rgba(200,123,82,0.15)',
-            transition:'opacity 0.2s ease',
-          }}>
-          <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-            stroke={isNight ? "rgba(180,210,255,0.80)" : "#C87B52"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-        </button>
-
-        {/* Next arrow */}
-        <button onClick={handleNext} disabled={activeIndex === cardCount - 1}
-          aria-label="Suivant"
-          style={{
-            position:'absolute', right:0, top:'50%', transform:'translateY(-50%)',
-            width:34, height:34, borderRadius:'50%', zIndex:20,
-            background: isNight ? 'rgba(8,18,45,0.88)' : 'rgba(255,246,238,0.92)',
-            border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
-            cursor: activeIndex === cardCount - 1 ? 'not-allowed' : 'pointer',
-            opacity: activeIndex === cardCount - 1 ? 0.3 : 1,
-            display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow: isNight ? '0 2px 10px rgba(0,0,0,0.30)' : '0 2px 10px rgba(200,123,82,0.15)',
-            transition:'opacity 0.2s ease',
-          }}>
-          <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-            stroke={isNight ? "rgba(180,210,255,0.80)" : "#C87B52"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </button>
-      </div>
-
-      {/* Line nav */}
-      <div style={{ display:'flex', justifyContent:'center', gap:5, marginTop:12, marginBottom:4 }}>
-        {allCards.map((_, i) => (
-          <div key={i} onClick={() => goToCard(i)} style={{
-            height:2, width: i === activeIndex ? 28 : 8, borderRadius:2,
-            background: i === activeIndex
-              ? isNight ? 'linear-gradient(90deg,rgba(140,180,255,0.90),rgba(100,150,255,0.70))' : 'linear-gradient(90deg,#E8A07A,#C87B52)'
-              : isNight ? 'rgba(180,210,255,0.18)' : 'rgba(200,123,82,0.20)',
-            transition:'all 0.35s cubic-bezier(0.34,1.56,0.64,1)', cursor:'pointer',
-          }} />
-        ))}
-      </div>
-    </div>
-  )
-}
+// ─── CARROUSEL D'INSIGHTS — SUPPRIMÉ le 2026-08-11 ──────────────────────────
+// Il mélangeait les observations réelles de Solenn avec des conseils horaires
+// génériques qui répétaient « Pour toi maintenant » juste au-dessus : même
+// découpage horaire, mêmes sujets, et « Prépare ton sommeil » comme la carte
+// hydratation étaient identiques mot pour mot. Les observations ont été
+// déplacées sous le graphe d'Évolution, auquel elles se rapportent.
 
 // ─── CONTEXTUAL SHORTCUTS ──────────────────────────────────────────────────────
 function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, presetManuel = null }) {
@@ -2224,8 +1932,33 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
 
 // ─── 14-DAY SPARKLINE ─────────────────────────────────────────────────────────
 
-function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
+// Le bloc porte aussi les observations personnelles de Solenn. Elles vivaient
+// dans un carrousel séparé qui mélangeait ces patterns réels avec des conseils
+// horaires génériques, lesquels répétaient mot pour mot « Pour toi maintenant »
+// juste au-dessus (« Prépare ton sommeil », la carte hydratation, les 10 min de
+// marche). Deux moteurs de suggestions en parallèle sur la même page. Le
+// carrousel est supprimé, seules les observations survivent, ici, sous le
+// graphe auquel elles se rapportent (décision Jean 2026-08-11).
+function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onParler }) {
   const tc = isNight ? nightText : warmText
+
+  const [observations, setObservations] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('solenn_insights_home') || '[]') } catch { return [] }
+  })
+  useEffect(() => {
+    if (!userId || observations.length) return
+    ;(async () => {
+      try {
+        const m = await import('./supabase')
+        const res = await fetch(`/api/insights?userId=${userId}`, { headers: await m.authHeaders() })
+        const d = await res.json()
+        if (d?.insights?.length) {
+          setObservations(d.insights)
+          sessionStorage.setItem('solenn_insights_home', JSON.stringify(d.insights))
+        }
+      } catch {}
+    })()
+  }, [userId])
   const BAR_H = 28
   const today = new Date()
   const days = Array.from({ length: 14 }, (_, i) => {
@@ -2338,6 +2071,36 @@ function WeeklySparkline({ history, isNight = false, preset = 'day' }) {
                 )
               })}
             </div>
+
+            {/* Ce que Solenn a remarqué sur ces 14 jours */}
+            {observations.length > 0 && (
+              <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${isNight ? 'rgba(140,180,240,0.16)' : 'rgba(200,123,82,0.16)'}` }}>
+                <div style={{ fontSize:9, color:tc(0.80), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:7 }}>
+                  Solenn a remarqué
+                </div>
+                {observations.slice(0, 3).map((ins, i) => (
+                  <div
+                    key={i}
+                    onClick={e => {
+                      // Le bloc entier navigue vers Progrès : sans ça, toucher une
+                      // observation ouvrirait la page au lieu d'en parler.
+                      e.stopPropagation()
+                      onParler?.(`Tu as remarqué que : « ${ins.insight} ». Dis-m'en plus, qu'est-ce que j'en fais ?`)
+                    }}
+                    style={{
+                      display:'flex', alignItems:'flex-start', gap:8, cursor: onParler ? 'pointer' : 'default',
+                      marginBottom: i < Math.min(observations.length, 3) - 1 ? 7 : 0,
+                    }}
+                  >
+                    <span style={{
+                      width:4, height:4, borderRadius:'50%', flexShrink:0, marginTop:6,
+                      background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(200,123,82,0.65)',
+                    }} />
+                    <span style={{ fontSize:11.5, lineHeight:1.45, color:tc(0.82) }}>{ins.insight}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </GlassyButtonWrap>
       </div>
@@ -2422,18 +2185,14 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
       <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} />
 
-      <InsightsCarousel profil={profil} metriques={metriques} isNight={isNight} userId={userId}
-        onChat={action => {
-          if (action === 'herbal') { onSwitchTab('herbal'); return }
-          if (action === 'sante')  { onSwitchTab('sante');  return }
-          onSwitchTab('chat'); onChat(action)
-        }}
-      />
-
       {/* Évolution = raccourci vers Progrès. Toujours affichée, même sans
-          donnée : Jean la garde pour l'équilibre visuel de la page. */}
+          donnée : Jean la garde pour l'équilibre visuel de la page. Elle porte
+          désormais aussi les observations de Solenn, le carrousel d'insights
+          ayant été supprimé (il répétait « Pour toi maintenant »). */}
       <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
-        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset} />
+        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset}
+          userId={userId}
+          onParler={prompt => { onSwitchTab('chat'); onChat(prompt) }} />
       </div>
 
       {/* Metric bottom sheet */}
