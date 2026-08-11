@@ -15,10 +15,20 @@ function calculerProgres(history) {
   const entries = [...(history || [])]
     .filter(e => e?.date)
     .sort((a, b) => new Date(a.date) - new Date(b.date))
-  if (entries.length < 10) return null
+  // 3 et non 10. En dessous de 10 jours le bloc disparaissait entierement :
+  // l'ecran de preuve, celui qui justifie de payer, restait invisible pendant
+  // dix jours. Avec un essai a 14 jours, il n'apparaissait plus que quatre
+  // jours avant qu'on demande de l'argent, et seulement si la personne avait
+  // saisi presque tous les jours (2026-08-12).
+  // En dessous de 7 jours on ne compare rien, mais on DIT ou on en est.
+  if (entries.length < 3) return null
+  if (entries.length < 7) return { stats: [], joursSuivis: entries.length, enAttente: 7 - entries.length }
 
-  const premiere = entries.slice(0, 7)
-  const derniere = entries.slice(-7)
+  // Fenetres adaptees a la longueur reelle : sur 8 jours, comparer 7 contre 7
+  // ferait se chevaucher les deux moities et ecraserait l'ecart.
+  const fenetre  = Math.min(7, Math.floor(entries.length / 2))
+  const premiere = entries.slice(0, fenetre)
+  const derniere = entries.slice(-fenetre)
   const delta = (champ) => {
     const avant = moyenne(premiere.map(e => Number(e[champ]) || 0).filter(v => v > 0))
     const apres = moyenne(derniere.map(e => Number(e[champ]) || 0).filter(v => v > 0))
@@ -108,9 +118,31 @@ export default function TesProgres({ history, userId }) {
           ))}
         </div>
       )}
-      {progres && (
+      {/* En attente : dire ou on en est plutot que de disparaitre. La personne
+          sait que la preuve arrive et a une raison de continuer a saisir. */}
+      {progres?.enAttente > 0 && (
+        <div style={{
+          background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 15px',
+          fontFamily: F, marginBottom: insights.length ? 12 : 0,
+        }}>
+          <div style={{ fontSize: 13, color: 'rgba(178,102,62,0.92)', fontWeight: 500, lineHeight: 1.45 }}>
+            {progres.joursSuivis} jour{progres.joursSuivis > 1 ? 's' : ''} suivi{progres.joursSuivis > 1 ? 's' : ''}.
+            {' '}Encore {progres.enAttente} jour{progres.enAttente > 1 ? 's' : ''} et je pourrai te montrer ce qui a changé.
+          </div>
+          <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.72)', marginTop: 5, lineHeight: 1.45 }}>
+            Sommeil, pas, humeur et poids : je compare tes débuts à ta semaine en cours, chiffres à l'appui.
+          </div>
+          {/* Barre d'avancement vers la premiere comparaison */}
+          <div style={{ marginTop: 10, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.14)' }}>
+            <div style={{ width: `${Math.round(progres.joursSuivis / 7 * 100)}%`, height: '100%', borderRadius: 2, background: 'rgba(200,123,82,0.65)', transition: 'width 0.4s ease' }} />
+          </div>
+        </div>
+      )}
+
+      {progres && !progres.enAttente && (
         <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.72)', fontFamily: F, marginBottom: insights.length ? 12 : 0 }}>
-          {progres.joursSuivis} jours suivis · comparaison première semaine vs 7 derniers jours
+          {progres.joursSuivis} jours suivis · comparaison de tes débuts à ta semaine en cours
         </div>
       )}
 

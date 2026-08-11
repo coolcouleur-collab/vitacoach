@@ -2444,7 +2444,10 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                 <div style={{ fontSize:9, color:tc(0.80), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:7 }}>
                   Solenn a remarqué
                 </div>
-                {observations.slice(0, 3).map((ins, i) => (
+                {/* UNE seule ici, la liste complete vit dans Progres. Les trois
+                    memes phrases s'affichaient sur les deux ecrans depuis que
+                    les observations ont ete deplacees ce matin (2026-08-12). */}
+                {observations.slice(0, 1).map((ins, i) => (
                   <div
                     key={i}
                     onClick={e => {
@@ -2455,7 +2458,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                     }}
                     style={{
                       display:'flex', alignItems:'flex-start', gap:8, cursor: onParler ? 'pointer' : 'default',
-                      marginBottom: i < Math.min(observations.length, 3) - 1 ? 7 : 0,
+                      marginBottom: 0,
                     }}
                   >
                     <span style={{
@@ -2465,6 +2468,11 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                     <span style={{ fontSize:11.5, lineHeight:1.45, color:tc(0.82) }}>{ins.insight}</span>
                   </div>
                 ))}
+                {observations.length > 1 && (
+                  <div style={{ fontSize:10.5, color:tc(0.62), marginTop:7 }}>
+                    {observations.length - 1} autre{observations.length > 2 ? 's' : ''} dans Progrès
+                  </div>
+                )}
               </div>
             )}
           </div>
