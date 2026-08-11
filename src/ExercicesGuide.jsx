@@ -8,7 +8,6 @@
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 
-const API_BASE = import.meta.env.VITE_API_URL || ''
 const F = "'Poppins', system-ui, sans-serif"
 const T = '#C87B52'
 const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
@@ -136,95 +135,58 @@ const AnimEtirement = () => (
 )
 
 // ── Bibliothèque ─────────────────────────────────────────────────────────────
-// Photo de démonstration réelle, avec repli sur l'animation. Jean : « les
-// animations sont exactement ce que je voulais, mais j'ai peur que les
-// bonshommes ne suffisent pas » (2026-07-27). La photo montre le geste sur un
-// vrai corps ; l'animation reste dans la fiche détaillée pour décomposer le
-// mouvement.
-// radius : 12 dans la grille, 18 dans la fiche.
-// fallback='anim' (grille) : sans photo on retombe sur la silhouette animée.
-// fallback='rien' (fiche) : l'animation est déjà affichée juste en dessous.
-function PhotoExo({ exo, height = 78, radius = 12, fallback = 'anim' }) {
-  const [img, setImg] = React.useState(null)
-  const [ko, setKo] = React.useState(false)
-  React.useEffect(() => {
-    let vivant = true
-    setImg(null); setKo(false)
-    if (!exo.recherche) { setKo(true); return }
-    fetch(`${API_BASE}/api/image?prompt=${encodeURIComponent(exo.recherche)}`)
-      .then(r => r.json())
-      .then(d => { if (!vivant) return; if (d?.url) setImg(d.url); else setKo(true) })
-      .catch(() => { if (vivant) setKo(true) })
-    return () => { vivant = false }
-  }, [exo.id])
-
-  if (ko || !img) {
-    if (fallback === 'rien') return null
-    return <div style={{ height }}><exo.Anim /></div>
-  }
-  return (
-    <div style={{
-      height, borderRadius: radius, overflow: 'hidden', marginBottom: fallback === 'rien' ? 10 : 0,
-      background: 'rgba(255,240,220,0.60)', border: '1px solid rgba(255,220,160,0.40)',
-    }}>
-      <img src={img} alt={exo.nom} onError={() => setKo(true)}
-        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-    </div>
-  )
-}
-
 const EXOS = [
   {
-    id: 'squat', recherche: 'woman doing squat exercise fitness', nom: 'Squat', duree: '3 × 10', cible: 'Jambes · fessiers',
+    id: 'squat', nom: 'Squat', duree: '3 × 10', cible: 'Jambes · fessiers',
     mots: ['squat', 'flexion'],
     Anim: AnimSquat,
     etapes: ['Pieds largeur d\'épaules, dos droit, regard devant', 'Descends comme pour t\'asseoir, poids dans les talons', 'Remonte en poussant dans le sol, sans verrouiller les genoux'],
     erreurs: ['Les genoux qui rentrent vers l\'intérieur', 'Le dos qui s\'arrondit en bas du mouvement'],
   },
   {
-    id: 'gainage', recherche: 'plank exercise fitness demonstration', nom: 'Gainage', duree: '3 × 30 s', cible: 'Centre du corps',
+    id: 'gainage', nom: 'Gainage', duree: '3 × 30 s', cible: 'Centre du corps',
     mots: ['gainage', 'planche', 'plank'],
     Anim: AnimGainage,
     etapes: ['Avant-bras au sol, coudes sous les épaules', 'Corps aligné des épaules aux talons', 'Respire calmement, serre le ventre sans bloquer'],
     erreurs: ['Les hanches qui montent ou qui creusent', 'Retenir sa respiration'],
   },
   {
-    id: 'fente', recherche: 'lunge exercise fitness demonstration', nom: 'Fentes alternées', duree: '2 × 8 / jambe', cible: 'Jambes · équilibre',
+    id: 'fente', nom: 'Fentes alternées', duree: '2 × 8 / jambe', cible: 'Jambes · équilibre',
     mots: ['fente', 'lunge'],
     Anim: AnimFente,
     etapes: ['Grand pas en avant, buste droit', 'Descends jusqu\'à ce que les deux genoux soient à 90°', 'Repousse le sol pour revenir, change de jambe'],
     erreurs: ['Le genou avant qui dépasse trop les orteils', 'Le buste qui penche en avant'],
   },
   {
-    id: 'pont', recherche: 'glute bridge exercise fitness', nom: 'Pont fessier', duree: '3 × 12', cible: 'Fessiers · dos',
+    id: 'pont', nom: 'Pont fessier', duree: '3 × 12', cible: 'Fessiers · dos',
     mots: ['pont', 'bridge', 'bassin'],
     Anim: AnimPont,
     etapes: ['Allongé·e sur le dos, pieds à plat près des fessiers', 'Soulève le bassin jusqu\'à aligner épaules-genoux', 'Redescends lentement, vertèbre par vertèbre'],
     erreurs: ['Pousser avec le cou ou les épaules', 'Cambrer excessivement en haut'],
   },
   {
-    id: 'chaise', recherche: 'wall sit exercise fitness', nom: 'Chaise au mur', duree: '3 × 30 s', cible: 'Cuisses',
+    id: 'chaise', nom: 'Chaise au mur', duree: '3 × 30 s', cible: 'Cuisses',
     mots: ['chaise'],
     Anim: AnimChaise,
     etapes: ['Dos entier collé au mur', 'Glisse jusqu\'à avoir les genoux à 90°', 'Tiens la position en respirant normalement'],
     erreurs: ['Les mains sur les cuisses (elles trichent !)', 'Les talons décollés du sol'],
   },
   {
-    id: 'chatvache', recherche: 'cat cow yoga stretch pose', nom: 'Chat-vache', duree: '8 respirations', cible: 'Dos · détente',
+    id: 'chatvache', nom: 'Chat-vache', duree: '8 respirations', cible: 'Dos · détente',
     mots: ['chat-vache', 'chat vache', 'dos rond', 'mobilité du dos'],
     Anim: AnimChatVache,
     etapes: ['À quatre pattes, mains sous les épaules', 'Inspire en creusant doucement le dos, regard devant', 'Expire en arrondissant le dos, tête relâchée'],
     erreurs: ['Aller trop vite — le mouvement suit la respiration', 'Forcer l\'amplitude'],
   },
   {
-    id: 'marche', recherche: 'brisk walking outdoor exercise', nom: 'Marche active', duree: '20-30 min', cible: 'Cardio doux',
+    id: 'marche', nom: 'Marche active', duree: '20-30 min', cible: 'Cardio doux',
     mots: ['marche', 'marcher', 'pas rapide', 'balade'],
     Anim: AnimMarche,
     etapes: ['Rythme où parler reste possible mais chanter non', 'Bras qui accompagnent naturellement', 'Régularité avant intensité : mieux vaut 20 min chaque jour'],
     erreurs: ['Confondre marche active et flânerie', 'Zapper les jours de pluie — prévois un plan B intérieur'],
   },
   {
-    id: 'etirement', recherche: 'side stretch exercise fitness', nom: 'Étirement latéral', duree: '4 × 20 s / côté', cible: 'Souplesse · détente',
+    id: 'etirement', nom: 'Étirement latéral', duree: '4 × 20 s / côté', cible: 'Souplesse · détente',
     mots: ['étirement', 'etirement', 'stretch', 's\'étirer'],
     Anim: AnimEtirement,
     etapes: ['Debout, bras au-dessus de la tête', 'Penche-toi doucement sur le côté en expirant', 'Reste dans une tension agréable, jamais douloureuse'],
@@ -286,7 +248,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
                   background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.40)',
                   borderRadius: 16, padding: '10px 12px 12px', cursor: 'pointer', textAlign: 'left', fontFamily: F,
                 }}>
-                  <PhotoExo exo={e} height={78} />
+                  <div style={{ height: 78 }}><e.Anim /></div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(178,102,62,0.95)', marginTop: 2 }}>{e.nom}</div>
                   <div style={{ fontSize: 10.5, color: 'rgba(200,123,82,0.60)' }}>{e.cible} · {e.duree}</div>
                 </button>
@@ -303,7 +265,6 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             }}>← Tous les exercices</button>
             <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)' }}>{exo.nom}</div>
             <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
-            <PhotoExo exo={exo} height={150} radius={18} fallback="rien" />
             <div style={{
               height: 190, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,
