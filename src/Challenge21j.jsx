@@ -23,6 +23,10 @@ const EXO_INFOS = {
   chatvache: { nom: 'Chat-vache' },
   marche:    { nom: 'Marche active' },
   etirement: { nom: 'Étirements' },
+  pompe:       { nom: 'Pompes' },
+  pompegenoux: { nom: 'Pompes sur genoux' },
+  superman:    { nom: 'Superman' },
+  dips:        { nom: 'Dips sur chaise' },
 }
 
 function SeanceRow({ item, onFiche }) {
@@ -574,7 +578,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
                   {jourActuelData.seance.map((s, i) => (
-                    <SeanceRow key={i} item={s} onFiche={() => setExoGuide(EXO_INFOS[s.exo] ? s.exo : null)} />
+                    <SeanceRow key={i} item={s} onFiche={() => setExoGuide(s.exo || null)} />
                   ))}
                 </div>
               )}
