@@ -320,7 +320,10 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
             <PhotoExo exo={exo} height={190} radius={18} fallback="rien" />
             <div style={{
-              height: 190, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
+              // 120 et non 190 : depuis que la photo montre la position, ce bloc
+              // ne sert plus qu'à décomposer le geste. À 190 il repoussait
+              // « Comment faire » sous la ligne de flottaison.
+              height: 120, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,
             }}>
               <exo.Anim />
