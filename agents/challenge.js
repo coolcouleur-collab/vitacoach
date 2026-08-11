@@ -2,6 +2,16 @@
  * AGENT CHALLENGE 21 JOURS — Solenn
  * ─────────────────────────────────────────────────────────────────────────────
  * Génère un challenge personnalisé de 7 ou 21 jours basé sur les points faibles
+ *
+ * REFONTE 2026-08-12 — le programme généré était bien plus pauvre que le
+ * programme écrit en dur réservé aux objectifs de poids : micro-actions de
+ * 2 à 5 minutes, sans séance ni conseil nutrition, ce qui donnait des
+ * programmes mono-thème du genre « bois de l'eau pendant 21 jours ».
+ * Et le prompt n'utilisait presque rien du profil : ni l'objectif choisi à
+ * l'inscription, ni le niveau d'activité, ni le rythme de vie, ni les
+ * conditions de santé, tous collectés puis jamais transmis.
+ * Le format demande désormais les mêmes champs que le programme écrit en dur,
+ * et le prompt interdit explicitement le mono-thème.
  * détectés par l'agent de monitoring. Chaque jour = 1 micro-action concrète.
  * Suit la progression et envoie une micro-célébration à chaque étape clé.
  *
@@ -149,28 +159,58 @@ export async function creerChallenge(userId, duree = 21) {
       },
       {
         role: 'user',
-        content: `Crée un challenge de ${duree} jours pour ${nom}.
+        content: `Crée un programme de ${duree} jours pour ${nom}.
 
-Points à améliorer : ${faiblesses.length ? faiblesses.join(', ') : 'bien-être général et vitalité'}
-Objectifs personnels : ${memoire?.objectifs_mentionnes?.slice(0, 2).join(', ') || 'non renseignés'}
-Thèmes récurrents : ${memoire?.themes_recurrents?.slice(0, 3).join(', ') || 'non renseignés'}
+═══ QUI EST ${nom.toUpperCase()} ═══
+Objectif principal : ${profil?.objectifs?.[0] || profil?.objectif || 'bien-être général'}
+Niveau d'activité : ${profil?.activite || 'non renseigné'}
+Rythme de vie : ${profil?.rythme || 'non renseigné'}
+Foyer : ${profil?.vie || 'non renseigné'}
+Moment préféré pour soi : ${profil?.moment || 'non renseigné'}
+Point de départ ressenti : ${profil?.baseline || 'non renseigné'}
+Ce qui l'a décidé : ${profil?.declencheur || 'non renseigné'}
+${profil?.sante_conditions?.length ? `⚠️ À PRENDRE EN COMPTE : ${profil.sante_conditions.join(', ')}` : ''}
 
-Crée ${duree} jours de micro-actions CONCRÈTES (2-5 min max chacune), progressives.
-Les actions doivent être faisables même en journée chargée.
+═══ CE QUE DISENT SES DONNÉES ═══
+${faiblesses.length ? faiblesses.join(', ') : 'pas encore assez de données'}
+${memoire?.objectifs_mentionnes?.length ? `Ce qu'elle/il t'a dit vouloir : ${memoire.objectifs_mentionnes.slice(0, 2).join(', ')}` : ''}
+${memoire?.themes_recurrents?.length ? `Sujets qui reviennent dans vos échanges : ${memoire.themes_recurrents.slice(0, 3).join(', ')}` : ''}
+
+═══ RÈGLES NON NÉGOCIABLES ═══
+1. VARIE LES THÈMES. Un programme entier sur un seul sujet (boire de l'eau, marcher) est un échec.
+   Répartis sur les ${duree} jours : mouvement, sommeil, alimentation, respiration/mental, et récupération.
+   Aucun thème ne doit occuper plus d'un tiers des jours.
+2. ADAPTE L'INTENSITÉ au niveau d'activité déclaré. Sédentaire : on commence par de la marche
+   et de la mobilité. Sportif : les séances doivent le/la challenger, sinon il/elle décroche.
+3. RESPECTE LES CONTRAINTES. Douleurs ou blessures : pas d'impact. Fatigue profonde : on
+   commence par le sommeil et la récupération, jamais par l'effort. Rapport compliqué à la
+   nourriture : AUCUNE consigne de quantité, de comptage ou de restriction.
+4. TIENS COMPTE DU RYTHME. Horaires décalés : viser la régularité, pas des heures fixes.
+   En famille : des actions courtes qui survivent aux imprévus.
+5. PROGRESSE. Semaine 1 on installe, semaine 2 on monte, semaine 3 on ancre.
+   Prévois 1 jour de récupération plus léger tous les 3 à 4 jours.
+
+═══ SÉANCES ═══
+Quand un jour comporte du mouvement, décris-le dans "seance" avec ces identifiants
+UNIQUEMENT : squat, gainage, fente, pont, chaise, chatvache, marche, etirement.
+Ils correspondent au guide des exercices de l'app, qui montre le geste en photo.
+Les jours sans mouvement (sommeil, respiration, nutrition) n'ont pas de "seance".
 
 Format JSON :
 {
-  "titre": "nom du challenge (accrocheur, max 6 mots)",
+  "titre": "nom du programme (accrocheur, max 6 mots)",
   "emoji": "1 emoji thème",
-  "description": "1-2 phrases de motivation",
-  "objectif_final": "ce qu'on gagne après ${duree} jours",
+  "description": "1-2 phrases qui disent ce qu'on va construire ensemble",
+  "objectif_final": "ce qu'on gagne après ${duree} jours, concret et mesurable",
   "jours": [
     {
       "jour": 1,
       "titre": "titre court du jour",
-      "action": "action concrète et précise",
-      "duree": "2-5 min",
-      "pourquoi": "1 phrase d'explication scientifique/motivationnelle"
+      "action": "action concrète et précise, avec la durée",
+      "duree": "ex: 10 min",
+      "seance": [{ "exo": "squat", "reps": "3 × 10" }],
+      "nutrition": "un conseil alimentaire concret, ou null si le jour n'en porte pas",
+      "pourquoi": "1 phrase qui explique POURQUOI ça marche"
     }
   ],
   "milestones": [
@@ -182,7 +222,10 @@ Format JSON :
       }
     ],
     temperature: 0.5,
-    max_tokens: 3000,
+    // 3000 suffisaient pour des micro-actions d'une ligne. Avec les seances et
+    // les conseils nutrition, un programme de 21 jours depasse : le JSON etait
+    // tronque et la generation echouait (2026-08-12).
+    max_tokens: 6000,
   })
 
   const raw   = res.choices[0].message.content
