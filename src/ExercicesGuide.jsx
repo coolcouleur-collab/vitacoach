@@ -145,7 +145,7 @@ const AnimEtirement = () => (
 // renvoyait un culturiste torse nu pour le gainage et un gros plan sur le
 // bassin pour le pont fessier. Sur huit exercices figés, la sélection manuelle
 // est la seule qui garantisse le bon geste ET un cadrage correct.
-// Le chat-vache n'a aucune photo juste sur Pexels : il garde son animation.
+// Un exercice sans photo retombe proprement sur son animation.
 // `pos` = object-position vertical. Les photos sont verticales, la vignette est
 // large : un recadrage centré tombe systématiquement sur les hanches. 70 % sur
 // le pont fessier et 25 % sur l'étirement remettent la tête et le geste dans le
@@ -157,7 +157,7 @@ export const PHOTOS_EXOS = {
   fente:     { url: P(8038573), pos: '50%' },
   pont:      { url: P(4534643), pos: '70%' },
   chaise:    { url: P(6740054), pos: '50%' },
-  chatvache: null,
+  chatvache: { url: P(6303431), pos: '50%' },
   marche:    { url: P(8539234), pos: '50%' },
   etirement: { url: P(7880157), pos: '25%' },
 }
