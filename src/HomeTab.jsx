@@ -588,9 +588,19 @@ function OceanSceneBg({ preset: key }) {
 // « Solenn te demande » dans JourneePrete.
 // Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
 // mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
-function phraseCoach({ score, metriques, streak = 0, heure }) {
+function phraseCoach({ score, metriques, streak = 0, heure, history = [] }) {
   const m = metriques || {}
   const h = heure ?? new Date().getHours()
+
+  // Les sept derniers jours renseignes, aujourd'hui exclu. C'est ce qui permet
+  // de dire une chose qu'aucune autre app ne dit : non pas « tu as mal dormi »,
+  // mais « c'est la troisieme fois cette semaine ». Le constat du jour, tout le
+  // monde le fait ; le motif sur la duree, non (2026-08-11).
+  const auj = new Date().toDateString()
+  const semaine = (history || [])
+    .filter(e => e && e.date && e.date !== auj)
+    .slice(-7)
+  const compte = (f) => semaine.filter(f).length
 
   if (!score || (!m.sommeil && !m.eau && !m.pas && !m.humeur)) {
     return {
@@ -603,6 +613,24 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
   }
 
   const manques = [
+    // ── Motifs sur la semaine ── ecart majore : ils priment sur le constat du jour
+    m.sommeil > 0 && m.sommeil < 7 && compte(e => e.sommeil > 0 && e.sommeil < 7) >= 2 && {
+      cle: 'sommeil', ecart: 1.5,
+      quoi: `${compte(e => e.sommeil > 0 && e.sommeil < 7) + 1}ᵉ nuit courte cette semaine, ${m.sommeil} h cette nuit.`,
+      action: 'Le manque s\'accumule. Ce soir, couche-toi une demi-heure plus t\u00f4t.',
+    },
+    m.humeur > 0 && m.humeur < 3 && compte(e => e.humeur > 0 && e.humeur < 3) >= 2 && {
+      cle: 'humeur', ecart: 1.4,
+      quoi: `Ton humeur est basse pour la ${compte(e => e.humeur > 0 && e.humeur < 3) + 1}ᵉ fois cette semaine.`,
+      action: 'Ce n\'est plus un mauvais jour, c\'est une tendance. On en parle ?',
+    },
+    semaine.length >= 3 && m.sommeil >= 7 && compte(e => e.sommeil >= 7) === 0 && {
+      cle: 'sommeil', ecart: 1.3,
+      quoi: `${m.sommeil} h cette nuit, ta meilleure de la semaine.`,
+      action: 'C\'est exactement ce rythme qu\'il faut tenir.',
+    },
+
+    // ── Constats du jour ──
     m.sommeil > 0 && m.sommeil < 7 && {
       cle: 'sommeil', ecart: (7 - m.sommeil) / 7,
       quoi: `Ton sommeil tire le reste vers le bas, ${m.sommeil} h cette nuit.`,
@@ -633,7 +661,7 @@ function phraseCoach({ score, metriques, streak = 0, heure }) {
   return manques[0]
 }
 
-function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, phrase, expliquerScore = false }) {
+function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManuel = null, phrase, expliquerScore = false, streak = 0 }) {
   const [mounted, setMounted]           = useState(false)
   const [activeMetric, setActiveMetric] = useState(null)
   const [circleHovered, setCircleHovered] = useState(false)
@@ -788,6 +816,26 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
           const p = phrase
           return (
             <div style={{ maxWidth: 320, margin: '0 auto', textAlign: 'center', padding: '10px 22px 2px' }}>
+              {/* La série n'apparaissait que dans la branche où tout va bien :
+                  douze jours de suite avec quatre verres d'eau, et elle n'était
+                  jamais mentionnée. C'est pourtant le jour où il faut la
+                  rappeler pour éviter qu'elle se casse (2026-08-11). */}
+              {streak > 0 && (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '3px 11px', borderRadius: 20, marginBottom: 8,
+                  background: isNight ? 'rgba(15,28,58,0.62)' : 'rgba(255,246,238,0.62)',
+                  border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(200,123,82,0.24)',
+                  fontFamily: "'Poppins',system-ui,sans-serif",
+                  fontSize: 10.5, fontWeight: 600,
+                  color: isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)',
+                }}>
+                  {streak >= 7
+                    ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
+                    : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />}
+                  {streak} jour{streak > 1 ? 's' : ''} de suite
+                </div>
+              )}
               <div style={{
                 fontSize: 14.5, lineHeight: 1.45, fontWeight: 500,
                 fontFamily: "'Poppins',system-ui,sans-serif",
@@ -1721,6 +1769,129 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
 // hydratation étaient identiques mot pour mot. Les observations ont été
 // déplacées sous le graphe d'Évolution, auquel elles se rapportent.
 
+// ─── LE DÉFI DU JOUR ─────────────────────────────────────────────
+// Le défi 21 jours n'apparaissait NULLE PART sur l'accueil : quelqu'un au
+// jour 9 de son programme ouvrait l'app sans le voir, alors que c'est ce qui
+// doit le ramener chaque jour (constat 2026-08-11).
+// Une seule ligne : le jour, l'action du jour, et la case à cocher. Le détail
+// des séances reste dans Programme, on ne le duplique pas ici.
+function DefiDuJour({ userId, isNight, onOuvrir }) {
+  const tc = isNight ? nightText : warmText
+  const [challenge, setChallenge] = useState(null)
+  const [envoi, setEnvoi] = useState(false)
+
+  useEffect(() => {
+    if (!userId) return
+    ;(async () => {
+      try {
+        const m = await import('./supabase')
+        const res = await fetch(`/api/challenge?userId=${userId}`, { headers: await m.authHeaders() })
+        const d = await res.json()
+        if (d?.challenge) setChallenge(d.challenge)
+      } catch {}
+    })()
+  }, [userId])
+
+  if (!challenge) return null
+
+  // Même calcul que dans Challenge21j : le jour découle de la date de début,
+  // pas d'un compteur stocké, pour rester juste si l'app n'est pas ouverte.
+  const debut = new Date(challenge.date_debut)
+  const jour = Math.min(Math.max(Math.floor((new Date() - debut) / 86400000) + 1, 1), 21)
+  const progression = challenge.progression || Array(21).fill(false)
+  const fait = progression[jour - 1] || false
+  const donnee = (challenge.challenge?.jours || [])[jour - 1] || null
+  if (!donnee) return null
+
+  async function marquerFait(e) {
+    e.stopPropagation()
+    if (fait || envoi) return
+    setEnvoi(true)
+    // Coché tout de suite : attendre le serveur pour un geste aussi simple
+    // donne l'impression que le bouton n'a pas répondu.
+    setChallenge(c => {
+      const p = [...(c.progression || Array(21).fill(false))]
+      p[jour - 1] = true
+      return { ...c, progression: p }
+    })
+    try {
+      const m = await import('./supabase')
+      await fetch(`/api/challenge-progress`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await m.authHeaders()) },
+        body: JSON.stringify({ userId, jour: jour - 1, complete: true }),
+      })
+    } catch {}
+    setEnvoi(false)
+  }
+
+  return (
+    <div style={{ padding: '14px 18px 0' }}>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+        onClick={onOuvrir}
+        whileTap={{ scale: 0.98 }}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          padding: '13px 15px', borderRadius: 20, cursor: 'pointer',
+          background: isNight
+            ? 'linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)'
+            : 'linear-gradient(135deg, rgba(200,123,82,0.16) 0%, rgba(200,123,82,0.06) 70%)',
+          border: isNight ? '1.5px solid rgba(180,210,255,0.22)' : '1.5px solid rgba(200,123,82,0.30)',
+          boxShadow: isNight ? '0 6px 22px rgba(0,0,0,0.25)' : '0 6px 22px rgba(200,123,82,0.14)',
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: 9.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em',
+            color: tc(0.72), marginBottom: 3,
+          }}>
+            Ton défi · jour {jour} sur 21
+          </div>
+          <div style={{
+            fontSize: 13.5, fontWeight: 500, color: tc(0.92), lineHeight: 1.35,
+            textDecoration: fait ? 'line-through' : 'none', opacity: fait ? 0.6 : 1,
+          }}>
+            {donnee.action}
+          </div>
+          {/* Barre d'avancement : voir la progression compte autant que l'action */}
+          <div style={{
+            marginTop: 8, height: 3, borderRadius: 2, overflow: 'hidden',
+            background: isNight ? 'rgba(180,210,255,0.14)' : 'rgba(200,123,82,0.14)',
+          }}>
+            <div style={{
+              width: `${Math.round(progression.filter(Boolean).length / 21 * 100)}%`, height: '100%',
+              borderRadius: 2, background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(200,123,82,0.65)',
+              transition: 'width 0.4s ease',
+            }} />
+          </div>
+        </div>
+        <button
+          onClick={marquerFait}
+          aria-label={fait ? 'Fait' : 'Marquer comme fait'}
+          style={{
+            width: 34, height: 34, borderRadius: '50%', flexShrink: 0, cursor: fait ? 'default' : 'pointer',
+            background: fait
+              ? (isNight ? 'rgba(159,196,232,0.85)' : 'rgba(200,123,82,0.85)')
+              : (isNight ? 'rgba(10,20,45,0.50)' : 'rgba(255,246,238,0.60)'),
+            border: isNight ? '1.5px solid rgba(180,210,255,0.35)' : '1.5px solid rgba(200,123,82,0.38)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.2s',
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke={fait ? (isNight ? '#0a142d' : '#fff') : (isNight ? 'rgba(180,210,255,0.55)' : 'rgba(200,123,82,0.55)')}
+            strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+      </motion.div>
+    </div>
+  )
+}
+
 // ─── CONTEXTUAL SHORTCUTS ──────────────────────────────────────────────────────
 // dejaDit : la métrique que la phrase de Solenn vient de nommer en haut de
 // page. Sans ce filtre, l'accueil disait deux fois la même chose à quelques
@@ -2144,7 +2315,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   const [modeJournee, setModeJournee] = useState(null)
   // Calculée ici et non dans NovaGlowScore : les cartes du dessous doivent
   // savoir de quelle métrique Solenn vient de parler pour ne pas la répéter.
-  const phrase = phraseCoach({ score, metriques, streak })
+  const phrase = phraseCoach({ score, metriques, streak, history })
   const [initialMetric, setInitialMetric] = useState('eau')
 
   function handleLog(key) { setInitialMetric(key || 'eau'); setShowSheet(true) }
@@ -2197,7 +2368,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <NovaGlowScore
         score={score} scoreColor={scoreColor}
         profil={profil} metriques={metriques} onLog={handleLog}
-        presetManuel={presetManuel} phrase={phrase}
+        presetManuel={presetManuel} phrase={phrase} streak={streak}
         expliquerScore={history.length === 0}
       />
 
@@ -2214,6 +2385,10 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           <NovaLogBtn onClick={() => handleLog('eau')} />
         </div>
       )}
+      {/* Le défi passe AVANT le reste : c'est l'engagement pris, et la seule
+          chose de l'accueil qui ait une échéance. */}
+      <DefiDuJour userId={userId} isNight={isNight} onOuvrir={() => onSwitchTab('routine')} />
+
       {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
         onMode={setModeJournee} />
