@@ -184,6 +184,11 @@ pompe, pompegenoux, superman, dips.
 Ils correspondent au guide des exercices de l'app, qui montre le geste en photo.
 Les jours sans mouvement (sommeil, respiration, nutrition) n'ont pas de "seance".
 
+RICHESSE : un jour de mouvement porte 2 à 4 exercices dans "seance", jamais un
+seul. Un jour avec un unique exercice n'est pas une séance, c'est un geste.
+Et chaque jour porte un conseil "nutrition" concret, sauf les jours de
+récupération pure où il peut être null.
+
 ÉQUILIBRE DU CORPS : ne construis pas un programme qui ne travaille que les
 jambes. Sur l'ensemble des jours, fais revenir le haut du corps (pompe ou
 pompegenoux, superman, dips) au moins autant que le bas (squat, fente, chaise).
@@ -242,6 +247,15 @@ Format JSON :
       const n = c.jours.filter(j => (j.action || '').toLowerCase().includes(t)).length
       if (n > Math.ceil(c.jours.length / 3)) return false
     }
+    // Des seances consistantes : au moins la moitie des jours doivent porter du
+    // mouvement, et une seance d'un seul exercice n'en est pas une.
+    const avecSeance = c.jours.filter(j => Array.isArray(j.seance) && j.seance.length)
+    if (avecSeance.length < Math.floor(c.jours.length / 2)) return false
+    if (avecSeance.filter(j => j.seance.length >= 2).length < avecSeance.length * 0.6) return false
+    // Le haut du corps doit exister quelque part.
+    const HAUT = ['pompe', 'pompegenoux', 'superman', 'dips']
+    const aDuHaut = avecSeance.some(j => j.seance.some(e => HAUT.includes(e?.exo)))
+    if (!aDuHaut) return false
     return true
   }
 
