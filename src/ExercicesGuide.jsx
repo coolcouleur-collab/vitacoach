@@ -134,6 +134,59 @@ const AnimEtirement = () => (
   />
 )
 
+// ── Photos de démonstration ──────────────────────────────────────────────────
+// Photos CHOISIES À LA MAIN, pas cherchées à l'exécution. Le 2026-08-11 la
+// version qui appelait /api/image affichait la même photo de mode sur les huit
+// vignettes : le front tape l'API via VITE_API_URL, donc Render, dont la route
+// /api/image est écrite pour la page Style — elle réécrit toute requête en
+// « woman … ootd full body street style » et, faute de clé Pexels, retombe sur
+// un placeholder LoremFlickr identique pour tout le monde.
+// Même en tapant la bonne route (celle de Vercel), la recherche sémantique
+// renvoyait un culturiste torse nu pour le gainage et un gros plan sur le
+// bassin pour le pont fessier. Sur huit exercices figés, la sélection manuelle
+// est la seule qui garantisse le bon geste ET un cadrage correct.
+// Le chat-vache n'a aucune photo juste sur Pexels : il garde son animation.
+// `pos` = object-position vertical. Les photos sont verticales, la vignette est
+// large : un recadrage centré tombe systématiquement sur les hanches. 70 % sur
+// le pont fessier et 25 % sur l'étirement remettent la tête et le geste dans le
+// cadre — vérifié en composant les recadrages réels avant de livrer.
+const P = id => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940`
+export const PHOTOS_EXOS = {
+  squat:     { url: P(8032754), pos: '50%' },
+  gainage:   { url: P(7900683), pos: '50%' },
+  fente:     { url: P(8038573), pos: '50%' },
+  pont:      { url: P(4534643), pos: '70%' },
+  chaise:    { url: P(6740054), pos: '50%' },
+  chatvache: null,
+  marche:    { url: P(8539234), pos: '50%' },
+  etirement: { url: P(7880157), pos: '25%' },
+}
+
+// Sans photo (ou si elle ne charge pas), on retombe sur la silhouette animée.
+// fallback='rien' dans la fiche détaillée, où l'animation est déjà affichée
+// juste en dessous.
+function PhotoExo({ exo, height = 130, radius = 12, fallback = 'anim' }) {
+  const [ko, setKo] = useState(false)
+  const photo = PHOTOS_EXOS[exo.id]
+
+  if (!photo || ko) {
+    if (fallback === 'rien') return null
+    return <div style={{ height }}><exo.Anim /></div>
+  }
+  return (
+    <div style={{
+      height, borderRadius: radius, overflow: 'hidden', marginBottom: fallback === 'rien' ? 12 : 0,
+      background: 'rgba(255,240,220,0.60)', border: '1px solid rgba(255,220,160,0.40)',
+    }}>
+      <img src={photo.url} alt={exo.nom} loading="lazy" onError={() => setKo(true)}
+        style={{
+          width: '100%', height: '100%', display: 'block',
+          objectFit: 'cover', objectPosition: `center ${photo.pos}`,
+        }} />
+    </div>
+  )
+}
+
 // ── Bibliothèque ─────────────────────────────────────────────────────────────
 const EXOS = [
   {
@@ -248,7 +301,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
                   background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.40)',
                   borderRadius: 16, padding: '10px 12px 12px', cursor: 'pointer', textAlign: 'left', fontFamily: F,
                 }}>
-                  <div style={{ height: 78 }}><e.Anim /></div>
+                  <PhotoExo exo={e} height={130} />
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(178,102,62,0.95)', marginTop: 2 }}>{e.nom}</div>
                   <div style={{ fontSize: 10.5, color: 'rgba(200,123,82,0.60)' }}>{e.cible} · {e.duree}</div>
                 </button>
@@ -265,6 +318,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             }}>← Tous les exercices</button>
             <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)' }}>{exo.nom}</div>
             <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
+            <PhotoExo exo={exo} height={190} radius={18} fallback="rien" />
             <div style={{
               height: 190, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,

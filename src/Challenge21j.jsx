@@ -3,31 +3,32 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
-import { matchExercice } from './ExercicesGuide'
+import { matchExercice, PHOTOS_EXOS } from './ExercicesGuide'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
 const API = import.meta.env.VITE_API_URL || ''
 
 // ─── Ligne d'exercice d'une séance du programme (photo + reps + fiche) ───────
+// Les photos viennent de PHOTOS_EXOS (choisies à la main dans ExercicesGuide).
+// Avant, chaque ligne appelait /api/image : le front tape Render, dont la route
+// du même nom est écrite pour la page Style et renvoyait la même photo de mode
+// pour tous les exercices (corrigé 2026-08-11).
 const EXO_INFOS = {
-  squat:     { nom: 'Squat',          recherche: 'woman doing squat exercise fitness' },
-  gainage:   { nom: 'Gainage',        recherche: 'plank exercise fitness demonstration' },
-  fente:     { nom: 'Fentes',         recherche: 'lunge exercise fitness demonstration' },
-  pont:      { nom: 'Pont fessier',   recherche: 'glute bridge exercise fitness' },
-  chaise:    { nom: 'Chaise au mur',  recherche: 'wall sit exercise fitness' },
-  chatvache: { nom: 'Chat-vache',     recherche: 'cat cow yoga stretch pose' },
-  marche:    { nom: 'Marche active',  recherche: 'brisk walking outdoor exercise' },
-  etirement: { nom: 'Étirements',     recherche: 'side stretch exercise fitness' },
+  squat:     { nom: 'Squat' },
+  gainage:   { nom: 'Gainage' },
+  fente:     { nom: 'Fentes' },
+  pont:      { nom: 'Pont fessier' },
+  chaise:    { nom: 'Chaise au mur' },
+  chatvache: { nom: 'Chat-vache' },
+  marche:    { nom: 'Marche active' },
+  etirement: { nom: 'Étirements' },
 }
 
 function SeanceRow({ item, onFiche }) {
-  const info = EXO_INFOS[item.exo] || { nom: item.exo, recherche: `${item.exo} exercise` }
-  const [img, setImg] = useState(null)
-  useEffect(() => {
-    fetch(`${API}/api/image?prompt=${encodeURIComponent(info.recherche)}`)
-      .then(r => r.json()).then(d => { if (d.url) setImg(d.url) }).catch(() => {})
-  }, [])
+  const info = EXO_INFOS[item.exo] || { nom: item.exo }
+  const photo = PHOTOS_EXOS[item.exo] || null
+  const [img, setImg] = useState(photo?.url || null)
   return (
     <button onClick={onFiche} style={{
       width: '100%', display: 'flex', alignItems: 'center', gap: 12,
@@ -37,7 +38,7 @@ function SeanceRow({ item, onFiche }) {
     }}>
       <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(255,240,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {img
-          ? <img src={img} alt={info.nom} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={() => setImg(null)} />
+          ? <img src={img} alt={info.nom} loading="lazy" onError={() => setImg(null)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', objectPosition: `center ${photo?.pos || '50%'}` }} />
           : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.6" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
