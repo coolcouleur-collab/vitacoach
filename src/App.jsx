@@ -605,7 +605,18 @@ const [messages, setMessages] = useState(() => {
         if (wantsSleep)       parts.push(`N'oublie pas ta routine du soir pour bien dormir.`)
         else                  parts.push(`Comment s'est passée ta journée ?`)
       }
-      parts.push(`Qu'est-ce que je peux faire pour toi ?`)
+      // Sans données (nouveau compte), tout ce qui précède est vide et il ne
+      // restait que « Bonjour ! Qu'est-ce que je peux faire pour toi ? » — la
+      // phrase de n'importe quel chatbot, en guise de première impression
+      // (retour Jean 2026-08-08). On ancre alors l'ouverture sur son objectif.
+      if (parts.length === 1) {
+        const obj = p.objectifs?.[0]
+        parts.push(obj
+          ? `On avance sur ton objectif : ${String(obj).toLowerCase()}. Par quoi on commence aujourd'hui ?`
+          : `Raconte-moi ta journée — ce que tu as mangé, comment tu as dormi, ce qui te pèse. Je pars de là.`)
+      } else {
+        parts.push(`Qu'est-ce que je peux faire pour toi ?`)
+      }
       return [{ role:'assistant', content: parts.join(' ') }]
     }
     return []
@@ -616,6 +627,9 @@ const [messages, setMessages] = useState(() => {
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
+  // Réponses rapides. Restaurées au démarrage à partir du dernier message de
+  // Solenn : sans ça, rouvrir l'app faisait disparaître les chips, y compris
+  // quand la dernière réponse posait une question (retour Jean 2026-08-08).
   const [followUps, setFollowUps]   = useState([])
   const [copiedIdx, setCopiedIdx]   = useState(null)
   const [kbOffset,  setKbOffset]    = useState(0)
@@ -843,6 +857,15 @@ const [messages, setMessages] = useState(() => {
   // check-subscription au retour d'un paiement). Gratuit, aucun service tiers.
   useEffect(() => {
     fetch('https://solenn-api.onrender.com/ping', { mode: 'no-cors' }).catch(() => {})
+  }, [])
+
+  // Réponses rapides du dernier message, regénérées au démarrage. Elles ne sont
+  // pas persistées avec la conversation : sans cet effet, rouvrir l'app laissait
+  // la dernière question de Solenn sans aucun bouton pour y répondre.
+  useEffect(() => {
+    const last = messages[messages.length - 1]
+    if (last?.role === 'assistant' && last.content) setFollowUps(genFollowUps(last.content))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -2002,6 +2025,25 @@ padding: isMobile
               </div>
 
               <div style={{ display:'flex', alignItems:'center', gap:8, pointerEvents:'auto' }}>
+                {/* ── Historique des conversations — dans le header plutôt que
+                       flottant au-dessus des bulles, où il occupait une ligne
+                       entière pour lui seul (retour Jean 2026-08-08) ── */}
+                {onglet === 'chat' && user?.id && (
+                  <button
+                    onClick={() => setShowChatHistory(true)}
+                    title="Historique des conversations"
+                    style={{
+                      width:34, height:34, borderRadius:10,
+                      background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      cursor:'pointer', color:'rgba(200,123,82,0.90)',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </button>
+                )}
                 {/* ── Nouveau chat (visible seulement sur onglet chat avec messages) ── */}
                 {onglet === 'chat' && messages.length > 0 && (
                   <button
@@ -2227,25 +2269,6 @@ padding: isMobile
           {/* ── Chat ── */}
           {onglet === 'chat' && (
             <div style={s.chatWrap}>
-
-              {/* Bouton historique chat — dans le flux (plus d'absolu qui
-                  chevauchait les bulles, retour Jean 2026-07-25) */}
-              {user?.id && (
-                <div style={{ display:'flex', justifyContent:'flex-end', paddingBottom:8, flexShrink:0 }}>
-                  <button onClick={() => setShowChatHistory(true)} title="Historique" style={{
-                    background:'rgba(255,235,210,0.32)',
-                    backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-                    border:'1px solid rgba(200,123,82,0.22)', borderRadius:10,
-                    padding:'6px 10px', cursor:'pointer', display:'flex', alignItems:'center', gap:5,
-                    fontSize:11, fontWeight:600, color:'rgba(200,123,82,0.75)', fontFamily:'Poppins,sans-serif',
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    Historique
-                  </button>
-                </div>
-              )}
 
               <div ref={chatBoxRef} style={s.chatBox}
                 onScroll={e => {
@@ -3485,8 +3508,8 @@ const s = {
     transition:'transform .18s, box-shadow .18s',
   },
 
-  userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:16 },
-  botMsg: { display:'flex', alignItems:'flex-start', marginBottom:16, gap:10 },
+  userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:10 },
+  botMsg: { display:'flex', alignItems:'flex-start', marginBottom:10, gap:10 },
   userBubble: {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
