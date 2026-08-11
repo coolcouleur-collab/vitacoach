@@ -16,6 +16,16 @@
  */
 
 import Groq from 'groq-sdk'
+import { createClient } from '@supabase/supabase-js'
+
+let _sb = null
+function getSupabase() {
+  if (!_sb && process.env.SUPABASE_URL) _sb = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+  )
+  return _sb
+}
 
 let _groq = null
 function getGroq() {
@@ -161,14 +171,38 @@ export function getRoutineCache(userId) {
 // ─── Force la régénération pour un utilisateur ───────────────────────────────
 export async function regenererPourUser(userId, pushSubscriptions) {
   routineCache.delete(userId)
-  const entry = pushSubscriptions.get(userId)
-  if (!entry) return null
 
-  const meta   = entry._meta || {}
-  const profil = meta.profil
+  // Le profil vivait UNIQUEMENT dans pushSubscriptions, une Map en memoire du
+  // serveur. Au moindre redemarrage de Render, deploiement compris, elle se
+  // vide : la generation echouait alors pour tout le monde avec le message
+  // « Profil incomplet », qui accusait l'utilisateur d'un probleme serveur.
+  // La table profils est la source durable, on la lit en repli (2026-08-12).
+  const entry  = pushSubscriptions.get(userId)
+  const meta   = entry?._meta || {}
+  let profil    = meta.profil
+  let metriques = meta.metriques || {}
+
+  if (!profil?.nom) {
+    try {
+      const sb = getSupabase()
+      const { data } = await sb.from('profils').select('profil').eq('user_id', userId).single()
+      if (data?.profil?.nom) profil = data.profil
+    } catch (e) {
+      console.warn('[RoutineAuto] profil illisible en base:', e.message)
+    }
+  }
   if (!profil?.nom) return null
 
-  const routine = await genererRoutine(profil, meta.metriques || {})
+  if (!metriques || !Object.keys(metriques).length) {
+    try {
+      const sb = getSupabase()
+      const auj = new Date().toISOString().split('T')[0]
+      const { data } = await sb.from('user_metrics').select('*').eq('user_id', userId).eq('date', auj).single()
+      if (data) metriques = data
+    } catch {}
+  }
+
+  const routine = await genererRoutine(profil, metriques)
   routineCache.set(userId, {
     routine,
     generatedAt: new Date().toISOString(),

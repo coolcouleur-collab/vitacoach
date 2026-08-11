@@ -1236,7 +1236,7 @@ app.post('/api/routine-regenerer', ownerGuard, async (req, res) => {
       entry._meta = { ...(entry._meta || {}), profil: profilBody, metriques: metriquesBody || entry._meta?.metriques || {} }
     }
     const routine = await regenererPourUser(userId, pushSubscriptions)
-    if (!routine) return res.status(404).json({ error: 'Profil incomplet — impossible de générer' })
+    if (!routine) return res.status(404).json({ error: "Je n'ai pas réussi à générer ta routine. Réessaie dans un instant." })
     res.json({ ok: true, routine, generatedAt: new Date().toISOString() })
   } catch (e) {
     res.status(500).json({ error: e.message })
