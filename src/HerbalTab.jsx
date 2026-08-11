@@ -36,6 +36,7 @@ function LinkChainIcon({ color = '#E8962A', size = 14 }) {
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const CATS = [
+  { id:'beaute',     label:'Beauté',     color:'#E8962A' },
   { id:'plantes',    label:'Plantes',    color:'#22c55e' },
   { id:'tisanes',    label:'Tisanes',    color:'#E8962A' },
   { id:'chinoise',   label:'Méd. chin.', color:'#C87B52' },
@@ -43,6 +44,94 @@ const CATS = [
 ]
 
 const DATA = {
+  // ── BEAUTÉ — recettes de grand-mère, cheveux et peau ────────────────────
+  // Chaque fiche porte ses ingrédients et sa préparation : une recette sans
+  // dosage ni mode d'emploi ne sert à rien.
+  // Les recettes très populaires mais réellement mauvaises (citron au soleil,
+  // bicarbonate, dentifrice) sont volontairement écartées et rassemblées dans
+  // la dernière fiche, qui explique pourquoi.
+  // Ni féminin ni masculin : cuir chevelu gras et chute de cheveux concernent
+  // tout le monde (Solenn vise les deux).
+  beaute: [
+    { nom:'Bain d\'huile de ricin', tag:'Cheveux', color:'#C87B52',
+      benefice:'Densifie, freine la chute et nourrit le cuir chevelu',
+      usage:'1 fois par semaine, en cure de 6 semaines',
+      ingredients:['2 c. à soupe d\'huile de ricin', '2 c. à soupe d\'huile de jojoba ou d\'olive'],
+      prepa:['Tiédir le mélange au bain-marie', 'Masser le cuir chevelu 5 minutes, par petits cercles', 'Laisser poser 1 h, cheveux enroulés dans une serviette', 'Deux shampoings doux pour tout retirer'],
+      detail:'Le ricin est très épais : pur, il est presque impossible à rincer, d\'où le mélange avec une huile fluide. Le massage compte autant que l\'huile, c\'est lui qui relance la microcirculation du bulbe.',
+      precaution:'À espacer si ton cuir chevelu est déjà gras.' },
+    { nom:'Rinçage au vinaigre de cidre', tag:'Cheveux', color:'#E8962A',
+      benefice:'Redonne de la brillance et calme les pellicules',
+      usage:'1 fois par semaine, après le shampoing',
+      ingredients:['1 c. à soupe de vinaigre de cidre', '500 ml d\'eau froide'],
+      prepa:['Mélanger dans une bouteille', 'Verser lentement sur les longueurs après le shampoing', 'Rincer rapidement à l\'eau froide'],
+      detail:'L\'acidité resserre les écailles du cheveu, ce qui le rend lisse et réfléchissant. L\'odeur disparaît complètement au séchage.',
+      precaution:'Jamais pur, et jamais sur un cuir chevelu irrité ou griffé.' },
+    { nom:'Masque œuf et miel', tag:'Cheveux', color:'#E8962A',
+      benefice:'Répare les longueurs sèches et les pointes abîmées',
+      usage:'Tous les quinze jours',
+      ingredients:['1 jaune d\'œuf', '1 c. à soupe de miel liquide', '1 c. à soupe d\'huile d\'olive'],
+      prepa:['Fouetter jusqu\'à obtenir une texture homogène', 'Appliquer sur les longueurs et les pointes, pas sur les racines', 'Laisser poser 20 minutes', 'Rincer à l\'eau TIÈDE, jamais chaude'],
+      detail:'Les protéines du jaune comblent les écailles ouvertes, le miel retient l\'eau dans la fibre. L\'eau chaude est le seul vrai piège : elle cuit l\'œuf dans les cheveux.',
+      precaution:'À éviter en cas d\'allergie à l\'œuf, même légère.' },
+    { nom:'Rhassoul sur cuir chevelu gras', tag:'Cheveux', color:'#22c55e',
+      benefice:'Absorbe l\'excès de sébum sans décaper la fibre',
+      usage:'1 fois par semaine au maximum',
+      ingredients:['3 c. à soupe de rhassoul en poudre', 'Eau tiède ou hydrolat, jusqu\'à obtenir une pâte'],
+      prepa:['Mélanger dans un bol NON métallique, avec une cuillère en bois', 'Appliquer uniquement sur les racines', 'Laisser 10 minutes sans laisser sécher', 'Rincer très abondamment'],
+      detail:'Le rhassoul capte le sébum par échange d\'ions au lieu de le dissoudre, contrairement à un shampoing détergent qui provoque un effet rebond.',
+      precaution:'Ni bol ni cuillère en métal, cela désactive l\'argile. Plus d\'une fois par semaine, ça assèche.' },
+    { nom:'Cure d\'ortie', tag:'Cheveux', color:'#22c55e',
+      benefice:'Reminéralise de l\'intérieur, contre la chute saisonnière',
+      usage:'1 à 2 tasses par jour, cure de 3 semaines',
+      ingredients:['2 c. à café d\'ortie séchée', '250 ml d\'eau frémissante'],
+      prepa:['Verser l\'eau sur l\'ortie', 'Couvrir et laisser infuser 10 minutes', 'Filtrer et boire'],
+      detail:'L\'ortie est riche en fer, en silice et en zinc, les trois carences qui se voient le plus vite dans les cheveux. Elle est déjà dans les fiches Plantes, ici c\'est son usage capillaire.',
+      precaution:'À éviter sous anticoagulant ou diurétique, et pendant la grossesse. Demande l\'avis de ton médecin.' },
+    { nom:'Masque à l\'argile verte', tag:'Peau', color:'#22c55e',
+      benefice:'Absorbe l\'excès de sébum et resserre les pores',
+      usage:'1 fois par semaine',
+      ingredients:['2 c. à soupe d\'argile verte', 'Eau florale ou eau, jusqu\'à obtenir une pâte', '1 c. à café de miel'],
+      prepa:['Mélanger dans un bol non métallique', 'Appliquer en couche épaisse en évitant le contour des yeux', 'Laisser 10 minutes SANS laisser sécher, vaporiser un peu d\'eau si ça tire', 'Rincer à l\'eau tiède'],
+      detail:'La règle est toujours la même avec l\'argile : elle travaille tant qu\'elle est humide. Une fois craquelée, elle tire l\'eau de la peau au lieu du sébum.',
+      precaution:'Jamais jusqu\'à craquelure, c\'est ce qui provoque tiraillements et rebond de sébum.' },
+    { nom:'Miel de thym sur les boutons', tag:'Peau', color:'#E8962A',
+      benefice:'Assainit et accélère la cicatrisation sans dessécher',
+      usage:'2 à 3 fois par semaine, en local',
+      ingredients:['1 c. à café de miel de thym ou de manuka'],
+      prepa:['Appliquer en couche fine sur la zone concernée', 'Laisser poser 15 minutes', 'Rincer à l\'eau tiède'],
+      detail:'Le miel est naturellement antibactérien et hygroscopique : il prive les bactéries de l\'eau dont elles ont besoin, tout en gardant la peau souple. Le miel de thym et le manuka sont les plus actifs.',
+      precaution:'À éviter en cas d\'allergie aux produits de la ruche.' },
+    { nom:'Avoine colloïdale', tag:'Peau', color:'#C87B52',
+      benefice:'Apaise les rougeurs, les tiraillements et les démangeaisons',
+      usage:'Dès que la peau chauffe ou tire',
+      ingredients:['3 c. à soupe de flocons d\'avoine', '2 c. à soupe d\'eau tiède ou de yaourt nature'],
+      prepa:['Mixer les flocons en poudre la plus fine possible', 'Mélanger jusqu\'à obtenir une crème', 'Appliquer et laisser 10 minutes', 'Rincer à l\'eau tiède'],
+      detail:'Ce n\'est pas qu\'une recette de grand-mère : l\'avoine colloïdale est utilisée en dermatologie, ses avénanthramides sont reconnues anti-inflammatoires et apaisent les peaux réactives.',
+      precaution:null },
+    { nom:'Gel d\'aloe vera', tag:'Peau', color:'#22c55e',
+      benefice:'Hydrate, calme les coups de soleil et les peaux échauffées',
+      usage:'Matin et soir sur peau propre',
+      ingredients:['Gel d\'aloe vera pur, 98 % minimum'],
+      prepa:['Appliquer une couche fine sur peau propre', 'Laisser pénétrer une minute', 'Ajouter une crème par-dessus si ta peau est sèche'],
+      detail:'L\'aloe hydrate mais ne retient pas l\'eau seul : sans crème par-dessus, sur peau sèche, l\'effet ne tient pas la journée.',
+      precaution:'Teste dans le pli du coude 24 h avant, l\'aloe est allergisant chez certaines personnes.' },
+    { nom:'Eau de rose', tag:'Peau', color:'#E8962A',
+      benefice:'Ravive un teint terne et décongestionne les cernes',
+      usage:'Matin et soir',
+      ingredients:['Hydrolat de rose de Damas'],
+      prepa:['Vaporiser sur le visage propre', 'Tapoter du bout des doigts sans frotter', 'Pour les cernes : compresses imbibées et bien froides, 5 minutes sur les yeux fermés'],
+      detail:'Astringent doux qui rééquilibre le pH après le nettoyage. Sur les cernes, c\'est surtout le froid qui agit, en resserrant les vaisseaux.',
+      precaution:'Choisis un hydrolat sans conservateur et garde-le au réfrigérateur.' },
+    { nom:'Ce qu\'il ne faut PAS faire', tag:'À éviter', color:'#ef4444',
+      benefice:'Trois recettes très répandues qui abîment vraiment la peau',
+      usage:'À bannir, quoi qu\'on lise ailleurs',
+      ingredients:['Citron sur la peau', 'Bicarbonate de soude en gommage', 'Dentifrice sur un bouton'],
+      prepa:['Citron : photosensibilisant, il provoque de vraies brûlures et des taches durables au moindre rayon de soleil', 'Bicarbonate : son pH très basique détruit le film hydrolipidique, la peau se défend en produisant plus de sébum', 'Dentifrice : le menthol et les agents blanchissants brûlent la zone et laissent souvent une marque plus visible que le bouton'],
+      detail:'Ces trois-là reviennent partout parce qu\'elles donnent une sensation immédiate de propreté ou de picotement, qu\'on prend pour de l\'efficacité. C\'est de l\'irritation.',
+      precaution:'Si une recette pique, chauffe ou rougit, rince immédiatement. Une bonne recette ne fait rien sentir.' },
+  ],
+
   plantes: [
     { nom:'Ashwagandha',   tag:'Adaptogène',      color:'#22c55e', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
     { nom:'Curcuma',       tag:'Anti-inflammatoire', color:'#E8962A', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
@@ -374,18 +463,23 @@ function HerbItem({ item, onChat }) {
       {/* Expanded content */}
       <div style={{
         overflow:'hidden',
-        maxHeight: open ? 320 : 0,
+        // 320 px suffisaient pour une plante, pas pour une recette complete :
+        // ingredients + preparation + precaution depassent largement et se
+        // faisaient couper (2026-08-11).
+        maxHeight: open ? (item.ingredients ? 1200 : 320) : 0,
         transition:'max-height 0.35s cubic-bezier(0.4,0,0.2,1)',
       }}>
         <div style={{
           padding:'0 15px 15px',
           borderTop:'1px solid rgba(200,123,82,0.18)',
         }}>
-          {/* Usage box — green identity tint */}
+          {/* Usage box — vert par defaut. Rouge sur la fiche des recettes a
+              proscrire : un encadre vert intitule « Comment utiliser » pour dire
+              « a bannir » se contredit lui-meme. */}
           <div style={{
             display:'flex', alignItems:'flex-start', gap:11,
-            background:'rgba(34,197,94,0.10)',
-            border:'1px solid rgba(34,197,94,0.20)',
+            background: item.tag === 'À éviter' ? 'rgba(239,68,68,0.09)' : 'rgba(34,197,94,0.10)',
+            border: item.tag === 'À éviter' ? '1px solid rgba(239,68,68,0.22)' : '1px solid rgba(34,197,94,0.20)',
             borderRadius:12, padding:'11px 13px', margin:'12px 0 10px',
           }}>
             <div style={{
@@ -395,13 +489,60 @@ function HerbItem({ item, onChat }) {
             }} />
             <div>
               <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px' }}>
-                Comment utiliser
+                {item.tag === 'À éviter' ? 'À ne pas faire' : 'Comment utiliser'}
               </div>
               <div style={{ fontSize:12, color:TXT_MAIN, fontWeight:700, marginTop:2, lineHeight:1.4 }}>
                 {item.usage}
               </div>
             </div>
           </div>
+          {/* Ingredients — recettes de la categorie Beaute */}
+          {item.ingredients && (
+            <div style={{ marginBottom:11 }}>
+              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
+                Il te faut
+              </div>
+              {item.ingredients.map((ing, k) => (
+                <div key={k} style={{ display:'flex', alignItems:'flex-start', gap:8, marginBottom:4 }}>
+                  <span style={{ width:4, height:4, borderRadius:'50%', background:item.color, opacity:0.8, flexShrink:0, marginTop:6 }} />
+                  <span style={{ fontSize:12, color:TXT_MAIN, lineHeight:1.45 }}>{ing}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Preparation, etape par etape */}
+          {item.prepa && (
+            <div style={{ marginBottom:11 }}>
+              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
+                {item.tag === 'À éviter' ? 'Pourquoi' : 'La recette'}
+              </div>
+              {item.prepa.map((etape, k) => (
+                <div key={k} style={{ display:'flex', alignItems:'flex-start', gap:9, marginBottom:6 }}>
+                  <span style={{
+                    width:17, height:17, borderRadius:'50%', flexShrink:0, marginTop:1,
+                    background:'rgba(232,150,42,0.14)', border:'1px solid rgba(232,150,42,0.30)',
+                    color:ACCENT, fontSize:9, fontWeight:800,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                  }}>{k + 1}</span>
+                  <span style={{ fontSize:12, color:TXT_SOFT, lineHeight:1.5 }}>{etape}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Precaution — rouge, comme les mises en garde deja presentes */}
+          {item.precaution && (
+            <div style={{
+              display:'flex', alignItems:'flex-start', gap:9,
+              background:'rgba(239,68,68,0.07)', border:'1px solid rgba(239,68,68,0.20)',
+              borderRadius:12, padding:'10px 12px', marginBottom:11,
+            }}>
+              <span style={{ marginTop:1, flexShrink:0 }}><WarnTriangleIcon size={13} /></span>
+              <span style={{ fontSize:11.5, color:TXT_SOFT, lineHeight:1.5 }}>{item.precaution}</span>
+            </div>
+          )}
+
           {/* Detail text */}
           <div style={{ fontSize:12, color:TXT_SOFT, lineHeight:1.75, marginBottom:12 }}>
             {item.detail}
@@ -432,8 +573,11 @@ function HerbItem({ item, onChat }) {
 }
 
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
-export default function HerbalTab({ profil, onChat, onBack }) {
-  const [cat, setCat] = useState('plantes')
+// catInitiale : « Tes outils » propose une entree Beaute qui doit ouvrir
+// directement sur cette categorie. Sans ca la page s'ouvrait toujours sur
+// Plantes et l'entree mentait sur sa destination.
+export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'plantes' }) {
+  const [cat, setCat] = useState(catInitiale)
   const items = DATA[cat] || []
 
   return (

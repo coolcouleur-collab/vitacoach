@@ -2474,11 +2474,17 @@ padding: isMobile
             </div>
           )}
 
-          {/* ── Herbal ── */}
-          {onglet === 'herbal' && (
+          {/* ── Santé Naturelle ──
+               Deux portes d'entrée sur la MEME page : « herbal » l'ouvre sur les
+               plantes (cartes horaires de l'accueil), « beaute » l'ouvre sur les
+               recettes cheveux et peau (rangée « Tes outils »). Avant, seule la
+               première existait, et uniquement à certaines heures : la page
+               était donc inaccessible le reste du temps. */}
+          {(onglet === 'herbal' || onglet === 'beaute') && (
             <Suspense fallback={<GlowLoader fullPage />}>
             <HerbalTab
               profil={profil}
+              catInitiale={onglet === 'beaute' ? 'beaute' : 'plantes'}
               onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
               onBack={() => setOnglet('accueil')}
             />
