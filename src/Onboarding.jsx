@@ -356,6 +356,12 @@ function iconCircleStyle(isSel) {
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function Onboarding({ onTermine, onBack }) {
+  // Consentement explicite au traitement des donnees de sante. Le RGPD les
+  // classe en categorie particuliere (article 9) : l'acceptation des CGU ne
+  // suffit pas, il faut un consentement DISTINCT, non pre-coche, et pouvoir en
+  // prouver la date. Il n'existait rien (constat 2026-08-12).
+  const [consentSante, setConsentSante] = useState(false)
+
   const [step, setStep] = useState(() => {
     const s = sessionStorage.getItem('solenn_onboarding_step')
     return s ? parseInt(s, 10) : 0
@@ -499,6 +505,9 @@ function premiereLecture(a) {
       sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Tout va bien de ce côté'),
       sante_conditions: a.sante_conditions || [],
       cycle:            a.cycle === true,
+      // Preuve du consentement : le RGPD exige de pouvoir demontrer QUAND il a
+      // ete donne, pas seulement qu'il l'a ete.
+      consentSanteLe:   a.consentSanteLe || null,
       isPro:            false,
     }
     localStorage.setItem('vitacoach_profil', JSON.stringify(profil))
@@ -937,7 +946,7 @@ function premiereLecture(a) {
           return without.includes(label) ? without.filter(s => s !== label) : [...without, label]
         })
       }
-      const canContinue = santeSelections.length > 0
+      const canContinue = santeSelections.length > 0 && consentSante
       return (
         <div style={{display:'flex', flexDirection:'column', gap:28}}>
           <div style={{display:'flex', flexDirection:'column', gap:10}}>
@@ -981,10 +990,49 @@ function premiereLecture(a) {
               )
             })}
           </div>
+          {/* Consentement explicite — RGPD article 9. Non coche par defaut :
+              une case pre-cochee ne vaut pas consentement. */}
+          <motion.button
+            initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.5 }}
+            onClick={() => setConsentSante(v => !v)}
+            whileTap={{ scale:0.99 }}
+            style={{
+              display:'flex', alignItems:'flex-start', gap:12, textAlign:'left',
+              padding:'13px 15px', borderRadius:16, cursor:'pointer',
+              background: consentSante ? 'rgba(255,235,210,0.22)' : 'rgba(255,255,255,0.06)',
+              border: consentSante ? '1px solid rgba(255,220,160,0.55)' : '1px solid rgba(255,248,235,0.22)',
+              transition:'background 0.18s, border-color 0.18s',
+            }}
+          >
+            <span style={{
+              width:20, height:20, borderRadius:6, flexShrink:0, marginTop:1,
+              background: consentSante ? 'rgba(255,220,160,0.90)' : 'transparent',
+              border: consentSante ? '1px solid rgba(255,220,160,0.90)' : '1.5px solid rgba(255,248,235,0.45)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+            }}>
+              {consentSante && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a4a22"
+                  strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </span>
+            <span style={{ fontSize:12.5, lineHeight:1.55, color:'rgba(255,248,235,0.92)' }}>
+              J'accepte que Solenn traite mes données de santé pour personnaliser
+              ses conseils. Je peux retirer ce consentement, exporter ou supprimer
+              mes données à tout moment depuis les réglages.{' '}
+              <a href="/confidentialite" target="_blank" rel="noreferrer"
+                onClick={e => e.stopPropagation()}
+                style={{ color:'rgba(255,225,175,1)', textDecoration:'underline' }}>
+                Politique de confidentialité
+              </a>
+            </span>
+          </motion.button>
+
           <motion.button
             onClick={() => {
               if (canContinue) {
-                goNext({ ...answers, sante_conditions: santeSelections })
+                goNext({ ...answers, sante_conditions: santeSelections, consentSanteLe: new Date().toISOString() })
               }
             }}
             disabled={!canContinue}
