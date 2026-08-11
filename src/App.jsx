@@ -1865,7 +1865,17 @@ const [messages, setMessages] = useState(() => {
    En bas, 168px au lieu de 130 : la barre d'onglets dépliée est plus haute que
    l'ancienne pastille et recouvrait le dernier bloc de chaque page — le
    « Guide des exercices » devenait même impossible à toucher. */
-padding: isMobile ? (onglet === 'accueil' ? '0' : 'calc(env(safe-area-inset-top, 0px) + 76px) 0 168px') : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'none' }}>
+/* Le bas est calculé à partir de la barre de navigation réelle (pastille
+   flottante : safe-area + 10px d'écart + ~62px de haut) au lieu d'un 168px
+   forfaitaire, qui laissait un grand vide sous la zone de saisie du chat.
+   Le chat serre au plus près ; les pages qui défilent gardent une marge de
+   confort pour que leur dernier bloc reste attrapable. */
+padding: isMobile
+  ? (onglet === 'accueil' ? '0'
+    : onglet === 'chat'
+      ? 'calc(env(safe-area-inset-top, 0px) + 76px) 0 calc(env(safe-area-inset-bottom, 0px) + 82px)'
+      : 'calc(env(safe-area-inset-top, 0px) + 76px) 0 calc(env(safe-area-inset-bottom, 0px) + 118px)')
+  : '0 0 40px', overflowY: onglet === 'chat' ? 'hidden' : 'auto', overflowX:'hidden', WebkitOverflowScrolling:'touch', overscrollBehavior:'none' }}>
 
           {/* Pull-to-refresh indicator */}
           {(pullDist > 8 || pullRefreshing) && (
