@@ -777,7 +777,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
         {(() => {
           const p = phraseCoach({ score, metriques, streak })
           return (
-            <div style={{ maxWidth: 320, textAlign: 'center', padding: '0 22px', marginTop: -2, marginBottom: 6 }}>
+            <div style={{ maxWidth: 320, minHeight: 66, textAlign: 'center', padding: '0 22px', marginTop: -2, marginBottom: 6 }}>
               <div style={{
                 fontSize: 14.5, lineHeight: 1.45, fontWeight: 500,
                 fontFamily: "'Poppins',system-ui,sans-serif",
@@ -2214,7 +2214,13 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 const hc = {
   page: { display:'flex', flexDirection:'column', paddingBottom:120 },
 
-  hero: { position:'relative', minHeight:360, display:'flex', flexDirection:'column',
+  // 440 et non 360 : le contenu est aligné en BAS, donc tout ce qu'on ajoute
+  // sous le cercle le remonte d'autant. La phrase de Solenn faisait dépasser le
+  // contenu de la hauteur minimale, le cercle se collait en haut de l'écran et
+  // l'icône en orbite passait sous le header (signalé par Jean 2026-08-11).
+  // 250 (cercle) + 20 + ~66 (phrase) + 18 = 354, il reste ~86 px au-dessus,
+  // soit l'espace qu'avait le cercle avant la phrase.
+  hero: { position:'relative', minHeight:440, display:'flex', flexDirection:'column',
     alignItems:'center', justifyContent:'flex-end', paddingBottom:18 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
