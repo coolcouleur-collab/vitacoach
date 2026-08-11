@@ -35,6 +35,11 @@ function LinkChainIcon({ color = '#E8962A', size = 14 }) {
 }
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
+const LABEL_CAT = {
+  sommeil: 'mieux dormir', stress: 'moins de stress', '\u00e9nergie': "plus d'\u00e9nergie",
+  digestion: 'la digestion', 'immunit\u00e9': 'les d\u00e9fenses', cheveux: 'les cheveux', peau: 'la peau',
+}
+
 const CATS = [
   { id:'sommeil',   label:'Sommeil',   color:'#C87B52' },
   { id:'stress',    label:'Stress',    color:'#22c55e' },
@@ -564,7 +569,27 @@ function HerbItem({ item, onChat }) {
 // Plantes et l'entree mentait sur sa destination.
 export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'sommeil' }) {
   const [cat, setCat] = useState(catInitiale)
-  const items = FICHES.filter(f => f.besoins.includes(cat))
+
+  // La rangee de categories deborde de l'ecran. Quand la page s'ouvre sur une
+  // categorie qui n'est pas la premiere (Soins ouvre sur Cheveux), la pastille
+  // active restait hors champ : on voyait « Sommeil, Stress, Energie » en haut
+  // et des recettes capillaires en dessous, sans comprendre le lien. On amene
+  // donc la pastille active dans le champ de vision (2026-08-11).
+  const catRowRef = React.useRef(null)
+  useEffect(() => {
+    const el = catRowRef.current?.querySelector('[data-actif="1"]')
+    if (el?.scrollIntoView) el.scrollIntoView({ inline: 'center', block: 'nearest' })
+  }, [cat])
+  // 5. La mise en garde d'abord : c'est l'information la plus importante en
+  //    securite, elle etait en bas de liste et coupee par la barre de nav.
+  // 4. Puis les protocoles (Recette) groupes avant les ingredients : « Ortie »
+  //    et « Bain d'huile de ricin » ne sont pas de meme nature, les melanger
+  //    dans un ordre arbitraire brouillait la lecture.
+  const RANG = { '\u00c0 \u00e9viter': 0, 'Recette': 1 }
+  const items = FICHES
+    .filter(f => f.besoins.includes(cat))
+    .slice()
+    .sort((a, b) => (RANG[a.tag] ?? 2) - (RANG[b.tag] ?? 2))
 
   return (
     <div style={hb.page}>
@@ -609,12 +634,16 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
       <AIReco profil={profil} onChat={onChat} />
 
       {/* ── Category pills row ── */}
-      <div style={hb.catRow}>
+      {/* Le fondu a droite signale qu'il reste des categories : sans lui, la
+          cinquieme est coupee net et rien n'indique qu'on peut faire defiler. */}
+      <div style={{ position:'relative' }}>
+      <div ref={catRowRef} style={hb.catRow}>
         {CATS.map(c => {
           const active = cat === c.id
           return (
             <button
               key={c.id}
+              data-actif={active ? '1' : '0'}
               style={{
                 flexShrink:0, padding:'10px 20px', borderRadius:20,
                 border: active ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(200,123,82,0.16)',
@@ -639,18 +668,20 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
           )
         })}
       </div>
+      <div style={{
+        position:'absolute', top:0, right:0, bottom:0, width:34, pointerEvents:'none',
+        background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.85) 100%)',
+      }} />
+      </div>
 
       {/* ── Count row ── */}
       <div style={hb.countRow}>
-        <div style={{
-          width:8, height:8, borderRadius:'50%',
-          background:CTA_GRAD,
-          boxShadow:'0 2px 6px rgba(232,150,42,0.40)',
-          flexShrink:0,
-        }} />
-        <span style={hb.countText}>{items.length} remèdes</span>
+        {/* « 6 REMÈDES · APPUIE POUR DÉVELOPPER » avec une pastille n'était ni un
+            titre ni un bouton : l'affordance était illisible. Un vrai libellé de
+            section, et le compteur en second plan. */}
+        <span style={hb.countText}>Pour {LABEL_CAT[cat] || cat}</span>
         <span style={{ ...hb.countSep }}>·</span>
-        <span style={hb.countText}>Appuie pour développer</span>
+        <span style={{ ...hb.countText, fontWeight:500, opacity:0.75 }}>{items.length} fiches</span>
       </div>
 
       {/* ── Items list ── */}
@@ -671,7 +702,10 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const hb = {
-  page: { paddingBottom:100, animation:'tabFade 0.28s ease both' },
+  // 100 px ne suffisaient pas : la pastille de navigation flotte a
+  // env(safe-area-inset-bottom) + 10 et mesure ~62 px, elle recouvrait donc la
+  // derniere fiche. On reserve sa hauteur reelle.
+  page: { paddingBottom:'calc(env(safe-area-inset-bottom, 0px) + 132px)', animation:'tabFade 0.28s ease both' },
 
   // ── Aurora hero header
   hero: {
