@@ -350,8 +350,8 @@ function AIReco({ profil, onChat }) {
             <SparkleIcon color={ACCENT} size={22} />
           </div>
           <div style={{ flex:1 }}>
-            <div style={hb.aiTitle}>Recommandation IA</div>
-            <div style={hb.aiSub}>Basée sur ton profil {profil?.nom ? `· ${profil.nom}` : ''}</div>
+            <div style={hb.aiTitle}>Tu ne trouves pas ?</div>
+            <div style={hb.aiSub}>Solenn cherche dans ton profil {profil?.nom ? `· ${profil.nom}` : ''}</div>
           </div>
           {!items && (
             <button
@@ -630,9 +630,6 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
         </div>
       </div>
 
-      {/* ── AI Reco ── */}
-      <AIReco profil={profil} onChat={onChat} />
-
       {/* ── Category pills row ── */}
       {/* Le fondu a droite signale qu'il reste des categories : sans lui, la
           cinquieme est coupee net et rien n'indique qu'on peut faire defiler. */}
@@ -690,6 +687,13 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
           <HerbItem key={i} item={item} onChat={onChat} />
         ))}
       </div>
+
+      {/* ── Recours, APRÈS la liste ──
+           Il était en tête de page et formait un troisième système de
+           navigation avant même qu'on ait pu lire quoi que ce soit. Il est
+           descendu ici : le besoin d'aide naît quand la liste n'a pas répondu,
+           pas avant de l'avoir parcourue (décision Jean 2026-08-11). */}
+      <AIReco profil={profil} onChat={onChat} />
 
       {/* ── Disclaimer ── */}
       <div style={hb.disclaimer}>
