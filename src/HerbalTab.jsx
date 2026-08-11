@@ -763,11 +763,11 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
            pas avant de l'avoir parcourue (décision Jean 2026-08-11). */}
       <AIReco profil={profil} onChat={onChat} />
 
-      {/* ── Disclaimer ── */}
-      <div style={hb.disclaimer}>
-        <span style={{ flexShrink:0, display:'flex', marginTop:1 }}><WarnTriangleIcon color="#ef4444" size={13} /></span>
-        <span>À titre éducatif uniquement. Consulte un professionnel de santé avant tout supplément, particulièrement si tu prends des médicaments.</span>
-      </div>
+      {/* L'ancien avertissement de bas de page a ete retire : il faisait doublon
+          avec le bandeau permanent ajoute en tete (2026-08-12). Deux mises en
+          garde identiques s'annulent, on finit par n'en lire aucune. Celui du
+          haut est conserve car il est vu avant le contenu et couvre en plus la
+          grossesse et l'allaitement. */}
     </div>
   )
 }
