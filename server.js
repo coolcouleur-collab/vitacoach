@@ -650,6 +650,41 @@ app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
   // On retire aussi son abonnement aux notifications push.
   try { pushSubscriptions.delete(userId) } catch {}
 
+  // Email de confirmation. Envoye AVANT de conclure, mais son echec ne fait
+  // jamais echouer la suppression : le droit a l'effacement prime sur l'accuse
+  // de reception. L'adresse vient du compte authentifie, pas du corps de la
+  // requete, sinon n'importe qui pourrait se faire envoyer cet email.
+  const email = req.authUser?.email
+  if (email && process.env.RESEND_API_KEY) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Solenn <noreply@meet-solenn.com>',
+          to: [email],
+          subject: 'Ton compte Solenn a bien été supprimé',
+          html: `<p>Bonjour,</p>
+            <p>Ton compte Solenn a été supprimé le ${new Date().toLocaleString('fr-FR')}, à ta demande.</p>
+            <p><strong>Ce qui a été effacé :</strong> ton profil, tes mesures de santé,
+            tes check-ins, tes conversations avec Solenn, ton programme, tes rapports,
+            ton suivi de cycle et tes publications du forum.</p>
+            <p><strong>Ce que nous conservons :</strong> uniquement les factures liées à
+            un éventuel abonnement, que la loi comptable nous oblige à garder dix ans.
+            Elles ne contiennent aucune donnée de santé.</p>
+            <p>Si tu n'es pas à l'origine de cette demande, écris-nous immédiatement
+            à contact@meet-solenn.com.</p>
+            <p>Merci d'avoir essayé Solenn.</p>`,
+        }),
+      })
+    } catch (e) {
+      console.warn('[Suppression compte] email non envoyé:', e.message)
+    }
+  }
+
   if (echecs.length) {
     console.error('[Suppression compte] échecs partiels:', echecs)
     return res.status(500).json({ error: 'suppression incomplète', details: echecs })

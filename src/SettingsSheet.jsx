@@ -434,6 +434,10 @@ export default function SettingsSheet({
         body: JSON.stringify({ userId }),
       })
       if (!res.ok) throw new Error("Le serveur n'a pas pu supprimer le compte.")
+      // Le lien vers l'app Sante est retire explicitement avant le vidage
+      // general : ne pas dependre d'un localStorage.clear() pour une donnee de
+      // sante, et rendre l'intention lisible.
+      try { localStorage.removeItem('vitacoach_healthkit_connected') } catch {}
       try { localStorage.clear(); sessionStorage.clear() } catch {}
       try { await m.supabase.auth.signOut() } catch {}
       window.location.replace('/')
@@ -992,10 +996,29 @@ export default function SettingsSheet({
                 danger={confirmSuppr}
               />
               {confirmSuppr && !supprEnCours && (
-                <div style={{ fontFamily: C.font, fontSize: 11.5, color: 'rgba(200,50,20,0.85)', lineHeight: 1.55, padding: '2px 4px 8px' }}>
-                  Ton profil, tes mesures, tes conversations, ton programme et tes
-                  publications du forum seront effacés définitivement. Cette action
-                  est irréversible et ne peut pas être annulée.
+                <div style={{ fontFamily: C.font, fontSize: 11.5, lineHeight: 1.6, padding: '4px 4px 10px', display:'flex', flexDirection:'column', gap:8 }}>
+                  {/* Dire ce qui est efface ET ce qui est conserve : une
+                      suppression qui ne mentionne pas les factures serait
+                      trompeuse, la loi comptable impose de les garder. */}
+                  <div style={{ color: 'rgba(200,50,20,0.90)' }}>
+                    <strong>Effacé définitivement :</strong> ton profil, tes mesures de
+                    santé, tes check-ins, tes conversations avec Solenn, ton programme,
+                    tes rapports, ton suivi de cycle, tes publications du forum et ta
+                    connexion à l'app Santé de ton téléphone.
+                  </div>
+                  <div style={{ color: C.textMuted }}>
+                    <strong>Conservé :</strong> uniquement les factures d'un éventuel
+                    abonnement, que la loi comptable impose de garder dix ans. Elles ne
+                    contiennent aucune donnée de santé.
+                  </div>
+                  <div style={{ color: C.textMuted }}>
+                    Tu recevras un email de confirmation. Si tu as autorisé Solenn à lire
+                    l'app Santé, pense à retirer l'autorisation dans Réglages, Santé,
+                    Accès des apps : seul iOS peut la révoquer.
+                  </div>
+                  <div style={{ color: 'rgba(200,50,20,0.90)', fontWeight: 700 }}>
+                    Cette action est irréversible.
+                  </div>
                 </div>
               )}
               {supprErreur && (
