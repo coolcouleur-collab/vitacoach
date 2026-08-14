@@ -651,7 +651,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
            suivaient sans respiration ni hierarchie : brouillon
            (constat Jean 2026-08-12). ── */}
       <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(178,102,62,0.85)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
         Ta semaine
       </div>
       {userId && (
@@ -661,7 +661,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       )}
 
       <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(178,102,62,0.85)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
         Sur la durée
       </div>
       <TesProgres history={history} userId={userId} />

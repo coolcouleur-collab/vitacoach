@@ -308,7 +308,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
       {/* POURQUOI on s'entraine — l'objectif du profil, en tete. La page
           montrait un plan sans jamais dire ce qu'il vise : on ne s'entraine
           pas pour cocher des cases (constat Jean 2026-08-12). */}
-      {(objectifProgramme || objectifActuel) && !objectifChange && (
+      {!objectifChange && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
           padding: '10px 14px', borderRadius: 14,
@@ -317,7 +317,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
         }}>
           <TargetIcon size={15} color="#C87B52" />
           <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.4 }}>
-            <span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}
+            {(objectifProgramme || objectifActuel)
+              ? <><span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}</>
+              : <>Aucun objectif dans ton profil — définis-le dans Réglages, ton programme suivra ce cap.</>}
           </div>
         </div>
       )}
