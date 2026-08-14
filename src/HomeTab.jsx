@@ -376,6 +376,10 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
 }
 
 // ─── PALETTE TEXTE NUIT / JOUR ────────────────────────────────────────────────
+// Couleur unique des metriques : la meme dans l'orbite du soleil et dans la
+// feuille de saisie. Les changer separement recree l'incoherence.
+const ORBIT = '#C87B52'
+
 const nightText  = (op) => `rgba(180,210,255,${op})`
 const warmText   = (op) => `rgba(200,123,82,${op})`
 const sunsetText = (op) => `rgba(255,225,200,${op})`
@@ -1237,10 +1241,15 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
   const [activeIdx, setActiveIdx] = useState(METRIC_KEY_IDX[initialKey] ?? 0)
 
   const ITEMS = [
-    { key:'eau',     icon:<WaterIcon size={22} color="#72B8D4" />, iconLg:<WaterIcon size={52} color="#72B8D4" />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:'#72B8D4', fmt: v => Math.round(v) },
-    { key:'pas',     icon:<RunIcon   size={22} color="#C87B52" />, iconLg:<RunIcon   size={52} color="#C87B52" />, label:'Pas',     unit:'',   min:0, max:25000, step:500, color:'#C87B52', fmt: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v },
-    { key:'sommeil', icon:<MoonIcon  size={22} color="#9A96CC" />, iconLg:<MoonIcon  size={52} color="#9A96CC" />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:'#9A96CC', fmt: v => Number(v).toFixed(1) },
-    { key:'humeur',  icon:<MoodIcon  size={22} color="#C9A24E" />, iconLg:<MoodIcon  size={52} color="#C9A24E" />, label:'Humeur',  unit:'/5', min:1, max:5,     step:1,   color:'#C9A24E', fmt: v => v },
+    // Toutes en terracotta. La feuille de saisie gardait un bleu ciel, un
+    // violet et un jaune olive alors que les cinq icones en orbite autour du
+    // soleil sont passees au terracotta le 2026-08-08 : on touchait une icone
+    // terracotta et elle changeait de couleur en s'ouvrant. Chaque metrique se
+    // reconnait a sa FORME, pas a sa teinte (constat Jean 2026-08-12).
+    { key:'eau',     icon:<WaterIcon size={22} color={ORBIT} />, iconLg:<WaterIcon size={52} color={ORBIT} />, label:'Eau',     unit:'v',  min:0, max:20,    step:1,   color:ORBIT, fmt: v => Math.round(v) },
+    { key:'pas',     icon:<RunIcon   size={22} color={ORBIT} />, iconLg:<RunIcon   size={52} color={ORBIT} />, label:'Pas',     unit:'',   min:0, max:25000, step:500, color:ORBIT, fmt: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v },
+    { key:'sommeil', icon:<MoonIcon  size={22} color={ORBIT} />, iconLg:<MoonIcon  size={52} color={ORBIT} />, label:'Sommeil', unit:'h',  min:0, max:12,    step:0.5, color:ORBIT, fmt: v => Number(v).toFixed(1) },
+    { key:'humeur',  icon:<MoodIcon  size={22} color={ORBIT} />, iconLg:<MoodIcon  size={52} color={ORBIT} />, label:'Humeur',  unit:'/5', min:1, max:5,     step:1,   color:ORBIT, fmt: v => v },
   ]
   const m = ITEMS[activeIdx]
 
