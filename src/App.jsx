@@ -3682,6 +3682,60 @@ const s = {
 const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, disabled, kbOffset, isMobile, showScrollBtn, onScrollDown }) {
   const [input, setInput] = React.useState('')
   const fileRef = React.useRef(null)
+
+  // ── Parler a Solenn au lieu de taper ──────────────────────────────────────
+  // Un coach, ca s'ecoute et ca se parle : c'est la fonctionnalite qu'aucun
+  // tracker n'a. Le texte transcrit atterrit dans le champ, MODIFIABLE, et ne
+  // part jamais tout seul : on relit ce qu'on a dicte avant d'envoyer
+  // (2026-08-13). Transcription par Whisper via /api/transcribe.
+  const [micState, setMicState] = React.useState('idle')  // idle | rec | trans
+  const recRef = React.useRef(null)
+
+  async function toggleMic() {
+    if (disabled) return
+    if (micState === 'rec') { recRef.current?.stop(); return }
+    if (micState !== 'idle') return
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      // iOS enregistre en AAC/mp4, Chrome en opus/webm : on prend ce que
+      // l'appareil sait faire.
+      const mime = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm']
+        .find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || ''
+      const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined)
+      const chunks = []
+      rec.ondataavailable = e => { if (e.data?.size) chunks.push(e.data) }
+      rec.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop())
+        setMicState('trans')
+        try {
+          const blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' })
+          const base64 = await new Promise((ok, ko) => {
+            const r = new FileReader()
+            r.onload = () => ok(String(r.result).split(',')[1] || '')
+            r.onerror = ko
+            r.readAsDataURL(blob)
+          })
+          const res = await fetch('/api/transcribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+            body: JSON.stringify({ audio: base64, mime: rec.mimeType }),
+          })
+          const d = await res.json()
+          if (d?.texte) setInput(prev => (prev ? prev + ' ' : '') + d.texte)
+        } catch {}
+        setMicState('idle')
+      }
+      recRef.current = rec
+      rec.start()
+      setMicState('rec')
+      triggerHaptic('light')
+      // Garde-fou : 90 s max, personne ne dicte plus longtemps et l'API a une
+      // limite de taille.
+      setTimeout(() => { if (recRef.current === rec && rec.state === 'recording') rec.stop() }, 90000)
+    } catch {
+      setMicState('idle')   // micro refuse : on reste au clavier, sans erreur
+    }
+  }
   function send() {
     const msg = input.trim()
     if (!msg || disabled) return
@@ -3728,11 +3782,30 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
             <circle cx="12" cy="13" r="4"/>
           </svg>
         </button>
+        <button style={{ ...s.sendBtn, marginRight:-4, position:'relative' }}
+          title={micState === 'rec' ? 'Terminer et transcrire' : 'Parler à Solenn'}
+          onClick={toggleMic}>
+          <style>{`@keyframes micPulse { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.55; transform:scale(1.15) } }`}</style>
+          {micState === 'trans' ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.58)" strokeWidth="1.8" strokeLinecap="round" style={{ animation:'spin 1s linear infinite' }}>
+              <path d="M21 12a9 9 0 1 1-6.2-8.56"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke={micState === 'rec' ? '#C0392B' : 'rgba(200,123,82,0.58)'}
+              strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+              style={micState === 'rec' ? { animation:'micPulse 1.1s ease-in-out infinite' } : undefined}>
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+            </svg>
+          )}
+        </button>
         <input className="chat-input" style={s.inputChat}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
-          placeholder="Pose une question à Solenn..."
+          placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Pose une question à Solenn...'}
           disabled={disabled} />
         <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
           <SendIcon color="rgba(200,123,82,0.58)" size={20} />
