@@ -1750,7 +1750,7 @@ const [messages, setMessages] = useState(() => {
             isPro={isPro}
             onPasserPro={passerPro}
             msgsRestants={hasFullAccess ? null : Math.max(0, FREE_LIMIT - getMsgCount())}
-            trialDaysLeft={isFreeTrial ? Math.max(0, 21 - Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)) : null}
+            trialDaysLeft={isFreeTrial ? Math.max(0, ESSAI_JOURS - Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)) : null}
             userId={user?.id}
             onMetriqueUpdate={mettreAJourMetrique}
             onClose={() => setShowSettings(false)}
@@ -2249,10 +2249,13 @@ padding: isMobile
                     display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                     border:'none', background:'transparent', cursor:'pointer',
                     fontFamily:F, width:'100%', textAlign:'left',
-                    color:'rgba(239,68,68,0.70)', fontWeight:400, fontSize:14,
+                    // Terracotta et non rouge : se deconnecter est reversible en
+                    // un geste, ce n'est pas une action dangereuse. Le rouge est
+                    // reserve a l'irreversible (2026-08-12).
+                    color:'rgba(200,123,82,0.80)', fontWeight:400, fontSize:14,
                     marginTop:4,
                   }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.70)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                     </svg>
                     Se déconnecter
