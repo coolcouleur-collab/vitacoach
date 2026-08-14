@@ -808,19 +808,22 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
               transition={{ type: 'spring', stiffness: 400, damping: 28 }}
               onClick={e => e.stopPropagation()}
               style={{
-                background: 'rgba(22,9,2,0.92)',
+                // Claire et non sombre : c'etait le seul element fonce de toute
+                // l'app, il jurait avec la charte (constat Jean 2026-08-12).
+                background: 'rgba(255,246,238,0.96)',
                 backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255,220,160,0.22)',
+                border: '1px solid rgba(200,123,82,0.28)',
+                boxShadow: '0 18px 60px rgba(120,60,20,0.28)',
                 borderRadius: 24, padding: '28px 24px',
                 maxWidth: 340, width: '100%',
                 fontFamily: "'Poppins', sans-serif",
               }}
             >
               <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#E8962A" /></div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,238,220,0.92)', textAlign: 'center', marginBottom: 8 }}>
+              <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(150,85,50,0.95)', textAlign: 'center', marginBottom: 8 }}>
                 Nouveau challenge ?
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,238,220,0.60)', textAlign: 'center', marginBottom: 24 }}>
+              <div style={{ fontSize: 13, color: 'rgba(160,100,60,0.75)', textAlign: 'center', marginBottom: 24 }}>
                 Le challenge actuel sera remplacé et ta progression perdue.
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
@@ -828,9 +831,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
                   onClick={() => setConfirmReset(false)}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
-                    background: 'rgba(255,235,210,0.08)',
-                    border: '1px solid rgba(255,220,160,0.18)',
-                    color: 'rgba(255,238,220,0.70)', fontSize: 14,
+                    background: 'rgba(200,123,82,0.08)',
+                    border: '1px solid rgba(200,123,82,0.25)',
+                    color: 'rgba(160,100,60,0.85)', fontSize: 14,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
                 >

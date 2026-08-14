@@ -1968,18 +1968,13 @@ padding: isMobile
             }}>
               {/* Logo */}
               {(() => {
-                const logoColor = {
-                  sunrise: 'rgba(255,232,195,0.90)',
-                  day:     'rgba(255,238,228,0.62)',
-                  sunset:  'rgba(255,218,180,0.52)',
-                  night:   'rgba(160,200,255,0.90)',
-                }[homePreset] ?? 'rgba(255,238,228,0.62)'
-                const subColor = {
-                  sunrise: 'rgba(255,218,170,0.72)',
-                  day:     'rgba(255,238,228,0.68)',
-                  sunset:  'rgba(255,200,155,0.42)',
-                  night:   'rgba(160,200,255,0.65)',
-                }[homePreset] ?? 'rgba(255,238,228,0.68)'
+                // Creme FRANC partout : le logo variait selon l'ambiance et
+                // tombait a 52-62 % d'opacite en journee, quasi invisible sur le
+                // ciel bleu de l'accueil et different des autres pages
+                // (constat Jean 2026-08-12). La nuit garde sa teinte bleutee,
+                // seule exception lisible.
+                const logoColor = homePreset === 'night' ? 'rgba(160,200,255,0.95)' : 'rgba(255,246,235,0.96)'
+                const subColor  = homePreset === 'night' ? 'rgba(160,200,255,0.70)' : 'rgba(255,240,225,0.85)'
                 return (
                 <div style={{ pointerEvents:'none', position:'relative' }}>
                   <span style={{
@@ -2025,7 +2020,9 @@ padding: isMobile
           )}
           {isMobile && onglet !== 'accueil' && (() => {
             const onChat = onglet === 'chat'
-            const iconColor = 'rgba(200,123,82,0.58)'
+            // 0.58 rendait le hamburger quasi invisible sur les fonds clairs
+            // (constat Jean 2026-08-12).
+            const iconColor = 'rgba(178,102,62,0.92)'
             return (
             <div style={s.mobileHeader}>
               {/* Logo — identique sur tous les onglets */}
@@ -2082,10 +2079,14 @@ padding: isMobile
                     onClick={() => { setMessages([]); setFollowUps([]); setReactions({}) }}
                     title="Nouvelle conversation"
                     style={{
-                      width:34, height:34, borderRadius:10,
-                      background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
+                      // Une pastille avec le mot « Nouveau » : l'icone seule ne
+                      // disait pas qu'elle recommencait la conversation
+                      // (constat Jean 2026-08-12).
+                      height:34, padding:'0 12px', borderRadius:12, gap:6,
+                      background:'rgba(200,123,82,0.10)', border:'1px solid rgba(200,123,82,0.30)',
                       display:'flex', alignItems:'center', justifyContent:'center',
-                      cursor:'pointer', color:'rgba(200,123,82,0.90)',
+                      cursor:'pointer', color:'rgba(178,102,62,0.95)',
+                      fontFamily:F, fontSize:12, fontWeight:600,
                       transition:'all .15s ease',
                     }}
                     onMouseDown={e => e.currentTarget.style.transform='scale(0.92)'}
@@ -2094,11 +2095,12 @@ padding: isMobile
                   >
                     {/* Icône « nouveau message » explicite : le losange ✦ ne
                         disait rien de sa fonction (retour Jean 2026-08-08) */}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 20h9"/>
                       <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
                     </svg>
+                    Nouveau
                   </button>
                 )}
                 {/* ── Hamburger button ── */}
@@ -2190,7 +2192,7 @@ padding: isMobile
                     <div style={{ fontSize:18, fontWeight:500, color:'rgba(255,238,228,0.92)', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', letterSpacing:'0.01em' }}>
                       {profil.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : ''}
                     </div>
-                    <div style={{ fontSize:11, color:'rgba(255,238,228,0.48)', marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
+                    <div style={{ fontSize:11.5, fontWeight:600, color:'rgba(255,238,228,0.85)', marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
                 {/* Nav links */}

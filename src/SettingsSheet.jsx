@@ -628,15 +628,18 @@ export default function SettingsSheet({
               {editMode && (
                 <div>
                   <style>{`
+                    /* Texte SOMBRE : la page des parametres est claire, un texte
+                       creme a 90 % y etait quasi invisible, saisie comprise
+                       (constat Jean 2026-08-12). */
                     .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
-                      border:1px solid rgba(255,220,160,0.20); background:rgba(255,235,210,0.10);
-                      font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(255,238,220,0.90); outline:none;
+                      border:1px solid rgba(200,123,82,0.32); background:rgba(255,255,255,0.55);
+                      font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(110,60,30,0.95); outline:none;
                       transition:border-color 0.18s; }
                     .ss-edit-input:focus { border-color:#C87B52; }
-                    .ss-edit-input::placeholder { color:rgba(255,210,160,0.35); }
-                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(255,220,160,0.20);
-                      background:rgba(255,235,210,0.10); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
-                      color:rgba(255,238,220,0.90); outline:none; }
+                    .ss-edit-input::placeholder { color:rgba(160,100,60,0.50); }
+                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(200,123,82,0.32);
+                      background:rgba(255,255,255,0.55); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
+                      color:rgba(110,60,30,0.95); outline:none; }
                     .ss-time-input:focus { border-color:#C87B52; }
                   `}</style>
 
