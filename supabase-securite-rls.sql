@@ -90,3 +90,37 @@ CREATE POLICY "forum_replies_read"  ON forum_replies FOR SELECT TO authenticated
 CREATE POLICY "forum_replies_write" ON forum_replies FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "forum_replies_own"   ON forum_replies FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "forum_replies_del"   ON forum_replies FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- CE QUI A RÉELLEMENT MARCHÉ — 2026-08-12
+--
+-- Les deux tentatives ci-dessus ont échoué sur le forum, pour une raison que
+-- seule l'inspection du tableau de bord a révélée : forum_posts et
+-- forum_replies portaient HUIT règles chacune, empilées par des scripts
+-- successifs, et la permissive s'appelait « posts_select_all » et
+-- « replies_select_all » — aucun des noms que j'avais devinés.
+--
+-- Leçon : les règles RLS s'ADDITIONNENT. Il suffit qu'une seule autorise pour
+-- que tout passe. Créer des règles restrictives ne sert à rien tant qu'une
+-- permissive survit, et on ne peut pas supprimer par nom ce qu'on n'a pas lu.
+-- Toujours lister les règles existantes AVANT d'en écrire :
+--   SELECT tablename, policyname, roles::text, cmd FROM pg_policies
+--   WHERE schemaname='public' ORDER BY tablename;
+-- ─────────────────────────────────────────────────────────────────────────────
+
+DROP POLICY IF EXISTS "posts_select_all"   ON forum_posts;
+DROP POLICY IF EXISTS "read posts"         ON forum_posts;
+DROP POLICY IF EXISTS "insert posts"       ON forum_posts;
+DROP POLICY IF EXISTS "posts_insert_own"   ON forum_posts;
+DROP POLICY IF EXISTS "posts_update_own"   ON forum_posts;
+DROP POLICY IF EXISTS "posts_delete_own"   ON forum_posts;
+
+DROP POLICY IF EXISTS "replies_select_all" ON forum_replies;
+DROP POLICY IF EXISTS "read replies"       ON forum_replies;
+DROP POLICY IF EXISTS "insert replies"     ON forum_replies;
+DROP POLICY IF EXISTS "replies_insert_own" ON forum_replies;
+DROP POLICY IF EXISTS "replies_update_own" ON forum_replies;
+DROP POLICY IF EXISTS "replies_delete_own" ON forum_replies;
+
+DROP POLICY IF EXISTS "likes_select_all"   ON forum_likes;
+DROP POLICY IF EXISTS "read likes"         ON forum_likes;
