@@ -56,7 +56,7 @@ function SeanceRow({ item, onFiche }) {
   )
 }
 
-export default function Challenge21j({ userId, isPro, onPasserPro }) {
+export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [challenge, setChallenge] = useState(null)
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -138,6 +138,15 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
     jours = challenge.challenge?.jours || []
     milestones = challenge.challenge?.milestones || []
   }
+
+  // L'objectif du profil peut avoir changé DEPUIS la création du programme :
+  // le programme est fige en base, il ne suit pas. On compare l'objectif
+  // actuel a celui grave dans le programme a sa creation (objectif_source,
+  // pose par le serveur) et on propose la regeneration — jamais automatique,
+  // elle detruirait la progression sans prevenir (2026-08-12).
+  const objectifActuel    = profil?.objectifs?.[0] || profil?.objectif || ''
+  const objectifProgramme = challenge?.challenge?.objectif_source || ''
+  const objectifChange    = !!(challenge && objectifActuel && objectifProgramme && objectifActuel !== objectifProgramme)
 
   const jourActuelData = jours[jourActuel - 1] || null
   // Le jour en cours est le seul affiche, et les premiers jours sont
@@ -287,6 +296,27 @@ export default function Challenge21j({ userId, isPro, onPasserPro }) {
   // ── 4. CHALLENGE PRINCIPAL ───────────────────────────────────────
   return (
     <div style={styles.container}>
+      {objectifChange && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(232,150,42,0.14), rgba(200,123,82,0.07))',
+          border: '1px solid rgba(232,150,42,0.35)', borderRadius: 16,
+          padding: '13px 15px', marginBottom: 14, fontFamily: "'Poppins', sans-serif",
+        }}>
+          <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.5, fontWeight: 500 }}>
+            Ton objectif est maintenant « {objectifActuel} », mais ce programme
+            visait « {objectifProgramme} ».
+          </div>
+          <button
+            onClick={handleNouveauChallenge}
+            style={{
+              marginTop: 9, padding: '9px 16px', borderRadius: 12, cursor: 'pointer',
+              background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.55)',
+              color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+            }}>
+            Régénérer pour mon nouvel objectif
+          </button>
+        </div>
+      )}
       <AnimatePresence>
         <motion.div
           key="challenge-main"

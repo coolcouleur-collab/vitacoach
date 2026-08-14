@@ -420,6 +420,15 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
 
   const [showExos, setShowExos] = useState(false)
 
+  // ── Programme OU Routine, plus jamais les deux empilés ──────────────────
+  // La page mélangeait le défi 21 jours, la routine du jour et le guide dans
+  // un seul flux : brouillon, et personne ne savait ce qu'il devait faire.
+  // Deux onglets aux rôles écrits noir sur blanc : le PROGRAMME est le plan
+  // sport-santé-nutrition qui vise TON objectif sur 21 jours ; la ROUTINE est
+  // le rythme quotidien que Solenn régénère chaque matin selon tes données
+  // (séparation demandée par Jean 2026-08-12).
+  const [vue, setVue] = useState('programme')
+
 
   return (
     <div style={{
@@ -438,14 +447,14 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 800, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
-            Ton programme
+            {vue === 'programme' ? 'Ton programme' : 'Ta routine du jour'}
           </div>
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </div>
         </div>
 
-        {routine && (
+        {vue === 'routine' && routine && (
           <button
             onClick={generer}
             disabled={generating}
@@ -463,13 +472,43 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         )}
       </div>
 
+      {/* ── Sélecteur Programme / Routine ── */}
+      <div style={{ padding: '14px 20px 0' }}>
+        <div style={{
+          display: 'flex', gap: 6, padding: 4, borderRadius: 16,
+          background: 'rgba(200,123,82,0.10)', border: '1px solid rgba(200,123,82,0.18)',
+        }}>
+          {[
+            { id: 'programme', label: 'Programme' },
+            { id: 'routine',   label: 'Routine du jour' },
+          ].map(o => (
+            <button key={o.id} onClick={() => setVue(o.id)} style={{
+              flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
+              border: vue === o.id ? '1px solid rgba(255,220,160,0.55)' : '1px solid transparent',
+              background: vue === o.id ? 'rgba(255,246,238,0.82)' : 'transparent',
+              color: vue === o.id ? 'rgba(150,85,50,0.95)' : 'rgba(200,123,82,0.60)',
+              fontFamily: 'Poppins,sans-serif', fontSize: 13, fontWeight: vue === o.id ? 700 : 500,
+              boxShadow: vue === o.id ? '0 3px 10px rgba(200,123,82,0.16)' : 'none',
+              transition: 'all 0.18s ease',
+            }}>{o.label}</button>
+          ))}
+        </div>
+        {/* Chaque vue dit son rôle en une phrase : c'est la distinction que la
+            page ne faisait jamais. */}
+        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.68)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, padding: '9px 4px 0' }}>
+          {vue === 'programme'
+            ? '21 jours de sport, santé et nutrition pour atteindre ton objectif.'
+            : 'Ton rythme du jour, régénéré chaque matin selon tes données.'}
+        </div>
+      </div>
+
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
 
         {/* ── 1. LE DÉFI 21 JOURS — c'est LE programme, il ouvre la page.
              Une seule instance (le raccourci doublon a été supprimé,
              retour Jean 2026-07-25). ── */}
-        {userId && (
+        {vue === 'programme' && userId && (
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
               <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
@@ -478,13 +517,13 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                   : 'Ton défi 21 jours'}</span>
             </div>
             <React.Suspense fallback={null}>
-              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
+              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} profil={profil} />
             </React.Suspense>
           </div>
         )}
 
         {/* Skeleton loader */}
-        {loading && (
+        {vue === 'routine' && loading && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <style>{`@keyframes routinePulse { 0%,100%{opacity:.45} 50%{opacity:.80} }`}</style>
             {[1, 2, 3].map(i => (
@@ -521,7 +560,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         )}
 
         {/* Erreur */}
-        {!loading && error && (
+        {vue === 'routine' && !loading && error && (
           <div style={{
             background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 12, padding: '12px 16px', marginBottom: 12,
@@ -532,13 +571,13 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         )}
 
         {/* Vide */}
-        {!loading && !routine && (
+        {vue === 'routine' && !loading && !routine && (
           <EmptyRoutine generating={generating} onGenerate={generer} />
         )}
 
         {/* Routine chargée */}
         <AnimatePresence>
-          {!loading && routine && (
+          {vue === 'routine' && !loading && routine && (
             <motion.div
               key="routine"
               initial={{ opacity: 0 }}
@@ -685,7 +724,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           )}
         </AnimatePresence>
 
-        {/* ── 3. Ressource : le guide des gestes, en pied de page ── */}
+        {/* ── 3. Ressource : le guide des gestes — côté Programme ── */}
+        {vue === 'programme' && (
         <button onClick={() => setShowExos(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
           background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
@@ -702,6 +742,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
+        )}
       </div>
 
       {/* ── CSS spin ── */}

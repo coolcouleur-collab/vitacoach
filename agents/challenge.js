@@ -277,6 +277,14 @@ Format JSON :
   // erreur qui laisse l'utilisateur sans rien.
   if (!challenge) challenge = PROGRAMME_POIDS
 
+  // L'objectif qui a produit ce programme est grave dedans : le client detecte
+  // ainsi qu'il a change depuis, et propose la regeneration. Copie et non
+  // mutation, PROGRAMME_POIDS est une constante partagee.
+  challenge = {
+    ...challenge,
+    objectif_source: [profil?.objectifs?.[0], profil?.objectif].filter(Boolean)[0] || null,
+  }
+
   const dateDebutChallenge = new Date().toISOString().split('T')[0]
 
   // Sauvegarder dans Supabase
