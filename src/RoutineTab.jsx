@@ -512,9 +512,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
               <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
-                {/(poids|mincir|maigrir|corps|réconcilier)/i.test((profil?.objectifs?.[0] || profil?.objectif || ''))
-                  ? 'Ton programme — 21 jours pour te réconcilier avec ton corps'
-                  : 'Ton défi 21 jours'}</span>
+                21 jours vers ton objectif</span>
             </div>
             <React.Suspense fallback={null}>
               <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} profil={profil} />

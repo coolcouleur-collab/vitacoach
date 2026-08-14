@@ -191,7 +191,11 @@ export async function regenererPourUser(userId, pushSubscriptions) {
       console.warn('[RoutineAuto] profil illisible en base:', e.message)
     }
   }
-  if (!profil?.nom) return null
+  // Jamais d'echec faute de profil : un compte sans profil (jamais rempli,
+  // efface, ou pas encore synchronise) recevait « Je n'ai pas reussi a
+  // generer ta routine » en boucle. Une routine generique vaut toujours mieux
+  // qu'une erreur (2026-08-12).
+  if (!profil?.nom) profil = { nom: 'toi', objectifs: [] }
 
   if (!metriques || !Object.keys(metriques).length) {
     try {

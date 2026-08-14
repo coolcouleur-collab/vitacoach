@@ -102,7 +102,7 @@ export default function TesProgres({ history, userId }) {
               border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
               <div style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(200,123,82,0.78)' }}>{st.label}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#2E7D5B' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#1f9d55' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
               <div style={{ fontSize: 10, color: 'rgba(200,123,82,0.72)', lineHeight: 1.4 }}>{st.detail}</div>
               {st.serie && st.serie.length >= 3 && (() => {
                 const min = Math.min(...st.serie), max = Math.max(...st.serie)

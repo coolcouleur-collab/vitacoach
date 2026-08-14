@@ -644,19 +644,27 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         })}
       </div>
 
-      {/* ── TON ÉVOLUTION — une seule zone : progrès + insights + bilan hebdo.
-           (Taille du 2026-07-25, décision Jean : le bouton « Analyse IA » et
-           son carrousel étaient redondants avec Tes progrès et le rapport —
-           trois analyses qui disaient la même chose.) ── */}
-      <TesProgres history={history} userId={userId} />
+      {/* ── Sous les cartes du jour, la page se lit du plus court au plus
+           long terme : TA SEMAINE (le bilan) → SUR LA DURÉE (les progrès
+           mesures) → le detail brut (historique). Avant, les progres longue
+           duree arrivaient AVANT le bilan de la semaine et les blocs se
+           suivaient sans respiration ni hierarchie : brouillon
+           (constat Jean 2026-08-12). ── */}
+      <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
+      <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+        Ta semaine
+      </div>
       {userId && (
         <div style={{ marginBottom: 22 }}>
           <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>
       )}
 
-      {/* ── Historique 7 jours — HistoriqueSection est déjà repliable en
-           interne (bouton en double supprimé, retour Jean 2026-07-25) ── */}
+      <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
+      <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+        Sur la durée
+      </div>
+      <TesProgres history={history} userId={userId} />
       <HistoriqueSection history={history} onLog={openEdit} />
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :

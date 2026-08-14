@@ -57,7 +57,13 @@ function SeanceRow({ item, onFiche }) {
 }
 
 export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
-  const [challenge, setChallenge] = useState(null)
+  // Affichage immediat depuis le cache : chaque ouverture de l'onglet
+  // repassait par Render, reveil compris, et la page restait vide plusieurs
+  // secondes (constat Jean 2026-08-12). Le cache rend l'ecran instantane, le
+  // reseau le rafraichit derriere.
+  const [challenge, setChallenge] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('solenn_challenge_cache') || 'null') } catch { return null }
+  })
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
@@ -66,12 +72,15 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
 
   const fetchChallenge = async () => {
     try {
-      setLoading(true)
+      // Pas de squelette si le cache affiche deja quelque chose : le reseau
+      // rafraichit en silence.
+      if (!challenge) setLoading(true)
       setError(null)
       const res = await fetch(`${API}/api/challenge?userId=${userId}`, { headers: await authHeaders() })
       if (!res.ok) throw new Error('Erreur lors du chargement')
       const data = await res.json()
       setChallenge(data.challenge || null)
+      try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(data.challenge || null)) } catch {}
     } catch (err) {
       setError(err.message)
     } finally {
@@ -236,7 +245,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               marginBottom: '8px',
             }}
           >
-            Prêt pour un défi ?
+            Prêt à commencer ?
           </h2>
           <p
             style={{
@@ -246,7 +255,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               lineHeight: 1.6,
             }}
           >
-            Solenn crée un challenge 21 jours personnalisé basé sur ton profil et tes métriques
+            Solenn crée un programme de 21 jours personnalisé, basé sur ton profil et tes métriques
           </p>
 
           {error && (
@@ -286,7 +295,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               transition: 'all 0.2s',
             }}
           >
-            {creating ? 'Création en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon challenge</span>}
+            {creating ? 'Création en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon programme</span>}
           </motion.button>
         </motion.div>
       </div>
@@ -296,6 +305,23 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // ── 4. CHALLENGE PRINCIPAL ───────────────────────────────────────
   return (
     <div style={styles.container}>
+      {/* POURQUOI on s'entraine — l'objectif du profil, en tete. La page
+          montrait un plan sans jamais dire ce qu'il vise : on ne s'entraine
+          pas pour cocher des cases (constat Jean 2026-08-12). */}
+      {(objectifProgramme || objectifActuel) && !objectifChange && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
+          padding: '10px 14px', borderRadius: 14,
+          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(200,123,82,0.20)',
+          fontFamily: "'Poppins', sans-serif",
+        }}>
+          <TargetIcon size={15} color="#C87B52" />
+          <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.4 }}>
+            <span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}
+          </div>
+        </div>
+      )}
+
       {objectifChange && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(232,150,42,0.14), rgba(200,123,82,0.07))',
@@ -358,7 +384,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   flex: 1,
                 }}
               >
-                {challenge?.challenge?.titre || 'Challenge 21 jours'}
+                {challenge?.challenge?.titre || 'Programme 21 jours'}
               </h2>
 
               <div
@@ -791,15 +817,16 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               onClick={handleNouveauChallenge}
               disabled={creating}
               style={{
-                background: 'transparent',
-                // Terracotta et non #ef4444 : le rouge est reserve au danger
-                // (contre-indications, suppression de compte). Ici c'est une
-                // action normale, elle n'a pas a alarmer (2026-08-12).
-                color: 'rgba(200,123,82,0.85)',
-                border: '1.5px solid rgba(200,123,82,0.35)',
-                borderRadius: '12px',
-                padding: '8px 20px',
-                fontSize: '12px',
+                // Pastille pleine et lisible : transparent a 0.85 sur fond
+                // clair, le bouton etait presque invisible et semblait
+                // abandonne en bas de page (constat Jean 2026-08-12).
+                background: 'rgba(255,246,238,0.80)',
+                color: 'rgba(150,85,50,0.95)',
+                border: '1px solid rgba(200,123,82,0.40)',
+                boxShadow: '0 3px 12px rgba(200,123,82,0.14)',
+                borderRadius: '14px',
+                padding: '11px 22px',
+                fontSize: '12.5px',
                 fontWeight: 600,
                 fontFamily: "'Poppins', sans-serif",
                 cursor: creating ? 'not-allowed' : 'pointer',
@@ -807,7 +834,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 transition: 'all 0.2s',
               }}
             >
-              {creating ? 'Création…' : 'Nouveau challenge'}
+              {creating ? 'Création…' : 'Recommencer avec un nouveau programme'}
             </motion.button>
           </div>
           )}
@@ -851,10 +878,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             >
               <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#E8962A" /></div>
               <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(150,85,50,0.95)', textAlign: 'center', marginBottom: 8 }}>
-                Nouveau challenge ?
+                Nouveau programme ?
               </div>
               <div style={{ fontSize: 13, color: 'rgba(160,100,60,0.75)', textAlign: 'center', marginBottom: 24 }}>
-                Le challenge actuel sera remplacé et ta progression perdue.
+                Ton programme actuel sera remplacé et sa progression perdue.
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button

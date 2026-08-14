@@ -55,7 +55,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   }
 
   const getScoreColor = (score) => {
-    if (score > 70) return '#22c55e'
+    if (score > 70) return '#1f9d55'
     if (score > 50) return '#E8962A'
     // En dessous de 20 on est presque toujours face à une semaine sans données
     // saisies, pas à un échec : un gros 0 rouge accueille l'utilisateur par une
@@ -240,7 +240,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
 
   const sections = [
     { key: 'semaine',  label: 'Cette semaine',       texte: rapport.analyse,       icon: <CalendarIcon size={15} color="#C87B52" /> },
-    { key: 'fort',     label: 'Ton point fort',      texte: rapport.point_fort,    icon: <SparkleIcon size={15} color="#22c55e" /> },
+    { key: 'fort',     label: 'Ton point fort',      texte: rapport.point_fort,    icon: <SparkleIcon size={15} color="#C87B52" /> },
     { key: 'mieux',    label: 'À améliorer',         texte: rapport.point_progres, icon: <LightbulbIcon size={15} color="#E8962A" /> },
     { key: 'focus',    label: 'La semaine prochaine', texte: rapport.focus_prochain, icon: <StarIcon size={15} color="#E8962A" /> },
   ].filter(s => s.texte)
@@ -321,15 +321,15 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Une seule phrase mise en avant : la victoire (ou la stat phare) */}
       {(rapport.victoire_semaine || rapport.stat_phare) && (
         <div style={{
-          background: 'rgba(34, 197, 94, 0.08)',
+          background: 'rgba(255,235,210,0.35)',
           borderRadius: 16,
           padding: '12px 16px',
           display: 'flex',
           alignItems: 'flex-start',
           gap: 10,
-          border: '1px solid rgba(34, 197, 94, 0.18)',
+          border: '1px solid rgba(255,220,160,0.45)',
         }}>
-          <span style={{ fontSize: 15, color: '#22c55e', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
+          <span style={{ fontSize: 15, color: '#1f9d55', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
           <p style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
