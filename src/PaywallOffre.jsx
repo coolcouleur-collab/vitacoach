@@ -24,11 +24,22 @@ const CheckSvg = ({ size = 15 }) => (
   </svg>
 )
 
+// Ce que cet ecran vend a change le 2026-08-12. Il listait des
+// fonctionnalites de suivi : or Bevel, le concurrent principal, offre
+// GRATUITEMENT tout le suivi et le fait mieux, avec 700 exercices, l'import
+// d'analyses sanguines et l'age biologique. Chaque ligne de suivi jouait donc
+// contre nous.
+// Il vend desormais la seule chose qu'un tracker ne fait pas : une IA qui se
+// souvient, qui mesure ses propres conseils, et qui n'est pas rationnee. Leur
+// coach IA, lui, a un quota hebdomadaire, c'est ecrit dans leur grille.
+// Et l'argument le plus concret : Solenn marche sans montre connectee, alors
+// que tout chez eux en depend.
 const AVANTAGES = [
-  'Conversations illimitées avec Solenn',
-  'Challenge 14 jours personnalisé',
-  'Données santé connectées (Apple Health, Withings, Garmin)',
-  'Routines et rapport hebdomadaire',
+  'Solenn se souvient de ce que tu lui racontes',
+  'Elle relie tes mots à tes chiffres, et te prouve ce qui a changé',
+  "Elle change d'approche quand son conseil ne marche pas",
+  'Conversations illimitées, sans quota hebdomadaire',
+  'Aucune montre nécessaire — la tienne est un bonus, pas une condition',
 ]
 
 // Halos cuivre — même esprit que les BgBlobs de la page Auth/Onboarding
@@ -74,7 +85,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
             fontSize: 'clamp(30px, 8vw, 38px)', color: CREME, lineHeight: 1.12,
             textShadow: '0 2px 18px rgba(160,80,20,0.25)',
           }}>
-            {prenom ? `${prenom}, tes` : 'Tes'} 21 premiers jours<br />sont offerts
+            {prenom ? `${prenom}, tes` : 'Tes'} 14 premiers jours<br />sont offerts
           </div>
           <div style={{ fontSize: 13.5, color: CREME_70, marginTop: 10, lineHeight: 1.55 }}>
             Tout Solenn, sans limite, pendant 14 jours.<br />Aucun paiement demandé aujourd'hui.
