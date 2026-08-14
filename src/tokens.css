@@ -68,6 +68,8 @@
    fond du document derrière l'app — d'où le blanc au refresh signalé par Jean
    le 2026-08-08. Instagram et les apps natives n'ont pas ce rebond. */
 html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   box-sizing: border-box; scroll-behavior: auto; height: 100%;
   background: var(--bg);
   overscroll-behavior: none;

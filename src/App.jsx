@@ -3619,7 +3619,10 @@ const s = {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
     color:'rgba(200,123,82,0.80)',
-    padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'76%',
+    // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 % — les deux
+    // cumules donnaient des bulles a 58 % de l'ecran, et « Plan d'action »
+    // passait sur deux lignes (constat Jean 2026-08-13).
+    padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'100%',
     fontSize:14, lineHeight:1.65,
     boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
@@ -3627,7 +3630,7 @@ const s = {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
     color:'rgba(200,123,82,0.80)',
-    padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'82%',
+    padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'100%',
     fontSize:14, lineHeight:1.65, fontWeight:400, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',
     boxShadow:'0 4px 20px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.25)',
