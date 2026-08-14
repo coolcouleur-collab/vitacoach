@@ -55,8 +55,38 @@ CREATE POLICY "forum_replies_write" ON forum_replies FOR INSERT TO authenticated
 CREATE POLICY "forum_replies_own"   ON forum_replies FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "forum_replies_del"   ON forum_replies FOR DELETE TO authenticated USING (auth.uid() = user_id);
 
--- ── 5. Vérification. Chaque ligne doit afficher rowsecurity = true ──────────
+-- ── 5. CORRECTIF DU 2026-08-12 (voir en bas du fichier) : le forum est reste
+--        ouvert apres le premier passage, une regle permissive survivait sous un
+--        autre nom que ceux devines ici.
+-- ── 6. Verification. Chaque ligne doit afficher rowsecurity = true ──────────
 SELECT tablename, rowsecurity
 FROM pg_tables
 WHERE schemaname = 'public'
   AND tablename IN ('rapports_hebdo', 'challenges', 'forum_posts', 'forum_replies');
+-- Supprime TOUTES les règles existantes sur les tables du forum, quel que
+-- soit leur nom, puis repose les bonnes. Le premier script ne supprimait que
+-- les noms devinés : une ancienne règle permissive portant un autre nom
+-- survivait et continuait d'autoriser la lecture sans compte.
+DO $$
+DECLARE r RECORD;
+BEGIN
+  FOR r IN
+    SELECT policyname, tablename FROM pg_policies
+    WHERE schemaname = 'public' AND tablename IN ('forum_posts', 'forum_replies')
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON %I', r.policyname, r.tablename);
+  END LOOP;
+END $$;
+
+ALTER TABLE forum_posts   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE forum_replies ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "forum_posts_read"  ON forum_posts  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "forum_posts_write" ON forum_posts  FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "forum_posts_own"   ON forum_posts  FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "forum_posts_del"   ON forum_posts  FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+CREATE POLICY "forum_replies_read"  ON forum_replies FOR SELECT TO authenticated USING (true);
+CREATE POLICY "forum_replies_write" ON forum_replies FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "forum_replies_own"   ON forum_replies FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "forum_replies_del"   ON forum_replies FOR DELETE TO authenticated USING (auth.uid() = user_id);
