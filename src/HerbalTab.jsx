@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
 
@@ -614,12 +614,54 @@ function HerbItem({ item, onChat }) {
   )
 }
 
+// ─── CE QUE DISENT TES DONNÉES ────────────────────────────────────────────────
+// Soins était un catalogue à part, sans aucun lien avec ce que Solenn mesure.
+// Or c'est précisément le croisement qui n'existe nulle part ailleurs : les
+// applications de ce créneau sont soit des identificateurs de plantes, soit des
+// dictionnaires classés par pathologie. Aucune ne part de TES chiffres.
+// On repère donc le besoin le plus criant des sept derniers jours et on ouvre
+// la page dessus (2026-08-12).
+function besoinDuMoment(metriques, history) {
+  const m = metriques || {}
+  const sept = (history || []).slice(-7)
+  const moy = (cle) => {
+    const l = sept.map(e => Number(e?.[cle]) || 0).filter(v => v > 0)
+    return l.length ? l.reduce((a, b) => a + b, 0) / l.length : 0
+  }
+  const sommeil = moy('sommeil') || m.sommeil || 0
+  const humeur  = moy('humeur')  || m.humeur  || 0
+  const pas     = moy('pas')     || m.pas     || 0
+
+  // Écart relatif à l'objectif : c'est ce qui permet de comparer des unités
+  // qui n'ont rien à voir entre elles.
+  const pistes = [
+    sommeil > 0 && sommeil < 7 && {
+      cat: 'sommeil', ecart: (7 - sommeil) / 7,
+      constat: `Tu dors ${Math.floor(sommeil)} h ${String(Math.round((sommeil % 1) * 60)).padStart(2, '0')} en moyenne ces derniers jours.`,
+    },
+    humeur > 0 && humeur < 3.2 && {
+      cat: 'stress', ecart: (3.2 - humeur) / 3.2,
+      constat: `Ton humeur tourne autour de ${Math.round(humeur * 10) / 10} sur 5 ces derniers jours.`,
+    },
+    pas > 0 && pas < 5000 && {
+      cat: '\u00e9nergie', ecart: (5000 - pas) / 5000 * 0.7,
+      constat: `Tu marches ${Math.round(pas / 100) / 10}k pas par jour en moyenne.`,
+    },
+  ].filter(Boolean).sort((a, b) => b.ecart - a.ecart)
+
+  return pistes[0] || null
+}
+
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
 // catInitiale : « Tes outils » propose une entree Beaute qui doit ouvrir
 // directement sur cette categorie. Sans ca la page s'ouvrait toujours sur
 // Plantes et l'entree mentait sur sa destination.
-export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'sommeil' }) {
-  const [cat, setCat] = useState(catInitiale)
+export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, metriques, history }) {
+  // Le besoin du moment decide de la categorie d'ouverture, sauf si l'appelant
+  // en impose une (l'entree Soins ouvre sur les cheveux).
+  const besoin = useMemo(() => besoinDuMoment(metriques, history), [metriques, history])
+  const [cat, setCat] = useState(catInitiale || besoin?.cat || 'sommeil')
+  const [recherche, setRecherche] = useState('')
 
   // La rangee de categories deborde de l'ecran. Quand la page s'ouvre sur une
   // categorie qui n'est pas la premiere (Soins ouvre sur Cheveux), la pastille
@@ -637,8 +679,15 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
   //    et « Bain d'huile de ricin » ne sont pas de meme nature, les melanger
   //    dans un ordre arbitraire brouillait la lecture.
   const RANG = { '\u00c0 \u00e9viter': 0, 'Recette': 1 }
+  // 2. Recherche libre : quelqu'un qui a des pellicules ou des ballonnements
+  //    doit pouvoir taper son probleme, sans deviner dans quelle categorie
+  //    l'app a range la reponse. Elle traverse TOUTES les categories.
+  const q = recherche.trim().toLowerCase()
   const items = FICHES
-    .filter(f => f.besoins.includes(cat))
+    .filter(f => q
+      ? [f.nom, f.benefice, f.detail, f.usage, f.tag, ...(f.besoins || [])]
+          .filter(Boolean).join(' ').toLowerCase().includes(q)
+      : f.besoins.includes(cat))
     .slice()
     .sort((a, b) => (RANG[a.tag] ?? 2) - (RANG[b.tag] ?? 2))
 
@@ -699,6 +748,56 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
         </span>
       </div>
 
+      {/* Ce que disent tes donnees — le croisement que personne d'autre ne fait */}
+      {besoin && !q && (
+        <div style={{
+          margin:'0 16px 10px', padding:'13px 15px', borderRadius:16,
+          background:'linear-gradient(135deg, rgba(200,123,82,0.14), rgba(200,123,82,0.05))',
+          border:'1px solid rgba(200,123,82,0.28)',
+        }}>
+          <div style={{ fontSize:9, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', color:ACCENT, marginBottom:4 }}>
+            Ce que disent tes données
+          </div>
+          <div style={{ fontSize:13, color:TXT_MAIN, lineHeight:1.45, fontWeight:500 }}>
+            {besoin.constat}
+          </div>
+          <button
+            onClick={() => setCat(besoin.cat)}
+            style={{
+              marginTop:9, padding:'8px 14px', borderRadius:12, cursor:'pointer',
+              background:CTA_GRAD, border:'1px solid rgba(255,220,160,0.50)',
+              color:'#B2663E', fontSize:11.5, fontWeight:700, fontFamily:'Poppins,sans-serif',
+            }}>
+            Voir ce qui peut aider →
+          </button>
+        </div>
+      )}
+
+      {/* Recherche par symptome — traverse toutes les categories */}
+      <div style={{ margin:'0 16px 10px', position:'relative' }}>
+        <input
+          value={recherche}
+          onChange={e => setRecherche(e.target.value)}
+          placeholder="Pellicules, ballonnements, insomnie…"
+          style={{
+            width:'100%', boxSizing:'border-box', padding:'11px 36px 11px 14px',
+            borderRadius:14, border:'1px solid rgba(200,123,82,0.22)',
+            background:'rgba(255,248,242,0.72)', color:TXT_MAIN,
+            fontSize:13, fontFamily:'Poppins,sans-serif', outline:'none',
+          }}
+        />
+        {recherche && (
+          <button
+            onClick={() => setRecherche('')}
+            aria-label="Effacer"
+            style={{
+              position:'absolute', right:10, top:'50%', transform:'translateY(-50%)',
+              background:'none', border:'none', cursor:'pointer', padding:4,
+              color:'rgba(200,123,82,0.60)', fontSize:16, lineHeight:1,
+            }}>×</button>
+        )}
+      </div>
+
       {/* Le fondu a droite signale qu'il reste des categories : sans lui, la
           cinquieme est coupee net et rien n'indique qu'on peut faire defiler. */}
       <div style={{ position:'relative' }}>
@@ -744,7 +843,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = 'somme
         {/* « 6 REMÈDES · APPUIE POUR DÉVELOPPER » avec une pastille n'était ni un
             titre ni un bouton : l'affordance était illisible. Un vrai libellé de
             section, et le compteur en second plan. */}
-        <span style={hb.countText}>Pour {LABEL_CAT[cat] || cat}</span>
+        <span style={hb.countText}>{q ? `Résultats pour « ${recherche} »` : `Pour ${LABEL_CAT[cat] || cat}`}</span>
         <span style={{ ...hb.countSep }}>·</span>
         <span style={{ ...hb.countText, fontWeight:500, opacity:0.75 }}>{items.length} fiches</span>
       </div>

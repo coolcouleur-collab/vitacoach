@@ -2493,7 +2493,9 @@ padding: isMobile
             <Suspense fallback={<GlowLoader fullPage />}>
             <HerbalTab
               profil={profil}
-              catInitiale={onglet === 'beaute' ? 'cheveux' : 'sommeil'}
+              catInitiale={onglet === 'beaute' ? 'cheveux' : null}
+              metriques={metriques}
+              history={history}
               onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
               onBack={() => setOnglet('accueil')}
             />
