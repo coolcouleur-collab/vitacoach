@@ -408,7 +408,7 @@ function AIReco({ profil, onChat }) {
 }
 
 // ─── HERB ITEM — glass card with expand ──────────────────────────────────────
-function HerbItem({ item, onChat }) {
+function HerbItem({ item, onChat, onCure, cureActive }) {
   const [open, setOpen] = useState(false)
   const [pressed, setPressed] = useState(false)
 
@@ -589,6 +589,24 @@ function HerbItem({ item, onChat }) {
           <div style={{ fontSize:12, color:TXT_SOFT, lineHeight:1.75, marginBottom:12 }}>
             {item.detail}
           </div>
+          {/* Cure de 14 jours — uniquement les remèdes internes mesurables */}
+          {onCure && cureEligible(item) && (
+            <button
+              onClick={e => { e.stopPropagation(); onCure(item) }}
+              disabled={!!cureActive}
+              style={{
+                display: 'block', width: '100%', marginBottom: 10,
+                padding: '11px 16px', borderRadius: 12,
+                background: cureActive ? 'rgba(200,123,82,0.08)' : 'linear-gradient(135deg, rgba(232,150,42,0.20), rgba(200,123,82,0.12))',
+                border: '1px solid rgba(232,150,42,0.40)',
+                color: cureActive ? 'rgba(160,100,60,0.55)' : '#B2663E',
+                fontSize: 12.5, fontWeight: 800, cursor: cureActive ? 'default' : 'pointer',
+                fontFamily: 'Poppins,sans-serif',
+              }}>
+              {cureActive ? 'Une cure est déjà en cours' : 'Commencer une cure de 14 jours'}
+            </button>
+          )}
+
           {/* CTA button */}
           <button
             style={{
@@ -612,6 +630,41 @@ function HerbItem({ item, onChat }) {
       </div>
     </div>
   )
+}
+
+// ─── LA CURE GUIDÉE ──────────────────────────────────────────────────────────
+// Une cure n'est ni le programme ni la routine. Le PROGRAMME est le plan de
+// 21 jours vers l'objectif global ; la ROUTINE est le rythme quotidien. La
+// CURE est un protocole court et ciblé : UN remède de cette page, pris
+// sérieusement pendant 14 jours, et un VERDICT chiffré à la fin — c'est la
+// boucle du conseil appliquée à la santé naturelle. Aucune app ne fait ça :
+// les trackers n'ont pas de remèdes, les dictionnaires de plantes n'ont pas
+// de mesures (2026-08-12).
+// Réservée aux remèdes internes dont l'effet EST mesurable par une métrique
+// suivie : sommeil et stress. Pas de cure sur les recettes externes ni sur ce
+// qu'on ne peut pas mesurer — un verdict invérifiable serait du théâtre.
+const CURE_METRIQUES = {
+  sommeil: { cle: 'sommeil', nom: 'ton sommeil', fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
+  stress:  { cle: 'humeur',  nom: 'ton humeur',  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
+}
+const CURE_JOURS = 14
+
+function lireCure() {
+  try { return JSON.parse(localStorage.getItem('solenn_cure') || 'null') } catch { return null }
+}
+
+function moyenneCure(history, cle, depuisTs) {
+  const l = (history || [])
+    .filter(e => e?.date && e[cle] > 0)
+    .filter(e => depuisTs === null ? true : new Date(e.date).getTime() >= depuisTs)
+    .map(e => e[cle])
+  return l.length ? { moy: l.reduce((x, y) => x + y, 0) / l.length, n: l.length } : null
+}
+
+function cureEligible(fiche) {
+  if (['Recette', 'À éviter'].includes(fiche.tag)) return null
+  const besoin = (fiche.besoins || []).find(b => CURE_METRIQUES[b])
+  return besoin || null
 }
 
 // ─── CE QUE DISENT TES DONNÉES ────────────────────────────────────────────────
@@ -662,6 +715,28 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
   const besoin = useMemo(() => besoinDuMoment(metriques, history), [metriques, history])
   const [cat, setCat] = useState(catInitiale || besoin?.cat || 'sommeil')
   const [recherche, setRecherche] = useState('')
+  const [cure, setCure] = useState(lireCure)
+
+  function demarrerCure(fiche) {
+    const besoin = cureEligible(fiche)
+    if (!besoin || cure) return
+    const conf = CURE_METRIQUES[besoin]
+    // La moyenne d'AVANT est figée au départ : la recalculer au verdict
+    // laisserait les jours de cure contaminer la référence.
+    const avant = moyenneCure(history, conf.cle, Date.now() - 14 * 86400000)
+    const c = { nom: fiche.nom, besoin, cle: conf.cle, debut: Date.now(), avant: avant?.n >= 3 ? avant.moy : null }
+    try { localStorage.setItem('solenn_cure', JSON.stringify(c)) } catch {}
+    setCure(c)
+  }
+  function arreterCure() {
+    try { localStorage.removeItem('solenn_cure') } catch {}
+    setCure(null)
+  }
+
+  const cureJour    = cure ? Math.min(Math.floor((Date.now() - cure.debut) / 86400000) + 1, CURE_JOURS) : 0
+  const cureFinie   = cure && Math.floor((Date.now() - cure.debut) / 86400000) >= CURE_JOURS
+  const cureConf    = cure ? CURE_METRIQUES[cure.besoin] : null
+  const cureApres   = cureFinie && cure.avant != null ? moyenneCure(history, cure.cle, cure.debut) : null
 
   // La rangee de categories deborde de l'ecran. Quand la page s'ouvre sur une
   // categorie qui n'est pas la premiere (Soins ouvre sur Cheveux), la pastille
@@ -747,6 +822,65 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           en particulier si tu suis un traitement, si tu es enceinte ou si tu allaites.
         </span>
       </div>
+
+      {/* Cure en cours ou terminée */}
+      {cure && (
+        <div style={{
+          margin: '0 16px 10px', padding: '14px 15px', borderRadius: 16,
+          background: 'linear-gradient(135deg, rgba(232,150,42,0.16), rgba(200,123,82,0.07))',
+          border: '1px solid rgba(232,150,42,0.40)', fontFamily: 'Poppins,sans-serif',
+        }}>
+          <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: ACCENT, marginBottom: 4 }}>
+            {cureFinie ? 'Cure terminée — le verdict' : `Cure en cours · jour ${cureJour} sur ${CURE_JOURS}`}
+          </div>
+          <div style={{ fontSize: 13.5, color: TXT_MAIN, fontWeight: 600, marginBottom: 4 }}>{cure.nom}</div>
+
+          {!cureFinie && (
+            <>
+              <div style={{ fontSize: 11.5, color: TXT_SOFT, lineHeight: 1.5 }}>
+                Suis la posologie de la fiche, et continue de saisir {cureConf?.nom || 'tes données'} :
+                c'est lui qui rendra le verdict au jour {CURE_JOURS}.
+              </div>
+              <div style={{ marginTop: 9, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.15)' }}>
+                <div style={{ width: `${Math.round(cureJour / CURE_JOURS * 100)}%`, height: '100%', background: 'rgba(232,150,42,0.75)', transition: 'width 0.4s ease' }} />
+              </div>
+            </>
+          )}
+
+          {cureFinie && cureApres && cureApres.n >= 3 && (
+            <div style={{ fontSize: 12.5, color: TXT_MAIN, lineHeight: 1.55, fontWeight: 500 }}>
+              {cureConf.nom.charAt(0).toUpperCase() + cureConf.nom.slice(1)} : {cureConf.fmt(cure.avant)} avant la cure,
+              {' '}{cureConf.fmt(cureApres.moy)} pendant.{' '}
+              {cureApres.moy > cure.avant ? 'Ça a bougé dans le bon sens.' : "Ça n'a pas bougé — ce remède n'est peut-être pas le tien."}
+            </div>
+          )}
+          {cureFinie && (!cureApres || cureApres.n < 3 || cure.avant == null) && (
+            <div style={{ fontSize: 12.5, color: TXT_SOFT, lineHeight: 1.55 }}>
+              Quatorze jours faits. Pas assez de données saisies pour un verdict chiffré :
+              dis-moi comment tu te sens, on conclut ensemble.
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+            {cureFinie && (
+              <button
+                onClick={() => { onChat(`J'ai terminé ma cure de 14 jours de ${cure.nom}. Qu'est-ce qu'on en conclut, et on fait quoi maintenant ?`); arreterCure() }}
+                style={{
+                  flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
+                  background: CTA_GRAD, border: '1px solid rgba(255,220,160,0.55)',
+                  color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
+                }}>En parler à Solenn</button>
+            )}
+            <button
+              onClick={arreterCure}
+              style={{
+                flex: cureFinie ? 0.6 : 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
+                background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+                color: 'rgba(160,100,60,0.75)', fontSize: 12, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
+              }}>{cureFinie ? 'Terminer' : 'Arrêter la cure'}</button>
+          </div>
+        </div>
+      )}
 
       {/* Ce que disent tes donnees — le croisement que personne d'autre ne fait */}
       {besoin && !q && (
@@ -851,7 +985,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       {/* ── Items list ── */}
       <div style={hb.list}>
         {items.map((item, i) => (
-          <HerbItem key={i} item={item} onChat={onChat} />
+          <HerbItem key={i} item={item} onChat={onChat} onCure={demarrerCure} cureActive={!!cure} />
         ))}
       </div>
 

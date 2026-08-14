@@ -11,6 +11,11 @@
 import { createClient } from '@supabase/supabase-js'
 
 export const FREE_LIMIT = 5
+// Plafond anti-abus des comptes Pro et essai. « Illimité » reste vrai pour
+// tout humain : 150 messages/jour, c'est un message toutes les 6 minutes
+// pendant 15 heures. Seul un script le franchit. À ~0,0008 $ le message, sans
+// plafond, un script tournant en boucle coûterait sans limite (2026-08-12).
+export const PRO_DAILY_CAP = 150
 // Essai complet 21 jours — aligné sur le challenge 21 jours (jour 21 = fin de
 // challenge = moment de conversion). Après l'essai : retour au quota gratuit.
 // 14 et non 21 (2026-08-12). L'essai couvrait exactement la periode ou Solenn
@@ -44,16 +49,23 @@ export async function consumeQuota(authUser, message) {
   if (!uid) return { ok: true }
   if (message && SOS_PATTERN.test(message)) return { ok: true }
   try {
-    // Essai gratuit 7 jours — created_at ne vient que d'un token vérifié
-    if (!authUser._unverified && authUser.created_at &&
-        Date.now() - new Date(authUser.created_at).getTime() < TRIAL_MS) {
-      return { ok: true }
+    const enEssai = !authUser._unverified && authUser.created_at &&
+        Date.now() - new Date(authUser.created_at).getTime() < TRIAL_MS
+    let estPro = false
+    if (!enEssai) {
+      const { data: row } = await sb().from('profils').select('profil').eq('user_id', uid).maybeSingle()
+      estPro = !!row?.profil?.isPro
     }
-    const { data: row } = await sb().from('profils').select('profil').eq('user_id', uid).maybeSingle()
-    if (row?.profil?.isPro) return { ok: true }
+
     const today = new Date().toISOString().split('T')[0]
     const { data: count, error } = await sb().rpc('increment_daily_usage', { p_user: uid, p_date: today })
     if (error || typeof count !== 'number') return { ok: true } // table/RPC pas encore créées
+
+    // Pro et essai : illimité pour un humain, plafonné pour un script.
+    if (enEssai || estPro) {
+      if (count > PRO_DAILY_CAP) return { ok: false, limit: PRO_DAILY_CAP }
+      return { ok: true }
+    }
     if (count > FREE_LIMIT) return { ok: false, limit: FREE_LIMIT }
     return { ok: true, remaining: FREE_LIMIT - count }
   } catch {
