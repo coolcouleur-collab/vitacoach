@@ -389,7 +389,7 @@ const OCEAN_PRESETS = {
     // froide saturée, et la rupture avec le fond doré se voyait (option B
     // choisie par Jean le 2026-08-08 parmi quatre maquettes).
     sky:          'linear-gradient(180deg,#7FB5D8 0%,#A8CFE4 38%,#CFE3E8 65%,#E6E0DC 82%,#EDD8CC 100%)',
-    sunMoonY:     'calc(100% - 135px)',
+    sunMoonY:     'calc(100% - 149px)',
     bodyColor:    '#FFD900',
     bodyGlow:     'rgba(255,215,0,0.60)',
     bodyGlowFar:  'rgba(255,215,0,0.22)',
@@ -405,7 +405,7 @@ const OCEAN_PRESETS = {
   },
   sunrise: {
     sky:          'linear-gradient(180deg,#1A1540 0%,#6B2C65 24%,#C85870 52%,#EE8858 76%,#F8C888 100%)',
-    sunMoonY:     'calc(100% - 135px)',
+    sunMoonY:     'calc(100% - 149px)',
     bodyColor:    '#FFD055',
     bodyGlow:     'rgba(255,200,60,0.65)',
     bodyGlowFar:  'rgba(255,200,60,0.20)',
@@ -421,7 +421,7 @@ const OCEAN_PRESETS = {
   },
   sunset: {
     sky:          'linear-gradient(180deg,#0E1F4A 0%,#5A1E48 28%,#C04020 55%,#E86830 76%,#F0A060 100%)',
-    sunMoonY:     'calc(100% - 135px)',
+    sunMoonY:     'calc(100% - 149px)',
     bodyColor:    '#FF6020',
     bodyGlow:     'rgba(255,90,20,0.42)',
     bodyGlowFar:  'rgba(255,90,20,0.09)',
@@ -438,7 +438,7 @@ const OCEAN_PRESETS = {
   },
   night: {
     sky:          'linear-gradient(180deg,#020712 0%,#050E22 45%,#091830 78%,#0C2040 100%)',
-    sunMoonY:     'calc(100% - 135px)',
+    sunMoonY:     'calc(100% - 149px)',
     bodyColor:    'radial-gradient(circle at 28% 38%, #F8FBFF 0%, #DDE8F8 28%, #B4CAEC 58%, #8AAAD8 85%, #6888C0 100%)',
     bodyGlow:     'rgba(180,200,255,0.55)',
     bodyGlowFar:  'rgba(180,200,255,0.18)',
@@ -2662,16 +2662,16 @@ const hc = {
   page: { display:'flex', flexDirection:'column', paddingBottom:120 },
 
   // NE RIEN AJOUTER DANS CE BLOC. Son contenu est aligné en BAS et le soleil du
-  // décor est ancré au bas du hero (sunMoonY: calc(100% - 135px)) : tout ce
+  // décor est ancré au bas du hero (sunMoonY: calc(100% - 149px)) : tout ce
   // qu'on glisse sous le cercle remonte le cercle SANS remonter le soleil, qui
   // se retrouve alors sous l'anneau au lieu d'être dedans. C'est ce qui est
   // arrivé le 2026-08-11 en plaçant la phrase de Solenn ici. Elle est
   // désormais rendue APRÈS le hero, hors de cette géométrie.
   // INVARIANT : paddingBottom + circleWrap.marginBottom + 125 doit TOUJOURS
-  // valoir le nombre de sunMoonY (135 aujourd'hui), sinon le soleil sort de
+  // valoir le nombre de sunMoonY (149 aujourd'hui), sinon le soleil sort de
   // l'anneau. Les deux se reglent ensemble, jamais l'un sans l'autre.
   hero: { position:'relative', minHeight:420, display:'flex', flexDirection:'column',
-    alignItems:'center', justifyContent:'flex-end', paddingBottom:6 },
+    alignItems:'center', justifyContent:'flex-end', paddingBottom:12 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
     borderRadius:20, padding:'6px 16px', fontSize:11, color:'rgba(200,123,82,0.72)', fontWeight:500,
@@ -2684,7 +2684,7 @@ const hc = {
   greetNameAccent: { background:'linear-gradient(135deg,#C87B52,#E8A07A)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:250, height:250,
-    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:4 },
+    display:'flex', alignItems:'center', justifyContent:'center', marginBottom:12 },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
     background:'linear-gradient(145deg, #C87B52, #C87B52)',
