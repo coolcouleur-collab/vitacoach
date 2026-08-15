@@ -672,20 +672,25 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: 'spring', stiffness: 320, damping: 22 }}
               style={{
+                // left/right 0 + margin auto, et non left 50% + translateX :
+                // framer-motion ecrase transform avec ses propres y/scale, le
+                // bandeau partait a droite hors ecran (constat Jean 2026-08-13).
+                // Et verre ambre clair, pas de fond sombre : la palette Solenn
+                // n'a AUCUN element fonce.
                 position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 66px)',
-                left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
-                background: 'rgba(40,20,5,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+                left: 0, right: 0, margin: '0 auto', zIndex: 9999,
+                background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
                 borderRadius: 20, padding: '14px 24px',
-                border: '1.5px solid rgba(255,220,160,0.30)',
-                boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+                border: '1.5px solid rgba(255,220,160,0.60)',
+                boxShadow: '0 16px 48px rgba(120,60,20,0.25)',
                 display: 'flex', alignItems: 'center', gap: 12, width: 'max-content', maxWidth: '88vw',
               }}>
               <StarIcon size={24} color="#E8962A" />
               <div style={{ fontFamily: "'Poppins', sans-serif" }}>
-                <div style={{ fontSize: 14.5, fontWeight: 800, color: 'rgba(255,238,220,0.95)' }}>
+                <div style={{ fontSize: 14.5, fontWeight: 800, color: 'rgba(150,85,50,0.95)' }}>
                   Objectif du jour terminé, bravo !
                 </div>
-                <div style={{ fontSize: 11.5, color: 'rgba(255,238,220,0.60)', marginTop: 1 }}>
+                <div style={{ fontSize: 11.5, color: 'rgba(178,102,62,0.75)', marginTop: 1 }}>
                   Jour {jourActuel} validé · {progression.filter(Boolean).length + 1} sur 21
                 </div>
               </div>
@@ -962,7 +967,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(200,123,82,0.65)', margin: 0 }}>
+              <p style={{ fontSize: '13px', color: 'rgba(150,85,50,0.88)', margin: 0, lineHeight: 1.55 }}>
                 <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
                   Prochaine étape · Jour {prochainMilestone.jour} :
                 </span>{' '}

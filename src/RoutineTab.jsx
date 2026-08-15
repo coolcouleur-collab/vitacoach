@@ -545,17 +545,17 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         {showCelebration && (
           <div style={{
             position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
-            background: 'rgba(40,20,5,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+            background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             borderRadius: 20, padding: '16px 28px', textAlign: 'center',
             boxShadow: '0 16px 48px rgba(0,0,0,0.40), 0 4px 12px rgba(200,123,82,0.18)',
-            border: '1.5px solid rgba(255,220,160,0.22)',
+            border: '1.5px solid rgba(255,220,160,0.60)',
             animation: 'celebPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
             display: 'flex', alignItems: 'center', gap: 12,
           }}>
             <span style={{ display:'flex' }}><StarIcon size={28} color="#E8962A" /></span>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(200,123,82,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
-              <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
+              <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(150,85,50,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
+              <div style={{ fontSize: 12, color: 'rgba(178,102,62,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
             </div>
           </div>
         )}
