@@ -958,16 +958,29 @@ const [messages, setMessages] = useState(() => {
     const today = new Date().toISOString().split('T')[0]
 
     getSupabase().then(supabase => {
-      // Charger le profil depuis Supabase (priorité sur localStorage)
+      // Charger le profil depuis Supabase. ATTENTION AU SENS DU FLUX : la base
+      // ne fait foi que si SA copie est complète. L'ancienne version écrasait
+      // le profil local avec la ligne de la base quelle qu'elle soit : si la
+      // sauvegarde vers la base avait échoué en silence (session expirée en
+      // PWA, réseau), la base gardait une vieille ligne vide et chaque
+      // ouverture de l'app EFFAÇAIT ce que l'utilisateur venait de remplir.
+      // C'est le « je remplis mon profil et ça s'enlève » de Jean (2026-08-13).
       supabase.from('profils').select('profil').eq('user_id', user.id).maybeSingle()
         .then(({ data }) => {
-          if (data?.profil) {
-            setProfil(data.profil)
-            localStorage.setItem('vitacoach_profil', JSON.stringify(data.profil))
-            if (data.profil.isPro === true) {
+          const base  = data?.profil
+          const local = safeParse('vitacoach_profil', null)
+          if (base?.nom) {
+            // La base a un profil complet : elle fait foi.
+            setProfil(base)
+            localStorage.setItem('vitacoach_profil', JSON.stringify(base))
+            if (base.isPro === true) {
               setIsPro(true)
               localStorage.setItem('vitacoach_pro', JSON.stringify(true))
             }
+          } else if (local?.nom) {
+            // La base est vide ou amputée mais l'appareil a un profil rempli :
+            // c'est la base qu'on répare, jamais l'appareil qu'on vide.
+            syncProfilSupabase(user.id, local)
           }
           setProfilLoading(false)
         })
