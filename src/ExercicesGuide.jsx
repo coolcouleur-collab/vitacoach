@@ -358,13 +358,25 @@ export default function ExercicesGuide({ onClose, initial = null }) {
       }}>
         <div style={{ width: 44, height: 5, background: 'rgba(200,123,82,0.30)', borderRadius: 8, margin: '0 auto 14px' }} />
 
+        <button onClick={onClose} aria-label="Fermer le guide" style={{
+          position: 'sticky', top: 0, float: 'right', zIndex: 5,
+          width: 32, height: 32, borderRadius: '50%', cursor: 'pointer',
+          background: 'rgba(255,246,238,0.92)', border: '1px solid rgba(200,123,82,0.30)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 10px rgba(200,123,82,0.15)', marginLeft: 8,
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.85)" strokeWidth="2.4" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
         {!exo && (
           <>
             <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)', marginBottom: 4 }}>
               Guide des exercices
             </div>
             <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', marginBottom: 16, lineHeight: 1.5 }}>
-              Chaque geste montré et expliqué. Doucement, régulièrement — jamais dans la douleur.
+              Chaque geste montré et expliqué. Doucement, régulièrement, jamais dans la douleur.
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {EXOS.map(e => (
