@@ -69,6 +69,24 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
   const [showGrille, setShowGrille] = useState(false)
+
+  // La generation prend 10 a 20 secondes, Groq plus le reveil de Render : on
+  // ne peut pas la rendre instantanee, mais une attente qui raconte ce qu'elle
+  // fait parait deux fois plus courte qu'un libelle fige (2026-08-13).
+  const ETAPES_CREATION = [
+    'Je lis ton profil et ton objectif…',
+    'Je regarde tes données de la semaine…',
+    'Je construis tes 21 jours, séances et nutrition…',
+    'Je vérifie l'équilibre et la progression…',
+    'Dernières retouches…',
+  ]
+  const [etapeCreation, setEtapeCreation] = useState(0)
+  useEffect(() => {
+    if (!creating) { setEtapeCreation(0); return }
+    const t = setInterval(() => setEtapeCreation(i => Math.min(i + 1, ETAPES_CREATION.length - 1)), 3500)
+    return () => clearInterval(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [creating])
   const [exoGuide, setExoGuide] = useState(null)
 
   const fetchChallenge = async () => {
@@ -296,7 +314,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               transition: 'all 0.2s',
             }}
           >
-            {creating ? 'Création en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon programme</span>}
+            {creating ? ETAPES_CREATION[etapeCreation] : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon programme</span>}
           </motion.button>
         </motion.div>
       </div>
@@ -432,7 +450,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 </button>
               )}
 
-              {jourActuelData.duree && (
+              {jourActuelData.duree && !jourActuelData.seance?.length && (
                 <span
                   style={{
                     display: 'inline-block',
@@ -454,8 +472,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontStyle: 'italic',
-                    fontSize: '14px',
-                    color: 'rgba(200,123,82,0.60)',
+                    // 16px et 0.88 : a 14px et 0.60 d'opacite, la seule ligne
+                    // qui explique le SENS de la seance etait illisible
+                    // (constat Jean 2026-08-13).
+                    fontSize: '16px',
+                    color: 'rgba(150,85,50,0.88)',
                     marginBottom: '20px',
                     lineHeight: 1.6,
                   }}
@@ -853,7 +874,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 transition: 'all 0.2s',
               }}
             >
-              {creating ? 'Création…' : 'Recommencer avec un nouveau programme'}
+              {creating ? ETAPES_CREATION[etapeCreation] : 'Recommencer avec un nouveau programme'}
             </motion.button>
           </div>
           )}
