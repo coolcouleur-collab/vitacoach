@@ -967,7 +967,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(150,85,50,0.88)', margin: 0, lineHeight: 1.55 }}>
+              <p style={{ fontSize: '13px', color: 'rgba(150,85,50,0.75)', margin: 0, lineHeight: 1.55 }}>
                 <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
                   Prochaine étape · Jour {prochainMilestone.jour} :
                 </span>{' '}
