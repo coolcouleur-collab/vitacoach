@@ -77,7 +77,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     'Je lis ton profil et ton objectif…',
     'Je regarde tes données de la semaine…',
     'Je construis tes 21 jours, séances et nutrition…',
-    'Je vérifie l'équilibre et la progression…',
+    "Je vérifie l'équilibre et la progression…",
     'Dernières retouches…',
   ]
   const [etapeCreation, setEtapeCreation] = useState(0)
