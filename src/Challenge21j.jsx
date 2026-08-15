@@ -319,7 +319,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.4 }}>
             {(objectifProgramme || objectifActuel)
               ? <><span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}</>
-              : <>Aucun objectif dans ton profil — définis-le dans Réglages, ton programme suivra ce cap.</>}
+              : <>Aucun objectif dans ton profil : définis-le dans Réglages, ton programme suivra ce cap.</>}
           </div>
         </div>
       )}
@@ -616,7 +616,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   marginBottom: '10px',
                 }}
               >
-                Aujourd'hui — Jour {jourActuel}
+                Aujourd'hui · Jour {jourActuel}
               </p>
 
               <p
@@ -803,7 +803,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             >
               <p style={{ fontSize: '13px', color: 'rgba(200,123,82,0.65)', margin: 0 }}>
                 <span style={{ fontWeight: 700, color: 'rgba(200,123,82,0.92)' }}>
-                  Prochain milestone — Jour {prochainMilestone.jour} :
+                  Prochaine étape · Jour {prochainMilestone.jour} :
                 </span>{' '}
                 {prochainMilestone.message}
               </p>
@@ -819,13 +819,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               onClick={handleNouveauChallenge}
               disabled={creating}
               style={{
-                // Pastille pleine et lisible : transparent a 0.85 sur fond
-                // clair, le bouton etait presque invisible et semblait
-                // abandonne en bas de page (constat Jean 2026-08-12).
-                background: 'rgba(255,246,238,0.80)',
-                color: 'rgba(150,85,50,0.95)',
-                border: '1px solid rgba(200,123,82,0.40)',
-                boxShadow: '0 3px 12px rgba(200,123,82,0.14)',
+                // Verre ambré clair : LA charte CTA de l'app (memes valeurs que
+                // le paywall et le guide). Ma pastille blanche sortait de la
+                // palette (constat Jean 2026-08-13).
+                background: 'rgba(255,235,210,0.32)',
+                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                color: '#B2663E',
+                border: '1px solid rgba(255,220,160,0.60)',
+                boxShadow: '0 4px 20px rgba(200,123,82,0.25)',
                 borderRadius: '14px',
                 padding: '11px 22px',
                 fontSize: '12.5px',
