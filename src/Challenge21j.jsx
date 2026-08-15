@@ -29,16 +29,22 @@ const EXO_INFOS = {
   dips:        { nom: 'Dips sur chaise' },
 }
 
-function SeanceRow({ item, onFiche }) {
+function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
   const info = EXO_INFOS[item.exo] || { nom: item.exo }
   const photo = PHOTOS_EXOS[item.exo] || null
   const [img, setImg] = useState(photo?.url || null)
   return (
-    <button onClick={onFiche} style={{
+    <motion.button
+      initial={{ opacity: 0, x: -14 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ type: 'spring', stiffness: 320, damping: 26, delay: index * 0.08 }}
+      onClick={onFiche} style={{
       width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-      background: 'rgba(255,235,210,0.30)', border: '1px solid rgba(255,220,160,0.35)',
+      background: fait ? 'rgba(232,150,42,0.16)' : 'rgba(255,235,210,0.30)',
+      border: fait ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(255,220,160,0.35)',
       borderRadius: 14, padding: '8px 10px', marginBottom: 8, cursor: 'pointer',
       fontFamily: "'Poppins', sans-serif", textAlign: 'left',
+      transition: 'background 0.25s, border-color 0.25s',
     }}>
       <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(255,240,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {img
@@ -52,7 +58,25 @@ function SeanceRow({ item, onFiche }) {
       <span style={{ fontSize: 10.5, fontWeight: 600, color: '#B2663E', background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
         Voir le geste
       </span>
-    </button>
+      {onToggle && (
+        <span
+          role="button"
+          aria-label={fait ? 'Fait' : 'Marquer cet exercice'}
+          onClick={e => { e.stopPropagation(); onToggle() }}
+          style={{
+            width: 30, height: 30, borderRadius: '50%', flexShrink: 0, cursor: 'pointer',
+            background: fait ? 'rgba(200,123,82,0.90)' : 'rgba(255,246,238,0.70)',
+            border: fait ? '1.5px solid rgba(200,123,82,0.90)' : '1.5px solid rgba(200,123,82,0.40)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.2s',
+          }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke={fait ? '#fff' : 'rgba(200,123,82,0.45)'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </span>
+      )}
+    </motion.button>
   )
 }
 
@@ -69,6 +93,23 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
   const [showGrille, setShowGrille] = useState(false)
+
+  // Coches d'exercices du jour. Locales a l'appareil et remises a zero chaque
+  // jour : c'est un rituel d'entrainement, pas une donnee de sante.
+  const cleExos = 'solenn_exos_' + new Date().toDateString()
+  const [exosFaits, setExosFaits] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(cleExos) || '{}') } catch { return {} }
+  })
+  function toggleExo(i) {
+    setExosFaits(prev => {
+      const p = { ...prev, [i]: !prev[i] }
+      try {
+        localStorage.setItem(cleExos, JSON.stringify(p))
+        if (navigator.vibrate) navigator.vibrate(p[i] ? 45 : 20)
+      } catch {}
+      return p
+    })
+  }
 
   // La generation prend 10 a 20 secondes, Groq plus le reveil de Render : on
   // ne peut pas la rendre instantanee, mais une attente qui raconte ce qu'elle
@@ -432,8 +473,25 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
                   {jourActuelData.seance.map((s, i) => (
-                    <SeanceRow key={i} item={s} onFiche={() => setExoGuide(s.exo || null)} />
+                    <SeanceRow key={i} item={s} index={i}
+                      fait={!!exosFaits[i]}
+                      onToggle={() => toggleExo(i)}
+                      onFiche={() => setExoGuide(s.exo || null)} />
                   ))}
+                  {(() => {
+                    const total = jourActuelData.seance.length
+                    const faits = jourActuelData.seance.filter((_, i) => exosFaits[i]).length
+                    return (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '2px 2px 6px' }}>
+                        <div style={{ flex: 1, height: 4, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.14)' }}>
+                          <div style={{ width: `${total ? Math.round(faits / total * 100) : 0}%`, height: '100%', borderRadius: 2, background: 'linear-gradient(90deg,#C87B52,#E8962A)', transition: 'width 0.35s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                        </div>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(178,102,62,0.80)', fontFamily: "'Poppins',sans-serif", flexShrink: 0 }}>
+                          {faits}/{total}
+                        </span>
+                      </div>
+                    )
+                  })()}
                 </div>
               )}
               {/* ── Conseil nutrition du jour ── */}
@@ -564,7 +622,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleMarquerFait(jourActuel - 1)}
+                  onClick={() => { if (navigator.vibrate) navigator.vibrate([50, 40, 80]); handleMarquerFait(jourActuel - 1) }}
+                  animate={jourActuelData.seance?.length && jourActuelData.seance.every((_, i) => exosFaits[i])
+                    ? { scale: [1, 1.04, 1], transition: { repeat: Infinity, duration: 1.6 } }
+                    : {}}
                   style={{
                     background: 'rgba(255,235,210,0.32)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
