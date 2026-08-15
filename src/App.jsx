@@ -653,6 +653,18 @@ const [messages, setMessages] = useState(() => {
   const [metriques, setMetriques] = useState(defaultMetriques)
   const [suggestions, setSuggestions] = useState([])
   const [reactions, setReactions]   = useState({})
+
+  // « Photographie ton repas » depuis la vue Nutrition : bascule sur le chat
+  // et ouvre directement le selecteur photo, meme geste que le bouton camera.
+  useEffect(() => {
+    const h = () => {
+      setOnglet('chat')
+      setTimeout(() => { try { document.querySelector('input[type=file][accept*=image]')?.click() } catch {} }, 350)
+    }
+    window.addEventListener('solenn:photo-repas', h)
+    return () => window.removeEventListener('solenn:photo-repas', h)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // Réponses rapides. Restaurées au démarrage à partir du dernier message de
   // Solenn : sans ça, rouvrir l'app faisait disparaître les chips, y compris
   // quand la dernière réponse posait une question (retour Jean 2026-08-08).

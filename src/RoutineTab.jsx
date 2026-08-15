@@ -447,7 +447,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 800, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
-            {vue === 'programme' ? 'Ton programme' : 'Ta routine du jour'}
+            {vue === 'programme' ? 'Ton programme' : vue === 'routine' ? 'Ta routine du jour' : 'Ta nutrition'}
           </div>
           <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -480,7 +480,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         }}>
           {[
             { id: 'programme', label: 'Programme' },
-            { id: 'routine',   label: 'Routine du jour' },
+            { id: 'routine',   label: 'Routine' },
+            { id: 'nutrition', label: 'Nutrition' },
           ].map(o => (
             <button key={o.id} onClick={() => setVue(o.id)} style={{
               flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
@@ -498,7 +499,9 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.68)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, padding: '9px 4px 0' }}>
           {vue === 'programme'
             ? '21 jours de sport, santé et nutrition pour atteindre ton objectif.'
-            : 'Ton rythme du jour, régénéré chaque matin selon tes données.'}
+            : vue === 'routine'
+              ? 'Ton rythme du jour, régénéré chaque matin selon tes données.'
+              : 'Tes repas du jour, adaptés à ton profil et à tes données.'}
         </div>
       </div>
 
@@ -721,6 +724,49 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ── Vue NUTRITION — la maison des repas, demandee par Jean le
+             2026-08-13. Regroupe ce qui etait eparpille : les trois repas de la
+             routine, et le bouton photo de repas qui vivait cache dans le chat.
+             Les donnees viennent de la routine deja generee : pas d'appel
+             supplementaire. ── */}
+        {vue === 'nutrition' && (
+          <div>
+            {routine?.nutrition ? (
+              <NutritionCard nutrition={routine.nutrition} />
+            ) : (
+              <div style={{
+                background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+                borderRadius: 18, padding: '18px 20px', marginBottom: 14,
+                fontFamily: 'Poppins,sans-serif', fontSize: 13, color: 'rgba(178,102,62,0.85)', lineHeight: 1.55,
+              }}>
+                Tes repas du jour arrivent avec ta routine : génère-la dans l'onglet
+                Routine, et le petit-déjeuner, le déjeuner et le dîner apparaîtront ici.
+              </div>
+            )}
+
+            <button
+              onClick={() => { try { window.dispatchEvent(new CustomEvent('solenn:photo-repas')) } catch {} }}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+                padding: '14px 16px', cursor: 'pointer', marginBottom: 8,
+                fontFamily: 'Poppins,sans-serif', textAlign: 'left',
+              }}>
+              <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.90)' }}>Photographie ton repas</div>
+                <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Solenn l'analyse et te dit ce qu'elle en pense</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        )}
 
         {/* ── 3. Ressource : le guide des gestes — côté Programme ── */}
         {vue === 'programme' && (

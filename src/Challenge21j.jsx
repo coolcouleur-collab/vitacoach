@@ -401,6 +401,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 Aujourd'hui · Jour {jourActuel}
               </p>
 
+              {/* L'action textuelle ne s'affiche que si aucune seance ne la
+                  detaille : « Seance A : squats, pont, gainage » suivi des trois
+                  memes lignes en photo etait LA redondance de la carte
+                  (constat Jean 2026-08-13). */}
+              {!jourActuelData.seance?.length && (
               <p
                 style={{
                   fontFamily: "'Poppins', sans-serif",
@@ -413,6 +418,15 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               >
                 {jourActuelData.action}
               </p>
+              )}
+              {jourActuelData.titre && jourActuelData.seance?.length > 0 && (
+                <p style={{
+                  fontFamily: "'Poppins', sans-serif", fontSize: '15px', fontWeight: 700,
+                  color: 'rgba(200,123,82,0.92)', marginBottom: '10px', lineHeight: 1.5,
+                }}>
+                  {jourActuelData.titre}
+                </p>
+              )}
 
               {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
               {jourActuelData.seance?.length > 0 && (
