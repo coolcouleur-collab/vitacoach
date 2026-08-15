@@ -2208,13 +2208,13 @@ padding: isMobile
                       background:'rgba(255,238,228,0.07)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <span style={{ fontSize:16, fontWeight:600, color:'rgba(255,238,228,0.88)', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic' }}>
+                      <span style={{ fontSize:16, fontWeight:600, color:'rgba(255,238,228,0.88)', fontFamily:F }}>
                         {(profil.nom || profil.prenom || '').charAt(0).toUpperCase()}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize:18, fontWeight:500, color:'rgba(255,238,228,0.92)', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', letterSpacing:'0.01em' }}>
+                    <div style={{ fontSize:18, fontWeight:600, color:'rgba(255,238,228,0.92)', fontFamily:F, letterSpacing:'0.01em' }}>
                       {profil.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : ''}
                     </div>
                     <div style={{ fontSize:11.5, fontWeight:600, color:'rgba(255,238,228,0.85)', marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>

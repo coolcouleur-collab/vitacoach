@@ -620,7 +620,7 @@ export default function CycleTab({ profil, userId, onChat }) {
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
             <MoonIcon size={36} color="rgba(200,123,82,0.75)" />
           </div>
-          <div style={{ fontSize: 17, fontWeight: 600, color: am(0.90), marginBottom: 8, fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' }}>
+          <div style={{ fontSize: 17, fontWeight: 600, color: am(0.90), marginBottom: 8, fontFamily: "'Poppins', sans-serif" }}>
             Une seule question pour démarrer :
           </div>
           <div style={{ fontSize: 14, fontWeight: 600, color: am(0.85), marginBottom: 8 }}>

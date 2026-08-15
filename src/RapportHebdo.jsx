@@ -331,9 +331,8 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         }}>
           <span style={{ fontSize: 15, color: '#1f9d55', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
           <p style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontStyle: 'italic',
-            fontSize: 15,
+            fontFamily: "'Poppins', sans-serif",
+            fontSize: 13,
             color: 'rgba(200,123,82,0.92)',
             margin: 0,
             lineHeight: 1.5,

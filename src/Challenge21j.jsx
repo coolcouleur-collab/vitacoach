@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react'
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
@@ -100,6 +100,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [exosFaits, setExosFaits] = useState(() => {
     try { return JSON.parse(localStorage.getItem(cleExos) || '{}') } catch { return {} }
   })
+  const [showBravo, setShowBravo] = useState(false)
+  const bravoLance = useRef(false)
+
   function toggleExo(i) {
     setExosFaits(prev => {
       const p = { ...prev, [i]: !prev[i] }
@@ -218,6 +221,24 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const objectifChange    = !!(challenge && objectifActuel && objectifProgramme && objectifActuel !== objectifProgramme)
 
   const jourActuelData = jours[jourActuel - 1] || null
+
+  // Le dernier exercice coché VALIDE le jour, sans bouton : le geste de
+  // terminer la séance est déjà la déclaration d'avoir fini. Un bandeau
+  // « Objectif du jour terminé, bravo ! » célèbre, puis s'efface
+  // (demande Jean 2026-08-13). Le garde-fou bravoLance évite la double
+  // validation si l'utilisateur décoche puis recoche.
+  useEffect(() => {
+    const seance = jours[jourActuel - 1]?.seance
+    if (!seance?.length || progression[jourActuel - 1] || bravoLance.current) return
+    const tousFaits = seance.every((_, i) => exosFaits[i])
+    if (!tousFaits) return
+    bravoLance.current = true
+    if (navigator.vibrate) navigator.vibrate([60, 50, 90])
+    setShowBravo(true)
+    handleMarquerFait(jourActuel - 1)
+    setTimeout(() => setShowBravo(false), 3200)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exosFaits])
   // Le jour en cours est le seul affiche, et les premiers jours sont
   // volontairement legers pour ne pas cramer un debutant. Resultat : la
   // personne qui decouvre son programme voit le jour le plus pauvre des 21 et
@@ -542,12 +563,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               {jourActuelData.pourquoi && (
                 <p
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: 'italic',
-                    // 16px et 0.88 : a 14px et 0.60 d'opacite, la seule ligne
-                    // qui explique le SENS de la seance etait illisible
-                    // (constat Jean 2026-08-13).
-                    fontSize: '16px',
+                    // Regle B : Poppins sous 20px, l'italique serif en petit
+                    // corps etait la cause premiere de l'illisibilite.
+                    fontFamily: "'Poppins', sans-serif",
+                    fontSize: '13px',
                     color: 'rgba(150,85,50,0.88)',
                     marginBottom: '20px',
                     lineHeight: 1.6,
@@ -605,7 +624,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   disabled
                   style={{
                     background: 'rgba(34,197,94,0.12)',
-                    color: '#22c55e',
+                    color: '#1f9d55',
                     border: '1.5px solid rgba(34,197,94,0.3)',
                     borderRadius: '16px',
                     padding: '12px 24px',
@@ -618,14 +637,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 >
                   Fait aujourd'hui !
                 </button>
-              ) : (
+              // Jour à séance : pas de bouton, cocher le dernier exercice
+              // valide tout seul. Le compteur au-dessus dit où on en est.
+              ) : jourActuelData?.seance?.length ? null : (
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => { if (navigator.vibrate) navigator.vibrate([50, 40, 80]); handleMarquerFait(jourActuel - 1) }}
-                  animate={jourActuelData.seance?.length && jourActuelData.seance.every((_, i) => exosFaits[i])
-                    ? { scale: [1, 1.04, 1], transition: { repeat: Infinity, duration: 1.6 } }
-                    : {}}
                   style={{
                     background: 'rgba(255,235,210,0.32)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
@@ -644,6 +662,33 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   ✓ Marquer comme fait
                 </motion.button>
               )}
+            </motion.div>
+          )}
+
+          {/* Bandeau de victoire du jour */}
+          {showBravo && (
+            <motion.div
+              initial={{ opacity: 0, y: -16, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+              style={{
+                position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 66px)',
+                left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
+                background: 'rgba(40,20,5,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+                borderRadius: 20, padding: '14px 24px',
+                border: '1.5px solid rgba(255,220,160,0.30)',
+                boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+                display: 'flex', alignItems: 'center', gap: 12, width: 'max-content', maxWidth: '88vw',
+              }}>
+              <StarIcon size={24} color="#E8962A" />
+              <div style={{ fontFamily: "'Poppins', sans-serif" }}>
+                <div style={{ fontSize: 14.5, fontWeight: 800, color: 'rgba(255,238,220,0.95)' }}>
+                  Objectif du jour terminé, bravo !
+                </div>
+                <div style={{ fontSize: 11.5, color: 'rgba(255,238,220,0.60)', marginTop: 1 }}>
+                  Jour {jourActuel} validé · {progression.filter(Boolean).length + 1} sur 21
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -687,7 +732,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   flex: 1,
                 }}
               >
-                {challenge?.challenge?.titre || 'Programme 21 jours'}
+                {/* Le titre invente par le modele, « Équilibre Vital 21 Jours »,
+                    ne disait rien a personne : le suivi porte un nom
+                    fonctionnel, l'objectif est deja dans Ton cap
+                    (constat Jean 2026-08-13). */}
+                Ta progression sur 21 jours
               </h2>
 
               <div
