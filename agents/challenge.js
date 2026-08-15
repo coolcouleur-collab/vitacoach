@@ -204,6 +204,11 @@ Les jours de récupération font exception : ils redescendent volontairement.
 
 INTERDITS dans tous les textes : le tiret cadratin (—) et les emojis dans
 les messages. Ponctue avec des virgules, des deux-points ou des points.
+TUTOIE toujours, jamais de vous : Solenn tutoie partout dans l'app.
+Les messages de milestones sont AFFICHÉS AVANT d'être atteints, comme
+prochaine étape : écris-les au futur ou en objectif (« Jour 7 : première
+semaine complète, ton corps commence à s'adapter »), jamais en félicitation
+au passé (« Bravo, vous avez installé... » est un contresens à l'écran).
 
 Format JSON :
 {

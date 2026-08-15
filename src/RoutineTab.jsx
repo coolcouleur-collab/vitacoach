@@ -528,10 +528,9 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
              retour Jean 2026-07-25). ── */}
         {vue === 'programme' && userId && (
           <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:'rgba(200,123,82,0.70)', fontFamily:'Poppins,sans-serif', marginBottom:12, letterSpacing:'0.3px' }}>
-              <span style={{display:'flex',alignItems:'center',gap:5}}><StarIcon size={12} color="rgba(200,123,82,0.70)" />
-                21 jours vers ton objectif</span>
-            </div>
+            {/* Libellé « 21 jours vers ton objectif » retiré : le mot 21 jours
+                apparaissait quatre fois sur l'écran et « Ton cap » dit déjà
+                l'essentiel juste dessous (constat Jean 2026-08-13). */}
             <React.Suspense fallback={null}>
               <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} profil={profil} />
             </React.Suspense>

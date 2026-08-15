@@ -247,6 +247,42 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const objectifProgramme = challenge?.challenge?.objectif_source || ''
   const objectifChange    = !!(challenge && objectifActuel && objectifProgramme && objectifActuel !== objectifProgramme)
 
+  // ── GESTION DES JOURS MANQUÉS ─────────────────────────────────────────────
+  // Un vrai coach remarque l'absence. La page affichait le jour 8 comme si de
+  // rien n'était après trois jours sautés : aucune reconnaissance, aucune
+  // reprise (constat Jean 2026-08-13). À partir de DEUX jours manqués, un
+  // bandeau propose de reprendre là où on s'était arrêté, en décalant la date
+  // de début du programme, ou d'assumer le trou et de continuer. Un seul jour
+  // manqué ne déclenche rien : c'est la vie, pas une rechute.
+  const joursManques = progression.slice(0, Math.max(jourActuel - 1, 0)).filter(x => !x).length
+  const cleReprise = challenge ? `solenn_reprise_${challenge.id}_${jourActuel}` : ''
+  const [repriseVue, setRepriseVue] = useState(() => {
+    try { return cleReprise ? !!localStorage.getItem(cleReprise) : false } catch { return false }
+  })
+  const proposerReprise = joursManques >= 2 && !jourActuelComplete && !repriseVue
+
+  function ignorerReprise() {
+    try { localStorage.setItem(cleReprise, '1') } catch {}
+    setRepriseVue(true)
+  }
+
+  async function reprendreOuOnEnEtait() {
+    // Le prochain jour à faire est celui qui suit le dernier jour validé.
+    const dernierFait = progression.lastIndexOf(true)
+    const jourCible = dernierFait + 2   // -1 => jour 1
+    const nouveauDebut = new Date(Date.now() - (jourCible - 1) * 86400000).toISOString().split('T')[0]
+    try {
+      const m = await import('./supabase')
+      await m.supabase.from('challenges')
+        .update({ date_debut: nouveauDebut })
+        .eq('id', challenge.id)
+    } catch {}
+    const maj = { ...challenge, date_debut: nouveauDebut }
+    setChallenge(maj)
+    try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(maj)) } catch {}
+    ignorerReprise()
+  }
+
   const jourActuelData = jours[jourActuel - 1] || null
 
   // Le dernier exercice coché VALIDE le jour, sans bouton : le geste de
@@ -460,6 +496,37 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           </button>
         </div>
       )}
+      {proposerReprise && (
+        <div style={{
+          background: 'rgba(255,246,238,0.70)', border: '1px solid rgba(200,123,82,0.28)',
+          borderRadius: 16, padding: '14px 16px', marginBottom: 14,
+          fontFamily: "'Poppins', sans-serif",
+        }}>
+          <div style={{ fontSize: 13, color: 'rgba(150,85,50,0.92)', fontWeight: 600, lineHeight: 1.5 }}>
+            {joursManques} jours ont sauté, ça arrive.
+          </div>
+          <div style={{ fontSize: 12, color: 'rgba(178,102,62,0.75)', lineHeight: 1.5, marginTop: 3 }}>
+            On reprend là où tu t'étais arrêté, ou on continue au jour {jourActuel} ?
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 11 }}>
+            <button onClick={reprendreOuOnEnEtait} style={{
+              flex: 1, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
+              background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
+              color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+            }}>
+              Reprendre au jour {progression.lastIndexOf(true) + 2}
+            </button>
+            <button onClick={ignorerReprise} style={{
+              flex: 0.8, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
+              background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+              color: 'rgba(160,100,60,0.80)', fontSize: 12, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
+            }}>
+              Continuer au jour {jourActuel}
+            </button>
+          </div>
+        </div>
+      )}
+
       <AnimatePresence>
         <motion.div
           key="challenge-main"
@@ -547,6 +614,27 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                       </div>
                     )
                   })()}
+                  {/* Filet de sécurité : depuis que cocher le dernier exercice
+                      valide le jour, quelqu'un qui a fait sa séance sans cocher
+                      dans l'app n'avait plus AUCUN moyen de valider sa journée
+                      (constat Jean 2026-08-13). */}
+                  {!jourActuelComplete && (
+                    <button
+                      onClick={() => {
+                        const tous = {}
+                        jourActuelData.seance.forEach((_, i) => { tous[i] = true })
+                        try { localStorage.setItem(cleExos, JSON.stringify(tous)) } catch {}
+                        setExosFaits(tous)
+                      }}
+                      style={{
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        padding: '2px 2px 8px', fontSize: 11.5, fontWeight: 600,
+                        color: 'rgba(178,102,62,0.65)', fontFamily: "'Poppins',sans-serif",
+                        textDecoration: 'underline', textUnderlineOffset: 3,
+                      }}>
+                      Séance déjà faite ? Tout valider
+                    </button>
+                  )}
                 </div>
               )}
               {/* ── Conseil nutrition du jour ── */}
