@@ -54,8 +54,15 @@ function getMidnightExpiry() {
 // ─── Génère la routine pour un profil + métriques ────────────────────────────
 async function genererRoutine(profil, metriques = {}) {
   const prompt = `Tu es Solenn, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
-Profil : ${profil.age} ans, objectifs : ${profil.objectifs?.join(', ')}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
+Profil : ${profil.age || '?'} ans, objectifs : ${profil.objectifs?.join(', ') || 'bien-être général'}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
+Rythme de vie : ${profil.rythme || 'non renseigné'} · Foyer : ${profil.vie || 'non renseigné'}
+${profil.sante_conditions?.length ? `À PRENDRE EN COMPTE : ${profil.sante_conditions.join(', ')} — adapte les repas et l'effort.` : ''}
 Métriques d'hier : sommeil ${metriques.sommeil || 0}h, pas ${metriques.pas || 0}, humeur ${metriques.humeur || 0}/5.
+
+Les suggestions de repas doivent être CONCRÈTES (un plat nommé, pas une catégorie)
+et adaptées au profil et aux métriques : nuit courte, privilégie protéines et
+glucides lents ; peu de pas, repas plus légers.
+INTERDIT : le tiret cadratin (—) dans tous les textes.
 
 Réponds UNIQUEMENT en JSON valide :
 {

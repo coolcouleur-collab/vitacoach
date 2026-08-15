@@ -68,6 +68,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
+  const [showGrille, setShowGrille] = useState(false)
   const [exoGuide, setExoGuide] = useState(null)
 
   const fetchChallenge = async () => {
@@ -353,243 +354,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           transition={{ duration: 0.5 }}
           style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
         >
-          {/* ── HEADER ── */}
-          <div
-            style={{
-              background: 'rgba(255,235,210,0.22)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-              borderRadius: '20px',
-              padding: '24px 28px',
-              border: '1px solid rgba(255,220,160,0.28)',
-              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '12px',
-                marginBottom: '16px',
-              }}
-            >
-              <h2
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: 'italic',
-                  fontSize: '22px',
-                  fontWeight: 700,
-                  color: 'rgba(200,123,82,0.92)',
-                  margin: 0,
-                  flex: 1,
-                }}
-              >
-                {challenge?.challenge?.titre || 'Programme 21 jours'}
-              </h2>
-
-              <div
-                style={{
-                  background: 'rgba(232,150,42,0.12)',
-                  color: '#E8962A',
-                  borderRadius: '12px',
-                  padding: '6px 14px',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Jour {jourActuel} / 21
-              </div>
-            </div>
-
-            {/* Barre de progression */}
-            <div style={{ marginBottom: '4px' }}>
-              <div
-                style={{
-                  height: '6px',
-                  borderRadius: '12px',
-                  background: 'rgba(200,123,82,0.12)',
-                  overflow: 'hidden',
-                }}
-              >
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(completedCount / 21) * 100}%` }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  style={{
-                    height: '100%',
-                    borderRadius: '12px',
-                    background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 100%)',
-                  }}
-                />
-              </div>
-              <p
-                style={{
-                  fontSize: '11px',
-                  color: 'rgba(200,123,82,0.50)',
-                  marginTop: '6px',
-                  textAlign: 'right',
-                }}
-              >
-                {completedCount} / 21 jours complétés
-              </p>
-            </div>
-          </div>
-
-          {/* ── GRILLE 21 JOURS ── */}
-          <div
-            style={{
-              background: 'rgba(255,235,210,0.22)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-              borderRadius: '20px',
-              padding: '24px 28px',
-              border: '1px solid rgba(255,220,160,0.28)',
-              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: '13px',
-                fontWeight: 600,
-                color: 'rgba(200,123,82,0.55)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: '16px',
-              }}
-            >
-              Progression
-            </h3>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(7, 1fr)',
-                gap: '8px',
-              }}
-            >
-              {Array.from({ length: 21 }, (_, i) => {
-                const numJour = i + 1
-                const estPasse = numJour < jourActuel
-                const estAujourdhui = numJour === jourActuel
-                const estFutur = numJour > jourActuel
-                const estComplete = progression[i]
-                const estMilestone = MILESTONES_JOURS.includes(numJour)
-
-                let bgColor = 'rgba(200,123,82,0.04)'
-                let borderColor = 'rgba(200,123,82,0.08)'
-                let textColor = 'rgba(200,123,82,0.35)'
-                let borderWidth = '1px'
-
-                if (estPasse && estComplete) {
-                  bgColor = 'rgba(34,197,94,0.15)'
-                  borderColor = '#22c55e'
-                  textColor = '#22c55e'
-                } else if (estPasse && !estComplete) {
-                  // Jour passé non fait : simplement estompé, jamais rouge.
-                  // Une grille de 13 cases rouges transforme un programme raté
-                  // en mur d'échecs et donne envie de fermer l'app — l'inverse
-                  // de ce qu'un coach doit produire (retour Jean 2026-08-08).
-                  bgColor = 'rgba(200,123,82,0.05)'
-                  borderColor = 'rgba(200,123,82,0.12)'
-                  textColor = 'rgba(200,123,82,0.28)'
-                } else if (estAujourdhui) {
-                  bgColor = 'rgba(232,150,42,0.18)'
-                  borderColor = '#E8962A'
-                  textColor = '#C87B52'
-                  borderWidth = '2px'
-                }
-
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: i * 0.03 }}
-                    style={{
-                      position: 'relative',
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '12px',
-                      background: bgColor,
-                      border: `${borderWidth} solid ${borderColor}`,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'default',
-                    }}
-                  >
-                    {/* Indicateur pulsant pour aujourd'hui */}
-                    {estAujourdhui && (
-                      <motion.div
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
-                        transition={{ duration: 1.8, repeat: Infinity }}
-                        style={{
-                          position: 'absolute',
-                          inset: '-3px',
-                          borderRadius: '12px',
-                          border: '2px solid #E8962A',
-                          pointerEvents: 'none',
-                        }}
-                      />
-                    )}
-
-                    {/* Badge étoile milestone */}
-                    {estMilestone && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '-6px',
-                          right: '-6px',
-                          fontSize: '10px',
-                          lineHeight: 1,
-                          zIndex: 1,
-                        }}
-                      >
-                        <StarIcon size={10} color="white" />
-                      </div>
-                    )}
-
-                    {/* Contenu */}
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        fontWeight: estAujourdhui ? 700 : 500,
-                        color: textColor,
-                        lineHeight: 1,
-                      }}
-                    >
-                      {estPasse && estComplete ? '✓' : numJour}
-                    </span>
-                    {estPasse && estComplete && (
-                      <span
-                        style={{
-                          fontSize: '8px',
-                          color: textColor,
-                          lineHeight: 1,
-                          marginTop: '1px',
-                        }}
-                      >
-                        {numJour}
-                      </span>
-                    )}
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* ── Guide des exercices (ouvert depuis « Voir le geste ») ── */}
-          {exoGuide && (
-            <Suspense fallback={null}>
-              <ExercicesGuide initial={exoGuide} onClose={() => setExoGuide(null)} />
-            </Suspense>
-          )}
-
           {/* ── ACTION DU JOUR ── */}
           {jourActuelData && (
             <motion.div
@@ -597,13 +361,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               style={{
-                background: 'rgba(255,235,210,0.22)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-                borderRadius: '20px',
+                background: 'rgba(255,235,210,0.30)',
+                backdropFilter: 'blur(18px)',
+                WebkitBackdropFilter: 'blur(18px)',
+                borderRadius: '22px',
                 padding: '24px 28px',
-                border: '1px solid rgba(255,220,160,0.28)',
-                boxShadow: '0 4px 32px rgba(200,123,82,0.12)',
+                border: '1.5px solid rgba(232,150,42,0.45)',
+                boxShadow: '0 8px 36px rgba(200,123,82,0.18)',
               }}
             >
               <p
@@ -785,6 +549,258 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 </motion.button>
               )}
             </motion.div>
+          )}
+
+          {/* ── Guide des exercices (ouvert depuis « Voir le geste ») ── */}
+          {exoGuide && (
+            <Suspense fallback={null}>
+              <ExercicesGuide initial={exoGuide} onClose={() => setExoGuide(null)} />
+            </Suspense>
+          )}
+
+          {/* ── HEADER ── */}
+          <div
+            style={{
+              background: 'rgba(255,235,210,0.22)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
+              borderRadius: '20px',
+              padding: '24px 28px',
+              border: '1px solid rgba(255,220,160,0.28)',
+              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px',
+                marginBottom: '16px',
+              }}
+            >
+              <h2
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: 'italic',
+                  fontSize: '22px',
+                  fontWeight: 700,
+                  color: 'rgba(200,123,82,0.92)',
+                  margin: 0,
+                  flex: 1,
+                }}
+              >
+                {challenge?.challenge?.titre || 'Programme 21 jours'}
+              </h2>
+
+              <div
+                style={{
+                  background: 'rgba(232,150,42,0.12)',
+                  color: '#E8962A',
+                  borderRadius: '12px',
+                  padding: '6px 14px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Jour {jourActuel} / 21
+              </div>
+            </div>
+
+            {/* Barre de progression */}
+            <div style={{ marginBottom: '4px' }}>
+              <div
+                style={{
+                  height: '6px',
+                  borderRadius: '12px',
+                  background: 'rgba(200,123,82,0.12)',
+                  overflow: 'hidden',
+                }}
+              >
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(completedCount / 21) * 100}%` }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                  style={{
+                    height: '100%',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 100%)',
+                  }}
+                />
+              </div>
+              <p
+                style={{
+                  fontSize: '11px',
+                  color: 'rgba(200,123,82,0.50)',
+                  marginTop: '6px',
+                  textAlign: 'right',
+                }}
+              >
+                {completedCount} / 21 jours complétés
+              </p>
+              <button
+                onClick={() => setShowGrille(v => !v)}
+                style={{
+                  marginTop: 8, padding: '7px 14px', borderRadius: 12, cursor: 'pointer',
+                  background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+                  color: 'rgba(178,102,62,0.80)', fontSize: 11.5, fontWeight: 600,
+                  fontFamily: "'Poppins', sans-serif",
+                }}>
+                {showGrille ? 'Masquer ma progression' : 'Voir ma progression jour par jour'}
+              </button>
+            </div>
+          </div>
+
+          {/* ── GRILLE 21 JOURS — repliée par défaut. La page ouvrait sur
+               trois rangées de cases avant de dire quoi FAIRE aujourd'hui :
+               c'était le cœur du « brouillon » (redesign Jean 2026-08-13).
+               Le détail reste à un tap, la barre suffit au quotidien. ── */}
+          {showGrille && (
+          <div
+            style={{
+              background: 'rgba(255,235,210,0.22)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
+              borderRadius: '20px',
+              padding: '24px 28px',
+              border: '1px solid rgba(255,220,160,0.28)',
+              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: '13px',
+                fontWeight: 600,
+                color: 'rgba(200,123,82,0.55)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                marginBottom: '16px',
+              }}
+            >
+              Progression
+            </h3>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(7, 1fr)',
+                gap: '8px',
+              }}
+            >
+              {Array.from({ length: 21 }, (_, i) => {
+                const numJour = i + 1
+                const estPasse = numJour < jourActuel
+                const estAujourdhui = numJour === jourActuel
+                const estFutur = numJour > jourActuel
+                const estComplete = progression[i]
+                const estMilestone = MILESTONES_JOURS.includes(numJour)
+
+                let bgColor = 'rgba(200,123,82,0.04)'
+                let borderColor = 'rgba(200,123,82,0.08)'
+                let textColor = 'rgba(200,123,82,0.35)'
+                let borderWidth = '1px'
+
+                if (estPasse && estComplete) {
+                  bgColor = 'rgba(34,197,94,0.15)'
+                  borderColor = '#22c55e'
+                  textColor = '#22c55e'
+                } else if (estPasse && !estComplete) {
+                  // Jour passé non fait : simplement estompé, jamais rouge.
+                  // Une grille de 13 cases rouges transforme un programme raté
+                  // en mur d'échecs et donne envie de fermer l'app — l'inverse
+                  // de ce qu'un coach doit produire (retour Jean 2026-08-08).
+                  bgColor = 'rgba(200,123,82,0.05)'
+                  borderColor = 'rgba(200,123,82,0.12)'
+                  textColor = 'rgba(200,123,82,0.28)'
+                } else if (estAujourdhui) {
+                  bgColor = 'rgba(232,150,42,0.18)'
+                  borderColor = '#E8962A'
+                  textColor = '#C87B52'
+                  borderWidth = '2px'
+                }
+
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: i * 0.03 }}
+                    style={{
+                      position: 'relative',
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '12px',
+                      background: bgColor,
+                      border: `${borderWidth} solid ${borderColor}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'default',
+                    }}
+                  >
+                    {/* Indicateur pulsant pour aujourd'hui */}
+                    {estAujourdhui && (
+                      <motion.div
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
+                        transition={{ duration: 1.8, repeat: Infinity }}
+                        style={{
+                          position: 'absolute',
+                          inset: '-3px',
+                          borderRadius: '12px',
+                          border: '2px solid #E8962A',
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    )}
+
+                    {/* Badge étoile milestone */}
+                    {estMilestone && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '-6px',
+                          right: '-6px',
+                          fontSize: '10px',
+                          lineHeight: 1,
+                          zIndex: 1,
+                        }}
+                      >
+                        <StarIcon size={10} color="white" />
+                      </div>
+                    )}
+
+                    {/* Contenu */}
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: estAujourdhui ? 700 : 500,
+                        color: textColor,
+                        lineHeight: 1,
+                      }}
+                    >
+                      {estPasse && estComplete ? '✓' : numJour}
+                    </span>
+                    {estPasse && estComplete && (
+                      <span
+                        style={{
+                          fontSize: '8px',
+                          color: textColor,
+                          lineHeight: 1,
+                          marginTop: '1px',
+                        }}
+                      >
+                        {numJour}
+                      </span>
+                    )}
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
           )}
 
           {/* ── PROCHAIN MILESTONE ── */}

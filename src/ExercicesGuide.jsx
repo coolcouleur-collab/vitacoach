@@ -197,12 +197,10 @@ export const PHOTOS_EXOS = {
   // fait jamais travailler bras, epaules et dos se decredibilise.
   pompe:       { url: P(7900673), pos: '50%' },
   dips:        { url: P(6496123), pos: '50%' },
-  // Pompes sur genoux et Superman : aucune photo juste sur Pexels. Les
-  // resultats donnaient un cadrage sur les fesses et une posture qui n'est pas
-  // le mouvement. Mieux vaut l'animation, qui montre le bon geste, qu'une
-  // photo qui en montre un autre. Meme choix que pour le chat-vache.
-  pompegenoux: null,
-  superman:    null,
+  // Trouvees sur Unsplash le 2026-08-13, apres l'ajout de la cle : Pexels
+  // n'avait rien de juste pour ces deux mouvements.
+  pompegenoux: { url: 'https://images.unsplash.com/photo-1730416142374-d0363fd292f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080', pos: '50%' },
+  superman:    { url: 'https://images.unsplash.com/photo-1591258370814-01609b341790?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080', pos: '50%' },
 }
 
 // Sans photo (ou si elle ne charge pas), on retombe sur la silhouette animée.
