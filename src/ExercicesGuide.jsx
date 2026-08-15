@@ -199,7 +199,11 @@ export const PHOTOS_EXOS = {
   dips:        { url: P(6496123), pos: '50%' },
   // Trouvees sur Unsplash le 2026-08-13, apres l'ajout de la cle : Pexels
   // n'avait rien de juste pour ces deux mouvements.
-  pompegenoux: { url: 'https://images.unsplash.com/photo-1730416142374-d0363fd292f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080', pos: '50%' },
+  // Pompes sur genoux : DIX-SEPT recherches sur les deux banques, aucune photo
+  // qui montre reellement les genoux au sol. Celle retenue le 2026-08-13
+  // montrait une planche jambes tendues, signalee par Jean : une photo qui
+  // enseigne un autre geste est pire que l'animation, qui montre le bon.
+  pompegenoux: null,
   superman:    { url: 'https://images.unsplash.com/photo-1591258370814-01609b341790?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080', pos: '50%' },
 }
 
