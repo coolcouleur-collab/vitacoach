@@ -101,6 +101,30 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     try { return JSON.parse(localStorage.getItem(cleExos) || '{}') } catch { return {} }
   })
   const [showBravo, setShowBravo] = useState(false)
+
+  // Regenerer, c'est repartir vers un cap, peut-etre un autre : la modale
+  // demande le nouvel objectif au lieu de supposer que l'ancien tient
+  // toujours (demande Jean 2026-08-13). Les six objectifs de l'inscription.
+  const OBJECTIFS = [
+    'Retrouver mon énergie', 'Me réconcilier avec mon corps',
+    'Dormir enfin comme il faut', 'Retrouver ma sérénité',
+    'Reprendre le mouvement', 'Manger sans culpabiliser',
+  ]
+  const [objChoisi, setObjChoisi] = useState('')
+
+  async function changerObjectif(obj) {
+    try {
+      const pLocal = JSON.parse(localStorage.getItem('vitacoach_profil') || '{}')
+      const maj = { ...pLocal, objectif: obj, objectifs: [obj] }
+      localStorage.setItem('vitacoach_profil', JSON.stringify(maj))
+      const m = await import('./supabase')
+      // La base d'abord : le generateur serveur y lit l'objectif.
+      await m.supabase.from('profils').upsert(
+        { user_id: userId, profil: maj, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' },
+      )
+    } catch {}
+  }
   const bravoLance = useRef(false)
 
   function toggleExo(i) {
@@ -188,7 +212,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     }
   }
 
-  const handleNouveauChallenge = () => setConfirmReset(true)
+  const handleNouveauChallenge = () => {
+    setObjChoisi(profil?.objectifs?.[0] || profil?.objectif || '')
+    setConfirmReset(true)
+  }
 
   // ── Calcul des données ──────────────────────────────────────────
   let jourActuel = 1
@@ -227,6 +254,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // « Objectif du jour terminé, bravo ! » célèbre, puis s'efface
   // (demande Jean 2026-08-13). Le garde-fou bravoLance évite la double
   // validation si l'utilisateur décoche puis recoche.
+  useEffect(() => {
+    const h = () => handleNouveauChallenge()
+    window.addEventListener('solenn:nouveau-programme', h)
+    return () => window.removeEventListener('solenn:nouveau-programme', h)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profil])
+
   useEffect(() => {
     const seance = jours[jourActuel - 1]?.seance
     if (!seance?.length || progression[jourActuel - 1] || bravoLance.current) return
@@ -976,37 +1010,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             </motion.div>
           )}
 
-          {/* ── BOUTON NOUVEAU CHALLENGE (Pro only) ── */}
-          {isPro && (
-          <div style={{ textAlign: 'center' }}>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={handleNouveauChallenge}
-              disabled={creating}
-              style={{
-                // Verre ambré clair : LA charte CTA de l'app (memes valeurs que
-                // le paywall et le guide). Ma pastille blanche sortait de la
-                // palette (constat Jean 2026-08-13).
-                background: 'rgba(255,235,210,0.32)',
-                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                color: '#B2663E',
-                border: '1px solid rgba(255,220,160,0.60)',
-                boxShadow: '0 4px 20px rgba(200,123,82,0.25)',
-                borderRadius: '14px',
-                padding: '11px 22px',
-                fontSize: '12.5px',
-                fontWeight: 600,
-                fontFamily: "'Poppins', sans-serif",
-                cursor: creating ? 'not-allowed' : 'pointer',
-                opacity: creating ? 0.5 : 1,
-                transition: 'all 0.2s',
-              }}
-            >
-              {creating ? ETAPES_CREATION[etapeCreation] : 'Recommencer avec un nouveau programme'}
-            </motion.button>
-          </div>
-          )}
+          {/* Le bouton de regeneration a quitte le bas de page : c'est la
+              fleche d'actualisation du header, comme pour la routine
+              (demande Jean 2026-08-13). Voir RoutineTab. */}
         </motion.div>
       </AnimatePresence>
 
@@ -1047,10 +1053,32 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             >
               <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#E8962A" /></div>
               <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(150,85,50,0.95)', textAlign: 'center', marginBottom: 8 }}>
-                Nouveau programme ?
+                Vers quel objectif ?
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(160,100,60,0.75)', textAlign: 'center', marginBottom: 24 }}>
-                Ton programme actuel sera remplacé et sa progression perdue.
+              <div style={{ fontSize: 12.5, color: 'rgba(160,100,60,0.75)', textAlign: 'center', marginBottom: 16, lineHeight: 1.5 }}>
+                Ton nouveau programme sera construit pour lui.
+                L'actuel sera remplacé et sa progression remise à zéro.
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 20 }}>
+                {OBJECTIFS.map(o => {
+                  const actif = objChoisi === o
+                  return (
+                    <button key={o} onClick={() => setObjChoisi(o)} style={{
+                      display: 'flex', alignItems: 'center', gap: 9, textAlign: 'left',
+                      padding: '10px 13px', borderRadius: 13, cursor: 'pointer',
+                      background: actif ? 'rgba(255,235,210,0.55)' : 'rgba(255,246,238,0.40)',
+                      border: actif ? '1.5px solid rgba(232,150,42,0.60)' : '1px solid rgba(200,123,82,0.20)',
+                      fontFamily: "'Poppins', sans-serif", transition: 'all 0.15s',
+                    }}>
+                      <span style={{
+                        width: 15, height: 15, borderRadius: '50%', flexShrink: 0,
+                        border: actif ? '4.5px solid #C87B52' : '1.5px solid rgba(200,123,82,0.40)',
+                        background: '#FFF6EE', boxSizing: 'border-box',
+                      }} />
+                      <span style={{ fontSize: 13, fontWeight: actif ? 700 : 500, color: 'rgba(150,85,50,0.92)' }}>{o}</span>
+                    </button>
+                  )
+                })}
               </div>
               <div style={{ display: 'flex', gap: 10 }}>
                 <button
@@ -1066,16 +1094,23 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   Annuler
                 </button>
                 <button
-                  onClick={() => { setConfirmReset(false); handleCreerChallenge() }}
+                  disabled={!objChoisi}
+                  onClick={async () => {
+                    setConfirmReset(false)
+                    await changerObjectif(objChoisi)
+                    handleCreerChallenge()
+                  }}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(255,235,210,0.32)',
                     border: '1px solid rgba(255,220,160,0.30)',
                     color: '#B2663E', fontSize: 14, fontWeight: 600,
-                    fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
+                    fontFamily: "'Poppins', sans-serif",
+                    cursor: objChoisi ? 'pointer' : 'not-allowed',
+                    opacity: objChoisi ? 1 : 0.45,
                   }}
                 >
-                  Confirmer
+                  Créer
                 </button>
               </div>
             </motion.div>

@@ -454,6 +454,21 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
         </div>
 
+        {vue === 'programme' && isPro && (
+          <button
+            onClick={() => { try { window.dispatchEvent(new CustomEvent('solenn:nouveau-programme')) } catch {} }}
+            title="Nouveau programme"
+            style={{
+              width: 38, height: 38, borderRadius: 12, border: 'none',
+              background: 'rgba(200,123,82,0.12)',
+              color: 'rgba(200,123,82,0.80)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <RefreshSVG spinning={false} />
+          </button>
+        )}
         {vue === 'routine' && routine && (
           <button
             onClick={generer}
