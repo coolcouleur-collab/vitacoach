@@ -111,6 +111,36 @@ export async function creerChallenge(userId, duree = 21) {
   // porte tout le profil, il n'y a plus de raison qu'un objectif recoive un
   // programme fige et les autres un programme sur mesure (2026-08-12).
 
+  // ── Le cycle précédent nourrit le suivant ─────────────────────────────────
+  // Sans ça, le cycle 2 repartait des mêmes niveaux que le jour 1 du cycle 1 :
+  // l'abonné qui enchaîne recevait un programme de débutant (chantier A,
+  // 2026-08-13). La route a déjà désactivé l'ancien programme : on lit le plus
+  // récent, actif ou non.
+  let contexteCycle = ''
+  let numCycle = 1
+  try {
+    const { data: prev } = await supabase
+      .from('challenges')
+      .select('challenge, progression')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (prev?.challenge) {
+      const tenus = (prev.progression || []).filter(Boolean).length
+      const objPrev = prev.challenge.objectif_source || ''
+      const objNow  = [profil?.objectifs?.[0], profil?.objectif].filter(Boolean)[0] || ''
+      if (objPrev && objNow && objPrev === objNow) numCycle = (prev.challenge.cycle || 1) + 1
+      contexteCycle = `
+═══ CYCLE PRÉCÉDENT ═══
+${tenus} jours validés sur ${(prev.progression || []).length || 21} (objectif : ${objPrev || 'inconnu'}).
+${numCycle > 1
+  ? `Ceci est le CYCLE ${numCycle} du même objectif. Repars AU-DESSUS des derniers chiffres du cycle précédent, jamais des niveaux du jour 1. Varie les exercices et les enchaînements par rapport au cycle précédent. Assume la continuité dans les textes : c'est une suite, pas un recommencement.`
+  : `L'objectif a changé : nouveau départ, mais tiens compte du niveau déjà acquis, ne repars pas de zéro.`}
+`
+    }
+  } catch {}
+
   // Métriques des 7 derniers jours pour détecter les faiblesses
   const dateDebut = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   const { data: metriques } = await supabase
@@ -163,6 +193,7 @@ ${faiblesses.length ? faiblesses.join(', ') : 'pas encore assez de données'}
 ${memoire?.objectifs_mentionnes?.length ? `Ce qu'elle/il t'a dit vouloir : ${memoire.objectifs_mentionnes.slice(0, 2).join(', ')}` : ''}
 ${memoire?.themes_recurrents?.length ? `Sujets qui reviennent dans vos échanges : ${memoire.themes_recurrents.slice(0, 3).join(', ')}` : ''}
 
+${contexteCycle}
 ═══ RÈGLES NON NÉGOCIABLES ═══
 1. VARIE LES THÈMES. Un programme entier sur un seul sujet (boire de l'eau, marcher) est un échec.
    Répartis sur les ${duree} jours : mouvement, sommeil, alimentation, respiration/mental, et récupération.
@@ -291,6 +322,7 @@ Format JSON :
   challenge = {
     ...challenge,
     objectif_source: [profil?.objectifs?.[0], profil?.objectif].filter(Boolean)[0] || null,
+    cycle: numCycle,
   }
 
   const dateDebutChallenge = new Date().toISOString().split('T')[0]

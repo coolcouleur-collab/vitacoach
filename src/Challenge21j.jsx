@@ -259,7 +259,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [repriseVue, setRepriseVue] = useState(() => {
     try { return cleReprise ? !!localStorage.getItem(cleReprise) : false } catch { return false }
   })
-  const proposerReprise = joursManques >= 2 && !jourActuelComplete && !repriseVue
+  const proposerReprise = joursManques >= 2 && !progression[jourActuel - 1] && !repriseVue && !(challenge && (Math.floor((Date.now() - new Date(challenge.date_debut)) / 86400000) + 1) > 21)
 
   function ignorerReprise() {
     try { localStorage.setItem(cleReprise, '1') } catch {}
@@ -315,6 +315,12 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // juge sur celui-la. On lui montre donc ce qui arrive demain (2026-08-12).
   const jourSuivantData = jours[jourActuel] || null
   const jourActuelComplete = progression[jourActuel - 1] || false
+
+  // Fin de programme : jours ecoules NON bornes a 21, sinon un programme
+  // depasse depuis une semaine s'affiche encore comme un jour 21 ordinaire.
+  const joursEcoules = challenge ? Math.floor((Date.now() - new Date(challenge.date_debut)) / 86400000) + 1 : 0
+  const programmeTermine = !!challenge && (joursEcoules > 21 || (jourActuel === 21 && jourActuelComplete))
+  const numCycle = challenge?.challenge?.cycle || 1
 
   const prochainsJoursMilestone = milestones
     .filter((m) => m.jour > jourActuel)
@@ -535,8 +541,54 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           transition={{ duration: 0.5 }}
           style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
         >
+          {/* ── PROGRAMME TERMINÉ — le jour 21 ouvrait sur RIEN : bravo, puis
+               le vide, au moment exact où l'abonné décide de rester ou partir.
+               La fin propose le cycle suivant (chantier A, Jean 2026-08-13). */}
+          {programmeTermine && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                background: 'rgba(255,235,210,0.30)',
+                backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+                borderRadius: '22px', padding: '26px 28px',
+                border: '1.5px solid rgba(232,150,42,0.45)',
+                boxShadow: '0 8px 36px rgba(200,123,82,0.18)',
+                textAlign: 'center', fontFamily: "'Poppins', sans-serif",
+              }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                <StarIcon size={30} color="#E8962A" />
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'rgba(150,85,50,0.95)', marginBottom: 6 }}>
+                {numCycle > 1 ? `Cycle ${numCycle} terminé` : 'Programme terminé'}
+              </div>
+              <div style={{ fontSize: 13, color: 'rgba(178,102,62,0.80)', lineHeight: 1.55, marginBottom: 16 }}>
+                {progression.filter(Boolean).length} jours validés sur 21.
+                {progression.filter(Boolean).length >= 15
+                  ? ' Ce que tu tiens 21 jours, tu peux le tenir à l\'année.'
+                  : ' L\'important n\'est pas le score, c\'est de continuer.'}
+              </div>
+              <button
+                onClick={handleNouveauChallenge}
+                style={{
+                  width: '100%', padding: '14px 0', borderRadius: 16, cursor: 'pointer',
+                  background: 'rgba(255,235,210,0.45)',
+                  backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255,220,160,0.60)',
+                  color: '#B2663E', fontSize: 14.5, fontWeight: 800,
+                  fontFamily: "'Poppins', sans-serif",
+                  boxShadow: '0 4px 20px rgba(200,123,82,0.30)',
+                }}>
+                Lancer le cycle {numCycle + 1}
+              </button>
+              <div style={{ fontSize: 11.5, color: 'rgba(178,102,62,0.65)', marginTop: 9, lineHeight: 1.5 }}>
+                Même cap en plus intense, ou change d'objectif : c'est toi qui choisis.
+              </div>
+            </motion.div>
+          )}
+
           {/* ── ACTION DU JOUR ── */}
-          {jourActuelData && (
+          {!programmeTermine && jourActuelData && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -863,7 +915,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     ne disait rien a personne : le suivi porte un nom
                     fonctionnel, l'objectif est deja dans Ton cap
                     (constat Jean 2026-08-13). */}
-                Ta progression sur 21 jours
+                Ta progression sur 21 jours{numCycle > 1 ? ` · cycle ${numCycle}` : ''}
               </h2>
 
               <div
