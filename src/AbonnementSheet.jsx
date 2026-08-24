@@ -122,7 +122,7 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
         position: 'fixed', inset: 0, zIndex: 1300,
         background: 'rgba(26,10,0,0.32)',
         backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-        animation: 'aboFade 0.22s ease both',
+        animation: 'aboFade 0.22s ease forwards',
       }} />
 
       {/* Le conteneur fixe couvre TOUT l'ecran et colle la feuille en bas.
@@ -136,7 +136,15 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
       }}>
         <div style={{
           pointerEvents: 'auto',
-          animation: 'aboUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both',
+          // `forwards`, JAMAIS `both`. Avec `both`, le remplissage arriere
+          // maintient la position de DEPART tant que l'animation n'a pas
+          // tourne : la feuille reste decalee de toute sa hauteur, donc hors
+          // ecran, et n'importe quoi qui empeche l'animation de demarrer la
+          // rend definitivement invisible. Mesure du 2026-08-14 : conteneur
+          // haut de 487, feuille a top 487, decalee de 183 soit exactement sa
+          // hauteur. Avec `forwards`, l'etat par defaut est la position finale
+          // correcte ; l'animation n'est plus qu'un agrement.
+          animation: 'aboUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards',
           width: '100%', maxWidth: 520, background: C.bg,
           backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
           borderRadius: '28px 28px 0 0', boxShadow: C.shadow,
