@@ -961,11 +961,20 @@ app.post('/api/create-checkout', async (req, res) => {
 })
 
 // ── Vérifier statut abonnement ───────────────────────────────────────────────
-app.get('/api/check-subscription', async (req, res) => {
-  const { sessionId } = req.query
+// La session doit appartenir au compte qui la presente. Avant, la route
+// acceptait n'importe quel identifiant de session, sans authentification ni
+// controle de proprietaire : un identifiant reste sur un appareil partage
+// suffisait a se declarer Pro sur un autre compte (2026-08-14).
+app.get('/api/check-subscription', ownerGuard, async (req, res) => {
+  const { sessionId, userId } = req.query
   if (!sessionId) return res.json({ active: false })
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const proprio = session.metadata?.userId
+    if (userId && proprio && proprio !== 'anonymous' && String(proprio) !== String(userId)) {
+      console.warn('[check-subscription] session', sessionId, 'reclamee par', userId, '- appartient a', proprio)
+      return res.json({ active: false })
+    }
     res.json({ active: session.payment_status === 'paid' || session.status === 'complete' })
   } catch {
     res.json({ active: false })

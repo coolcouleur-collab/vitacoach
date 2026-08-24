@@ -933,19 +933,21 @@ const [messages, setMessages] = useState(() => {
     if (!user?.id) return
     const sessionId = localStorage.getItem('vitacoach_stripe_session')
     if (!sessionId) return
-    fetch(`/api/check-subscription?sessionId=${sessionId}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.active) {
-          setIsPro(true)
-          localStorage.setItem('vitacoach_pro', JSON.stringify(true))
-        } else {
-          // Abonnement annulé ou jamais activé
-          setIsPro(false)
-          localStorage.setItem('vitacoach_pro', JSON.stringify(false))
-        }
-      })
-      .catch(() => {})
+    ;(async () => {
+      try {
+        const r = await fetch(`/api/check-subscription?sessionId=${sessionId}&userId=${user.id}`,
+          { headers: await authHeaders() })
+        const data = await r.json()
+        const actif = data?.active === true
+        setIsPro(actif)
+        localStorage.setItem('vitacoach_pro', JSON.stringify(actif))
+        // Session périmée, annulée, ou appartenant à un autre compte : on
+        // l'oublie. La garder bloquerait la révocation au prochain démarrage,
+        // puisque l'effet de synchronisation s'abstient tant qu'une
+        // vérification de paiement est en cours.
+        if (!actif) localStorage.removeItem('vitacoach_stripe_session')
+      } catch {}
+    })()
   }, [user?.id])
 
   // Célébration quand score atteint 80+ (une fois par jour)
