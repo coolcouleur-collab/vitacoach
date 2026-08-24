@@ -865,8 +865,19 @@ app.post('/api/push-subscribe', ownerGuard, async (req, res) => {
 app.post('/api/push-unsubscribe', ownerGuard, async (req, res) => {
   const { userId, endpoint } = req.body
   pushSubscriptions.delete(userId || endpoint)
+  // Filet : si l'identifiant manque ou ne correspond a rien, on retire par
+  // endpoint. Sans ca, une ligne orpheline continue de recevoir des rappels
+  // que plus personne ne peut couper (2026-08-14).
+  if (endpoint) {
+    for (const [cle, entree] of pushSubscriptions) {
+      if (entree?.endpoint === endpoint) pushSubscriptions.delete(cle)
+    }
+  }
   if (supabase && userId) {
     try { await supabase.from('push_subscriptions').delete().eq('user_id', userId) } catch { /* ignore */ }
+  }
+  if (supabase && endpoint) {
+    try { await supabase.from('push_subscriptions').delete().eq('subscription->>endpoint', endpoint) } catch { /* ignore */ }
   }
   res.json({ ok: true })
 })

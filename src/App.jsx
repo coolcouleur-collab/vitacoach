@@ -1303,7 +1303,7 @@ const [messages, setMessages] = useState(() => {
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({
           subscription: sub.toJSON(),
-          userId: user?.id || profil?.nom || 'user',
+          userId: user?.id,
           profil: { nom: profil?.nom, objectifs: profil?.objectifs },
           streak,
           score: scoreJour(metriques),
@@ -1336,7 +1336,11 @@ const [messages, setMessages] = useState(() => {
         if (sub) {
           await fetch('/api/push-unsubscribe', {
             method: 'POST', headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-            body: JSON.stringify({ userId: profil?.nom || 'user', endpoint: sub.endpoint })
+            // L'IDENTIFIANT DU COMPTE, pas le prenom. L'abonnement est
+            // enregistre sous user.id ; envoyer le prenom ici visait une cle
+            // qui n'existe pas, la ligne survivait cote serveur et les rappels
+            // continuaient d'arriver apres les avoir coupes (2026-08-14).
+            body: JSON.stringify({ userId: user?.id, endpoint: sub.endpoint })
           })
           await sub.unsubscribe()
         }
