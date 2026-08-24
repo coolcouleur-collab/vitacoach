@@ -132,8 +132,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
       localStorage.setItem('vitacoach_profil', JSON.stringify(maj))
       const m = await import('./supabase')
       // La base d'abord : le generateur serveur y lit l'objectif.
+      // Sans updated_at : la colonne n'existe pas, l'envoyer faisait rejeter
+      // toute l'ecriture (PGRST204). Le changement d'objectif n'arrivait donc
+      // jamais en base, et le generateur serveur relisait l'ancien.
       await m.supabase.from('profils').upsert(
-        { user_id: userId, profil: maj, updated_at: new Date().toISOString() },
+        { user_id: userId, profil: maj },
         { onConflict: 'user_id' },
       )
     } catch {}

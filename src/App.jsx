@@ -320,8 +320,12 @@ async function syncMetriquesSupabase(userId, m) {
 
 // Les champs d'abonnement appartiennent au webhook Stripe et au serveur.
 // Le client ne les ecrit JAMAIS : il recopie ceux de la base.
-const CHAMPS_ABONNEMENT = ['isPro', 'proSince', 'proPlan', 'proEnd',
-  'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId']
+// Champs ecrits par le SERVEUR — webhook Stripe, agent memoire, mise a Pro
+// manuelle. Le client ne les produit pas : il doit les recopier depuis la base
+// avant d'ecrire, sinon il les efface.
+const CHAMPS_SERVEUR = ['isPro', 'proSince', 'proPlan', 'proEnd', 'proManuel',
+  'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId',
+  'memoire_longue']
 
 async function syncProfilSupabase(userId, profil) {
   if (!userId) return
@@ -335,23 +339,31 @@ async function syncProfilSupabase(userId, profil) {
   const aEcrire = { ...profil }
   try {
     const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
-    for (const k of CHAMPS_ABONNEMENT) {
+    for (const k of CHAMPS_SERVEUR) {
       if (data?.profil?.[k] !== undefined) aEcrire[k] = data.profil[k]
     }
   } catch (_) {}
 
+  // PAS de updated_at : la colonne n'existe pas dans `profils`. Elle etait
+  // pourtant envoyee a chaque sauvegarde, et PostgREST rejetait TOUTE
+  // l'ecriture, code PGRST204. Aucun profil rempli dans l'app n'a jamais
+  // atteint la base : ils ne vivaient que dans le navigateur. D'ou le
+  // « je remplis mon profil et ça s'enlève », et le questionnaire qui
+  // recommence des qu'on vide les donnees du site (diagnostique 2026-08-14).
+  // L'erreur etait avalee, et la nouvelle tentative renvoyait exactement la
+  // meme requete : elle echouait pareil.
   const { error } = await supabase.from('profils').upsert({
     user_id: userId, profil: aEcrire,
-    updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
   if (error) {
+    console.error('[profil] sauvegarde refusee par la base —', error.message)
     setTimeout(async () => {
       try {
         const sb = await getSupabase()
-        await sb.from('profils').upsert({
+        const { error: e2 } = await sb.from('profils').upsert({
           user_id: userId, profil: aEcrire,
-          updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id' })
+        if (e2) console.error('[profil] seconde tentative refusee —', e2.message)
       } catch (_) {}
     }, 4000)
   }
