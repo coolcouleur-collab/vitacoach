@@ -116,12 +116,18 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
         animation: 'aboFade 0.22s ease both',
       }} />
 
+      {/* Le conteneur fixe couvre TOUT l'ecran et colle la feuille en bas.
+          L'animation porte sur la feuille, jamais sur le conteneur : en
+          animant le conteneur fixe, un arret au premier keyframe le decale de
+          toute sa hauteur et la feuille sort de l'ecran. */}
       <div style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1301,
-        display: 'flex', justifyContent: 'center',
-        animation: 'aboUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both',
+        position: 'fixed', inset: 0, zIndex: 1301,
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        pointerEvents: 'none',
       }}>
         <div style={{
+          pointerEvents: 'auto',
+          animation: 'aboUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both',
           width: '100%', maxWidth: 520, background: C.bg,
           backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
           borderRadius: '28px 28px 0 0', boxShadow: C.shadow,
@@ -141,7 +147,11 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
             </div>
           </div>
 
-          <div style={{ overflowY: 'auto', padding: '4px 22px 30px' }}>
+          {/* flex:1 et minHeight:0 sont indispensables : sans eux, dans une
+              colonne flex bornee par maxHeight, cette zone prend la hauteur de
+              son contenu, deborde, et le parent en overflow:hidden la coupe.
+              C'est ce qui tronquait la feuille (Jean, 2026-08-14). */}
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '4px 22px 30px' }}>
             {etat === 'chargement' && (
               <div style={{ padding: '30px 0', textAlign: 'center', color: C.textMuted, fontSize: 13.5 }}>
                 Un instant, je regarde…
