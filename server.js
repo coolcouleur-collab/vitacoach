@@ -627,6 +627,30 @@ app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
   if (!supabase) return res.status(500).json({ error: 'base indisponible' })
 
   const echecs = []
+
+  // ── L'abonnement Stripe AVANT les tables ───────────────────────────────────
+  // Sinon l'identifiant d'abonnement disparait avec la ligne profils et plus
+  // personne ne peut arreter le prelevement : le compte est efface, la carte
+  // continue d'etre debitee 44,99 EUR par an, et l'utilisateur n'a plus ni
+  // compte ni ecran pour resilier. Facturer quelqu'un qui a supprime son
+  // compte n'est pas defendable (2026-08-14).
+  // Un echec ici NE BLOQUE PAS la suppression : le droit a l'effacement prime.
+  // Il est signale dans la reponse et journalise pour rattrapage manuel.
+  try {
+    const { data: prof } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+    const subId = prof?.profil?.stripeSubscriptionId
+    if (subId && stripe) {
+      await stripe.subscriptions.cancel(subId)
+      console.log('[Suppression] Abonnement', subId, 'annule pour', userId)
+    } else if (prof?.profil?.isPro === true && !subId) {
+      echecs.push('stripe: compte Pro sans identifiant d abonnement, resilier a la main')
+      console.error('[Suppression] ATTENTION', userId, 'etait Pro sans stripeSubscriptionId')
+    }
+  } catch (e) {
+    echecs.push(`stripe: ${e.message}`)
+    console.error('[Suppression] Annulation Stripe echouee pour', userId, '-', e.message)
+  }
+
   for (const table of TABLES_UTILISATEUR) {
     try {
       const { error } = await supabase.from(table).delete().eq('user_id', userId)
