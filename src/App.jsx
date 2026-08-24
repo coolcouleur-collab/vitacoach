@@ -519,6 +519,15 @@ function getOceanPreset(hour) {
 }
 
 // ─── APP ══════════════════════════════════════════════════════════════════════
+// Efface toute trace d'abonnement de l'appareil. Appelee a chaque
+// deconnexion : sans elle, `vitacoach_pro` survivait au changement de compte
+// et le compte suivant cree sur le meme navigateur s'affichait Pro sans avoir
+// jamais paye (constate par Jean le 2026-08-14).
+function oublierAbonnement() {
+  localStorage.removeItem('vitacoach_pro')
+  localStorage.removeItem('vitacoach_stripe_session')
+}
+
 export default function App() {
   const FREE_LIMIT = 5
 
@@ -558,6 +567,10 @@ export default function App() {
     return safeParse('vitacoach_user', null)
   })
   const [isPro, setIsPro]       = useState(() => safeParse('vitacoach_pro', false))
+  // Le statut Pro appartient au COMPTE, pas a l'appareil. Il est confirme
+  // juste apres par la ligne Supabase (effet plus bas) ; cette valeur locale
+  // n'est qu'un affichage immediat au demarrage.
+
   // ?paywall=1 → prévisualisation directe de l'écran d'offre (test/design)
   const [showPaywall, setShowPaywall] = useState(() => new URLSearchParams(window.location.search).has('paywall'))
   // Durée de l'essai. DOIT rester égale à TRIAL_DAYS dans api/_quota.js : deux
@@ -981,18 +994,38 @@ const [messages, setMessages] = useState(() => {
         .then(({ data }) => {
           const base  = data?.profil
           const local = safeParse('vitacoach_profil', null)
+
+          // L'abonnement se lit sur le compte, quel que soit l'etat du profil.
+          // Avant, on ne savait qu'ACCORDER le Pro (jamais le retirer) et
+          // seulement si le profil portait un nom : un `true` laisse sur
+          // l'appareil par un compte precedent n'etait jamais dementi.
+          // Exception : juste apres un paiement, le webhook n'a peut-etre pas
+          // encore ecrit la ligne, on ne revoque pas tant que la verification
+          // du paiement est en cours.
+          const proBase = base?.isPro === true
+          if (proBase) {
+            setIsPro(true)
+            localStorage.setItem('vitacoach_pro', JSON.stringify(true))
+          } else if (!localStorage.getItem('vitacoach_stripe_session')) {
+            setIsPro(false)
+            localStorage.setItem('vitacoach_pro', JSON.stringify(false))
+          }
+
           if (base?.nom) {
             // La base a un profil complet : elle fait foi.
             setProfil(base)
             localStorage.setItem('vitacoach_profil', JSON.stringify(base))
-            if (base.isPro === true) {
-              setIsPro(true)
-              localStorage.setItem('vitacoach_pro', JSON.stringify(true))
-            }
           } else if (local?.nom) {
             // La base est vide ou amputée mais l'appareil a un profil rempli :
             // c'est la base qu'on répare, jamais l'appareil qu'on vide.
-            syncProfilSupabase(user.id, local)
+            // Les champs d'abonnement sont ecrits par le webhook Stripe et
+            // n'existent que dans la base : les reporter, sinon reparer le
+            // profil d'un abonne au profil incomplet lui retirait son Pro.
+            const CHAMPS_PRO = ['isPro', 'proSince', 'proPlan', 'proEnd',
+              'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId']
+            const garde = {}
+            for (const k of CHAMPS_PRO) if (base?.[k] !== undefined) garde[k] = base[k]
+            syncProfilSupabase(user.id, { ...local, ...garde })
           }
           setProfilLoading(false)
         })
@@ -1581,7 +1614,8 @@ const [messages, setMessages] = useState(() => {
         await sb.auth.signOut()
         localStorage.removeItem('vitacoach_user')
         localStorage.removeItem('vitacoach_profil')
-        setUser(null); setProfil(null)
+        oublierAbonnement()
+        setUser(null); setProfil(null); setIsPro(false)
       }} onTermine={p => {
         // Attribution influence — rattachée une seule fois, à l'inscription
         const refSource = localStorage.getItem('vitacoach_ref')
@@ -1921,7 +1955,8 @@ const [messages, setMessages] = useState(() => {
                 await sb.auth.signOut()
                 localStorage.removeItem('vitacoach_user')
                 localStorage.removeItem('vitacoach_profil')
-                setUser(null); setProfil(null)
+                oublierAbonnement()
+                setUser(null); setProfil(null); setIsPro(false)
               }} style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5, color:'rgba(239,68,68,0.70)', border:'1px solid rgba(239,68,68,0.18)', background:'rgba(239,68,68,0.04)'}}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.70)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
@@ -2266,8 +2301,10 @@ padding: isMobile
                     await sb.auth.signOut()
                     localStorage.removeItem('vitacoach_user')
                     localStorage.removeItem('vitacoach_profil')
+                    oublierAbonnement()
                     setUser(null)
                     setProfil(null)
+                    setIsPro(false)
                     setMenuOpen(false)
                   }} style={{
                     display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
