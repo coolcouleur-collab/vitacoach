@@ -1953,12 +1953,13 @@ const [messages, setMessages] = useState(() => {
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
-            <button style={{...s.btnEdit, display:'flex', alignItems:'center', gap:6}} onClick={() => setShowSettings(true)}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-              </svg>
-              Modifier ton profil
-            </button>
+            {/* « Modifier ton profil » retire le 2026-08-14, meme raison que dans
+                le menu mobile le 2026-08-12 : il appelait exactement la meme
+                chose que « Parametres » juste en dessous, setShowSettings(true).
+                Le correctif du 12 n'avait touche QUE le menu mobile, la barre
+                laterale du bureau gardait le doublon (releve par Jean).
+                Le profil se modifie depuis le bloc en haut des Parametres, qui
+                a deja son bouton Modifier. */}
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
               <button style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
