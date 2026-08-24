@@ -9,6 +9,7 @@
 // surface sombre flottante. Rouge réservé au danger, ici la résiliation.
 
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { StarIcon } from './Icons'
 
 const C = {
@@ -102,7 +103,15 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
     color: C.text, fontSize: 14, fontWeight: 700, fontFamily: C.font,
   }
 
-  return (
+  // PORTAIL OBLIGATOIRE, et c'est la cause de la feuille tronquee.
+  // Un `position: fixed` n'est relatif a l'ecran que si AUCUN ancetre ne porte
+  // transform, filter, backdrop-filter, perspective, will-change ou contain.
+  // L'app en est pleine : l'un d'eux devient le bloc conteneur, plus grand que
+  // l'ecran, et la feuille collee en bas se retrouve sous la zone visible.
+  // C'est pour cette raison que le Guide des exercices, la seule autre feuille
+  // de ce type qui fonctionne, passe par createPortal. J'avais copie sa
+  // structure CSS sans copier son portail (Jean, 2026-08-14).
+  return createPortal(
     <>
       <style>{`
         @keyframes aboFade { from { opacity:0 } to { opacity:1 } }
@@ -257,6 +266,7 @@ export default function AbonnementSheet({ userId, authHeaders, onClose }) {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   )
 }
