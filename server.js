@@ -1005,6 +1005,35 @@ app.get('/api/check-subscription', ownerGuard, async (req, res) => {
   }
 })
 
+// POST /api/portail-client → ouvre le portail d'abonnement Stripe
+// Un abonne n'avait AUCUN moyen de resilier depuis l'app : « Membre Pro »
+// etait un simple encart non cliquable. Or depuis le 1er juin 2023, l'article
+// L215-1-1 du code de la consommation impose, pour tout abonnement souscrit
+// en ligne, une resiliation en ligne « facile et directe ». Les regles des
+// magasins d'applications l'exigent aussi. Le portail Stripe couvre la
+// resiliation, le changement de carte et les factures (2026-08-14).
+app.post('/api/portail-client', ownerGuard, async (req, res) => {
+  const userId = req.authUser?.id || req.body?.userId
+  if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
+  try {
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+    const customerId = data?.profil?.stripeCustomerId
+    if (!customerId) return res.status(404).json({ erreur: 'aucun abonnement rattache a ce compte' })
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: req.body?.retour || 'https://meet-solenn.com/',
+      locale: 'fr',
+    })
+    res.json({ url: session.url })
+  } catch (e) {
+    // Le portail doit etre active une fois dans le Dashboard Stripe :
+    // Parametres > Facturation > Portail client. Sans ca, Stripe repond une
+    // erreur de configuration — on la remonte telle quelle pour la diagnostiquer.
+    console.error('[portail-client]', e.message)
+    res.status(500).json({ erreur: e.message })
+  }
+})
+
 // GET /api/verify-pro?userId=... → vérifie le statut Pro dans profils
 app.get('/api/verify-pro', ownerGuard, async (req, res) => {
   const { userId } = req.query

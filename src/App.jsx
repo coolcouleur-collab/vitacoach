@@ -1365,6 +1365,47 @@ const [messages, setMessages] = useState(() => {
     })()
   }, [user?.id, profil])
 
+  // Ouvre le portail d'abonnement Stripe : resilier, changer de carte, voir
+  // ses factures. Sans lui, « Membre Pro » etait un encart mort et l'abonne
+  // n'avait aucun moyen de resilier — ni conforme aux magasins, ni a
+  // l'article L215-1-1 du code de la consommation (2026-08-14).
+  const [portailEnCours, setPortailEnCours] = useState(false)
+  async function gererAbonnement() {
+    // Conformite Apple 3.1.1 : rien qui mene a un paiement hors du magasin
+    // dans le build natif, meme pour resilier.
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Pour gérer ou résilier ton abonnement, rends-toi sur meet-solenn.com depuis un navigateur.`
+      }])
+      setOnglet('chat')
+      setShowSettings(false)
+      return
+    }
+    if (portailEnCours) return
+    setPortailEnCours(true)
+    try {
+      const res = await fetch('/api/portail-client', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+        body: JSON.stringify({ userId: user?.id, retour: window.location.origin + '/' }),
+      })
+      const data = await res.json()
+      if (data?.url) window.location.href = data.url
+      else {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Je n'arrive pas à ouvrir la gestion de ton abonnement. Écris-moi à contact@meet-solenn.com et je m'en occupe.`
+        }])
+        setOnglet('chat')
+        setShowSettings(false)
+      }
+    } catch {
+      setPortailEnCours(false)
+    }
+    setPortailEnCours(false)
+  }
+
   async function passerPro(plan) {
     // Souvent appelé via onClick : le 1er argument peut être l'event → filtrer
     const planKey = plan === 'monthly' ? 'monthly' : 'annual'
@@ -1949,7 +1990,14 @@ const [messages, setMessages] = useState(() => {
               </div>
             </div>
             {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 44,99€/an</button>}
-            {isPro && <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>}
+            {isPro && (
+              <button onClick={gererAbonnement} disabled={portailEnCours}
+                style={{ ...s.proBadge, width:'100%', cursor: portailEnCours ? 'wait' : 'pointer',
+                         display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                <StarIcon size={14} color="#fbbf24" />
+                {portailEnCours ? 'Ouverture…' : 'Membre Pro — gérer mon abonnement'}
+              </button>
+            )}
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
               {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
             </button>
