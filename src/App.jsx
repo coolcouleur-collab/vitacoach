@@ -2008,7 +2008,7 @@ const [messages, setMessages] = useState(() => {
                 style={{ ...s.proBadge, width:'100%', cursor:'pointer',
                          display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
                 <StarIcon size={14} color="#fbbf24" />
-                Membre Pro · gérer mon abonnement
+                Membre Pro
               </button>
             )}
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
@@ -2034,8 +2034,8 @@ const [messages, setMessages] = useState(() => {
                 localStorage.removeItem('vitacoach_profil')
                 oublierAbonnement()
                 setUser(null); setProfil(null); setIsPro(false)
-              }} style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5, color:'rgba(239,68,68,0.70)', border:'1px solid rgba(239,68,68,0.18)', background:'rgba(239,68,68,0.04)'}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.70)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              }} style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
                 Déconnexion
