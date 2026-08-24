@@ -1,7 +1,7 @@
-// ─── GUIDE DES EXERCICES — démonstrations animées ────────────────────────────
+// ─── GUIDE DES EXERCICES, démonstrations animées ────────────────────────────
 // Silhouettes en trait terracotta, animation par ALTERNANCE DE 2 POSES
-// (crossfade opacity — compatible Safari/iOS, contrairement aux animations de
-// tracés `d: path()` qui restent figées sur iPhone — corrigé 2026-07-25).
+// (crossfade opacity, compatible Safari/iOS, contrairement aux animations de
+// tracés `d: path()` qui restent figées sur iPhone, corrigé 2026-07-25).
 // Exporte matchExercice(texte) pour afficher « Voir le geste » sur les actions
 // du challenge / de la routine qui mentionnent un exercice.
 
@@ -13,7 +13,7 @@ const T = '#C87B52'
 const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
 const SOL = <path d="M12 92 L88 92" stroke="rgba(200,123,82,0.25)" strokeWidth="3" strokeLinecap="round" fill="none" />
 
-// Deux poses en alternance — le cœur du système, 100 % compatible mobile.
+// Deux poses en alternance, le cœur du système, 100 % compatible mobile.
 // labelA/labelB : mot-clé synchronisé avec chaque pose (« Descends » quand la
 // silhouette descend) pour que le mouvement soit compris sans ambiguïté
 // (retour Jean 2026-07-25 : les bonshommes seuls pourraient ne pas suffire).
@@ -38,7 +38,7 @@ function DeuxPoses({ poseA, poseB, labelA, labelB, duree = 2.6 }) {
   )
 }
 
-// Trois poses en séquence (départ → milieu → fin) — pour les gestes où le
+// Trois poses en séquence (départ → milieu → fin), pour les gestes où le
 // trajet du mouvement doit être explicite (retour Jean 2026-07-25)
 function TroisPoses({ poses, labels, duree = 3.3 }) {
   const anims = [
@@ -167,7 +167,7 @@ const AnimDips = () => (
 )
 
 
-// ─── Vague 2 — 2026-08-14 : 13 exercices, la bibliothèque passe de 12 à 25 ──
+// ─── Vague 2, 2026-08-14 : 13 exercices, la bibliothèque passe de 12 à 25 ──
 // Sans matériel (chaise et mur exceptés), du cardio aux obliques : c'est ce
 // qui permet à deux programmes générés de ne pas se ressembler, et au cycle 2
 // de monter en intensité avec de VRAIS nouveaux mouvements.
@@ -274,7 +274,7 @@ const AnimLegRaise = () => (
 // Photos CHOISIES À LA MAIN, pas cherchées à l'exécution. Le 2026-08-11 la
 // version qui appelait /api/image affichait la même photo de mode sur les huit
 // vignettes : le front tape l'API via VITE_API_URL, donc Render, dont la route
-// /api/image est écrite pour la page Style — elle réécrit toute requête en
+// /api/image est écrite pour la page Style, elle réécrit toute requête en
 // « woman … ootd full body street style » et, faute de clé Pexels, retombe sur
 // un placeholder LoremFlickr identique pour tout le monde.
 // Même en tapant la bonne route (celle de Vercel), la recherche sémantique
@@ -285,7 +285,7 @@ const AnimLegRaise = () => (
 // `pos` = object-position vertical. Les photos sont verticales, la vignette est
 // large : un recadrage centré tombe systématiquement sur les hanches. 70 % sur
 // le pont fessier et 25 % sur l'étirement remettent la tête et le geste dans le
-// cadre — vérifié en composant les recadrages réels avant de livrer.
+// cadre, vérifié en composant les recadrages réels avant de livrer.
 const P = id => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940`
 export const PHOTOS_EXOS = {
   squat:     { url: P(8032754), pos: '50%' },
@@ -385,14 +385,14 @@ const EXOS = [
     mots: ['chat-vache', 'chat vache', 'dos rond', 'mobilité du dos'],
     Anim: AnimChatVache,
     etapes: ['À quatre pattes, mains sous les épaules', 'Inspire en creusant doucement le dos, regard devant', 'Expire en arrondissant le dos, tête relâchée'],
-    erreurs: ['Aller trop vite — le mouvement suit la respiration', 'Forcer l\'amplitude'],
+    erreurs: ['Aller trop vite, le mouvement suit la respiration', 'Forcer l\'amplitude'],
   },
   {
     id: 'marche', nom: 'Marche active', duree: '20-30 min', cible: 'Cardio doux',
     mots: ['marche', 'marcher', 'pas rapide', 'balade'],
     Anim: AnimMarche,
     etapes: ['Rythme où parler reste possible mais chanter non', 'Bras qui accompagnent naturellement', 'Régularité avant intensité : mieux vaut 20 min chaque jour'],
-    erreurs: ['Confondre marche active et flânerie', 'Zapper les jours de pluie — prévois un plan B intérieur'],
+    erreurs: ['Confondre marche active et flânerie', 'Zapper les jours de pluie, prévois un plan B intérieur'],
   },
   {
     id: 'etirement', nom: 'Étirement latéral', duree: '4 × 20 s / côté', cible: 'Souplesse · détente',
@@ -539,7 +539,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
   const exo = EXOS.find(e => e.id === actif)
 
   // Portail vers <body> : rendu depuis une carte animée (transform), un
-  // position:fixed serait piégé et invisible — bug « rien ne se passe »
+  // position:fixed serait piégé et invisible, bug « rien ne se passe »
   // au tap sur Voir le geste (2026-07-27)
   return createPortal(
     <div onClick={onClose} style={{

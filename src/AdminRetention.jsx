@@ -1,8 +1,8 @@
-// ─── DASHBOARD RÉTENTION (admin) — /admin ────────────────────────────────────
+// ─── DASHBOARD RÉTENTION (admin), /admin ────────────────────────────────────
 // Les 3 métriques de survie identifiées par l'étude de marché (2026-07-21) :
 //   1. Complétion du challenge 21 jours
 //   2. Utilisateurs actifs J7 / J30
-//   3. Premier renouvellement (objectif ≥ 67 % — benchmark Adapty)
+//   3. Premier renouvellement (objectif ≥ 67 %, benchmark Adapty)
 // Accès : clé admin (AGENTS_TRIGGER_KEY) saisie une fois, gardée en
 // sessionStorage, envoyée en header x-agents-key à /api/admin/retention.
 
@@ -62,7 +62,7 @@ export default function AdminRetention() {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFF8F4', fontFamily: F, padding: 20 }}>
         <div style={{ ...card, width: '100%', maxWidth: 360 }}>
-          <div style={{ fontFamily: SERIF, fontSize: 24, fontWeight: 600, color: '#0A1633', marginBottom: 12 }}>Solenn — Admin</div>
+          <div style={{ fontFamily: SERIF, fontSize: 24, fontWeight: 600, color: '#0A1633', marginBottom: 12 }}>Solenn, Admin</div>
           <input
             type="password"
             value={input}
@@ -96,7 +96,7 @@ export default function AdminRetention() {
   const c = data.challenge21j || {}
   const a = data.abonnements || {}
   const renew = a.premierRenouvellement || {}
-  const pct = (num, den) => den ? `${Math.round((100 * num) / den)} %` : '—'
+  const pct = (num, den) => den ? `${Math.round((100 * num) / den)} %` : ','
 
   return (
     <div style={{ minHeight: '100vh', background: '#FFF8F4', fontFamily: F, padding: '32px 20px 60px' }}>
@@ -112,22 +112,22 @@ export default function AdminRetention() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-          <Stat label="Utilisateurs" value={u.total ?? '—'} sub="profils créés" />
-          <Stat label="Actifs J7" value={u.actifsJ7 ?? '—'} sub={u.total ? `${pct(u.actifsJ7, u.total)} de la base` : null} />
-          <Stat label="Actifs J30" value={u.actifsJ30 ?? '—'} sub={u.total ? `${pct(u.actifsJ30, u.total)} de la base` : null} />
+          <Stat label="Utilisateurs" value={u.total ?? ','} sub="profils créés" />
+          <Stat label="Actifs J7" value={u.actifsJ7 ?? ','} sub={u.total ? `${pct(u.actifsJ7, u.total)} de la base` : null} />
+          <Stat label="Actifs J30" value={u.actifsJ30 ?? ','} sub={u.total ? `${pct(u.actifsJ30, u.total)} de la base` : null} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginTop: 12 }}>
-          <Stat label="Challenges lancés" value={c.total ?? '—'} sub={`${c.enCours ?? 0} en cours`} />
-          <Stat label="Complétion moyenne" value={c.tauxCompletionMoyen != null ? `${c.tauxCompletionMoyen} %` : '—'} sub="jours cochés / jours écoulés (challenges actifs)" />
-          <Stat label="Challenges 21/21" value={c.termines ?? '—'} sub="terminés en entier" />
+          <Stat label="Challenges lancés" value={c.total ?? ','} sub={`${c.enCours ?? 0} en cours`} />
+          <Stat label="Complétion moyenne" value={c.tauxCompletionMoyen != null ? `${c.tauxCompletionMoyen} %` : ','} sub="jours cochés / jours écoulés (challenges actifs)" />
+          <Stat label="Challenges 21/21" value={c.termines ?? ','} sub="terminés en entier" />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginTop: 12 }}>
-          <Stat label="Abonnés Pro" value={a.prosActifs ?? '—'} sub="statut isPro actif" />
+          <Stat label="Abonnés Pro" value={a.prosActifs ?? ','} sub="statut isPro actif" />
           <Stat
             label="1er renouvellement"
-            value={renew.taux != null ? `${renew.taux} %` : '—'}
+            value={renew.taux != null ? `${renew.taux} %` : ','}
             sub={renew.error ? `Stripe : ${renew.error}` : `${renew.renouveles ?? 0}/${renew.eligibles ?? 0} abonnements arrivés à échéance · objectif ≥ 67 %`}
             alert={renew.taux != null && renew.taux < 67}
           />
@@ -148,7 +148,7 @@ export default function AdminRetention() {
         )}
 
         <div style={{ fontSize: 11, color: 'rgba(10,22,51,0.40)', marginTop: 22, lineHeight: 1.5 }}>
-          Généré le {data.generatedAt ? new Date(data.generatedAt).toLocaleString('fr-FR') : '—'}.
+          Généré le {data.generatedAt ? new Date(data.generatedAt).toLocaleString('fr-FR') : ','}.
           Actifs = au moins une métrique enregistrée sur la période. Renouvellement calculé sur les 100 derniers abonnements Stripe.
           Conversions par code promo : Dashboard Stripe → Produits → Codes promotionnels.
         </div>

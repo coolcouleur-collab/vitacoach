@@ -1,10 +1,10 @@
 /**
- * GlowLoader.jsx — halo de soleil qui respire
+ * GlowLoader.jsx, halo de soleil qui respire
  * Remplace les dots animés (2026-07-24, retour Jean : animation buggée).
  * Une seule forme, animation CSS pure (pas de framer-motion, pas de calcul
  * de box-shadow par frame) : calme, fluide, et dans l'univers Solenn (soleil).
  *
- * Props (compatibles avec l'ancien composant — les props dots sont ignorées) :
+ * Props (compatibles avec l'ancien composant, les props dots sont ignorées) :
  *   size     {number}  Diamètre du soleil en px (défaut 34)
  *   color    {string}  Couleur principale (défaut copper #C87B52)
  *   fullPage {boolean} Overlay plein écran centré

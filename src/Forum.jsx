@@ -20,7 +20,7 @@ const MAX_CHARS = 600
 const MAX_TITLE = 120
 
 function checkContent(text) {
-  // Match sur mots entiers uniquement — "conseil" ne doit pas matcher "con",
+  // Match sur mots entiers uniquement, "conseil" ne doit pas matcher "con",
   // "violon" ne doit pas matcher "viol". Frontières = tout sauf lettres/chiffres.
   const lower = text.toLowerCase()
   for (const word of BANNED_WORDS) {
@@ -375,7 +375,7 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
                   fontFamily:'var(--font)', lineHeight:1, transition:'all .15s',
                 }}>▼</button>
               </div>
-              {/* Signaler — masqué pour le propriétaire */}
+              {/* Signaler, masqué pour le propriétaire */}
               {!isOwner && (
                 <button onClick={signaler} disabled={reported} style={{
                   background:'none', border:'none', cursor: reported ? 'default' : 'pointer',
@@ -565,7 +565,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
         </div>
       </div>
 
-      {/* Reply form — visible seulement après clic sur Commenter */}
+      {/* Reply form, visible seulement après clic sur Commenter */}
       {showReplyForm && (
         <div style={{ marginBottom:'1.4rem', animation:'fadeUp .22s ease both' }}>
           <ReplyForm
@@ -840,8 +840,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
   }, [posts])
 
   const authors = useMemo(() =>
-    [...new Set(Object.values(authorMap).map(a => a.displayName))].filter(n => n !== authorName)
-  , [authorMap, authorName])
+    [...new Set(Object.values(authorMap).map(a => a.displayName))].filter(n => n !== authorName), [authorMap, authorName])
 
   async function insertMentions(text, postId, replyId = null) {
     if (!userId || !text) return
@@ -854,7 +853,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             post_id: postId, reply_id: replyId,
             mentioned_user_id: entry.userId, mentioned_by: userId,
           })
-        } catch { /* table absente ou RLS — ne bloque pas l'envoi */ }
+        } catch { /* table absente ou RLS, ne bloque pas l'envoi */ }
       }
     }
   }
@@ -888,7 +887,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
   useEffect(() => {
     fetchPosts()
 
-    // Temps réel — refetch à chaque changement
+    // Temps réel, refetch à chaque changement
     const channel = supabase
       .channel('forum-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'forum_posts' },        fetchPosts)
@@ -1164,7 +1163,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
         </div>
       )}
 
-      {/* Category filters — scroll horizontal */}
+      {/* Category filters, scroll horizontal */}
       <div style={{
         display: 'flex', gap: '.5rem', marginBottom: '1.4rem',
         overflowX: 'auto', WebkitOverflowScrolling: 'touch',
@@ -1214,7 +1213,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             {search ? 'Aucun résultat pour cette recherche' : 'Aucune discussion pour le moment'}
           </div>
           <div style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(180,110,60,0.65)', lineHeight: 1.75 }}>
-            {search ? "Essaie avec d'autres mots." : 'Lance la première — la communauté t\'attend.'}
+            {search ? "Essaie avec d'autres mots." : 'Lance la première, la communauté t\'attend.'}
           </div>
         </div>
       ) : (

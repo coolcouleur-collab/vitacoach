@@ -161,7 +161,7 @@ function InfoRow({ label, value }) {
         {label}
       </span>
       <span style={{ fontFamily: C.font, fontSize: 13, color: C.text, fontWeight: 600 }}>
-        {value || '—'}
+        {value || ','}
       </span>
     </div>
   )
@@ -382,7 +382,7 @@ export default function SettingsSheet({
 
   // Heure format HH:MM depuis nombre décimal ou string
   const fmtHeure = (h) => {
-    if (!h && h !== 0) return '—'
+    if (!h && h !== 0) return ','
     if (typeof h === 'string' && h.includes(':')) return h
     const heures = Math.floor(h)
     const mins = Math.round((h - heures) * 60)
@@ -474,7 +474,7 @@ export default function SettingsSheet({
 
   return (
     <>
-      {/* Animations CSS — remplacent framer-motion dont l'animation de montage
+      {/* Animations CSS, remplacent framer-motion dont l'animation de montage
           ne se déclenchait pas (sheet coincée hors écran sur mobile, retour
           Jean 2026-07-24). Même mécanisme fiable que le menu hamburger. */}
       <style>{`
@@ -581,7 +581,7 @@ export default function SettingsSheet({
                 <Avatar nom={editMode ? (editValues.nom || profil.nom) : (profil.nom || profil.prenom)} size={52} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: C.font, fontWeight: 700, fontSize: 16, color: C.accent, lineHeight: 1.25, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {[profil.prenom, profil.nom].filter(Boolean).join(' ') || profil.nom || '—'}
+                    {[profil.prenom, profil.nom].filter(Boolean).join(' ') || profil.nom || ','}
                   </div>
                   {profil.age && (
                     <div style={{ fontFamily: C.font, fontSize: 12, color: C.textMuted, fontWeight: 500 }}>{profil.age}</div>
@@ -849,7 +849,7 @@ export default function SettingsSheet({
                 <button
                   onClick={onPasserPro}
                   style={{
-                    // Verre de cuivre profond — CTA unifié Solenn (2026-07-24)
+                    // Verre de cuivre profond, CTA unifié Solenn (2026-07-24)
                     width: '100%',
                     padding: '14px',
                     borderRadius: 16,
@@ -930,7 +930,7 @@ export default function SettingsSheet({
                     Rappels Solenn
                   </div>
                   <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
-                    {notifsEnabled ? 'Activées — tu recevras des rappels' : 'Désactivées'}
+                    {notifsEnabled ? 'Activées, tu recevras des rappels' : 'Désactivées'}
                   </div>
                 </div>
                 <ToggleSwitch enabled={notifsEnabled} onToggle={onToggleNotifs} />
@@ -950,7 +950,7 @@ export default function SettingsSheet({
                     Suivi du cycle menstruel
                   </div>
                   <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
-                    {profil.cycle ? "Activé — l'onglet Cycle est visible" : 'Désactivé — active-le quand tu veux'}
+                    {profil.cycle ? "Activé, l'onglet Cycle est visible" : 'Désactivé, active-le quand tu veux'}
                   </div>
                 </div>
                 <ToggleSwitch
@@ -985,7 +985,7 @@ export default function SettingsSheet({
                 label="Exporter mes données"
                 onClick={onExportData}
               />
-              {/* Suppression de compte — RGPD article 17 et App Store 5.1.1(v).
+              {/* Suppression de compte, RGPD article 17 et App Store 5.1.1(v).
                   Double confirmation : c'est irréversible, un seul appui de
                   travers ne doit pas effacer des mois de données. */}
               <ActionBtn
@@ -1031,7 +1031,7 @@ export default function SettingsSheet({
               )}
             </div>
 
-            {/* ── À PROPOS — transparence IA + disclaimer médical ──────────
+            {/* ── À PROPOS, transparence IA + disclaimer médical ──────────
                 Requis : Google Play (disclaimer non-dispositif médical),
                 AI Act art. 50 (divulgation IA), Apple 1.4 (rappel médecin). */}
             <SectionTitle>À propos de Solenn</SectionTitle>
@@ -1040,7 +1040,7 @@ export default function SettingsSheet({
                 Solenn est un coach bien-être basé sur une <strong style={{ color: C.text }}>intelligence artificielle</strong>.
                 Ce n'est pas un dispositif médical : Solenn ne diagnostique, ne traite, ne guérit
                 ni ne prévient aucune maladie ou condition médicale. Ses conseils ne remplacent
-                jamais l'avis d'un professionnel de santé — en cas de symptôme ou de doute,
+                jamais l'avis d'un professionnel de santé, en cas de symptôme ou de doute,
                 consulte un médecin.
               </div>
               <a

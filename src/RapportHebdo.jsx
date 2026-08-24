@@ -11,7 +11,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState(null)
-  // Section dépliée du bilan (une seule à la fois) — le bilan était un mur
+  // Section dépliée du bilan (une seule à la fois), le bilan était un mur
   // d'infos affiché d'un coup, retour Jean 2026-07-27
   const [openSection, setOpenSection] = useState(null)
 
@@ -144,7 +144,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <button
           onClick={onPasserPro}
           style={{
-            // Verre de cuivre profond — CTA unifié Solenn (2026-07-24)
+            // Verre de cuivre profond, CTA unifié Solenn (2026-07-24)
             marginTop: 8,
             background: 'rgba(255,235,210,0.32)',
             backdropFilter: 'blur(12px)',
@@ -235,7 +235,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     )
   }
 
-  // ─── État 4 : Rapport complet — compact, sections dépliables ──────────────
+  // ─── État 4 : Rapport complet, compact, sections dépliables ──────────────
   const scoreColor = getScoreColor(rapport.score_global)
 
   const sections = [
@@ -339,13 +339,13 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           }}>
             {rapport.victoire_semaine
               || (typeof rapport.stat_phare === 'object'
-                ? [rapport.stat_phare.valeur, rapport.stat_phare.label].filter(Boolean).join(' — ')
+                ? [rapport.stat_phare.valeur, rapport.stat_phare.label].filter(Boolean).join(', ')
                 : rapport.stat_phare)}
           </p>
         </div>
       )}
 
-      {/* Sections dépliables — un titre par ligne, tape pour lire le détail */}
+      {/* Sections dépliables, un titre par ligne, tape pour lire le détail */}
       {sections.map(s => {
         const ouvert = openSection === s.key
         return (

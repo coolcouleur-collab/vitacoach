@@ -6,7 +6,7 @@ import BusinessLanding from './BusinessLanding'
 import Confidentialite from './Confidentialite'
 import './tokens.css'
 
-// ── Error boundary global — affiche l'erreur au lieu de page blanche
+// ── Error boundary global, affiche l'erreur au lieu de page blanche
 class RootBoundary extends Component {
   constructor(props) { super(props); this.state = { error: null } }
   static getDerivedStateFromError(e) { return { error: e } }
@@ -24,7 +24,7 @@ class RootBoundary extends Component {
   }
 }
 
-// Smooth scroll (Lenis) — UNIQUEMENT pour la landing publique. Dans l'app
+// Smooth scroll (Lenis), UNIQUEMENT pour la landing publique. Dans l'app
 // connectée, html.lenis { height:auto } casse la chaîne height:100% →
 // le layout à scroll interne ne fonctionne plus et le bas des pages est
 // coupé sur mobile (bug Respiration, 2026-07-24). Lenis avait déjà causé
@@ -40,7 +40,7 @@ if (!hasSession) {
   requestAnimationFrame(raf)
 }
 
-// Routing minimal — /business → BusinessLanding, /confidentialite → politique,
+// Routing minimal, /business → BusinessLanding, /confidentialite → politique,
 // /admin → dashboard rétention (clé admin requise), sinon App
 const isBusiness = window.location.pathname.startsWith('/business')
 const isPrivacy  = window.location.pathname.startsWith('/confidentialite')

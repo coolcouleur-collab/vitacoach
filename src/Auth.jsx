@@ -26,7 +26,7 @@ const TRANS = {
     errFields: 'Remplis tous les champs.', errShort: 'Mot de passe minimum 6 caractères.',
     okCreated: '✓ Compte créé ! Connecte-toi.',
     errInvalid: 'Identifiants incorrects.', errNotConfirmed: 'Confirme ton email avant de te connecter.',
-    errExists: 'Ce compte existe déjà — connecte-toi.', errPasswordShort: 'Mot de passe trop court (6 caractères minimum).',
+    errExists: 'Ce compte existe déjà, connecte-toi.', errPasswordShort: 'Mot de passe trop court (6 caractères minimum).',
     errEmailInvalid: 'Adresse email invalide.', errNetwork: 'Problème de connexion, réessaie.', errGeneric: 'Une erreur est survenue, réessaie.',
   },
   en: {
@@ -39,7 +39,7 @@ const TRANS = {
     errFields: 'Please fill in all fields.', errShort: 'Password must be at least 6 characters.',
     okCreated: '✓ Account created! Log in.',
     errInvalid: 'Incorrect credentials.', errNotConfirmed: 'Please confirm your email first.',
-    errExists: 'Account already exists — log in.', errPasswordShort: 'Password too short (6 characters minimum).',
+    errExists: 'Account already exists, log in.', errPasswordShort: 'Password too short (6 characters minimum).',
     errEmailInvalid: 'Invalid email address.', errNetwork: 'Connection error, try again.', errGeneric: 'Something went wrong, try again.',
   },
   es: {
@@ -52,7 +52,7 @@ const TRANS = {
     errFields: 'Por favor completa todos los campos.', errShort: 'La contraseña debe tener al menos 6 caracteres.',
     okCreated: '✓ ¡Cuenta creada! Inicia sesión.',
     errInvalid: 'Credenciales incorrectas.', errNotConfirmed: 'Por favor confirma tu email primero.',
-    errExists: 'Esta cuenta ya existe — inicia sesión.', errPasswordShort: 'Contraseña demasiado corta (mínimo 6 caracteres).',
+    errExists: 'Esta cuenta ya existe, inicia sesión.', errPasswordShort: 'Contraseña demasiado corta (mínimo 6 caracteres).',
     errEmailInvalid: 'Dirección de email inválida.', errNetwork: 'Error de conexión, inténtalo de nuevo.', errGeneric: 'Algo salió mal, inténtalo de nuevo.',
   },
   pt: {
@@ -65,7 +65,7 @@ const TRANS = {
     errFields: 'Por favor preencha todos os campos.', errShort: 'A senha deve ter pelo menos 6 caracteres.',
     okCreated: '✓ Conta criada! Entre agora.',
     errInvalid: 'Credenciais incorretas.', errNotConfirmed: 'Por favor confirme seu email primeiro.',
-    errExists: 'Esta conta já existe — entre.', errPasswordShort: 'Senha muito curta (mínimo 6 caracteres).',
+    errExists: 'Esta conta já existe, entre.', errPasswordShort: 'Senha muito curta (mínimo 6 caracteres).',
     errEmailInvalid: 'Endereço de email inválido.', errNetwork: 'Erro de conexão, tente novamente.', errGeneric: 'Algo deu errado, tente novamente.',
   },
   it: {
@@ -78,7 +78,7 @@ const TRANS = {
     errFields: 'Per favore compila tutti i campi.', errShort: 'La password deve avere almeno 6 caratteri.',
     okCreated: '✓ Account creato! Accedi.',
     errInvalid: 'Credenziali errate.', errNotConfirmed: 'Per favore conferma la tua email prima.',
-    errExists: 'Questo account esiste già — accedi.', errPasswordShort: 'Password troppo corta (minimo 6 caratteri).',
+    errExists: 'Questo account esiste già, accedi.', errPasswordShort: 'Password troppo corta (minimo 6 caratteri).',
     errEmailInvalid: 'Indirizzo email non valido.', errNetwork: 'Errore di connessione, riprova.', errGeneric: 'Qualcosa è andato storto, riprova.',
   },
   de: {
@@ -91,7 +91,7 @@ const TRANS = {
     errFields: 'Bitte füll alle Felder aus.', errShort: 'Das Passwort muss mindestens 6 Zeichen haben.',
     okCreated: '✓ Konto erstellt! Anmelden.',
     errInvalid: 'Falsche Anmeldedaten.', errNotConfirmed: 'Bitte bestätige zuerst deine E-Mail.',
-    errExists: 'Dieses Konto existiert bereits — anmelden.', errPasswordShort: 'Passwort zu kurz (mindestens 6 Zeichen).',
+    errExists: 'Dieses Konto existiert bereits, anmelden.', errPasswordShort: 'Passwort zu kurz (mindestens 6 Zeichen).',
     errEmailInvalid: 'Ungültige E-Mail-Adresse.', errNetwork: 'Verbindungsfehler, bitte erneut versuchen.', errGeneric: 'Ein Fehler ist aufgetreten, bitte erneut versuchen.',
   },
   nl: {
@@ -104,7 +104,7 @@ const TRANS = {
     errFields: 'Vul alle velden in.', errShort: 'Wachtwoord moet minimaal 6 tekens bevatten.',
     okCreated: '✓ Account aangemaakt! Log in.',
     errInvalid: 'Onjuiste inloggegevens.', errNotConfirmed: 'Bevestig eerst je e-mail.',
-    errExists: 'Dit account bestaat al — log in.', errPasswordShort: 'Wachtwoord te kort (minimaal 6 tekens).',
+    errExists: 'Dit account bestaat al, log in.', errPasswordShort: 'Wachtwoord te kort (minimaal 6 tekens).',
     errEmailInvalid: 'Ongeldig e-mailadres.', errNetwork: 'Verbindingsfout, probeer opnieuw.', errGeneric: 'Er is iets misgegaan, probeer opnieuw.',
   },
 }
@@ -232,7 +232,7 @@ export default function Auth({ onConnecte, onBack }) {
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
-      {/* ── Sélecteur langue — coin haut droit ── */}
+      {/* ── Sélecteur langue, coin haut droit ── */}
       <div ref={langRef} style={{ position:'fixed', top:'calc(env(safe-area-inset-top,0px) + 14px)', right:16, zIndex:210 }}>
         <button onClick={() => setLangOpen(o => !o)} style={{
           display:'flex', alignItems:'center', gap:5,

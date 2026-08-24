@@ -1,9 +1,9 @@
 /**
  * LiquidImage.jsx
- * WebGL liquid-distortion component — inspired by Framer LiquidImage.
+ * WebGL liquid-distortion component, inspired by Framer LiquidImage.
  *
  * Props:
- *   src        {string}   URL d'image (optionnel — si absent, gradient généré)
+ *   src        {string}   URL d'image (optionnel, si absent, gradient généré)
  *   gradient   {string[]} Tableau de couleurs CSS pour le dégradé (ex: ['#C87B52','#E8962A'])
  *   width      {number}   Résolution WebGL interne en px (défaut 512)
  *   height     {number}   Résolution WebGL interne en px (défaut 512)
@@ -24,7 +24,7 @@ const VERT = `
   }
 `
 
-// ─── GLSL Fragment — gradient-noise liquid displacement ───────────────────────
+// ─── GLSL Fragment, gradient-noise liquid displacement ───────────────────────
 const FRAG = `
   precision mediump float;
 
@@ -173,7 +173,7 @@ export default function LiquidImage({
   useEffect(() => {
     const canvas = canvasRef.current
     const gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
-    if (!gl) return          // no WebGL — canvas stays blank; style a CSS fallback if needed
+    if (!gl) return          // no WebGL, canvas stays blank; style a CSS fallback if needed
     glCtx.current = gl
 
     // ── Program + quad ──
@@ -204,7 +204,7 @@ export default function LiquidImage({
     if (src)      imageTexture(gl, src, setTex)
     else          setTex(gradientTexture(gl, gradient, width, height))
 
-    // ── Render loop — pausé quand le canvas est hors écran ou l'onglet caché
+    // ── Render loop, pausé quand le canvas est hors écran ou l'onglet caché
     // (double boucle WebGL avec GlobeBg = surchauffe GPU mobile)
     let last = 0
     let running = false

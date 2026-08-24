@@ -64,7 +64,7 @@ const G = {
   Age5:      ph(Crown),
 }
 
-// ─── BG BLOBS — même palette qu'Auth ─────────────────────────────────────────
+// ─── BG BLOBS, même palette qu'Auth ─────────────────────────────────────────
 function BgBlobs() {
   return (
     <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
@@ -101,7 +101,7 @@ function AnimatedQuestion({ text, style }) {
   )
 }
 
-// ─── REVEAL SCREEN — palette Auth ─────────────────────────────────────────────
+// ─── REVEAL SCREEN, palette Auth ─────────────────────────────────────────────
 function RevealScreen({ answers, onEnter }) {
   const [visible, setVisible] = useState(false)
   const [btnVisible, setBtnVisible] = useState(false)
@@ -151,7 +151,7 @@ function RevealScreen({ answers, onEnter }) {
           </span>
         </div>
 
-        {/* Carte glassmorphism — même style qu'Auth */}
+        {/* Carte glassmorphism, même style qu'Auth */}
         <div style={{
           width:'100%',
           background:'rgba(255,235,210,0.28)',
@@ -297,7 +297,7 @@ const RYTHME_OPTIONS = [
   { Icon: G.Freelance, label:'À mon compte',            desc:'Je gère mon propre temps, freelance ou entrepreneur'  },
 ]
 
-// ─── STYLES — palette Auth ────────────────────────────────────────────────────
+// ─── STYLES, palette Auth ────────────────────────────────────────────────────
 const S = {
   question: {
     fontSize:'clamp(22px,5vw,28px)', fontWeight:600, lineHeight:1.35,
@@ -319,7 +319,7 @@ const S = {
     transition:'border-color 0.2s, box-shadow 0.2s',
   },
   cta: {
-    // Verre de cuivre profond — translucide + texte crème (palette Solenn)
+    // Verre de cuivre profond, translucide + texte crème (palette Solenn)
     width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,235,210,0.45)',
     background:'rgba(255,235,210,0.32)',
     backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
@@ -532,7 +532,7 @@ function premiereLecture(a) {
   if (showReveal) {
     // Passer le PROFIL CONSTRUIT (window._solennProfil, posé par finishOnboarding),
     // pas les réponses brutes : `answers` (state) ne contient pas le choix de
-    // cycle de l'étape 10 (passé en argument, jamais setAnswers) — App écrasait
+    // cycle de l'étape 10 (passé en argument, jamais setAnswers), App écrasait
     // le bon profil localStorage et l'onglet Cycle n'apparaissait jamais.
     return <RevealScreen answers={answers} onEnter={() => onTermine(window._solennProfil || answers)} />
   }
@@ -1002,7 +1002,7 @@ function premiereLecture(a) {
               )
             })}
           </div>
-          {/* Consentement explicite — RGPD article 9. Non coche par defaut :
+          {/* Consentement explicite, RGPD article 9. Non coche par defaut :
               une case pre-cochee ne vaut pas consentement. */}
           <motion.button
             initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.5 }}

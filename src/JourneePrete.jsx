@@ -1,6 +1,6 @@
-// ─── « TA JOURNÉE EST PRÊTE » — HomeTab ──────────────────────────────────────
+// ─── « TA JOURNÉE EST PRÊTE », HomeTab ──────────────────────────────────────
 // La card du réflexe matinal : quand l'utilisateur ouvre l'app, Solenn a déjà
-// travaillé — chaque adaptation dit ce qui a été ajusté et POURQUOI (ses
+// travaillé, chaque adaptation dit ce qui a été ajusté et POURQUOI (ses
 // données de la nuit/veille). Alimentée par l'agent morning-brief (06:45)
 // via /api/morning-message (adaptations jsonb). Masquée si rien aujourd'hui.
 
@@ -13,11 +13,11 @@ function AdaptIcon({ type }) {
   const stroke = '#C87B52'
   const common = { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke, strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', style: { flexShrink: 0 } }
   switch (type) {
-    case 'allege': // plume — journée allégée
+    case 'allege': // plume, journée allégée
       return <svg {...common}><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/></svg>
-    case 'boost': // éclair — journée ambitieuse
+    case 'boost': // éclair, journée ambitieuse
       return <svg {...common}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    case 'soft': // cœur — douceur
+    case 'soft': // cœur, douceur
       return <svg {...common}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     case 'challenge': // drapeau
       return <svg {...common}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
@@ -51,7 +51,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
   // Sans adaptations, ce bloc disparaissait purement et simplement : une
   // nouvelle utilisatrice ouvrait donc l'app sur un soleil et des cartes vides,
   // sans jamais découvrir ce que Solenn sait faire. Elle pose désormais UNE
-  // question, dont la réponse tient en un geste — c'est aussi ce qui amorce la
+  // question, dont la réponse tient en un geste, c'est aussi ce qui amorce la
   // collecte de données sans formulaire (refonte demandée par Jean 2026-08-08).
   const sansAdaptations = !data?.adaptations?.length
   const manqueMetrique = !metriques?.sommeil ? 'sommeil' : !metriques?.eau ? 'eau' : !metriques?.pas ? 'pas' : null
@@ -70,7 +70,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
     const Q = {
       sommeil: {
         titre: 'Tu as dormi combien cette nuit ?',
-        sous:  "C'est la donnée qui explique le plus de choses — humeur, faim, énergie.",
+        sous:  "C'est la donnée qui explique le plus de choses, humeur, faim, énergie.",
         choix: [5, 6, 7, 8, 9].map(v => ({ label: v === 9 ? '9h+' : `${v}h`, val: v })),
       },
       eau: {
@@ -80,7 +80,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       },
       pas: {
         titre: "Tu as bougé aujourd'hui ?",
-        sous:  "Une estimation suffit — je m'occupe du reste.",
+        sous:  "Une estimation suffit, je m'occupe du reste.",
         choix: [
           { label: 'Peu',      val: 2000 },
           { label: 'Un peu',   val: 5000 },

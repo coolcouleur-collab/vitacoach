@@ -173,7 +173,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                   {e.description}
                 </div>
               )}
-              {/* « Voir le geste » — si l'étape mentionne un exercice du guide */}
+              {/* « Voir le geste », si l'étape mentionne un exercice du guide */}
               {onVoirGeste && matchExercice(`${e.titre} ${e.description || ''}`) && !checked[e.id] && (
                 <span
                   role="button"
@@ -523,7 +523,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       {/* ── Contenu ── */}
       <div style={{ padding: '16px 20px 0' }}>
 
-        {/* ── 1. LE DÉFI 21 JOURS — c'est LE programme, il ouvre la page.
+        {/* ── 1. LE DÉFI 21 JOURS, c'est LE programme, il ouvre la page.
              Une seule instance (le raccourci doublon a été supprimé,
              retour Jean 2026-07-25). ── */}
         {vue === 'programme' && userId && (
@@ -644,7 +644,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 </div>
               </motion.div>
 
-              {/* ── Astuce du jour — juste sous l'intro de la journée
+              {/* ── Astuce du jour, juste sous l'intro de la journée
                    (elle flottait en bas de page, retour Jean 2026-07-27) ── */}
               {routine.astuce && (
                 <motion.div
@@ -739,7 +739,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           )}
         </AnimatePresence>
 
-        {/* ── Vue NUTRITION — la maison des repas, demandee par Jean le
+        {/* ── Vue NUTRITION, la maison des repas, demandee par Jean le
              2026-08-13. Regroupe ce qui etait eparpille : les trois repas de la
              routine, et le bouton photo de repas qui vivait cache dans le chat.
              Les donnees viennent de la routine deja generee : pas d'appel
@@ -782,7 +782,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
         )}
 
-        {/* ── 3. Ressource : le guide des gestes — côté Programme ── */}
+        {/* ── 3. Ressource : le guide des gestes, côté Programme ── */}
         {vue === 'programme' && (
         <button onClick={() => setShowExos(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,

@@ -149,7 +149,7 @@ function buildPhases(cycleLength, periodLength) {
   ].map(p => ({ ...p, ...PHASE_CONTENT[p.id] }))
 }
 
-// ── Explorateur de douleur — « creuser pourquoi » (demande Jean 2026-07-25) ──
+// ── Explorateur de douleur, « creuser pourquoi » (demande Jean 2026-07-25) ──
 // 3 questions guidées, puis Solenn explique les pistes possibles de façon
 // pédagogique dans le chat. Éducatif uniquement : jamais de diagnostic, et
 // toujours l'orientation médecin pour les signaux d'alerte.
@@ -186,7 +186,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
       {etape === 0 && (
         <>
           <div style={{ fontSize: 12.5, color: am(0.72), fontFamily: F, lineHeight: 1.55, marginBottom: 12 }}>
-            Décris ta douleur en 3 taps — Solenn t'aide à comprendre ce qui se passe et te met sur des pistes.
+            Décris ta douleur en 3 taps, Solenn t'aide à comprendre ce qui se passe et te met sur des pistes.
           </div>
           <button onClick={() => setEtape(1)} style={{
             padding: '10px 20px', borderRadius: 14, cursor: 'pointer', fontFamily: F,
@@ -405,7 +405,7 @@ export default function CycleTab({ profil, userId, onChat }) {
           <div style={{ fontSize: 11, color: am(0.45), marginTop: 8 }}>
             {stats.realCycles > 0
               ? `Estimation basée sur tes ${stats.realCycles + 1} derniers cycles enregistrés`
-              : 'Estimation par défaut (28 j) — elle s\'affinera à chaque cycle enregistré'}
+              : 'Estimation par défaut (28 j), elle s\'affinera à chaque cycle enregistré'}
           </div>
         </div>
       )}
@@ -524,7 +524,7 @@ export default function CycleTab({ profil, userId, onChat }) {
                 </div>
               </div>
 
-              {/* ── J'ai mal — explorateur guidé ── */}
+              {/* ── J'ai mal, explorateur guidé ── */}
               <DouleurExplorer onChat={onChat} phaseNom={currentPhase?.name || currentPhase?.nom || null} />
 
               {/* Symptômes du jour */}
@@ -627,7 +627,7 @@ export default function CycleTab({ profil, userId, onChat }) {
             Quand ont commencé tes dernières règles ?
           </div>
           <div style={{ fontSize: 12.5, color: am(0.60), lineHeight: 1.6 }}>
-            Réponds avec un des boutons juste au-dessus — c'est aujourd'hui, ou tu choisis la date. À partir de là, Solenn apprend TON cycle et te prévient avant tes prochaines règles.
+            Réponds avec un des boutons juste au-dessus, c'est aujourd'hui, ou tu choisis la date. À partir de là, Solenn apprend TON cycle et te prévient avant tes prochaines règles.
           </div>
         </motion.div>
       )}

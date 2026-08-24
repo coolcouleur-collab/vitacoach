@@ -1,6 +1,6 @@
-// ─── « TES PROGRÈS AVEC SOLENN » — SanteTab ──────────────────────────────────
+// ─── « TES PROGRÈS AVEC SOLENN », SanteTab ──────────────────────────────────
 // L'écran de preuve : les résultats mesurables depuis le début (mécanisme n°3
-// de la thèse « indispensable » — on paie ce qui marche visiblement).
+// de la thèse « indispensable », on paie ce qui marche visiblement).
 // Deux sources : l'historique local (comparaison première/dernière semaine)
 // et les insights longitudinaux de l'agent (table user_insights).
 
@@ -40,7 +40,7 @@ function calculerProgres(history) {
   const pas = delta('pas')
   const humeur = delta('humeur')
 
-  // Poids : première et dernière mesure disponibles (pas de moyenne — une
+  // Poids : première et dernière mesure disponibles (pas de moyenne, une
   // pesée n'est pas quotidienne), présenté SANS jugement (positionnement
   // « réconciliation », jamais de culpabilisation)
   const pesees = entries.map(e => Number(e.poids) || 0).filter(v => v > 0)
@@ -146,7 +146,7 @@ export default function TesProgres({ history, userId }) {
         </div>
       )}
 
-      {/* Ce que Solenn a remarqué — insights longitudinaux */}
+      {/* Ce que Solenn a remarqué, insights longitudinaux */}
       {insights.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {insights.slice(0, 3).map((ins, i) => (

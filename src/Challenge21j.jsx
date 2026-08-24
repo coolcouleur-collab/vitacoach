@@ -257,7 +257,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // L'objectif du profil peut avoir changé DEPUIS la création du programme :
   // le programme est fige en base, il ne suit pas. On compare l'objectif
   // actuel a celui grave dans le programme a sa creation (objectif_source,
-  // pose par le serveur) et on propose la regeneration — jamais automatique,
+  // pose par le serveur) et on propose la regeneration, jamais automatique,
   // elle detruirait la progression sans prevenir (2026-08-12).
   const objectifActuel    = profil?.objectifs?.[0] || profil?.objectif || ''
   const objectifProgramme = challenge?.challenge?.objectif_source || ''
@@ -478,7 +478,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // ── 4. CHALLENGE PRINCIPAL ───────────────────────────────────────
   return (
     <div style={styles.container}>
-      {/* POURQUOI on s'entraine — l'objectif du profil, en tete. La page
+      {/* POURQUOI on s'entraine, l'objectif du profil, en tete. La page
           montrait un plan sans jamais dire ce qu'il vise : on ne s'entraine
           pas pour cocher des cases (constat Jean 2026-08-12). */}
       {!objectifChange && (
@@ -557,7 +557,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           transition={{ duration: 0.5 }}
           style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
         >
-          {/* ── PROGRAMME TERMINÉ — le jour 21 ouvrait sur RIEN : bravo, puis
+          {/* ── PROGRAMME TERMINÉ, le jour 21 ouvrait sur RIEN : bravo, puis
                le vide, au moment exact où l'abonné décide de rester ou partir.
                La fin propose le cycle suivant (chantier A, Jean 2026-08-13). */}
           {programmeTermine && (
@@ -718,7 +718,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   </span>
                 </div>
               )}
-              {/* « Voir le geste » — si l'action mentionne un exercice du guide
+              {/* « Voir le geste », si l'action mentionne un exercice du guide
                   (masqué quand une séance structurée est déjà affichée) */}
               {!jourActuelData.seance?.length && matchExercice(jourActuelData.action) && (
                 <button onClick={() => setExoGuide(matchExercice(jourActuelData.action))} style={{
@@ -766,7 +766,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 </p>
               )}
 
-              {/* Aperçu de demain — donne envie de revenir, et montre que le
+              {/* Aperçu de demain, donne envie de revenir, et montre que le
                   programme est plus riche que le jour qu'on a sous les yeux. */}
               {jourSuivantData && jourActuel < 21 && (
                 <div style={{
@@ -993,7 +993,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             </div>
           </div>
 
-          {/* ── GRILLE 21 JOURS — repliée par défaut. La page ouvrait sur
+          {/* ── GRILLE 21 JOURS, repliée par défaut. La page ouvrait sur
                trois rangées de cases avant de dire quoi FAIRE aujourd'hui :
                c'était le cœur du « brouillon » (redesign Jean 2026-08-13).
                Le détail reste à un tap, la barre suffit au quotidien. ── */}
@@ -1050,7 +1050,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 } else if (estPasse && !estComplete) {
                   // Jour passé non fait : simplement estompé, jamais rouge.
                   // Une grille de 13 cases rouges transforme un programme raté
-                  // en mur d'échecs et donne envie de fermer l'app — l'inverse
+                  // en mur d'échecs et donne envie de fermer l'app, l'inverse
                   // de ce qu'un coach doit produire (retour Jean 2026-08-08).
                   bgColor = 'rgba(200,123,82,0.05)'
                   borderColor = 'rgba(200,123,82,0.12)'
@@ -1172,7 +1172,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dialog de confirmation reset — portail vers <body> : rendu dans une
+      {/* Dialog de confirmation reset, portail vers <body> : rendu dans une
           carte animée (transform), un position:fixed serait piégé et invisible
           → le tap sur « Nouveau challenge » semblait ne rien faire */}
       {createPortal(<AnimatePresence>

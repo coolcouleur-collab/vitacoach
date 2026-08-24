@@ -360,7 +360,7 @@ function GlobalStyles() {
 }
 
 /* ─────────────────────────────────────────────
-   SECTION 1 — HERO
+   SECTION 1, HERO
 ───────────────────────────────────────────── */
 function HeroSection({ onDemanderDemo }) {
   const scrollToPricing = (e) => {
@@ -423,7 +423,7 @@ function HeroSection({ onDemanderDemo }) {
         <div className="bl-fade-in">
           <span className="bl-badge">
             <SparkleIcon color={T.creme} size={15} />
-            Nouveau — Solenn pour les entreprises
+            Nouveau, Solenn pour les entreprises
           </span>
         </div>
 
@@ -447,7 +447,7 @@ function HeroSection({ onDemanderDemo }) {
             lineHeight: 1.7,
           }}
         >
-          Solenn accompagne chaque collaborateur individuellement — nutrition, sommeil, stress,
+          Solenn accompagne chaque collaborateur individuellement, nutrition, sommeil, stress,
           énergie. Votre RH voit les tendances. Sans effort.
         </p>
 
@@ -513,7 +513,7 @@ function HeroSection({ onDemanderDemo }) {
 }
 
 /* ─────────────────────────────────────────────
-   SECTION 2 — LE PROBLÈME
+   SECTION 2, LE PROBLÈME
 ───────────────────────────────────────────── */
 const problemCards = [
   {
@@ -596,13 +596,13 @@ function ProblemSection() {
 }
 
 /* ─────────────────────────────────────────────
-   SECTION 3 — LA SOLUTION
+   SECTION 3, LA SOLUTION
 ───────────────────────────────────────────── */
 const steps = [
   {
     num: "1",
     title: "Chaque employé s'inscrit",
-    desc: "Solenn crée un profil santé personnalisé en 3 min — habitudes, objectifs, contraintes.",
+    desc: "Solenn crée un profil santé personnalisé en 3 min, habitudes, objectifs, contraintes.",
   },
   {
     num: "2",
@@ -719,7 +719,7 @@ function SolutionSection() {
 }
 
 /* ─────────────────────────────────────────────
-   SECTION 4 — PRICING
+   SECTION 4, PRICING
 ───────────────────────────────────────────── */
 const pricingPlans = [
   {
@@ -894,7 +894,7 @@ function PricingSection({ onDemanderDemo }) {
 }
 
 /* ─────────────────────────────────────────────
-   SECTION 5 — DEMO FORM
+   SECTION 5, DEMO FORM
 ───────────────────────────────────────────── */
 function DemoFormSection() {
   const [form, setForm] = useState({

@@ -1,5 +1,5 @@
 /**
- * ConnexionsSante — Solenn
+ * ConnexionsSante, Solenn
  * Gère la connexion/déconnexion des appareils et services santé.
  * S'affiche dans SanteTab et dans SettingsSheet.
  */
@@ -57,7 +57,7 @@ const PROVIDERS = [
     id:          'withings',
     nom:         'Withings',
     icon:        ICONS.withings,
-    description: 'Balance, tensiomètre, montre — marque française',
+    description: 'Balance, tensiomètre, montre, marque française',
     couleur:     '#C87B52',
     donnees:     ['Poids', 'Tension artérielle', 'FC repos', 'Sommeil', 'Température'],
     methode:     'oauth',   // redirect OAuth
@@ -87,7 +87,7 @@ const PROVIDERS = [
     id:          'apple_health',
     nom:         'Apple Santé',
     icon:        ICONS.apple_health,
-    description: 'Via l\'app native iOS — sync automatique',
+    description: 'Via l\'app native iOS, sync automatique',
     couleur:     '#ef4444',
     donnees:     ['Pas', 'Sommeil', 'FC', 'Calories', 'Poids'],
     methode:     'native',
@@ -302,8 +302,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
           <a href="https://cloud.ouraring.com/personal-access-tokens" target="_blank" rel="noreferrer"
             style={{ color: C.orange }}>
             cloud.ouraring.com
-          </a>
-          , puis colle-le ici.
+          </a>, puis colle-le ici.
         </div>
 
         <input
@@ -545,7 +544,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
                 Withings connecté !
               </div>
               <div style={{ fontSize: 12, color: '#22c55e', marginTop: 2, opacity: 0.85 }}>
-                {syncing ? 'Synchronisation en cours…' : 'Synchronisation lancée — données disponibles dans quelques secondes.'}
+                {syncing ? 'Synchronisation en cours…' : 'Synchronisation lancée, données disponibles dans quelques secondes.'}
               </div>
             </div>
             <button

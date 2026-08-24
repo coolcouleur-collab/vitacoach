@@ -166,7 +166,7 @@ export default function BusinessDashboard({ orgId, token }) {
             Plateforme RH
           </div>
           <h1 style={{ margin: 0, color: T.white, fontSize: 22, fontWeight: 700, letterSpacing: '-0.3px' }}>
-            Dashboard Bien-être — {loading ? '…' : d.org.nom}
+            Dashboard Bien-être, {loading ? '…' : d.org.nom}
           </h1>
         </div>
         <div style={{
@@ -220,7 +220,7 @@ export default function BusinessDashboard({ orgId, token }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <div>
               <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: T.navy }}>
-                Score moyen équipe — 8 dernières semaines
+                Score moyen équipe, 8 dernières semaines
               </h2>
               <p style={{ margin: '4px 0 0', fontSize: 13, color: T.gray400 }}>
                 {d.org.employes} collaborateurs · Plan {d.org.plan}

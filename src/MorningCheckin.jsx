@@ -7,7 +7,7 @@ const EASE = [0.22, 1, 0.36, 1]
 const HUMEURS = [
   // Même dégradé que le check-in de l'accueil : du terracotta sourd à l'ambre
   // doré. Avant, cet écran mêlait un gris ardoise, un vert et deux jaunes
-  // Tailwind — du bleu, du vert et du gris au milieu d'une palette chaude
+  // Tailwind, du bleu, du vert et du gris au milieu d'une palette chaude
   // (retour Jean 2026-08-08).
   { val: 1, label: 'Vide',      color: 'rgba(169,97,74,0.95)',  icon: <NeutralIcon size={30} color="rgba(169,97,74,0.95)"  /> },
   { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color="rgba(192,117,81,0.95)" /> },
@@ -208,7 +208,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                 Ton humeur ce matin ?
               </h2>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 48 }}>
-                Sois honnête — Solenn adapte ses conseils
+                Sois honnête, Solenn adapte ses conseils
               </p>
 
               <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
@@ -263,7 +263,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                 Une intention<br/>pour aujourd'hui ?
               </h2>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 36 }}>
-                Optionnel — mais ça aide vraiment
+                Optionnel, mais ça aide vraiment
               </p>
 
               <input

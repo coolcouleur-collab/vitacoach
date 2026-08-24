@@ -63,7 +63,7 @@ const FX_SLIDES = [
   {
     num: '02', tag: 'Sommeil',
     title: ['Dormir mieux,', 'dès ce soir.'],
-    sub: 'Un sommeil qui récupère vraiment — Solenn ajuste ta routine du soir pour que chaque nuit compte.',
+    sub: 'Un sommeil qui récupère vraiment, Solenn ajuste ta routine du soir pour que chaque nuit compte.',
     color: '#EDE8DC', accent: '#E8962A',
     bg: 'transparent',
     items: ['Récupération profonde', 'Gestion du stress', 'Routine nocturne'],
@@ -96,7 +96,7 @@ function CinematicSlider({ onCommencer }) {
   const SLIDE = FX_SLIDES[cur]
   const N     = FX_SLIDES.length
 
-  // Auto-slide désactivé — l'utilisateur navigue à son rythme
+  // Auto-slide désactivé, l'utilisateur navigue à son rythme
 
   const prevTimerRef = useRef(null)
   useEffect(() => () => clearTimeout(prevTimerRef.current), [])
@@ -159,7 +159,7 @@ function CinematicSlider({ onCommencer }) {
 
 
 
-        {/* ── Commencer — centré ── */}
+        {/* ── Commencer, centré ── */}
         {onCommencer && (
           <button
             onClick={onCommencer}
@@ -168,7 +168,7 @@ function CinematicSlider({ onCommencer }) {
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
-              // Verre de cuivre profond — translucide + texte crème (palette Solenn)
+              // Verre de cuivre profond, translucide + texte crème (palette Solenn)
               background: 'rgba(255,235,210,0.32)',
               backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
               border: '1px solid rgba(255,235,210,0.50)',
@@ -191,7 +191,7 @@ function CinematicSlider({ onCommencer }) {
           </button>
         )}
 
-        {/* ═══ CENTER — titre pur ═══ */}
+        {/* ═══ CENTER, titre pur ═══ */}
         <div style={{
           position: 'absolute',
           top: '50%', left: '0',
@@ -266,7 +266,7 @@ function CinematicSlider({ onCommencer }) {
 
         </div>
 
-        {/* ── Slide title — visible bas-gauche ── */}
+        {/* ── Slide title, visible bas-gauche ── */}
 
         {/* ── Mini panel transparent ── */}
         {showPanel && (
@@ -326,7 +326,7 @@ function CinematicSlider({ onCommencer }) {
           </div>
         )}
 
-        {/* ── Filmstrip navigation — bas ── */}
+        {/* ── Filmstrip navigation, bas ── */}
         <div className="filmstrip-nav" data-no-sfx="true" style={{
           position: 'absolute', bottom: 'calc(2.4rem + env(safe-area-inset-bottom, 0px))', left: 0, right: 0, zIndex: 20,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
@@ -401,7 +401,7 @@ function CinematicSlider({ onCommencer }) {
           ))}
         </div>
 
-        {/* ── Contact — lien discret bas gauche ── */}
+        {/* ── Contact, lien discret bas gauche ── */}
         <a
           href="mailto:contact@solenn.app"
           style={{
@@ -512,7 +512,7 @@ function EarlyAccessSection() {
           lineHeight: 1.7, marginBottom: '2.8rem',
           maxWidth: 480,
         }}>
-          Reçois chaque semaine des conseils bien-être, sommeil et nutrition — <span style={{ color: 'rgba(255,248,235,0.92)', fontWeight: 500 }}>signés Solenn.</span>
+          Reçois chaque semaine des conseils bien-être, sommeil et nutrition, <span style={{ color: 'rgba(255,248,235,0.92)', fontWeight: 500 }}>signés Solenn.</span>
         </p>
 
         {status === 'success' ? (
@@ -521,7 +521,7 @@ function EarlyAccessSection() {
             fontStyle: 'italic', fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
             color: 'rgba(255,248,235,0.92)',
           }}>
-            C'est noté — on te contacte en premier.
+            C'est noté, on te contacte en premier.
           </div>
         ) : (
           <form onSubmit={handleSubmit} style={{

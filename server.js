@@ -1018,7 +1018,10 @@ app.post('/api/portail-client', ownerGuard, async (req, res) => {
   try {
     const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
     const customerId = data?.profil?.stripeCustomerId
-    if (!customerId) return res.status(404).json({ erreur: 'aucun abonnement rattache a ce compte' })
+    // Acces Pro accorde a la main (proManuel) ou offert : il n'y a pas de
+    // client Stripe, donc rien a resilier. L'app doit le dire clairement au
+    // lieu de renvoyer sur le support (Jean, 2026-08-14).
+    if (!customerId) return res.status(404).json({ sansAbonnement: true, erreur: 'aucun abonnement Stripe rattache a ce compte' })
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: req.body?.retour || 'https://meet-solenn.com/',

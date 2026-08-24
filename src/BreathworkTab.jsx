@@ -145,7 +145,7 @@ export default function BreathworkTab() {
   return (
     <div style={{ padding: '16px 16px 120px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
 
-      {/* Technique tabs — flexWrap : tout visible d'un coup, plus de rangée
+      {/* Technique tabs, flexWrap : tout visible d'un coup, plus de rangée
           coupée au bord de l'écran (retour Jean 2026-07-25) */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 4, marginBottom: 16, justifyContent: 'center' }}>
         {TECHNIQUES.map(t => {

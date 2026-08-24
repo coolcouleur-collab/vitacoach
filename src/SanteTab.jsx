@@ -429,7 +429,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
         /* ── Liquid Glass Card ── */
         .lg-card { position: relative; isolation: isolate; }
 
-        /* Highlight interne haut-gauche — simule la réfraction lumineuse */
+        /* Highlight interne haut-gauche, simule la réfraction lumineuse */
         .lg-card::before {
           content: '';
           position: absolute; inset: 0;
@@ -443,7 +443,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           z-index: 1;
         }
 
-        /* Bordure chaude — dégradé de la charte */
+        /* Bordure chaude, dégradé de la charte */
         .lg-card::after {
           content: '';
           position: absolute; inset: 0;

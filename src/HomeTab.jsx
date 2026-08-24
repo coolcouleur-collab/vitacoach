@@ -5,7 +5,7 @@ import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafI
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
 
-// ─── Icône vélo (inline — absente d'Icons.jsx) ───────────────────────────────
+// ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -17,7 +17,7 @@ function BikeIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-// Copie locale — évite d'importer SanteTab (JSX au niveau module → crash)
+// Copie locale, évite d'importer SanteTab (JSX au niveau module → crash)
 function scoreJour(m) {
   let s = 0
   if (m.pas >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
@@ -28,7 +28,7 @@ function scoreJour(m) {
   return Math.min(s, 100)
 }
 
-// ─── SOLENN FACE (liquid morph — cohérent avec App.jsx) ──────────────────────
+// ─── SOLENN FACE (liquid morph, cohérent avec App.jsx) ──────────────────────
 function SolennFace({ size = 34, isNight = false }) {
   return (
     <div className="liquid-avatar" style={{
@@ -50,7 +50,7 @@ function SolennFace({ size = 34, isNight = false }) {
   )
 }
 
-// ─── NOVA GLOW — shader WebGL (Nova-Glow-lv7f) — couleurs palette chaude ────────
+// ─── NOVA GLOW, shader WebGL (Nova-Glow-lv7f), couleurs palette chaude ────────
 const NOVA_VERT = `
   precision highp float;
   attribute vec2 position;
@@ -98,7 +98,7 @@ const NOVA_FRAG = `
   }
   vec4 extractAlpha(vec3 c){ float a=max(max(c.r,c.g),c.b); return vec4(c/(a+1e-5),a); }
 
-  /* ── Palette dynamique — couleurs passées en uniforms ── */
+  /* ── Palette dynamique, couleurs passées en uniforms ── */
   uniform vec3 uColor1;  /* couleur principale de l'anneau */
   uniform vec3 uColor2;  /* couleur secondaire de l'anneau */
   const vec3 baseColor3 = vec3(0.0, 0.0, 0.0);  /* noir pur → alpha=0 via extractAlpha → halo invisible */
@@ -218,7 +218,7 @@ function NovaGlowCanvas({ size = 248, mouseRef, color1 = [1.0, 0.58, 0.20], colo
       gl.enable(gl.BLEND)
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
 
-      // couleurs via ref — toujours à jour même après HMR sans remount
+      // couleurs via ref, toujours à jour même après HMR sans remount
       const c1 = color1Ref.current, c2 = color2Ref.current
       gl.uniform3f(uColor1, c1[0], c1[1], c1[2])
       gl.uniform3f(uColor2, c2[0], c2[1], c2[2])
@@ -243,7 +243,7 @@ function NovaGlowCanvas({ size = 248, mouseRef, color1 = [1.0, 0.58, 0.20], colo
   )
 }
 
-// ─── NOVA GLASS ORB — glassmorphisme + glow border cursor (Framer Glow-Card) ───
+// ─── NOVA GLASS ORB, glassmorphisme + glow border cursor (Framer Glow-Card) ───
 function NovaOrb({ active, isNight = false, preset = 'day' }) {
   const ownRef  = useRef(null)
   const glowRef = useRef(null)
@@ -312,9 +312,9 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
           background: 'transparent',
         }}
       >
-        {/* ── Nova Glow — rendu au niveau circleWrap ── */}
+        {/* ── Nova Glow, rendu au niveau circleWrap ── */}
 
-        {/* Shine top — reflet verre */}
+        {/* Shine top, reflet verre */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: preset === 'day'     ? 'radial-gradient(ellipse 80% 30% at 50% -2%, rgba(255,240,160,0.45) 0%, transparent 65%)'
@@ -331,7 +331,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
           }} />
         )}
 
-        {/* Liquid highlight — suit le curseur */}
+        {/* Liquid highlight, suit le curseur */}
         <motion.div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
           background: liquidHighlight,
@@ -350,7 +350,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
           }} />
         ))}
 
-        {/* ── Glow border (Framer Glow-Card) — anneau lumineux qui suit le curseur ── */}
+        {/* ── Glow border (Framer Glow-Card), anneau lumineux qui suit le curseur ── */}
         <div
           ref={glowRef}
           style={{
@@ -369,7 +369,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
           }}
         />
 
-        {/* Bordure statique supprimée — soleil remplit l'espace */}
+        {/* Bordure statique supprimée, soleil remplit l'espace */}
       </div>
     </div>
   )
@@ -386,7 +386,7 @@ const sunsetText = (op) => `rgba(255,225,200,${op})`
 
 // ─── OCEAN SCENE BACKGROUND ────────────────────────────────────────────────────
 const OCEAN_PRESETS = {
-  // sky covers the FULL hero height — no separate "water" block, no demarcation
+  // sky covers the FULL hero height, no separate "water" block, no demarcation
   day: {
     // Bleu ADOUCI qui glisse vers l'abricot de l'app au lieu de s'arrêter net sur
     // du bleu clair : le Jour était la seule ambiance à introduire une couleur
@@ -493,15 +493,15 @@ function OceanSceneBg({ preset: key }) {
   return (
     <div style={{
       position:'absolute', inset:0, zIndex:0, overflow:'hidden', pointerEvents:'none',
-      /* Fade bottom edge into the page — no hard cutoff */
+      /* Fade bottom edge into the page, no hard cutoff */
       WebkitMaskImage:'linear-gradient(180deg, black 72%, transparent 100%)',
       maskImage:       'linear-gradient(180deg, black 72%, transparent 100%)',
     }}>
 
-      {/* Sky — fills the entire hero, no separate ocean block */}
+      {/* Sky, fills the entire hero, no separate ocean block */}
       <div style={{ position:'absolute', inset:0, background:p.sky }} />
 
-      {/* Vignette top — assombrit le haut pour rendre le header lisible */}
+      {/* Vignette top, assombrit le haut pour rendre le header lisible */}
       <div style={{
         position:'absolute', top:0, left:0, right:0, height:'22%',
         background:'linear-gradient(180deg, rgba(0,0,0,0.46) 0%, transparent 100%)',
@@ -535,7 +535,7 @@ function OceanSceneBg({ preset: key }) {
         {p.isMoon && p.skyBiteColor && (<>
           {/* Crescent bite */}
           <div style={{ position:'absolute', top:'-8%', right:'-18%', width:'82%', height:'82%', borderRadius:'50%', background:p.skyBiteColor }} />
-          {/* Rim light — bord lumineux du croissant */}
+          {/* Rim light, bord lumineux du croissant */}
           <div style={{ position:'absolute', inset:0, borderRadius:'50%',
             background:'radial-gradient(circle at 14% 48%, rgba(255,255,255,0.38) 0%, rgba(200,224,255,0.18) 32%, transparent 55%)',
           }} />
@@ -566,7 +566,7 @@ function OceanSceneBg({ preset: key }) {
         filter:'blur(5px)', zIndex:4,
       }} />
 
-      {/* Water-surface ripples — supprimées (trop visibles sur fond sombre) */}
+      {/* Water-surface ripples, supprimées (trop visibles sur fond sombre) */}
       <div style={{ position:'absolute', left:0, right:0, bottom:0, height:'30%', zIndex:4 }}>
         {[]}
         {/* Sun/moon reflection streak */}
@@ -861,7 +861,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   ]
   const paused = circleHovered || !!activeMetric
 
-  // ── Couleur de l'arc selon le score — identique à SanteTab ──
+  // ── Couleur de l'arc selon le score, identique à SanteTab ──
   const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(239,68,68,0.28)' : 'rgba(200,123,82,0.25)'
   const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(239,68,68,0.05)' : 'rgba(200,123,82,0.05)'
 
@@ -885,13 +885,13 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
           onMouseEnter={() => setCircleHovered(true)}
           onMouseLeave={() => setCircleHovered(false)}
         >
-          {/* ── Nova Glow canvas — 165px centré dans le circleWrap 250×250 ── */}
+          {/* ── Nova Glow canvas, 165px centré dans le circleWrap 250×250 ── */}
           <NovaGlowCanvas size={200} mouseRef={null} color1={OCEAN_PRESETS[preset].ringColor1} color2={OCEAN_PRESETS[preset].ringColor2} />
 
           {/* Hub 108×108 centré dans le container 250×250 */}
           <div style={{ position:'absolute', inset:0, margin:'auto', width:108, height:108 }}>
             <NovaOrb active={circleHovered || !!activeMetric} isNight={preset === 'night'} preset={preset} />
-            {/* Night tint — orb becomes moon-like */}
+            {/* Night tint, orb becomes moon-like */}
             {preset === 'night' && (
               <div style={{
                 position:'absolute', inset:0, borderRadius:'50%',
@@ -910,7 +910,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               <span style={{ fontSize: score > 0 ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
                 opacity: score > 0 ? 1 : 0.55,
-                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '—'}</span>
+                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : ','}</span>
               <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
                 color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
                 marginTop:2, textTransform:'uppercase',
@@ -918,7 +918,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
             </div>
           </div>
 
-          {/* ── Arc de progression score — masqué ── */}
+          {/* ── Arc de progression score, masqué ── */}
           <svg
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none', zIndex:2, overflow:'visible', display:'none' }}
             viewBox="0 0 340 340"
@@ -940,7 +940,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
             />
           </svg>
 
-          {/* ── Ferris Wheel — orbit container (tourne, pass-through events) ── */}
+          {/* ── Ferris Wheel, orbit container (tourne, pass-through events) ── */}
           <div style={{
             position:'absolute', inset:0,
             animation:'ferrisOrbit 18s linear infinite',
@@ -955,7 +955,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               const filled   = m.val > 0
               const isActive = activeMetric === m.key
               return (
-                /* Counter-rotation — garde l'icône droite, re-active les events */
+                /* Counter-rotation, garde l'icône droite, re-active les events */
                 <div key={m.key} style={{
                   position:'absolute', left: x - 21, top: y - 21,
                   width:42, height:42,
@@ -979,7 +979,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
       </div>
     </div>
 
-    {/* La phrase de Solenn — HORS du hero, voir le commentaire de hc.hero :
+    {/* La phrase de Solenn, HORS du hero, voir le commentaire de hc.hero :
         à l'intérieur, elle décalait le cercle par rapport au soleil du décor. */}
     {(() => {
           const p = phrase
@@ -1039,7 +1039,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   )
 }
 
-// ─── METRIC DOT — spring bounce + glow ring (gradient Framer button style) ────
+// ─── METRIC DOT, spring bounce + glow ring (gradient Framer button style) ────
 function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day', onDown, onUp, onLog }) {
   const [springing, setSpringing] = useState(false)
   const [rings, setRings] = useState([])
@@ -1114,7 +1114,7 @@ function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day',
   )
 }
 
-// ─── GLASSY BUTTON WRAP — GlassyButton (Framer) ──────────────────────────────
+// ─── GLASSY BUTTON WRAP, GlassyButton (Framer) ──────────────────────────────
 // Highlight + reflection blobs follow mouse in parallax. Glass backdrop blur.
 const LIGHT_MAP = {
   'top-left':     { angle: 135, x: '10%', y: '10%' },
@@ -1296,7 +1296,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
         <div style={{ width:36, height:3, borderRadius:2,
           background:'rgba(200,123,82,0.15)', margin:'0 auto 28px' }} />
 
-        {/* Onglets — 4 icônes */}
+        {/* Onglets, 4 icônes */}
         <div style={{ display:'flex', justifyContent:'center', gap:8, marginBottom:40 }}>
           {ITEMS.map((it, i) => {
             const active = i === activeIdx
@@ -1324,7 +1324,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           })}
         </div>
 
-        {/* Métrique active — icône grande + label + valeur */}
+        {/* Métrique active, icône grande + label + valeur */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIdx}
@@ -1438,7 +1438,7 @@ function NovaLogBtn({ onClick }) {
   )
 }
 
-// ─── PILL BUTTON — GlassyButton style ────────────────────────────────────────
+// ─── PILL BUTTON, GlassyButton style ────────────────────────────────────────
 function MagneticGlowBtn({ label, iconEl, onClick }) {
   return (
     <GlassyButtonWrap
@@ -1499,7 +1499,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       style={{
         flex:1, position:'relative',
         padding:'1.5px', borderRadius:20,
-        /* Glow border couleur du sujet — statique + suit le curseur */
+        /* Glow border couleur du sujet, statique + suit le curseur */
         background: glowing
           ? `radial-gradient(circle 220px at ${glowPos.x}% ${glowPos.y}%, ${color}70, ${color}30 42%, ${color}14 68%)`
           : `${color}28`,
@@ -1512,7 +1512,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         transformStyle:'preserve-3d',
         willChange:'transform',
       }}>
-      {/* Inner card — fond teinté couleur + transparent */}
+      {/* Inner card, fond teinté couleur + transparent */}
       <div style={{
         background:`linear-gradient(145deg, ${color}07, rgba(255,246,238,0.72))`,
         borderRadius:20, padding:'8px 4px 7px',
@@ -1575,7 +1575,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
           )}
         </div>
         <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(200,123,82,0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
-          {val > 0 ? fmt(val) : '—'}
+          {val > 0 ? fmt(val) : ','}
         </div>
         <div style={{ fontSize:10, color:'rgba(200,123,82,0.80)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
       </div>
@@ -1722,7 +1722,7 @@ export function StreakXP({ streak, xp, level }) {
   )
 }
 
-// ─── DAILY TASK ITEM — même style que ContextualShortcuts ────────────────────
+// ─── DAILY TASK ITEM, même style que ContextualShortcuts ────────────────────
 function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
   const tc = isNight ? nightText : warmText
   return (
@@ -1817,7 +1817,7 @@ function generateDailyTasks(profil, metriques) {
     h < 14 ? {
       id:'matin', Icon: SunIcon, color:'#fbbf24',
       title:'Démarrage matinal',
-      detail: profil?.reveil ? `Levé à ${profil.reveil} — 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
+      detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
       id:'soir', Icon: MoonIcon, color:'#C87B52',
@@ -1855,7 +1855,7 @@ function generateDailyTasks(profil, metriques) {
 }
 
 function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 'day' }) {
-  // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit — la
+  // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit, la
   // variante sunset créait l'incohérence de couleurs signalée par Jean)
   const tc = isNight ? nightText : warmText
   const [done, setDone] = useState({})
@@ -1940,7 +1940,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
   )
 }
 
-// ─── CARROUSEL D'INSIGHTS — SUPPRIMÉ le 2026-08-11 ──────────────────────────
+// ─── CARROUSEL D'INSIGHTS, SUPPRIMÉ le 2026-08-11 ──────────────────────────
 // Il mélangeait les observations réelles de Solenn avec des conseils horaires
 // génériques qui répétaient « Pour toi maintenant » juste au-dessus : même
 // découpage horaire, mêmes sujets, et « Prépare ton sommeil » comme la carte
@@ -2181,7 +2181,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         ))}
       </div>
 
-      {/* ── Tes outils — accès permanent aux sections sorties de la barre ──
+      {/* ── Tes outils, accès permanent aux sections sorties de la barre ──
            Style, Respiration et Cycle ne sont plus des onglets : quatre onglets
            est le maximum lisible sur un téléphone. Cette rangée garantit qu'ils
            restent visibles et atteignables quelle que soit l'heure, contrairement
@@ -2218,7 +2218,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         </div>
       </div>
 
-      {/* ── CTA Demander à Solenn — toujours en bas ── */}
+      {/* ── CTA Demander à Solenn, toujours en bas ── */}
       <motion.div
         initial={{ opacity:0, y:14 }}
         animate={{ opacity:1, y:0 }}
@@ -2293,7 +2293,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                 <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
               </>
             ) : (
-              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>—</span>
+              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>,</span>
             )}
           </div>
           <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
@@ -2401,7 +2401,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                 </div>
                 <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
                   <span style={{ fontSize:15, fontWeight:600, color:avg > 0 ? tc(0.90) : tc(0.65), letterSpacing: avg > 0 ? '-0.3px' : '0px', lineHeight:1 }}>
-                    {avg > 0 ? avg : '—'}
+                    {avg > 0 ? avg : ','}
                   </span>
                   {avg > 0 && <span style={{ fontSize:9, color:tc(0.55), fontWeight:400 }}>/100</span>}
                 </div>
@@ -2592,7 +2592,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
     // Fondu vers TRANSPARENT : le ciel doit laisser réapparaître le halo doré
     // du calque global. En le faisant fondre vers #EDD8CC opaque (ce que
     // j'avais fait le 2026-07-25 pour masquer la bande du bas), l'accueil
-    // recouvrait entièrement ce halo d'un aplat abricot — d'où le fond « rose »
+    // recouvrait entièrement ce halo d'un aplat abricot, d'où le fond « rose »
     // que Jean ne voyait QUE sur l'accueil, les autres pages restant dorées.
     // La bande du bas est réglée depuis par le verrouillage de body.
     : `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 540px, transparent 820px)`
@@ -2626,7 +2626,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           chose de l'accueil qui ait une échéance. */}
       <DefiDuJour userId={userId} isNight={isNight} onOuvrir={() => onSwitchTab('routine')} />
 
-      {/* Ta journée est prête — adaptations du matin (agent morning-brief) */}
+      {/* Ta journée est prête, adaptations du matin (agent morning-brief) */}
       <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
         onMode={setModeJournee} />
 
@@ -2640,7 +2640,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
 
       {/* ORDRE : l'ACTION avant la DONNÉE. L'accueil ouvrait sur deux blocs de
           statistiques (Évolution, Insights) avant de proposer quoi que ce soit
-          à faire — un tableau de bord, pas un coach. Les suggestions du moment
+          à faire, un tableau de bord, pas un coach. Les suggestions du moment
           remontent donc juste après le check-in ; l'historique et les analyses
           restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
       <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} dejaDit={phrase.cle} />

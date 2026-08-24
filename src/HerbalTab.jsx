@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
 
-// ─── PALETTE (clair — fond de page abricot) ──────────────────────────────────
+// ─── PALETTE (clair, fond de page abricot) ──────────────────────────────────
 const GLASS_BG     = 'rgba(255,248,242,0.75)'
 const GLASS_BORDER = '1px solid rgba(200,123,82,0.18)'
 const TXT_MAIN     = 'rgba(200,123,82,0.90)'
@@ -66,7 +66,7 @@ const CATS = [
 const FICHES = [
     { nom:'Valériane', contre:'Sédatifs, anxiolytiques, alcool, grossesse. Ne pas conduire après la prise.', preuve:'Étudié', besoins:['sommeil'],     tag:'Plante',         color:'#E8962A', benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
     { nom:'Camomille', contre:'Allergie aux astéracées (marguerite, arnica). Prudence sous anticoagulant.', preuve:'Étudié', besoins:['sommeil'],       tag:'Tisane',   color:'#E8962A', benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
-    { nom:'Rooibos', contre:'Aucune contre-indication connue. Prudence en cas de traitement hormonal.', preuve:'Usage traditionnel', besoins:['sommeil'],         tag:'Tisane', color:'#E8962A', benefice:'Zéro caféine — riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
+    { nom:'Rooibos', contre:'Aucune contre-indication connue. Prudence en cas de traitement hormonal.', preuve:'Usage traditionnel', besoins:['sommeil'],         tag:'Tisane', color:'#E8962A', benefice:'Zéro caféine, riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
     { nom:'Tilleul', contre:'Aucune contre-indication majeure. Avis médical en cas de trouble cardiaque.', preuve:'Usage traditionnel', besoins:['sommeil', 'stress'],         tag:'Tisane',      color:'#C87B52', benefice:'Relâche les tensions nerveuses et musculaires', usage:'1–2 tasses en fin d\'après-midi', detail:'Flavonoïdes sédatifs légers utilisés depuis le Moyen-Âge. Efficace contre les maux de tête de tension, l\'anxiété et l\'hypertension légère.' },
     { nom:'Earthing', contre:'Aucune. Prudence pieds nus en cas de diabète avec neuropathie.', preuve:'Usage traditionnel', besoins:['sommeil'],            tag:'Pratique',   color:'#E8962A', benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
     { nom:'Luminothérapie', contre:'Maladie de la rétine, trouble bipolaire, traitement photosensibilisant. Avis médical avant de commencer.', preuve:'Étudié', besoins:['sommeil', 'énergie'],      tag:'Pratique', color:'#C87B52', benefice:'Régule la mélatonine et traite la dépression saisonnière', usage:'10 000 lux, 20–30 min le matin au réveil', detail:'Efficacité comparable aux antidépresseurs pour le TAS (trouble affectif saisonnier). Synchronise l\'horloge interne et améliore l\'énergie matinale.' },
@@ -74,7 +74,7 @@ const FICHES = [
     { nom:'Qi Gong', contre:'Aucune. À adapter en cas de trouble de l\'équilibre ou de douleur aiguë.', preuve:'Usage traditionnel', besoins:['énergie', 'stress'],         tag:'Méd. chinoise',    color:'#C87B52', benefice:'Harmonise corps, souffle et esprit par le mouvement', usage:'20 min le matin à jeun, quotidiennement', detail:'+800 études scientifiques. Réduit la tension artérielle, renforce l\'immunité et améliore l\'équilibre mental. Idéal pour tous les âges.' },
     { nom:'Cohérence cardiaque', contre:'Aucune.', preuve:'Étudié', besoins:['stress'], tag:'Pratique', color:'#ef4444', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
     { nom:'Bain de forêt', contre:'Allergies aux pollens en saison.', preuve:'Étudié', besoins:['stress'],       tag:'Pratique', color:'#C87B52', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
-    { nom:'Méditation MBSR', contre:'Prudence en cas de trouble psychiatrique aigu ou de traumatisme non accompagné : à faire encadrer.', preuve:'Étudié', besoins:['stress'],     tag:'Pratique', color:'#C87B52', benefice:'Recâble le cerveau en 8 semaines — Harvard prouvé', usage:'10–20 min/jour, app ou guidance', detail:'L\'étude Harvard : augmentation de la matière grise après 8 semaines. L\'amygdale (siège de la peur) réduit de façon mesurable. MBSR = Mindfulness-Based Stress Reduction.' },
+    { nom:'Méditation MBSR', contre:'Prudence en cas de trouble psychiatrique aigu ou de traumatisme non accompagné : à faire encadrer.', preuve:'Étudié', besoins:['stress'],     tag:'Pratique', color:'#C87B52', benefice:'Recâble le cerveau en 8 semaines, Harvard prouvé', usage:'10–20 min/jour, app ou guidance', detail:'L\'étude Harvard : augmentation de la matière grise après 8 semaines. L\'amygdale (siège de la peur) réduit de façon mesurable. MBSR = Mindfulness-Based Stress Reduction.' },
     { nom:'Rhodiola Rosea', contre:'Trouble bipolaire, grossesse, allaitement. Interagit avec les antidépresseurs.', preuve:'Étudié', besoins:['énergie'],tag:'Plante',         color:'#C87B52', benefice:'Combat la fatigue physique et améliore la concentration', usage:'200–400 mg le matin, à jeun', detail:'Plante des montagnes arctiques utilisée par les cosmonautes soviétiques. Réduit le stress oxydatif et améliore les fonctions cognitives sous pression.' },
     { nom:'Ginkgo Biloba', contre:'Anticoagulants et antiagrégants, épilepsie. À suspendre avant une chirurgie.', preuve:'Étudié', besoins:['énergie'], tag:'Plante',         color:'#C87B52', benefice:'Améliore la circulation cérébrale et la mémoire', usage:'120–240 mg/jour avec un repas', detail:'Un des suppléments les plus étudiés au monde. Augmente le flux sanguin vers le cerveau et protège les neurones du stress oxydatif.' },
     { nom:'Acupuncture', contre:'Troubles de la coagulation, anticoagulants, grossesse (certains points sont proscrits). Uniquement chez un praticien diplômé.', preuve:'Étudié', besoins:['énergie'],     tag:'Méd. chinoise',  color:'#C87B52', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
@@ -88,7 +88,7 @@ const FICHES = [
     { nom:'Ortie', contre:'Anticoagulants, diurétiques, insuffisance rénale ou cardiaque, grossesse.', preuve:'Usage traditionnel', besoins:['immunité', 'cheveux'],         tag:'Plante',        color:'#E8962A', benefice:'Reminéralise l\'organisme et combat la fatigue de fond', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, silice et vitamines K et C. Excellent dépuratif. Aide contre l\'anémie, les douleurs articulaires et la chute de cheveux.' },
     { nom:'Hibiscus', contre:'Hypotension, traitement antihypertenseur, grossesse et allaitement.', preuve:'Étudié', besoins:['immunité'],        tag:'Tisane',      color:'#ef4444', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
     { nom:'Gingembre-citron', contre:'Anticoagulants, reflux gastrique, calculs biliaires.', preuve:'Usage traditionnel', besoins:['immunité'],tag:'Tisane',    color:'#C87B52', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
-    { nom:'Reishi', contre:'Anticoagulants, immunosuppresseurs. À suspendre avant une chirurgie.', preuve:'Usage traditionnel', besoins:['immunité'],          tag:'Méd. chinoise',  color:'#C87B52', benefice:'"Champignon de l\'immortalité" — immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
+    { nom:'Reishi', contre:'Anticoagulants, immunosuppresseurs. À suspendre avant une chirurgie.', preuve:'Usage traditionnel', besoins:['immunité'],          tag:'Méd. chinoise',  color:'#C87B52', benefice:'"Champignon de l\'immortalité", immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
     { nom:'Astragale', contre:'Maladies auto-immunes, traitements immunosuppresseurs, greffe.', preuve:'Usage traditionnel', besoins:['immunité'],       tag:'Méd. chinoise',   color:'#C87B52', benefice:'Renforce l\'immunité en profondeur et ralentit le vieillissement', usage:'500 mg, 2× par jour, cure de 3 mois', detail:'Allonge les télomères (marqueurs du vieillissement cellulaire). Utilisé en complément de la chimiothérapie pour réduire les effets secondaires.' },
     { nom:'Bain d\'huile de ricin', contre:'Usage externe. Éviter en cas de cuir chevelu lésé.', preuve:'Usage traditionnel', besoins:['cheveux'], tag:'Recette', color:'#C87B52',
       benefice:'Densifie, freine la chute et nourrit le cuir chevelu',
@@ -165,7 +165,7 @@ const FICHES = [
 function HeroBg() {
   return (
     <div style={{ position:'absolute', inset:0, zIndex:0, overflow:'hidden', borderRadius:'inherit' }}>
-      {/* Animated aurora gradient — subtle warm/green glow on dark */}
+      {/* Animated aurora gradient, subtle warm/green glow on dark */}
       <div style={{
         position:'absolute', inset:0,
         background:'linear-gradient(-45deg, rgba(232,150,42,0.14), rgba(255,248,242,0.10), rgba(232,150,42,0.12), rgba(255,220,160,0.10), rgba(200,123,82,0.14))',
@@ -211,7 +211,7 @@ function AIRecoCard({ r, onChat, index }) {
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
     >
-      {/* Collapsed header — always visible */}
+      {/* Collapsed header, always visible */}
       <div
         style={{ display:'flex', alignItems:'center', gap:12, padding:'13px 14px', cursor:'pointer' }}
         onClick={() => setOpen(o => !o)}
@@ -256,7 +256,7 @@ function AIRecoCard({ r, onChat, index }) {
       <div style={{ overflow:'hidden', maxHeight: open ? 520 : 0, transition:'max-height 0.38s cubic-bezier(0.4,0,0.2,1)' }}>
         <div style={{ padding:'0 14px 14px', borderTop:'1px solid rgba(200,123,82,0.18)' }}>
 
-          {/* Pourquoi — personnalisé */}
+          {/* Pourquoi, personnalisé */}
           {r.pourquoi && (
             <div style={{
               background:'rgba(200,123,82,0.08)',
@@ -407,7 +407,7 @@ function AIReco({ profil, onChat }) {
   )
 }
 
-// ─── HERB ITEM — glass card with expand ──────────────────────────────────────
+// ─── HERB ITEM, glass card with expand ──────────────────────────────────────
 function HerbItem({ item, onChat, onCure, cureActive }) {
   const [open, setOpen] = useState(false)
   const [pressed, setPressed] = useState(false)
@@ -436,7 +436,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
       >
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4, flexWrap:'wrap' }}>
-            {/* Pastille discrète — couleur du remède */}
+            {/* Pastille discrète, couleur du remède */}
             <span style={{
               width:7, height:7, borderRadius:'50%', flexShrink:0,
               background:item.color, opacity:0.85, display:'inline-block',
@@ -495,7 +495,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
           padding:'0 15px 15px',
           borderTop:'1px solid rgba(200,123,82,0.18)',
         }}>
-          {/* Usage box — vert par defaut. Rouge sur la fiche des recettes a
+          {/* Usage box, vert par defaut. Rouge sur la fiche des recettes a
               proscrire : un encadre vert intitule « Comment utiliser » pour dire
               « a bannir » se contredit lui-meme. */}
           <div style={{
@@ -518,7 +518,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               </div>
             </div>
           </div>
-          {/* Ingredients — recettes de la categorie Beaute */}
+          {/* Ingredients, recettes de la categorie Beaute */}
           {item.ingredients && (
             <div style={{ marginBottom:11 }}>
               <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
@@ -553,7 +553,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             </div>
           )}
 
-          {/* Precaution — rouge, comme les mises en garde deja presentes */}
+          {/* Precaution, rouge, comme les mises en garde deja presentes */}
           {item.precaution && (
             <div style={{
               display:'flex', alignItems:'flex-start', gap:9,
@@ -565,7 +565,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             </div>
           )}
 
-          {/* 9. Contre-indications — champ dedie sur CHAQUE fiche. Certaines
+          {/* 9. Contre-indications, champ dedie sur CHAQUE fiche. Certaines
               plantes interagissent avec des traitements courants et sont
               deconseillees en grossesse : l'information ne peut pas rester
               noyee dans le texte de detail. */}
@@ -589,7 +589,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
           <div style={{ fontSize:12, color:TXT_SOFT, lineHeight:1.75, marginBottom:12 }}>
             {item.detail}
           </div>
-          {/* Cure de 14 jours — uniquement les remèdes internes mesurables */}
+          {/* Cure de 14 jours, uniquement les remèdes internes mesurables */}
           {onCure && cureEligible(item) && (
             <button
               onClick={e => { e.stopPropagation(); onCure(item) }}
@@ -636,13 +636,13 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
 // Une cure n'est ni le programme ni la routine. Le PROGRAMME est le plan de
 // 21 jours vers l'objectif global ; la ROUTINE est le rythme quotidien. La
 // CURE est un protocole court et ciblé : UN remède de cette page, pris
-// sérieusement pendant 14 jours, et un VERDICT chiffré à la fin — c'est la
+// sérieusement pendant 14 jours, et un VERDICT chiffré à la fin, c'est la
 // boucle du conseil appliquée à la santé naturelle. Aucune app ne fait ça :
 // les trackers n'ont pas de remèdes, les dictionnaires de plantes n'ont pas
 // de mesures (2026-08-12).
 // Réservée aux remèdes internes dont l'effet EST mesurable par une métrique
 // suivie : sommeil et stress. Pas de cure sur les recettes externes ni sur ce
-// qu'on ne peut pas mesurer — un verdict invérifiable serait du théâtre.
+// qu'on ne peut pas mesurer, un verdict invérifiable serait du théâtre.
 const CURE_METRIQUES = {
   sommeil: { cle: 'sommeil', nom: 'ton sommeil', fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
   stress:  { cle: 'humeur',  nom: 'ton humeur',  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
@@ -773,7 +773,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       <div style={{ ...hb.hero }}>
         <HeroBg />
         <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
-          {/* Leaf icon — warm gradient */}
+          {/* Leaf icon, warm gradient */}
           <div style={{
             width:64, height:64, borderRadius:20,
             background:CTA_GRAD,
@@ -831,7 +831,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           border: '1px solid rgba(232,150,42,0.40)', fontFamily: 'Poppins,sans-serif',
         }}>
           <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: ACCENT, marginBottom: 4 }}>
-            {cureFinie ? 'Cure terminée — le verdict' : `Cure en cours · jour ${cureJour} sur ${CURE_JOURS}`}
+            {cureFinie ? 'Cure terminée, le verdict' : `Cure en cours · jour ${cureJour} sur ${CURE_JOURS}`}
           </div>
           <div style={{ fontSize: 13.5, color: TXT_MAIN, fontWeight: 600, marginBottom: 4 }}>{cure.nom}</div>
 
@@ -851,7 +851,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             <div style={{ fontSize: 12.5, color: TXT_MAIN, lineHeight: 1.55, fontWeight: 500 }}>
               {cureConf.nom.charAt(0).toUpperCase() + cureConf.nom.slice(1)} : {cureConf.fmt(cure.avant)} avant la cure,
               {' '}{cureConf.fmt(cureApres.moy)} pendant.{' '}
-              {cureApres.moy > cure.avant ? 'Ça a bougé dans le bon sens.' : "Ça n'a pas bougé — ce remède n'est peut-être pas le tien."}
+              {cureApres.moy > cure.avant ? 'Ça a bougé dans le bon sens.' : "Ça n'a pas bougé, ce remède n'est peut-être pas le tien."}
             </div>
           )}
           {cureFinie && (!cureApres || cureApres.n < 3 || cure.avant == null) && (
@@ -882,7 +882,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         </div>
       )}
 
-      {/* Ce que disent tes donnees — le croisement que personne d'autre ne fait */}
+      {/* Ce que disent tes donnees, le croisement que personne d'autre ne fait */}
       {besoin && !q && (
         <div style={{
           margin:'0 16px 10px', padding:'13px 15px', borderRadius:16,
@@ -907,7 +907,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         </div>
       )}
 
-      {/* Recherche par symptome — traverse toutes les categories */}
+      {/* Recherche par symptome, traverse toutes les categories */}
       <div style={{ margin:'0 16px 10px', position:'relative' }}>
         <input
           value={recherche}
@@ -1021,7 +1021,7 @@ const hb = {
     marginBottom:4,
   },
 
-  // ── AI box — glass card
+  // ── AI box, glass card
   aiBox: {
     position:'relative',
     margin:'14px 16px 4px',

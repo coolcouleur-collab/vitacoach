@@ -1,4 +1,4 @@
-// Page Politique de confidentialité — requise par App Store & Google Play
+// Page Politique de confidentialité, requise par App Store & Google Play
 // URL : meet-solenn.com/confidentialite
 const S = {
   page: {
@@ -29,7 +29,7 @@ export default function Confidentialite() {
     <div style={S.page}>
       <div style={S.card}>
         <h1 style={S.h1}>Politique de confidentialité</h1>
-        <p style={S.date}>Solenn — dernière mise à jour : 21 juillet 2026</p>
+        <p style={S.date}>Solenn, dernière mise à jour : 21 juillet 2026</p>
 
         <p style={S.p}>
           Solenn est une application de coaching bien-être. Ta vie privée est au cœur de notre
@@ -41,7 +41,7 @@ export default function Confidentialite() {
         <ul style={{ paddingLeft: 20 }}>
           <li style={S.li}><strong>Compte</strong> : adresse e-mail et mot de passe (chiffré).</li>
           <li style={S.li}><strong>Profil</strong> : prénom, âge, objectifs bien-être, niveau d'activité, préférences renseignées lors du questionnaire.</li>
-          <li style={S.li}><strong>Données de bien-être</strong> : sommeil, pas, hydratation, humeur, poids — saisies par toi ou synchronisées depuis des services que tu connectes volontairement (Apple Santé, Oura, Garmin, Withings).</li>
+          <li style={S.li}><strong>Données de bien-être</strong> : sommeil, pas, hydratation, humeur, poids, saisies par toi ou synchronisées depuis des services que tu connectes volontairement (Apple Santé, Oura, Garmin, Withings).</li>
           <li style={S.li}><strong>Conversations</strong> : tes échanges avec le coach Solenn, pour assurer la continuité du suivi.</li>
           <li style={S.li}><strong>Paiement</strong> : géré par Stripe ; nous ne stockons jamais tes numéros de carte.</li>
         </ul>
@@ -77,7 +77,7 @@ export default function Confidentialite() {
         <p style={S.p}>
           Tes données sont conservées tant que ton compte est actif. Tu peux demander à tout
           moment l'accès, la rectification ou la suppression complète de tes données
-          (conformément au RGPD) en nous écrivant — la suppression est effective sous 30 jours.
+          (conformément au RGPD) en nous écrivant, la suppression est effective sous 30 jours.
         </p>
 
         <h2 style={S.h2}>6. Ce que Solenn n'est pas</h2>

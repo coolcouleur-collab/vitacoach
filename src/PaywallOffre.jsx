@@ -1,12 +1,12 @@
-// ─── PAYWALL POST-ONBOARDING — « 14 jours offerts » ──────────────────────────
+// ─── PAYWALL POST-ONBOARDING, « 14 jours offerts » ──────────────────────────
 // Affiché une seule fois, juste après l'onboarding (le combo essai long +
-// paywall d'onboarding est le plus performant de la catégorie — étude de
+// paywall d'onboarding est le plus performant de la catégorie, étude de
 // marché 2026-07-21). L'essai de 14 jours (21 jusqu'au 2026-08-12) démarre automatiquement à
 // l'inscription (auth.users.created_at) : le bouton principal ne fait
 // qu'entrer dans l'app, aucun paiement demandé avant le jour 21.
 // Sur les builds natifs iOS/Android : pas de checkout Stripe (Apple 3.1.1 /
-// Google Play Billing) — seul le CTA d'essai est proposé.
-// Style : univers « verre translucide » Solenn — même recette que la page
+// Google Play Billing), seul le CTA d'essai est proposé.
+// Style : univers « verre translucide » Solenn, même recette que la page
 // Auth (fond chaud + halos cuivre, cartes verre ambré clair, textes crème).
 
 import React, { useState } from 'react'
@@ -39,10 +39,10 @@ const AVANTAGES = [
   'Elle relie tes mots à tes chiffres, et te prouve ce qui a changé',
   "Elle change d'approche quand son conseil ne marche pas",
   'Conversations illimitées, sans quota hebdomadaire',
-  'Aucune montre nécessaire — la tienne est un bonus, pas une condition',
+  'Aucune montre nécessaire, la tienne est un bonus, pas une condition',
 ]
 
-// Halos cuivre — même esprit que les BgBlobs de la page Auth/Onboarding
+// Halos cuivre, même esprit que les BgBlobs de la page Auth/Onboarding
 function Halos() {
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
@@ -92,7 +92,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
           </div>
         </div>
 
-        {/* Avantages — carte verre ambré clair */}
+        {/* Avantages, carte verre ambré clair */}
         <div style={{
           background: 'rgba(255,235,210,0.28)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255,220,160,0.32)', borderRadius: 18,
@@ -110,7 +110,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
           ))}
         </div>
 
-        {/* Plans — web uniquement (conformité stores sur natif) */}
+        {/* Plans, web uniquement (conformité stores sur natif) */}
         {!isNative && (
           <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
             {[
@@ -147,7 +147,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
           </div>
         )}
 
-        {/* CTA principal : entrer dans l'essai — verre ambré clair */}
+        {/* CTA principal : entrer dans l'essai, verre ambré clair */}
         <button onClick={onStart} style={{
           width: '100%', cursor: 'pointer', fontFamily: F, fontWeight: 600, fontSize: 15,
           color: CREME, borderRadius: 16, padding: '15px 20px',
@@ -166,7 +166,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
             color: CREME_70, background: 'transparent', border: 'none',
             padding: '13px 0 2px', textDecoration: 'underline', textUnderlineOffset: 3,
           }}>
-            Ou passe directement à Pro — {plan === 'annual' ? '44,99 €/an' : '7,99 €/mois'}, résiliable à tout moment
+            Ou passe directement à Pro, {plan === 'annual' ? '44,99 €/an' : '7,99 €/mois'}, résiliable à tout moment
           </button>
         )}
 

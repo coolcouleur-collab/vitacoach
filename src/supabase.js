@@ -6,7 +6,7 @@ export const supabase = createClient(
 )
 
 // Retourne le header Authorization avec le token de session Supabase (ou {} si pas de session).
-// Ne throw jamais — les appels API restent fonctionnels même sans session.
+// Ne throw jamais, les appels API restent fonctionnels même sans session.
 export async function authHeaders() {
   try {
     const { data } = await supabase.auth.getSession()

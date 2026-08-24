@@ -11,7 +11,7 @@ const sunsetText = (op) => `rgba(255,225,200,${op})`
 // vers l'ambre lumineux. L'ancienne version mélangeait un rouge froid
 // (#C85050) et un jaune olive (#C9A24E) qui n'existent nulle part ailleurs dans
 // l'app (retour Jean 2026-08-08). Aucun rouge : dire qu'on va mal n'est pas une
-// faute, c'est une information — même principe que le score et la grille du défi.
+// faute, c'est une information, même principe que le score et la grille du défi.
 const MOODS = [
   { val: 1, label: 'Très mal',   color: '#A9614A', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
   { val: 2, label: 'Pas top',    color: '#C07551', mouth: 'M8 16 Q11 14.5 14 16' },
@@ -41,7 +41,7 @@ function todayStr() {
 
 export default function CheckinCard({ userId, onUpdate, isNight = false, preset = 'day' }) {
   // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit, pas de
-  // variante sunset — source d'incohérence relevée par Jean le 2026-07-24)
+  // variante sunset, source d'incohérence relevée par Jean le 2026-07-24)
   const tc = isNight ? nightText : warmText
 
   const [saved, setSaved] = useState(() => {
@@ -146,7 +146,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
               })}
             </div>
 
-            {/* Tags + valider — apparaissent après le choix d'humeur */}
+            {/* Tags + valider, apparaissent après le choix d'humeur */}
             <AnimatePresence>
               {mood > 0 && (
                 <motion.div key="tags"

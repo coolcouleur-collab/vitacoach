@@ -1,4 +1,4 @@
-// ─── SOLENN — Sound FX (Web Audio API, zero fichier audio) ──────────────────
+// ─── SOLENN, Sound FX (Web Audio API, zero fichier audio) ──────────────────
 // Usage : import { playFx } from './sfx'
 //         playFx('tap')      → clic léger UI
 //         playFx('success')  → confirmation douce
@@ -31,7 +31,7 @@ export async function playFx(type = 'tap') {
     const now = ctx.currentTime
 
     if (type === 'tap' || type === 'click') {
-      // Cristal délicat — fondamentale + quinte, 55 ms
+      // Cristal délicat, fondamentale + quinte, 55 ms
       const pairs = [[1760, 0.022], [2640, 0.013]]
       pairs.forEach(([freq, vol]) => {
         const o = ctx.createOscillator()

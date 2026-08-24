@@ -124,7 +124,7 @@ function BookingCard({ data }) {
 
         {/* Buttons */}
         <div style={{ display:'flex', flexDirection:'column', gap:9 }}>
-          {/* Calendar — primary CTA */}
+          {/* Calendar, primary CTA */}
           <a href={calendarUrl()} target="_blank" rel="noopener noreferrer"
             style={{ textDecoration:'none' }}
             onClick={() => setAdded(true)}>

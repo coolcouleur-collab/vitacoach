@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { playFx } from './sfx'
 import GlowLoader from './GlowLoader'
 
-// Supabase chargé en lazy — ne bloque pas le démarrage
+// Supabase chargé en lazy, ne bloque pas le démarrage
 let _sb = null
 async function getSupabase() {
   if (!_sb) { const m = await import('./supabase'); _sb = m.supabase }
@@ -33,7 +33,7 @@ async function enregistrerRetour({ userId, question, reponse, vote }) {
   } catch {}
 }
 
-// Header Authorization avec le token de session Supabase (import lazy — ne bloque pas le démarrage).
+// Header Authorization avec le token de session Supabase (import lazy, ne bloque pas le démarrage).
 // Ne throw jamais.
 async function authHeaders() {
   try { const m = await import('./supabase'); return await m.authHeaders() } catch { return {} }
@@ -42,7 +42,7 @@ async function authHeaders() {
 const MorningCheckin = lazy(() => import('./MorningCheckin'))
 const SettingsSheet  = lazy(() => import('./SettingsSheet'))
 
-// Lazy — chargés uniquement quand l'utilisateur y accède
+// Lazy, chargés uniquement quand l'utilisateur y accède
 const Auth          = lazy(() => import('./Auth'))
 const Landing       = lazy(() => import('./Landing'))
 const Forum         = lazy(() => import('./Forum'))
@@ -320,7 +320,7 @@ async function syncMetriquesSupabase(userId, m) {
 
 // Les champs d'abonnement appartiennent au webhook Stripe et au serveur.
 // Le client ne les ecrit JAMAIS : il recopie ceux de la base.
-// Champs ecrits par le SERVEUR — webhook Stripe, agent memoire, mise a Pro
+// Champs ecrits par le SERVEUR, webhook Stripe, agent memoire, mise a Pro
 // manuelle. Le client ne les produit pas : il doit les recopier depuis la base
 // avant d'ecrire, sinon il les efface.
 const CHAMPS_SERVEUR = ['isPro', 'proSince', 'proPlan', 'proEnd', 'proManuel',
@@ -332,8 +332,8 @@ async function syncProfilSupabase(userId, profil) {
   const supabase = await getSupabase()
 
   // Cet upsert reecrit le profil ENTIER, il ne fusionne pas. Sans la
-  // preservation ci-dessous, terminer l'inscription — qui construit un profil
-  // avec `isPro: false` en dur (Onboarding.jsx) — effacait l'abonnement de
+  // preservation ci-dessous, terminer l'inscription, qui construit un profil
+  // avec `isPro: false` en dur (Onboarding.jsx), effacait l'abonnement de
   // quelqu'un qui venait de payer. Meme piege pour toute sauvegarde de profil
   // faite depuis l'app (2026-08-14).
   const aEcrire = { ...profil }
@@ -356,14 +356,14 @@ async function syncProfilSupabase(userId, profil) {
     user_id: userId, profil: aEcrire,
   }, { onConflict: 'user_id' })
   if (error) {
-    console.error('[profil] sauvegarde refusee par la base —', error.message)
+    console.error('[profil] sauvegarde refusee par la base,', error.message)
     setTimeout(async () => {
       try {
         const sb = await getSupabase()
         const { error: e2 } = await sb.from('profils').upsert({
           user_id: userId, profil: aEcrire,
         }, { onConflict: 'user_id' })
-        if (e2) console.error('[profil] seconde tentative refusee —', e2.message)
+        if (e2) console.error('[profil] seconde tentative refusee,', e2.message)
       } catch (_) {}
     }, 4000)
   }
@@ -378,7 +378,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 // ─── DYNAMIC NAV ─────────────────────────────────────────────────────────────
-// Architecture clarifiée (2026-07-25) : chaque onglet répond à UNE question —
+// Architecture clarifiée (2026-07-25) : chaque onglet répond à UNE question,
 // Accueil « comment je vais ? » · Programme « que faire aujourd'hui ? » ·
 // Progrès « est-ce que ça marche ? » · Solenn « j'ai une question »
 const NAV_ITEMS = [
@@ -404,7 +404,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
 
   // Écart entre l'écran réel et le viewport de mise en page. Mesuré chez Jean
   // le 2026-08-08 : 956 px d'écran pour 894 px de viewport, soit 62 px que les
-  // position:fixed ne peuvent pas atteindre — c'est la « bande du bas ».
+  // position:fixed ne peuvent pas atteindre, c'est la « bande du bas ».
   // On le mesure en JS plutôt qu'avec un calc() CSS : la première tentative en
   // calc(100% - 100vh) donnait une valeur positive et remontait la barre au
   // milieu de l'écran. Ici la valeur est certaine, et vaut 0 partout où le
@@ -446,7 +446,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
       style={{
         // Barre ancrée au bord INFÉRIEUR de l'écran, comme Instagram : elle
         // recouvre la zone de la barre d'accueil iOS au lieu de flotter
-        // au-dessus. C'est ce qui fait disparaître la bande du bas — il n'y a
+        // au-dessus. C'est ce qui fait disparaître la bande du bas, il n'y a
         // PASTILLE FLOTTANTE façon Instagram : détachée des trois bords, coins
         // très arrondis. La version pleine largeur avait été faite pour couvrir
         // la bande du bas ; ce n'est plus nécessaire depuis que body est
@@ -530,7 +530,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   )
 }
 
-// Copie locale de scoreJour — SanteTab ne l'exporte plus (Fast Refresh incompatible)
+// Copie locale de scoreJour, SanteTab ne l'exporte plus (Fast Refresh incompatible)
 function scoreJour(m) {
   let s = 0
   if (m.pas  >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
@@ -589,7 +589,7 @@ export default function App() {
 
   const [user, setUser]         = useState(() => {
     if (localStorage.getItem('solenn_remember_me') === 'false' && !sessionStorage.getItem('solenn_active_session')) {
-      // "Don't remember me" session ended — clear stale auth
+      // "Don't remember me" session ended, clear stale auth
       localStorage.removeItem('vitacoach_user')
       localStorage.removeItem('solenn_remember_me')
       getSupabase().then(sb => sb.auth.signOut())
@@ -623,7 +623,7 @@ const [messages, setMessages] = useState(() => {
       // Purge les vieux messages de limite (jamais utiles dans l'historique) ET
       // les bulles d'assistant tronquées : quand un flux de réponse est coupé
       // (perte de réseau, onglet quitté, app mise en arrière-plan), le fragment
-      // déjà reçu était enregistré tel quel et revenait à chaque ouverture —
+      // déjà reçu était enregistré tel quel et revenait à chaque ouverture,
       // d'où les bulles « ta » ou « Commence ta » vues par Jean le 2026-08-08.
       return h.filter(m => {
         if (m.content?.includes('messages gratuits')) return false
@@ -663,10 +663,10 @@ const [messages, setMessages] = useState(() => {
       const wantsWeight = /poids|mincir|maigrir/.test(obj0)
       // Construire le message
       const parts = [`${greet} ${nom} !`]
-      if (streakC >= 7)       parts.push(`${streakC} jours de suite — tu es vraiment sur une lancée.`)
-      else if (streakC >= 3)  parts.push(`${streakC} jours consécutifs — ta régularité paie vraiment.`)
+      if (streakC >= 7)       parts.push(`${streakC} jours de suite, tu es vraiment sur une lancée.`)
+      else if (streakC >= 3)  parts.push(`${streakC} jours consécutifs, ta régularité paie vraiment.`)
       else if (streakC === 2) parts.push(`2 jours de suite, tu prends de bonnes habitudes.`)
-      if (yScore >= 80)           parts.push(`Hier tu étais au top (${yScore}/100) — continue comme ça.`)
+      if (yScore >= 80)           parts.push(`Hier tu étais au top (${yScore}/100), continue comme ça.`)
       else if (yScore > 0 && yScore < 50) parts.push(`Hier c'était une journée difficile (${yScore}/100), aujourd'hui c'est une nouvelle page.`)
       if (hr >= 5 && hr < 10) {
         if (wantsEnergy)      parts.push(`Parfait moment pour booster ton énergie du matin.`)
@@ -676,14 +676,14 @@ const [messages, setMessages] = useState(() => {
         else                  parts.push(`Comment s'est passée ta journée ?`)
       }
       // Sans données (nouveau compte), tout ce qui précède est vide et il ne
-      // restait que « Bonjour ! Qu'est-ce que je peux faire pour toi ? » — la
+      // restait que « Bonjour ! Qu'est-ce que je peux faire pour toi ? », la
       // phrase de n'importe quel chatbot, en guise de première impression
       // (retour Jean 2026-08-08). On ancre alors l'ouverture sur son objectif.
       if (parts.length === 1) {
         const obj = p.objectifs?.[0]
         parts.push(obj
           ? `On avance sur ton objectif : ${String(obj).toLowerCase()}. Par quoi on commence aujourd'hui ?`
-          : `Raconte-moi ta journée — ce que tu as mangé, comment tu as dormi, ce qui te pèse. Je pars de là.`)
+          : `Raconte-moi ta journée, ce que tu as mangé, comment tu as dormi, ce qui te pèse. Je pars de là.`)
       } else {
         parts.push(`Qu'est-ce que je peux faire pour toi ?`)
       }
@@ -772,7 +772,7 @@ const [messages, setMessages] = useState(() => {
   const [pullRefreshing, setPullRefreshing] = useState(false)
   const PULL_THRESHOLD = 72
 
-  // ── Calculs gamification — mémoïsés, ne recalculent que si history/messages changent ──
+  // ── Calculs gamification, mémoïsés, ne recalculent que si history/messages changent ──
   const streak = useMemo(() => {
     if (!history || history.length === 0) return 0
     const sorted = [...history].sort((a,b) => new Date(b.date) - new Date(a.date))
@@ -790,8 +790,7 @@ const [messages, setMessages] = useState(() => {
   }, [history])
 
   const xp    = useMemo(() =>
-    history.length * 15 + messages.filter(m => m.role === 'user').length * 5
-  , [history, messages])
+    history.length * 15 + messages.filter(m => m.role === 'user').length * 5, [history, messages])
 
   const level = Math.floor(xp / 100) + 1
 
@@ -821,7 +820,7 @@ const [messages, setMessages] = useState(() => {
   }, [])
   const isMobile = windowWidth < 768
 
-  // Clavier virtuel iOS — pousse la barre d'input vers le haut
+  // Clavier virtuel iOS, pousse la barre d'input vers le haut
   useEffect(() => {
     if (!window.visualViewport) return
     const update = () => {
@@ -999,8 +998,8 @@ const [messages, setMessages] = useState(() => {
     const key = `vitacoach_streak_cel_${today}_${streak}`
     if (localStorage.getItem(key)) return
     const milestones = {
-      3:  '3 jours de suite — tu prends de vraies habitudes. Fière de toi.',
-      7:  "7 jours consécutifs ! Une semaine entière — c'est un vrai changement qui s'installe.",
+      3:  '3 jours de suite, tu prends de vraies habitudes. Fière de toi.',
+      7:  "7 jours consécutifs ! Une semaine entière, c'est un vrai changement qui s'installe.",
       14: '14 jours ! Deux semaines de constance, c\'est vraiment impressionnant.',
       30: '30 jours ! Un mois de régularité. Tu n\'es plus la même qu\'au début.',
     }
@@ -1073,7 +1072,7 @@ const [messages, setMessages] = useState(() => {
     })
   }, [user?.id])
 
-  // Permission apps santé — affichée une seule fois au 1er lancement après profil
+  // Permission apps santé, affichée une seule fois au 1er lancement après profil
   useEffect(() => {
     if (!profil || healthPermShownRef.current) return
     if (localStorage.getItem('vitacoach_health_perm')) return
@@ -1183,12 +1182,12 @@ const [messages, setMessages] = useState(() => {
 
   // ── Milestones célébrés ──────────────────────────────────────────────────────
   const MILESTONES = [
-    { id: 'streak7',   check: () => streak >= 7,    Icon: FireIcon,    titre: '7 jours de suite !',      texte: `${profil?.nom}, 7 jours consécutifs — c'est une vraie habitude qui se construit. Continue comme ça.` },
+    { id: 'streak7',   check: () => streak >= 7,    Icon: FireIcon,    titre: '7 jours de suite !',      texte: `${profil?.nom}, 7 jours consécutifs, c'est une vraie habitude qui se construit. Continue comme ça.` },
     { id: 'streak30',  check: () => streak >= 30,   Icon: StarIcon,    titre: 'Un mois de régularité !', texte: `30 jours. Tu as transformé des intentions en routine réelle. C'est rare et précieux.` },
-    { id: 'steps10k',  check: () => metriques.pas >= 10000, Icon: WalkIcon, titre: '10 000 pas !',   texte: `Objectif pas atteint aujourd'hui — ton corps te remercie.` },
-    { id: 'score100',  check: () => scoreJour(metriques) >= 95, Icon: SparkleIcon, titre: 'Score parfait !', texte: `Presque 100/100 aujourd'hui — sommeil, eau, mouvement, humeur : tout est là.` },
-    { id: 'sleep8',    check: () => metriques.sommeil >= 8, Icon: MoonIcon, titre: '8h de sommeil !', texte: `8h de sommeil enregistrées — ton cerveau consolide, ton corps récupère.` },
-    { id: 'water8',    check: () => metriques.eau >= 8, Icon: WaterIcon, titre: 'Hydratation parfaite !', texte: `8 verres d'eau aujourd'hui — c'est exactement ce qu'il faut.` },
+    { id: 'steps10k',  check: () => metriques.pas >= 10000, Icon: WalkIcon, titre: '10 000 pas !',   texte: `Objectif pas atteint aujourd'hui, ton corps te remercie.` },
+    { id: 'score100',  check: () => scoreJour(metriques) >= 95, Icon: SparkleIcon, titre: 'Score parfait !', texte: `Presque 100/100 aujourd'hui, sommeil, eau, mouvement, humeur : tout est là.` },
+    { id: 'sleep8',    check: () => metriques.sommeil >= 8, Icon: MoonIcon, titre: '8h de sommeil !', texte: `8h de sommeil enregistrées, ton cerveau consolide, ton corps récupère.` },
+    { id: 'water8',    check: () => metriques.eau >= 8, Icon: WaterIcon, titre: 'Hydratation parfaite !', texte: `8 verres d'eau aujourd'hui, c'est exactement ce qu'il faut.` },
   ]
 
   function checkMilestones() {
@@ -1348,7 +1347,7 @@ const [messages, setMessages] = useState(() => {
   }
 
   // ── Lenis ne doit JAMAIS tourner dans l'app connectée ──────────────────────
-  // (html.lenis { height:auto } casse le layout à scroll interne — bas des
+  // (html.lenis { height:auto } casse le layout à scroll interne, bas des
   // pages coupé sur mobile). Détruit si la session a démarré déconnectée.
   useEffect(() => {
     if (!user) return
@@ -1379,7 +1378,7 @@ const [messages, setMessages] = useState(() => {
 
   // Ouvre le portail d'abonnement Stripe : resilier, changer de carte, voir
   // ses factures. Sans lui, « Membre Pro » etait un encart mort et l'abonne
-  // n'avait aucun moyen de resilier — ni conforme aux magasins, ni a
+  // n'avait aucun moyen de resilier, ni conforme aux magasins, ni a
   // l'article L215-1-1 du code de la consommation (2026-08-14).
   const [portailEnCours, setPortailEnCours] = useState(false)
   async function gererAbonnement() {
@@ -1407,7 +1406,9 @@ const [messages, setMessages] = useState(() => {
       else {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: `Je n'arrive pas à ouvrir la gestion de ton abonnement. Écris-moi à contact@meet-solenn.com et je m'en occupe.`
+          content: data?.sansAbonnement
+            ? `Ton accès Pro n'est pas passé par un paiement en ligne, il a été activé directement sur ton compte. Il n'y a donc rien à résilier ni à gérer ici.`
+            : `Je n'arrive pas à ouvrir la gestion de ton abonnement. Écris-moi à contact@meet-solenn.com et je m'en occupe.`
         }])
         setOnglet('chat')
         setShowSettings(false)
@@ -1443,7 +1444,7 @@ const [messages, setMessages] = useState(() => {
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
-      // Stripe pas encore configuré — silencieux
+      // Stripe pas encore configuré, silencieux
     } catch {}
   }
 
@@ -1469,7 +1470,7 @@ const [messages, setMessages] = useState(() => {
       const data = await resp.json()
       setMessages(prev => [...prev, { role:'assistant', content: data.message || data.error || `Je n'ai pas réussi à analyser cette photo, tu peux réessayer ?` }])
     } catch {
-      setMessages(prev => [...prev, { role:'assistant', content:`Je n'ai pas réussi à analyser la photo — vérifie ta connexion et réessaie.` }])
+      setMessages(prev => [...prev, { role:'assistant', content:`Je n'ai pas réussi à analyser la photo, vérifie ta connexion et réessaie.` }])
     } finally {
       setLoading(false)
       isSendingRef.current = false
@@ -1487,7 +1488,7 @@ const [messages, setMessages] = useState(() => {
       setTimeout(() => {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: `Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités — 44,99€/an (soit 3,75€/mois), résiliable à tout moment.`
+          content: `Plus qu'un message gratuit aujourd'hui. Passe à **Solenn Pro** pour des échanges illimités, 44,99€/an (soit 3,75€/mois), résiliable à tout moment.`
         }])
       }, 800)
     }
@@ -1569,7 +1570,7 @@ const [messages, setMessages] = useState(() => {
       }
 
       if (!started) {
-        // Flux vide — message de fallback
+        // Flux vide, message de fallback
         setMessages(prev => [...prev, { role: 'assistant', content: "Désolée, je n'ai pas pu répondre. Réessaie !" }])
         setLoading(false)
       } else if (reply.trim().length < 12 && !/[.!?…:)]$/.test(reply.trim())) {
@@ -1685,7 +1686,7 @@ const [messages, setMessages] = useState(() => {
         oublierAbonnement()
         setUser(null); setProfil(null); setIsPro(false)
       }} onTermine={p => {
-        // Attribution influence — rattachée une seule fois, à l'inscription
+        // Attribution influence, rattachée une seule fois, à l'inscription
         const refSource = localStorage.getItem('vitacoach_ref')
         if (refSource) p = { ...p, refSource }
         setProfil(p)
@@ -1716,13 +1717,13 @@ const [messages, setMessages] = useState(() => {
         const obj0 = p.objectifs?.[0] || p.objectif
         if (obj0 && objMap[obj0]) introParts.push(objMap[obj0])
         else introParts.push('On va construire quelque chose de vraiment adapté à toi.')
-        // Conditions de santé — reconnaissance discrète
+        // Conditions de santé, reconnaissance discrète
         const santeConditions = p.sante_conditions || []
         const hasConditions = p.sante && santeConditions.length > 0 &&
           !santeConditions.includes('Tout va bien de ce côté') &&
           !santeConditions.includes('Aucune condition particulière')
         if (hasConditions) introParts.push('J\'ai bien noté ce que tu vis côté santé, je vais en tenir compte dans tout ce que je te propose.')
-        // Moment préféré — engagement
+        // Moment préféré, engagement
         const momentMap = {
           'Le matin':    'Je serai là pour bien commencer tes journées.',
           'En journée':  'Je serai disponible pour tes pauses.',
@@ -1739,14 +1740,14 @@ const [messages, setMessages] = useState(() => {
         }
         introParts.push((p.baseline && baselineQ[p.baseline]) || 'Par quoi on commence ?')
         setMessages([{ role:'assistant', content: introParts.join(' ') }])
-        // Paywall d'onboarding « 14 jours offerts » — une seule fois
+        // Paywall d'onboarding « 14 jours offerts », une seule fois
         if (!localStorage.getItem('vitacoach_paywall_vu')) setShowPaywall(true)
       }} />
       </Suspense>
     )
   }
 
-  // ── PAYWALL POST-ONBOARDING — « 14 jours offerts » ─────────────────────────
+  // ── PAYWALL POST-ONBOARDING, « 14 jours offerts » ─────────────────────────
   if (showPaywall && !isPro) {
     return (
       <Suspense fallback={<GlowLoader fullPage />}>
@@ -1772,9 +1773,9 @@ const [messages, setMessages] = useState(() => {
     { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
     // Quatre onglets maximum : au-delà, les libellés deviennent illisibles sur
     // un écran de téléphone. Style, Respiration et Cycle sont des outils qu'on
-    // ouvre ponctuellement — ils vivent dans la rangée « Tes outils » de
+    // ouvre ponctuellement, ils vivent dans la rangée « Tes outils » de
     // l'Accueil, pas dans la barre.
-    // Forum retiré du lancement (décision 2026-07-21) — code conservé, réactivable ici
+    // Forum retiré du lancement (décision 2026-07-21), code conservé, réactivable ici
   ]
 
   const outils = [
@@ -1859,7 +1860,7 @@ const [messages, setMessages] = useState(() => {
           }}
         >
           <span style={{ fontSize: 12, color: 'rgba(80,120,200,0.90)', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
-            Solenn est là pour toi — prends le temps qu'il faut
+            Solenn est là pour toi, prends le temps qu'il faut
           </span>
           <button onClick={() => setSosMode(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.4, marginLeft: 4 }}>✕</button>
         </motion.div>
@@ -1945,7 +1946,7 @@ const [messages, setMessages] = useState(() => {
            Un seul dégradé, SANS mixBlendMode. Le fond était auparavant composé
            de deux halos (#FFF991 à .6 et #FF7112 à .3) en mixBlendMode:multiply
            par-dessus #EDD8CC. Ce rendu est correct sur navigateur de bureau,
-           mais iOS applique mal — voire ignore — le mode multiply en PWA
+           mais iOS applique mal, voire ignore, le mode multiply en PWA
            installée : les deux calques se posaient alors en simple
            semi-transparence, ce qui pâlissait le fond et le faisait virer au
            rose. C'est le fond rose que Jean voyait alors que le code semblait
@@ -1959,7 +1960,7 @@ const [messages, setMessages] = useState(() => {
         background:'radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%)',
       }} />
 
-      {/* ══ AURORA — plein écran fixe, actif uniquement sur l'onglet chat ══ */}
+      {/* ══ AURORA, plein écran fixe, actif uniquement sur l'onglet chat ══ */}
       {onglet === 'chat' && <div className="aurora-bg" style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none' }} />}
 
       {/* ══ SIDEBAR (desktop) ══ */}
@@ -2001,13 +2002,13 @@ const [messages, setMessages] = useState(() => {
                 {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#C87B52" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
-            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro — 44,99€/an</button>}
+            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro · 44,99€/an</button>}
             {isPro && (
               <button onClick={gererAbonnement} disabled={portailEnCours}
                 style={{ ...s.proBadge, width:'100%', cursor: portailEnCours ? 'wait' : 'pointer',
                          display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
                 <StarIcon size={14} color="#fbbf24" />
-                {portailEnCours ? 'Ouverture…' : 'Membre Pro — gérer mon abonnement'}
+                {portailEnCours ? 'Ouverture…' : 'Membre Pro · gérer mon abonnement'}
               </button>
             )}
             <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
@@ -2046,15 +2047,15 @@ const [messages, setMessages] = useState(() => {
 
       {/* ══ MAIN ══ */}
       <main style={{ ...s.main, marginLeft: isMobile ? 0 : 260 }}>
-        {/* Accueil : padding bas 0 — le ciel de HomeTab doit toucher le bord de
+        {/* Accueil : padding bas 0, le ciel de HomeTab doit toucher le bord de
             l'écran (le padding 130 laissait une bande abricot sous le ciel).
-            Chat : overflow hidden — SEULE la zone de messages scrolle, la barre
+            Chat : overflow hidden, SEULE la zone de messages scrolle, la barre
             de saisie ne bouge jamais (retours Jean 2026-07-25). */}
         <div ref={contentRef} style={{ ...s.content, maxWidth: (!isMobile && onglet === 'accueil') ? '100%' : 860, /* 64px ne suffisait plus : le header fixe fait environ safe-area + 66px, donc
    le titre de page et le bouton Historique du chat passaient sous le logo et
    sous le menu. 92px laisse le contenu démarrer proprement sous le voile.
    En bas, 168px au lieu de 130 : la barre d'onglets dépliée est plus haute que
-   l'ancienne pastille et recouvrait le dernier bloc de chaque page — le
+   l'ancienne pastille et recouvrait le dernier bloc de chaque page, le
    « Guide des exercices » devenait même impossible à toucher. */
 /* Le bas est calculé à partir de la barre de navigation réelle (pastille
    flottante : safe-area + 10px d'écart + ~62px de haut) au lieu d'un 168px
@@ -2094,7 +2095,7 @@ padding: isMobile
             </div>
           )}
 
-          {/* Mobile header — transparent sur Accueil, plein sur les autres onglets */}
+          {/* Mobile header, transparent sur Accueil, plein sur les autres onglets */}
           {isMobile && onglet === 'accueil' && (
             <div style={{
               position:'fixed', top:0, left:0, right:0, zIndex:50,
@@ -2161,7 +2162,7 @@ padding: isMobile
             const iconColor = 'rgba(178,102,62,0.92)'
             return (
             <div style={s.mobileHeader}>
-              {/* Logo — identique sur tous les onglets */}
+              {/* Logo, identique sur tous les onglets */}
               <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
                 <style>{`
                   @keyframes headerShimmer {
@@ -2190,7 +2191,7 @@ padding: isMobile
               </div>
 
               <div style={{ display:'flex', alignItems:'center', gap:8, pointerEvents:'auto' }}>
-                {/* ── Historique des conversations — dans le header plutôt que
+                {/* ── Historique des conversations, dans le header plutôt que
                        flottant au-dessus des bulles, où il occupait une ligne
                        entière pour lui seul (retour Jean 2026-08-08) ── */}
                 {onglet === 'chat' && user?.id && (
@@ -2406,7 +2407,7 @@ padding: isMobile
               minHeight:0 est OBLIGATOIRE ici. Un enfant flex vaut
               min-height:auto par défaut : il refuse de devenir plus petit que
               son contenu. Sans cette ligne, ce conteneur grandissait avec la
-              conversation, donc chatWrap et chatBox aussi — chatBox n'avait
+              conversation, donc chatWrap et chatBox aussi, chatBox n'avait
               jamais de hauteur bornée et son overflowY:auto n'avait rien à
               scroller. Le trop-plein était coupé par main{overflow:hidden} :
               on voyait la fin du fil et remonter était impossible. Le maillon
@@ -2461,9 +2462,9 @@ padding: isMobile
                       {profil?.prenom || profil?.nom ? `Comment je peux t'aider, ${((profil.prenom || profil.nom) || '').charAt(0).toUpperCase() + ((profil.prenom || profil.nom) || '').slice(1).toLowerCase()} ?` : `Comment je peux t'aider ?`}
                     </div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
-                    {/* Transparence IA — AI Act art. 50 (obligatoire août 2026) + confiance */}
+                    {/* Transparence IA, AI Act art. 50 (obligatoire août 2026) + confiance */}
                     <div style={{ fontSize:10.5, color:'rgba(200,123,82,0.55)', marginTop:-8, marginBottom:16 }}>
-                      Solenn est une intelligence artificielle — ses conseils ne remplacent pas un avis médical.
+                      Solenn est une intelligence artificielle, ses conseils ne remplacent pas un avis médical.
                     </div>
 
                     {streak > 0 && (
@@ -2486,7 +2487,7 @@ padding: isMobile
 
                 {messages.map((msg, i) => (
                   <div key={i} style={msg.role==='user' ? s.userMsg : s.botMsg}>
-                    {/* Avatar Solenn — visible sur le premier message d'une série IA */}
+                    {/* Avatar Solenn, visible sur le premier message d'une série IA */}
                     {msg.role === 'assistant' && (i === 0 || messages[i-1]?.role === 'user') && (
                       <div style={{ flexShrink:0, marginTop:4, paddingLeft:3 }}>
                         <SolennFace size={30} />
@@ -2582,7 +2583,7 @@ padding: isMobile
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Follow-up chips — scroll horizontal */}
+              {/* Follow-up chips, scroll horizontal */}
               {followUps.length > 0 && !loading && (
                 <div style={{ display:'flex', gap:7, marginBottom:10, overflowX:'auto', flexWrap:'nowrap', paddingBottom:2, position:'relative', zIndex:1, scrollbarWidth:'none' }}>
                   {followUps.map((sug, i) => (
@@ -2643,7 +2644,7 @@ padding: isMobile
           )}
 
           {/* ── Style ── */}
-          {/* Retour — les pages outils (Style, Respiration, Soins, Cycle) ne
+          {/* Retour, les pages outils (Style, Respiration, Soins, Cycle) ne
               figurent pas dans la barre du bas : on y entre depuis l'accueil et
               rien ne permettait d'en ressortir. Le balayage iOS existe mais il
               n'est pas visible, et il n'existe pas du tout sur Android
@@ -2774,7 +2775,7 @@ padding: isMobile
       {/* Celebration overlay */}
       {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
 
-      {/* Health permission modal — 1er lancement */}
+      {/* Health permission modal, 1er lancement */}
       {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} />}
 
       {/* Global animations */}
@@ -2979,7 +2980,7 @@ padding: isMobile
           100% { background-position: -200% 0; }
         }
         * { -webkit-tap-highlight-color: transparent; }
-        /* Scrollbar cachée sur mobile — scroll tactile suffisant */
+        /* Scrollbar cachée sur mobile, scroll tactile suffisant */
         ::-webkit-scrollbar { display:none; width:0; height:0; }
         * { scrollbar-width:none; }
       `}</style>
@@ -2997,7 +2998,7 @@ function NutritionCard({ nutrition }) {
         <div key={i} style={sr.repasRow}>
           <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(34,197,94,0.55)" /></span>
           <div style={{ fontSize:12, color:'rgba(200,123,82,0.65)', lineHeight:1.5 }}>
-            <strong style={{ color:'rgba(200,123,82,0.90)', fontWeight:500 }}>{r.moment}</strong> — {r.suggestion}
+            <strong style={{ color:'rgba(200,123,82,0.90)', fontWeight:500 }}>{r.moment}</strong>, {r.suggestion}
           </div>
         </div>
       ))}
@@ -3086,10 +3087,10 @@ const sr = {
     borderTop:'1px solid #f8f4f0' },
 }
 
-// ─── TENUES MODULE — CAPSULE SLIDER 3D ───────────────────────────────────────
+// ─── TENUES MODULE, CAPSULE SLIDER 3D ───────────────────────────────────────
 
 // Cartes capsule claires AVEC photo (retour Jean 2026-07-25 : elle veut des
-// images — mais des vêtements posés à plat, pas des photoshoots de personnes).
+// images, mais des vêtements posés à plat, pas des photoshoots de personnes).
 // Requête biaisée « flat lay clothing » ; si l'image manque, la carte reste
 // belle avec l'icône. Skeleton clair (fini le fond sombre).
 function TenueCard({ tenue, style: extraStyle }) {
@@ -3245,7 +3246,7 @@ function CapsuleSlider({ tenues, loading }) {
   const count = loading ? 6 : tenues.length
   const clamp = v => Math.max(0, Math.min(count - 1, v))
 
-  // Keyboard navigation — géré via onKeyDown sur le container, pas window
+  // Keyboard navigation, géré via onKeyDown sur le container, pas window
 
   // Reset active index when tenues change
   useEffect(() => { setActive(0) }, [tenues.length])
@@ -3462,7 +3463,7 @@ function TenuesModule({ profil }) {
   }
   .tenues-select option { background: #F5E8D8; color: rgba(160,80,20,0.92); }
 `}</style>
-      {/* Controls — toujours visibles */}
+      {/* Controls, toujours visibles */}
       <div style={{ ...st.panel, marginBottom: 0 }}>
         {/* Ligne 1 : champ ville */}
         <div style={{ marginBottom: 8 }}>
@@ -3535,7 +3536,7 @@ function TenuesModule({ profil }) {
         )}
       </div>
 
-      {/* Capsule Slider — hors du panel pour ne pas être rogné par les bords */}
+      {/* Capsule Slider, hors du panel pour ne pas être rogné par les bords */}
       {(loading || tenues.length > 0) && (
         <div style={{ marginTop: 20 }}>
           <CapsuleSlider tenues={tenues} loading={loading} />
@@ -3622,7 +3623,7 @@ const s = {
   sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
-    /* Géré par ShinyLogoText — statique par défaut, shimmer au hover/tap */
+    /* Géré par ShinyLogoText, statique par défaut, shimmer au hover/tap */
     background:'linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
@@ -3694,7 +3695,7 @@ const s = {
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)',
     // Voile dégradé + flou progressif : le logo et le menu restent lisibles quand
     // le contenu scrolle dessous (les bulles du chat passaient encore sur le
-    // logo, capture Jean 2026-07-27 — voile renforcé + backdrop blur masqué)
+    // logo, capture Jean 2026-07-27, voile renforcé + backdrop blur masqué)
     // Voile plus couvrant sur sa moitié haute : les cartes du carrousel
     // passaient par-dessus le logo en scrollant (retour Jean 2026-08-08).
     background:'linear-gradient(180deg, rgba(240,220,203,1) 0%, rgba(240,220,203,0.98) 48%, rgba(240,220,203,0.70) 72%, rgba(240,220,203,0) 100%)',
@@ -3757,7 +3758,7 @@ const s = {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
     color:'rgba(200,123,82,0.80)',
-    // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 % — les deux
+    // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 %, les deux
     // cumules donnaient des bulles a 58 % de l'ecran, et « Plan d'action »
     // passait sur deux lignes (constat Jean 2026-08-13).
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'100%',
@@ -3883,7 +3884,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
     setInput('')
     onSend(msg)
   }
-  // Photo de repas : compression canvas (max 1024px, jpeg 0.75) avant envoi —
+  // Photo de repas : compression canvas (max 1024px, jpeg 0.75) avant envoi,
   // assez précis pour l'analyse vision, assez léger pour la 4G
   function handleFile(e) {
     const file = e.target.files?.[0]
