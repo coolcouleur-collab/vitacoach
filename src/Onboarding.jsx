@@ -1169,7 +1169,15 @@ function premiereLecture(a) {
 
   return (
     <div className="ob-outer" style={{
-      minHeight:'100vh',
+      // HAUTEUR, pas min-height. tokens.css met body en position:fixed et
+      // #root en overflow:hidden pour supprimer le rebond elastique d'iOS :
+      // plus rien ne defile au niveau du document. Avec un simple min-height,
+      // ce conteneur GRANDIT au-dela de l'ecran au lieu de defiler, son
+      // overflow-y:auto ne se declenche jamais faute de hauteur definie, et
+      // #root le coupe net. Les dernieres questions devenaient inatteignables
+      // (signale par Jean le 2026-08-14, questionnaire sante).
+      height:'100%',
+      minHeight:'100%',
       background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       fontFamily:"'Poppins', sans-serif",
       display:'flex', flexDirection:'column',
@@ -1203,7 +1211,7 @@ function premiereLecture(a) {
           .ob-outer {
             max-width: 520px;
             margin: 0 auto;
-            min-height: 100vh;
+            height: 100%;
             box-shadow:
               -1px 0 0 rgba(255,220,160,0.18),
               1px 0 0 rgba(255,220,160,0.18),
