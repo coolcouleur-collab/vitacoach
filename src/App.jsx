@@ -1998,13 +1998,12 @@ const [messages, setMessages] = useState(() => {
               </div>
             </div>
             {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro · 44,99€/an</button>}
-            {/* Acces Pro pose a la main en base : aucun abonnement Stripe
-                derriere, donc rien a gerer. On affiche l'encart simple plutot
-                qu'un bouton qui repond « il n'y a rien ici » (Jean 2026-08-14). */}
-            {isPro && profil?.proManuel && (
-              <div style={s.proBadge}><StarIcon size={14} color="#fbbf24" /> Membre Pro</div>
-            )}
-            {isPro && !profil?.proManuel && (
+            {/* Un seul comportement pour tous les abonnes. J'avais d'abord
+                masque le bouton pour les acces Pro poses a la main : resultat,
+                un encart qui ressemble a un bouton et ne repond pas quand on
+                clique dessus (Jean, 2026-08-14). La page sait desormais
+                expliquer ce cas elle-meme. */}
+            {isPro && (
               <button onClick={gererAbonnement}
                 style={{ ...s.proBadge, width:'100%', cursor:'pointer',
                          display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
