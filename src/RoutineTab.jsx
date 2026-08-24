@@ -796,7 +796,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.90)' }}>Guide des exercices</div>
-            <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Les 12 gestes montrés et expliqués</div>
+            <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Les 25 gestes montrés et expliqués</div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>

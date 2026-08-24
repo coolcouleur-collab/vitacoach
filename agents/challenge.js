@@ -211,7 +211,12 @@ ${contexteCycle}
 ═══ SÉANCES ═══
 Quand un jour comporte du mouvement, décris-le dans "seance" avec ces identifiants
 UNIQUEMENT : squat, gainage, fente, pont, chaise, chatvache, marche, etirement,
-pompe, pompegenoux, superman, dips.
+pompe, pompegenoux, superman, dips, mountainclimber, jumpingjack, crunch,
+russiantwist, birddog, donkeykick, mollets, stepup, genouxhauts, squatsaute,
+fentelaterale, planchelateral, legraise.
+Niveaux : squatsaute, mountainclimber et genouxhauts sont INTENSES, réserve-les
+aux profils actifs ou aux cycles 2 et plus. birddog, mollets, crunch et
+chatvache conviennent à tous dès le jour 1.
 Ils correspondent au guide des exercices de l'app, qui montre le geste en photo.
 Les jours sans mouvement (sommeil, respiration, nutrition) n'ont pas de "seance".
 
