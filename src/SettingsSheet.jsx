@@ -352,6 +352,7 @@ export default function SettingsSheet({
   msgsRestants = null,
   trialDaysLeft = null,
   userId = null,
+  authHeaders = async () => ({}),
   onMetriqueUpdate,
   onClose,
   onSaveProfil,
@@ -360,6 +361,53 @@ export default function SettingsSheet({
   onResetMemoire,
   onExportData,
 }) {
+  // ── Abonnement reel, lu chez Stripe ────────────────────────────────────────
+  // La resiliation vit ICI, dans la section Mon Abonnement des Parametres, et
+  // non dans une feuille flottante par-dessus : c'est sa place naturelle, elle
+  // se comporte correctement sur mobile puisque cette feuille defile deja, et
+  // l'utilisateur la trouve la ou il la cherche (Jean, 2026-08-14).
+  const [abo, setAbo] = useState(null)
+  const [aboEtat, setAboEtat] = useState('chargement')
+  const [aboMsg, setAboMsg] = useState('')
+  const [confirmResil, setConfirmResil] = useState(false)
+  const [aboOccupe, setAboOccupe] = useState(false)
+
+  useEffect(() => {
+    if (!isPro || !userId) { setAboEtat('inutile'); return }
+    let vivant = true
+    ;(async () => {
+      try {
+        const r = await fetch(`/api/abonnement?userId=${userId}`, { headers: await authHeaders() })
+        const d = await r.json()
+        if (!vivant) return
+        if (d?.abonnement) { setAbo(d.abonnement); setAboEtat('pret') }
+        else if (d?.sansAbonnement) { setAboEtat('offert') }
+        else setAboEtat('erreur')
+      } catch { if (vivant) setAboEtat('erreur') }
+    })()
+    return () => { vivant = false }
+  }, [isPro, userId])
+
+  async function actionAbo(route) {
+    if (aboOccupe) return
+    setAboOccupe(true)
+    try {
+      const r = await fetch(`/api/abonnement/${route}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+        body: JSON.stringify({ userId }),
+      })
+      const d = await r.json()
+      if (d?.abonnement) { setAbo(d.abonnement); setConfirmResil(false); setAboMsg('') }
+      else setAboMsg("L'opération n'a pas abouti. Réessaie dans un instant.")
+    } catch { setAboMsg("L'opération n'a pas abouti. Réessaie dans un instant.") }
+    setAboOccupe(false)
+  }
+
+  const jourMois = ms => ms
+    ? new Date(ms).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
   const [confirmReset, setConfirmReset] = useState(false)
   const [confirmSuppr, setConfirmSuppr] = useState(false)
   const [supprEnCours, setSupprEnCours] = useState(false)
@@ -771,6 +819,78 @@ export default function SettingsSheet({
                 }}>
                   Merci de faire partie de l'aventure
                 </div>
+
+                {/* ── Detail et resiliation ───────────────────────────────── */}
+                {aboEtat === 'pret' && abo && (
+                  <div style={{ marginTop: 14, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 12 }}>
+                    {[
+                      ['Formule', 'Solenn Pro · ' + (abo.periode === 'an' ? 'annuel' : 'mensuel')],
+                      ['Montant', abo.montant != null ? abo.montant.toFixed(2).replace('.', ',') + ' € par ' + abo.periode : null],
+                      abo.carte ? ['Carte', abo.carte.marque + ' ····' + abo.carte.fin] : null,
+                      [abo.resilie ? 'Accès jusqu’au' : 'Prochain prélèvement', jourMois(abo.finPeriode)],
+                    ].filter(l => l && l[1]).map(([k, v]) => (
+                      <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '5px 0' }}>
+                        <span style={{ fontFamily: C.font, fontSize: 12.5, color: C.textMuted }}>{k}</span>
+                        <span style={{ fontFamily: C.font, fontSize: 12.5, fontWeight: 600, color: C.text, textAlign: 'right' }}>{v}</span>
+                      </div>
+                    ))}
+
+                    {abo.resilie ? (
+                      <>
+                        <div style={{ fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.55, margin: '10px 0' }}>
+                          Résilié. Tu gardes tout jusqu’à cette date, puis rien ne sera prélevé.
+                        </div>
+                        <button onClick={() => actionAbo('reprendre')} disabled={aboOccupe} style={{
+                          width: '100%', padding: '11px 0', borderRadius: 12, cursor: 'pointer',
+                          background: 'rgba(232,150,42,0.10)', border: '1px solid rgba(232,150,42,0.30)',
+                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: '#E8962A',
+                        }}>{aboOccupe ? 'Un instant…' : 'Reprendre mon abonnement'}</button>
+                      </>
+                    ) : confirmResil ? (
+                      <div style={{ marginTop: 10 }}>
+                        <div style={{ fontFamily: C.font, fontSize: 12.5, color: C.text, lineHeight: 1.55, marginBottom: 10 }}>
+                          Tu confirmes ? Tu gardes ton accès jusqu’au {jourMois(abo.finPeriode)}, et rien ne sera prélevé ensuite.
+                        </div>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <button onClick={() => setConfirmResil(false)} style={{
+                            flex: 1, padding: '11px 0', borderRadius: 12, cursor: 'pointer',
+                            background: 'rgba(255,235,210,0.55)', border: '1px solid ' + C.border,
+                            fontFamily: C.font, fontSize: 13, fontWeight: 700, color: C.text,
+                          }}>Garder</button>
+                          <button onClick={() => actionAbo('annuler')} disabled={aboOccupe} style={{
+                            flex: 1, padding: '11px 0', borderRadius: 12, cursor: 'pointer',
+                            background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.22)',
+                            fontFamily: C.font, fontSize: 13, fontWeight: 700, color: 'rgba(239,68,68,0.78)',
+                          }}>{aboOccupe ? 'Un instant…' : 'Résilier'}</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button onClick={() => setConfirmResil(true)} style={{
+                        width: '100%', marginTop: 10, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
+                        background: 'transparent', border: '1px solid ' + C.border,
+                        fontFamily: C.font, fontSize: 12.5, fontWeight: 600, color: C.textMuted,
+                      }}>Résilier mon abonnement</button>
+                    )}
+
+                    {aboMsg && (
+                      <div style={{ fontFamily: C.font, fontSize: 12, color: 'rgba(239,68,68,0.78)', marginTop: 8 }}>{aboMsg}</div>
+                    )}
+                  </div>
+                )}
+
+                {aboEtat === 'offert' && (
+                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 10,
+                                fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.55 }}>
+                    Accès offert, activé directement sur ton compte. Aucun prélèvement, rien à résilier.
+                  </div>
+                )}
+
+                {aboEtat === 'erreur' && (
+                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 10,
+                                fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.55 }}>
+                    Je n’arrive pas à lire le détail de ton abonnement pour le moment.
+                  </div>
+                )}
               </Card>
             ) : (
               /* Card upgrade */

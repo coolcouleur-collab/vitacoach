@@ -41,7 +41,6 @@ async function authHeaders() {
 
 const MorningCheckin = lazy(() => import('./MorningCheckin'))
 const SettingsSheet  = lazy(() => import('./SettingsSheet'))
-const AbonnementSheet = lazy(() => import('./AbonnementSheet'))
 
 // Lazy, chargés uniquement quand l'utilisateur y accède
 const Auth          = lazy(() => import('./Auth'))
@@ -1381,23 +1380,12 @@ const [messages, setMessages] = useState(() => {
   // ses factures. Sans lui, « Membre Pro » etait un encart mort et l'abonne
   // n'avait aucun moyen de resilier, ni conforme aux magasins, ni a
   // l'article L215-1-1 du code de la consommation (2026-08-14).
-  // Ouvre la page d'abonnement de Solenn. On ne renvoie plus vers la page
-  // Stripe : Jean voulait la gestion DANS l'app, dans sa palette (2026-08-14).
-  const [showAbonnement, setShowAbonnement] = useState(false)
+  // Le bouton Membre Pro ouvre les Parametres, dont la section
+  // « Mon Abonnement » porte desormais le detail et la resiliation. Une
+  // feuille flottante par-dessus les Parametres etait une mauvaise idee :
+  // mauvaise place, et rendu bancal (Jean, 2026-08-14).
   function gererAbonnement() {
-    // Conformite Apple 3.1.1 : rien qui mene a un paiement hors du magasin
-    // dans le build natif, meme pour resilier.
-    if (window?.Capacitor?.isNativePlatform?.()) {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: `Pour gérer ou résilier ton abonnement, rends-toi sur meet-solenn.com depuis un navigateur.`
-      }])
-      setOnglet('chat')
-      setShowSettings(false)
-      return
-    }
-    setShowSettings(false)
-    setShowAbonnement(true)
+    setShowSettings(true)
   }
 
   async function passerPro(plan) {
@@ -1848,25 +1836,12 @@ const [messages, setMessages] = useState(() => {
       )}
 
 
-      {/* ── Mon abonnement ──
-          Monte au meme niveau que la feuille des reglages, PAS dedans :
-          gererAbonnement ferme les reglages avant d'ouvrir celle-ci, une
-          feuille imbriquee ne s'afficherait donc jamais. */}
-      {showAbonnement && (
-        <Suspense fallback={null}>
-          <AbonnementSheet
-            userId={user?.id}
-            authHeaders={authHeaders}
-            onClose={() => setShowAbonnement(false)}
-          />
-        </Suspense>
-      )}
-
       {/* ── Settings Sheet ── */}
       <AnimatePresence>
         {showSettings && profil && (
           <Suspense fallback={null}>
           <SettingsSheet
+            authHeaders={authHeaders}
             profil={profil}
             preset={homePreset}
             notifsEnabled={notifEnabled}
