@@ -318,11 +318,30 @@ async function syncMetriquesSupabase(userId, m) {
   }, { onConflict: 'user_id,date' })
 }
 
+// Les champs d'abonnement appartiennent au webhook Stripe et au serveur.
+// Le client ne les ecrit JAMAIS : il recopie ceux de la base.
+const CHAMPS_ABONNEMENT = ['isPro', 'proSince', 'proPlan', 'proEnd',
+  'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId']
+
 async function syncProfilSupabase(userId, profil) {
   if (!userId) return
   const supabase = await getSupabase()
+
+  // Cet upsert reecrit le profil ENTIER, il ne fusionne pas. Sans la
+  // preservation ci-dessous, terminer l'inscription — qui construit un profil
+  // avec `isPro: false` en dur (Onboarding.jsx) — effacait l'abonnement de
+  // quelqu'un qui venait de payer. Meme piege pour toute sauvegarde de profil
+  // faite depuis l'app (2026-08-14).
+  const aEcrire = { ...profil }
+  try {
+    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+    for (const k of CHAMPS_ABONNEMENT) {
+      if (data?.profil?.[k] !== undefined) aEcrire[k] = data.profil[k]
+    }
+  } catch (_) {}
+
   const { error } = await supabase.from('profils').upsert({
-    user_id: userId, profil,
+    user_id: userId, profil: aEcrire,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id' })
   if (error) {
@@ -330,7 +349,7 @@ async function syncProfilSupabase(userId, profil) {
       try {
         const sb = await getSupabase()
         await sb.from('profils').upsert({
-          user_id: userId, profil,
+          user_id: userId, profil: aEcrire,
           updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id' })
       } catch (_) {}
@@ -1020,14 +1039,8 @@ const [messages, setMessages] = useState(() => {
           } else if (local?.nom) {
             // La base est vide ou amputée mais l'appareil a un profil rempli :
             // c'est la base qu'on répare, jamais l'appareil qu'on vide.
-            // Les champs d'abonnement sont ecrits par le webhook Stripe et
-            // n'existent que dans la base : les reporter, sinon reparer le
-            // profil d'un abonne au profil incomplet lui retirait son Pro.
-            const CHAMPS_PRO = ['isPro', 'proSince', 'proPlan', 'proEnd',
-              'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId']
-            const garde = {}
-            for (const k of CHAMPS_PRO) if (base?.[k] !== undefined) garde[k] = base[k]
-            syncProfilSupabase(user.id, { ...local, ...garde })
+            // Les champs d'abonnement sont preserves par syncProfilSupabase.
+            syncProfilSupabase(user.id, local)
           }
           setProfilLoading(false)
         })
