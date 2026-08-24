@@ -1005,6 +1005,84 @@ app.get('/api/check-subscription', ownerGuard, async (req, res) => {
   }
 })
 
+// ─── ABONNEMENT — page de gestion dans Solenn ────────────────────────────────
+// Jean ne voulait pas renvoyer l'abonne vers une page Stripe : la gestion se
+// fait dans l'app, dans sa palette (2026-08-14). Le portail Stripe reste
+// accessible en secondaire, uniquement pour le changement de carte : saisir un
+// moyen de paiement ne doit jamais transiter par notre interface.
+
+async function abonnementDe(userId) {
+  const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+  const prof = data?.profil || {}
+  const subId = prof.stripeSubscriptionId
+  if (!subId || !stripe) return { prof, sub: null }
+  const sub = await stripe.subscriptions.retrieve(subId, { expand: ['default_payment_method'] })
+  return { prof, sub }
+}
+
+function resumeAbonnement(sub) {
+  const item = sub.items?.data?.[0]
+  const prix = item?.price
+  const carte = sub.default_payment_method?.card
+  return {
+    statut: sub.status,
+    montant: prix?.unit_amount != null ? prix.unit_amount / 100 : null,
+    devise: (prix?.currency || 'eur').toUpperCase(),
+    periode: prix?.recurring?.interval === 'year' ? 'an' : 'mois',
+    finPeriode: sub.current_period_end ? sub.current_period_end * 1000 : null,
+    resilie: !!sub.cancel_at_period_end,
+    carte: carte ? { marque: carte.brand, fin: carte.last4 } : null,
+  }
+}
+
+// GET /api/abonnement?userId=... → l'etat reel, lu chez Stripe
+app.get('/api/abonnement', ownerGuard, async (req, res) => {
+  const userId = req.query.userId || req.authUser?.id
+  if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
+  try {
+    const { prof, sub } = await abonnementDe(userId)
+    if (!sub) return res.json({ sansAbonnement: true, proManuel: prof.proManuel === true, isPro: prof.isPro === true })
+    res.json({ abonnement: resumeAbonnement(sub) })
+  } catch (e) {
+    console.error('[abonnement]', e.message)
+    res.status(500).json({ erreur: e.message })
+  }
+})
+
+// POST /api/abonnement/annuler → resiliation A LA FIN DE LA PERIODE PAYEE.
+// Jamais immediate : l'annee est deja reglee, la couper prive l'abonne de ce
+// qu'il a paye et ouvrirait un droit a remboursement.
+app.post('/api/abonnement/annuler', ownerGuard, async (req, res) => {
+  const userId = req.body?.userId || req.authUser?.id
+  if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
+  try {
+    const { sub } = await abonnementDe(userId)
+    if (!sub) return res.status(404).json({ sansAbonnement: true })
+    const maj = await stripe.subscriptions.update(sub.id, { cancel_at_period_end: true })
+    console.log('[abonnement] resiliation programmee pour', userId)
+    res.json({ abonnement: resumeAbonnement(maj) })
+  } catch (e) {
+    console.error('[abonnement/annuler]', e.message)
+    res.status(500).json({ erreur: e.message })
+  }
+})
+
+// POST /api/abonnement/reprendre → on annule l'annulation, tant que la periode
+// payee court encore.
+app.post('/api/abonnement/reprendre', ownerGuard, async (req, res) => {
+  const userId = req.body?.userId || req.authUser?.id
+  if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
+  try {
+    const { sub } = await abonnementDe(userId)
+    if (!sub) return res.status(404).json({ sansAbonnement: true })
+    const maj = await stripe.subscriptions.update(sub.id, { cancel_at_period_end: false })
+    res.json({ abonnement: resumeAbonnement(maj) })
+  } catch (e) {
+    console.error('[abonnement/reprendre]', e.message)
+    res.status(500).json({ erreur: e.message })
+  }
+})
+
 // POST /api/portail-client → ouvre le portail d'abonnement Stripe
 // Un abonne n'avait AUCUN moyen de resilier depuis l'app : « Membre Pro »
 // etait un simple encart non cliquable. Or depuis le 1er juin 2023, l'article
