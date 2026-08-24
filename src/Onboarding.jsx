@@ -355,6 +355,8 @@ function iconCircleStyle(isSel) {
 }
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+const DERNIERE_ETAPE = 11
+
 export default function Onboarding({ onTermine, onBack }) {
   // Consentement explicite au traitement des donnees de sante. Le RGPD les
   // classe en categorie particuliere (article 9) : l'acceptation des CGU ne
@@ -362,9 +364,14 @@ export default function Onboarding({ onTermine, onBack }) {
   // prouver la date. Il n'existait rien (constat 2026-08-12).
   const [consentSante, setConsentSante] = useState(false)
 
+  // Derniere etape de renderStep. Toute valeur au-dela rendait `null` : la
+  // page se vidait, en-tete et barre de progression compris, et l'etape etant
+  // memorisee dans sessionStorage, recharger n'en sortait pas. Blocage
+  // constate par Jean le 2026-08-14.
   const [step, setStep] = useState(() => {
     const s = sessionStorage.getItem('solenn_onboarding_step')
-    return s ? parseInt(s, 10) : 0
+    const n = s ? parseInt(s, 10) : 0
+    return Number.isFinite(n) ? Math.min(Math.max(n, 0), DERNIERE_ETAPE) : 0
   })
   const [answers, setAnswers] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem('solenn_onboarding_answers') || '{}') } catch { return {} }
@@ -469,7 +476,7 @@ function premiereLecture(a) {
     setAnswers(newAnswers)
     setSlideDir(1)
     setTapped(null)
-    setStep(s => s + 1)
+    setStep(s => Math.min(s + 1, DERNIERE_ETAPE))
   }
 
   function goBack() {
@@ -479,6 +486,11 @@ function premiereLecture(a) {
   }
 
   function tapThen(key, fn) {
+    // L'avancee est differee de 230 ms pour laisser voir l'animation du choix.
+    // Sans ce garde, une seconde tape pendant ce delai faisait avancer DEUX
+    // fois : depuis l'avant-derniere question, le compteur sautait par-dessus
+    // la derniere etape et la page se vidait. Facile a declencher au doigt.
+    if (tapped) return
     setTapped(key)
     setTimeout(fn, 230)
   }
@@ -1149,6 +1161,9 @@ function premiereLecture(a) {
       )
     }
 
+    // Filet de securite : plus jamais d'ecran vide. Une etape hors liste
+    // ramene a la derniere question plutot que de rendre `null`.
+    if (step > DERNIERE_ETAPE) { setTimeout(() => setStep(DERNIERE_ETAPE), 0); return null }
     return null
   }
 
