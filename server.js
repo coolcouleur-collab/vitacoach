@@ -989,11 +989,20 @@ app.post('/api/push-native-subscribe', ownerGuard, async (req, res) => {
   if (!['ios', 'android'].includes(platform)) return res.status(400).json({ erreur: 'plateforme inconnue' })
   if (!supabase) return res.status(500).json({ erreur: 'base indisponible' })
   try {
+    // On n'ecrit QUE les colonnes indispensables. last_seen a une valeur par
+    // defaut en base et se met a jour juste apres, separement : nommer une
+    // colonne absente du cache de schema fait rejeter TOUTE la requete par
+    // PostgREST, et l'enregistrement echouerait entierement pour une donnee
+    // purement informative. C'est le piege qui a fait qu'aucun profil
+    // n'arrivait en base pendant des semaines (2026-08-14).
     const { error } = await supabase.from('push_tokens').upsert(
-      { user_id: userId, token, platform, last_seen: new Date().toISOString() },
+      { user_id: userId, token, platform },
       { onConflict: 'user_id,token' },
     )
     if (error) throw new Error(error.message)
+    // Confort, jamais bloquant.
+    supabase.from('push_tokens').update({ last_seen: new Date().toISOString() })
+      .eq('user_id', userId).eq('token', token).then(() => {}, () => {})
     res.json({ ok: true, envoiConfigure: !!process.env.FIREBASE_SERVICE_ACCOUNT })
   } catch (e) {
     console.error('[Push natif] enregistrement echoue :', e.message)
