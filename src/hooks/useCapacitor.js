@@ -23,6 +23,58 @@ export function getPlatform() {
   return window?.Capacitor?.getPlatform?.() || 'web'
 }
 
+/**
+ * Enregistre CET appareil pour les notifications natives (APNs / FCM).
+ *
+ * Exportee au niveau module, et pas seulement dans le hook : l'interrupteur des
+ * reglages en a besoin, et le hook n'etait importe nulle part. Resultat, dans
+ * l'app installee l'interrupteur affichait un message et ne faisait rien
+ * (constate par Jean le 2026-08-14).
+ *
+ * Retourne true si la permission est accordee. L'envoi du jeton au serveur se
+ * fait ensuite, quand le systeme le fournit.
+ */
+export async function demanderPushNatif(userId) {
+  if (!isNativeApp()) return false
+  try {
+    const { PushNotifications } = await import('@capacitor/push-notifications')
+
+    const perm = await PushNotifications.requestPermissions()
+    if (perm.receive !== 'granted') return false
+
+    // Un echec d'enregistrement doit se VOIR. Sans cet ecouteur, un mauvais
+    // certificat APNs ou un identifiant d'app qui ne correspond pas echoue en
+    // silence et l'app croit les rappels actifs.
+    PushNotifications.addListener('registrationError', (err) => {
+      console.error('[Push natif] enregistrement refuse :', JSON.stringify(err))
+    })
+
+    PushNotifications.addListener('registration', async (token) => {
+      try {
+        const rep = await fetch('/api/push-native-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+          body: JSON.stringify({ userId, token: token.value, platform: getPlatform() }),
+        })
+        if (!rep.ok) console.error('[Push natif] serveur a refuse le jeton :', rep.status)
+      } catch (e) {
+        console.error('[Push natif] jeton non transmis :', e.message)
+      }
+    })
+
+    PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+      const url = action.notification?.data?.url
+      if (url) window.location.href = url
+    })
+
+    await PushNotifications.register()
+    return true
+  } catch (e) {
+    console.error('[Push natif] activation impossible :', e.message)
+    return false
+  }
+}
+
 // ─── Types de données Health demandés ────────────────────────────────────────
 const HEALTH_READ_TYPES = [
   'steps',
@@ -74,45 +126,11 @@ export function useCapacitor() {
   }, [isNative])
 
   // ─── Push Notifications Natives ────────────────────────────────────────────
-  const requestPushPermission = useCallback(async () => {
+  const requestPushPermission = useCallback(async (userId) => {
     if (!isNative) return false
-    try {
-      const { PushNotifications } = await import('@capacitor/push-notifications')
-
-      const perm = await PushNotifications.requestPermissions()
-      if (perm.receive !== 'granted') return false
-
-      await PushNotifications.register()
-
-      // Token FCM/APNs → envoyer au serveur
-      PushNotifications.addListener('registration', async (token) => {
-        console.log('[Capacitor] Push token:', token.value)
-        try {
-          await fetch('/api/push-native-subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-            body: JSON.stringify({ token: token.value, platform: getPlatform() }),
-          })
-        } catch (_) {}
-      })
-
-      // Notif reçue en foreground
-      PushNotifications.addListener('pushNotificationReceived', (notif) => {
-        console.log('[Capacitor] Notif reçue:', notif)
-      })
-
-      // Tap sur une notif
-      PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-        const url = action.notification?.data?.url
-        if (url) window.location.href = url
-      })
-
-      setNotifsGranted(true)
-      return true
-    } catch (e) {
-      console.warn('[Capacitor] Push notifications:', e.message)
-      return false
-    }
+    const ok = await demanderPushNatif(userId)
+    if (ok) setNotifsGranted(true)
+    return ok
   }, [isNative])
 
   // ─── Apple Health / Google Fit ─────────────────────────────────────────────

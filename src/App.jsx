@@ -1270,8 +1270,25 @@ const [messages, setMessages] = useState(() => {
 
   // ── Notifications Push ────────────────────────────────────────────────────
   async function activerNotifications() {
+    // ── Application installee (App Store / Play Store) ───────────────────────
+    // Les notifications WEB ne marchent pas ici : iOS ne les autorise que dans
+    // un site ajoute a l'ecran d'accueil. Il faut APNs, via Capacitor. Ce
+    // chemin se contentait d'un message : l'interrupteur ne faisait RIEN dans
+    // l'app installee (Jean, 2026-08-14).
     if (window?.Capacitor?.isNativePlatform?.()) {
-      alert('Les notifications sont configurées via les paramètres de l\'app.')
+      const { demanderPushNatif } = await import('./hooks/useCapacitor.js')
+      const ok = await demanderPushNatif(user?.id)
+      if (ok) {
+        setNotifEnabled(true)
+        localStorage.setItem('vitacoach_notif', JSON.stringify(true))
+      } else {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Je n'ai pas pu activer les rappels. Vérifie que les notifications sont autorisées pour Solenn dans les réglages de ton téléphone.`
+        }])
+        setOnglet('chat')
+        setShowSettings(false)
+      }
       return
     }
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -1329,6 +1346,19 @@ const [messages, setMessages] = useState(() => {
   }
 
   async function desactiverNotifications() {
+    // Application installee : on retire le jeton de CET appareil cote serveur.
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      try {
+        await fetch('/api/push-native-unsubscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+          body: JSON.stringify({ userId: user?.id }),
+        })
+      } catch {}
+      setNotifEnabled(false)
+      localStorage.setItem('vitacoach_notif', JSON.stringify(false))
+      return
+    }
     try {
       const reg = await navigator.serviceWorker.getRegistration('/sw.js')
       if (reg) {
