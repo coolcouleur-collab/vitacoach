@@ -882,11 +882,146 @@ app.post('/api/push-unsubscribe', ownerGuard, async (req, res) => {
   res.json({ ok: true })
 })
 
+// ═══ NOTIFICATIONS NATIVES (iOS / Android) ═══════════════════════════════════
+// Les notifications web ne marchent pas dans une app publiee sur l'App Store :
+// iOS ne les autorise que dans un site ajoute a l'ecran d'accueil. Une vraie
+// app doit passer par APNs. On relaie par Firebase, qui parle a Apple ET a
+// Google, ce qui evite de gerer deux systemes (Jean, 2026-08-14).
+//
+// Configuration attendue sur Render :
+//   FIREBASE_SERVICE_ACCOUNT  le JSON du compte de service, en une seule ligne
+// Sans elle, l'enregistrement des jetons fonctionne mais aucun envoi ne part,
+// et un avertissement est journalise plutot qu'une erreur silencieuse.
+
+let _jetonFirebase = null // { valeur, expire }
+
+async function jetonAccesFirebase() {
+  const brut = process.env.FIREBASE_SERVICE_ACCOUNT
+  if (!brut) return null
+  if (_jetonFirebase && _jetonFirebase.expire > Date.now() + 60_000) return _jetonFirebase.valeur
+  try {
+    const compte = JSON.parse(brut)
+    const maintenant = Math.floor(Date.now() / 1000)
+    const entete = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url')
+    const charge = Buffer.from(JSON.stringify({
+      iss: compte.client_email,
+      scope: 'https://www.googleapis.com/auth/firebase.messaging',
+      aud: 'https://oauth2.googleapis.com/token',
+      iat: maintenant,
+      exp: maintenant + 3600,
+    })).toString('base64url')
+    const signature = crypto.createSign('RSA-SHA256')
+      .update(`${entete}.${charge}`)
+      .sign(compte.private_key, 'base64url')
+    const rep = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        assertion: `${entete}.${charge}.${signature}`,
+      }),
+    })
+    const d = await rep.json()
+    if (!d.access_token) { console.error('[Push natif] jeton Firebase refuse :', JSON.stringify(d).slice(0, 200)); return null }
+    _jetonFirebase = { valeur: d.access_token, expire: Date.now() + (d.expires_in || 3600) * 1000 }
+    return _jetonFirebase.valeur
+  } catch (e) {
+    console.error('[Push natif] FIREBASE_SERVICE_ACCOUNT illisible :', e.message)
+    return null
+  }
+}
+
+/** Envoie une notification native. Retourne true si Firebase l'a acceptee. */
+async function envoyerNatif(token, { title, body, url }) {
+  const acces = await jetonAccesFirebase()
+  if (!acces) return false
+  let projet = null
+  try { projet = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT).project_id } catch {}
+  if (!projet) return false
+  try {
+    const rep = await fetch(`https://fcm.googleapis.com/v1/projects/${projet}/messages:send`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${acces}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: {
+          token,
+          notification: { title, body },
+          data: url ? { url } : {},
+          // Sans cette section, iOS n'affiche RIEN quand l'app est fermee.
+          apns: { payload: { aps: { sound: 'default', badge: 1 } } },
+          android: { priority: 'high', notification: { sound: 'default' } },
+        },
+      }),
+    })
+    if (rep.ok) return true
+    const err = await rep.text()
+    // 404 UNREGISTERED = l'app a ete desinstallee, le jeton est mort.
+    if (rep.status === 404 && supabase) {
+      await supabase.from('push_tokens').delete().eq('token', token)
+      console.log('[Push natif] jeton mort supprime')
+    } else {
+      console.error('[Push natif] envoi refuse', rep.status, err.slice(0, 200))
+    }
+    return false
+  } catch (e) {
+    console.error('[Push natif] envoi impossible :', e.message)
+    return false
+  }
+}
+
+/** Envoie a TOUS les appareils natifs d'un utilisateur. Retourne le nombre d'envois reussis. */
+async function envoyerNatifAUtilisateur(userId, contenu) {
+  if (!supabase) return 0
+  try {
+    const { data } = await supabase.from('push_tokens').select('token').eq('user_id', userId)
+    if (!data?.length) return 0
+    const resultats = await Promise.all(data.map(r => envoyerNatif(r.token, contenu)))
+    return resultats.filter(Boolean).length
+  } catch { return 0 }
+}
+
+// POST /api/push-native-subscribe → enregistre le jeton d'un appareil
+// Un compte peut avoir plusieurs appareils : on empile, on n'ecrase pas.
+app.post('/api/push-native-subscribe', ownerGuard, async (req, res) => {
+  const userId = req.authUser?.id || req.body?.userId
+  const { token, platform } = req.body || {}
+  if (!userId || !token) return res.status(400).json({ erreur: 'userId et token requis' })
+  if (!['ios', 'android'].includes(platform)) return res.status(400).json({ erreur: 'plateforme inconnue' })
+  if (!supabase) return res.status(500).json({ erreur: 'base indisponible' })
+  try {
+    const { error } = await supabase.from('push_tokens').upsert(
+      { user_id: userId, token, platform, last_seen: new Date().toISOString() },
+      { onConflict: 'user_id,token' },
+    )
+    if (error) throw new Error(error.message)
+    res.json({ ok: true, envoiConfigure: !!process.env.FIREBASE_SERVICE_ACCOUNT })
+  } catch (e) {
+    console.error('[Push natif] enregistrement echoue :', e.message)
+    res.status(500).json({ erreur: e.message })
+  }
+})
+
+// POST /api/push-native-unsubscribe → retire le jeton de cet appareil
+app.post('/api/push-native-unsubscribe', ownerGuard, async (req, res) => {
+  const userId = req.authUser?.id || req.body?.userId
+  const { token } = req.body || {}
+  if (!supabase) return res.json({ ok: true })
+  try {
+    const q = supabase.from('push_tokens').delete()
+    if (token) await q.eq('token', token)
+    else if (userId) await q.eq('user_id', userId)
+  } catch { /* le droit de couper prime sur l'accuse */ }
+  res.json({ ok: true })
+})
+
 // ── Envoyer notif a un utilisateur ───────────────────────────────────────────
 app.post('/api/push-send', adminGuard, async (req, res) => {
   const { userId, title, body, url, tag } = req.body
+  // Les appareils natifs d'abord : sur iPhone, c'est le SEUL canal qui marche
+  // dans une app installee depuis l'App Store.
+  const natifs = await envoyerNatifAUtilisateur(userId, { title, body, url })
   const entry = pushSubscriptions.get(userId)
-  if (!entry) return res.status(404).json({ error: 'Subscription introuvable' })
+  if (!entry) return res.json({ ok: natifs > 0, natifs, web: 0 })
   try {
     const { _meta, ...sub } = entry
     await webpush.sendNotification(sub, JSON.stringify({ title, body, url: url || '/', tag }))
