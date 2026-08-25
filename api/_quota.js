@@ -23,7 +23,7 @@ export const PRO_DAILY_CAP = 150
 // verdict d'un essai de sept jours, la progression sur trois semaines. On
 // offrait donc la revelation puis on demandait de payer juste apres. A 14 jours
 // la decision tombe avant, quand l'envie est encore devant.
-export const TRIAL_DAYS = 14
+export const TRIAL_DAYS = 21
 const TRIAL_MS = TRIAL_DAYS * 24 * 3600 * 1000
 
 let _sb = null

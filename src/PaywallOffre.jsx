@@ -1,7 +1,9 @@
-// ─── PAYWALL POST-ONBOARDING, « 14 jours offerts » ──────────────────────────
+// ─── PAYWALL POST-ONBOARDING, « 21 jours offerts » ──────────────────────────
 // Affiché une seule fois, juste après l'onboarding (le combo essai long +
 // paywall d'onboarding est le plus performant de la catégorie, étude de
-// marché 2026-07-21). L'essai de 14 jours (21 jusqu'au 2026-08-12) démarre automatiquement à
+// marché 2026-07-21). L'essai dure 21 jours : ramené à 14 le 2026-08-12, puis remis à 21 le
+// 2026-08-25, la fiche des magasins ayant toujours promis 21 jours et l'essai
+// devant couvrir un programme entier. Démarre automatiquement à
 // l'inscription (auth.users.created_at) : le bouton principal ne fait
 // qu'entrer dans l'app, aucun paiement demandé avant le jour 21.
 // Sur les builds natifs iOS/Android : pas de checkout Stripe (Apple 3.1.1 /
@@ -85,10 +87,10 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
             fontSize: 'clamp(30px, 8vw, 38px)', color: CREME, lineHeight: 1.12,
             textShadow: '0 2px 18px rgba(160,80,20,0.25)',
           }}>
-            {prenom ? `${prenom}, tes` : 'Tes'} 14 premiers jours<br />sont offerts
+            {prenom ? `${prenom}, tes` : 'Tes'} 21 premiers jours<br />sont offerts
           </div>
           <div style={{ fontSize: 13.5, color: CREME_70, marginTop: 10, lineHeight: 1.55 }}>
-            Tout Solenn, sans limite, pendant 14 jours.<br />Aucun paiement demandé aujourd'hui.
+            Tout Solenn, sans limite, pendant 21 jours.<br />Aucun paiement demandé aujourd'hui.
           </div>
         </div>
 
@@ -156,7 +158,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
           border: '1px solid rgba(255,220,160,0.60)',
           boxShadow: '0 0 26px rgba(232,190,100,0.25), inset 0 1px 0 rgba(255,240,200,0.28)',
         }}>
-          Commencer mes 14 jours offerts
+          Commencer mes 21 jours offerts
         </button>
 
         {/* CTA secondaire : s'abonner tout de suite (web uniquement) */}
