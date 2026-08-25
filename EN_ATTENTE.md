@@ -43,6 +43,28 @@ par mois, part directement du dépôt GitHub. Demande une **clé API App Store
 Connect**, à créer dans le compte Apple. Les dossiers `ios/` et `android/` sont
 déjà versionnés, rien à préparer.
 
+### Conformité magasins — jamais fait, trouvé le 2026-08-25
+
+**Incohérence à trancher : la fiche annonce 21 jours d'essai, le code en donne
+14.** Trois occurrences dans `STORES.md` (lignes 26, 73, 99). Promettre 21 jours
+et en donner 14 fait recaler une soumission et génère des plaintes. Décision
+commerciale : corriger la fiche, ou remonter l'essai.
+
+Quatre déclarations Play Console listées dans `STORES.md` et jamais faites :
+déclaration « Health apps », permissions Health Connect limitées aux seules
+données utilisées, formulaire Data safety, politique de confidentialité.
+
+### Vérification de sécurité jamais faite
+
+`SECURITE.md` étape 4 prévoit cinq tests après le durcissement des règles
+Supabase : connexion, chat, **forum en écriture**, historique, onglet Santé.
+Aucun n'a été coché. Si l'écriture du forum est cassée par les règles, personne
+ne le sait.
+
+### Point ouvert dans le code
+
+`server.js:2088` — vérification du jeton d'organisation restée à faire.
+
 ### Administratif
 
 - Digidom : signature du contrat de domiciliation
