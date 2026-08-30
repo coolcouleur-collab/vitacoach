@@ -50,7 +50,10 @@ Oura/Garmin/Withings et les conversations des autres deviennent inaccessibles.
 Sur meet-solenn.com (recharge avec Ctrl+Shift+R) :
 - [ ] Connexion / déconnexion OK
 - [ ] Le chat répond
-- [ ] Le forum s'affiche et on peut poster
+- [~] ~~Le forum s'affiche et on peut poster~~ SANS OBJET depuis le
+      2026-08-25 : le forum est retire du lancement et inaccessible dans
+      l'app. Ses tables restent fermees aux inconnus, verifie le meme jour.
+      A rouvrir si le forum revient un jour.
 - [ ] L'historique de chat s'ouvre (panneau Historique)
 - [ ] L'onglet Santé et le rapport hebdo se chargent
 

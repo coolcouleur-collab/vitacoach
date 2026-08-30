@@ -69,9 +69,11 @@ Mesuré depuis le navigateur, sur le compte réel :
 - **Sans aucun compte** : **0 ligne lisible**, sur toutes les tables, forum
   compris.
 
-Le durcissement du 2026-08-12 tient donc. Reste **le forum en écriture**, non
-testé : il publierait un message public, en attente du feu vert de Jean. C'est
-le test qui compte, parce que c'est ce que le durcissement pouvait casser.
+Le durcissement du 2026-08-12 tient donc.
+
+Le cinquième test, « le forum en écriture », est **sans objet** : il datait de
+l'époque où le forum devait être dans l'app. Il en est retiré et personne ne
+peut y accéder, donc rien à vérifier. À rouvrir si le forum revient.
 
 ### Point ouvert dans le code — sans gravité
 
