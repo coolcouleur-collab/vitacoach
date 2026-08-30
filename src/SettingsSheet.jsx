@@ -527,7 +527,6 @@ export default function SettingsSheet({
           Jean 2026-07-24). Même mécanisme fiable que le menu hamburger. */}
       <style>{`
         @keyframes settingsFade { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes settingsUp   { from { transform: translateY(100%) } to { transform: translateY(0) } }
       `}</style>
       {/* Backdrop */}
       <div
@@ -539,7 +538,7 @@ export default function SettingsSheet({
           background: 'rgba(26,10,0,0.32)',
           backdropFilter: 'blur(8px)',
           WebkitBackdropFilter: 'blur(8px)',
-          animation: 'settingsFade 0.22s ease both',
+          animation: 'settingsFade 0.22s ease forwards',
         }}
       />
 
@@ -553,7 +552,17 @@ export default function SettingsSheet({
           zIndex: 1201,
           display: 'flex',
           justifyContent: 'center',
-          animation: 'settingsUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both',
+          // AUCUNE animation de glissement, et c'est delibere.
+          // `settingsUp` partait de translateY(100%), donc hors ecran, avec
+          // fill-mode `both`. Tant que l'animation n'avance pas, la feuille
+          // reste integralement sous l'ecran. Et `forwards` n'y changerait
+          // rien : ce mode n'agit qu'APRES la fin de l'animation, pas pendant
+          // sa phase active.
+          // Mesure du 2026-08-25 sur la feuille d'abonnement, qui portait le
+          // meme defaut : conteneur haut de 495, feuille a top 495 avec un
+          // transform de 184, exactement sa hauteur. Invisible. Une demi-
+          // journee perdue a chercher ailleurs.
+          // La feuille apparait maintenant a sa place, sans glissement.
         }}
       >
         <div style={{

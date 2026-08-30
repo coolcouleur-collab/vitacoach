@@ -425,10 +425,22 @@ export default function Auth({ onConnecte, onBack }) {
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex', alignItems:'center',
+  // HAUTEUR bornee et defilement interne. tokens.css met body en
+  // position:fixed et #root en overflow:hidden pour supprimer le rebond
+  // elastique d'iOS : plus rien ne defile au niveau du document. Avec un
+  // simple min-height et overflow:hidden, cette page GRANDIT au-dela de
+  // l'ecran et se fait couper, exactement comme le questionnaire
+  // d'inscription le 2026-08-25. Le formulaire est court, donc invisible en
+  // pratique, mais il clippait des qu'un clavier logiciel reduisait l'ecran.
+  //
+  // `margin:auto` sur la carte plutot que `alignItems:center` : un enfant
+  // centre par align-items dans un conteneur qui defile se fait couper EN
+  // HAUT, sans moyen de remonter. La marge automatique centre aussi, mais
+  // laisse le defilement atteindre les deux extremites.
+  page: { height:'100%', minHeight:'100%', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     paddingTop: 'calc(env(safe-area-inset-top, 0px) + 20px)',
-    position:'relative', overflow:'hidden' },
+    position:'relative', overflowY:'auto', overflowX:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
@@ -439,7 +451,7 @@ const s = {
   blob3: { position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' },
-  card: { position:'relative', zIndex:3, width:'100%', maxWidth:380,
+  card: { margin:'auto 0', position:'relative', zIndex:3, width:'100%', maxWidth:380,
     background:'rgba(255,235,210,0.25)',
     borderRadius: 20,
     padding:'20px 16px',
