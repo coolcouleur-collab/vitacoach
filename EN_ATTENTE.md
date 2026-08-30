@@ -65,7 +65,35 @@ désormais « Aucune donnée partagée avec des tiers ». Les conditions de Groq
 été vérifiées avant de décocher : pas de rétention sur l'inférence, journaux
 temporaires trente jours, aucun entraînement sur les données d'API.
 
-**Health Connect : BLOQUÉ, et ce n'est pas un oubli.** La déclaration n'existe
+### ⚠️ La fiche Play a été REFAITE le 2026-08-30 — mauvais nom de package
+
+L'ancienne fiche était enregistrée sous **`com.solenn.ap`**, sans le « p »
+final : une faute de frappe faite à sa création. Tout le reste du projet dit
+`com.solenn.app`, y compris les deux applications Firebase. Le nom de package
+étant définitif chez Google, et l'ancienne fiche n'ayant jamais rien publié,
+elle a été remplacée.
+
+- **Nouvelle fiche, celle qui compte** : app `4974374457808147962`
+- Ancienne, à supprimer une fois la nouvelle complète : `4972821536691969226`
+
+Le bundle Android a été construit, déposé et accepté sur la nouvelle fiche le
+2026-08-30 : version brouillon « 2 (1.1) », aucune erreur de package.
+
+**Toutes les déclarations sont donc à refaire sur la nouvelle fiche.** Les
+réponses sont dans `STORES.md`, il n'y a rien à réinventer.
+
+**Bloquant côté Jean, personne ne peut le faire à sa place** : la case des
+conditions IARC, et les identifiants du compte d'examen. Voir la section
+« Compte d'examen » de `STORES.md` : compte dédié, jamais le compte personnel,
+et à rendre Pro définitivement sous peine de rejet à la première mise à jour.
+
+**Health Connect : devrait maintenant apparaître**, un bundle ayant enfin été
+déposé. Trois permissions exactement : pas, fréquence cardiaque, sommeil. Le
+manifeste en déclarait une quatrième, la distance, retirée le 2026-08-30 :
+Google lit ce manifeste, une permission en trop devient une donnée déclarée que
+l'app ne consulte jamais.
+
+~~**Health Connect : BLOQUÉ, et ce n'est pas un oubli.**~~ La déclaration n'existe
 pas encore dans la console, parce que Google ne la fait apparaître qu'après
 avoir lu les permissions dans le manifeste d'un bundle. Or aucun bundle n'a
 jamais été déposé, le canal de tests internes est inactif.

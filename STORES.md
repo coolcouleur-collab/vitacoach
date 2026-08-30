@@ -91,6 +91,62 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
       il faudra REPRENDRE cette déclaration **et** construire la modération
       avant de soumettre.
 
+## 1 bis. Compte d'examen pour Google et Apple
+
+Les deux magasins exigent des identifiants de test permettant aux examinateurs
+d'entrer dans l'application. Chez Google : Contenu de l'application →
+Informations de connexion. Chez Apple : App Review Information.
+
+**Ne JAMAIS donner le compte personnel de Jean.** Les examinateurs verraient de
+vraies conversations, de vraies mesures de santé et un vrai suivi de cycle.
+
+### Le compte à créer
+
+Adresse : `coolcouleur+review@gmail.com`, mot de passe saisi par Jean elle-même.
+Inscription complète dans l'app, avec des réponses neutres.
+
+### ⚠️ Le rendre Pro DÉFINITIVEMENT, sinon rejet à la première mise à jour
+
+L'essai dure 21 jours. Un compte neuf a donc tout, et le premier examen se passe
+bien. Mais à la mise à jour suivante l'essai aura expiré, les examinateurs
+tomberont sur l'écran d'abonnement, et le motif de rejet est classique : « nous
+n'avons pas pu accéder à l'ensemble des fonctionnalités ».
+
+Après l'inscription, dans l'éditeur SQL de Supabase :
+
+```sql
+update profils
+set profil = coalesce(profil, '{}'::jsonb)
+  || '{"isPro": true, "proManuel": true, "proSince": "2026-08-30T00:00:00Z"}'::jsonb
+where user_id = (
+  select id from auth.users where email = 'coolcouleur+review@gmail.com'
+);
+```
+
+Même mécanisme que le compte de Jean : `proManuel`, sans aucun abonnement
+Stripe derrière. La page d'abonnement affichera « accès offert, rien à gérer »,
+ce qui est correct.
+
+### Ordre des opérations
+
+1. Créer le compte et terminer l'inscription
+2. Lancer le SQL ci-dessus
+3. Saisir identifiant et mot de passe dans Play Console
+
+C'est seulement à ce moment que « Cible et contenu » se débloque, donc la
+tranche d'âge 18 et plus.
+
+### Ce que Jean doit faire elle-même, et personne d'autre
+
+- **La case « J'accepte les Conditions d'utilisation de l'IARC »** au début du
+  questionnaire de classification. C'est un engagement juridique à son nom.
+- **Les deux déclarations à la création d'une application** : respect du
+  règlement du programme pour les développeurs, et lois américaines sur
+  l'exportation.
+- **Tout mot de passe.** Aucune session Claude n'en saisit, jamais.
+
+---
+
 ## 2. Apple App Store
 
 ### Points de vigilance App Review
