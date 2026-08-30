@@ -114,14 +114,42 @@ n'avons pas pu accéder à l'ensemble des fonctionnalités ».
 
 Après l'inscription, dans l'éditeur SQL de Supabase :
 
+**Le schema de `profils`, verifie le 2026-08-30 contre la base elle-meme**, apres
+qu'une session eut propose une requete fausse : la table a exactement deux
+colonnes utiles, `user_id` et `profil`, cette derniere en JSONB. Il n'existe
+**ni colonne `isPro`, ni `proManuel`, ni meme `id`** : les trois renvoient
+`42703 column does not exist`. Toute requete qui les traite comme des colonnes
+echoue. Les champs vivent DANS le JSON.
+
+D'abord le diagnostic, pour savoir ou on en est :
+
+```sql
+select u.id, u.email, (p.user_id is not null) as profil_existe
+from auth.users u
+left join profils p on p.user_id = u.id
+where u.email = 'coolcouleur+review@gmail.com';
+```
+
+Aucune ligne → le compte n'est pas cree. `profil_existe = false` → le compte
+existe mais l'inscription n'est pas allee a son terme, la finir dans l'app.
+
+Puis la mise a Pro :
+
 ```sql
 update profils
-set profil = coalesce(profil, '{}'::jsonb)
-  || '{"isPro": true, "proManuel": true, "proSince": "2026-08-30T00:00:00Z"}'::jsonb
+set profil = coalesce(profil, '{}'::jsonb) || '{"isPro": true, "proManuel": true}'::jsonb
 where user_id = (
   select id from auth.users where email = 'coolcouleur+review@gmail.com'
-);
+)
+returning user_id, profil->>'nom' as nom, profil->>'isPro' as pro, profil->>'proManuel' as manuel;
 ```
+
+Une ligne avec `pro = true` et `manuel = true` : c'est bon. Le `returning` est
+le seul garde-fou, ne rien conclure sans le lire.
+
+Pas de `proSince` : verifie le meme jour, ce champ n'est jamais lu pour
+calculer quoi que ce soit, il est purement informatif. Inutile d'inventer une
+date que personne n'a demandee.
 
 Même mécanisme que le compte de Jean : `proManuel`, sans aucun abonnement
 Stripe derrière. La page d'abonnement affichera « accès offert, rien à gérer »,
