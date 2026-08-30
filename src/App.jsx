@@ -388,7 +388,17 @@ const NAV_ITEMS = [
   { id:'sante',     label:'Progrès',    Icon: HeartIcon },
   { id:'style',     label:'Style',      Icon: StyleIcon },
   { id:'breathwork',label:'Respiration',Icon: BreathworkIcon },
-  { id:'forum',     label:'Forum',      Icon: ForumIcon },
+  // PAS de forum ici. Il a ete retire du lancement le 2026-07-21, et la fiche
+  // Play Console declare que Solenn ne contient AUCUN contenu genere par les
+  // utilisateurs. Le laisser dans cette liste etait un piege : elle sert de
+  // valeur par defaut a DynamicNav, et un seul appel sans `items` aurait fait
+  // reapparaitre le forum dans l'app en contradiction avec la declaration
+  // (releve par Jean le 2026-08-25).
+  //
+  // Declarer du contenu genere par les utilisateurs impose signalement,
+  // blocage, moderation demontrable et delai de traitement, chez Google comme
+  // chez Apple, article 1.2. A reprendre AVANT toute reactivation.
+  // Point de reactivation unique : la propriete `onForum` de Landing.
 ]
 
 // Barre d'onglets TOUJOURS dépliée. Avant, la nav n'affichait qu'une pastille
@@ -1652,6 +1662,10 @@ const [messages, setMessages] = useState(() => {
   if (showForum) return <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
   if (!user && !showAuth && !isMobile) return (
     <Suspense fallback={<GlowLoader fullPage />}>
+      {/* `onForum` est le SEUL chemin vers le forum. Landing ne l'utilise pas
+          aujourd'hui : c'est volontaire, le forum est retire du lancement.
+          Rebrancher un bouton dessus le reactive, mais lire d'abord le
+          commentaire de NAV_ITEMS : la declaration Play Console devra suivre. */}
       <Landing onCommencer={goToAuth} onForum={() => setShowForum(true)} />
     </Suspense>
   )

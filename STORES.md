@@ -41,6 +41,22 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
       utilisés (pas, sommeil, poids, FC) — Google cible le « data overreach ».
 - [ ] **Data safety form** : déclarer données santé collectées, chiffrées en
       transit, non partagées à des fins publicitaires.
+- [ ] **Contenu généré par les utilisateurs : NON.** ⚠️ Une réponse « oui »
+      avait été cochée à l'époque où le forum était prévu. Le forum a été retiré
+      du lancement le 2026-07-21 et vérifié inaccessible le 2026-08-25 : les
+      trois barres de navigation l'excluent, et le seul déclencheur restant
+      n'est branché nulle part. **Décocher cette réponse dans Play Console.**
+
+      Ne pas la laisser par confort : déclarer du contenu généré par les
+      utilisateurs impose un outil de signalement, un moyen de bloquer un
+      utilisateur, une modération démontrable et un délai de traitement, chez
+      Google comme chez Apple (article 1.2, motif de rejet fréquent). S'engager
+      à tout ça pour une fonctionnalité que personne ne peut ouvrir n'apporte
+      rien et attire le contrôle sur un sujet sans bénéfice.
+
+      Le code du forum est conservé et réactivable. Si tu le rouvres un jour,
+      il faudra REPRENDRE cette déclaration **et** construire la modération
+      avant de soumettre.
 
 ## 2. Apple App Store
 

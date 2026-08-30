@@ -49,9 +49,16 @@ déjà versionnés, rien à préparer.
 pour 21 jours. L'essai couvre désormais un programme entier, et la fiche des
 magasins, qui promettait déjà 21 jours, redevient exacte.
 
-Quatre déclarations Play Console listées dans `STORES.md` et jamais faites :
+Cinq déclarations Play Console listées dans `STORES.md` et jamais faites :
 déclaration « Health apps », permissions Health Connect limitées aux seules
-données utilisées, formulaire Data safety, politique de confidentialité.
+données utilisées, formulaire Data safety, politique de confidentialité, et
+**décocher le contenu généré par les utilisateurs**.
+
+Ce dernier point est une **erreur active** : une réponse « oui » a été cochée à
+l'époque où le forum était prévu. Vérifié le 2026-08-25, le forum est
+inaccessible dans l'app. Déclarer du contenu généré par les utilisateurs impose
+signalement, blocage, modération démontrable et délai de traitement, pour une
+fonctionnalité que personne ne peut ouvrir.
 
 ### Vérification de sécurité — faite le 2026-08-25
 
