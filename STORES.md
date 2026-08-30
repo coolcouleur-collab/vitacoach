@@ -37,8 +37,23 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
       Ne pas déclarer de catégorie médicale sans migrer d'abord.
 - [ ] **Politique de confidentialité** : URL publique non géo-bloquée, pas de
       PDF → https://meet-solenn.com/confidentialite ✅ (page déjà en ligne).
-- [ ] **Permissions Health Connect** : ne demander QUE les types de données
-      utilisés (pas, sommeil, poids, FC) — Google cible le « data overreach ».
+- [ ] **Permissions Health Connect** : déclarer EXACTEMENT trois types, et
+      seulement ceux-là : **pas, fréquence cardiaque, sommeil**.
+      ⚠️ Pas le poids : il est saisi à la main dans l'app, jamais lu depuis
+      Health. Le code demandait huit types (dont distance, calories, poids,
+      taille, activité) et n'en lisait que trois ; ramené à trois le
+      2026-08-25 dans `useCapacitor.js`. Google cible le « data overreach »,
+      Apple aussi (5.1.1). La déclaration doit refléter le code, pas l'inverse.
+- [x] **Classification du contenu (IARC)** : refait et envoyé le 2026-08-30.
+      Interaction entre utilisateurs = NON (le forum est retiré), contenu en
+      ligne = OUI (réponses IA et programmes générés côté serveur), achats
+      numériques = OUI, navigateur intégré = NON, produit d'actualité ou
+      d'éducation = NON. Résultat : PEGI 3, ESRB Tout public, USK Tous
+      publics, Brésil ClassInd 14+ (conséquence honnête du contenu en ligne).
+      « Interactivité des utilisateurs » et « risques de communication
+      accrus » ont disparu. Le questionnaire ne s'édite pas : il se refait en
+      entier via Contenu de l'application → Classification du contenu →
+      Gérer → Répondre au nouveau questionnaire.
 - [ ] **Data safety form** : déclarer données santé collectées, chiffrées en
       transit, non partagées à des fins publicitaires.
 - [ ] **Contenu généré par les utilisateurs : NON.** ⚠️ Une réponse « oui »

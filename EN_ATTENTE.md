@@ -49,16 +49,19 @@ déjà versionnés, rien à préparer.
 pour 21 jours. L'essai couvre désormais un programme entier, et la fiche des
 magasins, qui promettait déjà 21 jours, redevient exacte.
 
-Cinq déclarations Play Console listées dans `STORES.md` et jamais faites :
-déclaration « Health apps », permissions Health Connect limitées aux seules
-données utilisées, formulaire Data safety, politique de confidentialité, et
-**décocher le contenu généré par les utilisateurs**.
+**Classification du contenu : FAITE le 2026-08-30.** Le questionnaire IARC a
+été refait en entier, l'interaction entre utilisateurs passée à non. Résultat
+PEGI 3, USK Tous publics. Le Brésil reste à 14+, conséquence honnête du contenu
+en ligne, et ce n'est pas un problème.
 
-Ce dernier point est une **erreur active** : une réponse « oui » a été cochée à
-l'époque où le forum était prévu. Vérifié le 2026-08-25, le forum est
-inaccessible dans l'app. Déclarer du contenu généré par les utilisateurs impose
-signalement, blocage, modération démontrable et délai de traitement, pour une
-fonctionnalité que personne ne peut ouvrir.
+Trois déclarations Play Console restent à faire, détaillées dans `STORES.md` :
+déclaration « Health apps », formulaire Data safety, URL de la politique de
+confidentialité. Plus les permissions Health Connect, à déclarer **exactement
+comme le code** : pas, fréquence cardiaque, sommeil. Pas le poids.
+
+À surveiller : l'ID du certificat IARC affiche encore un tiret. C'est normal
+tant que l'app est en brouillon ; s'il reste vide après la première soumission
+d'une version pour examen, il faudra creuser.
 
 ### Vérification de sécurité — faite le 2026-08-25
 
