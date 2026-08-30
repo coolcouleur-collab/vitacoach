@@ -27,8 +27,18 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
 
 ### Checklist Play Console (à faire par Jean)
 
-- [ ] **Déclaration « Health apps »** : Play Console → App content → Health apps
-      → cocher les catégories : wellness / sleep / nutrition / mindfulness.
+- [ ] **Déclaration « Health apps »** : Play Console → Contenu de l'application
+      → Applis de santé. CINQ catégories, toutes en bien-être, AUCUNE en
+      catégorie médicale (le compte personnel ne suffirait plus) :
+      activité et remise en forme · **suivi des règles** · gestion du sommeil ·
+      gestion du stress · nutrition et gestion du poids.
+      ⚠️ Le suivi des règles manquait dans la première version de ce document,
+      écrite avant l'ajout de l'onglet Cycle. Vérifié dans le code le
+      2026-08-30 : l'onglet existe, s'active depuis les Paramètres et écrit
+      dans `cycle_periods` et `cycle_symptoms`. La déclaration est donc juste.
+      Conséquence pour le Data safety : les données de cycle sont
+      particulièrement sensibles, à déclarer explicitement en santé, ni
+      partagées ni publicitaires.
 - [x] **Type de compte développeur** : vérifié le 2026-07-25 sur la doc
       officielle Google — le compte Organisation n'est exigé QUE pour les
       catégories « Applications médicales » et « Recherche sur sujets
