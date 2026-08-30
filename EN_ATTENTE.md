@@ -54,10 +54,32 @@ magasins, qui promettait déjà 21 jours, redevient exacte.
 PEGI 3, USK Tous publics. Le Brésil reste à 14+, conséquence honnête du contenu
 en ligne, et ce n'est pas un problème.
 
-Trois déclarations Play Console restent à faire, détaillées dans `STORES.md` :
-déclaration « Health apps », formulaire Data safety, URL de la politique de
-confidentialité. Plus les permissions Health Connect, à déclarer **exactement
-comme le code** : pas, fréquence cardiaque, sommeil. Pas le poids.
+**Health apps, Data safety et politique de confidentialité : FAITS le
+2026-08-30.** Cinq catégories bien-être déclarées, aucune médicale, donc le
+compte personnel reste suffisant. Data safety corrigé sur quatre points au-delà
+de ce qui était prévu : l'URL de suppression pointait vers une route morte, la
+suppression partielle était sur non, les données de santé étaient déclarées
+partagées alors que Groq est un sous-traitant, et les messages étaient déclarés
+éphémères alors qu'ils sont stockés dans `solenn_chats`. La fiche affiche
+désormais « Aucune donnée partagée avec des tiers ». Les conditions de Groq ont
+été vérifiées avant de décocher : pas de rétention sur l'inférence, journaux
+temporaires trente jours, aucun entraînement sur les données d'API.
+
+**Health Connect : BLOQUÉ, et ce n'est pas un oubli.** La déclaration n'existe
+pas encore dans la console, parce que Google ne la fait apparaître qu'après
+avoir lu les permissions dans le manifeste d'un bundle. Or aucun bundle n'a
+jamais été déposé, le canal de tests internes est inactif.
+
+**La suite passe donc par la construction de l'app Android**, faisable depuis le
+PC sans aucun Mac. Tout est prêt : le keystore de signature existe déjà
+(`android/app/solenn-release.keystore`, alias `solenn`), `key.properties` est
+configuré, et `google-services.json` a été déposé dans `android/app/` le
+2026-08-30. Le greffon Google Services s'active automatiquement dès que ce
+fichier est présent.
+
+Cette même construction débloque **trois choses d'un coup** : la déclaration
+Health Connect, le test réel des notifications natives, et l'ouverture du canal
+de tests internes.
 
 À surveiller : l'ID du certificat IARC affiche encore un tiret. C'est normal
 tant que l'app est en brouillon ; s'il reste vide après la première soumission

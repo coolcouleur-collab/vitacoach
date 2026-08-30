@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "407558327865",
+    "project_id": "solenn-1f7c3",
+    "storage_bucket": "solenn-1f7c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407558327865:android:235751acbdca2302df87e8",
+        "android_client_info": {
+          "package_name": "com.solenn.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX1p3vk49pEOF2E74l6xsxLZhcdOjaZPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
