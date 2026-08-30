@@ -48,7 +48,13 @@
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
     <uses-permission android:name="android.permission.health.READ_SLEEP" />
-    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <!-- READ_DISTANCE retire le 2026-08-30 : jamais lu. syncHealthData ne
+         renvoie que les pas, la frequence cardiaque et le sommeil.
+         Google lit CE manifeste pour generer la declaration Health Connect de
+         la console : toute permission en trop devient une donnee declaree que
+         l'app ne consulte pas, ce qui est du data overreach et un motif de
+         rejet. Ces trois lignes doivent rester alignees sur HEALTH_READ_TYPES
+         dans src/hooks/useCapacitor.js. -->
 
     <!-- Localisation pour météo -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
