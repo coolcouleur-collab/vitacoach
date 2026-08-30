@@ -2082,10 +2082,18 @@ app.post('/api/demo-request', async (req, res) => {
   res.json({ succes: true, message: 'Demande reçue — vous serez contacté sous 24h' })
 })
 
-// ── B2B : Dashboard RH (données mock) ────────────────────────────────────────
+// ── B2B : Dashboard RH ───────────────────────────────────────────────────────
+// ATTENTION : tous les chiffres ci-dessous sont INVENTES. C'est une maquette de
+// demonstration, il n'existe aucune table d'organisations ni de salaries.
+// Ne jamais montrer cet ecran a un prospect en le presentant comme ses donnees.
+//
+// Le parametre `token` n'est pas verifie, et c'est sans consequence tant que la
+// route reste derriere adminGuard : verifie le 2026-08-25, elle repond 401 sans
+// la cle, donc AGENTS_TRIGGER_KEY est bien definie en production. Le jour ou le
+// B2B devient reel, il faudra une vraie table d'organisations et cette garde
+// deviendra insuffisante.
 app.get('/api/business/dashboard', adminGuard, async (req, res) => {
   const { orgId, token } = req.query
-  // TODO: vérifier le token org en base
   res.json({
     org: { nom: 'Votre Entreprise', plan: 'business', employes: 48 },
     kpis: {

@@ -53,16 +53,25 @@ Quatre déclarations Play Console listées dans `STORES.md` et jamais faites :
 déclaration « Health apps », permissions Health Connect limitées aux seules
 données utilisées, formulaire Data safety, politique de confidentialité.
 
-### Vérification de sécurité jamais faite
+### Vérification de sécurité — faite le 2026-08-25
 
-`SECURITE.md` étape 4 prévoit cinq tests après le durcissement des règles
-Supabase : connexion, chat, **forum en écriture**, historique, onglet Santé.
-Aucun n'a été coché. Si l'écriture du forum est cassée par les règles, personne
-ne le sait.
+Mesuré depuis le navigateur, sur le compte réel :
 
-### Point ouvert dans le code
+- **Connectée** : 9 challenges, 6 rapports, 7 conversations, 1 profil, dont
+  **0 appartenant à quelqu'un d'autre**.
+- **Sans aucun compte** : **0 ligne lisible**, sur toutes les tables, forum
+  compris.
 
-`server.js:2088` — vérification du jeton d'organisation restée à faire.
+Le durcissement du 2026-08-12 tient donc. Reste **le forum en écriture**, non
+testé : il publierait un message public, en attente du feu vert de Jean. C'est
+le test qui compte, parce que c'est ce que le durcissement pouvait casser.
+
+### Point ouvert dans le code — sans gravité
+
+`/api/business/dashboard` ne vérifie pas son jeton d'organisation, mais il ne
+renvoie que des chiffres inventés et il est derrière `adminGuard`. Vérifié le
+2026-08-25 : la route répond 401 sans la clé, donc `AGENTS_TRIGGER_KEY` est bien
+définie en production. À reprendre le jour où le B2B devient réel.
 
 ### Administratif
 
