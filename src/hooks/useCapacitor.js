@@ -76,15 +76,23 @@ export async function demanderPushNatif(userId) {
 }
 
 // ─── Types de données Health demandés ────────────────────────────────────────
+// UNIQUEMENT ce que Solenn lit vraiment. syncHealthData ne renvoie que trois
+// mesures : les pas, la frequence cardiaque et le sommeil. L'app demandait
+// pourtant huit types, en ajoutant distance, calories, poids, taille et
+// activite, jamais lus.
+//
+// Ce n'est pas un detail cosmetique : Google cible explicitement le
+// « data overreach » dans sa politique Health Connect, et Apple l'interdit
+// aussi, article 5.1.1. Demander l'acces au poids et a la taille de quelqu'un
+// sans jamais s'en servir est un motif de rejet, et une promesse qu'on ne
+// tient pas envers l'utilisateur (releve le 2026-08-25).
+//
+// AJOUTER UN TYPE ICI SUPPOSE DE LE LIRE dans syncHealthData, et de mettre a
+// jour la declaration Health Connect dans Play Console.
 const HEALTH_READ_TYPES = [
   'steps',
-  'distance',
-  'calories',
   'heart_rate',
   'sleep_analysis',
-  'weight',
-  'height',
-  'activity',
 ]
 
 // ─── Hook principal ───────────────────────────────────────────────────────────
