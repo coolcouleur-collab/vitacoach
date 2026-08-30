@@ -98,6 +98,24 @@ export default function SuppressionCompte() {
           confirmons par email quand c'est fait.
         </p>
 
+        <h2 style={S.h2}>Supprimer une partie de tes données, sans fermer ton compte</h2>
+        <p style={S.p}>
+          Tu n'es pas obligée de tout supprimer pour effacer quelque chose. Deux moyens :
+        </p>
+        <p style={S.etape}>
+          <strong>Depuis l'application</strong> : Paramètres, puis Mes données, puis
+          <strong> Réinitialiser mémoire IA</strong>. Solenn oublie alors tout ce qu'elle avait
+          retenu de toi au fil des conversations. Ton compte, tes mesures et tes programmes
+          restent intacts.
+        </p>
+        <p style={S.etape}>
+          <strong>Par email</strong> : écris à{' '}
+          <a href="mailto:contact@meet-solenn.com" style={S.lien}>contact@meet-solenn.com</a> en
+          précisant ce que tu veux voir effacé, par exemple ton historique de conversations, ton
+          suivi de cycle ou tes mesures d'une période donnée. Nous le faisons sous trente jours
+          au plus et te confirmons par email.
+        </p>
+
         <h2 style={S.h2}>Tes autres droits</h2>
         <p style={S.p}>
           Tu peux aussi demander l'accès à tes données, leur rectification ou leur portabilité,
