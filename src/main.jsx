@@ -40,19 +40,29 @@ if (!hasSession) {
   requestAnimationFrame(raf)
 }
 
-// Routing minimal, /business → BusinessLanding, /confidentialite → politique,
-// /admin → dashboard rétention (clé admin requise), sinon App
-const isBusiness = window.location.pathname.startsWith('/business')
-const isPrivacy  = window.location.pathname.startsWith('/confidentialite')
-const isAdmin    = window.location.pathname.startsWith('/admin')
+// Routing minimal. Tout chemin non reconnu retombe sur App : c'est voulu pour
+// une application d'une seule page, mais ca cache les fautes de frappe dans les
+// URL. C'est ainsi que le champ « URL de suppression de compte » de Play Console
+// pointait vers /privacy, une route inexistante : Google y voyait l'ecran
+// d'accueil de l'app au lieu d'une page de suppression. Motif de rejet certain
+// (releve le 2026-08-30).
+// /privacy et /suppression sont donc acceptes comme synonymes, pour qu'un lien
+// deja depose quelque part ne tombe jamais dans le vide.
+const chemin     = window.location.pathname
+const isBusiness = chemin.startsWith('/business')
+const isPrivacy  = chemin.startsWith('/confidentialite') || chemin.startsWith('/privacy')
+const isSuppr    = chemin.startsWith('/suppression') || chemin.startsWith('/delete-account')
+const isAdmin    = chemin.startsWith('/admin')
 
 const AdminRetention = React.lazy(() => import('./AdminRetention'))
+const SuppressionCompte = React.lazy(() => import('./SuppressionCompte'))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RootBoundary>
       {isAdmin
         ? <React.Suspense fallback={null}><AdminRetention /></React.Suspense>
+        : isSuppr ? <React.Suspense fallback={null}><SuppressionCompte /></React.Suspense>
         : isPrivacy ? <Confidentialite /> : isBusiness ? <BusinessLanding /> : <App />}
     </RootBoundary>
   </React.StrictMode>

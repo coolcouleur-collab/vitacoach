@@ -47,6 +47,14 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
       Ne pas déclarer de catégorie médicale sans migrer d'abord.
 - [ ] **Politique de confidentialité** : URL publique non géo-bloquée, pas de
       PDF → https://meet-solenn.com/confidentialite ✅ (page déjà en ligne).
+- [ ] **URL de suppression de compte** →
+      **https://meet-solenn.com/suppression-compte**
+      ⚠️ Le champ contenait https://meet-solenn.com/privacy, une route qui
+      n'existait pas : le visiteur retombait sur l'écran d'accueil de l'app.
+      Google ouvre ce lien pendant l'examen, c'était un motif de rejet certain
+      (relevé le 2026-08-30). La page a été créée le même jour, et /privacy
+      redirige désormais vers la politique pour qu'aucun lien déjà déposé ne
+      tombe dans le vide.
 - [ ] **Permissions Health Connect** : déclarer EXACTEMENT trois types, et
       seulement ceux-là : **pas, fréquence cardiaque, sommeil**.
       ⚠️ Pas le poids : il est saisi à la main dans l'app, jamais lu depuis

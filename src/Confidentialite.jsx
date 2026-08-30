@@ -29,7 +29,7 @@ export default function Confidentialite() {
     <div style={S.page}>
       <div style={S.card}>
         <h1 style={S.h1}>Politique de confidentialité</h1>
-        <p style={S.date}>Solenn, dernière mise à jour : 21 juillet 2026</p>
+        <p style={S.date}>Solenn, dernière mise à jour : 30 août 2026</p>
 
         <p style={S.p}>
           Solenn est une application de coaching bien-être. Ta vie privée est au cœur de notre
@@ -75,9 +75,16 @@ export default function Confidentialite() {
 
         <h2 style={S.h2}>5. Conservation et suppression</h2>
         <p style={S.p}>
-          Tes données sont conservées tant que ton compte est actif. Tu peux demander à tout
-          moment l'accès, la rectification ou la suppression complète de tes données
-          (conformément au RGPD) en nous écrivant, la suppression est effective sous 30 jours.
+          Tes données sont conservées tant que ton compte est actif. Tu peux le supprimer
+          toi-même à tout moment, directement dans l'application : Paramètres, puis Mes
+          données, puis Supprimer mon compte. La suppression est immédiate et définitive, et
+          un abonnement en cours est résilié au même moment. Le détail de ce qui est effacé
+          figure sur la page <a href="/suppression-compte" style={{ color: 'rgba(180,95,40,0.95)', fontWeight: 600 }}>Supprimer mon compte</a>.
+        </p>
+        <p style={S.p}>
+          Si tu n'as plus accès à l'application, écris-nous : la suppression intervient sous 30
+          jours au plus, conformément au RGPD. Tu peux aussi demander à tout moment l'accès à
+          tes données, leur rectification ou leur portabilité sans supprimer ton compte.
         </p>
 
         <h2 style={S.h2}>6. Ce que Solenn n'est pas</h2>
