@@ -70,7 +70,21 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
 
   return (
     <div style={{
-      minHeight: '100dvh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      // HAUTEUR bornee et defilement interne, PAS un simple min-height.
+      // tokens.css met body en position:fixed et #root en overflow:hidden pour
+      // supprimer le rebond elastique d'iOS : plus rien ne defile au niveau du
+      // document. Avec min-height seul, cette page GRANDIT au-dela de l'ecran
+      // au lieu de defiler, et #root la coupe net. Le bouton « Commencer mes
+      // 21 jours offerts » devenait alors INATTEIGNABLE : personne ne pouvait
+      // entrer dans l'app (constate par Jean le 2026-08-31, en creant le
+      // compte d'examen). Meme defaut que le questionnaire d'inscription et la
+      // feuille d'abonnement.
+      //
+      // Le centrage passe par margin:auto sur la carte, et NON par
+      // alignItems:center : un enfant centre par align-items dans un conteneur
+      // qui defile se fait couper EN HAUT, sans moyen de remonter.
+      height: '100%', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden',
+      position: 'relative', display: 'flex', justifyContent: 'center',
       background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
       padding: '24px 20px calc(24px + env(safe-area-inset-bottom))', fontFamily: F,
     }}>
@@ -78,7 +92,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
       <motion.div
         initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        style={{ width: '100%', maxWidth: 440, position: 'relative', zIndex: 1 }}
+        style={{ width: '100%', maxWidth: 440, position: 'relative', zIndex: 1, margin: 'auto 0' }}
       >
         {/* Titre */}
         <div style={{ textAlign: 'center', marginBottom: 26 }}>
