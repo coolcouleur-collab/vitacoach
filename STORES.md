@@ -8,22 +8,69 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
 
 ## 1. Google Play — fiche store
 
-### Description (le disclaimer DOIT être dans le premier paragraphe)
+### Brève description (80 caractères maximum)
 
-> **Solenn — Ton soleil au quotidien**
->
-> Solenn est un coach bien-être basé sur l'intelligence artificielle : nutrition
-> intuitive, sommeil, routines et challenges 21 jours, connectés à tes données
-> santé. *Solenn n'est pas un dispositif médical et ne diagnostique, ne traite,
-> ne guérit ni ne prévient aucune maladie ou condition médicale. Ses conseils ne
-> remplacent pas l'avis d'un professionnel de santé.*
->
-> • Un coach IA qui te connaît vraiment — il s'appuie sur ton sommeil, tes pas,
->   ton énergie du jour pour adapter ses conseils
-> • Challenge 21 jours personnalisé pour installer des habitudes durables
-> • Routines du matin et du soir à ta mesure
-> • Connexion Apple Health, Withings, Garmin
-> • 21 premiers jours offerts, sans engagement
+Réécrite le 2026-08-31. Google la montre sous le nom de l'app, avant même que
+quiconque déplie la description complète.
+
+```
+Ton coach bien-être qui te connaît et adapte ses conseils jour après jour.
+```
+
+73 caractères. Pas de tiret cadratin, pas d'emoji, aucune promesse médicale.
+
+### Description complète
+
+⚠️ **Le disclaimer DOIT être dans le premier paragraphe**, c'est une exigence
+de la politique Google sur les applications de santé. Ne jamais le déplacer
+plus bas pour « alléger » l'accroche.
+
+Réécrite le 2026-08-31 : la version du 21 juillet ne mentionnait ni la
+nutrition, ni le suivi de cycle, ni Santé Naturelle, ni le guide des exercices,
+et promettait des connexions au pluriel sans les nommer. Elle doit rester
+alignée sur les **cinq catégories déclarées dans Health apps**, sous peine de
+contradiction dans le même dossier.
+
+```
+Solenn est un coach bien-être propulsé par l'intelligence artificielle :
+activité, sommeil, nutrition, gestion du stress et suivi du cycle, reliés à tes
+données de santé. Solenn n'est pas un dispositif médical. Elle ne diagnostique,
+ne traite, ne guérit ni ne prévient aucune maladie, et ses conseils ne
+remplacent jamais l'avis d'un professionnel de santé.
+
+UN COACH QUI TE CONNAÎT VRAIMENT
+
+Solenn se souvient de ce que tu lui racontes, relie tes mots à tes chiffres, et
+change d'approche quand un conseil ne marche pas. Les conversations sont
+illimitées, sans quota hebdomadaire. Tu peux lui écrire ou lui parler.
+
+TON PROGRAMME, PAS UN PROGRAMME
+
+Un programme de 21 jours construit pour ton objectif, avec des séances guidées,
+un guide de 25 exercices expliqués geste par geste, et une progression qui
+monte à mesure que tu tiens. Au bout des 21 jours, Solenn te propose la suite.
+
+CE QUE TU Y TROUVES
+
+Des routines du matin et du soir à ta mesure.
+Des idées de repas adaptées à tes besoins et à ton objectif.
+Des remèdes naturels documentés, avec leurs précautions et leurs limites.
+Un suivi de cycle, si tu l'actives.
+Des bilans hebdomadaires qui te montrent ce qui a bougé, chiffres à l'appui.
+
+TES DONNÉES, TES RÈGLES
+
+Connexion facultative à Apple Santé, Withings, Garmin et Oura. Aucune montre
+n'est nécessaire, la tienne est un bonus, jamais une condition. Tes données ne
+sont partagées avec personne. Tu peux supprimer ton compte et tout ce qu'il
+contient depuis l'application, en trois clics, à tout moment.
+
+21 premiers jours offerts, sans engagement et sans paiement demandé.
+```
+
+Règles à tenir si tu la modifies : aucun tiret cadratin, aucun emoji, aucune
+promesse de résultat ni de guérison, et rien qui ne soit vrai dans l'app au
+moment de la soumission.
 
 ### Checklist Play Console (à faire par Jean)
 
