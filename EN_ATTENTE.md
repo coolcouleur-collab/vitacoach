@@ -94,12 +94,29 @@ le gros dossier de Google. Verifie apres compilation.
 Le bundle Android depose chez Google date du 30 aout, l'iOS embarque du
 21 juillet. Rien de ce chantier n'y est.
 
+### Deux choses notees en chemin, pas urgentes
+
+**La barre du bas deborde a 130 % de taille de texte.** Mesure faite le
+2 septembre : 283px necessaires pour 339 disponibles a taille normale, mais
+368 a 130 %, un reglage d'accessibilite tres courant. Le probleme existait
+AVANT le passage au pluriel, il n'est pas cause par lui. A traiter en
+reduisant le libelle ou en passant l'icone seule sous une certaine largeur.
+
+**Les recettes ne sont pas encore reliees au programme alimentaire.** Le
+programme installe des habitudes semaine par semaine, les idees de repas
+repondent a « je fais quoi ce soir ». Elles s'ignorent. Les idees pourraient
+suivre le theme de la semaine en cours du programme.
+
 ### A verifier sur un vrai telephone, ce qu'aucun test ne remplace
 
 - une course reelle, dehors, pour confronter la distance a un parcours connu
 - le verrouillage de l'ecran pendant une course, sur Android
 - la connexion Health Connect, et les metriques qui remontent
 - les rappels du programme, qui doivent arriver aux heures prevues
+- une generation de recettes en declarant un regime, pour voir si le controle
+  de securite se declenche a tort ou a raison sur de vraies sorties du modele
+- un programme sportif lance en 56 jours et intensite soutenue, pour verifier
+  que la duree et l'intensite arrivent bien jusqu'au plan genere
 
 ### Ce qui ne pourra pas se faire sans une montre
 
