@@ -396,7 +396,9 @@ function urlBase64ToUint8Array(base64String) {
 const NAV_ITEMS = [
   { id:'accueil',   label:'Accueil',    Icon: HomeIcon },
   { id:'chat',      label:'Solenn',     Icon: ChatIcon },
-  { id:'routine',   label:'Programme',  Icon: RoutineIcon },
+  // Pluriel : l'onglet en contient desormais quatre, repartis en trois
+  // familles. Mesure faite avant de changer : la barre tient a 375px.
+  { id:'routine',   label:'Programmes', Icon: RoutineIcon },
   { id:'sante',     label:'Progrès',    Icon: HeartIcon },
   { id:'style',     label:'Style',      Icon: StyleIcon },
   { id:'breathwork',label:'Respiration',Icon: BreathworkIcon },
@@ -1832,7 +1834,7 @@ const [messages, setMessages] = useState(() => {
   const navItems = [
     { id:'accueil',    Icon: HomeIcon,       label:'Accueil' },
     { id:'chat',       Icon: ChatIcon,       label:'Solenn' },
-    { id:'routine',    Icon: RoutineIcon,    label:'Programme' },
+    { id:'routine',    Icon: RoutineIcon,    label:'Programmes' },
     { id:'sante',      Icon: HeartIcon,      label:'Progrès' },
     // Quatre onglets maximum : au-delà, les libellés deviennent illisibles sur
     // un écran de téléphone. Style, Respiration et Cycle sont des outils qu'on

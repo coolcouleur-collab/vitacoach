@@ -231,14 +231,19 @@ export default function SeanceActive({ seance = [], titre = '', jour = null, onT
 
       {/* ── Le corps ── */}
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '0 18px' }}>
-        {/* PAS d'AnimatePresence ici, volontairement. Ce sous-arbre est
-            redessine quatre fois par seconde par le chronometre, et dans ces
-            conditions la comptabilite de presence se bloquait : l'en-tete
-            passait a « Exercice 2 sur 4 » pendant que le corps restait fige
-            sur le premier exercice, indefiniment. Constate en cliquant, pas
-            suppose. Une transition de sortie ne vaut pas un ecran qui ment.
-            Les entrees s'animent quand meme : la cle change, donc React
-            remonte, donc le `initial` de chaque etat rejoue. */}
+        {/* PAS d'AnimatePresence ici, volontairement.
+            L'en-tete passait a « Exercice 2 sur 4 » pendant que le corps
+            restait fige sur le premier exercice, indefiniment.
+            CORRECTION du 2 septembre : j'avais d'abord attribue ca au
+            chronometre, qui redessine ce sous-arbre quatre fois par seconde.
+            C'etait faux. La cause est qu'AnimatePresence en mode « wait »
+            attend la FIN de l'animation de sortie avant de monter l'ecran
+            suivant, et qu'une animation de sortie ne se termine jamais quand
+            requestAnimationFrame ne s'execute pas : navigateur sans rendu,
+            onglet en arriere plan, appareil qui economise.
+            La dependance reste donc mauvaise ici, mais pour cette raison la :
+            un ecran qui ment vaut moins qu'une transition. Les entrees
+            s'animent quand meme, la cle change donc React remonte. */}
         {fini ? (
           <Bilan key="bilan" totalMs={totalMs} exos={exos} onEnregistrer={enregistrer} />
         ) : enRepos ? (

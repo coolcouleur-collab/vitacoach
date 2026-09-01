@@ -21,7 +21,7 @@
  */
 
 import Groq from 'groq-sdk'
-import { programmeParId } from '../src/programmes.js'
+import { programmeParId, INTENSITES } from '../src/programmes.js'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
 
@@ -91,13 +91,20 @@ const PROGRAMME_POIDS = {
 // generation depuis le 2026-08-12.
 const OBJECTIF_POIDS_RE = /poids|mincir|maigrir|corps|réconcilier|silhouette/i
 
-export async function creerChallenge(userId, duree = null, typeId = 'defi21') {
+export async function creerChallenge(userId, duree = null, typeId = 'defi21', intensiteId = null) {
   // Le programme choisi commande tout : la duree, la consigne donnee au
   // modele, ce qu'on accepte en retour, et le repli. Il vient du catalogue
   // partage avec le client, pour que la promesse affichee a l'ecran et le
   // texte envoye au generateur ne puissent pas diverger.
   const prog = programmeParId(typeId) || programmeParId('defi21')
-  duree = duree || prog.duree
+
+  // La duree vient du client, mais elle n'est acceptee que si le catalogue la
+  // propose. Sans ce controle, un appel bricole demanderait 365 jours, et le
+  // generateur passerait dix minutes a fabriquer un programme illisible.
+  const dureesOk = prog.durees?.length ? prog.durees : [prog.duree]
+  duree = dureesOk.includes(Number(duree)) ? Number(duree) : prog.duree
+
+  const intensite = INTENSITES.find(i => i.id === intensiteId) || null
 
   const supabase = getSupabase()
   const groq     = getGroq()
@@ -204,6 +211,12 @@ ${memoire?.themes_recurrents?.length ? `Sujets qui reviennent dans vos échanges
 ${contexteCycle}
 ═══ CE PROGRAMME : ${prog.titre.toUpperCase()} ═══
 ${prog.consigne}
+${intensite ? `
+INTENSITE CHOISIE PAR LA PERSONNE : ${intensite.nom.toUpperCase()}.
+${intensite.consigne}
+Elle l'a choisie elle-meme, en connaissance de cause. Respecte-la, sauf si le
+profil la rend dangereuse, auquel cas tu adaptes ET tu l'expliques dans la
+description.` : ''}
 
 Voici ce que la personne a lu AVANT de le choisir. Le programme que tu écris
 doit tenir ces promesses, ce sont elles qui l'ont décidée :
@@ -368,6 +381,9 @@ Format JSON :
     ...challenge,
     objectif_source: [profil?.objectifs?.[0], profil?.objectif].filter(Boolean)[0] || null,
     cycle: numCycle,
+    // L'intensite est gravee pour que le cycle suivant sache d'ou il repart,
+    // et pour que l'ecran puisse la rappeler.
+    intensite: intensite?.id || null,
     // Le type vit DANS le jsonb et pas dans une colonne : aucune migration a
     // passer, et les plans deja en base restent lisibles, ils valent defi21.
     type: prog.id,

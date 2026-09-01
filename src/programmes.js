@@ -37,7 +37,73 @@
  * @property {string[]} resultats    ce qu'on peut attendre en s'y tenant
  * @property {string}   consigne     ce qui est injecté dans le générateur
  * @property {string[]} exclusions   clés de sante_flags qui déclenchent un avis
+ * @property {string}   famille      'sport', 'routine' ou 'nutrition'
  */
+
+/**
+ * Les trois familles, et ce qui les sépare.
+ *
+ * Ce ne sont pas trois rangements, ce sont trois personnes différentes. Le
+ * découpage répond à « je cherche quoi ? » et non à « ça parle de quoi ? »,
+ * ce qui n'est pas la même question : un programme sommeil parle de sommeil,
+ * mais la personne qui le choisit cherche à retrouver de l'énergie sans
+ * s'engager sur du sport.
+ */
+/**
+ * Les trois intensités.
+ *
+ * Elles ne changent pas la nature du programme, elles changent ce qu'il
+ * demande. La description dit le COÛT, pas le bénéfice : quelqu'un qui
+ * surestime ce qu'il peut tenir abandonne en semaine deux, et c'est le pire
+ * résultat possible pour lui comme pour l'app.
+ */
+export const INTENSITES = [
+  {
+    id: 'douce', nom: 'Douce',
+    resume: 'Court, très progressif. Le bon choix si tu repars de loin.',
+    consigne: 'INTENSITE DOUCE. Seances de 10 a 15 minutes, jamais plus de 3 exercices, '
+            + 'aucun mouvement saute ni pliometrique, progression tres lente. '
+            + 'Objectif : la regularite, pas la performance. Un jour manque ne doit '
+            + 'jamais compromettre la suite.',
+  },
+  {
+    id: 'moyenne', nom: 'Moyenne',
+    resume: 'Environ vingt minutes, quatre fois par semaine. Le rythme par défaut.',
+    consigne: 'INTENSITE MOYENNE. Seances de 15 a 25 minutes, 3 a 4 exercices, '
+            + 'progression reguliere d\'environ 10 % par semaine.',
+  },
+  {
+    id: 'soutenue', nom: 'Soutenue',
+    resume: 'Trente minutes, ça pique. Seulement si tu bouges déjà régulièrement.',
+    consigne: 'INTENSITE SOUTENUE. Seances de 25 a 35 minutes, 4 a 5 exercices, '
+            + 'enchainements et mouvements intenses autorises des la premiere '
+            + 'semaine, progression plus rapide. NE PROPOSE PAS cette intensite '
+            + 'a un profil declare sedentaire : adapte a la baisse et dis-le.',
+  },
+]
+
+export const INTENSITE_DEFAUT = 'moyenne'
+
+export const FAMILLES = {
+  sport: {
+    id: 'sport',
+    onglet: 'Sport',
+    titre: 'Tes programmes sportifs',
+    role: "Pour t'engager sur un objectif physique, avec des séances et une progression.",
+  },
+  routine: {
+    id: 'routine',
+    onglet: 'Routine',
+    titre: 'Ta routine',
+    role: "Pour reprendre un rythme sans t'engager sur un programme sportif.",
+  },
+  nutrition: {
+    id: 'nutrition',
+    onglet: 'Nutrition',
+    titre: 'Ton accompagnement alimentaire',
+    role: 'Pour remettre de l\'ordre dans tes repas, sans rien compter.',
+  },
+}
 
 import { SITUATIONS } from './contreIndications.js'
 
@@ -87,6 +153,8 @@ export const PROGRAMMES = [
       "marche, jamais de séance construite, et le champ seance reste null presque partout.",
 
     exclusions: ['diabete', 'ulcere', 'renal', 'grossesse', 'allaitement'],
+    durees: [28],
+    famille: 'nutrition',
   },
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -133,6 +201,8 @@ export const PROGRAMMES = [
       "suite sur la même zone. Le conseil nutrition reste court et tourné vers la récupération.",
 
     exclusions: ['cardiaque', 'grossesse', 'chirurgie', 'epilepsie'],
+    durees: [28, 42, 56],
+    famille: 'sport',
   },
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -174,6 +244,8 @@ export const PROGRAMMES = [
       "un tiers des jours. Un jour de récupération plus léger tous les trois à quatre jours.",
 
     exclusions: [],
+    durees: [21],
+    famille: 'sport',
   },
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -220,8 +292,26 @@ export const PROGRAMMES = [
       "caféine et l'alcool.",
 
     exclusions: ['sedatifs', 'bipolaire'],
+    durees: [21],
+    famille: 'routine',
   },
 ]
+
+/**
+ * Ce programme laisse-t-il choisir son intensité ?
+ *
+ * Seul le sport. Une intensité « soutenue » n'a aucun sens pour un
+ * rééquilibrage alimentaire, et proposer un réglage qui ne change rien est
+ * pire que ne rien proposer : ça fait douter de tous les autres.
+ */
+export function reglableEnIntensite(prog) {
+  return prog?.famille === 'sport'
+}
+
+/** Les programmes d'une famille, dans l'ordre du catalogue. */
+export function programmesDe(famille) {
+  return PROGRAMMES.filter(p => p.famille === famille)
+}
 
 /** Retrouve un programme par sa clé. */
 export function programmeParId(id) {

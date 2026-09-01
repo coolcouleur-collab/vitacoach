@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import CatalogueProgrammes from './CatalogueProgrammes'
+import { programmeParId, FAMILLES } from './programmes'
 import { reposerRappels, demanderAutorisation } from './notificationsProgramme'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -97,7 +98,14 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
   )
 }
 
-export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
+/**
+ * @param {string} famille  la vue dans laquelle ce composant est monte :
+ *                          'sport', 'routine' ou 'nutrition'. Il ne montre le
+ *                          programme en cours que s'il appartient a cette
+ *                          famille, et propose sinon le catalogue de la
+ *                          famille demandee.
+ */
+export default function Challenge21j({ userId, isPro, onPasserPro, profil, famille = 'sport' }) {
   // Affichage immediat depuis le cache : chaque ouverture de l'onglet
   // repassait par Render, reveil compris, et la page restait vide plusieurs
   // secondes (constat Jean 2026-08-12). Le cache rend l'ecran instantane, le
@@ -206,7 +214,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
-  const handleCreerChallenge = async (type = 'defi21') => {
+  const handleCreerChallenge = async (type = 'defi21', reglages = {}) => {
     try {
       setCreating(true)
       setError(null)
@@ -216,7 +224,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
       const res = await fetch(`${API}/api/challenge-create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-        body: JSON.stringify({ userId, type }),
+        body: JSON.stringify({
+          userId, type,
+          duree: reglages.duree || null,
+          intensite: reglages.intensite || null,
+        }),
       })
       if (!res.ok) throw new Error('Erreur lors de la création')
       // L'autorisation est demandee ICI et pas au demarrage de l'app : on la
@@ -430,15 +442,44 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // connaissait le contenu avant de les recevoir. Il montre desormais les
   // quatre programmes, ce que chacun vise, pour qui il est fait et ce qu'on
   // peut en attendre : le choix precede la generation au lieu de la subir.
-  if (!challenge) {
+  // A quelle famille appartient le programme en cours ? Les programmes crees
+  // avant le catalogue n'ont pas de type : ce sont des defis 21 jours, donc du
+  // sport. Sans ce repli, ils disparaitraient de tous les onglets a la fois.
+  const familleEnCours = programmeParId(challenge?.challenge?.type)?.famille || 'sport'
+  const ailleurs = !!challenge && familleEnCours !== famille
+
+  if (!challenge || ailleurs) {
+    const enCours = challenge ? programmeParId(challenge.challenge?.type) : null
     return (
       <div style={styles.container}>
+        {/* Un seul programme peut tourner a la fois. Le dire ICI, avant le
+            choix, et non apres : quelqu'un qui decouvre en validant que son
+            programme alimentaire vient d'etre remplace par du sport ne le
+            pardonne pas. */}
+        {ailleurs && (
+          <div style={{
+            background: 'rgba(255,235,210,0.32)', border: '1px solid rgba(255,220,160,0.40)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: 18, padding: '14px 16px', marginBottom: 14,
+            fontFamily: "'Poppins', sans-serif",
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: ENCRE, marginBottom: 4 }}>
+              Tu suis déjà « {enCours?.titre || challenge.challenge?.titre} »
+            </div>
+            <div style={{ fontSize: 12.5, lineHeight: 1.55, color: ENCRE }}>
+              Il est dans l'onglet {FAMILLES[familleEnCours]?.onglet || 'Sport'}.
+              Tu ne peux suivre qu'un programme à la fois : en commencer un ici
+              remplacera celui-là, et sa progression sera perdue.
+            </div>
+          </div>
+        )}
         <CatalogueProgrammes
           profil={profil}
+          famille={famille}
           creating={creating}
           creatingLabel={ETAPES_CREATION[etapeCreation]}
           error={error}
-          onCommencer={prog => handleCreerChallenge(prog.id)}
+          onCommencer={(prog, reglages) => handleCreerChallenge(prog.id, reglages)}
         />
       </div>
     )

@@ -17,8 +17,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { PROGRAMMES, avisProgramme } from './programmes'
+import { motion } from 'framer-motion'
+import {
+  PROGRAMMES, programmesDe, avisProgramme,
+  INTENSITES, INTENSITE_DEFAUT, reglableEnIntensite,
+} from './programmes'
 import { ENCRE, ICONE, ACCENT, AMBRE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
@@ -69,10 +72,65 @@ function Titre({ children }) {
   )
 }
 
+/**
+ * Un choix entre quelques options, en boutons filaires.
+ *
+ * Pas de menu déroulant : sur un écran de téléphone, un menu cache ses options
+ * derrière un geste, et on ne choisit pas ce qu'on ne voit pas. Trois ou
+ * quatre boutons visibles se comparent d'un coup d'œil.
+ */
+function Choix({ titre, options, valeur, onChoisir, aide = null }) {
+  return (
+    <div style={{ marginTop: 18 }}>
+      <div style={{
+        fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase',
+        color: AMBRE, marginBottom: 9,
+      }}>
+        {titre}
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {options.map(o => {
+          const actif = o.id === valeur
+          return (
+            <button
+              key={o.id}
+              onClick={() => onChoisir(o.id)}
+              style={{
+                flex: 1, padding: '11px 6px', borderRadius: 13, cursor: 'pointer',
+                background: actif ? 'rgba(200,123,82,0.16)' : 'transparent',
+                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(200,123,82,0.28)',
+                color: ENCRE, fontSize: 13, fontWeight: actif ? 700 : 500,
+                fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              {o.nom}
+            </button>
+          )
+        })}
+      </div>
+      {aide && (
+        <div style={{ fontSize: 12, lineHeight: 1.5, color: ENCRE, opacity: 0.85, marginTop: 9 }}>
+          {aide}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── LA FICHE D'UN PROGRAMME ─────────────────────────────────────────────────
 
 function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, error }) {
   const avis = avisProgramme(profil, prog)
+
+  // La duree par defaut est celle que la fiche annonce plus haut : changer ce
+  // que la personne vient de lire sans qu'elle l'ait demande serait un piege.
+  const durees = prog.durees?.length ? prog.durees : [prog.duree]
+  const [duree, setDuree] = useState(
+    durees.includes(prog.duree) ? prog.duree : durees[0],
+  )
+  const [intensite, setIntensite] = useState(INTENSITE_DEFAUT)
+  const reglable = reglableEnIntensite(prog)
+  const aideIntensite = INTENSITES.find(i => i.id === intensite)?.resume
 
   return (
     <motion.div
@@ -97,7 +155,7 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
           }}>
             {prog.titre}
           </h2>
-          <div style={{ marginTop: 7 }}><Duree jours={prog.duree} /></div>
+          <div style={{ marginTop: 7 }}><Duree jours={duree} /></div>
         </div>
       </div>
 
@@ -129,6 +187,32 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
         Ces effets supposent que tu t'y tiennes. Ils varient d'une personne à l'autre,
         et ce programme ne remplace pas un avis médical.
       </p>
+
+      {/* Les reglages arrivent APRES la promesse et avant l'engagement : on
+          choisit son intensite en sachant deja a quoi on s'engage, pas avant. */}
+      {durees.length > 1 && (
+        <Choix
+          titre="Sur combien de temps"
+          options={durees.map(j => ({ id: j, nom: `${j} jours` }))}
+          valeur={duree}
+          onChoisir={setDuree}
+          aide={duree === Math.max(...durees)
+            ? "Le plus long laisse le corps s'adapter vraiment, mais demande de tenir plus longtemps."
+            : duree === Math.min(...durees)
+              ? 'Le plus court, pour voir si le rythme te convient avant de t\'engager davantage.'
+              : null}
+        />
+      )}
+
+      {reglable && (
+        <Choix
+          titre="À quelle intensité"
+          options={INTENSITES}
+          valeur={intensite}
+          onChoisir={setIntensite}
+          aide={aideIntensite}
+        />
+      )}
 
       {/* L'avis de santé vient du croisement avec les situations déclarées à
           l'inscription. Il ne bloque pas le bouton : c'est une information,
@@ -169,7 +253,7 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
         </button>
         <motion.button
           whileTap={creating ? undefined : { scale: 0.98 }}
-          onClick={() => onCommencer(prog)}
+          onClick={() => onCommencer(prog, { duree, intensite: reglable ? intensite : null })}
           disabled={creating}
           style={{
             flex: 1, padding: '13px 16px', borderRadius: 15,
@@ -235,14 +319,23 @@ function Vignette({ prog, index, onOuvrir }) {
  *                               programme alors qu'un autre tourne déjà
  */
 export default function CatalogueProgrammes({
-  profil, onCommencer, creating = false, creatingLabel = null, error = null, onAnnuler = null,
+  profil, onCommencer, creating = false, creatingLabel = null, error = null,
+  onAnnuler = null, famille = null, titre = null, sousTitre = null,
 }) {
   const [ouvert, setOuvert] = useState(null)
+  // Sans famille, le catalogue entier. C'est ce que voit l'ecran de
+  // verification, et ce que verrait un futur ecran « tout voir ».
+  const liste = famille ? programmesDe(famille) : PROGRAMMES
 
   return (
     <div style={{ fontFamily: "'Poppins', sans-serif" }}>
-      <AnimatePresence mode="wait">
-        {ouvert ? (
+      {/* Meme choix que dans SeanceActive, et meme raison : AnimatePresence en
+          mode « wait » attend la fin de l'animation de sortie pour monter
+          l'ecran suivant, et cette animation ne se termine jamais quand
+          requestAnimationFrame ne tourne pas. Toucher un programme laissait
+          alors la liste a l'ecran, sans fiche et sans erreur.
+          Une transition ne vaut pas un ecran qui ne repond plus. */}
+      {ouvert ? (
           <Fiche
             key={ouvert.id}
             prog={ouvert}
@@ -265,15 +358,15 @@ export default function CatalogueProgrammes({
               fontSize: 20, fontWeight: 700, color: ENCRE, margin: '0 0 6px',
               lineHeight: 1.3,
             }}>
-              Choisis ton programme
+              {titre || 'Choisis ton programme'}
             </h2>
             <p style={{ fontSize: 13, lineHeight: 1.6, color: ENCRE, margin: '0 0 18px' }}>
-              Quatre chemins, quatre objectifs. Solenn construira le tien à partir de
-              ton profil. Tu pourras en changer quand tu veux.
+              {sousTitre || `${liste.length === 1 ? 'Un programme' : liste.length + ' programmes'}, `
+                + 'construits à partir de ton profil. Tu pourras en changer quand tu veux.'}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-              {PROGRAMMES.map((p, i) => (
+              {liste.map((p, i) => (
                 <Vignette key={p.id} prog={p} index={i} onOuvrir={setOuvert} />
               ))}
             </div>
@@ -293,7 +386,6 @@ export default function CatalogueProgrammes({
             )}
           </motion.div>
         )}
-      </AnimatePresence>
     </div>
   )
 }

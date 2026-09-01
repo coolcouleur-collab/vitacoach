@@ -451,7 +451,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       }}>
         <div>
           <div style={{ fontSize: 22, fontWeight: 800, color: ENCRE, fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
-            {vue === 'programme' ? 'Ton programme' : vue === 'routine' ? 'Ta routine du jour' : 'Ta nutrition'}
+            {vue === 'programme' ? 'Ton sport' : vue === 'routine' ? 'Ta routine' : 'Ton alimentation'}
           </div>
           <div style={{ fontSize: 12, color: ENCRE, fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -497,8 +497,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           display: 'flex', gap: 6, padding: 4, borderRadius: 16,
           background: 'rgba(200,123,82,0.10)', border: '1px solid rgba(200,123,82,0.18)',
         }}>
+          {/* « Sport » et non « Programme ». L'onglet parent s'appelle
+              Programmes : un sous-onglet du meme nom obligeait a se demander
+              lequel des deux on regarde. Et surtout, ces trois mots repondent
+              maintenant a « je cherche quoi ? » et non a « ca parle de quoi ? ». */}
           {[
-            { id: 'programme', label: 'Programme' },
+            { id: 'programme', label: 'Sport' },
             { id: 'routine',   label: 'Routine' },
             { id: 'nutrition', label: 'Nutrition' },
           ].map(o => (
@@ -517,10 +521,10 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             page ne faisait jamais. */}
         <div style={{ fontSize: 11.5, color: ENCRE, fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, padding: '9px 4px 0' }}>
           {vue === 'programme'
-            ? '21 jours de sport, santé et nutrition pour atteindre ton objectif.'
+            ? "Pour t'engager sur un objectif physique, avec des séances et une progression."
             : vue === 'routine'
-              ? 'Ton rythme du jour, régénéré chaque matin selon tes données.'
-              : 'Tes repas du jour, adaptés à ton profil et à tes données.'}
+              ? "Pour reprendre un rythme sans t'engager sur un programme sportif."
+              : "Pour remettre de l'ordre dans tes repas, sans rien compter."}
         </div>
       </div>
 
@@ -536,7 +540,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 apparaissait quatre fois sur l'écran et « Ton cap » dit déjà
                 l'essentiel juste dessous (constat Jean 2026-08-13). */}
             <React.Suspense fallback={null}>
-              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro} profil={profil} />
+              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
+                profil={profil} famille="sport" />
             </React.Suspense>
           </div>
         )}
@@ -763,6 +768,18 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               </div>
             )}
 
+            {/* Les repas du jour racontent aujourd'hui. Le programme, lui,
+                installe des habitudes sur quatre semaines : ce sont deux
+                choses differentes, et l'ordre le dit. */}
+            {userId && (
+              <div style={{ marginTop: 18, marginBottom: 4 }}>
+                <React.Suspense fallback={null}>
+                  <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
+                    profil={profil} famille="nutrition" />
+                </React.Suspense>
+              </div>
+            )}
+
             <button
               onClick={() => { try { window.dispatchEvent(new CustomEvent('solenn:photo-repas')) } catch {} }}
               style={{
@@ -783,6 +800,21 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
+          </div>
+        )}
+
+        {/* ── Aller plus loin, depuis la Routine.
+             La routine du jour est legere et sans engagement, c'est son role.
+             Ceux qui veulent aller plus loin sur leur energie trouvent ici le
+             programme de 21 jours qui creuse le sujet. Il vient APRES la
+             routine, et non a la place : proposer un engagement de trois
+             semaines a quelqu'un venu chercher le contraire, c'est le perdre. ── */}
+        {vue === 'routine' && userId && !loading && (
+          <div style={{ marginTop: 20 }}>
+            <React.Suspense fallback={null}>
+              <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
+                profil={profil} famille="routine" />
+            </React.Suspense>
           </div>
         )}
 
