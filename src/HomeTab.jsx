@@ -2286,6 +2286,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
       </motion.div>
 
       {/* ── Ta progression cette semaine ── */}
+      {score > 0 && (
       <motion.div
         initial={{ opacity:0, y:14 }}
         animate={{ opacity:1, y:0 }}
@@ -2349,6 +2350,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           </div>
         </div>
       </motion.div>
+      )}
     </div>
   )
 }

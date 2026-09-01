@@ -2173,7 +2173,12 @@ padding: isMobile
           {isMobile && onglet === 'accueil' && (
             <div style={{
               position:'fixed', top:0, left:0, right:0, zIndex:50,
+              background: homePreset === 'night'
+                ? 'linear-gradient(180deg, rgba(7,15,30,0.92) 0%, rgba(7,15,30,0.72) 55%, rgba(7,15,30,0) 100%)'
+                : 'linear-gradient(180deg, rgba(240,220,203,0.92) 0%, rgba(240,220,203,0.70) 55%, rgba(240,220,203,0) 100%)',
+              backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
               padding:'10px 18px',
+              paddingBottom:16,   // apres le raccourci, sinon il l'ecrase
               paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
               display:'flex', justifyContent:'space-between', alignItems:'center',
             }}>
