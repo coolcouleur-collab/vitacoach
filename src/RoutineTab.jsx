@@ -298,6 +298,7 @@ function EmptyRoutine({ generating, onGenerate }) {
 
 // ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
 const CourseActive = React.lazy(() => import('./CourseActive'))
+const IdeesRepas = React.lazy(() => import('./IdeesRepas'))
 
 export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
   const todayKey = new Date().toDateString()
@@ -778,6 +779,16 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                     profil={profil} famille="nutrition" />
                 </React.Suspense>
               </div>
+            )}
+
+            {/* Les idees de repas apres le programme : le programme installe
+                des habitudes, les idees repondent a « je fais quoi ce soir ».
+                La seconde question se pose tous les jours, la premiere une
+                fois, d'ou cet ordre. */}
+            {userId && (
+              <React.Suspense fallback={null}>
+                <IdeesRepas userId={userId} profil={profil} />
+              </React.Suspense>
             )}
 
             <button

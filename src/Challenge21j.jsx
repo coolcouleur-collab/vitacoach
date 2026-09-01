@@ -185,6 +185,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   }, [creating])
   const [exoGuide, setExoGuide] = useState(null)
   const [seanceOuverte, setSeanceOuverte] = useState(false)
+  const [pourquoiOuvert, setPourquoiOuvert] = useState(false)
 
   const fetchChallenge = async () => {
     try {
@@ -445,7 +446,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   // A quelle famille appartient le programme en cours ? Les programmes crees
   // avant le catalogue n'ont pas de type : ce sont des defis 21 jours, donc du
   // sport. Sans ce repli, ils disparaitraient de tous les onglets a la fois.
-  const familleEnCours = programmeParId(challenge?.challenge?.type)?.famille || 'sport'
+  const progCourant = programmeParId(challenge?.challenge?.type)
+  const familleEnCours = progCourant?.famille || 'sport'
   const ailleurs = !!challenge && familleEnCours !== famille
 
   if (!challenge || ailleurs) {
@@ -504,6 +506,63 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               ? <><span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}</>
               : <>Aucun objectif dans ton profil : définis-le dans Réglages, ton programme suivra ce cap.</>}
           </div>
+        </div>
+      )}
+
+      {/* POURQUOI ce programme, et ce qu'il promet, pendant qu'il tourne.
+          Ces textes n'existaient qu'AVANT le choix, sur la fiche du catalogue.
+          Or c'est en semaine deux qu'on se demande a quoi bon, pas le premier
+          jour : les laisser hors de portee une fois le programme lance, c'est
+          les mettre au seul moment ou personne n'en a besoin.
+          Replie par defaut, parce qu'on ne relit pas ca tous les jours. */}
+      {progCourant && (
+        <div style={{
+          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(200,123,82,0.20)',
+          borderRadius: 14, padding: '10px 14px', marginBottom: 12,
+          fontFamily: "'Poppins', sans-serif",
+        }}>
+          <button
+            onClick={() => setPourquoiOuvert(o => !o)}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              width: '100%', textAlign: 'left', fontFamily: "'Poppins', sans-serif",
+              fontSize: 12.5, fontWeight: 700, color: ENCRE,
+            }}
+          >
+            {pourquoiOuvert ? 'Masquer' : 'Pourquoi ce programme, et ce qu\'il t\'apporte'}
+          </button>
+
+          {pourquoiOuvert && (
+            <div style={{ marginTop: 10 }}>
+              <div style={{ fontSize: 12.5, lineHeight: 1.6, color: ENCRE }}>
+                {progCourant.pourquoi}
+              </div>
+
+              <div style={{
+                fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em',
+                textTransform: 'uppercase', color: AMBRE, margin: '14px 0 7px',
+              }}>
+                Ce que tu peux en attendre
+              </div>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                {progCourant.resultats.map((r, i) => (
+                  <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 6 }}>
+                    <span aria-hidden="true" style={{
+                      width: 4, height: 4, borderRadius: 999, background: ICONE,
+                      marginTop: 7, flexShrink: 0,
+                    }} />
+                    <span style={{ fontSize: 12.5, lineHeight: 1.5, color: ENCRE }}>{r}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {challenge?.challenge?.intensite && (
+                <div style={{ fontSize: 11.5, color: ENCRE, opacity: 0.8, marginTop: 10 }}>
+                  Intensité choisie : {challenge.challenge.intensite}.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

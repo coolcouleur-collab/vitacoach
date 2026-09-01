@@ -18,6 +18,7 @@ import {
   extraireMoments, sauvegarderMoments,
 } from './agents/index.js'
 import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken } from './agents/sync-sante.js'
+import { genererRecettes } from './agents/recettes.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 import { ownerGuard, adminGuard } from './api/_auth.js'
@@ -2005,6 +2006,47 @@ app.get('/api/meteo', async (req, res) => {
     const ctx = await genererContexteMeteo(ville, pays)
     res.json(ctx || { error: 'Météo non disponible (OPENWEATHER_API_KEY manquante ?)' })
   } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// ─── Idées de repas ─────────────────────────────────────────────────────────
+// GET  /api/recettes?userId=...          → le cache du jour, s'il existe
+// POST /api/recettes { userId, moment }  → en génère de nouvelles
+//
+// Deux routes et non une : ouvrir l'onglet Nutrition ne doit pas déclencher
+// une génération, sinon chaque passage coûte un appel au modèle et vingt
+// secondes d'attente pour des idées que la personne n'a pas demandées.
+app.get('/api/recettes', ownerGuard, async (req, res) => {
+  const { userId } = req.query
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  try {
+    const { data } = await supabase
+      .from('profils').select('profil').eq('user_id', userId).single()
+    const cache = data?.profil?.recettes_cache || null
+    const aujourdhui = new Date().toISOString().split('T')[0]
+    // Un cache d'hier est servi quand meme : des idees de repas ne se perimen
+    // pas a minuit, et un ecran vide au reveil vaut moins qu'une idee de la
+    // veille. La date part avec, l'ecran dira qu'elles datent.
+    res.json({ recettes: cache?.liste || null, date: cache?.date || null, dujour: cache?.date === aujourdhui })
+  } catch (e) {
+    res.json({ recettes: null, date: null, dujour: false })
+  }
+})
+
+app.post('/api/recettes', ownerGuard, async (req, res) => {
+  const { userId, moment = 'diner' } = req.body
+  if (!userId) return res.status(400).json({ error: 'userId requis' })
+  const momentsOk = ['petit-dejeuner', 'dejeuner', 'diner']
+  try {
+    const r = await genererRecettes(userId, {
+      moment: momentsOk.includes(moment) ? moment : 'diner',
+    })
+    res.json({ succes: true, ...r })
+  } catch (e) {
+    // Le message vient de genererRecettes et il est ecrit pour etre lu par la
+    // personne : un refus pour cause d'interdit alimentaire doit se distinguer
+    // d'une panne, sinon relancer parait inutile alors que ca marche souvent.
     res.status(500).json({ error: e.message })
   }
 })
