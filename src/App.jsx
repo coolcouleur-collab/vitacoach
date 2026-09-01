@@ -2186,7 +2186,8 @@ padding: isMobile
                   ? { color: 'rgba(198,222,255,0.96)' }
                   : { background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
                       backgroundSize:'200% auto',
-                      WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }
+                      WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                      animation:'headerShimmer 3s linear infinite' }
                 const subColor  = nuitAcc ? 'rgba(190,216,255,0.78)' : ENCRE
                 return (
                 <div style={{ pointerEvents:'none', position:'relative' }}>
@@ -2199,7 +2200,7 @@ padding: isMobile
                   }}>Solenn</span>
                   <span style={{
                     fontSize:8.5, fontWeight:400, letterSpacing:'0.5px', display:'block', marginTop:2,
-                    fontFamily:"'Poppins',system-ui,sans-serif",
+                    fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic',
                     color: subColor,
                   }}>Ton soleil au quotidien</span>
                 </div>

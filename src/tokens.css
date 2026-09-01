@@ -219,3 +219,12 @@ body {
   animation: chatGlow 3s ease-in-out infinite;
   will-change: box-shadow;
 }
+
+
+/* Le degrade anime du logo. Il vivait dans un <style> a l'interieur de
+   l'en-tete des pages AUTRES que l'accueil : l'accueil ne pouvait donc pas
+   s'en servir, et son logo restait fige la ou les autres scintillaient. */
+@keyframes headerShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
