@@ -1026,7 +1026,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   douze jours de suite avec quatre verres d'eau, et elle n'était
                   jamais mentionnée. C'est pourtant le jour où il faut la
                   rappeler pour éviter qu'elle se casse (2026-08-11). */}
-              {streak > 0 && (
+              {streak > 1 && (
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '3px 11px', borderRadius: 20, marginBottom: 8,
@@ -1039,7 +1039,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   {streak >= 7
                     ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
                     : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />}
-                  {`${streak} jour${streak > 1 ? 's' : ''} d'affilée`}
+                  {`${streak} jours d'affilée`}
                 </div>
               )}
               <div style={{
@@ -1695,7 +1695,7 @@ export function StreakXP({ streak, xp, level }) {
                 {streak}<span style={{ fontSize:10, fontWeight:300, color:ENCRE, marginLeft:6 }}>jours</span>
               </div>
               <div style={{ fontSize:9, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
-                {streak >= 7 ? 'En feu !' : streak > 0 ? `${streak} jour${streak > 1 ? 's' : ''} d'affilée` : 'À commencer'}
+                {streak >= 7 ? 'En feu !' : streak > 1 ? `${streak} jours d'affilée` : 'À commencer'}
               </div>
             </div>
           </div>
