@@ -3,7 +3,6 @@ import { supabase } from './supabase'
 import { FlashIcon, LoadingIcon } from './Icons'
 import LiquidImage from './LiquidImage'
 import GlobeBg from './GlobeBg'
-import { ENCRE } from './palette'
 
 const LANGS = [
   { code: 'fr', name: 'Français' },
@@ -240,7 +239,7 @@ export default function Auth({ onConnecte, onBack }) {
           border:'1px solid rgba(255,220,160,0.35)', borderRadius:'2rem',
           padding:'6px 12px', cursor:'pointer',
           fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight:500, letterSpacing:'0.08em',
-          color:ENCRE, transition:'background 0.2s',
+          color:'#C87B52', transition:'background 0.2s',
         }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
@@ -260,11 +259,11 @@ export default function Auth({ onConnecte, onBack }) {
             {LANGS.map(({ code, name }) => (
               <button key={code} onClick={() => switchLang(code)} style={{
                 display:'block', width:'100%', textAlign:'left',
-                padding:'9px 16px', background: lang===code ? ENCRE : 'none',
+                padding:'9px 16px', background: lang===code ? '#C87B52' : 'none',
                 border:'none', cursor:'pointer',
                 fontFamily:'Poppins, sans-serif', fontSize:13,
                 fontWeight: lang===code ? 600 : 400,
-                color: lang===code ? ENCRE : ENCRE,
+                color: lang===code ? '#C87B52' : '#C87B52',
                 transition:'background 0.15s',
               }}>
                 {name}
@@ -334,24 +333,22 @@ export default function Auth({ onConnecte, onBack }) {
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>{T.email}</label>
-          <input style={s.input} type="email" placeholder="@" value={email}
+          <input style={s.input} type="email" placeholder={T.email} value={email}
             autoComplete="email" name="email"
             onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key==='Enter' && soumettre()} />
         </div>
 
         <div style={{...s.field, position:'relative'}}>
-          <label style={s.label}>{T.password}</label>
           <div style={{position:'relative'}}>
             <svg style={{position:'absolute', left:4, top:'50%', transform:'translateY(-50%)',
-              opacity:0.82, pointerEvents:'none', color:ENCRE}}
+              opacity:0.82, pointerEvents:'none', color:'#C87B52'}}
               width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
-            <input style={{...s.input, paddingLeft:24}} type="password" placeholder=""
+            <input style={{...s.input, paddingLeft:24}} type="password" placeholder={T.password}
               autoComplete={mode === 'inscription' ? 'new-password' : 'current-password'}
               name="password"
               value={password} onChange={e => setPassword(e.target.value)}
@@ -365,7 +362,7 @@ export default function Auth({ onConnecte, onBack }) {
               type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
               style={{ cursor:'pointer' }}
             />
-            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:ENCRE }}>
+            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'#C87B52' }}>
               {T.remember}
             </span>
           </label>
@@ -383,7 +380,7 @@ export default function Auth({ onConnecte, onBack }) {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: '1rem',
-              color: ENCRE,
+              color: '#C87B52',
               letterSpacing: '0.01em',
             }}>
               {message}
@@ -415,7 +412,7 @@ export default function Auth({ onConnecte, onBack }) {
         {mode === 'inscription' && (
           <div style={s.footer}>
             {T.terms}<br />
-            <span style={{ color:ENCRE, fontWeight:600 }}>{T.termsLink}</span>.
+            <span style={{ color:'#C87B52', fontWeight:600 }}>{T.termsLink}</span>.
           </div>
         )}
 
@@ -461,34 +458,37 @@ const s = {
     border:'1px solid rgba(255,220,160,0.30)',
     animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', marginBottom:6 },
-  tagline: { textAlign:'center', fontSize:13, color:ENCRE, marginBottom:36 },
+  tagline: { textAlign:'center', fontSize:13, color:'#C87B52', marginBottom:36 },
   tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
     borderBottom:'1px solid rgba(255,220,160,0.20)' },
-  tab: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
-    fontSize:14, fontFamily:'Poppins, sans-serif', color:ENCRE, fontWeight:400,
-    borderBottom:'2px solid transparent', marginBottom:'-1px' },
-  tabActive: { flex:1, padding:'12px', background:'transparent', border:'none', cursor:'pointer',
-    fontSize:14, fontFamily:'Poppins, sans-serif', color:ENCRE, fontWeight:600,
-    borderBottom:'2px solid rgba(255,220,160,0.60)', marginBottom:'-1px' },
+  tab: { flex:1, padding:'10px 4px', background:'transparent', border:'none', cursor:'pointer',
+    fontSize:21, fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
+    color:'#C87B52', fontWeight:400, opacity:0.72,
+    borderBottom:'1px solid transparent', marginBottom:'-1px' },
+  tabActive: { flex:1, padding:'10px 4px', background:'transparent', border:'none', cursor:'pointer',
+    fontSize:21, fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
+    color:'#C87B52', fontWeight:600,
+    borderBottom:'1px solid rgba(200,123,82,0.60)', marginBottom:'-1px' },
   field: { marginBottom:16 },
   label: { display:'block', marginBottom:6, fontWeight:500, fontSize:12,
-    color:ENCRE, letterSpacing:'1.2px', textTransform:'uppercase' },
-  input: { width:'100%', padding:'12px 14px', border:'1.5px solid rgba(124,76,51,0.70)',   // 3,11:1 mesure, etait a 1,02
-    borderRadius:10, background:'rgba(255,250,244,0.55)', fontSize:16, fontFamily:'Poppins, sans-serif',
-    boxSizing:'border-box', outline:'none', color:ENCRE, transition:'border-color 0.2s, background 0.2s, box-shadow 0.2s' },
+    color:'#C87B52', letterSpacing:'1.2px', textTransform:'uppercase' },
+  input: { width:'100%', padding:'11px 2px', border:'none', borderBottom:'1px solid rgba(200,123,82,0.50)',
+    borderRadius:0, background:'none', fontSize:16, fontFamily:'Poppins, sans-serif',
+    color:'#C87B52',
+    boxSizing:'border-box', outline:'none', transition:'border-color 0.2s, background 0.2s, box-shadow 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
-  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'linear-gradient(135deg,#6C422C,#90593B)', display:'block', margin:'12px auto 0',
-    color:'#FFF8EB', border:'1px solid rgba(108,66,44,0.55)', borderRadius:'2rem',
+  btn: { width:'auto', padding:'0.85rem 2.5rem', background:'none', display:'block', margin:'20px auto 0',
+    color:'#C87B52', border:'1px solid rgba(200,123,82,0.65)', borderRadius:'2rem',
     fontSize:'clamp(1.3rem, 1.2vw, 1.6rem)', fontWeight:500, fontStyle:'italic',
     cursor:'pointer', fontFamily:"'Cormorant Garamond', Georgia, serif",
     letterSpacing:'0.10em', marginTop:0,
     transition:'background 0.25s, border-color 0.25s' },
-  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:ENCRE, letterSpacing:'0.02em' },
-  footer: { marginTop:20, textAlign:'center', fontSize:14, color:ENCRE, lineHeight:1.6 },
+  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:'#C87B52', letterSpacing:'0.02em' },
+  footer: { marginTop:20, textAlign:'center', fontSize:14, color:'#C87B52', lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,
     background:'rgba(255,235,210,0.22)', border:'1px solid rgba(255,220,160,0.40)', cursor:'pointer',
-    color:ENCRE, fontSize:22, fontWeight:500,
+    color:'#C87B52', fontSize:22, fontWeight:500,
     fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic', padding:'0.55rem 1.8rem',
     borderRadius:'2rem', transition:'background 0.25s, border-color 0.25s',
   },
