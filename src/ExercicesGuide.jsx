@@ -366,7 +366,10 @@ function PhotoExo({ exo, height = 130, radius = 12, fallback = 'anim' }) {
 }
 
 // ── Bibliothèque ─────────────────────────────────────────────────────────────
-const EXOS = [
+// Exporte : le lecteur de seance affiche le meme nom, la meme cible et les
+// memes etapes que le guide. Les redeclarer ailleurs, c'est garantir qu'un
+// jour les deux ne diront plus la meme chose.
+export const EXOS = [
   {
     id: 'squat', nom: 'Squat', duree: '3 × 10', cible: 'Jambes · fessiers',
     mots: ['squat', 'flexion'],
