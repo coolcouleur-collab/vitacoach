@@ -119,7 +119,12 @@ class MsgBoundary extends Component {
 }
 
 // ─── HEALTH PERMISSION MODAL ─────────────────────────────────────────────────
-function HealthPermModal({ onAllow, onLater }) {
+function HealthPermModal({ onAllow, onLater, isNight = false }) {
+  // Le panneau flotte au-dessus de l'accueil : sur le navy du mode Nuit,
+  // l'encre terracotta disparait. Meme regle que la barre laterale.
+  const encre  = isNight ? 'rgba(198,222,255,0.95)' : ENCRE
+  const encre2 = isNight ? 'rgba(190,216,255,0.78)' : ENCRE
+  const trait  = isNight ? 'rgba(160,200,255,0.22)' : 'rgba(255,220,160,0.28)'
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:1500,
@@ -144,8 +149,8 @@ function HealthPermModal({ onAllow, onLater }) {
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
-            { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color={ICONE} /> },
-            { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color={ICONE} /> },
+            { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color={encre2} /> },
+            { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color={encre2} /> },
           ].map(({ bg, icon }, idx) => (
             <div key={idx} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center' }}>{icon}</div>
           ))}
@@ -155,15 +160,15 @@ function HealthPermModal({ onAllow, onLater }) {
           fontFamily:"'Poppins', system-ui, sans-serif",
           fontWeight:600,
           fontSize:'clamp(1.4rem, 2vw, 1.7rem)',
-          color: ENCRE,
+          color: encre,
           textAlign:'center', marginBottom:8, letterSpacing:'-0.01em',
         }}>
           Synchroniser mes données santé
         </div>
-        <div style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: ENCRE, textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
+        <div style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: encre, textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
           Solenn synchronise automatiquement depuis{' '}
-          <strong style={{ color: ENCRE }}>Apple Santé</strong> ou{' '}
-          <strong style={{ color: ENCRE }}>Google Fit</strong>.
+          <strong style={{ color: encre }}>Apple Santé</strong> ou{' '}
+          <strong style={{ color: encre }}>Google Fit</strong>.
         </div>
 
         {[
@@ -178,10 +183,10 @@ function HealthPermModal({ onAllow, onLater }) {
             background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.18)',
           }}>
             <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-              <Icon size={18} color={ICONE} />
+              <Icon size={18} color={encre2} />
             </span>
-            <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:500, flex:1 }}>{label}</span>
-            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
+            <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: encre, fontWeight:500, flex:1 }}>{label}</span>
+            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: encre, fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
           </div>
         ))}
 
@@ -190,7 +195,7 @@ function HealthPermModal({ onAllow, onLater }) {
             padding:'0.85rem 2.5rem', borderRadius:'2rem',
             border:'1px solid rgba(255,220,160,0.75)',
             background:'rgba(200,100,40,0.18)',
-            color: ENCRE,
+            color: encre,
             fontFamily:"'Poppins', system-ui, sans-serif",
             fontWeight:600,
             fontSize:'clamp(1.2rem, 1.3vw, 1.4rem)',
@@ -202,7 +207,7 @@ function HealthPermModal({ onAllow, onLater }) {
             padding:'12px', borderRadius:'2rem',
             border:'1px solid rgba(255,220,160,0.45)',
             background:'rgba(255,220,160,0.08)',
-            color: ENCRE,
+            color: encre,
             fontFamily:'Poppins, sans-serif',
             fontSize:13, fontWeight:500,
             cursor:'pointer',
@@ -2893,7 +2898,7 @@ padding: isMobile
       {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
 
       {/* Health permission modal, 1er lancement */}
-      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} />}
+      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} isNight={homePreset === 'night' && onglet === 'accueil'} />}
 
       {/* Global animations */}
       <style>{`
