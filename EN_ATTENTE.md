@@ -237,3 +237,23 @@ vrai thème sombre, et les testeuses le demanderont.
 
 `src/palette.js` a été créé pour ça. Le jour où on l'étend, il suffira de
 donner une variante nuit aux six jetons au lieu de chasser 600 valeurs.
+
+## Pourquoi les corrections de couleur en oubliaient toujours
+
+Relevé le 1er septembre 2026, après quatre passages successifs. Une couleur
+n'est presque jamais écrite en clair dans ce code. Cinq mécanismes la cachent,
+et chacun a survécu à au moins un passage :
+
+1. **Fabriques** : `am(0.8)`, `warmText(op)`. Une fonction construit la couleur.
+2. **Constantes locales** : `TXT_MAIN`, `ACCENT`. Une valeur pour vingt textes.
+3. **Suffixe d'alpha hexadécimal** collé à la couleur, qui la délave.
+4. **Ternaires**, y compris à l'intérieur d'un attribut JSX.
+5. **Attributs d'icône**, qui s'écrivent avec un égal et non deux points, et
+   relèvent du seuil 3,0 et non 4,5.
+
+Avant toute nouvelle campagne de lisibilité, chercher ces cinq formes, pas
+seulement les valeurs littérales.
+
+Non trouvé : l'option « moins de 5h » de sommeil signalée comme manquante.
+Le seul réglage de durée est le curseur du check-in du matin, qui va de 2h à
+12h. Moins de 5h y est donc déjà possible.
