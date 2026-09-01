@@ -1139,7 +1139,7 @@ function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day',
         display:'flex', alignItems:'center', lineHeight:1,
         animation: springing ? 'iconBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) both' : 'none',
       }}>{m.iconEl}</span>
-      {filled && <span style={{ fontSize:10, color:m.color, fontWeight:500, lineHeight:1 }}>{m.fmt(m.val)}</span>}
+      {filled && <span style={{ fontSize:10, color: isNight ? 'rgba(190,216,255,0.90)' : ENCRE, fontWeight:500, lineHeight:1 }}>{m.fmt(m.val)}</span>}
     </button>
   )
 }
@@ -1620,10 +1620,10 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 
 function MetricRings({ metriques }) {
   const items = [
-    { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
-    { iconEl:<RunIcon size={17} color="#9C5B33" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#9C5B33', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
-    { iconEl:<MoonIcon size={17} color="#818cf8" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#818cf8', fmt: v => `${v}h` },
-    { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
+    { iconEl:<WaterIcon size={17} color={ENCRE_DOUCE} />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:ENCRE_DOUCE, fmt: v => `${v}/8` },
+    { iconEl:<RunIcon size={17} color={ENCRE_DOUCE} />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:ENCRE_DOUCE, fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
+    { iconEl:<MoonIcon size={17} color={ENCRE_DOUCE} />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:ENCRE_DOUCE, fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={17} color={ENCRE_DOUCE} />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:ENCRE_DOUCE, fmt: v => `${v}/5` },
   ]
   return (
     <div style={{ display:'flex', gap:6, padding:'8px 14px' }}>
@@ -1722,7 +1722,7 @@ export function StreakXP({ streak, xp, level }) {
               </div>
               <div style={{
                 width:28, height:28, borderRadius:9,
-                background:'linear-gradient(135deg,#fbbf24,#d97706)',
+                background:'linear-gradient(135deg,#E8A04A,#8A5206)',   // medaille, dans l'ambre de la palette
                 display:'flex', alignItems:'center', justifyContent:'center',
                 boxShadow:'0 3px 10px rgba(217,119,6,0.30)',
               }}><StarIcon size={14} color="#fff" /></div>
@@ -1737,7 +1737,7 @@ export function StreakXP({ streak, xp, level }) {
                     flex: filled ? 1.4 : 1,
                     height:3.5, borderRadius:2,
                     background: filled
-                      ? 'linear-gradient(90deg,#fbbf24,#d97706)'
+                      ? 'linear-gradient(90deg,#E8A04A,#8A5206)'
                       : active ? 'rgba(217,119,6,0.28)' : 'rgba(217,119,6,0.10)',
                     boxShadow: filled ? '0 0 5px rgba(217,119,6,0.55)' : 'none',
                     transition:'all 0.45s cubic-bezier(0.34,1.56,0.64,1)',
@@ -1838,7 +1838,7 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', Icon: WaterIcon, color:'#38bdf8',
+      id:'eau', Icon: WaterIcon, color:ENCRE_DOUCE,
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
@@ -1850,7 +1850,7 @@ function generateDailyTasks(profil, metriques) {
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', Icon: SunIcon, color:'#fbbf24',
+      id:'matin', Icon: SunIcon, color:ENCRE_DOUCE,
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2456,12 +2456,12 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                 const filled  = s !== null
                 const h       = filled ? Math.max(3, Math.round((s / 100) * BAR_H)) : 3
                 const barColor = isNight
-                  ? s >= 70 ? 'linear-gradient(180deg,#60a5fa,#3b82f6)'
-                  : s >= 40 ? 'linear-gradient(180deg,#34d399,#10b981)'
-                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
-                  : s >= 70 ? 'linear-gradient(180deg,#fbbf24,#f97316)'
-                  : s >= 40 ? 'linear-gradient(180deg,#fb923c,#ea580c)'
-                  : s > 0   ? 'linear-gradient(180deg,#f87171,#ef4444)' : null
+                  ? s >= 70 ? 'linear-gradient(180deg,rgba(198,222,255,0.95),rgba(150,190,245,0.85))'
+                  : s >= 40 ? 'linear-gradient(180deg,rgba(160,195,240,0.70),rgba(120,160,215,0.60))'
+                  : s > 0   ? 'linear-gradient(180deg,rgba(120,150,200,0.45),rgba(90,120,170,0.38))' : null
+                  : s >= 70 ? 'linear-gradient(180deg,#B3501F,#8F3D14)'
+                  : s >= 40 ? 'linear-gradient(180deg,#C87B52,#A85C34)'
+                  : s > 0   ? 'linear-gradient(180deg,#E2B79C,#CE9A79)' : null
                 return (
                   <div key={i} style={{ flex:1, height:BAR_H, display:'flex', alignItems:'flex-end' }}>
                     <div style={{
