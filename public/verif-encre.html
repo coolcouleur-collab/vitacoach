@@ -1,75 +1,81 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Connexion, avant et maintenant</title>
+<title>Foncer sans quitter le terracotta</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
   body { margin:0; padding:20px 14px 70px; font-family:'Poppins',sans-serif;
-         background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#C87B52; }
-  h1 { font-size:15px; margin:0 0 3px; color:#8A5206; }
-  p.i { font-size:12.5px; margin:0 0 6px; color:#8A5206; line-height:1.55; }
-  .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-         margin:26px 0 8px; color:#8A5206; }
-  /* La carte, identique dans les deux : elle n'a pas ete touchee. */
+         background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#A0562C; }
+  h1 { font-size:15px; margin:0 0 3px; }
+  p.i { font-size:12.5px; margin:0 0 6px; line-height:1.55; }
+  .ech { max-width:330px; margin:16px auto 0; }
+  .ech div { display:flex; align-items:center; gap:10px; font-size:12px; padding:5px 0;
+             font-variant-numeric:tabular-nums; }
+  .ech i { width:34px; height:18px; border-radius:5px; flex-shrink:0; }
+  .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin:28px 0 8px; }
   .carte { border-radius:22px; padding:26px 22px 28px; max-width:330px; margin:0 auto;
            background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); }
   .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:44px;
-          text-align:center; line-height:1; margin-bottom:20px; color:#C87B52; }
-  .note { max-width:330px; margin:10px auto 0; font-size:12px; line-height:1.6; color:#8A5206; }
-
-  /* AVANT */
-  .av .ong { display:flex; justify-content:center; gap:0; margin-bottom:22px; }
-  .av .ong div { flex:1; text-align:center; font-size:14px; padding:12px 0; }
-  .av .ong b { font-weight:600; border-bottom:2px solid rgba(255,220,160,.60); padding-bottom:12px; color:#7C4C33; }
-  .av .ong span { font-weight:400; color:#7C4C33; }
-  .av .l { font-size:12px; font-weight:500; letter-spacing:1.2px; text-transform:uppercase;
-           margin-bottom:6px; color:#7C4C33; }
-  .av .ch { border:1.5px solid rgba(124,76,51,.70); border-radius:10px; padding:12px 14px;
-            font-size:16px; margin-bottom:16px; background:rgba(255,250,244,.55); color:#7C4C33; }
-  .av .sv { font-size:13px; color:#7C4C33; display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-  .av .sv i { width:15px; height:15px; border:1px solid rgba(124,76,51,.6); border-radius:3px; }
-  .av .btn { display:block; margin:12px auto 0; padding:12px 34px; border-radius:2rem; width:fit-content;
-             background:linear-gradient(135deg,#6C422C,#90593B); color:#FFF8EB;
-             font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
-
-  /* MAINTENANT — design C, ecriture #C87B52 */
-  .ap .ong { display:flex; justify-content:center; margin-bottom:26px; }
-  .ap .ong div { flex:1; text-align:center; padding:10px 4px;
-                 font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; color:#C87B52; }
-  .ap .ong b { font-weight:600; border-bottom:1px solid rgba(200,123,82,.60); padding-bottom:10px; display:block; }
-  .ap .ong span { font-weight:400; opacity:.72; }
-  .ap .ch { border:none; border-bottom:1px solid rgba(200,123,82,.50); border-radius:0;
-            padding:11px 2px; font-size:16px; margin-bottom:20px; background:none; color:#C87B52; }
-  .ap .sv { font-size:13px; color:#C87B52; display:flex; align-items:center; gap:8px; }
-  .ap .sv i { width:15px; height:15px; border:1px solid rgba(200,123,82,.65); border-radius:3px; }
-  .ap .btn { display:block; margin:20px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
-             background:none; border:1px solid rgba(200,123,82,.65); color:#C87B52;
-             font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
+          text-align:center; line-height:1; margin-bottom:20px; }
+  .ong { display:flex; margin-bottom:26px; }
+  .ong div { flex:1; text-align:center; padding:11px 4px; font-size:15px; }
+  .ong b { font-weight:600; border-bottom:1px solid; padding-bottom:11px; display:block; }
+  .ong span { font-weight:400; opacity:.75; }
+  .ch { border:none; border-bottom:1px solid; border-radius:0; padding:11px 2px;
+        font-size:16px; margin-bottom:20px; background:none; }
+  .sv { font-size:13px; display:flex; align-items:center; gap:8px; }
+  .sv i { width:15px; height:15px; border:1px solid; border-radius:3px; }
+  .btn { display:block; margin:20px auto 0; padding:11px 30px; border-radius:2rem; width:fit-content;
+         background:none; border:1px solid; font-size:15px; font-weight:600; letter-spacing:.02em; }
+  .note { max-width:330px; margin:10px auto 0; font-size:12px; line-height:1.6; }
 </style>
 
-<h1>Ce que j'ai changé sur la connexion</h1>
-<p class="i">La carte est identique dans les deux, je n'y ai pas touché.</p>
+<h1>Foncer sans quitter le terracotta</h1>
+<p class="i">
+  L'opacité ne peut rien : ton <b>#C87B52</b> est déjà à 100 %, la baisser ne
+  ferait que l'éclaircir. Le seul levier est un ton plus profond. Et tu en as
+  déjà un : l'extrémité foncée de ton logo.
+</p>
 
-<div class="lab">Avant</div>
-<div class="carte av">
-  <div class="logo">Solenn</div>
-  <div class="ong"><div><b>Connexion</b></div><div><span>Inscription</span></div></div>
-  <div class="l">Email</div><div class="ch">@</div>
-  <div class="l">Mot de passe</div><div class="ch">••••••</div>
-  <div class="sv"><i></i> Se souvenir de moi</div>
-  <div class="btn">Retrouver Solenn →</div>
+<div class="ech">
+  <div><i style="background:#D4854A"></i> #D4854A · clair du logo · 2,35:1</div>
+  <div><i style="background:#C87B52"></i> #C87B52 · en ligne · 2,66:1</div>
+  <div><i style="background:#B8693A"></i> <b>#B8693A · foncé du logo · 3,33:1</b></div>
+  <div><i style="background:#A0562C"></i> #A0562C · 4,41:1</div>
+  <div><i style="background:#944D26"></i> #944D26 · 5,08:1</div>
 </div>
-<p class="note">Étiquettes en capitales, cadres complets, bouton plein foncé, écriture brune.</p>
 
-<div class="lab">Maintenant, en ligne</div>
-<div class="carte ap">
+<div class="lab" style="color:#C87B52">A · #C87B52 · ce qui est en ligne</div>
+<div class="carte" style="color:#C87B52">
   <div class="logo">Solenn</div>
-  <div class="ong"><div><b>Connexion</b></div><div><span>Inscription</span></div></div>
-  <div class="ch">Email</div>
-  <div class="ch">Mot de passe</div>
-  <div class="sv"><i></i> Se souvenir de moi</div>
-  <div class="btn">Retrouver Solenn →</div>
+  <div class="ong"><div><b style="border-color:rgba(200,123,82,.6)">Connexion</b></div><div><span>Inscription</span></div></div>
+  <div class="ch" style="border-color:rgba(200,123,82,.5)">Email</div>
+  <div class="ch" style="border-color:rgba(200,123,82,.5)">Mot de passe</div>
+  <div class="sv"><i style="border-color:rgba(200,123,82,.65)"></i> Se souvenir de moi</div>
+  <div class="btn" style="border-color:rgba(200,123,82,.65)">Retrouver Solenn →</div>
 </div>
-<p class="note">
-  Plus d'étiquettes : le champ dit ce qu'il attend. Onglets au Cormorant
-  italique. Champs réduits à un trait. Bouton filaire. Toute l'écriture en
-  <b>#C87B52</b>.
+
+<div class="lab" style="color:#B8693A">B · #B8693A · le foncé de ton logo</div>
+<div class="carte" style="color:#B8693A">
+  <div class="logo">Solenn</div>
+  <div class="ong"><div><b style="border-color:rgba(184,105,58,.6)">Connexion</b></div><div><span>Inscription</span></div></div>
+  <div class="ch" style="border-color:rgba(184,105,58,.5)">Email</div>
+  <div class="ch" style="border-color:rgba(184,105,58,.5)">Mot de passe</div>
+  <div class="sv"><i style="border-color:rgba(184,105,58,.65)"></i> Se souvenir de moi</div>
+  <div class="btn" style="border-color:rgba(184,105,58,.65)">Retrouver Solenn →</div>
+</div>
+<p class="note" style="color:#B8693A">
+  Même famille, un cran plus profond. Suffisant dès 19px en gras ou 24px.
+</p>
+
+<div class="lab" style="color:#944D26">C · #944D26 · le seuil du petit texte</div>
+<div class="carte" style="color:#944D26">
+  <div class="logo">Solenn</div>
+  <div class="ong"><div><b style="border-color:rgba(148,77,38,.6)">Connexion</b></div><div><span>Inscription</span></div></div>
+  <div class="ch" style="border-color:rgba(148,77,38,.5)">Email</div>
+  <div class="ch" style="border-color:rgba(148,77,38,.5)">Mot de passe</div>
+  <div class="sv"><i style="border-color:rgba(148,77,38,.65)"></i> Se souvenir de moi</div>
+  <div class="btn" style="border-color:rgba(148,77,38,.65)">Retrouver Solenn →</div>
+</div>
+<p class="note" style="color:#944D26">
+  Le seul qui rende tout lisible sans rien agrandir. C'est aussi celui qui
+  commence à tirer vers le brun.
 </p>
