@@ -722,7 +722,7 @@ function pontMemoire(memories, history) {
 // « Solenn te demande » dans JourneePrete.
 // Une seule idée par phrase : on ne cite QUE la métrique qui manque le plus,
 // mesurée en écart relatif à son objectif pour pouvoir les comparer entre elles.
-function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {}, memories = [], essai = null }) {
+function phraseCoach({ score, metriques, streak = 0, heure, history = [], repetitions = {}, memories = [], essai = null, demandee = null }) {
   const m = metriques || {}
   const h = heure ?? new Date().getHours()
 
@@ -837,7 +837,12 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
       quoi: `C'est le mouvement qui manque, ${Math.round((m.pas || 0) / 100) / 10}k pas.`,
       action: '10 minutes de marche suffisent à débloquer le compteur.',
     },
-  ].filter(Boolean).filter(x => !enCours || x.cle !== enCours).sort((a, b) => b.ecart - a.ecart)
+  ].filter(Boolean)
+    .filter(x => !enCours || x.cle !== enCours)
+    // La carte « Solenn te demande » va poser la question sur cette
+    // metrique : le verdict n'a pas a l'affirmer avant qu'on la connaisse.
+    .filter(x => !demandee || x.cle !== demandee)
+    .sort((a, b) => b.ecart - a.ecart)
 
   if (!manques.length) {
     // ⚠️ NE JAMAIS dire « tout est en place » sans regarder le score.
@@ -941,10 +946,6 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 fontFamily:"'Poppins',system-ui,sans-serif",
                 opacity: score > 0 ? 1 : 0.55,
                 color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '·'}</span>
-              <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
-                color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
-                marginTop:2, textTransform:'uppercase',
-                fontFamily:"'Poppins',system-ui,sans-serif" }}>score</span>
             </div>
           </div>
 
@@ -2576,7 +2577,11 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   }, [])
 
   const [essai, setEssai] = useState(lireEssai)
-  const phrase = phraseCoach({ score, metriques, streak, history, repetitions, memories, essai })
+  // Meme calcul que JourneePrete : la premiere metrique absente, dans cet ordre.
+  const metriqueDemandee = !metriques?.sommeil ? 'sommeil'
+                         : !metriques?.eau     ? 'eau'
+                         : !metriques?.pas     ? 'pas' : null
+  const phrase = phraseCoach({ score, metriques, streak, history, repetitions, memories, essai, demandee: metriqueDemandee })
 
   // Ouverture et clôture de l'essai. La moyenne d'AVANT est figée au moment de
   // l'ouverture : la recalculer au verdict laisserait les jours d'observation
