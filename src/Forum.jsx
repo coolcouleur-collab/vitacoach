@@ -757,7 +757,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
           opacity: loading ? 0.7 : 1,
         }}>
-          {loading ? 'Publication...' : 'Publier →'}
+          {loading ? 'Publication...' : 'Publier'}
         </button>
       </div>
     </div>

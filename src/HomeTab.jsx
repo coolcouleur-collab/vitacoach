@@ -2295,10 +2295,10 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           padding:16,
           borderRadius:20,
           background: isNight
-            ? 'linear-gradient(135deg, rgba(255,165,80,0.10) 0%, rgba(255,120,40,0.06) 100%)'
+            ? 'rgba(15,28,58,0.70)'
             : 'linear-gradient(135deg, rgba(255,165,80,0.18) 0%, rgba(200,123,82,0.10) 60%, rgba(200,123,82,0.05) 100%)',
           backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
-          border: isNight ? '1.5px solid rgba(255,165,80,0.22)' : '1.5px solid rgba(200,123,82,0.28)',
+          border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
           boxShadow: isNight
             ? '0 6px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,100,0.06)'
             : '0 6px 22px rgba(200,123,82,0.14), inset 0 1px 0 rgba(255,255,255,0.70)',
@@ -2307,13 +2307,15 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
       >
         <div style={{
           width:38, height:38, borderRadius:12, flexShrink:0,
-          background: score > 50
-            ? 'linear-gradient(135deg, rgba(255,149,0,0.10), rgba(255,100,0,0.06))'
-            : 'linear-gradient(135deg, rgba(200,123,82,0.10), rgba(200,123,82,0.06))',
-          border: `1px solid ${score > 50 ? 'rgba(255,149,0,0.20)' : 'rgba(200,123,82,0.18)'}`,
+          background: isNight
+            ? 'rgba(180,210,255,0.10)'
+            : (score > 50
+              ? 'linear-gradient(135deg, rgba(255,149,0,0.10), rgba(255,100,0,0.06))'
+              : 'linear-gradient(135deg, rgba(200,123,82,0.10), rgba(200,123,82,0.06))'),
+          border: `1px solid ${isNight ? 'rgba(180,210,255,0.22)' : (score > 50 ? 'rgba(255,149,0,0.20)' : 'rgba(200,123,82,0.18)')}`,
           display:'flex', alignItems:'center', justifyContent:'center',
         }}>
-          <StarIcon size={16} color={score > 50 ? 'rgba(255,149,0,0.75)' : 'rgba(200,123,82,0.60)'} />
+          <StarIcon size={16} color={isNight ? 'rgba(190,216,255,0.85)' : (score > 50 ? 'rgba(255,149,0,0.75)' : ICONE)} />
         </div>
         <div style={{ flex:1, minWidth:0 }}>
           <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>

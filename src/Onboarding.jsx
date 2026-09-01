@@ -217,7 +217,6 @@ function RevealScreen({ answers, onEnter }) {
             }}
           >
             Entrer dans Solenn
-            <span style={{display:'inline-block', fontSize:18}}>→</span>
           </button>
         </div>
       </div>

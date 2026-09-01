@@ -353,7 +353,7 @@ function AIRecoCard({ r, onChat, index }) {
             }}
             onClick={e => { e.stopPropagation(); onChat(`Parle-moi en détail de ${r.nom} selon mon profil`) }}
           >
-            <ChatIcon color="#fff" size={13} /> En savoir plus →
+            <ChatIcon color="#fff" size={13} /> En savoir plus
           </button>
         </div>
       </div>
@@ -650,7 +650,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               onChat(`Explique-moi comment utiliser ${item.nom} selon mon profil`)
             }}
           >
-            <ChatIcon color="#fff" size={13} /> Conseils personnalisés →
+            <ChatIcon color="#fff" size={13} /> Conseils personnalisés
           </button>
         </div>
       </div>
@@ -928,7 +928,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
               background:CTA_GRAD, border:'1px solid rgba(255,220,160,0.50)',
               color: AMBRE, fontSize:11.5, fontWeight:700, fontFamily:'Poppins,sans-serif',
             }}>
-            Voir ce qui peut aider →
+            Voir ce qui peut aider
           </button>
         </div>
       )}

@@ -203,7 +203,7 @@ function SessionItem({ session, onSelect }) {
           letterSpacing: '0.04em',
           marginTop: 1,
         }}>
-          Charger cette session →
+          Charger cette session
         </div>
       )}
     </motion.div>

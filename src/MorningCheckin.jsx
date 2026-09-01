@@ -189,7 +189,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               </div>
 
               <button onClick={() => setStep(1)} style={btnFullStyle}>
-                Suivant →
+                Suivant
               </button>
             </motion.div>
           )}
