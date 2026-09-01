@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import CatalogueProgrammes from './CatalogueProgrammes'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
@@ -197,14 +198,17 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
-  const handleCreerChallenge = async () => {
+  const handleCreerChallenge = async (type = 'defi21') => {
     try {
       setCreating(true)
       setError(null)
+      // La duree n'est plus envoyee : elle appartient au catalogue, et elle
+      // change d'un programme a l'autre. La figer a 21 ici tronquerait la
+      // remise en mouvement, qui en dure 42.
       const res = await fetch(`${API}/api/challenge-create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-        body: JSON.stringify({ userId, duree: 21 }),
+        body: JSON.stringify({ userId, type }),
       })
       if (!res.ok) throw new Error('Erreur lors de la création')
       await fetchChallenge()
@@ -399,79 +403,21 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   }
 
   // ── 2. PAS DE CHALLENGE (tout le monde peut créer le premier) ───
+  // L'ecran vide n'est plus un bouton. Il demandait « Pret a commencer ? »
+  // sans jamais dire a quoi, et fabriquait 21 jours dont personne ne
+  // connaissait le contenu avant de les recevoir. Il montre desormais les
+  // quatre programmes, ce que chacun vise, pour qui il est fait et ce qu'on
+  // peut en attendre : le choix precede la generation au lieu de la subir.
   if (!challenge) {
     return (
       <div style={styles.container}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{ ...styles.card, textAlign: 'center' }}
-        >
-          <div style={{ display:'flex', justifyContent:'center', marginBottom: '12px' }}><SparkleIcon size={52} color="#9C5D08" /></div>
-          <h2
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: 'italic',
-              fontSize: '26px',
-              fontWeight: 700,
-              color: ENCRE,
-              marginBottom: '8px',
-            }}
-          >
-            Prêt à commencer ?
-          </h2>
-          <p
-            style={{
-              color: ENCRE,
-              fontSize: '14px',
-              marginBottom: '28px',
-              lineHeight: 1.6,
-            }}
-          >
-            Solenn crée un programme de 21 jours personnalisé, basé sur ton profil et tes métriques
-          </p>
-
-          {error && (
-            <p
-              style={{
-                color: ROUGE,
-                fontSize: '13px',
-                marginBottom: '16px',
-                background: 'rgba(239,68,68,0.08)',
-                borderRadius: '12px',
-                padding: '10px',
-              }}
-            >
-              {error}
-            </p>
-          )}
-
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={handleCreerChallenge}
-            disabled={creating}
-            style={{
-              background: creating
-                ? 'rgba(200,123,82,0.4)'
-                : 'rgba(255,235,210,0.32)',
-              backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-              color: AMBRE,
-              border: '1px solid rgba(255,220,160,0.38)',
-              borderRadius: '16px',
-              padding: '14px 32px',
-              fontSize: '15px',
-              fontWeight: 700,
-              fontFamily: "'Poppins', sans-serif",
-              cursor: creating ? 'not-allowed' : 'pointer',
-              boxShadow: creating ? 'none' : '0 4px 20px rgba(200,123,82,0.35)',
-              transition: 'all 0.2s',
-            }}
-          >
-            {creating ? ETAPES_CREATION[etapeCreation] : <span style={{display:'flex',alignItems:'center',gap:6}}><TargetIcon size={13} color="white" />Créer mon programme</span>}
-          </motion.button>
-        </motion.div>
+        <CatalogueProgrammes
+          profil={profil}
+          creating={creating}
+          creatingLabel={ETAPES_CREATION[etapeCreation]}
+          error={error}
+          onCommencer={prog => handleCreerChallenge(prog.id)}
+        />
       </div>
     )
   }

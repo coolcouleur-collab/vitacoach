@@ -21,6 +21,7 @@
  */
 
 import Groq from 'groq-sdk'
+import { programmeParId } from '../src/programmes.js'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
 
@@ -90,7 +91,14 @@ const PROGRAMME_POIDS = {
 // generation depuis le 2026-08-12.
 const OBJECTIF_POIDS_RE = /poids|mincir|maigrir|corps|réconcilier|silhouette/i
 
-export async function creerChallenge(userId, duree = 21) {
+export async function creerChallenge(userId, duree = null, typeId = 'defi21') {
+  // Le programme choisi commande tout : la duree, la consigne donnee au
+  // modele, ce qu'on accepte en retour, et le repli. Il vient du catalogue
+  // partage avec le client, pour que la promesse affichee a l'ecran et le
+  // texte envoye au generateur ne puissent pas diverger.
+  const prog = programmeParId(typeId) || programmeParId('defi21')
+  duree = duree || prog.duree
+
   const supabase = getSupabase()
   const groq     = getGroq()
 
@@ -194,10 +202,22 @@ ${memoire?.objectifs_mentionnes?.length ? `Ce qu'elle/il t'a dit vouloir : ${mem
 ${memoire?.themes_recurrents?.length ? `Sujets qui reviennent dans vos échanges : ${memoire.themes_recurrents.slice(0, 3).join(', ')}` : ''}
 
 ${contexteCycle}
+═══ CE PROGRAMME : ${prog.titre.toUpperCase()} ═══
+${prog.consigne}
+
+Voici ce que la personne a lu AVANT de le choisir. Le programme que tu écris
+doit tenir ces promesses, ce sont elles qui l'ont décidée :
+${prog.resultats.map(r => '· ' + r).join('\n')}
+
 ═══ RÈGLES NON NÉGOCIABLES ═══
-1. VARIE LES THÈMES. Un programme entier sur un seul sujet (boire de l'eau, marcher) est un échec.
-   Répartis sur les ${duree} jours : mouvement, sommeil, alimentation, respiration/mental, et récupération.
-   Aucun thème ne doit occuper plus d'un tiers des jours.
+1. RESTE SUR LE SUJET DU PROGRAMME décrit ci-dessus. C'est lui qui commande,
+${prog.id === 'defi21'
+  ? `   et il demande de la VARIÉTÉ : répartis sur les ${duree} jours le mouvement,
+   le sommeil, l'alimentation, la respiration ou le mental, et la récupération.
+   Aucun thème ne doit occuper plus d'un tiers des jours.`
+  : `   et il est THÉMATIQUE : chaque jour doit servir ce thème, c'est ce que la
+   personne est venue chercher. Les autres sujets n'apparaissent qu'en soutien.
+   Ne dilue pas le programme en le rendant généraliste.`}
 2. ADAPTE L'INTENSITÉ au niveau d'activité déclaré. Sédentaire : on commence par de la marche
    et de la mobilité. Sportif : les séances doivent le/la challenger, sinon il/elle décroche.
 3. RESPECTE LES CONTRAINTES. Douleurs ou blessures : pas d'impact. Fatigue profonde : on
@@ -284,22 +304,32 @@ Format JSON :
   function programmeValable(c) {
     if (!c || !Array.isArray(c.jours) || c.jours.length < duree) return false
     if (c.jours.some(j => !j?.action)) return false
-    // Anti mono-theme : si le meme mot-cle revient dans plus d'un tiers des
-    // jours, le modele a ignore la regle et on prefere le repli.
-    const THEMES = ['eau', 'boire', 'hydrat', 'marche', 'respir']
-    for (const t of THEMES) {
-      const n = c.jours.filter(j => (j.action || '').toLowerCase().includes(t)).length
-      if (n > Math.ceil(c.jours.length / 3)) return false
+    // Anti mono-theme, mais SEULEMENT pour le defi generaliste. Un programme
+    // thematique repete son sujet par construction : « respir » revient tous
+    // les jours dans Sommeil et energie, « boire » revient dans le
+    // reequilibrage. Appliquer ce controle a tous les programmes reviendrait a
+    // rejeter systematiquement les bons et a servir le repli a leur place.
+    if (prog.id === 'defi21') {
+      const THEMES = ['eau', 'boire', 'hydrat', 'marche', 'respir']
+      for (const t of THEMES) {
+        const n = c.jours.filter(j => (j.action || '').toLowerCase().includes(t)).length
+        if (n > Math.ceil(c.jours.length / 3)) return false
+      }
     }
-    // Des seances consistantes : au moins la moitie des jours doivent porter du
-    // mouvement, et une seance d'un seul exercice n'en est pas une.
-    const avecSeance = c.jours.filter(j => Array.isArray(j.seance) && j.seance.length)
-    if (avecSeance.length < Math.floor(c.jours.length / 2)) return false
-    if (avecSeance.filter(j => j.seance.length >= 2).length < avecSeance.length * 0.6) return false
-    // Le haut du corps doit exister quelque part.
-    const HAUT = ['pompe', 'pompegenoux', 'superman', 'dips']
-    const aDuHaut = avecSeance.some(j => j.seance.some(e => HAUT.includes(e?.exo)))
-    if (!aDuHaut) return false
+    // Des seances consistantes, pour les programmes qui en promettent. Le
+    // reequilibrage alimentaire n'en porte presque pas, VOLONTAIREMENT : sa
+    // consigne demande de laisser `seance` vide presque partout. Lui imposer
+    // ce controle, ecrit pour un programme sportif, le ferait echouer a tous
+    // les coups alors qu'il obeit exactement a ce qu'on lui a demande.
+    if (prog.id === 'sportif' || prog.id === 'defi21') {
+      const avecSeance = c.jours.filter(j => Array.isArray(j.seance) && j.seance.length)
+      if (avecSeance.length < Math.floor(c.jours.length / 2)) return false
+      if (avecSeance.filter(j => j.seance.length >= 2).length < avecSeance.length * 0.6) return false
+      // Le haut du corps doit exister quelque part.
+      const HAUT = ['pompe', 'pompegenoux', 'superman', 'dips']
+      const aDuHaut = avecSeance.some(j => j.seance.some(e => HAUT.includes(e?.exo)))
+      if (!aDuHaut) return false
+    }
     return true
   }
 
@@ -319,7 +349,17 @@ Format JSON :
   // Repli : le programme ecrit a la main. Il vaut mieux un bon programme
   // generique qu'un mauvais programme personnalise, et surtout mieux qu'une
   // erreur qui laisse l'utilisateur sans rien.
-  if (!challenge) challenge = PROGRAMME_POIDS
+  if (!challenge) {
+    // PROGRAMME_POIDS est un programme de perte de poids ecrit a la main. Le
+    // servir a quelqu'un qui vient de choisir « Sommeil et energie » est pire
+    // qu'un echec : il recoit un programme etranger a son choix, sans savoir
+    // qu'un repli a eu lieu, et il jugera l'app la-dessus. On ne replie donc
+    // que le defi generaliste, dont il est effectivement une version possible.
+    if (prog.id !== 'defi21') {
+      throw new Error(`La generation du programme « ${prog.titre} » n'a pas abouti. Reessaie dans un instant.`)
+    }
+    challenge = PROGRAMME_POIDS
+  }
 
   // L'objectif qui a produit ce programme est grave dedans : le client detecte
   // ainsi qu'il a change depuis, et propose la regeneration. Copie et non
@@ -328,6 +368,9 @@ Format JSON :
     ...challenge,
     objectif_source: [profil?.objectifs?.[0], profil?.objectif].filter(Boolean)[0] || null,
     cycle: numCycle,
+    // Le type vit DANS le jsonb et pas dans une colonne : aucune migration a
+    // passer, et les plans deja en base restent lisibles, ils valent defi21.
+    type: prog.id,
   }
 
   const dateDebutChallenge = new Date().toISOString().split('T')[0]

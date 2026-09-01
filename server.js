@@ -1949,12 +1949,25 @@ app.get('/api/challenge', ownerGuard, async (req, res) => {
 })
 
 app.post('/api/challenge-create', ownerGuard, async (req, res) => {
-  const { userId, duree = 21 } = req.body
+  // `duree` n'a plus de valeur par defaut ici : c'est le catalogue qui la
+  // porte, et un programme sportif dure 42 jours la ou le defi en dure 21.
+  // Une valeur par defaut a 21 tronquerait silencieusement les programmes longs.
+  const { userId, duree = null, type = 'defi21' } = req.body
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
-    // Désactiver l'ancien challenge si existant
-    await supabase.from('challenges').update({ actif: false }).eq('user_id', userId).eq('actif', true)
-    const result = await creerChallenge(userId, duree)
+    // On genere AVANT de desactiver. L'ordre inverse faisait perdre le
+    // programme en cours quand la generation echouait : la personne se
+    // retrouvait sans rien, en ayant seulement voulu en essayer un autre.
+    // Le GET lit `.order(created_at desc).limit(1)`, donc le nouveau prend la
+    // main immediatement, meme pendant la seconde ou les deux sont actifs.
+    const result = await creerChallenge(userId, duree, type)
+    // Sans identifiant du nouveau, on ne desactive rien : on ne saurait pas
+    // l'exclure du menage, et on risquerait d'eteindre celui qu'on vient de
+    // creer. Deux programmes actifs sont recuperables, zero ne l'est pas.
+    if (result?.id) {
+      await supabase.from('challenges').update({ actif: false })
+        .eq('user_id', userId).eq('actif', true).neq('id', result.id)
+    }
     res.json({ succes: true, challenge: result })
   } catch (e) {
     res.status(500).json({ error: e.message })
