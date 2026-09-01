@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import CatalogueProgrammes from './CatalogueProgrammes'
+import { reposerRappels, demanderAutorisation } from './notificationsProgramme'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
@@ -188,6 +189,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
       const data = await res.json()
       setChallenge(data.challenge || null)
       try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(data.challenge || null)) } catch {}
+      // Chaque ouverture fait AVANCER la fenetre glissante des rappels. iOS
+      // n'en garde que 64 en attente : on ne peut pas poser un programme de
+      // 42 jours d'un coup, il faut revenir en poser la suite. Sans appel
+      // ici, les rappels s'arreteraient au bout de dix jours.
+      reposerRappels(data.challenge || null)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -213,6 +219,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
         body: JSON.stringify({ userId, type }),
       })
       if (!res.ok) throw new Error('Erreur lors de la création')
+      // L'autorisation est demandee ICI et pas au demarrage de l'app : on la
+      // demande au moment ou elle a un sens, juste apres s'etre engage sur un
+      // programme. Demandee a froid au premier lancement, elle est refusee, et
+      // iOS ne repropose jamais la fenetre.
+      await demanderAutorisation()
       await fetchChallenge()
     } catch (err) {
       setError(err.message)

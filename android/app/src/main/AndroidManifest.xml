@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -58,5 +59,15 @@
 
     <!-- Localisation pour météo -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Le plugin @capacitor/local-notifications declare SCHEDULE_EXACT_ALARM
+         dans SON manifeste, qui se fond dans le notre a la compilation. Google
+         examine cette permission et attend une justification : reveils,
+         minuteurs, rendez-vous a la seconde pres. Des rappels de bien-etre ne
+         la justifient pas, et un rappel qui arrive a 18h03 au lieu de 18h00
+         ne gene personne. On la retire donc du paquet, et les notifications
+         sont posees avec isExactNotification a false, pour que le plugin ne
+         la demande pas non plus a l'execution. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
 
 </manifest>
