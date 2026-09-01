@@ -5,7 +5,7 @@ import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
 import { authHeaders } from './supabase'
-import { ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 // hex → rgba helper
 function h2r(hex, a) {
@@ -763,7 +763,7 @@ const ss = {
   btnInsights: {
     width: 'auto',
     background: 'rgba(255,235,210,0.32)',
-    color: ROUGE,
+    color: AMBRE,
     border: '1px solid rgba(255,220,160,0.28)',
     padding: '11px 34px',
     borderRadius: 100,
@@ -789,7 +789,7 @@ const ss = {
   btnWater: {
     background: 'rgba(255,235,210,0.32)',
     border: '1px solid rgba(255,220,160,0.28)',
-    color: ROUGE, borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
+    color: AMBRE, borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
     boxShadow: 'none',
     transition: 'transform 0.15s ease',

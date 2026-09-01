@@ -38,7 +38,7 @@ const S = {
     background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.5)',
     borderRadius: 14, padding: '14px 18px', margin: '0 0 10px',
   },
-  lien: { color: ROUGE, fontWeight: 600 },
+  lien: { color: AMBRE, fontWeight: 600 },
 }
 
 export default function SuppressionCompte() {

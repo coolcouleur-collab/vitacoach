@@ -80,7 +80,7 @@ export default function Confidentialite() {
           toi-même à tout moment, directement dans l'application : Paramètres, puis Mes
           données, puis Supprimer mon compte. La suppression est immédiate et définitive, et
           un abonnement en cours est résilié au même moment. Le détail de ce qui est effacé
-          figure sur la page <a href="/suppression-compte" style={{ color: ROUGE, fontWeight: 600 }}>Supprimer mon compte</a>.
+          figure sur la page <a href="/suppression-compte" style={{ color: AMBRE, fontWeight: 600 }}>Supprimer mon compte</a>.
         </p>
         <p style={S.p}>
           Si tu n'as plus accès à l'application, écris-nous : la suppression intervient sous 30

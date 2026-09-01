@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
 import { authHeaders } from './supabase'
-import { ROUGE, VERT } from './palette'
+import { AMBRE, ROUGE, VERT } from './palette'
 
 const HK_KEY = 'vitacoach_healthkit_connected'
 
@@ -193,7 +193,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               style={{
                 flex: 1, padding: '10px 16px',
                 background: 'rgba(255,235,210,0.32)',
-                border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12, color: ROUGE,
+                border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12, color: AMBRE,
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
               }}
@@ -334,7 +334,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
             flex: 1, padding: '11px',
             background: 'rgba(255,235,210,0.32)',
             border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12,
-            color: ROUGE, fontSize: 13, fontWeight: 600,
+            color: AMBRE, fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',
           }}>
             {loading ? 'Vérification…' : 'Connecter'}

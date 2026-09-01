@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ROUGE } from './palette'
+import { AMBRE, ROUGE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 const am = (a) => `rgba(200,123,82,${a})`
@@ -257,7 +257,7 @@ export default function BreathworkTab() {
             padding: '13px 40px',
             background: 'rgba(255,235,210,0.32)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            color: ROUGE, border: '1px solid rgba(255,220,160,0.38)',
+            color: AMBRE, border: '1px solid rgba(255,220,160,0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>

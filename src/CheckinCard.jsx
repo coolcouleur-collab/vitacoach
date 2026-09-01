@@ -17,7 +17,7 @@ const MOODS = [
   { val: 1, label: 'Très mal',   color: '#A9614A', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
   { val: 2, label: 'Pas top',    color: '#C07551', mouth: 'M8 16 Q11 14.5 14 16' },
   { val: 3, label: 'Ça va',      color: '#D48F52', mouth: 'M8 15.5 L14 15.5' },
-  { val: 4, label: 'Bien',       color: ROUGE, mouth: 'M8 14.5 Q11 16.5 14 14.5' },
+  { val: 4, label: 'Bien',       color: AMBRE, mouth: 'M8 14.5 Q11 16.5 14 14.5' },
   { val: 5, label: 'Très bien',  color: AMBRE, mouth: 'M8 14 Q11 17.5 14 14' },
 ]
 
@@ -183,7 +183,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
                       background: 'rgba(255,235,210,0.32)',
                       backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                      color: ROUGE, fontSize: 13, fontWeight: 700, fontFamily: F,
+                      color: AMBRE, fontSize: 13, fontWeight: 700, fontFamily: F,
                       boxShadow: '0 3px 14px rgba(200,123,82,0.30)', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',
                     }}

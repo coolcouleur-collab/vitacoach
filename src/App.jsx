@@ -260,7 +260,7 @@ function CelebrationOverlay({ score, onDone }) {
         <div style={{ marginBottom:10, lineHeight:1, display:'flex', justifyContent:'center' }}>
           {score >= 90 ? <StarIcon size={48} color="#9C5D08" /> : <SparkleIcon size={48} color="#9C5D08" />}
         </div>
-        <div style={{ fontSize:50, fontWeight:900, color: ROUGE, lineHeight:1, letterSpacing:'-2px' }}>
+        <div style={{ fontSize:50, fontWeight:900, color:'#9C5D08', lineHeight:1, letterSpacing:'-2px' }}>
           {score}<span style={{ fontSize:18, color:'rgba(255,238,220,0.55)', fontWeight:400 }}>/100</span>
         </div>
         <div style={{ fontSize:15, fontWeight:700, color:'rgba(255,238,220,0.92)', marginTop:9 }}>
@@ -3843,7 +3843,7 @@ const s = {
     boxShadow:'0 4px 20px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.25)',
   },
   botBubbleRich: {
-    background:'transparent', color: ROUGE,
+    background:'transparent', color: AMBRE,
     padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.65, fontWeight:400,
     fontFamily:'Poppins, sans-serif',
   },

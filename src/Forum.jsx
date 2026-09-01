@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './supabase'
 import { BellIcon, ChatIcon } from './Icons'
 import './tokens.css'
-import { ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 // ─── Moderation ───────────────────────────────────────────────────────────────
 const BANNED_WORDS = [
@@ -49,7 +49,7 @@ function Avatar({ name, size = 34 }) {
       width: size, height: size, borderRadius: size * 0.32,
       background: 'rgba(255,235,210,0.32)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.42, fontWeight: 800, color: ROUGE, flexShrink: 0,
+      fontSize: size * 0.42, fontWeight: 800, color: AMBRE, flexShrink: 0,
       boxShadow: '0 2px 8px rgba(200,123,82,0.32)',
     }}>
       {(name || '?').charAt(0).toUpperCase()}

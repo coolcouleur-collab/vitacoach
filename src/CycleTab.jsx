@@ -192,7 +192,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
           <button onClick={() => setEtape(1)} style={{
             padding: '10px 20px', borderRadius: 14, cursor: 'pointer', fontFamily: F,
             background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,220,160,0.45)', color: ROUGE, fontSize: 12.5, fontWeight: 600,
+            border: '1px solid rgba(255,220,160,0.45)', color: AMBRE, fontSize: 12.5, fontWeight: 600,
           }}>
             Comprendre ma douleur
           </button>
@@ -370,7 +370,7 @@ export default function CycleTab({ profil, userId, onChat }) {
     padding: '12px 18px',
     background: 'rgba(255,235,210,0.32)',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    color: ROUGE, border: '1px solid rgba(255,220,160,0.38)',
+    color: AMBRE, border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 14, fontSize: 13, fontWeight: 600,
     cursor: 'pointer', fontFamily: F,
   }

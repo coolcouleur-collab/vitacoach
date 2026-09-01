@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
 import { matchExercice, PHOTOS_EXOS } from './ExercicesGuide'
-import { ENCRE, ROUGE, VERT } from './palette'
+import { AMBRE, ENCRE, ROUGE, VERT } from './palette'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
@@ -69,7 +69,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
         <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>{info.nom}</div>
         <div style={{ fontSize: 11.5, color: '#7B421C' }}>{item.reps}</div>
       </div>
-      <span style={{ fontSize: 10.5, fontWeight: 600, color: ROUGE, background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: AMBRE, background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
         Voir le geste
       </span>
       {onToggle && (
@@ -457,7 +457,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 ? 'rgba(200,123,82,0.4)'
                 : 'rgba(255,235,210,0.32)',
               backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-              color: ROUGE,
+              color: AMBRE,
               border: '1px solid rgba(255,220,160,0.38)',
               borderRadius: '16px',
               padding: '14px 32px',
@@ -513,7 +513,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             style={{
               marginTop: 9, padding: '9px 16px', borderRadius: 12, cursor: 'pointer',
               background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.55)',
-              color: ROUGE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+              color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
             Régénérer pour mon nouvel objectif
           </button>
@@ -535,7 +535,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             <button onClick={reprendreOuOnEnEtait} style={{
               flex: 1, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
               background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
-              color: ROUGE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+              color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
               Reprendre au jour {progression.lastIndexOf(true) + 2}
             </button>
@@ -592,7 +592,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   background: 'rgba(255,235,210,0.45)',
                   backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,220,160,0.60)',
-                  color: ROUGE, fontSize: 14.5, fontWeight: 800,
+                  color: AMBRE, fontSize: 14.5, fontWeight: 800,
                   fontFamily: "'Poppins', sans-serif",
                   boxShadow: '0 4px 20px rgba(200,123,82,0.30)',
                 }}>
@@ -727,7 +727,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
                   border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99,
                   padding: '7px 14px', cursor: 'pointer',
-                  fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: ROUGE,
+                  fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: AMBRE,
                 }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
                   Voir le geste
@@ -739,7 +739,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   style={{
                     display: 'inline-block',
                     background: 'rgba(232,150,42,0.12)',
-                    color: ROUGE,
+                    color: AMBRE,
                     borderRadius: '12px',
                     padding: '4px 12px',
                     fontSize: '12px',
@@ -838,7 +838,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   style={{
                     background: 'rgba(255,235,210,0.32)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                    color: ROUGE,
+                    color: AMBRE,
                     border: '1px solid rgba(255,220,160,0.38)',
                     borderRadius: '16px',
                     padding: '12px 24px',
@@ -938,7 +938,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               <div
                 style={{
                   background: 'rgba(232,150,42,0.12)',
-                  color: ROUGE,
+                  color: AMBRE,
                   borderRadius: '12px',
                   padding: '6px 14px',
                   fontSize: '13px',
@@ -1261,7 +1261,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(255,235,210,0.32)',
                     border: '1px solid rgba(255,220,160,0.30)',
-                    color: ROUGE, fontSize: 14, fontWeight: 600,
+                    color: AMBRE, fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif",
                     cursor: objChoisi ? 'pointer' : 'not-allowed',
                     opacity: objChoisi ? 1 : 0.45,

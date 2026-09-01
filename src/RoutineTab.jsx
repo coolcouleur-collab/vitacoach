@@ -13,7 +13,7 @@ import { authHeaders } from './supabase'
 const ExercicesGuide = React.lazy(() => import('./ExercicesGuide'))
 const Challenge21j = React.lazy(() => import('./Challenge21j'))
 import { matchExercice } from './ExercicesGuide'
-import { ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -183,7 +183,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                     display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6,
                     background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.45)',
                     borderRadius: 99, padding: '5px 12px', cursor: 'pointer',
-                    fontFamily: 'Poppins,sans-serif', fontSize: 10.5, fontWeight: 600, color: ROUGE,
+                    fontFamily: 'Poppins,sans-serif', fontSize: 10.5, fontWeight: 600, color: AMBRE,
                   }}
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
@@ -662,7 +662,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 >
                   <LightbulbIcon size={22} color="#9C5D08" />
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: ROUGE, fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: AMBRE, fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
                     </div>
                     <div style={{ fontSize: 12.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>

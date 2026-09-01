@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
-import { ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 // Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
@@ -794,7 +794,7 @@ export default function SettingsSheet({
                     fontFamily: C.font,
                     fontSize: 13,
                     fontWeight: 700,
-                    color: ROUGE,
+                    color: AMBRE,
                   }}>
                     <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#9C5D08" /> Solenn Pro</span>
                   </span>
@@ -853,7 +853,7 @@ export default function SettingsSheet({
                         <button onClick={() => actionAbo('reprendre')} disabled={aboOccupe} style={{
                           width: '100%', padding: '11px 0', borderRadius: 12, cursor: 'pointer',
                           background: 'rgba(232,150,42,0.10)', border: '1px solid rgba(232,150,42,0.30)',
-                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: ROUGE,
+                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: AMBRE,
                         }}>{aboOccupe ? 'Un instant…' : 'Reprendre mon abonnement'}</button>
                       </>
                     ) : confirmResil ? (
@@ -989,7 +989,7 @@ export default function SettingsSheet({
                     WebkitBackdropFilter: 'blur(12px)',
                     // Texte terracotta ici : le panneau Réglages est clair, le
                     // crème y serait illisible (règle des surfaces claires)
-                    color: ROUGE,
+                    color: ENCRE,
                     fontFamily: C.font,
                     fontSize: 14,
                     fontWeight: 700,
