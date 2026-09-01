@@ -17,9 +17,9 @@ const C = {
   accent: '#C87B52',
   accentLight: 'rgba(200,123,82,0.14)',
   accentMid: 'rgba(200,123,82,0.28)',
-  text: '#7B421C',        // seuil 4,5
-  textMuted: '#7B421C',   // meme teinte : la hierarchie passe par la graisse
-  textLight: '#9C5B33',   // seuil 3,0, reserve aux libelles decoratifs
+  text: ENCRE,        // seuil 4,5
+  textMuted: ENCRE,   // meme teinte : la hierarchie passe par la graisse
+  textLight: ICONE,   // seuil 3,0, reserve aux libelles decoratifs
   handle: 'rgba(200,123,82,0.30)',
   shadow: '0 -24px 64px rgba(180,100,40,0.18), 0 -4px 20px rgba(200,100,40,0.10)',
   font: "'Poppins', system-ui, sans-serif",
@@ -134,7 +134,7 @@ function Avatar({ nom, size = 52 }) {
         <span style={{
           fontSize: size * 0.40,
           fontWeight: 600,
-          color: '#7B421C',
+          color: ENCRE,
           fontFamily: "'Cormorant Garamond', Georgia, serif",
           fontStyle: 'italic',
           lineHeight: 1,
@@ -516,8 +516,8 @@ export default function SettingsSheet({
 
   const PRESETS = [
     { icon: <SunIcon size={20} color="#9C5D08" />,  label: 'Jour',    value: 'day' },
-    { icon: <SunIcon size={20} color="#9C5B33" />,  label: 'Lever',   value: 'sunrise' },
-    { icon: <MoonIcon size={20} color="#9C5B33" />, label: 'Coucher', value: 'sunset' },
+    { icon: <SunIcon size={20} color={ICONE} />,  label: 'Lever',   value: 'sunrise' },
+    { icon: <MoonIcon size={20} color={ICONE} />, label: 'Coucher', value: 'sunset' },
     { icon: <MoonIcon size={20} color="#8B7AB8" />, label: 'Nuit',    value: 'night' },
   ]
 
@@ -1119,7 +1119,7 @@ export default function SettingsSheet({
                 danger={confirmReset}
               />
               <ActionBtn
-                icon={<SendIcon size={18} color="#9C5B33" />}
+                icon={<SendIcon size={18} color={ICONE} />}
                 label="Exporter mes données"
                 onClick={onExportData}
               />

@@ -6,7 +6,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { authHeaders } from './supabase'
-import { ICONE } from './palette'
+import { ENCRE, ICONE } from './palette'
 
 const F = "'Poppins', sans-serif"
 const moyenne = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null
@@ -87,7 +87,7 @@ export default function TesProgres({ history, userId }) {
 
   return (
     <div style={{ marginBottom: 22 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: '#7B421C', fontFamily: F, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: ENCRE, fontFamily: F, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           Tes progrès avec Solenn
@@ -102,9 +102,9 @@ export default function TesProgres({ history, userId }) {
               background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
-              <div style={{ fontSize: 10.5, fontWeight: 600, color: '#7B421C' }}>{st.label}</div>
+              <div style={{ fontSize: 10.5, fontWeight: 600, color: ENCRE }}>{st.label}</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#1f9d55' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
-              <div style={{ fontSize: 10, color: '#7B421C', lineHeight: 1.4 }}>{st.detail}</div>
+              <div style={{ fontSize: 10, color: ENCRE, lineHeight: 1.4 }}>{st.detail}</div>
               {st.serie && st.serie.length >= 3 && (() => {
                 const min = Math.min(...st.serie), max = Math.max(...st.serie)
                 const range = (max - min) || 1
@@ -127,11 +127,11 @@ export default function TesProgres({ history, userId }) {
           border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 15px',
           fontFamily: F, marginBottom: insights.length ? 12 : 0,
         }}>
-          <div style={{ fontSize: 13, color: '#7B421C', fontWeight: 500, lineHeight: 1.45 }}>
+          <div style={{ fontSize: 13, color: ENCRE, fontWeight: 500, lineHeight: 1.45 }}>
             {progres.joursSuivis} jour{progres.joursSuivis > 1 ? 's' : ''} suivi{progres.joursSuivis > 1 ? 's' : ''}.
             {' '}Encore {progres.enAttente} jour{progres.enAttente > 1 ? 's' : ''} et je pourrai te montrer ce qui a changé.
           </div>
-          <div style={{ fontSize: 11, color: '#7B421C', marginTop: 5, lineHeight: 1.45 }}>
+          <div style={{ fontSize: 11, color: ENCRE, marginTop: 5, lineHeight: 1.45 }}>
             Sommeil, pas, humeur et poids : je compare tes débuts à ta semaine en cours, chiffres à l'appui.
           </div>
           {/* Barre d'avancement vers la premiere comparaison */}
@@ -142,7 +142,7 @@ export default function TesProgres({ history, userId }) {
       )}
 
       {progres && !progres.enAttente && (
-        <div style={{ fontSize: 11, color: '#7B421C', fontFamily: F, marginBottom: insights.length ? 12 : 0 }}>
+        <div style={{ fontSize: 11, color: ENCRE, fontFamily: F, marginBottom: insights.length ? 12 : 0 }}>
           {progres.joursSuivis} jours suivis · comparaison de tes débuts à ta semaine en cours
         </div>
       )}
@@ -154,7 +154,7 @@ export default function TesProgres({ history, userId }) {
             <div key={i} style={{
               background: 'linear-gradient(135deg, rgba(232,150,42,0.08), rgba(200,123,82,0.08))',
               border: '1px solid rgba(232,150,42,0.22)', borderRadius: 14, padding: '12px 15px',
-              fontFamily: F, fontSize: 12.5, color: '#7B421C', lineHeight: 1.55,
+              fontFamily: F, fontSize: 12.5, color: ENCRE, lineHeight: 1.55,
               display: 'flex', gap: 9, alignItems: 'flex-start',
             }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>

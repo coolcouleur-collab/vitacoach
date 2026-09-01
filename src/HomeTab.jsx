@@ -398,7 +398,7 @@ const nightText  = (op) => `rgba(180,210,255,${op})`
 //
 // L'accent #C87B52 n'est pas abandonne : il garde les icones, les fonds, les
 // bordures et le grand score, ou sa taille suffit au seuil de 3,0.
-const warmText   = (op) => '#7B421C'
+const warmText   = (op) => ENCRE
 const sunsetText = (op) => `rgba(255,225,200,${op})`
 
 // ─── OCEAN SCENE BACKGROUND ────────────────────────────────────────────────────
@@ -1027,7 +1027,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(200,123,82,0.24)',
                   fontFamily: "'Poppins',system-ui,sans-serif",
                   fontSize: 10.5, fontWeight: 600,
-                  color: isNight ? 'rgba(190,215,250,0.85)' : '#7B421C',
+                  color: isNight ? 'rgba(190,215,250,0.85)' : ENCRE,
                 }}>
                   {streak >= 7
                     ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
@@ -1038,14 +1038,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               <div style={{
                 fontSize: 14.5, lineHeight: 1.45, fontWeight: 500,
                 fontFamily: "'Poppins',system-ui,sans-serif",
-                color: isNight ? 'rgba(200,222,255,0.92)' : '#7B421C',
+                color: isNight ? 'rgba(200,222,255,0.92)' : ENCRE,
               }}>
                 {score > 0 ? `${score}. ` : ''}{p.quoi}
               </div>
               <div style={{
                 fontSize: 12.5, lineHeight: 1.45, marginTop: 5,
                 fontFamily: "'Poppins',system-ui,sans-serif",
-                color: isNight ? 'rgba(180,205,240,0.66)' : '#7B421C',
+                color: isNight ? 'rgba(180,205,240,0.66)' : ENCRE,
               }}>
                 {p.action}
               </div>
@@ -1057,7 +1057,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 <div style={{
                   fontSize: 11, lineHeight: 1.45, marginTop: 9,
                   fontFamily: "'Poppins',system-ui,sans-serif",
-                  color: isNight ? 'rgba(170,198,235,0.58)' : '#7B421C',
+                  color: isNight ? 'rgba(170,198,235,0.58)' : ENCRE,
                 }}>
                   Ton score se calcule sur ton sommeil, ton eau, tes pas et ton humeur.
                 </div>
@@ -1431,7 +1431,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           display:'block', margin:'0 auto',
           background:'none', border:'none',
           fontSize:12, fontWeight:500, letterSpacing:'0.22em',
-          color:'#7B421C', textTransform:'uppercase',
+          color:ENCRE, textTransform:'uppercase',
           cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
           padding:'8px 24px',
           borderBottom:'1px solid rgba(160,110,60,0.20)',
@@ -1494,7 +1494,7 @@ function MagneticGlowBtn({ label, iconEl, onClick }) {
         <div style={{ width: 52, height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {iconEl}
         </div>
-        <span style={{ fontSize: 11, fontWeight: 800, color: '#7B421C', letterSpacing: '0.2px' }}>{label}</span>
+        <span style={{ fontSize: 11, fontWeight: 800, color: ENCRE, letterSpacing: '0.2px' }}>{label}</span>
       </div>
     </GlassyButtonWrap>
   )
@@ -1612,7 +1612,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(200,123,82,0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
           {val > 0 ? fmt(val) : '·'}
         </div>
-        <div style={{ fontSize:10, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
+        <div style={{ fontSize:10, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
       </div>
     </div>
   )
@@ -1682,10 +1682,10 @@ export function StreakXP({ streak, xp, level }) {
               {streak >= 7 ? <FireIcon size={17} color="#fff" /> : streak >= 3 ? <FlashIcon size={17} color="#fff" /> : <LeafIcon size={17} color="#fff" />}
             </div>
             <div>
-              <div style={{ fontSize:17, fontWeight:500, color:'#7B421C', lineHeight:1, letterSpacing:'-0.5px' }}>
-                {streak}<span style={{ fontSize:10, fontWeight:300, color:'#7B421C', marginLeft:6 }}>jours</span>
+              <div style={{ fontSize:17, fontWeight:500, color:ENCRE, lineHeight:1, letterSpacing:'-0.5px' }}>
+                {streak}<span style={{ fontSize:10, fontWeight:300, color:ENCRE, marginLeft:6 }}>jours</span>
               </div>
-              <div style={{ fontSize:9, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
+              <div style={{ fontSize:9, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
                 {streak >= 7 ? 'En feu !' : streak > 0 ? 'Streak actif' : 'Premier jour'}
               </div>
             </div>
@@ -1715,9 +1715,9 @@ export function StreakXP({ streak, xp, level }) {
           <div style={{ padding:'10px 12px', position:'relative', zIndex:3 }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
               <div>
-                <div style={{ fontSize:9, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
-                <div style={{ fontSize:16, fontWeight:500, color:'#7B421C', lineHeight:1.1, letterSpacing:'-0.5px' }}>
-                  {xp} <span style={{ fontSize:9, color:'#7B421C', fontWeight:300 }}>XP</span>
+                <div style={{ fontSize:9, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
+                <div style={{ fontSize:16, fontWeight:500, color:ENCRE, lineHeight:1.1, letterSpacing:'-0.5px' }}>
+                  {xp} <span style={{ fontSize:9, color:ENCRE, fontWeight:300 }}>XP</span>
                 </div>
               </div>
               <div style={{
@@ -1746,7 +1746,7 @@ export function StreakXP({ streak, xp, level }) {
                 )
               })}
             </div>
-            <div style={{ fontSize:10, color:'#7B421C', marginTop:3, fontWeight:500 }}>
+            <div style={{ fontSize:10, color:ENCRE, marginTop:3, fontWeight:500 }}>
               {100 - xpInLevel} XP pour le niveau {level + 1}
             </div>
           </div>
@@ -1844,7 +1844,7 @@ function generateDailyTasks(profil, metriques) {
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', Icon: WalkIcon, color:'#9C5B33',
+      id:'pas', Icon: WalkIcon, color:ICONE,
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
@@ -1855,7 +1855,7 @@ function generateDailyTasks(profil, metriques) {
       detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
-      id:'soir', Icon: MoonIcon, color:'#9C5B33',
+      id:'soir', Icon: MoonIcon, color:ICONE,
       title:'Prépare ton sommeil',
       detail: profil?.coucher ? `Écrans off 30 min avant ${profil.coucher}` : 'Écrans éteints 30 min avant dormir',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -1868,19 +1868,19 @@ function generateDailyTasks(profil, metriques) {
     },
     {
       id:'sport', Icon: niveau==='avancé' ? MuscleIcon : niveau==='intermédiaire' ? BikeIcon : WalkIcon,
-      color:'#9C5B33',
+      color:ICONE,
       title: niveau==='avancé' ? 'Session entraînement' : niveau==='intermédiaire' ? 'Cardio 30 min' : 'Mouvement doux',
       detail: niveau==='avancé' ? '45-60 min d\'effort physique' : niveau==='intermédiaire' ? 'Cardio modéré + échauffement' : '20-30 min de stretching ou marche',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', Icon: TargetIcon, color:'#9C5B33',
+      id:'objectif', Icon: TargetIcon, color:ICONE,
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Un pas de plus vers « ${objectif} »` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',
     },
     {
-      id:'mental', Icon: MeditateIcon, color:'#9C5B33',
+      id:'mental', Icon: MeditateIcon, color:ICONE,
       title:'Bien-être mental',
       detail:'5 min cohérence cardiaque ou journaling',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2328,7 +2328,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                   // En nuit l'orange et le brun se posaient sur du navy.
                   color: isNight
                     ? (score > 50 ? 'rgba(200,222,255,0.95)' : 'rgba(180,210,255,0.82)')
-                    : (score > 50 ? '#9C5D08' : '#9C5B33'),
+                    : (score > 50 ? '#9C5D08' : ICONE),
                   fontFamily:"'Poppins',system-ui,sans-serif",
                   letterSpacing:'-0.02em',
                 }}>{score}</span>
@@ -2729,7 +2729,7 @@ const hc = {
     alignItems:'center', justifyContent:'flex-end', paddingBottom:16 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
-    borderRadius:20, padding:'6px 16px', fontSize:11, color:'#7B421C', fontWeight:500,
+    borderRadius:20, padding:'6px 16px', fontSize:11, color:ENCRE, fontWeight:500,
     marginBottom:12, marginTop:32, letterSpacing:'0.3px',
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   greetDot: { width:7, height:7, borderRadius:'50%', background:'#E8A07A',
@@ -2754,7 +2754,7 @@ const hc = {
 
   cardsWrap: { padding:'8px 18px 8px' },
   cardsHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
-  cardsTitle: { fontSize:11, fontWeight:600, color:'#7B421C', letterSpacing:'0.08em',
+  cardsTitle: { fontSize:11, fontWeight:600, color:ENCRE, letterSpacing:'0.08em',
     fontFamily:"'Poppins',system-ui,sans-serif", textTransform:'uppercase' },
 
   actionsWrap: { padding:'16px 18px 4px' },

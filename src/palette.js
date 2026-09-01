@@ -11,7 +11,15 @@
 // pour du texte courant, 3,0 pour une icône ou un texte d'au moins 24px.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const ENCRE       = '#7B421C'   // 5,80:1 — tout le texte courant
+// « Brique solaire », choisie par Jean le 1er septembre 2026. 5,65:1, chroma 117.
+//
+// Elle remplace #7B421C, qui donnait 5,80:1 pour un chroma de seulement 95 :
+// une teinte choisie pour sa lisibilité, mais qui tirait vers la terre cuite.
+// Sur une app qui s'appelle « ton soleil au quotidien », la contradiction se
+// sentait sans se nommer. Quinze centièmes de contraste échangés contre
+// vingt-deux points de couleur, et il reste de la marge au-dessus du seuil
+// de 4,5 pour les écrans à venir.
+export const ENCRE       = '#83400E'
 // 3,86:1. Ne passe PAS le seuil du texte courant : réservée aux icônes et aux
 // textes d'au moins 24px. Elle s'appelait ENCRE_DOUCE, et ce nom d'encre
 // invitait à l'employer comme une encre : trouvée trois fois sur du texte de
@@ -21,7 +29,10 @@ export const ENCRE       = '#7B421C'   // 5,80:1 — tout le texte courant
 // encore le seuil est #8C4E22, à 4,74:1. Mesuré : au-delà, #935426 tombe à
 // 4,32 et échoue. L'écart avec ENCRE étant trop faible pour créer une
 // hiérarchie visible, la hiérarchie passe par la graisse, pas par la teinte.
-export const ICONE = '#9C5B33'
+// Réchauffée dans la même proportion que l'encre : une icône restée grise à
+// côté d'un texte devenu chaud se voit immédiatement. Elle y gagne sur les
+// deux tableaux, chroma 141 contre 105 et contraste 4,07 contre 3,86.
+export const ICONE = '#9E5511'
 export const ACCENT      = '#C87B52'   // 2,39:1 — fonds, bordures, traits. JAMAIS du texte
 export const AMBRE       = '#8A5206'   // 4,65:1 — accent chaud lisible
 export const VERT        = '#166534'   // 5,19:1 — état positif

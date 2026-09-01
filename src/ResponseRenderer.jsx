@@ -1,5 +1,6 @@
 import React, { useState, Component } from 'react'
 import { MuscleIcon, LightbulbIcon, LeafIcon, CalendarIcon, ChatIcon, CheckIcon, FoodIcon } from './Icons'
+import { ENCRE, ICONE } from './palette'
 
 // ─── Parser ───────────────────────────────────────────────────────────────────
 function parseRich(text) {
@@ -21,12 +22,12 @@ function parseRich(text) {
 
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
-  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color="#9C5B33" /> Repas</>,      gradient:'rgba(255,235,210,0.32)' },
+  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color={ICONE} /> Repas</>,      gradient:'rgba(255,235,210,0.32)' },
   exercises: { accent:'#F59E0B', labelEl:<><MuscleIcon size={13} color="#F59E0B" /> Exercices</>,  gradient:'linear-gradient(135deg,#F59E0B,#D97706)' },
-  tips:      { accent:'#C87B52', labelEl:<><LightbulbIcon size={13} color="#9C5B33" /> Conseils</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
+  tips:      { accent:'#C87B52', labelEl:<><LightbulbIcon size={13} color={ICONE} /> Conseils</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
   plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
   routine:   { accent:'#38bdf8', labelEl:<><CalendarIcon size={13} color="#38bdf8" /> Programme</>,gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
-  generic:   { accent:'#C87B52', labelEl:<><ChatIcon size={13} color="#9C5B33" /> Suggestions</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
+  generic:   { accent:'#C87B52', labelEl:<><ChatIcon size={13} color={ICONE} /> Suggestions</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
 }
 
 // ─── Global keyframes injected once ──────────────────────────────────────────
@@ -117,8 +118,8 @@ function BookingCard({ data }) {
             border:'1px solid rgba(200,123,82,0.15)',
             borderRadius:14, padding:'12px 14px',
           }}>
-            <span style={{ flexShrink:0, display:'flex' }}><ChatIcon size={18} color="#9C5B33" /></span>
-            <span style={{ fontSize:13, color:'#7B421C', lineHeight:1.65 }}>{data.note}</span>
+            <span style={{ flexShrink:0, display:'flex' }}><ChatIcon size={18} color={ICONE} /></span>
+            <span style={{ fontSize:13, color:ENCRE, lineHeight:1.65 }}>{data.note}</span>
           </div>
         )}
 
@@ -151,7 +152,7 @@ function BookingCard({ data }) {
                 style={{ textDecoration:'none' }}>
                 <div style={{
                   padding:'12px 16px', borderRadius:16,
-                  background:'#fff', color:'#7B421C',
+                  background:'#fff', color:ENCRE,
                   border:'1.5px solid #f0e8e0',
                   fontSize:13, fontWeight:600,
                   boxShadow:'0 4px 14px rgba(0,0,0,0.06)',
@@ -225,7 +226,7 @@ function RichCard({ item, accent, index }) {
             </span>
           )}
         </div>
-        {item.desc && <div style={{ fontSize:12, color:'#7B421C', lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
+        {item.desc && <div style={{ fontSize:12, color:ENCRE, lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
         {item.sub && (
           <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:`${color}cc`, fontWeight:600, background:`${color}12`, borderRadius:6, padding:'3px 8px' }}>
             {item.sub}
@@ -315,7 +316,7 @@ export default function ResponseRenderer({ content }) {
       {items.length > 0 && <TypeHeader cfg={cfg} count={items.length} />}
 
       {data.intro && (
-        <p style={{ margin:'0 0 14px', fontSize:13, color:'#7B421C', lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
+        <p style={{ margin:'0 0 14px', fontSize:13, color:ENCRE, lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
           {data.intro}
         </p>
       )}
@@ -329,7 +330,7 @@ export default function ResponseRenderer({ content }) {
       {data.outro && (
         <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'11px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
           <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={15} color={`${cfg.accent}99`} /></span>
-          <span style={{ fontSize:12, color:'#7B421C', lineHeight:1.6 }}>{data.outro}</span>
+          <span style={{ fontSize:12, color:ENCRE, lineHeight:1.6 }}>{data.outro}</span>
         </div>
       )}
 

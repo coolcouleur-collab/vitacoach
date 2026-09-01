@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './supabase'
 import { BellIcon, ChatIcon } from './Icons'
 import './tokens.css'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 
 // ─── Moderation ───────────────────────────────────────────────────────────────
 const BANNED_WORDS = [
@@ -62,7 +62,7 @@ function renderWithMentions(text) {
   if (!text) return text
   return text.split(/(@[\w\-À-ÿ]+)/g).map((part, i) =>
     part.startsWith('@')
-      ? <span key={i} style={{ color:'#7B421C', fontWeight:700 }}>{part}</span>
+      ? <span key={i} style={{ color:ENCRE, fontWeight:700 }}>{part}</span>
       : part
   )
 }
@@ -112,10 +112,10 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
               display:'block', width:'100%', textAlign:'left',
               padding:'8px 14px', background:'none', border:'none',
               cursor:'pointer', fontFamily:'var(--font)',
-              fontSize:'max(1.2rem,12px)', color:'#7B421C',
+              fontSize:'max(1.2rem,12px)', color:ENCRE,
               borderBottom:'1px solid rgba(200,123,82,0.08)',
             }}>
-              <span style={{ color:'#7B421C', fontWeight:700 }}>@</span>{name}
+              <span style={{ color:ENCRE, fontWeight:700 }}>@</span>{name}
             </button>
           ))}
         </div>
@@ -132,7 +132,7 @@ const inputBase = {
   background: 'rgba(255,246,238,0.96)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,16px)',
-  color: '#7B421C', lineHeight: 1.6,
+  color: ENCRE, lineHeight: 1.6,
   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.70)',
 }
 
@@ -196,7 +196,7 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
         {onCancel && (
           <button onClick={onCancel} style={{
             background:'none', border:'none', cursor:'pointer', padding:'.6rem .8rem',
-            fontSize:'max(1.1rem,11px)', color:'#7B421C', fontFamily:'var(--font)',
+            fontSize:'max(1.1rem,11px)', color:ENCRE, fontFamily:'var(--font)',
           }}>Annuler</button>
         )}
       </div>
@@ -224,21 +224,21 @@ function PostCard({ post, onLike, onOpen, userId }) {
         <Avatar name={post.author} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '.3rem' }}>
-            <span style={{ fontWeight: 600, fontSize: 'max(1.2rem,12px)', color: '#7B421C' }}>{post.author}</span>
+            <span style={{ fontWeight: 600, fontSize: 'max(1.2rem,12px)', color: ENCRE }}>{post.author}</span>
             <span style={{
-              fontSize: 'max(1rem,10px)', fontWeight: 500, color: '#7B421C',
+              fontSize: 'max(1rem,10px)', fontWeight: 500, color: ENCRE,
               background: 'rgba(200,123,82,0.08)', padding: '.15rem .65rem',
               borderRadius: 20, border: '1px solid rgba(200,123,82,0.18)',
             }}>{post.category}</span>
-            <span style={{ fontSize: 'max(1rem,10px)', color: '#7B421C' }}>{timeAgo(post.created_at)}</span>
+            <span style={{ fontSize: 'max(1rem,10px)', color: ENCRE }}>{timeAgo(post.created_at)}</span>
           </div>
-          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 400, color: '#7B421C', lineHeight: 1.35, fontFamily:'var(--font)', margin:0 }}>
+          <h3 style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 400, color: ENCRE, lineHeight: 1.35, fontFamily:'var(--font)', margin:0 }}>
             {post.title}
           </h3>
         </div>
       </div>
       {/* Preview body */}
-      <p style={{ fontSize: 'max(1.2rem,12px)', color: '#7B421C', lineHeight: 1.65, marginBottom: '1rem',
+      <p style={{ fontSize: 'max(1.2rem,12px)', color: ENCRE, lineHeight: 1.65, marginBottom: '1rem',
         overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
         {post.body}
       </p>
@@ -254,11 +254,11 @@ function PostCard({ post, onLike, onOpen, userId }) {
           <span style={{ fontSize: '1.1rem', color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.35)' }}>♥</span>
           <span style={{ fontSize: 'max(1.1rem,11px)', fontWeight: 500, color: liked ? 'rgba(200,123,82,0.80)' : 'rgba(200,123,82,0.45)' }}>{likesCount}</span>
         </button>
-        <div style={{ display:'flex', alignItems:'center', gap:'.4rem', color:'#7B421C', fontSize:'max(1.1rem,11px)' }}>
-          <ChatIcon size={16} color="#9C5B33" />
+        <div style={{ display:'flex', alignItems:'center', gap:'.4rem', color:ENCRE, fontSize:'max(1.1rem,11px)' }}>
+          <ChatIcon size={16} color={ICONE} />
           <span>{repliesCount} réponse{repliesCount !== 1 ? 's' : ''}</span>
         </div>
-        <div style={{ marginLeft:'auto', fontSize:'max(1.1rem,11px)', color:'#7B421C' }}>Lire →</div>
+        <div style={{ marginLeft:'auto', fontSize:'max(1.1rem,11px)', color:ENCRE }}>Lire →</div>
       </div>
     </div>
   )
@@ -306,17 +306,17 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
       <div style={{ flex:1, minWidth:0 }}>
         {/* Header ligne */}
         <div style={{ display:'flex', gap:'.5rem', alignItems:'center', marginBottom:'.25rem', flexWrap:'wrap' }}>
-          <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'#7B421C' }}>{r.author}</span>
-          <span style={{ fontSize:'max(1rem,10px)', color:'#7B421C' }}>{timeAgo(r.created_at)}</span>
+          <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:ENCRE }}>{r.author}</span>
+          <span style={{ fontSize:'max(1rem,10px)', color:ENCRE }}>{timeAgo(r.created_at)}</span>
           {r.edited_at && (
-            <span style={{ fontSize:'max(0.9rem,9px)', color:'#7B421C', fontStyle:'italic' }}>· modifié</span>
+            <span style={{ fontSize:'max(0.9rem,9px)', color:ENCRE, fontStyle:'italic' }}>· modifié</span>
           )}
           {/* Actions owner */}
           {isOwner && !editing && (
             <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
               <button onClick={() => setEditing(true)} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'2px 6px',
-                fontSize:'max(1rem,10px)', color:'#7B421C', fontFamily:'var(--font)',
+                fontSize:'max(1rem,10px)', color:ENCRE, fontFamily:'var(--font)',
               }}>Modifier</button>
               <button onClick={() => onDelete(postId, r.id)} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'2px 6px',
@@ -340,17 +340,17 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
               <button onClick={save} disabled={loading} style={{
                 background:'rgba(200,123,82,0.15)', border:'1px solid rgba(200,123,82,0.28)',
                 borderRadius:20, padding:'.3rem .9rem', fontSize:'max(1.1rem,11px)',
-                color:'#7B421C', cursor:'pointer', fontFamily:'var(--font)',
+                color:ENCRE, cursor:'pointer', fontFamily:'var(--font)',
               }}>{loading ? '...' : 'Sauvegarder'}</button>
               <button onClick={() => { setEditing(false); setEditText(r.body) }} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'.3rem .9rem',
-                fontSize:'max(1.1rem,11px)', color:'#7B421C', fontFamily:'var(--font)',
+                fontSize:'max(1.1rem,11px)', color:ENCRE, fontFamily:'var(--font)',
               }}>Annuler</button>
             </div>
           </div>
         ) : (
           <>
-            <p style={{ fontSize:'max(1.2rem,12px)', color:'#7B421C', lineHeight:1.65, margin:'0 0 .6rem' }}>{r.body}</p>
+            <p style={{ fontSize:'max(1.2rem,12px)', color:ENCRE, lineHeight:1.65, margin:'0 0 .6rem' }}>{r.body}</p>
             {/* Actions footer */}
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
               {/* Vote widget */}
@@ -461,7 +461,7 @@ function ChildReplies({ replies, postId, onEdit, onDelete, onVote, onReply, user
         <button onClick={() => setExpanded(true)} style={{
           background:'none', border:'none', cursor:'pointer', padding:'4px 0',
           fontSize:'max(1rem,10px)', fontFamily:'var(--font)',
-          color:'#7B421C', fontWeight:600, textAlign:'left',
+          color:ENCRE, fontWeight:600, textAlign:'left',
         }}>
           ↓ Afficher {hidden} réponse{hidden > 1 ? 's' : ''} de plus
         </button>
@@ -470,7 +470,7 @@ function ChildReplies({ replies, postId, onEdit, onDelete, onVote, onReply, user
         <button onClick={() => setExpanded(false)} style={{
           background:'none', border:'none', cursor:'pointer', padding:'4px 0',
           fontSize:'max(1rem,10px)', fontFamily:'var(--font)',
-          color:'#7B421C', textAlign:'left',
+          color:ENCRE, textAlign:'left',
         }}>
           ↑ Réduire
         </button>
@@ -507,7 +507,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
       {/* Back */}
       <button onClick={onBack} style={{
         display:'flex', alignItems:'center', gap:6, background:'none', border:'none',
-        color:'#7B421C', cursor:'pointer', fontFamily:'var(--font)',
+        color:ENCRE, cursor:'pointer', fontFamily:'var(--font)',
         fontSize:'max(1.1rem,11px)', fontWeight:400, marginBottom:'1rem', padding:0,
       }}>
         ← Retour
@@ -524,21 +524,21 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
           <Avatar name={post.author} />
           <div style={{ flex:1, minWidth:0 }}>
             <div style={{ display:'flex', gap:'.5rem', alignItems:'center', flexWrap:'wrap', marginBottom:'.3rem' }}>
-              <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:'#7B421C' }}>{post.author}</span>
+              <span style={{ fontWeight:600, fontSize:'max(1.2rem,12px)', color:ENCRE }}>{post.author}</span>
               <span style={{
-                fontSize:'max(1rem,10px)', color:'#7B421C',
+                fontSize:'max(1rem,10px)', color:ENCRE,
                 background:'rgba(200,123,82,0.08)', padding:'.15rem .65rem',
                 borderRadius:20, border:'1px solid rgba(200,123,82,0.18)',
               }}>{post.category}</span>
-              <span style={{ fontSize:'max(1rem,10px)', color:'#7B421C' }}>{timeAgo(post.created_at)}</span>
+              <span style={{ fontSize:'max(1rem,10px)', color:ENCRE }}>{timeAgo(post.created_at)}</span>
             </div>
-            <h2 style={{ fontSize:'max(1.6rem,16px)', fontWeight:400, color:'#7B421C', lineHeight:1.35,
+            <h2 style={{ fontSize:'max(1.6rem,16px)', fontWeight:400, color:ENCRE, lineHeight:1.35,
               fontFamily:'var(--font)', margin:0 }}>
               {post.title}
             </h2>
           </div>
         </div>
-        <p style={{ fontSize:'max(1.3rem,13px)', color:'#7B421C', lineHeight:1.75, marginBottom:'1.2rem' }}>
+        <p style={{ fontSize:'max(1.3rem,13px)', color:ENCRE, lineHeight:1.75, marginBottom:'1.2rem' }}>
           {post.body}
         </p>
         {/* Actions : like + commenter */}
@@ -579,7 +579,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
 
       {/* Replies */}
       <div>
-        <div style={{ fontSize:'max(1.3rem,13px)', fontWeight:500, color:'#7B421C', marginBottom:'.8rem' }}>
+        <div style={{ fontSize:'max(1.3rem,13px)', fontWeight:500, color:ENCRE, marginBottom:'.8rem' }}>
           {post.replies?.length || 0} commentaire{post.replies?.length !== 1 ? 's' : ''}
         </div>
         {post.replies?.length > 0 && (() => {
@@ -637,7 +637,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
             borderRadius: 100,
             width: 40, height: 40,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16, color: '#7B421C',
+            fontSize: 16, color: ENCRE,
             cursor: 'pointer',
             boxShadow: '0 4px 16px rgba(200,123,82,0.14), inset 0 1px 0 rgba(255,255,255,0.80)',
             zIndex: 200,
@@ -681,8 +681,8 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
       boxShadow: '0 8px 36px rgba(200,123,82,0.13), inset 0 1px 0 rgba(255,255,255,0.88)',
       marginBottom: '2rem',
     }}>
-      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 700, color: '#7B421C', marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem', fontFamily:'var(--font)' }}>
-        <span style={{ color: '#7B421C', fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
+      <div style={{ fontSize: 'max(1.5rem,15px)', fontWeight: 700, color: ENCRE, marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: '.7rem', fontFamily:'var(--font)' }}>
+        <span style={{ color: ENCRE, fontSize: '1.2rem' }}>✦</span> Nouvelle discussion
       </div>
 
       <input
@@ -742,7 +742,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
 
       <div style={{ display: 'flex', gap: '.8rem', justifyContent: 'flex-end' }}>
         <button onClick={onCancel} style={{
-          background: 'rgba(200,123,82,0.08)', color: '#7B421C',
+          background: 'rgba(200,123,82,0.08)', color: ENCRE,
           border: '1px solid rgba(200,123,82,0.18)', borderRadius: 20,
           padding: '.7rem 1.8rem', fontSize: 'max(1.2rem,12px)', fontWeight: 600,
           cursor: 'pointer', fontFamily: 'var(--font)',
@@ -751,7 +751,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
         </button>
         <button onClick={submit} disabled={loading} style={{
           background: 'rgba(255,255,255,0.25)',
-          color: '#7B421C', border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
+          color: ENCRE, border: '1px solid rgba(200,123,82,0.25)', borderRadius: 20,
           padding: '.7rem 2.2rem', fontSize: 'max(1.2rem,12px)', fontWeight: 800,
           cursor: 'pointer', fontFamily: 'var(--font)',
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
@@ -1045,7 +1045,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
 
       {/* ── Top action bar ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: '#7B421C', fontWeight: 500 }}>
+        <div style={{ flex: 1, fontSize: 'max(1.1rem,11px)', color: ENCRE, fontWeight: 500 }}>
           Communauté · entraide · bienveillance
         </div>
         {/* Cloche mentions */}
@@ -1055,7 +1055,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center',
           cursor:'pointer', flexShrink:0,
         }}>
-          <BellIcon size={15} color="#9C5B33" />
+          <BellIcon size={15} color={ICONE} />
           {unreadCount > 0 && (
             <span style={{
               position:'absolute', top:-4, right:-4,
@@ -1069,7 +1069,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           background: showRules ? 'rgba(200,123,82,0.14)' : 'rgba(200,123,82,0.09)',
           border:'1px solid rgba(200,123,82,0.28)', borderRadius:20,
           padding:'.45rem 1rem', fontSize:'max(1.1rem,11px)', fontWeight:600,
-          color:'#7B421C', cursor:'pointer', fontFamily:'var(--font)', whiteSpace:'nowrap',
+          color:ENCRE, cursor:'pointer', fontFamily:'var(--font)', whiteSpace:'nowrap',
         }}>Règles</button>
       </div>
 
@@ -1080,11 +1080,11 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           border:'1px solid rgba(200,123,82,0.18)', overflow:'hidden',
           backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(200,123,82,0.08)',
         }}>
-          <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:'#7B421C', borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color="#9C5B33" /> Mentions</span>
+          <div style={{ padding:'1rem 1.2rem .7rem', fontWeight:700, fontSize:'max(1.2rem,12px)', color:ENCRE, borderBottom:'1px solid rgba(200,123,82,0.10)' }}>
+            <span style={{ display:'flex', alignItems:'center', gap:6 }}><BellIcon size={14} color={ICONE} /> Mentions</span>
           </div>
           {mentions.length === 0 ? (
-            <div style={{ padding:'1.4rem', textAlign:'center', fontSize:'max(1.1rem,11px)', color:'#7B421C' }}>
+            <div style={{ padding:'1.4rem', textAlign:'center', fontSize:'max(1.1rem,11px)', color:ENCRE }}>
               Aucune mention pour l'instant
             </div>
           ) : mentions.map(m => (
@@ -1099,13 +1099,13 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
                 <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="rgba(200,123,82,0.70)" strokeWidth="2" strokeLinecap="round"/>
               </svg>
               <div style={{ minWidth:0 }}>
-                <div style={{ fontSize:'max(1.1rem,11px)', color:'#7B421C', lineHeight:1.5 }}>
+                <div style={{ fontSize:'max(1.1rem,11px)', color:ENCRE, lineHeight:1.5 }}>
                   Tu as été mentionné(e) dans{' '}
-                  <span style={{ fontWeight:700, color:'#7B421C' }}>
+                  <span style={{ fontWeight:700, color:ENCRE }}>
                     « {m.post?.title || 'une discussion'} »
                   </span>
                 </div>
-                <div style={{ fontSize:'max(0.95rem,9.5px)', color:'#7B421C', marginTop:2 }}>
+                <div style={{ fontSize:'max(0.95rem,9.5px)', color:ENCRE, marginTop:2 }}>
                   {timeAgo(m.created_at)}
                 </div>
               </div>
@@ -1133,7 +1133,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           boxShadow: '0 5px 24px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.82)',
         }}>
-          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: '#7B421C', marginBottom: '1rem' }}>
+          <div style={{ fontSize: 'max(1.3rem,13px)', fontWeight: 800, color: ENCRE, marginBottom: '1rem' }}>
             Règlement du forum
           </div>
           {[
@@ -1145,10 +1145,10 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             ['Pas de spam', 'Ne publie pas le même message plusieurs fois.'],
           ].map(([t, d]) => (
             <div key={t} style={{ display: 'flex', gap: '.9rem', padding: '.65rem 0', borderTop: '1px solid rgba(200,123,82,0.11)' }}>
-              <span style={{ color: '#7B421C', fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
+              <span style={{ color: ENCRE, fontSize: '1.2rem', flexShrink: 0 }}>✦</span>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: '#7B421C', marginBottom: '.15rem' }}>{t}</div>
-                <div style={{ fontSize: 'max(1.1rem,11px)', color: '#7B421C', lineHeight: 1.6 }}>{d}</div>
+                <div style={{ fontWeight: 700, fontSize: 'max(1.2rem,12px)', color: ENCRE, marginBottom: '.15rem' }}>{t}</div>
+                <div style={{ fontSize: 'max(1.1rem,11px)', color: ENCRE, lineHeight: 1.6 }}>{d}</div>
               </div>
             </div>
           ))}
@@ -1191,7 +1191,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           background: 'rgba(200,123,82,0.06)', border: '1px solid rgba(200,123,82,0.18)',
           borderRadius: 16, padding: '1.4rem 1.6rem',
           fontSize: 'max(1.2rem,12px)', marginBottom: '1.4rem', textAlign: 'center',
-          color: '#7B421C',
+          color: ENCRE,
         }}>
           {error}
           <button onClick={fetchPosts} style={{
@@ -1199,7 +1199,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
             background: 'rgba(200,123,82,0.10)', border: '1px solid rgba(200,123,82,0.22)',
             borderRadius: 20, padding: '.4rem 1.4rem',
             fontSize: 'max(1.1rem,11px)', fontWeight: 600,
-            color: '#7B421C', cursor: 'pointer', fontFamily: 'var(--font)',
+            color: ENCRE, cursor: 'pointer', fontFamily: 'var(--font)',
           }}>Recharger</button>
         </div>
       )}
@@ -1208,7 +1208,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {loading ? <Skeleton /> : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
           <div style={{ fontSize: '2.2rem', marginBottom: '1rem', opacity: 0.40 }}>○</div>
-          <div style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 600, color: '#7B421C', marginBottom: '.5rem' }}>
+          <div style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 600, color: ENCRE, marginBottom: '.5rem' }}>
             {search ? 'Aucun résultat pour cette recherche' : 'Aucune discussion pour le moment'}
           </div>
           <div style={{ fontSize: 'max(1.2rem,12px)', color: ENCRE, lineHeight: 1.75 }}>

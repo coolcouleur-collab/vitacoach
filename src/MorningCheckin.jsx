@@ -106,7 +106,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 20px)', right: 20, zIndex: 10,
           background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
           borderRadius: 20, padding: '6px 14px',
-          color: '#7B421C', fontSize: 12, fontWeight: 500,
+          color: ENCRE, fontSize: 12, fontWeight: 500,
           fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
           backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
         }}
@@ -128,7 +128,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           animate={{ opacity: 1, y: 0 }}
           style={{
             fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
-            color: '#7B421C', textTransform: 'uppercase',
+            color: ENCRE, textTransform: 'uppercase',
             marginBottom: 40, textAlign: 'center',
           }}
         >
@@ -150,12 +150,12 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color={ICONE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
+                color: ENCRE, marginBottom: 8, letterSpacing: '-0.5px',
                 lineHeight: 1.2,
               }}>
                 Combien d'heures<br/>tu as dormi ?
               </h2>
-              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 48 }}>
+              <p style={{ fontSize: 13, color: ENCRE, marginBottom: 48 }}>
                 Objectif recommandé : 8h
               </p>
 
@@ -163,10 +163,10 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 16, position: 'relative' }}>
                 <div style={{
                   fontSize: 72, fontWeight: 900, lineHeight: 1,
-                  color: '#7B421C', letterSpacing: '-3px', marginBottom: 24,
+                  color: ENCRE, letterSpacing: '-3px', marginBottom: 24,
                   fontVariantNumeric: 'tabular-nums',
                 }}>
-                  {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: '#9C5B33', marginLeft: 4 }}>h</span>
+                  {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: ICONE, marginLeft: 4 }}>h</span>
                 </div>
                 <input
                   className="mc-sleep-slider"
@@ -206,11 +206,11 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SparkleIcon size={56} color={ICONE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
+                color: ENCRE, marginBottom: 8, letterSpacing: '-0.5px',
               }}>
                 Ton humeur ce matin ?
               </h2>
-              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 48 }}>
+              <p style={{ fontSize: 13, color: ENCRE, marginBottom: 48 }}>
                 Sois honnête, Solenn adapte ses conseils
               </p>
 
@@ -240,7 +240,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                     }}
                   >
                     <span style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>{h.icon}</span>
-                    <span style={{ fontSize: 10, color: '#7B421C', fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
+                    <span style={{ fontSize: 10, color: ENCRE, fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
                       {h.label}
                     </span>
                   </motion.button>
@@ -261,11 +261,11 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><TargetIcon size={56} color={ICONE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
+                color: ENCRE, marginBottom: 8, letterSpacing: '-0.5px',
               }}>
                 Une intention<br/>pour aujourd'hui ?
               </h2>
-              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 36 }}>
+              <p style={{ fontSize: 13, color: ENCRE, marginBottom: 36 }}>
                 Optionnel, mais ça aide vraiment
               </p>
 
@@ -283,7 +283,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   background: 'rgba(255,235,210,0.32)',
                   backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                   fontSize: 16, fontFamily: 'Poppins, sans-serif',
-                  color: '#7B421C', outline: 'none', marginBottom: 24,
+                  color: ENCRE, outline: 'none', marginBottom: 24,
                   textAlign: 'center',
                 }}
               />
@@ -291,7 +291,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <button onClick={handleSubmit} style={{
                 ...btnFullStyle,
                 background: 'rgba(255,235,210,0.32)',
-                color: '#7B421C',
+                color: ENCRE,
               }}>
                 <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Lancer ma journée</span>
               </button>

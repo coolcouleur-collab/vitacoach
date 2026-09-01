@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon } from './Icons'
 import { supabase } from './supabase'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 // Meme fabrique que Respiration, meme defaut : elle partait d'une couleur
@@ -87,7 +87,7 @@ const PHASE_CONTENT = {
   luteal: {
     name: 'Phase lutéale',
     moonPhase: 'waning',
-    color: '#7B421C',
+    color: ENCRE,
     bgColor: 'rgba(200,123,82,0.12)',
     energy: 'Déclinante',
     description: "L'énergie baisse progressivement. Ton corps prépare le prochain cycle.",
@@ -625,7 +625,7 @@ export default function CycleTab({ profil, userId, onChat }) {
           style={{ ...CARD, textAlign: 'center', padding: '40px 24px' }}
         >
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-            <MoonIcon size={36} color="#9C5B33" />
+            <MoonIcon size={36} color={ICONE} />
           </div>
           <div style={{ fontSize: 17, fontWeight: 600, color: am(0.90), marginBottom: 8, fontFamily: "'Poppins', sans-serif" }}>
             Une seule question pour démarrer :
