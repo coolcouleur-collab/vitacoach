@@ -121,7 +121,7 @@ function CinematicSlider({ onCommencer }) {
           position: 'relative',
           overflow: 'hidden',
           width: '100%',
-          height: '100vh',
+          height: '100%',
           background: 'transparent',
           display: 'grid',
           gridTemplateColumns: '1fr',
@@ -164,18 +164,18 @@ function CinematicSlider({ onCommencer }) {
         {onCommencer && (
           <button
             onClick={onCommencer}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,225,170,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,220,160,0.65)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(144,89,59,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(108,66,44,0.55)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               // Verre de cuivre profond, translucide + texte crème (palette Solenn)
-              background: 'rgba(255,235,210,0.32)',
+              background: 'linear-gradient(135deg,#6C422C,#90593B)',
               backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-              border: '1px solid rgba(255,235,210,0.50)',
+              border: '1px solid rgba(108,66,44,0.55)',
               borderRadius: '2rem',
               boxShadow: '0 0 24px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,248,235,0.30)',
-              color: ENCRE,
+              color: '#FFF8EB',
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: 'clamp(1.3rem,1.4vw,1.65rem)',
@@ -341,7 +341,7 @@ function CinematicSlider({ onCommencer }) {
             style={{
               flexShrink: 0,
               background: 'none', border: 'none', cursor: 'pointer',
-              color: soundOn ? 'rgba(255,235,190,1)' : 'rgba(255,235,190,0.88)',
+              color: ENCRE,
               padding: '0.4rem 0.6rem',
               transition: 'color 0.25s',
               display: 'flex', alignItems: 'center',
@@ -375,7 +375,7 @@ function CinematicSlider({ onCommencer }) {
                 if (i !== cur) { e.currentTarget.style.color = 'rgba(255,248,235,1)' }
               }}
               onMouseLeave={e => {
-                if (i !== cur) { e.currentTarget.style.color = 'rgba(255,248,235,0.96)' }
+                if (i !== cur) { e.currentTarget.style.color = ENCRE }
               }}
               style={{
                 flexShrink: 0,
@@ -383,15 +383,15 @@ function CinematicSlider({ onCommencer }) {
                 background: 'transparent',
                 border: 'none',
                 borderRadius: '3rem',
-                color: i === cur ? 'rgba(255,248,235,1)' : 'rgba(255,248,235,0.92)',
-                fontSize: 'clamp(1.25rem,2.6vw,1.65rem)',
+                color: ENCRE,
+                fontSize: 'clamp(0.95rem,2.6vw,1.65rem)',   // plancher abaisse : a 1,25rem les trois se serraient sur un telephone
                 fontWeight: i === cur ? 700 : 400,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: 'italic',
                 cursor: 'pointer',
                 letterSpacing: '0.04em',
                 whiteSpace: 'nowrap',
-                textShadow: i === cur ? '0 0 20px rgba(255,220,150,0.35)' : 'none',
+                textShadow: 'none',   // le halo dore etait fait pour un fond sombre
                 transition: 'all 0.3s',
                 display: 'flex', alignItems: 'center', gap: '0.4rem',
               }}
@@ -598,7 +598,7 @@ export default function Landing({ onCommencer }) {
   }, [])
 
   return (
-    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100vh', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
+    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100%', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
       <style>{`
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
@@ -660,7 +660,7 @@ export default function Landing({ onCommencer }) {
         }
       `}</style>
 
-      <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 1 }}>
+      <div style={{ position: 'relative', height: '100%', overflow: 'hidden', zIndex: 1 }}>
         <div className="globe-wrapper"><GlobeBg opacity={0.35} fixed={false} /></div>
         <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
           background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',

@@ -478,7 +478,7 @@ const s = {
     boxSizing:'border-box', outline:'none', color:ENCRE, transition:'border-color 0.2s, background 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
   btn: { width:'auto', padding:'0.85rem 2.5rem', background:'linear-gradient(135deg,#6C422C,#90593B)', display:'block', margin:'12px auto 0',
-    color:ENCRE, border:'1px solid rgba(108,66,44,0.55)', borderRadius:'2rem',
+    color:'#FFF8EB', border:'1px solid rgba(108,66,44,0.55)', borderRadius:'2rem',
     fontSize:'clamp(1.3rem, 1.2vw, 1.6rem)', fontWeight:500, fontStyle:'italic',
     cursor:'pointer', fontFamily:"'Cormorant Garamond', Georgia, serif",
     letterSpacing:'0.10em', marginTop:0,
