@@ -112,19 +112,19 @@ export default function AdminRetention() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-          <Stat label="Utilisateurs" value={u.total ?? ','} sub="profils créés" />
-          <Stat label="Actifs J7" value={u.actifsJ7 ?? ','} sub={u.total ? `${pct(u.actifsJ7, u.total)} de la base` : null} />
-          <Stat label="Actifs J30" value={u.actifsJ30 ?? ','} sub={u.total ? `${pct(u.actifsJ30, u.total)} de la base` : null} />
+          <Stat label="Utilisateurs" value={u.total ?? '·'} sub="profils créés" />
+          <Stat label="Actifs J7" value={u.actifsJ7 ?? '·'} sub={u.total ? `${pct(u.actifsJ7, u.total)} de la base` : null} />
+          <Stat label="Actifs J30" value={u.actifsJ30 ?? '·'} sub={u.total ? `${pct(u.actifsJ30, u.total)} de la base` : null} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginTop: 12 }}>
-          <Stat label="Challenges lancés" value={c.total ?? ','} sub={`${c.enCours ?? 0} en cours`} />
+          <Stat label="Challenges lancés" value={c.total ?? '·'} sub={`${c.enCours ?? 0} en cours`} />
           <Stat label="Complétion moyenne" value={c.tauxCompletionMoyen != null ? `${c.tauxCompletionMoyen} %` : ','} sub="jours cochés / jours écoulés (challenges actifs)" />
-          <Stat label="Challenges 21/21" value={c.termines ?? ','} sub="terminés en entier" />
+          <Stat label="Challenges 21/21" value={c.termines ?? '·'} sub="terminés en entier" />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginTop: 12 }}>
-          <Stat label="Abonnés Pro" value={a.prosActifs ?? ','} sub="statut isPro actif" />
+          <Stat label="Abonnés Pro" value={a.prosActifs ?? '·'} sub="statut isPro actif" />
           <Stat
             label="1er renouvellement"
             value={renew.taux != null ? `${renew.taux} %` : ','}

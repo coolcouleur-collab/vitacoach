@@ -939,7 +939,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               <span style={{ fontSize: score > 0 ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
                 opacity: score > 0 ? 1 : 0.55,
-                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : ','}</span>
+                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '·'}</span>
               <span style={{ fontSize:8, fontWeight:500, letterSpacing:'0.18em',
                 color: preset === 'night' ? 'rgba(160,190,245,0.65)' : 'rgba(200,123,82,0.65)',
                 marginTop:2, textTransform:'uppercase',
@@ -1609,7 +1609,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
           )}
         </div>
         <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(200,123,82,0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
-          {val > 0 ? fmt(val) : ','}
+          {val > 0 ? fmt(val) : '·'}
         </div>
         <div style={{ fontSize:10, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
       </div>
@@ -2331,7 +2331,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                 <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
               </>
             ) : (
-              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>,</span>
+              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>·</span>
             )}
           </div>
           <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
@@ -2439,7 +2439,7 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                 </div>
                 <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
                   <span style={{ fontSize:15, fontWeight:600, color:avg > 0 ? tc(0.90) : tc(0.65), letterSpacing: avg > 0 ? '-0.3px' : '0px', lineHeight:1 }}>
-                    {avg > 0 ? avg : ','}
+                    {avg > 0 ? avg : '·'}
                   </span>
                   {avg > 0 && <span style={{ fontSize:9, color:tc(0.55), fontWeight:400 }}>/100</span>}
                 </div>

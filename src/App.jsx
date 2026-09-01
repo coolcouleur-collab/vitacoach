@@ -1800,6 +1800,22 @@ const [messages, setMessages] = useState(() => {
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? '#E8962A' : '#ef4444'
 
+  // L'encre de la barre laterale doit suivre le theme, pas rester fixe.
+  // Elle etait figee en brun profond depuis le correctif de contraste du
+  // 2026-09-01 : sur le fond navy du mode Nuit, toute la navigation tombait
+  // a 2,41:1, donc illisible. La condition est la MEME que celle de la barre
+  // mobile (DynamicNav, ligne 437) : le fond ne devient sombre que sur
+  // l'accueil, donc l'encre claire ne vaut que la. Ailleurs le fond reste
+  // creme et l'encre doit rester brune, sinon on cree le bug en miroir.
+  const nuitNav       = homePreset === 'night' && onglet === 'accueil'
+  const navEncre      = nuitNav ? 'rgba(190,216,255,0.95)' : '#7B421C'
+  const navIcone      = nuitNav ? 'rgba(190,216,255,0.78)' : '#9C5B33'
+  const navIconeOff   = nuitNav ? 'rgba(190,216,255,0.55)' : 'rgba(200,123,82,0.48)'
+  const navAccent     = nuitNav ? 'rgba(160,200,255,0.95)' : '#C87B52'
+  const navTrait      = nuitNav ? 'rgba(160,200,255,0.20)' : 'rgba(200,123,82,0.14)'
+  // Vert « rappels actifs » : #22c55e ne donnait que 1,66:1 sur le creme.
+  const navVert       = nuitNav ? 'rgba(134,239,172,0.95)' : '#166534'   // 4,87:1 mesure
+
 
   const navItems = [
     { id:'accueil',    Icon: HomeIcon,       label:'Accueil' },
@@ -2010,10 +2026,10 @@ const [messages, setMessages] = useState(() => {
           <style>{`@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.35)}}`}</style>
 
           {/* Logo */}
-          <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:'1px solid rgba(200,123,82,0.14)' }}>
-            <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color:'#7B421C' }}>Solenn</span>
-            <span style={{ fontSize:9, fontWeight:400, color:'#7B421C', letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
-              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite' }}>,</span> guidée.
+          <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:`1px solid ${navTrait}` }}>
+            <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color: navEncre }}>Solenn</span>
+            <span style={{ fontSize:9, fontWeight:400, color: navEncre, letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
+              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite' }}>·</span> guidée.
             </span>
           </div>
 
@@ -2021,9 +2037,9 @@ const [messages, setMessages] = useState(() => {
           <nav style={{ display:'flex', flexDirection:'column', gap:3 }}>
             {navItems.map(({ id, Icon, label }) => {
               const active = onglet === id
-              const color = active ? '#C87B52' : 'rgba(200,123,82,0.48)'
+              const color = active ? navAccent : navIconeOff
               return (
-                <button key={id} style={active ? s.navActive : s.nav} onClick={() => setOnglet(id)}>
+                <button key={id} style={{ ...(active ? s.navActive : s.nav), color: navEncre }} onClick={() => setOnglet(id)}>
                   <Icon color={color} size={18} />
                   <span>{label}</span>
                   {id === 'sante' && score > 0 && (
@@ -2035,15 +2051,15 @@ const [messages, setMessages] = useState(() => {
           </nav>
 
           {/* Bas de sidebar */}
-          <div style={{ marginTop:'1rem', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)', display:'flex', flexDirection:'column', gap:5 }}>
+          <div style={{ marginTop:'1rem', paddingTop:'1rem', borderTop:`1px solid ${navTrait}`, display:'flex', flexDirection:'column', gap:5 }}>
             <div style={s.profileCard}>
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={s.profileName}>{profil.nom}</div>
-                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#9C5B33" /> {profil.objectifs[0]}</div>}
+                <div style={{ ...s.profileName, color: navEncre }}>{profil.nom}</div>
+                {profil.objectifs?.[0] && <div style={{ ...s.profileMeta, color: navEncre }}><TargetIcon size={13} color={navIcone} /> {profil.objectifs[0]}</div>}
               </div>
             </div>
-            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="#9C5B33" /> Solenn Pro · 44,99€/an</button>}
+            {!isPro && <button style={{ ...s.btnPro, color: navEncre }} onClick={() => passerPro('annual')}><StarIcon size={12} color={navIcone} /> Solenn Pro · 44,99€/an</button>}
             {/* Un seul comportement pour tous les abonnes. J'avais d'abord
                 masque le bouton pour les acces Pro poses a la main : resultat,
                 un encart qui ressemble a un bouton et ne repond pas quand on
@@ -2057,8 +2073,8 @@ const [messages, setMessages] = useState(() => {
                 Membre Pro
               </button>
             )}
-            <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? '#22c55e' : 'rgba(200,123,82,0.65)', border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
-              {notifEnabled ? <><BellIcon size={15} color="#22c55e" /> Rappels activés</> : <><BellOffIcon size={15} color="#9ca3af" /> Activer les rappels</>}
+            <button style={{ ...s.btnEdit, background: notifEnabled ? 'rgba(34,197,94,0.10)' : 'rgba(0,0,0,0.04)', color: notifEnabled ? navVert : navEncre, border: notifEnabled ? '1px solid rgba(34,197,94,0.25)' : '1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:6 }} onClick={notifEnabled ? desactiverNotifications : activerNotifications}>
+              {notifEnabled ? <><BellIcon size={15} color={navVert} /> Rappels activés</> : <><BellOffIcon size={15} color={navEncre} /> Activer les rappels</>}
             </button>
             {/* « Modifier ton profil » retire le 2026-08-14, meme raison que dans
                 le menu mobile le 2026-08-12 : il appelait exactement la meme
@@ -2069,8 +2085,8 @@ const [messages, setMessages] = useState(() => {
                 a deja son bouton Modifier. */}
             {/* Paramètres + Déconnexion côte à côte */}
             <div style={{ display:'flex', gap:5 }}>
-              <button style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <button style={{...s.btnEdit, flex:1, color: navEncre, display:'flex', alignItems:'center', justifyContent:'center', gap:5}} onClick={() => setShowSettings(true)}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={navEncre} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 Paramètres
               </button>
               <button onClick={async () => {
@@ -2080,8 +2096,8 @@ const [messages, setMessages] = useState(() => {
                 localStorage.removeItem('vitacoach_profil')
                 oublierAbonnement()
                 setUser(null); setProfil(null); setIsPro(false)
-              }} style={{...s.btnEdit, flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:5}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.65)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              }} style={{...s.btnEdit, flex:1, color: navEncre, display:'flex', alignItems:'center', justifyContent:'center', gap:5}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={navEncre} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
                 Déconnexion
@@ -2232,7 +2248,7 @@ padding: isMobile
                 }}>Solenn</span>
                 <span style={{ fontSize:8.5, fontWeight:400, color:'#7B421C', letterSpacing:'0.5px',
                   fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
-                  Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>,</span> guidée.
+                  Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>·</span> guidée.
                 </span>
               </div>
 
