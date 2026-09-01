@@ -1,61 +1,63 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Le doré comme écriture</title>
+<title>Ton terracotta, sans le foncer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;600;700&display=swap');
   body { margin:0; padding:20px 14px 70px; font-family:'Poppins',sans-serif;
          background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#7C4C33; }
   h1 { font-size:15px; margin:0 0 3px; }
-  p.i { font-size:12.5px; margin:0 0 4px; opacity:.9; line-height:1.55; }
+  p.i { font-size:12.5px; margin:0 0 6px; opacity:.9; line-height:1.55; }
   .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin:26px 0 6px; }
-  .sub { font-size:11.5px; margin:0 0 8px; opacity:.75; line-height:1.5; }
-  .carte { border-radius:22px; padding:24px 22px 26px; max-width:330px; margin:0 auto;
-           background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); }
-  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:42px;
-          text-align:center; line-height:1; margin-bottom:18px; }
-  .ong { display:flex; gap:26px; justify-content:center; margin-bottom:24px;
-         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; }
-  .ong b { font-weight:600; padding-bottom:3px; }
-  .ong span { font-weight:300; }
-  .ch { padding:11px 2px; font-size:15px; font-weight:300; margin-bottom:20px; }
-  .sv { font-size:12.5px; font-weight:300; display:flex; align-items:center; gap:8px; }
-  .sv i { width:14px; height:14px; border-radius:3px; display:inline-block; }
-  /* Bouton FILAIRE, comme la version C que tu as choisie */
-  .btn { display:block; margin:24px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
-         background:none; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
+  .sub { font-size:11.5px; margin:0 0 10px; opacity:.75; line-height:1.5; }
+
+  /* La carte s'eclaircit : c'est un FOND, donc creme, conformement a la regle.
+     C'est elle qui donne au terracotta de quoi se detacher. */
+  .carte { border-radius:24px; padding:30px 26px 32px; max-width:330px; margin:0 auto;
+           background:rgba(255,251,244,0.82);
+           border:1px solid rgba(255,220,160,0.55);
+           box-shadow:0 14px 44px rgba(200,123,82,0.14); }
+
+  /* TOUT est en #C87B52, et tout atteint la taille qui le rend lisible. */
+  .t { color:#C87B52; }
+  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:46px;
+          text-align:center; line-height:1; margin-bottom:22px; }
+  .ong { display:flex; gap:24px; justify-content:center; margin-bottom:30px;
+         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:25px; }
+  .ong b { font-weight:600; padding-bottom:4px; border-bottom:1.5px solid rgba(200,123,82,.75); }
+  .ong span { font-weight:400; opacity:.72; }
+  .ch { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; font-weight:400;
+        padding:8px 2px 12px; margin-bottom:20px; border-bottom:1.5px solid rgba(200,123,82,.55); }
+  .sv { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; font-weight:600;
+        display:flex; align-items:center; gap:10px; }
+  .sv i { width:16px; height:16px; border-radius:4px; display:inline-block;
+          border:1.5px solid rgba(200,123,82,.75); }
+  .btn { display:block; margin:28px auto 0; padding:12px 34px; border-radius:2rem; width:fit-content;
+         background:none; border:1.5px solid rgba(200,123,82,.75);
+         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; }
+  .note { max-width:330px; margin:12px auto 0; font-size:12px; line-height:1.6; opacity:.85; }
+  b.k { font-weight:700; }
 </style>
 
-<h1>Le doré, la seule des trois qu'on n'a jamais essayée</h1>
-<p class="i">Crème, terracotta, halo doré. Le terracotta ne marche pas en écriture. Voici le doré, sur la carte C au bouton filaire.</p>
+<h1>Ton terracotta, sans le foncer d'un ton</h1>
+<p class="i">
+  <b class="k">#C87B52</b> exactement, partout. Il plafonne à 3,28:1 même sur du
+  blanc, donc il ne peut pas être du petit texte. Mais dès 24px il est valide.
+  La réponse n'est pas de changer la couleur, c'est d'agrandir l'écriture.
+</p>
 
-<div class="lab" style="color:#8A5206">5 · doré ambré · #8A5206</div>
-<div class="sub">Déjà dans ta palette, c'est la couleur de tes accents chauds. 4,65:1.</div>
-<div class="carte" style="color:#8A5206">
-  <div class="logo" style="color:#C87B52">Solenn</div>
-  <div class="ong"><b style="border-bottom:1px solid rgba(138,82,6,.55)">Connexion</b><span style="opacity:.75">Inscription</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(138,82,6,.45)"><span style="opacity:.72">Ton adresse email</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(138,82,6,.45)"><span style="opacity:.72">Ton mot de passe</span></div>
-  <div class="sv"><i style="border:1px solid rgba(138,82,6,.6)"></i> Se souvenir de moi</div>
-  <div class="btn" style="border:1px solid rgba(138,82,6,.6); color:#8A5206">Retrouver Solenn →</div>
+<div class="lab" style="color:#C87B52">8 · tout en #C87B52, typographie agrandie</div>
+<div class="sub">La carte s'éclaircit pour lui donner de quoi se détacher. Une carte est un fond : elle reste crème.</div>
+
+<div class="carte t">
+  <div class="logo">Solenn</div>
+  <div class="ong"><b>Connexion</b><span>Inscription</span></div>
+  <div class="ch" style="opacity:.78">Ton adresse email</div>
+  <div class="ch" style="opacity:.78">Ton mot de passe</div>
+  <div class="sv"><i></i> Se souvenir de moi</div>
+  <div class="btn">Retrouver Solenn →</div>
 </div>
 
-<div class="lab" style="color:#7E5A12">6 · doré olive · #7E5A12</div>
-<div class="sub">Plus vert, plus sourd, moins orangé. 4,55:1.</div>
-<div class="carte" style="color:#7E5A12">
-  <div class="logo" style="color:#C87B52">Solenn</div>
-  <div class="ong"><b style="border-bottom:1px solid rgba(126,90,18,.55)">Connexion</b><span style="opacity:.75">Inscription</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(126,90,18,.45)"><span style="opacity:.72">Ton adresse email</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(126,90,18,.45)"><span style="opacity:.72">Ton mot de passe</span></div>
-  <div class="sv"><i style="border:1px solid rgba(126,90,18,.6)"></i> Se souvenir de moi</div>
-  <div class="btn" style="border:1px solid rgba(126,90,18,.6); color:#7E5A12">Retrouver Solenn →</div>
-</div>
-
-<div class="lab" style="color:#A8700F">7 · doré franc · #A8700F</div>
-<div class="sub">Le plus lumineux des trois. 3,07:1 : sous le seuil du petit texte, mais je te le montre pour que tu voies la limite haute.</div>
-<div class="carte" style="color:#A8700F">
-  <div class="logo" style="color:#C87B52">Solenn</div>
-  <div class="ong"><b style="border-bottom:1px solid rgba(168,112,15,.55)">Connexion</b><span style="opacity:.75">Inscription</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(168,112,15,.45)"><span style="opacity:.72">Ton adresse email</span></div>
-  <div class="ch" style="border-bottom:1px solid rgba(168,112,15,.45)"><span style="opacity:.72">Ton mot de passe</span></div>
-  <div class="sv"><i style="border:1px solid rgba(168,112,15,.6)"></i> Se souvenir de moi</div>
-  <div class="btn" style="border:1px solid rgba(168,112,15,.6); color:#A8700F">Retrouver Solenn →</div>
-</div>
+<p class="note">
+  Plus rien de brun, plus rien de cuivré, plus rien de doré dans l'écriture.
+  Uniquement ta couleur, à sa valeur exacte. Le formulaire devient plus grand
+  et plus aéré, ce qui va aussi dans le sens de la version C que tu as choisie.
+</p>
