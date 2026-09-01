@@ -281,3 +281,29 @@ Mais le melange se voit, onze photos et quatorze dessins. Deux issues, au
 choix de Jean : trouver 14 photos, ou passer les 25 a l'animation pour que ce
 soit homogene en attendant. Je n'invente pas d'adresses Unsplash : une
 reference non verifiee donne une image absente ou hors sujet.
+
+## Le croisement des contre-indications
+
+Décidé le 1er septembre 2026. Les 36 fiches de Soins portent déjà des
+contre-indications précises, mais elles sont imprimées sur la fiche : c'est à
+l'utilisatrice de se diagnostiquer elle-même. Personne ne fait le lien.
+
+`src/contreIndications.js` fait le croisement. Mesuré sur les vraies fiches :
+
+- **enceinte : 10 fiches sur 36** lui sont déconseillées
+- **sous anticoagulant : 9 sur 36**
+- **les deux, plus un trouble thyroïdien : 15 sur 36**
+- **aucune situation déclarée : 0**, donc aucun faux signalement
+
+Aujourd'hui, une femme enceinte qui ouvre Soins voit ces dix fiches comme les
+autres.
+
+Le moteur ne fait aucune interprétation : chaque situation connaît les mots qui
+la désignent dans les contre-indications écrites à la main, et on les cherche
+littéralement. Vérifiable, et il échoue du bon côté, en signalant trop plutôt
+que pas assez.
+
+Reste à faire : trois questions facultatives à l'inscription (grossesse ou
+allaitement, traitements réguliers, opération prévue), et l'affichage sur la
+fiche. La phrase signale, n'interdit pas, et renvoie au pharmacien : Solenn
+n'est pas un dispositif médical, et la mention doit le rester.
