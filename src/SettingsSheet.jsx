@@ -1193,6 +1193,17 @@ export default function SettingsSheet({
               >
                 Politique de confidentialité
               </a>
+
+              {/* Repere de version. Depuis le 2026-09-01, la question « est-ce
+                  que je regarde bien la derniere version ? » revient a chaque
+                  correctif, et personne ne peut y repondre depuis un telephone.
+                  Cette date la tranche en une seconde. Elle distingue aussi le
+                  site de l'app installee, dont les fichiers sont figes au
+                  moment de la construction : ceux embarques dans iOS dataient
+                  du 21 juillet, six semaines derriere le site. */}
+              <div style={{ fontFamily: C.font, fontSize: 10.5, color: C.textLight, marginTop: 14, letterSpacing: '0.02em' }}>
+                Version du {typeof __BUILD__ === 'string' ? __BUILD__ : 'inconnue'}
+              </div>
             </Card>
 
           </div>
