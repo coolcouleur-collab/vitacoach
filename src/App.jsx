@@ -2662,12 +2662,18 @@ padding: isMobile
 
               {/* Follow-up chips, scroll horizontal */}
               {followUps.length > 0 && !loading && (
+                <div style={{ position:'relative' }}>
                 <div style={{ display:'flex', gap:7, marginBottom:10, overflowX:'auto', flexWrap:'nowrap', paddingBottom:2, position:'relative', zIndex:1, scrollbarWidth:'none' }}>
                   {followUps.map((sug, i) => (
                     <button key={i} style={{ ...s.suggestion, flexShrink:0 }} onClick={() => { envoyerMessage(sug); setFollowUps([]) }}>
                       {sug}
                     </button>
                   ))}
+                </div>
+                  <div style={{
+                    position:'absolute', top:0, right:0, bottom:10, width:28, pointerEvents:'none',
+                    background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.88) 100%)',
+                  }} />
                 </div>
               )}
 
@@ -3872,7 +3878,7 @@ const s = {
     border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
-  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'#7B421C' },
+  inputChat: { flex:1, minWidth:0, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'#7B421C' },
   sendBtn: {
     background:'transparent', border:'none',
     width:36, height:36, borderRadius:12, cursor:'pointer',
@@ -4010,7 +4016,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
             </svg>
           ) : (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke={micState === 'rec' ? '#C0392B' : 'rgba(200,123,82,0.58)'}
+              stroke={micState === 'rec' ? '#C0392B' : ENCRE_DOUCE}
               strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
               style={micState === 'rec' ? { animation:'micPulse 1.1s ease-in-out infinite' } : undefined}>
               <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
@@ -4026,7 +4032,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
           placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Pose une question à Solenn...'}
           disabled={disabled} />
         <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
-          <SendIcon color="#9C5B33" size={20} />
+          <SendIcon color={ENCRE_DOUCE} size={20} />
         </button>
       </div>
     </div>
