@@ -6,7 +6,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
+// readWeightHistory reste propre a iOS : Health Connect expose le poids
+// autrement, et la facade n'a pas encore d'equivalent. Tout le reste passe
+// par sante.js, qui choisit HealthKit ou Health Connect selon l'appareil.
+import { readWeightHistory } from './useHealthKit'
+import { santeDisponible, demanderAccesSante, lireSanteAujourdhui, ouvrirReglagesSante } from './sante'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
@@ -86,6 +90,9 @@ const PROVIDERS = [
   },
   {
     id:          'apple_health',
+    // Le nom et la description sont remplaces a l'affichage par ceux de la
+    // plateforme : sur Android cette carte parle de Health Connect. L'id, lui,
+    // ne bouge pas, c'est une cle stockee et il ne designe plus Apple seul.
     nom:         'Apple Santé',
     icon:        ICONS.apple_health,
     description: 'Via l\'app native iOS, sync automatique',
@@ -355,7 +362,14 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   const [syncing,        setSyncing]         = useState(false)
   const [hkConnected,    setHkConnected]     = useState(() => localStorage.getItem(HK_KEY) === 'true')
   const [hkLastSync,     setHkLastSync]      = useState(() => localStorage.getItem(HK_KEY + '_last'))
-  const hkAvailable = isHealthKitAvailable()
+  // La disponibilite ne se lit plus d'un trait. Sur Android il faut demander
+  // au systeme si Health Connect est la, absent mais installable, ou hors de
+  // portee de l'appareil : trois reponses, et l'ecran doit les distinguer.
+  const [santeInfo, setSanteInfo] = useState({
+    disponible: false, plateforme: null, aInstaller: false, nom: 'Sante',
+  })
+  useEffect(() => { santeDisponible().then(setSanteInfo).catch(() => {}) }, [])
+  const hkAvailable = santeInfo.disponible
 
   useEffect(() => {
     if (userId) chargerIntegrations()
@@ -426,15 +440,24 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       if (provider.id === 'oura') setModalOura(true)
     } else if (provider.methode === 'native' && provider.id === 'apple_health') {
       if (!hkAvailable) {
-        showToast('Disponible uniquement dans l\'app iOS Solenn')
+        // Deux refus tres differents : « installe Health Connect » se repare en
+        // deux touches, « ton appareil ne peut pas » ne se repare jamais. Les
+        // confondre enverrait des gens chercher une app inutilisable chez eux.
+        if (santeInfo.aInstaller) {
+          showToast('Installe Health Connect, puis reviens ici')
+          await ouvrirReglagesSante()
+        } else {
+          showToast('Disponible depuis l\'app Solenn, sur iPhone ou Android')
+        }
         return
       }
       setLoadingSync('apple_health')
       try {
-        await requestHealthKitPermissions()
+        const accorde = await demanderAccesSante()
+        if (!accorde) { showToast('Autorisation refusée'); return }
         localStorage.setItem(HK_KEY, 'true')
         setHkConnected(true)
-        showToast('Apple Santé connecté !')
+        showToast(santeInfo.nom + ' connecté !')
         await syncAppleHealth()
       } catch (e) {
         showToast('Autorisation refusée')
@@ -447,7 +470,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   async function syncAppleHealth() {
     setLoadingSync('apple_health')
     try {
-      const metrics = await readTodayHealthData()
+      const metrics = await lireSanteAujourdhui()
       let synced = 0
       if (onMetriqueUpdate) {
         for (const [key, val] of Object.entries(metrics)) {
@@ -458,7 +481,9 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         }
       }
       // Historique poids 30 jours → merge localStorage
-      const weightHistory = await readWeightHistory(30)
+      // Reserve a iOS : appeler HealthKit sur Android echouerait a chaque
+      // synchronisation, et ferait passer une sync reussie pour un echec.
+      const weightHistory = santeInfo.plateforme === 'ios' ? await readWeightHistory(30) : []
       if (weightHistory.length > 0) {
         try {
           const stored = JSON.parse(localStorage.getItem('vitacoach_history') || '[]')
@@ -612,10 +637,14 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
 
       {PROVIDERS.map(provider => {
         const isHK = provider.id === 'apple_health'
+        const fiche = isHK && santeInfo.plateforme === 'android'
+          ? { ...provider, nom: 'Health Connect',
+              description: 'Le magasin de santé d\'Android, sync automatique' }
+          : provider
         return (
           <ProviderCard
             key={provider.id}
-            provider={provider}
+            provider={fiche}
             connecte={estConnecte(provider.id)}
             lastSync={isHK ? hkLastSync : getIntegration(provider.id)?.last_sync_at}
             onConnect={connecter}

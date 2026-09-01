@@ -1,5 +1,9 @@
 ext {
-    minSdkVersion = 24
+    // 26 et non 24 : androidx.health.connect exige 26 au minimum, et la
+    // fusion des manifestes echoue en dessous. Health Connect lui-meme ne
+    // tourne pas avant Android 9, donc aucun appareil capable de s'en
+    // servir n'est perdu. Ce qui sort du parc, c'est Android 7, de 2016.
+    minSdkVersion = 26
     compileSdkVersion = 36
     targetSdkVersion = 36
     androidxActivityVersion = '1.11.0'
