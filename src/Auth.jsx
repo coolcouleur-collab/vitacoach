@@ -437,7 +437,7 @@ const s = {
   // centre par align-items dans un conteneur qui defile se fait couper EN
   // HAUT, sans moyen de remonter. La marge automatique centre aussi, mais
   // laisse le defilement atteindre les deux extremites.
-  page: { height:'100%', minHeight:'100%', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex',
+  page: { height:'100dvh', minHeight:'100dvh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex',
     justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
     paddingTop:    'calc(env(safe-area-inset-top, 0px) + 72px)',
     paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
