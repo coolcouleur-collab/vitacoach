@@ -1685,7 +1685,7 @@ const [messages, setMessages] = useState(() => {
   }
 
   if (showForum) return <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
-  if (!user && !showAuth && !isNativeApp()) return (
+  if (!user && !showAuth && !isMobile) return (
     <Suspense fallback={<GlowLoader fullPage />}>
       {/* `onForum` est le SEUL chemin vers le forum. Landing ne l'utilise pas
           aujourd'hui : c'est volontaire, le forum est retire du lancement.
