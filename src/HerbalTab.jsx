@@ -11,7 +11,7 @@ const TXT_SOFT     = ENCRE   // etait 1,81:1. Meme encre, la hierarchie passe pa
 const ACCENT_FICHE       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
 // Le vert ne subsiste QUE sur le badge « Étudié », ou il signifie validé.
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
-const GREEN        = '#C87B52'
+const ETIQUETTE    = ENCRE   // s'appelait GREEN et contenait du terracotta a 2,3:1
 const CTA_GRAD     = 'rgba(255,235,210,0.32)'
 
 // ─── LOCAL SVG ICONS (style Icons.jsx : viewBox 24, stroke) ──────────────────
@@ -222,7 +222,7 @@ function HeroBg() {
 function AIRecoCard({ r, onChat, index }) {
   const [open, setOpen]       = useState(false)
   const [pressed, setPressed] = useState(false)
-  const c = GREEN
+  const c = ETIQUETTE
 
   return (
     <div
@@ -1085,7 +1085,7 @@ const hb = {
   aiTitle: { fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' },
   aiSub: { fontSize:10, color:'#7B421C', fontWeight:600, marginTop:1 },
   aiCta: {
-    background:CTA_GRAD,
+    background:'linear-gradient(135deg,#8F3D14,#B3501F)',   // blanc mesure a 5,14:1
     color:'#fff', border:'none',
     padding:'9px 16px', borderRadius:12,
     fontSize:11, fontWeight:800, cursor:'pointer',
