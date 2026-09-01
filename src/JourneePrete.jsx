@@ -99,14 +99,14 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
         fontFamily: F,
       }}>
-        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.90)', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Solenn te demande
         </div>
-        <div style={{ fontSize: 14.5, fontWeight: 600, color: 'rgba(200,123,82,0.92)', marginBottom: 4, lineHeight: 1.4 }}>
+        <div style={{ fontSize: 14.5, fontWeight: 600, color: '#7B421C', marginBottom: 4, lineHeight: 1.4 }}>
           {Q.titre}
         </div>
-        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', lineHeight: 1.45, marginBottom: 12 }}>
+        <div style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.45, marginBottom: 12 }}>
           {Q.sous}
         </div>
         <div style={{ display: 'flex', gap: 7 }}>
@@ -115,7 +115,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
               flex: 1, padding: '11px 0', borderRadius: 14, cursor: 'pointer',
               background: 'rgba(255,246,238,0.62)',
               border: '1.5px solid rgba(200,123,82,0.30)',
-              fontFamily: F, fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)',
+              fontFamily: F, fontSize: 13, fontWeight: 600, color: '#7B421C',
             }}>
               {c.label}
             </button>
@@ -135,7 +135,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       fontFamily: F,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.90)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Ta journée est prête
         </div>
@@ -145,8 +145,8 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
             <div style={{ marginTop: 1 }}><AdaptIcon type={a.type} /></div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.92)' }}>{a.titre}</div>
-              <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', lineHeight: 1.45 }}>{a.raison}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>{a.titre}</div>
+              <div style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.45 }}>{a.raison}</div>
             </div>
           </div>
         ))}
@@ -155,7 +155,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         <button onClick={onOpenRoutine} style={{
           marginTop: 12, width: '100%', padding: '9px 0', borderRadius: 12, cursor: 'pointer',
           border: '1px solid rgba(200,123,82,0.30)', background: 'rgba(255,255,255,0.35)',
-          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: '#C87B52',
+          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: '#9C5B33',
         }}>
           Voir mon programme du jour
         </button>

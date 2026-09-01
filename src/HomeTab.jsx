@@ -1620,7 +1620,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 function MetricRings({ metriques }) {
   const items = [
     { iconEl:<WaterIcon size={17} color="#38bdf8" />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:'#38bdf8', fmt: v => `${v}/8` },
-    { iconEl:<RunIcon size={17} color="#C87B52" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#C87B52', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
+    { iconEl:<RunIcon size={17} color="#9C5B33" />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:'#9C5B33', fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
     { iconEl:<MoonIcon size={17} color="#818cf8" />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:'#818cf8', fmt: v => `${v}h` },
     { iconEl:<MoodIcon size={17} color="#fbbf24" />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:'#fbbf24', fmt: v => `${v}/5` },
   ]
@@ -1843,7 +1843,7 @@ function generateDailyTasks(profil, metriques) {
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', Icon: WalkIcon, color:'#C87B52',
+      id:'pas', Icon: WalkIcon, color:'#9C5B33',
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
@@ -1854,7 +1854,7 @@ function generateDailyTasks(profil, metriques) {
       detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
-      id:'soir', Icon: MoonIcon, color:'#C87B52',
+      id:'soir', Icon: MoonIcon, color:'#9C5B33',
       title:'Prépare ton sommeil',
       detail: profil?.coucher ? `Écrans off 30 min avant ${profil.coucher}` : 'Écrans éteints 30 min avant dormir',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -1867,19 +1867,19 @@ function generateDailyTasks(profil, metriques) {
     },
     {
       id:'sport', Icon: niveau==='avancé' ? MuscleIcon : niveau==='intermédiaire' ? BikeIcon : WalkIcon,
-      color:'#C87B52',
+      color:'#9C5B33',
       title: niveau==='avancé' ? 'Session entraînement' : niveau==='intermédiaire' ? 'Cardio 30 min' : 'Mouvement doux',
       detail: niveau==='avancé' ? '45-60 min d\'effort physique' : niveau==='intermédiaire' ? 'Cardio modéré + échauffement' : '20-30 min de stretching ou marche',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', Icon: TargetIcon, color:'#C87B52',
+      id:'objectif', Icon: TargetIcon, color:'#9C5B33',
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Un pas de plus vers « ${objectif} »` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',
     },
     {
-      id:'mental', Icon: MeditateIcon, color:'#C87B52',
+      id:'mental', Icon: MeditateIcon, color:'#9C5B33',
       title:'Bien-être mental',
       detail:'5 min cohérence cardiaque ou journaling',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2320,7 +2320,11 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               <>
                 <span style={{
                   fontSize:28, fontWeight:700, lineHeight:1,
-                  color: score > 50 ? '#E8962A' : '#C87B52',
+                  // 28px en gras : seuil de 3,0. #E8962A n'atteignait que
+                  // 1,41 et #C87B52 que 1,94, donc le chiffre le plus
+                  // important de l'ecran etait le moins lisible. Memes
+                  // teintes, un cran plus profondes : 3,12 et 3,14.
+                  color: score > 50 ? '#9C5D08' : '#9C5B33',
                   fontFamily:"'Poppins',system-ui,sans-serif",
                   letterSpacing:'-0.02em',
                 }}>{score}</span>
