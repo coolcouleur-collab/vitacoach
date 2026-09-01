@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AMBRE, ROUGE } from './palette'
+import { ENCRE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(200,123,82,${a})`
+// L'opacite recue est volontairement IGNOREE, comme warmText sur l'accueil.
+// Les 15 appels servent tous a `color`, jamais a un fond : cette fabrique
+// partait de #C87B52, une couleur de FOND (2,39:1), et l'alpha ne faisait
+// que l'effacer davantage. L'etat selectionne passe desormais par la
+// pastille pleine, plus par un ecart d'opacite illisible.
+const am = (a) => ENCRE
 
 const CARD = {
   background: 'rgba(255,235,210,0.22)',
@@ -156,11 +162,11 @@ export default function BreathworkTab() {
               flexShrink: 0,
               padding: '7px 14px',
               borderRadius: 20,
-              border: `1px solid ${sel ? 'rgba(255,220,160,0.55)' : 'rgba(200,123,82,0.35)'}`,
-              background: sel ? 'rgba(255,235,210,0.30)' : 'rgba(255,235,210,0.35)',
+              border: `1px solid ${sel ? 'rgba(143,61,20,0.55)' : 'rgba(200,123,82,0.35)'}`,
+              background: sel ? 'linear-gradient(135deg,#8F3D14,#B3501F)' : 'rgba(255,235,210,0.35)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
-              color: sel ? am(0.95) : am(0.78),
+              color: sel ? '#fff' : ENCRE,
               fontSize: 12, fontWeight: sel ? 600 : 400,
               cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap',
               transition: 'all 0.18s',
@@ -297,13 +303,13 @@ export default function BreathworkTab() {
             return (
               <div key={i} style={{
                 flex: 1, textAlign: 'center',
-                background: active ? 'rgba(255,235,210,0.55)' : 'rgba(255,235,210,0.35)',
-                border: `1px solid ${active ? 'rgba(200,123,82,0.50)' : 'rgba(200,123,82,0.28)'}`,
+                background: active ? 'linear-gradient(135deg,#8F3D14,#B3501F)' : 'rgba(255,235,210,0.35)',
+                border: `1px solid ${active ? 'rgba(143,61,20,0.55)' : 'rgba(200,123,82,0.28)'}`,
                 borderRadius: 14, padding: '10px 4px',
                 transition: 'all 0.3s ease',
               }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: am(active ? 0.92 : 0.50), marginBottom: 3 }}>{p.label}</div>
-                <div style={{ fontSize: 15, fontWeight: 300, color: am(active ? 0.85 : 0.55) }}>{p.dur}s</div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: active ? '#fff' : ENCRE, marginBottom: 3 }}>{p.label}</div>
+                <div style={{ fontSize: 15, fontWeight: 300, color: active ? 'rgba(255,255,255,0.92)' : ENCRE }}>{p.dur}s</div>
               </div>
             )
           })}

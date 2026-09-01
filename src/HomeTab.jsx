@@ -1438,7 +1438,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           transition:'border-color 0.2s ease, color 0.2s ease',
         }}
           onMouseEnter={e => { e.currentTarget.style.color='rgba(160,110,60,1)'; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.color='rgba(160,110,60,0.92)'; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.35)' }}
+          onMouseLeave={e => { e.currentTarget.style.color={ENCRE_DOUCE}; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.35)' }}
         >sauvegarder</button>
       </motion.div>
     </>,

@@ -13,7 +13,7 @@ import { authHeaders } from './supabase'
 const ExercicesGuide = React.lazy(() => import('./ExercicesGuide'))
 const Challenge21j = React.lazy(() => import('./Challenge21j'))
 import { matchExercice } from './ExercicesGuide'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -74,7 +74,7 @@ function ProgressRing({ pct, size = 72, stroke = 6 }) {
         </linearGradient>
       </defs>
       <circle cx={size/2} cy={size/2} r={r} fill="none"
-        stroke="rgba(200,123,82,0.12)" strokeWidth={stroke} />
+        stroke={ENCRE_DOUCE} strokeWidth={stroke} />
       <circle cx={size/2} cy={size/2} r={r} fill="none"
         stroke={`url(#${gradId})`} strokeWidth={stroke}
         strokeLinecap="round"
@@ -146,7 +146,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                 marginBottom: 2,
               }}>
                 <svg width="8" height="8" viewBox="0 0 8 8" style={{ flexShrink: 0 }}>
-                  <circle cx="4" cy="4" r="3" fill="#C87B52" fillOpacity={checked[e.id] ? 0.35 : 0.70} />
+                  <circle cx="4" cy="4" r="3" fill={ENCRE_DOUCE} fillOpacity={checked[e.id] ? 0.35 : 0.70} />
                 </svg>
                 <span style={{
                   fontSize: 13, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
@@ -227,8 +227,8 @@ function NutritionCard({ nutrition }) {
             background: 'rgba(200,123,82,0.05)', borderRadius: 12, padding: '10px 12px',
           }}>
             <svg width="12" height="12" viewBox="0 0 12 12" style={{ flexShrink: 0, marginTop: 3 }}>
-              <circle cx="6" cy="6" r="4.5" fill="none" stroke="#C87B52" strokeWidth="1.6" opacity="0.75" />
-              <circle cx="6" cy="6" r="1.8" fill="#C87B52" opacity="0.75" />
+              <circle cx="6" cy="6" r="4.5" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.6" opacity="0.75" />
+              <circle cx="6" cy="6" r="1.8" fill={ENCRE_DOUCE} opacity="0.75" />
             </svg>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -501,9 +501,9 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           ].map(o => (
             <button key={o.id} onClick={() => setVue(o.id)} style={{
               flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
-              border: vue === o.id ? '1px solid rgba(255,220,160,0.55)' : '1px solid transparent',
-              background: vue === o.id ? 'rgba(255,246,238,0.82)' : 'transparent',
-              color: vue === o.id ? 'rgba(150,85,50,0.95)' : 'rgba(200,123,82,0.60)',
+              border: vue === o.id ? '1px solid rgba(143,61,20,0.55)' : '1px solid transparent',
+              background: vue === o.id ? 'linear-gradient(135deg,#8F3D14,#B3501F)' : 'transparent',
+              color: vue === o.id ? '#fff' : ENCRE,
               fontFamily: 'Poppins,sans-serif', fontSize: 13, fontWeight: vue === o.id ? 700 : 500,
               boxShadow: vue === o.id ? '0 3px 10px rgba(200,123,82,0.16)' : 'none',
               transition: 'all 0.18s ease',
@@ -770,7 +770,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 fontFamily: 'Poppins,sans-serif', textAlign: 'left',
               }}>
               <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
                 </svg>
               </div>
@@ -778,7 +778,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>Photographie ton repas</div>
                 <div style={{ fontSize: 11, color: '#7B421C', marginTop: 1 }}>Solenn l'analyse et te dit ce qu'elle en pense</div>
               </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
         )}
@@ -793,13 +793,13 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           fontFamily: 'Poppins,sans-serif', textAlign: 'left',
         }}>
           <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.8" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>Guide des exercices</div>
             <div style={{ fontSize: 11, color: '#7B421C', marginTop: 1 }}>Les 25 gestes montrés et expliqués</div>
           </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
         )}
       </div>

@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { authHeaders } from './supabase'
+import { ENCRE, ENCRE_DOUCE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 
@@ -100,7 +101,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         fontFamily: F,
       }}>
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Solenn te demande
         </div>
         <div style={{ fontSize: 14.5, fontWeight: 600, color: '#7B421C', marginBottom: 4, lineHeight: 1.4 }}>
@@ -136,7 +137,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Ta journée est prête
         </div>
       </div>
@@ -155,7 +156,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         <button onClick={onOpenRoutine} style={{
           marginTop: 12, width: '100%', padding: '9px 0', borderRadius: 12, cursor: 'pointer',
           border: '1px solid rgba(200,123,82,0.30)', background: 'rgba(255,255,255,0.35)',
-          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: '#9C5B33',
+          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: ENCRE,
         }}>
           Voir mon programme du jour
         </button>

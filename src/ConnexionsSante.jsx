@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
 import { authHeaders } from './supabase'
-import { AMBRE, ROUGE, VERT } from './palette'
+import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE, VERT } from './palette'
 
 const HK_KEY = 'vitacoach_healthkit_connected'
 
@@ -20,7 +20,7 @@ const C = {
   or:       '#E8962A',
   nuit:     'rgba(255,238,220,0.92)',
   texte:    'rgba(255,238,220,0.92)',
-  texte2:   'rgba(200,123,82,0.70)',
+  texte2:   ENCRE,   // etait rgba(200,123,82,0.70) : 1,98:1 sur tous les libelles
   vert:     '#22c55e',
   rouge:    '#ef4444',
 }
@@ -29,25 +29,25 @@ const C = {
 const ICONS = {
   withings: (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="8" r="4" stroke="#C87B52" strokeWidth="1.5"/>
-      <path d="M5 20h14M8 20l4-12 4 12" stroke="#C87B52" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="12" cy="8" r="4" stroke={ENCRE_DOUCE} strokeWidth="1.5"/>
+      <path d="M5 20h14M8 20l4-12 4 12" stroke={ENCRE_DOUCE} strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   ),
   oura: (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="7" stroke="#C87B52" strokeWidth="2"/>
-      <circle cx="12" cy="12" r="3" stroke="#C87B52" strokeWidth="1.5"/>
+      <circle cx="12" cy="12" r="7" stroke={ENCRE_DOUCE} strokeWidth="2"/>
+      <circle cx="12" cy="12" r="3" stroke={ENCRE_DOUCE} strokeWidth="1.5"/>
     </svg>
   ),
   garmin: (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <rect x="7" y="4" width="10" height="16" rx="4" stroke="#C87B52" strokeWidth="1.5"/>
-      <path d="M9 2h6M9 22h6M12 8v4l2 2" stroke="#C87B52" strokeWidth="1.5" strokeLinecap="round"/>
+      <rect x="7" y="4" width="10" height="16" rx="4" stroke={ENCRE_DOUCE} strokeWidth="1.5"/>
+      <path d="M9 2h6M9 22h6M12 8v4l2 2" stroke={ENCRE_DOUCE} strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   ),
   apple_health: (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="#C87B52" strokeWidth="1.5" fill="none"/>
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke={ENCRE_DOUCE} strokeWidth="1.5" fill="none"/>
     </svg>
   ),
 }
@@ -291,8 +291,8 @@ function ModalOura({ userId, onSuccess, onClose }) {
       >
         <div style={{ marginBottom: 8 }}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="7" stroke="#C87B52" strokeWidth="2"/>
-            <circle cx="12" cy="12" r="3" stroke="#C87B52" strokeWidth="1.5"/>
+            <circle cx="12" cy="12" r="7" stroke={ENCRE_DOUCE} strokeWidth="2"/>
+            <circle cx="12" cy="12" r="3" stroke={ENCRE_DOUCE} strokeWidth="1.5"/>
           </svg>
         </div>
         <div style={{ fontSize: 18, fontWeight: 700, color: C.texte, marginBottom: 6 }}>
@@ -537,7 +537,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-              <circle cx="12" cy="12" r="10" fill="rgba(34,197,94,0.15)" stroke="#22c55e" strokeWidth="1.5"/>
+              <circle cx="12" cy="12" r="10" fill={ENCRE_DOUCE} stroke="#22c55e" strokeWidth="1.5"/>
               <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <div style={{ flex: 1 }}>
@@ -582,7 +582,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-              <circle cx="12" cy="12" r="10" fill="rgba(239,68,68,0.15)" stroke="#ef4444" strokeWidth="1.5"/>
+              <circle cx="12" cy="12" r="10" fill={ENCRE_DOUCE} stroke="#ef4444" strokeWidth="1.5"/>
               <path d="M8 8l8 8M16 8l-8 8" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
             </svg>
             <div style={{ flex: 1 }}>

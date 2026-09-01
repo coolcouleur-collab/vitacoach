@@ -6,6 +6,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { authHeaders } from './supabase'
+import { ENCRE_DOUCE } from './palette'
 
 const F = "'Poppins', sans-serif"
 const moyenne = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null
@@ -88,7 +89,7 @@ export default function TesProgres({ history, userId }) {
     <div style={{ marginBottom: 22 }}>
       <div style={{ fontSize: 12, fontWeight: 700, color: '#7B421C', fontFamily: F, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           Tes progrès avec Solenn
         </span>
       </div>
@@ -110,7 +111,7 @@ export default function TesProgres({ history, userId }) {
                 const pts = st.serie.map((v, j) => `${(j / (st.serie.length - 1)) * 100},${24 - ((v - min) / range) * 20}`).join(' ')
                 return (
                   <svg viewBox="0 0 100 26" style={{ width: '100%', height: 22, marginTop: 5, display: 'block' }} preserveAspectRatio="none">
-                    <polyline points={pts} fill="none" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" vectorEffect="non-scaling-stroke" />
+                    <polyline points={pts} fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" vectorEffect="non-scaling-stroke" />
                   </svg>
                 )
               })()}
@@ -156,7 +157,7 @@ export default function TesProgres({ history, userId }) {
               fontFamily: F, fontSize: 12.5, color: '#7B421C', lineHeight: 1.55,
               display: 'flex', gap: 9, alignItems: 'flex-start',
             }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E8962A" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <span>{ins.insight}</span>
             </div>
           ))}

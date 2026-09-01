@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon, SparkleIcon, SunIcon, TargetIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
-import { AMBRE, ENCRE } from './palette'
+import { AMBRE, ENCRE, ENCRE_DOUCE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -11,10 +11,10 @@ const HUMEURS = [
   // Tailwind, du bleu, du vert et du gris au milieu d'une palette chaude
   // (retour Jean 2026-08-08).
   { val: 1, label: 'Vide',      color: 'rgba(169,97,74,0.95)',  icon: <NeutralIcon size={30} color="rgba(169,97,74,0.95)"  /> },
-  { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color="rgba(192,117,81,0.95)" /> },
-  { val: 3, label: 'Neutre',    color: 'rgba(212,143,82,0.95)', icon: <NeutralIcon size={30} color="rgba(212,143,82,0.95)" /> },
-  { val: 4, label: 'Bien',      color: AMBRE, icon: <HappyIcon   size={30} color="rgba(232,150,42,0.95)" /> },
-  { val: 5, label: 'Super',     color: AMBRE, icon: <HappyIcon   size={30} color="rgba(242,182,78,0.95)" /> },
+  { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color={ENCRE_DOUCE} /> },
+  { val: 3, label: 'Neutre',    color: 'rgba(212,143,82,0.95)', icon: <NeutralIcon size={30} color={ENCRE_DOUCE} /> },
+  { val: 4, label: 'Bien',      color: AMBRE, icon: <HappyIcon   size={30} color={ENCRE_DOUCE} /> },
+  { val: 5, label: 'Super',     color: AMBRE, icon: <HappyIcon   size={30} color={ENCRE_DOUCE} /> },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
@@ -132,7 +132,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
             marginBottom: 40, textAlign: 'center',
           }}
         >
-          <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>{greet}{nom ? ` ${nom}` : ''} <SunIcon size={14} color="rgba(255,220,140,0.90)" /> · Check-in express</span>
+          <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>{greet}{nom ? ` ${nom}` : ''} <SunIcon size={14} color={ENCRE_DOUCE} /> · Check-in express</span>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -147,7 +147,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               style={{ width: '100%', textAlign: 'center' }}
             >
               {/* La lune était bleu-lavande : seule tache froide de l'écran */}
-              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color="rgba(255,220,140,0.90)" /></div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color={ENCRE_DOUCE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
@@ -182,7 +182,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                 />
                 <div style={{
                   display: 'flex', justifyContent: 'space-between',
-                  fontSize: 11, color: '#9C5B33', marginTop: 8,
+                  fontSize: 11, color: ENCRE, marginTop: 8,
                 }}>
                   <span>2h</span><span>12h</span>
                 </div>
@@ -203,7 +203,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SparkleIcon size={56} color="rgba(255,220,140,0.90)" /></div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SparkleIcon size={56} color={ENCRE_DOUCE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
@@ -258,7 +258,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               transition={{ duration: 0.35, ease: EASE }}
               style={{ width: '100%', textAlign: 'center' }}
             >
-              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><TargetIcon size={56} color="rgba(200,123,82,0.80)" /></div>
+              <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><TargetIcon size={56} color={ENCRE_DOUCE} /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
                 color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',

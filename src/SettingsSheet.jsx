@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon } from './Icons'
+import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon, SendIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 // Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
@@ -274,7 +274,7 @@ function ActionBtn({ icon, label, onClick, danger }) {
         fontFamily: C.font,
         fontSize: 13,
         fontWeight: 600,
-        color: danger ? 'rgba(200,50,20,0.85)' : C.text,
+        color: danger ? ROUGE : C.text,
       }}>
         {label}
       </span>
@@ -1069,7 +1069,7 @@ export default function SettingsSheet({
                     Rappels Solenn
                   </div>
                   <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
-                    {notifsEnabled ? 'Activées, tu recevras des rappels' : 'Désactivées'}
+                    {notifsEnabled ? 'Activés' : 'Désactivés'}
                   </div>
                 </div>
                 <ToggleSwitch enabled={notifsEnabled} onToggle={onToggleNotifs} />
@@ -1114,13 +1114,13 @@ export default function SettingsSheet({
             <SectionTitle>Mes Données</SectionTitle>
             <div>
               <ActionBtn
-                icon={<RefreshIcon size={18} color={confirmReset ? 'rgba(200,50,20,0.85)' : '#C87B52'} />}
+                icon={<RefreshIcon size={18} color={confirmReset ? ROUGE : ENCRE_DOUCE} />}
                 label={confirmReset ? 'Confirmer la réinitialisation ?' : 'Réinitialiser mémoire IA'}
                 onClick={handleResetClick}
                 danger={confirmReset}
               />
               <ActionBtn
-                icon={<SparkleIcon size={18} color="#9C5B33" />}
+                icon={<SendIcon size={18} color="#9C5B33" />}
                 label="Exporter mes données"
                 onClick={onExportData}
               />
@@ -1128,7 +1128,7 @@ export default function SettingsSheet({
                   Double confirmation : c'est irréversible, un seul appui de
                   travers ne doit pas effacer des mois de données. */}
               <ActionBtn
-                icon={<TrashIcon size={18} color={confirmSuppr ? 'rgba(200,50,20,0.95)' : '#C87B52'} />}
+                icon={<TrashIcon size={18} color={confirmSuppr ? ROUGE : ENCRE_DOUCE} />}
                 label={
                   supprEnCours ? 'Suppression en cours…'
                   : confirmSuppr ? 'Tout supprimer définitivement ?'

@@ -5,7 +5,10 @@ import { supabase } from './supabase'
 import { AMBRE, ENCRE, ROUGE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
-const am = (a) => `rgba(200,123,82,${a})`
+// Meme fabrique que Respiration, meme defaut : elle partait d'une couleur
+// de fond. 28 appels en texte et 2 en icone, tous corrects avec l'encre.
+// L'opacite est ignoree.
+const am = (a) => ENCRE
 const DAY_MS = 24 * 60 * 60 * 1000
 
 // Phase de lune en SVG (cercle avec remplissage partiel selon la phase)

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
 import { authHeaders } from './supabase'
-import { ENCRE, ROUGE, VERT } from './palette'
+import { ENCRE, ENCRE_DOUCE, ROUGE, VERT } from './palette'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -370,7 +370,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
               <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: '#7B421C' }}>
                 {s.label}
               </span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.55)"
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE}
                 strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
                 style={{ transform: ouvert ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
                 <polyline points="6 9 12 15 18 9" />

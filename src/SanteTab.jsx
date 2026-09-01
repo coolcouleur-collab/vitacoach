@@ -25,12 +25,12 @@ function ScaleIcon({ color = '#C87B52', size = 18 }) {
 }
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#9C5B33" />,   unit: '',      goal: 10000, color: '#9C5B33', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
-  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#9C5B33" />,  unit: 'h',    goal: 8,     color: '#9C5B33', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
-  { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#9C5B33" />, unit: ' v.',  goal: 8,     color: '#9C5B33', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
-  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#9C5B33" />, unit: ' bpm', goal: 70,    color: '#9C5B33', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
-  { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#9C5B33" />,  unit: '/5',   goal: 5,     color: '#9C5B33', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
-  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#9C5B33" />, unit: ' kg',  goal: null,  color: '#9C5B33', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#9C5B33" />,   unit: '',      goal: 10000, color: ENCRE, fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
+  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#9C5B33" />,  unit: 'h',    goal: 8,     color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
+  { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#9C5B33" />, unit: ' v.',  goal: 8,     color: ENCRE, fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
+  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#9C5B33" />, unit: ' bpm', goal: 70,    color: ENCRE, fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
+  { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#9C5B33" />,  unit: '/5',   goal: 5,     color: ENCRE, fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
+  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#9C5B33" />, unit: ' kg',  goal: null,  color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
 ]
 
 const HUMEUR_ICONS = [null,
@@ -603,24 +603,24 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               <div style={{
                 fontSize: val > 0 ? 32 : 22,
                 fontWeight: val > 0 ? 800 : 300,
-                color: val > 0 ? `${m.color}ee` : h2r(m.color, 0.45),
+                color: ENCRE,
                 lineHeight: 1, marginBottom: 3,
                 textShadow: val > 0 ? `0 2px 12px ${m.color}40` : 'none',
                 letterSpacing: val > 0 ? 'normal' : 2,
               }}>
                 {val > 0 ? m.fmt(val) : '–'}
-                {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: `${m.color}bb`, marginLeft: 4 }}>{m.unit}</span>}
+                {val > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: ENCRE, marginLeft: 4 }}>{m.unit}</span>}
               </div>
               {/* Un tiret ne dit pas quoi faire. La frequence cardiaque et le
                   poids restaient vides indefiniment quand aucune montre n'est
                   connectee, sans jamais proposer la saisie manuelle qui existe
                   pourtant (constat 2026-08-12). */}
               {val === 0 && (
-                <div style={{ fontSize: 10, color: `${m.color}b0`, fontWeight: 600, marginBottom: 6 }}>
+                <div style={{ fontSize: 10, color: ENCRE, fontWeight: 600, marginBottom: 6 }}>
                   {m.key === 'fc' ? 'Connecte ta montre ou saisis-la' : 'Appuie pour ajouter'}
                 </div>
               )}
-              <div style={{ fontSize: 11, color: `${m.color}`, marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ fontSize: 11, color: ENCRE, marginBottom: m.key === 'poids' && val > 0 && prevPoids > 0 ? 4 : 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {m.label}
                 {m.key === 'humeur' && val > 0 && <span style={{ display:'flex', alignItems:'center' }}>{HUMEUR_ICONS[val]}</span>}
               </div>

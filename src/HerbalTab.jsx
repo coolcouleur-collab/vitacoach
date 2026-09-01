@@ -8,7 +8,7 @@ const GLASS_BG     = 'rgba(255,248,242,0.75)'
 const GLASS_BORDER = '1px solid rgba(200,123,82,0.18)'
 const TXT_MAIN     = ENCRE   // etait rgba(200,123,82,0.90) : 2,18:1 sur 11 textes
 const TXT_SOFT     = ENCRE   // etait 1,81:1. Meme encre, la hierarchie passe par la graisse
-const ACCENT       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
+const ACCENT_FICHE       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
 // Le vert ne subsiste QUE sur le badge « Étudié », ou il signifie validé.
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
 const GREEN        = '#C87B52'
@@ -276,8 +276,8 @@ function AIRecoCard({ r, onChat, index }) {
               border:'1px solid rgba(200,123,82,0.20)', borderRadius:12,
               padding:'10px 12px', margin:'10px 0 8px',
             }}>
-              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
-                <span style={{display:'flex',alignItems:'center',gap:4}}><TargetIcon size={9} color={ACCENT} /> Pourquoi pour toi ?</span>
+              <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
+                <span style={{display:'flex',alignItems:'center',gap:4}}><TargetIcon size={9} color={ACCENT_FICHE} /> Pourquoi pour toi ?</span>
               </div>
               <div style={{ fontSize:12, color:'#7B421C', lineHeight:1.72 }}>{r.pourquoi}</div>
             </div>
@@ -290,9 +290,9 @@ function AIRecoCard({ r, onChat, index }) {
               background:'rgba(232,150,42,0.10)', border:'1px solid rgba(232,150,42,0.22)',
               borderRadius:12, padding:'10px 12px', marginBottom:8,
             }}>
-              <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color={ACCENT} /></span>
+              <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color={ACCENT_FICHE} /></span>
               <div>
-                <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
+                <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:3 }}>
                   Comment utiliser
                 </div>
                 <div style={{ fontSize:12, color:TXT_MAIN, fontWeight:600, lineHeight:1.55 }}>{r.usage}</div>
@@ -323,8 +323,8 @@ function AIRecoCard({ r, onChat, index }) {
               padding:'8px 11px', marginBottom:10,
               border:'1px solid rgba(232,150,42,0.20)', lineHeight:1.55,
             }}>
-              <span style={{ flexShrink:0, display:'flex', marginTop:2 }}><LinkChainIcon color={ACCENT} size={13} /></span>
-              <span><strong style={{ color:ACCENT }}>Synergie :</strong> {r.synergie}</span>
+              <span style={{ flexShrink:0, display:'flex', marginTop:2 }}><LinkChainIcon color={ACCENT_FICHE} size={13} /></span>
+              <span><strong style={{ color:ACCENT_FICHE }}>Synergie :</strong> {r.synergie}</span>
             </div>
           )}
 
@@ -373,7 +373,7 @@ function AIReco({ profil, onChat }) {
       <div style={{ position:'relative', zIndex:1 }}>
         <div style={hb.aiTop}>
           <div style={hb.aiIconWrap}>
-            <SparkleIcon color={ACCENT} size={22} />
+            <SparkleIcon color={ACCENT_FICHE} size={22} />
           </div>
           <div style={{ flex:1 }}>
             <div style={hb.aiTitle}>Tu ne trouves pas ?</div>
@@ -393,7 +393,7 @@ function AIReco({ profil, onChat }) {
           )}
           {items && (
             <button
-              style={{ ...hb.aiCta, background:'rgba(232,150,42,0.12)', color:ACCENT,
+              style={{ ...hb.aiCta, background:'rgba(232,150,42,0.12)', color:ACCENT_FICHE,
                 border:'1px solid rgba(232,150,42,0.35)', boxShadow:'none', fontSize:10 }}
               onClick={() => setItems(null)}
             >
@@ -457,7 +457,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             <span style={{ fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' }}>{item.nom}</span>
             <span style={{
               fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:12,
-              background:'rgba(232,150,42,0.12)', color:ACCENT,
+              background:'rgba(232,150,42,0.12)', color:ACCENT_FICHE,
               border:'1px solid rgba(232,150,42,0.25)', letterSpacing:'0.4px', textTransform:'uppercase',
             }}>
               {item.tag}
@@ -523,7 +523,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               marginTop:3, flexShrink:0,
             }} />
             <div>
-              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px' }}>
+              <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px' }}>
                 {item.tag === 'À éviter' ? 'À ne pas faire' : 'Comment utiliser'}
               </div>
               <div style={{ fontSize:12, color:TXT_MAIN, fontWeight:700, marginTop:2, lineHeight:1.4 }}>
@@ -534,7 +534,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
           {/* Ingredients, recettes de la categorie Beaute */}
           {item.ingredients && (
             <div style={{ marginBottom:11 }}>
-              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
+              <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
                 Il te faut
               </div>
               {item.ingredients.map((ing, k) => (
@@ -549,7 +549,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
           {/* Preparation, etape par etape */}
           {item.prepa && (
             <div style={{ marginBottom:11 }}>
-              <div style={{ fontSize:9, color:ACCENT, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
+              <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:6 }}>
                 {item.tag === 'À éviter' ? 'Pourquoi' : 'La recette'}
               </div>
               {item.prepa.map((etape, k) => (
@@ -557,7 +557,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
                   <span style={{
                     width:17, height:17, borderRadius:'50%', flexShrink:0, marginTop:1,
                     background:'rgba(232,150,42,0.14)', border:'1px solid rgba(232,150,42,0.30)',
-                    color:ACCENT, fontSize:9, fontWeight:800,
+                    color:ACCENT_FICHE, fontSize:9, fontWeight:800,
                     display:'flex', alignItems:'center', justifyContent:'center',
                   }}>{k + 1}</span>
                   <span style={{ fontSize:12, color:TXT_SOFT, lineHeight:1.5 }}>{etape}</span>
@@ -813,7 +813,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             borderRadius:20, padding:'5px 14px',
             fontSize:11, color:'#7B421C', fontWeight:600,
           }}>
-            <LeafIcon color={ACCENT} size={13} /> Plantes · Médecine chinoise · Holistique
+            <LeafIcon color={ACCENT_FICHE} size={13} /> Plantes · Médecine chinoise · Holistique
           </div>
         </div>
       </div>
@@ -843,7 +843,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           background: 'linear-gradient(135deg, rgba(232,150,42,0.16), rgba(200,123,82,0.07))',
           border: '1px solid rgba(232,150,42,0.40)', fontFamily: 'Poppins,sans-serif',
         }}>
-          <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: ACCENT, marginBottom: 4 }}>
+          <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: ACCENT_FICHE, marginBottom: 4 }}>
             {cureFinie ? 'Cure terminée, le verdict' : `Cure en cours · jour ${cureJour} sur ${CURE_JOURS}`}
           </div>
           <div style={{ fontSize: 13.5, color: TXT_MAIN, fontWeight: 600, marginBottom: 4 }}>{cure.nom}</div>
@@ -902,7 +902,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           background:'linear-gradient(135deg, rgba(200,123,82,0.14), rgba(200,123,82,0.05))',
           border:'1px solid rgba(200,123,82,0.28)',
         }}>
-          <div style={{ fontSize:9, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', color:ACCENT, marginBottom:4 }}>
+          <div style={{ fontSize:9, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', color:ACCENT_FICHE, marginBottom:4 }}>
             Ce que disent tes données
           </div>
           <div style={{ fontSize:13, color:TXT_MAIN, lineHeight:1.45, fontWeight:500 }}>
