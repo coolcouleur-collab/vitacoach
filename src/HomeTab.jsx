@@ -1477,7 +1477,7 @@ function MagneticGlowBtn({ label, iconEl, onClick }) {
         <div style={{ width: 52, height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {iconEl}
         </div>
-        <span style={{ fontSize: 11, fontWeight: 800, color: 'rgba(200,123,82,1)', letterSpacing: '0.2px' }}>{label}</span>
+        <span style={{ fontSize: 11, fontWeight: 800, color: '#7B421C', letterSpacing: '0.2px' }}>{label}</span>
       </div>
     </GlassyButtonWrap>
   )
@@ -1595,7 +1595,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(200,123,82,0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
           {val > 0 ? fmt(val) : ','}
         </div>
-        <div style={{ fontSize:10, color:'rgba(200,123,82,1)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
+        <div style={{ fontSize:10, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
       </div>
     </div>
   )
@@ -1665,10 +1665,10 @@ export function StreakXP({ streak, xp, level }) {
               {streak >= 7 ? <FireIcon size={17} color="#fff" /> : streak >= 3 ? <FlashIcon size={17} color="#fff" /> : <LeafIcon size={17} color="#fff" />}
             </div>
             <div>
-              <div style={{ fontSize:17, fontWeight:500, color:'rgba(200,123,82,1)', lineHeight:1, letterSpacing:'-0.5px' }}>
-                {streak}<span style={{ fontSize:10, fontWeight:300, color:'rgba(200,123,82,1)', marginLeft:6 }}>jours</span>
+              <div style={{ fontSize:17, fontWeight:500, color:'#7B421C', lineHeight:1, letterSpacing:'-0.5px' }}>
+                {streak}<span style={{ fontSize:10, fontWeight:300, color:'#7B421C', marginLeft:6 }}>jours</span>
               </div>
-              <div style={{ fontSize:9, color:'rgba(200,123,82,1)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
+              <div style={{ fontSize:9, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
                 {streak >= 7 ? 'En feu !' : streak > 0 ? 'Streak actif' : 'Premier jour'}
               </div>
             </div>
@@ -1698,9 +1698,9 @@ export function StreakXP({ streak, xp, level }) {
           <div style={{ padding:'10px 12px', position:'relative', zIndex:3 }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
               <div>
-                <div style={{ fontSize:9, color:'rgba(200,123,82,1)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
-                <div style={{ fontSize:16, fontWeight:500, color:'rgba(200,123,82,1)', lineHeight:1.1, letterSpacing:'-0.5px' }}>
-                  {xp} <span style={{ fontSize:9, color:'rgba(200,123,82,1)', fontWeight:300 }}>XP</span>
+                <div style={{ fontSize:9, color:'#7B421C', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>Niveau {level}</div>
+                <div style={{ fontSize:16, fontWeight:500, color:'#7B421C', lineHeight:1.1, letterSpacing:'-0.5px' }}>
+                  {xp} <span style={{ fontSize:9, color:'#7B421C', fontWeight:300 }}>XP</span>
                 </div>
               </div>
               <div style={{
@@ -1729,7 +1729,7 @@ export function StreakXP({ streak, xp, level }) {
                 )
               })}
             </div>
-            <div style={{ fontSize:10, color:'rgba(200,123,82,1)', marginTop:3, fontWeight:500 }}>
+            <div style={{ fontSize:10, color:'#7B421C', marginTop:3, fontWeight:500 }}>
               {100 - xpInLevel} XP pour le niveau {level + 1}
             </div>
           </div>
@@ -2705,7 +2705,7 @@ const hc = {
     alignItems:'center', justifyContent:'flex-end', paddingBottom:16 },
   greetBadge: { display:'inline-flex', alignItems:'center', gap:6,
     background:'rgba(0,0,0,0.05)', border:'1px solid rgba(0,0,0,0.08)',
-    borderRadius:20, padding:'6px 16px', fontSize:11, color:'rgba(200,123,82,1)', fontWeight:500,
+    borderRadius:20, padding:'6px 16px', fontSize:11, color:'#7B421C', fontWeight:500,
     marginBottom:12, marginTop:32, letterSpacing:'0.3px',
     boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   greetDot: { width:7, height:7, borderRadius:'50%', background:'#E8A07A',
@@ -2730,7 +2730,7 @@ const hc = {
 
   cardsWrap: { padding:'8px 18px 8px' },
   cardsHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
-  cardsTitle: { fontSize:11, fontWeight:600, color:'rgba(200,123,82,1)', letterSpacing:'0.08em',
+  cardsTitle: { fontSize:11, fontWeight:600, color:'#7B421C', letterSpacing:'0.08em',
     fontFamily:"'Poppins',system-ui,sans-serif", textTransform:'uppercase' },
 
   actionsWrap: { padding:'16px 18px 4px' },
