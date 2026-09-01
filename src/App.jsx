@@ -436,10 +436,28 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
 
   const isNight = preset === 'night' && onglet === 'accueil'
   // Couleurs adaptées au mode nuit / jour.
+  //
+  // ⚠️ EN JOUR, LE TEXTE EST TERRACOTTA, PAS CRÈME. Mesuré le 2026-09-01 sur
+  // les captures iPhone de Jean : en crème, les libellés atteignaient 1,68 de
+  // contraste pour l'onglet ouvert et 1,24 pour les autres, là où il en faut
+  // 4,5. Autrement dit du crème sur du crème, illisible par construction, sur
+  // la barre que TOUT LE MONDE regarde en permanence.
+  //
+  // La cause : cette pastille n'est PAS une surface sombre. À 0,24 d'opacité
+  // elle n'assombrit presque pas le fond ambré. Le crème n'y a donc pas sa
+  // place, conformément à la règle de la palette.
+  //
+  // Le verre est volontairement INCHANGÉ, Jean y tient : même couleur de
+  // pastille, même flou, même transparence. Seule la couleur du texte bouge,
+  // et l'onglet ouvert se distingue désormais par sa GRAISSE et sa pastille
+  // claire, plus par un écart de contraste. C'est ce qui permet aux quatre
+  // libellés d'être lisibles en même temps. Après : 6,49 et 5,95.
+  //
+  // Le mode nuit n'est pas concerné, ses bleus sur fond bleu foncé sont justes.
   const pillBg    = isNight ? 'rgba(10,22,58,0.60)'      : 'rgba(120,55,10,0.24)'
-  const txtHigh   = isNight ? 'rgba(160,200,255,0.92)'   : 'rgba(255,238,228,0.90)'
-  const txtMid    = isNight ? 'rgba(160,200,255,0.88)'   : 'rgba(255,238,228,0.88)'
-  const txtDim    = isNight ? 'rgba(160,200,255,0.42)'   : 'rgba(255,238,228,0.35)'
+  const txtHigh   = isNight ? 'rgba(160,200,255,0.92)'   : '#5A2A05'
+  const txtMid    = isNight ? 'rgba(160,200,255,0.88)'   : '#5A2A05'
+  const txtDim    = isNight ? 'rgba(160,200,255,0.42)'   : 'rgba(90,42,5,0.82)'
   const divider   = isNight ? 'rgba(160,200,255,0.18)'   : 'rgba(255,238,228,0.18)'
   const activeBg  = isNight ? 'rgba(160,200,255,0.14)'   : 'rgba(255,238,228,0.14)'
 
@@ -521,7 +539,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
                   }}
                 >
                   <item.Icon color={isActive ? txtHigh : txtDim} size={17} />
-                  <span style={{ fontSize:9.5, fontWeight: isActive ? 600 : 400, letterSpacing:'0.2px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
+                  <span style={{ fontSize:9.5, fontWeight: isActive ? 700 : 500, letterSpacing:'0.2px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
                     {item.label}
                   </span>
                   {item.id === 'forum' && forumUnread > 0 && (

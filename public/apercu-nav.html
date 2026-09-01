@@ -1,0 +1,64 @@
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barre de navigation, le verre reste</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+  body {
+    margin: 0; padding: 28px 16px 60px;
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%);
+    min-height: 100vh;
+  }
+  h1 { font-size: 17px; color: rgba(140,75,30,0.95); margin: 0 0 4px; }
+  p  { font-size: 13px; color: rgba(120,65,25,0.85); margin: 0 0 22px; line-height: 1.6; }
+  h2 { font-size: 12.5px; color: rgba(140,75,30,0.9); margin: 26px 0 8px; letter-spacing: .04em; }
+
+  /* Le verre est IDENTIQUE dans les deux, c'est le point */
+  .barre {
+    display: flex; justify-content: space-around; align-items: center;
+    background: rgba(120,55,10,0.24);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-radius: 26px; padding: 10px 8px 8px; max-width: 380px; margin: 0 auto;
+  }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 16px; }
+  .actif { background: rgba(255,238,228,0.14); }
+  .lib { font-size: 11px; }
+  svg { width: 19px; height: 19px; fill: none; stroke-width: 2; }
+
+  /* AVANT : creme */
+  .avant .actif .lib, .avant .actif svg { color: rgba(255,238,228,0.90); stroke: rgba(255,238,228,0.90); font-weight: 600; }
+  .avant .off   .lib, .avant .off svg   { color: rgba(255,238,228,0.35); stroke: rgba(255,238,228,0.35); font-weight: 600; }
+
+  /* APRES : terracotta fonce, le verre ne bouge pas */
+  .apres .actif .lib, .apres .actif svg { color: #5A2A05; stroke: #5A2A05; font-weight: 700; }
+  .apres .off   .lib, .apres .off svg   { color: #5A2A05; stroke: #5A2A05; font-weight: 500; opacity: .82; }
+
+  .note { max-width: 380px; margin: 12px auto 0; font-size: 12px; color: rgba(120,65,25,0.78); line-height: 1.65; }
+  code { background: rgba(255,255,255,0.38); padding: 1px 5px; border-radius: 5px; }
+</style>
+
+<h1>Le verre ne bouge pas</h1>
+<p>Même pastille, même flou, même transparence. Seule la couleur du texte change.</p>
+
+<h2>AVANT — 1,68 ouvert / 1,24 fermés</h2>
+<div class="barre avant">
+  <div class="item actif"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg><span class="lib">Accueil</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="lib">Solenn</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M9 3h6v3H9zM6 6h12v15H6z"/></svg><span class="lib">Programme</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M20.8 8.6a5 5 0 0 0-8.8-3 5 5 0 0 0-8.8 3c0 5 8.8 10.4 8.8 10.4s8.8-5.4 8.8-10.4"/></svg><span class="lib">Progrès</span></div>
+</div>
+
+<h2>APRÈS — 6,49 ouvert / 5,95 fermés</h2>
+<div class="barre apres">
+  <div class="item actif"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg><span class="lib">Accueil</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="lib">Solenn</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M9 3h6v3H9zM6 6h12v15H6z"/></svg><span class="lib">Programme</span></div>
+  <div class="item off"><svg viewBox="0 0 24 24"><path d="M20.8 8.6a5 5 0 0 0-8.8-3 5 5 0 0 0-8.8 3c0 5 8.8 10.4 8.8 10.4s8.8-5.4 8.8-10.4"/></svg><span class="lib">Progrès</span></div>
+</div>
+
+<p class="note">
+  La pastille reste exactement <code>rgba(120,55,10,0.24)</code>, avec son
+  <code>blur(18px)</code>. Le texte passe du crème au terracotta profond
+  <code>#5A2A05</code>. L'onglet ouvert se distingue par sa graisse et sa
+  pastille claire, plus par un écart de contraste : c'est ce qui permet de
+  garder les autres lisibles.
+</p>
