@@ -2035,7 +2035,7 @@ const [messages, setMessages] = useState(() => {
           <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:`1px solid ${navTrait}` }}>
             <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color: navEncre }}>Solenn</span>
             <span style={{ fontSize:9, fontWeight:400, color: navEncre, letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
-              Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite' }}>·</span> guidée.
+              Ton soleil au quotidien
             </span>
           </div>
 
@@ -2178,24 +2178,30 @@ padding: isMobile
                 // ciel bleu de l'accueil et different des autres pages
                 // (constat Jean 2026-08-12). La nuit garde sa teinte bleutee,
                 // seule exception lisible.
-                const logoColor = homePreset === 'night' ? 'rgba(160,200,255,0.95)' : 'rgba(255,246,235,0.96)'
-                const subColor  = homePreset === 'night' ? 'rgba(160,200,255,0.70)' : 'rgba(255,240,225,0.85)'
+                const nuitAcc  = homePreset === 'night'
+                // De jour, exactement le degrade des autres pages. De nuit, un
+                // aplat clair : un degrade terracotta sur du navy serait aussi
+                // illisible que le creme l'etait sur l'ambre.
+                const logoStyle = nuitAcc
+                  ? { color: 'rgba(198,222,255,0.96)' }
+                  : { background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
+                      backgroundSize:'200% auto',
+                      WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }
+                const subColor  = nuitAcc ? 'rgba(190,216,255,0.78)' : ENCRE
                 return (
                 <div style={{ pointerEvents:'none', position:'relative' }}>
                   <span style={{
                     fontSize:28, fontWeight:400,
                     fontFamily:"'Cormorant Garamond', Georgia, serif",
                     fontStyle:'italic', letterSpacing:'-0.01em',
-                    color: logoColor,
-                    textShadow:'0 1px 8px rgba(0,0,0,0.45)',
+                    ...logoStyle,
                     lineHeight:1, display:'block',
                   }}>Solenn</span>
                   <span style={{
                     fontSize:8.5, fontWeight:400, letterSpacing:'0.5px', display:'block', marginTop:2,
                     fontFamily:"'Poppins',system-ui,sans-serif",
                     color: subColor,
-                    textShadow:'0 1px 6px rgba(0,0,0,0.40)',
-                  }}>Ton évolution, guidée.</span>
+                  }}>Ton soleil au quotidien</span>
                 </div>
                 )
               })()}
@@ -2209,7 +2215,7 @@ padding: isMobile
                 {[0,1,2].map(i => (
                   <span key={i} style={{
                     display:'block', borderRadius:2,
-                    background: ({ sunrise:'rgba(255,232,195,0.85)', day:'rgba(255,238,228,0.75)', sunset:'rgba(255,218,180,0.45)', night:'rgba(160,200,255,0.80)' }[homePreset] ?? 'rgba(255,238,228,0.75)'),
+                    background: homePreset === 'night' ? 'rgba(190,216,255,0.88)' : ENCRE_DOUCE,
                     filter:'drop-shadow(0 1px 5px rgba(0,0,0,0.45))',
                     transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
                     width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 16 : menuOpen && i===2 ? 16 : i===1 ? 10 : 16,
@@ -2227,7 +2233,7 @@ padding: isMobile
             const onChat = onglet === 'chat'
             // 0.58 rendait le hamburger quasi invisible sur les fonds clairs
             // (constat Jean 2026-08-12).
-            const iconColor = 'rgba(178,102,62,0.92)'
+            const iconColor = ENCRE_DOUCE   // etait rgba(178,102,62,0.92) : 2,9:1, sous le seuil 3,0
             return (
             <div style={s.mobileHeader}>
               {/* Logo, identique sur tous les onglets */}
@@ -2254,7 +2260,7 @@ padding: isMobile
                 }}>Solenn</span>
                 <span style={{ fontSize:8.5, fontWeight:400, color:'#7B421C', letterSpacing:'0.5px',
                   fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
-                  Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>·</span> guidée.
+                  Ton soleil au quotidien
                 </span>
               </div>
 
@@ -2339,16 +2345,18 @@ padding: isMobile
               {/* Backdrop */}
               <div onClick={() => setMenuOpen(false)} style={{
                 position:'fixed', inset:0, zIndex:150,
-                background:'rgba(25,10,0,0.14)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+                background: nuitNav ? 'rgba(0,6,20,0.42)' : 'rgba(25,10,0,0.14)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
                 animation:'tabFade 0.22s ease both',
               }} />
               {/* Panel */}
               <div style={{
                 position:'fixed', top:0, right:0, bottom:0, zIndex:151,
                 width:'76%', maxWidth:300,
-                background:'linear-gradient(160deg, rgba(255,243,220,0.28) 0%, rgba(255,224,175,0.20) 100%)',
+                background: nuitNav
+                  ? 'linear-gradient(160deg, rgba(18,32,64,0.92) 0%, rgba(10,22,48,0.95) 100%)'
+                  : 'linear-gradient(160deg, rgba(255,243,220,0.28) 0%, rgba(255,224,175,0.20) 100%)',
                 backdropFilter:'blur(40px)', WebkitBackdropFilter:'blur(40px)',
-                borderLeft:'1px solid rgba(210,145,40,0.09)',
+                borderLeft: nuitNav ? '1px solid rgba(160,200,255,0.16)' : '1px solid rgba(210,145,40,0.09)',
                 boxShadow:'none',
                 display:'flex', flexDirection:'column',
                 overflowY:'auto', WebkitOverflowScrolling:'touch',
@@ -2360,7 +2368,7 @@ padding: isMobile
                 {/* Profile */}
                 <div style={{
                   display:'flex', alignItems:'center', gap:14, marginBottom:28,
-                  paddingBottom:22, borderBottom:'1px solid rgba(190,120,20,0.09)',
+                  paddingBottom:22, borderBottom: nuitNav ? '1px solid rgba(160,200,255,0.14)' : '1px solid rgba(190,120,20,0.09)',
                 }}>
                   {/* Monogramme utilisateur */}
                   <div style={{ position:'relative', width:38, height:38, flexShrink:0 }}>
@@ -2385,19 +2393,19 @@ padding: isMobile
                     {/* Fond + initiale */}
                     <div style={{
                       width:38, height:38, borderRadius:'50%',
-                      background:'rgba(255,238,228,0.07)',
+                      background: nuitNav ? 'rgba(160,200,255,0.10)' : 'rgba(255,238,228,0.07)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <span style={{ fontSize:16, fontWeight:600, color: ENCRE, fontFamily:F }}>
+                      <span style={{ fontSize:16, fontWeight:600, color: navEncre, fontFamily:F }}>
                         {(profil.nom || profil.prenom || '').charAt(0).toUpperCase()}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize:18, fontWeight:600, color: ENCRE, fontFamily:F, letterSpacing:'0.01em' }}>
+                    <div style={{ fontSize:18, fontWeight:600, color: navEncre, fontFamily:F, letterSpacing:'0.01em' }}>
                       {profil.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : ''}
                     </div>
-                    <div style={{ fontSize:11.5, fontWeight:600, color: ENCRE, marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
+                    <div style={{ fontSize:11.5, fontWeight:600, color: navEncre, marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
                 {/* Nav links */}
@@ -2416,7 +2424,7 @@ padding: isMobile
                   </button>
                 ))}
                 {/* Bottom actions */}
-                <div style={{ marginTop:'28px', display:'flex', flexDirection:'column', gap:2, borderTop:'1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
+                <div style={{ marginTop:'28px', display:'flex', flexDirection:'column', gap:2, borderTop: nuitNav ? '1px solid rgba(160,200,255,0.14)' : '1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
                   {!isPro && (
                     <button onClick={() => { passerPro('annual'); setMenuOpen(false) }} style={{
                       display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
@@ -3522,7 +3530,6 @@ function TenuesModule({ profil }) {
     <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
       <style>{`
   .tenues-ville-input { border: 1px solid rgba(255,220,160,0.35) !important; box-shadow: none !important; }
-  .tenues-ville-input::placeholder { color: rgba(200,123,82,0.42); }
   .tenues-ville-input:focus { border-color: rgba(200,123,82,0.50) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
   .tenues-ville-input:-webkit-autofill,
   .tenues-ville-input:-webkit-autofill:focus {

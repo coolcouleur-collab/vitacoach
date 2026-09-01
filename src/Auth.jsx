@@ -205,7 +205,6 @@ export default function Auth({ onConnecte, onBack }) {
           60%     { transform: translateX(-3px); }
           80%     { transform: translateX(3px); }
         }
-        input::placeholder { color: rgba(255,248,235,0.82); }
         input[type="checkbox"] {
           appearance: none; -webkit-appearance: none;
           width: 15px; height: 15px; flex-shrink: 0;

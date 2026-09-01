@@ -147,7 +147,23 @@ body {
 
 ::-webkit-scrollbar { width: 0; background: transparent; }
 
-.chat-input::placeholder { color: rgba(160,90,35,0.40); }
+/* Le texte d'exemple d'un champ reste du TEXTE : il doit se lire. Sans regle,
+   le navigateur applique son propre gris, illisible sur nos fonds clairs.
+   Releve par Jean le 2026-09-01 sur la barre de recherche de Soins, ou le
+   « Pellicules, ballonnements, insomnie... » etait invisible.
+
+   currentColor le fait deriver de la couleur du champ LUI-MEME. La regle vaut
+   donc telle quelle sur les ecrans clairs et sur les ecrans sombres (Auth,
+   Landing, Onboarding ont du texte clair sur fond sombre) : aucune exception
+   a maintenir, ce qui est exactement le defaut qu'on vient de corriger
+   partout ailleurs.
+
+   0,82 mesure a 4,63:1 sur le champ de Soins, au-dessus du seuil de 4,5, tout
+   en restant visiblement plus leger que le texte saisi, qui lui est a 7,04:1.
+
+   L'ancienne regle du chat posait une opacite de 0,40 sur un brun moyen : elle
+   etait plus specifique, donc elle aurait gagne sur la nouvelle. Supprimee. */
+::placeholder { color: currentColor; opacity: 0.82; }
 
 @keyframes suggFadeUp {
   from { opacity:0; transform:translateY(10px); }

@@ -2112,6 +2112,18 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
 // « Hydratation en retard · 4/8 verres » (2026-08-11).
 function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, presetManuel = null, dejaDit = null }) {
   const tc = isNight ? nightText : warmText
+  // Les textes passaient au bleu de nuit, les icones non : « Prepare ton
+  // sommeil », « Soins » et « Cycle » gardaient leur brun #9C5B33, invisible
+  // sur le navy (Jean, 2026-09-01). On ne remplace QUE les teintes trop
+  // sombres : le bleu de l'eau et l'ambre du matin portent le sens du
+  // raccourci et se lisent tres bien sur fond sombre.
+  const trop_sombre = (c) => {
+    const m = /^#([0-9a-fA-F]{6})$/.exec(c || '')
+    if (!m) return false
+    const v = [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16))
+    return (0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]) < 130
+  }
+  const icoNuit = (c) => (isNight && trop_sombre(c)) ? 'rgba(180,210,255,0.90)' : c
   // Le moment suit l'ambiance choisie dans Réglages, pas l'horloge : sans ça
   // l'app affichait « Nuit » et les suggestions du soir à 10 h du matin
   // (bug 2026-08-08). Une seule source de vérité pour le thème ET les cartes.
@@ -2199,7 +2211,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               display:'flex', alignItems:'center', justifyContent:'center',
               boxShadow: `0 4px 12px ${s.color}30`,
             }}>
-              {s.icon}
+              {isNight && s.icon ? React.cloneElement(s.icon, { color: icoNuit(s.color) }) : s.icon}
             </div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontSize:14, fontWeight:500, color:tc(0.90), lineHeight:1.2,
@@ -2207,7 +2219,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               <div style={{ fontSize:11, color:tc(0.75), marginTop:3 }}>{s.sub}</div>
             </div>
             <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-              stroke={s.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              stroke={icoNuit(s.color)} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
               className="arrow-anim"
               style={{ opacity:0.85, flexShrink:0 }}>
               <polyline points="9 18 15 12 9 6"/>
@@ -2325,7 +2337,10 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                   // 1,41 et #C87B52 que 1,94, donc le chiffre le plus
                   // important de l'ecran etait le moins lisible. Memes
                   // teintes, un cran plus profondes : 3,12 et 3,14.
-                  color: score > 50 ? '#9C5D08' : '#9C5B33',
+                  // En nuit l'orange et le brun se posaient sur du navy.
+                  color: isNight
+                    ? (score > 50 ? 'rgba(200,222,255,0.95)' : 'rgba(180,210,255,0.82)')
+                    : (score > 50 ? '#9C5D08' : '#9C5B33'),
                   fontFamily:"'Poppins',system-ui,sans-serif",
                   letterSpacing:'-0.02em',
                 }}>{score}</span>
@@ -2666,7 +2681,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
       <DefiDuJour userId={userId} isNight={isNight} onOuvrir={() => onSwitchTab('routine')} />
 
       {/* Ta journée est prête, adaptations du matin (agent morning-brief) */}
-      <JourneePrete userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
+      <JourneePrete isNight={isNight} userId={userId} onOpenRoutine={() => onSwitchTab('routine')} metriques={metriques} onUpdate={onUpdate}
         onMode={setModeJournee} />
 
       {/* UNE SEULE demande de saisie à la fois. Quand Solenn pose sa question

@@ -1041,8 +1041,6 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
         @keyframes fadeUp { from{opacity:0;transform:translateY(1.4rem)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.55} }
         .forum-in { animation: fadeUp .3s ease both; }
-        .forum-search::placeholder { color: rgba(200,123,82,0.55) !important; }
-        .forum-reply-ta::placeholder { color: rgba(200,123,82,0.68) !important; }
       `}</style>
 
       {/* ── Top action bar ── */}

@@ -1190,7 +1190,6 @@ function premiereLecture(a) {
         @keyframes liquidBlob3 { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
         @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
         input:focus { outline:none; border-color:rgba(255,220,160,0.65) !important; box-shadow:0 0 0 3px rgba(255,220,160,0.12) !important; }
-        input::placeholder { color:rgba(255,248,235,0.38); }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {

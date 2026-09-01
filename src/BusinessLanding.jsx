@@ -188,7 +188,6 @@ const GLOBAL_CSS = `
     outline: none;
     transition: border-color 0.2s, background 0.2s;
   }
-  .bl-input::placeholder { color: rgba(255,255,255,0.4); }
   .bl-input:focus {
     border-color: ${T.orange};
     background: rgba(255,255,255,0.12);

@@ -634,7 +634,6 @@ export default function Landing({ onCommencer }) {
           50%     { transform: translateX(-50%) scale(1.015); }
         }
         .commencer-arrow { display:inline-block; margin-left:6px; animation: arrowSlide 1.6s ease-in-out infinite; }
-        .early-access-input::placeholder { color: rgba(255,248,235,0.55); }
 
         /* ── MOBILE ── */
         @media (max-width: 640px) {

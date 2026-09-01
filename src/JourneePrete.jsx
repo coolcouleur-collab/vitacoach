@@ -27,7 +27,15 @@ function AdaptIcon({ type }) {
   }
 }
 
-export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdate, onMode }) {
+export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdate, onMode, isNight = false }) {
+  // Memes valeurs que ContextualShortcuts juste en dessous, pour que les deux
+  // blocs se ressemblent au lieu de se contredire.
+  const tc      = isNight ? (op) => `rgba(180,210,255,${op})` : () => ENCRE
+  const panneau = isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,255,255,0.22)'
+  const panneau2= isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,246,238,0.62)'
+  const trait   = isNight ? 'rgba(180,210,255,0.20)': 'rgba(200,123,82,0.22)'
+  const trait2  = isNight ? 'rgba(180,210,255,0.24)': 'rgba(200,123,82,0.30)'
+  const icone   = isNight ? 'rgba(180,210,255,0.78)': ENCRE_DOUCE
   const [data, setData] = useState(null)
 
   useEffect(() => {
@@ -93,30 +101,30 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
 
     return (
       <div style={{
-        background: 'rgba(255,255,255,0.22)',
+        background: panneau,
         backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-        border: '1px solid rgba(200,123,82,0.22)',
+        border: `1px solid ${trait}`,
         borderRadius: 18, padding: '16px 18px', marginBottom: 14,
         boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
         fontFamily: F,
       }}>
-        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: tc(0.90), display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Solenn te demande
         </div>
-        <div style={{ fontSize: 14.5, fontWeight: 600, color: '#7B421C', marginBottom: 4, lineHeight: 1.4 }}>
+        <div style={{ fontSize: 14.5, fontWeight: 600, color: tc(0.90), marginBottom: 4, lineHeight: 1.4 }}>
           {Q.titre}
         </div>
-        <div style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.45, marginBottom: 12 }}>
+        <div style={{ fontSize: 11.5, color: tc(0.90), lineHeight: 1.45, marginBottom: 12 }}>
           {Q.sous}
         </div>
         <div style={{ display: 'flex', gap: 7 }}>
           {Q.choix.map(c => (
             <button key={c.label} onClick={() => onUpdate(manque, c.val)} style={{
               flex: 1, padding: '11px 0', borderRadius: 14, cursor: 'pointer',
-              background: 'rgba(255,246,238,0.62)',
-              border: '1.5px solid rgba(200,123,82,0.30)',
-              fontFamily: F, fontSize: 13, fontWeight: 600, color: '#7B421C',
+              background: panneau2,
+              border: `1.5px solid ${trait2}`,
+              fontFamily: F, fontSize: 13, fontWeight: 600, color: tc(0.90),
             }}>
               {c.label}
             </button>
@@ -128,15 +136,15 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
 
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.22)',
+      background: panneau,
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-      border: '1px solid rgba(200,123,82,0.22)',
+      border: `1px solid ${trait}`,
       borderRadius: 18, padding: '16px 18px', marginBottom: 14,
       boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
       fontFamily: F,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: tc(0.90), display: 'flex', alignItems: 'center', gap: 6 }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Ta journée est prête
         </div>
@@ -146,8 +154,8 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
             <div style={{ marginTop: 1 }}><AdaptIcon type={a.type} /></div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>{a.titre}</div>
-              <div style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.45 }}>{a.raison}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: tc(0.90) }}>{a.titre}</div>
+              <div style={{ fontSize: 11.5, color: tc(0.90), lineHeight: 1.45 }}>{a.raison}</div>
             </div>
           </div>
         ))}
@@ -155,8 +163,8 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       {onOpenRoutine && (
         <button onClick={onOpenRoutine} style={{
           marginTop: 12, width: '100%', padding: '9px 0', borderRadius: 12, cursor: 'pointer',
-          border: '1px solid rgba(200,123,82,0.30)', background: 'rgba(255,255,255,0.35)',
-          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: ENCRE,
+          border: `1px solid ${trait2}`, background: panneau2,
+          fontFamily: F, fontSize: 12.5, fontWeight: 600, color: tc(0.90),
         }}>
           Voir mon programme du jour
         </button>

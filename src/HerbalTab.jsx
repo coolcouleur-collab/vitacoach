@@ -50,9 +50,22 @@ const LABEL_CAT = {
 // hierarchie devient visible. C'est aussi ce qui faisait croire que la fiche
 // Peau etait rangee sous Cheveux : elle etait simplement derriere, dans une
 // rangee qui defilait.
+// Troisieme axe, demande par Jean le 2026-09-01 : entrer par l'APPROCHE et
+// plus seulement par le besoin. Rien n'est invente, chaque fiche portait deja
+// un `tag` : les six « Pratique » sont bien des approches holistiques (bain de
+// foret, coherence cardiaque, meditation MBSR, luminotherapie, earthing,
+// therapie par le froid), d'ou leur libelle.
+const APPROCHES = [
+  { id: 'Méd. chinoise', label: 'Médecine chinoise' },
+  { id: 'Pratique',      label: 'Holistique' },
+  { id: 'Plante',        label: 'Plantes' },
+  { id: 'Tisane',        label: 'Tisanes' },
+]
+
 const GROUPES = [
-  { titre: 'Santé',  ids: ['sommeil', 'stress', 'énergie', 'digestion', 'immunité'] },
-  { titre: 'Beauté', ids: ['cheveux', 'peau'] },
+  { titre: 'Santé',    ids: ['sommeil', 'stress', 'énergie', 'digestion', 'immunité'] },
+  { titre: 'Beauté',   ids: ['cheveux', 'peau'] },
+  { titre: 'Approche', ids: APPROCHES.map(a => a.id) },
 ]
 
 const CATS = [
@@ -131,7 +144,7 @@ const FICHES = [
       prepa:['Mélanger dans un bol NON métallique, avec une cuillère en bois', 'Appliquer uniquement sur les racines', 'Laisser 10 minutes sans laisser sécher', 'Rincer très abondamment'],
       detail:'Le rhassoul capte le sébum par échange d\'ions au lieu de le dissoudre, contrairement à un shampoing détergent qui provoque un effet rebond.',
       precaution:'Ni bol ni cuillère en métal, cela désactive l\'argile. Plus d\'une fois par semaine, ça assèche.' },
-    { nom:'Ce qu\'il ne faut PAS faire', contre:'Ces trois recettes sont à proscrire, quelles que soient les recommandations trouvées ailleurs.', preuve:'Étudié', besoins:['peau', 'cheveux'], tag:'À éviter', color: ROUGE,
+    { nom:'Ce qu\'il ne faut PAS faire', contre:'Ces trois recettes sont à proscrire, quelles que soient les recommandations trouvées ailleurs.', preuve:'Étudié', besoins:['peau'], tag:'À éviter', color: ROUGE,
       benefice:'Trois recettes très répandues qui abîment vraiment la peau',
       usage:'À bannir, quoi qu\'on lise ailleurs',
       ingredients:['Citron sur la peau', 'Bicarbonate de soude en gommage', 'Dentifrice sur un bouton'],
@@ -775,7 +788,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
     .filter(f => q
       ? [f.nom, f.benefice, f.detail, f.usage, f.tag, ...(f.besoins || [])]
           .filter(Boolean).join(' ').toLowerCase().includes(q)
-      : f.besoins.includes(cat))
+      : (f.besoins.includes(cat) || f.tag === cat))
     .slice()
     .sort((a, b) => (RANG[a.tag] ?? 2) - (RANG[b.tag] ?? 2))
 
@@ -953,7 +966,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             <div style={hb.groupeTitre}>{g.titre}</div>
             <div style={hb.catRow}>
               {g.ids.map(id => {
-                const c = CATS.find(x => x.id === id)
+                const c = CATS.find(x => x.id === id) || APPROCHES.find(x => x.id === id)
                 if (!c) return null
                 const active = cat === c.id
                 return (
@@ -1001,7 +1014,8 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         {/* « 6 REMÈDES · APPUIE POUR DÉVELOPPER » avec une pastille n'était ni un
             titre ni un bouton : l'affordance était illisible. Un vrai libellé de
             section, et le compteur en second plan. */}
-        <span style={hb.countText}>{q ? `Résultats pour « ${recherche} »` : `Pour ${LABEL_CAT[cat] || cat}`}</span>
+        <span style={hb.countText}>{q ? `Résultats pour « ${recherche} »`
+          : (APPROCHES.find(a => a.id === cat)?.label ?? `Pour ${LABEL_CAT[cat] || cat}`)}</span>
         <span style={{ ...hb.countSep }}>·</span>
         <span style={{ ...hb.countText, fontWeight:500, opacity:0.75 }}>{items.length} fiches</span>
       </div>

@@ -694,7 +694,6 @@ export default function SettingsSheet({
                       font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(110,60,30,0.95); outline:none;
                       transition:border-color 0.18s; }
                     .ss-edit-input:focus { border-color:#C87B52; }
-                    .ss-edit-input::placeholder { color:rgba(160,100,60,0.50); }
                     .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(200,123,82,0.32);
                       background:rgba(255,255,255,0.55); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
                       color:rgba(110,60,30,0.95); outline:none; }
