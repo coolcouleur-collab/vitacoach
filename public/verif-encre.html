@@ -1,63 +1,75 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ton terracotta, sans le foncer</title>
+<title>Connexion, avant et maintenant</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap');
   body { margin:0; padding:20px 14px 70px; font-family:'Poppins',sans-serif;
-         background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#7C4C33; }
-  h1 { font-size:15px; margin:0 0 3px; }
-  p.i { font-size:12.5px; margin:0 0 6px; opacity:.9; line-height:1.55; }
-  .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin:26px 0 6px; }
-  .sub { font-size:11.5px; margin:0 0 10px; opacity:.75; line-height:1.5; }
+         background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#C87B52; }
+  h1 { font-size:15px; margin:0 0 3px; color:#8A5206; }
+  p.i { font-size:12.5px; margin:0 0 6px; color:#8A5206; line-height:1.55; }
+  .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+         margin:26px 0 8px; color:#8A5206; }
+  /* La carte, identique dans les deux : elle n'a pas ete touchee. */
+  .carte { border-radius:22px; padding:26px 22px 28px; max-width:330px; margin:0 auto;
+           background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); }
+  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:44px;
+          text-align:center; line-height:1; margin-bottom:20px; color:#C87B52; }
+  .note { max-width:330px; margin:10px auto 0; font-size:12px; line-height:1.6; color:#8A5206; }
 
-  /* La carte s'eclaircit : c'est un FOND, donc creme, conformement a la regle.
-     C'est elle qui donne au terracotta de quoi se detacher. */
-  .carte { border-radius:24px; padding:30px 26px 32px; max-width:330px; margin:0 auto;
-           background:rgba(255,251,244,0.82);
-           border:1px solid rgba(255,220,160,0.55);
-           box-shadow:0 14px 44px rgba(200,123,82,0.14); }
+  /* AVANT */
+  .av .ong { display:flex; justify-content:center; gap:0; margin-bottom:22px; }
+  .av .ong div { flex:1; text-align:center; font-size:14px; padding:12px 0; }
+  .av .ong b { font-weight:600; border-bottom:2px solid rgba(255,220,160,.60); padding-bottom:12px; color:#7C4C33; }
+  .av .ong span { font-weight:400; color:#7C4C33; }
+  .av .l { font-size:12px; font-weight:500; letter-spacing:1.2px; text-transform:uppercase;
+           margin-bottom:6px; color:#7C4C33; }
+  .av .ch { border:1.5px solid rgba(124,76,51,.70); border-radius:10px; padding:12px 14px;
+            font-size:16px; margin-bottom:16px; background:rgba(255,250,244,.55); color:#7C4C33; }
+  .av .sv { font-size:13px; color:#7C4C33; display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .av .sv i { width:15px; height:15px; border:1px solid rgba(124,76,51,.6); border-radius:3px; }
+  .av .btn { display:block; margin:12px auto 0; padding:12px 34px; border-radius:2rem; width:fit-content;
+             background:linear-gradient(135deg,#6C422C,#90593B); color:#FFF8EB;
+             font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
 
-  /* TOUT est en #C87B52, et tout atteint la taille qui le rend lisible. */
-  .t { color:#C87B52; }
-  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:46px;
-          text-align:center; line-height:1; margin-bottom:22px; }
-  .ong { display:flex; gap:24px; justify-content:center; margin-bottom:30px;
-         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:25px; }
-  .ong b { font-weight:600; padding-bottom:4px; border-bottom:1.5px solid rgba(200,123,82,.75); }
-  .ong span { font-weight:400; opacity:.72; }
-  .ch { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; font-weight:400;
-        padding:8px 2px 12px; margin-bottom:20px; border-bottom:1.5px solid rgba(200,123,82,.55); }
-  .sv { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; font-weight:600;
-        display:flex; align-items:center; gap:10px; }
-  .sv i { width:16px; height:16px; border-radius:4px; display:inline-block;
-          border:1.5px solid rgba(200,123,82,.75); }
-  .btn { display:block; margin:28px auto 0; padding:12px 34px; border-radius:2rem; width:fit-content;
-         background:none; border:1.5px solid rgba(200,123,82,.75);
-         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; }
-  .note { max-width:330px; margin:12px auto 0; font-size:12px; line-height:1.6; opacity:.85; }
-  b.k { font-weight:700; }
+  /* MAINTENANT — design C, ecriture #C87B52 */
+  .ap .ong { display:flex; justify-content:center; margin-bottom:26px; }
+  .ap .ong div { flex:1; text-align:center; padding:10px 4px;
+                 font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; color:#C87B52; }
+  .ap .ong b { font-weight:600; border-bottom:1px solid rgba(200,123,82,.60); padding-bottom:10px; display:block; }
+  .ap .ong span { font-weight:400; opacity:.72; }
+  .ap .ch { border:none; border-bottom:1px solid rgba(200,123,82,.50); border-radius:0;
+            padding:11px 2px; font-size:16px; margin-bottom:20px; background:none; color:#C87B52; }
+  .ap .sv { font-size:13px; color:#C87B52; display:flex; align-items:center; gap:8px; }
+  .ap .sv i { width:15px; height:15px; border:1px solid rgba(200,123,82,.65); border-radius:3px; }
+  .ap .btn { display:block; margin:20px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
+             background:none; border:1px solid rgba(200,123,82,.65); color:#C87B52;
+             font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
 </style>
 
-<h1>Ton terracotta, sans le foncer d'un ton</h1>
-<p class="i">
-  <b class="k">#C87B52</b> exactement, partout. Il plafonne à 3,28:1 même sur du
-  blanc, donc il ne peut pas être du petit texte. Mais dès 24px il est valide.
-  La réponse n'est pas de changer la couleur, c'est d'agrandir l'écriture.
-</p>
+<h1>Ce que j'ai changé sur la connexion</h1>
+<p class="i">La carte est identique dans les deux, je n'y ai pas touché.</p>
 
-<div class="lab" style="color:#C87B52">8 · tout en #C87B52, typographie agrandie</div>
-<div class="sub">La carte s'éclaircit pour lui donner de quoi se détacher. Une carte est un fond : elle reste crème.</div>
-
-<div class="carte t">
+<div class="lab">Avant</div>
+<div class="carte av">
   <div class="logo">Solenn</div>
-  <div class="ong"><b>Connexion</b><span>Inscription</span></div>
-  <div class="ch" style="opacity:.78">Ton adresse email</div>
-  <div class="ch" style="opacity:.78">Ton mot de passe</div>
+  <div class="ong"><div><b>Connexion</b></div><div><span>Inscription</span></div></div>
+  <div class="l">Email</div><div class="ch">@</div>
+  <div class="l">Mot de passe</div><div class="ch">••••••</div>
   <div class="sv"><i></i> Se souvenir de moi</div>
   <div class="btn">Retrouver Solenn →</div>
 </div>
+<p class="note">Étiquettes en capitales, cadres complets, bouton plein foncé, écriture brune.</p>
 
+<div class="lab">Maintenant, en ligne</div>
+<div class="carte ap">
+  <div class="logo">Solenn</div>
+  <div class="ong"><div><b>Connexion</b></div><div><span>Inscription</span></div></div>
+  <div class="ch">Email</div>
+  <div class="ch">Mot de passe</div>
+  <div class="sv"><i></i> Se souvenir de moi</div>
+  <div class="btn">Retrouver Solenn →</div>
+</div>
 <p class="note">
-  Plus rien de brun, plus rien de cuivré, plus rien de doré dans l'écriture.
-  Uniquement ta couleur, à sa valeur exacte. Le formulaire devient plus grand
-  et plus aéré, ce qui va aussi dans le sens de la version C que tu as choisie.
+  Plus d'étiquettes : le champ dit ce qu'il attend. Onglets au Cormorant
+  italique. Champs réduits à un trait. Bouton filaire. Toute l'écriture en
+  <b>#C87B52</b>.
 </p>
