@@ -381,7 +381,23 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
 const ORBIT = '#C87B52'
 
 const nightText  = (op) => `rgba(180,210,255,${op})`
-const warmText   = (op) => `rgba(200,123,82,${op})`
+// LE point unique ou se decide la couleur de TOUT le texte de l'accueil en
+// mode jour : 25 appels via tc(). Verifie, elle ne sert qu'a `color`, jamais a
+// un fond ni a une bordure.
+//
+// L'opacite recue est volontairement IGNOREE. rgba(200,123,82,·) plafonnait a
+// 2,48 de contraste sur le fond de l'app, et a 3,23 meme sur du blanc : aucune
+// opacite ne l'amenait au seuil de 4,5. #7B421C est la meme teinte, 24 degres
+// contre 21, et c'est le PLUS CLAIR qui passe. Toute opacite inferieure a 1 le
+// fait retomber sous le seuil, donc il n'y en a pas.
+//
+// La hierarchie ne passe donc plus par la transparence mais par la TAILLE et la
+// GRAISSE, qui existaient deja. C'est aussi ce qui evite le defaut que Jean a
+// vu le 2026-09-01 : deux couleurs de texte differentes sur le meme ecran.
+//
+// L'accent #C87B52 n'est pas abandonne : il garde les icones, les fonds, les
+// bordures et le grand score, ou sa taille suffit au seuil de 3,0.
+const warmText   = (op) => '#7B421C'
 const sunsetText = (op) => `rgba(255,225,200,${op})`
 
 // ─── OCEAN SCENE BACKGROUND ────────────────────────────────────────────────────
