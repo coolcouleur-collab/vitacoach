@@ -1,3 +1,50 @@
+# En attente, Solenn
+
+## Chantier « application sportive », ouvert le 2 septembre 2026
+
+Jean a demande que Programme devienne une vraie application sportive, et a
+choisi de tout construire quitte a decaler le lancement.
+
+### Fait et en ligne
+
+- **Le catalogue.** Quatre programmes ecrits a la main, avec promesse, public
+  vise, mecanisme, rythme, contre-indications et resultats attendus.
+  Reequilibrage alimentaire (28j), Remise en mouvement (42j), Defi 21 jours,
+  Sommeil et energie (21j). Le meme fichier sert au client et au serveur.
+- **Le lecteur de seance.** Un exercice a la fois, photo, etapes, chronometre
+  qui survit au verrouillage de l'ecran, repos decompte, bilan qui valide le
+  jour. Ecran maintenu allume pendant l'effort.
+- **Les rappels locaux.** Poses sur le telephone, fenetre glissante de 10
+  jours a cause de la limite de 64 d'iOS, reposee a chaque ouverture.
+
+### Reste a faire
+
+1. **Health Connect sur Android.** Le manifeste declare deja READ_STEPS,
+   READ_HEART_RATE et READ_SLEEP, mais AUCUN code ne les lit : seul HealthKit
+   est implemente. Les utilisateurs Android n'ont donc aucune metrique
+   automatique, et Google refuse les permissions sante declarees sans usage
+   visible. C'est le point le plus urgent des trois.
+2. **Le suivi de course.** GPS en arriere plan, distance, allure, tracé.
+   Demande `UIBackgroundModes: location` cote iOS, absent aujourd'hui, et une
+   justification a Apple.
+3. **L'ecran de veille.** Live Activity iOS en SwiftUI, service de premier
+   plan Android en Kotlin. Plusieurs jours, et une nouvelle revue App Store.
+
+### Ce qui ne pourra pas se faire sans une montre
+
+Le rythme cardiaque EN DIRECT pendant l'effort ne vient pas de HealthKit. Il
+suppose une Apple Watch executant une session d'entrainement, donc une
+application watchOS compagnon, qui est un projet a part entiere. Sans elle, le
+cardio est relu APRES la seance. Les pas en direct, eux, viennent du telephone
+seul, et la distance vient du GPS.
+
+### Deja branche cote serveur, a rebrancher cote ecran
+
+`agents/sync-sante.js` synchronise deja Withings, Oura et Garmin. Ce n'est pas
+a construire, c'est a exposer.
+
+---
+
 # En attente — Solenn
 
 Point au **25 août 2026**, fin de journée. Ce fichier remplace la mémoire de la
