@@ -1057,7 +1057,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 <div style={{
                   fontSize: 11, lineHeight: 1.45, marginTop: 9,
                   fontFamily: "'Poppins',system-ui,sans-serif",
-                  color: isNight ? 'rgba(170,198,235,0.58)' : ENCRE,
+                  color: isNight ? 'rgba(180,205,240,0.66)' : ENCRE,   // alignee sur la ligne du dessus, elle etait a 0,58
                 }}>
                   Ton score se calcule sur ton sommeil, ton eau, tes pas et ton humeur.
                 </div>
