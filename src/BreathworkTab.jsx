@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AMBRE, ROUGE } from './palette'
-import { ENCRE } from './palette'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 // L'opacite recue est volontairement IGNOREE, comme warmText sur l'accueil.
