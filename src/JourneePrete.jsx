@@ -104,7 +104,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         background: panneau,
         backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
         border: `1px solid ${trait}`,
-        borderRadius: 18, padding: '16px 18px', marginBottom: 14,
+        borderRadius: 18, padding: '16px 18px', margin: '14px 18px 14px',
         boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
         fontFamily: F,
       }}>
@@ -139,7 +139,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       background: panneau,
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       border: `1px solid ${trait}`,
-      borderRadius: 18, padding: '16px 18px', marginBottom: 14,
+      borderRadius: 18, padding: '16px 18px', margin: '14px 18px 14px',
       boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
       fontFamily: F,
     }}>

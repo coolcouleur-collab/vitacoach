@@ -313,10 +313,31 @@ export const PHOTOS_EXOS = {
   // Vague 2 : animations pour l'instant, la recherche de photos justes se
   // fera en lot (le taux de photos reellement exactes est faible, voir les
   // pompes sur genoux).
-  mountainclimber: null, jumpingjack: null, crunch: null, russiantwist: null,
-  birddog: null, donkeykick: null, mollets: null, stepup: null,
-  genouxhauts: null, squatsaute: null, fentelaterale: null,
-  planchelateral: null, legraise: null,
+  // Vague 2, trouvees et VERIFIEES A L'OEIL le 2026-09-01, au recadrage reel de
+  // 130px et non sur la foi de la description Pexels.
+  mountainclimber: { url: P(2294361),  pos: '50%' },   // planche, un genou ramene
+  planchelateral:  { url: P(2294363),  pos: '50%' },   // appui sur un bras, bras haut leve
+  crunch:          { url: P(3930989),  pos: '50%' },
+  mollets:         { url: P(13965339), pos: '50%' },   // gros plan, talon decolle visible
+  russiantwist:    { url: P(5128466),  pos: '50%' },   // assise, pieds decolles, buste pivote
+  jumpingjack:     { url: P(6339477),  pos: '50%' },
+  genouxhauts:     { url: P(6339342),  pos: '50%' },
+
+  // REJETEES apres verification, elles montraient autre chose :
+  //   leg raise 14942844 : genoux plies et bassin enroule, c'est un crunch
+  //     inverse et non un releve de jambes tendues ;
+  //   step-up 13896897 : aucune caisse visible, et au recadrage de 130px elle
+  //     serait coupee de toute facon. Le geste lu est « genoux hauts ».
+  legraise: null, stepup: null,
+
+  // JAMAIS TROUVEES. Pexels et Unsplash ne renvoient que le mouvement voisin :
+  //   pompes sur genoux -> pompes classiques (deja 17 recherches en aout) ;
+  //   bird dog -> des chiens et du yoga ;
+  //   donkey kick -> des elastiques, pas le mouvement ;
+  //   squat saute -> uniquement des sauts sur caisse, autre geste ;
+  //   fente laterale -> uniquement des fentes avant.
+ birddog: null, donkeykick: null,
+  squatsaute: null, fentelaterale: null,
 }
 
 // Sans photo (ou si elle ne charge pas), on retombe sur la silhouette animée.
