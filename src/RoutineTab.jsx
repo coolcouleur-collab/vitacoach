@@ -297,6 +297,8 @@ function EmptyRoutine({ generating, onGenerate }) {
 }
 
 // ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
+const CourseActive = React.lazy(() => import('./CourseActive'))
+
 export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
   const todayKey = new Date().toDateString()
   const storageKey = `vitacoach_routine_checked_${todayKey}`
@@ -420,6 +422,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
   }
 
   const [showExos, setShowExos] = useState(false)
+  const [courseOuverte, setCourseOuverte] = useState(false)
 
   // ── Programme OU Routine, plus jamais les deux empilés ──────────────────
   // La page mélangeait le défi 21 jours, la routine du jour et le guide dans
@@ -783,7 +786,31 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
         )}
 
-        {/* ── 3. Ressource : le guide des gestes, côté Programme ── */}
+        {/* ── 3. Sortir courir. Séparé du programme : une envie de sortir ne
+             se planifie pas la veille, et l'app doit pouvoir compter un temps
+             et une distance sans qu'on ait ouvert une séance. ── */}
+        {vue === 'programme' && (
+        <button onClick={() => setCourseOuverte(true)} style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+          background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+          padding: '14px 16px', cursor: 'pointer', marginTop: 4, marginBottom: 8,
+          fontFamily: 'Poppins,sans-serif', textAlign: 'left',
+        }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="13" cy="4" r="2" />
+              <path d="m8 20 3-6 3 2 2 4M6 12l3-4 4 1 2 3" />
+            </svg>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>Sortir courir</div>
+            <div style={{ fontSize: 11, color: ENCRE, marginTop: 1 }}>Temps, distance et allure en direct</div>
+          </div>
+        </button>
+        )}
+
+        {/* ── 4. Ressource : le guide des gestes, côté Programme ── */}
         {vue === 'programme' && (
         <button onClick={() => setShowExos(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
@@ -803,6 +830,15 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         </button>
         )}
       </div>
+
+      {courseOuverte && (
+        <React.Suspense fallback={null}>
+          <CourseActive
+            onFermer={() => setCourseOuverte(false)}
+            onTermine={() => setCourseOuverte(false)}
+          />
+        </React.Suspense>
+      )}
 
       {/* ── CSS spin ── */}
       <style>{`

@@ -73,7 +73,7 @@
 
 	<!-- ─── Localisation ──────────────────────────────────────────────────── -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Solenn utilise ta position pour adapter les recommandations météo de ta routine quotidienne.</string>
+	<string>Solenn utilise ta position pour mesurer la distance et l'allure de tes sorties, et pour adapter les recommandations météo de ta routine.</string>
 
 	<!-- ─── Face ID (si authentification biométrique plus tard) ──────────── -->
 	<key>NSFaceIDUsageDescription</key>

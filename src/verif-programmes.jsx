@@ -2,6 +2,7 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import CatalogueProgrammes from './CatalogueProgrammes'
 import SeanceActive from './SeanceActive'
+import CourseActive from './CourseActive'
 
 // Un profil qui declare grossesse et trouble cardiaque, pour voir l'avis de
 // sante s'afficher reellement sur la fiche « Remise en mouvement ».
@@ -18,7 +19,9 @@ const SEANCE = [
 const quoi = new URLSearchParams(location.search).get('ecran')
 
 createRoot(document.getElementById('app')).render(
-  quoi === 'seance'
+  quoi === 'course'
+    ? <CourseActive onTermine={r => console.log('course', r)} onFermer={() => console.log('ferme')} />
+  : quoi === 'seance'
     ? <SeanceActive
         seance={SEANCE}
         jour={9}
