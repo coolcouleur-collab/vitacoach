@@ -55,7 +55,7 @@ const ChatHistory   = lazy(() => import('./ChatHistory'))
 const BreathworkTab = lazy(() => import('./BreathworkTab'))
 const CycleTab      = lazy(() => import('./CycleTab'))
 const PaywallOffre  = lazy(() => import('./PaywallOffre'))
-import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
+import { LeafIcon, HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
@@ -2416,14 +2416,47 @@ padding: isMobile
                     border:'none',
                     background: onglet===id ? 'rgba(190,115,18,0.08)' : 'transparent',
                     cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
-                    color: onglet===id ? 'rgba(255,238,228,0.92)' : 'rgba(255,238,228,0.62)',
+                    color: navEncre,
                     fontWeight: onglet===id ? 600 : 400,
                     fontSize:14, marginBottom:3,
                   }}>
-                    <Icon color={onglet===id ? 'rgba(255,238,228,0.88)' : 'rgba(255,238,228,0.44)'} size={18} />
+                    <Icon color={onglet===id ? navAccent : navIcone} size={18} />
                     {label}
                   </button>
                 ))}
+
+                {/* Seconde porte vers les quatre pages outils. Elles n'etaient
+                    atteignables que depuis la rangee « Tes outils » de l'accueil :
+                    depuis le chat, le Programme ou les Progres, il fallait
+                    d'abord revenir en arriere. Quatre des huit destinations de
+                    l'app dependaient donc d'une seule rangee, sur une seule
+                    page, qu'il faut avoir fait defiler pour voir
+                    (etude d'architecture du 2026-09-01). */}
+                <div style={{ marginTop:16, paddingTop:12, borderTop:`1px solid ${navTrait}` }}>
+                  <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase',
+                                color:navEncre, opacity:0.68, padding:'0 16px 9px', fontFamily:F }}>
+                    Tes outils
+                  </div>
+                  {[
+                    { id:'style',      Icon: StyleIcon,      label:'Style' },
+                    { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
+                    { id:'beaute',     Icon: LeafIcon,       label:'Soins' },
+                    ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
+                  ].map(({ id, Icon, label }) => (
+                    <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
+                      display:'flex', alignItems:'center', gap:12, padding:'11px 16px', borderRadius:14,
+                      border:'none',
+                      background: onglet===id ? 'rgba(190,115,18,0.08)' : 'transparent',
+                      cursor:'pointer', fontFamily:F, width:'100%', textAlign:'left',
+                      color: navEncre,
+                      fontWeight: onglet===id ? 600 : 400,
+                      fontSize:14, marginBottom:3,
+                    }}>
+                      <Icon color={onglet===id ? navAccent : navIcone} size={18} />
+                      {label}
+                    </button>
+                  ))}
+                </div>
                 {/* Bottom actions */}
                 <div style={{ marginTop:'28px', display:'flex', flexDirection:'column', gap:2, borderTop: nuitNav ? '1px solid rgba(160,200,255,0.14)' : '1px solid rgba(200,130,25,0.09)', paddingTop:12 }}>
                   {!isPro && (
