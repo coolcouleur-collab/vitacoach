@@ -1,73 +1,77 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Le panneau santé en mode Nuit</title>
+<title>Le panneau santé, jour et nuit</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-  body { margin:0; padding:18px 12px 60px; font-family:'Poppins',sans-serif;
-         background:#070f1e; color:rgba(190,216,255,.85); }
-  h1 { font-size:14.5px; margin:0 0 4px; color:rgba(198,222,255,.96); }
-  p.i { font-size:12px; margin:0 0 4px; line-height:1.55; }
-  .lab { font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-         margin:22px 0 8px; color:rgba(190,216,255,.8); }
-  /* Le panneau, avec ses valeurs reelles, pose sur le navy de l'accueil */
-  .p { background:rgba(255,235,200,0.14); border:1px solid rgba(255,220,160,0.25);
-       border-radius:22px; padding:20px 16px 22px; max-width:330px; margin:0 auto;
+  body { margin:0; font-family:'Poppins',sans-serif; }
+  section { padding:20px 12px 34px; }
+  /* JOUR : le vrai degrade de l'accueil */
+  .jour { background:radial-gradient(circle at center,#EDB16D 0%,#EDB980 35%,#EDCBB8 70%,#EDD8CC 100%);
+          color:#944D26; }
+  /* NUIT : le vrai fond de l'accueil */
+  .nuit { background:#070f1e; color:rgba(190,216,255,.85); }
+  h2 { font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin:0 0 12px; }
+  .note { max-width:330px; margin:12px auto 0; font-size:12px; line-height:1.6; }
+
+  .p { border-radius:22px; padding:20px 16px 22px; max-width:330px; margin:0 auto;
        backdrop-filter:blur(8px); }
-  .poignee { width:44px; height:5px; background:rgba(255,220,160,0.30); border-radius:12px; margin:0 auto 20px; }
+  .jour .p { background:rgba(255,235,200,0.14); border:1px solid rgba(255,220,160,0.25); }
+  .nuit .p { background:rgba(255,235,200,0.14); border:1px solid rgba(160,200,255,0.22); }
+  .poignee { width:44px; height:5px; border-radius:12px; margin:0 auto 20px; }
+  .jour .poignee { background:rgba(255,220,160,0.55); }
+  .nuit .poignee { background:rgba(160,200,255,0.35); }
   .icones { display:flex; gap:10px; justify-content:center; margin-bottom:16px; }
   .icones div { width:48px; height:48px; border-radius:16px; background:rgba(200,100,40,0.10);
-                border:1px solid rgba(255,220,160,0.20); display:flex; align-items:center; justify-content:center; font-size:20px; }
+                display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .jour .icones div { border:1px solid rgba(255,220,160,0.28); }
+  .nuit .icones div { border:1px solid rgba(160,200,255,0.22); }
   .titre { text-align:center; font-size:15px; font-weight:600; margin-bottom:6px; }
   .sous { text-align:center; font-size:12px; line-height:1.6; margin-bottom:18px; }
   .ligne { display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:14px;
-           background:rgba(200,100,40,0.06); border:1px solid rgba(255,220,160,0.18); margin-bottom:8px; }
+           background:rgba(200,100,40,0.06); margin-bottom:8px; }
+  .jour .ligne { border:1px solid rgba(255,220,160,0.30); }
+  .nuit .ligne { border:1px solid rgba(160,200,255,0.20); }
   .ligne span.n { font-size:12.5px; font-weight:500; flex:1; }
   .ligne span.b { font-size:9.5px; font-weight:600; background:rgba(255,220,160,0.22);
                   padding:3px 8px; border-radius:8px; }
   .btn1 { display:block; text-align:center; padding:13px; border-radius:16px; margin:16px 0 8px;
           background:rgba(255,220,160,0.30); font-size:13.5px; font-weight:600; }
-  .btn2 { display:block; text-align:center; padding:12px; border-radius:16px;
-          border:1px solid rgba(255,220,160,0.20); font-size:13px; }
-
-  /* AVANT — l'encre terracotta figee, ce que Jean a vu */
-  .av, .av .titre, .av .sous, .av .ligne, .av .btn1, .av .btn2 { color:#944D26; }
-  .av .sous b { color:#944D26; }
-  /* APRES — l'encre suit l'ambiance */
-  .ap { color:rgba(198,222,255,.95); }
-  .ap .sous, .ap .ligne span.b { color:rgba(190,216,255,.78); }
+  .btn2 { display:block; text-align:center; padding:12px; border-radius:16px; font-size:13px; }
+  .jour .btn2 { border:1px solid rgba(255,220,160,0.30); }
+  .nuit .btn2 { border:1px solid rgba(160,200,255,0.20); }
+  .nuit .sous, .nuit .ligne span.b { color:rgba(190,216,255,.78); }
+  .nuit .titre, .nuit .ligne span.n, .nuit .btn1, .nuit .btn2 { color:rgba(198,222,255,.95); }
 </style>
 
-<h1>Le panneau santé, posé sur le navy de l'accueil</h1>
-<p class="i">Les valeurs sont celles du code. Seule la couleur de l'écriture change.</p>
+<section class="jour">
+  <h2>De jour</h2>
+  <div class="p">
+    <div class="poignee"></div>
+    <div class="icones"><div>♡</div><div>🏃</div></div>
+    <div class="titre">Synchroniser mes données santé</div>
+    <div class="sous">Solenn synchronise automatiquement depuis <b>Apple Santé</b> ou <b>Google Fit</b></div>
+    <div class="ligne"><span class="n">Activité &amp; pas quotidiens</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Sommeil &amp; récupération</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Fréquence cardiaque</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Poids &amp; composition</span><span class="b">Lecture seule</span></div>
+    <div class="btn1">Autoriser l'accès →</div>
+    <div class="btn2">Plus tard</div>
+  </div>
+  <p class="note">Écriture en <b>#944D26</b>, ton terracotta. Rien n'a changé de ce côté.</p>
+</section>
 
-<div class="lab">Avant · ce que tu as vu</div>
-<div class="p av">
-  <div class="poignee"></div>
-  <div class="icones"><div>♡</div><div>🏃</div></div>
-  <div class="titre">Synchroniser mes données santé</div>
-  <div class="sous">Solenn synchronise automatiquement depuis <b>Apple Santé</b> ou <b>Google Fit</b></div>
-  <div class="ligne"><span class="n">Activité &amp; pas quotidiens</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Sommeil &amp; récupération</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Fréquence cardiaque</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Poids &amp; composition</span><span class="b">Lecture seule</span></div>
-  <div class="btn1">Autoriser l'accès →</div>
-  <div class="btn2">Plus tard</div>
-</div>
-
-<div class="lab">Après · l'écriture suit l'ambiance</div>
-<div class="p ap">
-  <div class="poignee"></div>
-  <div class="icones"><div>♡</div><div>🏃</div></div>
-  <div class="titre">Synchroniser mes données santé</div>
-  <div class="sous">Solenn synchronise automatiquement depuis <b>Apple Santé</b> ou <b>Google Fit</b></div>
-  <div class="ligne"><span class="n">Activité &amp; pas quotidiens</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Sommeil &amp; récupération</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Fréquence cardiaque</span><span class="b">Lecture seule</span></div>
-  <div class="ligne"><span class="n">Poids &amp; composition</span><span class="b">Lecture seule</span></div>
-  <div class="btn1">Autoriser l'accès →</div>
-  <div class="btn2">Plus tard</div>
-</div>
-<p class="i" style="max-width:330px;margin:12px auto 0">
-  En mode Jour, rien ne change : l'écriture reste ton terracotta. La bascule ne
-  se fait que sur l'accueil en Nuit, la même condition que la barre latérale et
-  le menu.
-</p>
+<section class="nuit">
+  <h2>De nuit</h2>
+  <div class="p">
+    <div class="poignee"></div>
+    <div class="icones"><div>♡</div><div>🏃</div></div>
+    <div class="titre">Synchroniser mes données santé</div>
+    <div class="sous">Solenn synchronise automatiquement depuis <b>Apple Santé</b> ou <b>Google Fit</b></div>
+    <div class="ligne"><span class="n">Activité &amp; pas quotidiens</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Sommeil &amp; récupération</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Fréquence cardiaque</span><span class="b">Lecture seule</span></div>
+    <div class="ligne"><span class="n">Poids &amp; composition</span><span class="b">Lecture seule</span></div>
+    <div class="btn1">Autoriser l'accès →</div>
+    <div class="btn2">Plus tard</div>
+  </div>
+  <p class="note">Écriture en bleu clair, uniquement sur l'accueil en Nuit.</p>
+</section>
