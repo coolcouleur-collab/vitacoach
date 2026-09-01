@@ -287,6 +287,7 @@ export default function Auth({ onConnecte, onBack }) {
       {onBack && (
         <button onClick={onBack} style={s.backBtn}>←</button>
       )}
+      <div style={s.centreur}>
       <div style={s.card}>
         <div style={{...s.logoWrap, marginBottom: 16}}>
           <svg
@@ -418,6 +419,7 @@ export default function Auth({ onConnecte, onBack }) {
         )}
 
       </div>
+      </div>
     </div>
   )
 }
@@ -435,11 +437,12 @@ const s = {
   // centre par align-items dans un conteneur qui defile se fait couper EN
   // HAUT, sans moyen de remonter. La marge automatique centre aussi, mais
   // laisse le defilement atteindre les deux extremites.
-  page: { height:'100dvh', minHeight:'100dvh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'flex',
-    justifyContent:'center', fontFamily:'Poppins, sans-serif', padding:20,
+  page: { height:'100dvh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'block',
+    fontFamily:'Poppins, sans-serif', padding:20,
     paddingTop:    'calc(env(safe-area-inset-top, 0px) + 72px)',
     paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
     position:'relative', overflowY:'auto', overflowX:'hidden' },
+  centreur: { minHeight:'100%', display:'flex', alignItems:'center', justifyContent:'center' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(148,77,38,0.60) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
@@ -450,7 +453,8 @@ const s = {
   blob3: { position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' },
-  card: { margin:'auto 0', position:'relative', zIndex:3, width:'100%', maxWidth:380,
+  card: {
+    position:'relative', zIndex:3, width:'100%', maxWidth:380,
     background:'rgba(255,235,210,0.25)',
     borderRadius: 20,
     padding:'20px 16px',
