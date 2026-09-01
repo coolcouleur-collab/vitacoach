@@ -4,6 +4,7 @@ import SpiralBg from './SpiralBg'
 import GlobeBg from './GlobeBg'
 import { playFx as playFxSound } from './sfx'
 import './tokens.css'
+import { ENCRE } from './palette'
 
 // ─── SPLASH (entrée minimaliste) ─────────────────────────────────────────────
 function Splash({ done }) {
@@ -56,7 +57,7 @@ const FX_SLIDES = [
     num: '01', tag: 'Vitalité',
     title: ['Ce que tu manges,', 'te reconstruit.'],
     sub: 'Solenn analyse ton corps en temps réel et adapte chaque repas à ce dont il a vraiment besoin.',
-    color: '#EDE8DC', accent: '#E8962A',
+    color: ENCRE, accent: '#E8962A',
     bg: 'transparent',
     items: ['Nutrition intuitive', 'Données santé', 'Temps réel'],
   },
@@ -64,7 +65,7 @@ const FX_SLIDES = [
     num: '02', tag: 'Sommeil',
     title: ['Dormir mieux,', 'dès ce soir.'],
     sub: 'Un sommeil qui récupère vraiment, Solenn ajuste ta routine du soir pour que chaque nuit compte.',
-    color: '#EDE8DC', accent: '#E8962A',
+    color: ENCRE, accent: '#E8962A',
     bg: 'transparent',
     items: ['Récupération profonde', 'Gestion du stress', 'Routine nocturne'],
   },
@@ -72,7 +73,7 @@ const FX_SLIDES = [
     num: '03', tag: 'Rythme',
     title: ['Chaque jour,', 'à ta mesure.'],
     sub: 'Quand chaque habitude s\'aligne sur ton rythme naturel, tout devient plus fluide.',
-    color: '#EDE8DC', accent: '#E8962A',
+    color: ENCRE, accent: '#E8962A',
     bg: 'transparent',
     items: ['Habitudes durables', 'Journée alignée', 'Sans friction'],
   },
@@ -174,7 +175,7 @@ function CinematicSlider({ onCommencer }) {
               border: '1px solid rgba(255,235,210,0.50)',
               borderRadius: '2rem',
               boxShadow: '0 0 24px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,248,235,0.30)',
-              color: '#FFF6E8',
+              color: ENCRE,
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
               fontSize: 'clamp(1.3rem,1.4vw,1.65rem)',
@@ -257,7 +258,7 @@ function CinematicSlider({ onCommencer }) {
               fontSize: 'clamp(1rem, 1.4vw, 1.25rem)',
               fontWeight: 300,
               letterSpacing: '0.08em',
-              color: 'rgba(255,240,210,0.95)',
+              color: ENCRE,
               animation: 'solennReveal 1s 0.65s cubic-bezier(0.34,1.56,0.64,1) both',
             }}>
               Ton soleil au quotidien
@@ -288,7 +289,7 @@ function CinematicSlider({ onCommencer }) {
           }}>
             <div style={{
               fontSize: '0.90rem', fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-              color: 'rgba(255,248,235,0.65)', letterSpacing: '0.18em',
+              color: ENCRE, letterSpacing: '0.18em',
               textTransform: 'uppercase', marginBottom: 20,
             }}>
               {SLIDE.num} · {SLIDE.tag}
@@ -297,7 +298,7 @@ function CinematicSlider({ onCommencer }) {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic', fontWeight: 400,
               fontSize: 'clamp(2rem, 2.8vw, 2.7rem)',
-              color: 'rgba(255,248,235,0.95)',
+              color: ENCRE,
               lineHeight: 1.2, marginBottom: 20,
             }}>
               {SLIDE.title[0]}<br />{SLIDE.title[1]}
@@ -305,7 +306,7 @@ function CinematicSlider({ onCommencer }) {
             <div style={{
               fontFamily: 'Poppins, sans-serif', fontWeight: 400,
               fontSize: '1.15rem',
-              color: 'rgba(255,248,235,0.82)',
+              color: ENCRE,
               lineHeight: 1.75, marginBottom: 28,
             }}>
               {SLIDE.sub}
@@ -314,7 +315,7 @@ function CinematicSlider({ onCommencer }) {
               {SLIDE.items.map(item => (
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-                  color: 'rgba(255,248,235,0.85)',
+                  color: ENCRE,
                   background: 'rgba(255,235,210,0.18)',
                   border: '1px solid rgba(255,220,160,0.38)',
                   borderRadius: '2rem', padding: '4px 13px',
@@ -406,7 +407,7 @@ function CinematicSlider({ onCommencer }) {
           href="mailto:contact@solenn.app"
           style={{
             position: 'absolute', bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))', left: '1.5rem', zIndex: 20,
-            color: 'rgba(255,248,235,0.72)',
+            color: ENCRE,
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic', fontSize: '0.85rem',
             letterSpacing: '0.06em', textDecoration: 'none',
@@ -489,7 +490,7 @@ function EarlyAccessSection() {
           fontFamily: 'Poppins, sans-serif', fontWeight: 500,
           fontSize: 'clamp(0.7rem, 1vw, 0.82rem)',
           letterSpacing: '0.24em', textTransform: 'uppercase',
-          color: 'rgba(255,248,235,0.75)', marginBottom: '1.2rem',
+          color: ENCRE, marginBottom: '1.2rem',
         }}>
           Communauté
         </p>
@@ -498,7 +499,7 @@ function EarlyAccessSection() {
           fontFamily: "'Cormorant Garamond', Georgia, serif",
           fontStyle: 'italic', fontWeight: 300,
           fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
-          color: 'rgba(255,248,235,0.92)',
+          color: ENCRE,
           lineHeight: 1.2, marginBottom: '1.1rem',
           maxWidth: 640,
         }}>
@@ -508,18 +509,18 @@ function EarlyAccessSection() {
         <p style={{
           fontFamily: 'Poppins, sans-serif', fontWeight: 400,
           fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)',
-          color: 'rgba(255,248,235,0.75)',
+          color: ENCRE,
           lineHeight: 1.7, marginBottom: '2.8rem',
           maxWidth: 480,
         }}>
-          Reçois chaque semaine des conseils bien-être, sommeil et nutrition, <span style={{ color: 'rgba(255,248,235,0.92)', fontWeight: 500 }}>signés Solenn.</span>
+          Reçois chaque semaine des conseils bien-être, sommeil et nutrition, <span style={{ color: ENCRE, fontWeight: 500 }}>signés Solenn.</span>
         </p>
 
         {status === 'success' ? (
           <div style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic', fontSize: 'clamp(1.3rem, 2vw, 1.6rem)',
-            color: 'rgba(255,248,235,0.92)',
+            color: ENCRE,
           }}>
             C'est noté, on te contacte en premier.
           </div>
@@ -541,7 +542,7 @@ function EarlyAccessSection() {
                 WebkitBackdropFilter: 'blur(12px)',
                 border: '1px solid rgba(255,220,160,0.45)',
                 borderRadius: '2rem',
-                color: 'rgba(255,248,235,0.95)',
+                color: ENCRE,
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: '1rem', fontWeight: 400,
                 padding: '0.82rem 1.4rem',
@@ -556,7 +557,7 @@ function EarlyAccessSection() {
                 border: '1px solid rgba(255,220,160,0.60)',
                 borderRadius: '2rem',
                 boxShadow: '0 0 22px rgba(232,150,42,0.22)',
-                color: '#FFFFFF',
+                color: ENCRE,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: 'italic',
                 fontSize: 'clamp(1.1rem, 1.4vw, 1.3rem)',

@@ -501,8 +501,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           ].map(o => (
             <button key={o.id} onClick={() => setVue(o.id)} style={{
               flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
-              border: vue === o.id ? '1px solid rgba(143,61,20,0.55)' : '1px solid transparent',
-              background: vue === o.id ? 'linear-gradient(135deg,#8F3D14,#B3501F)' : 'transparent',
+              border: vue === o.id ? '1px solid rgba(108,66,44,0.55)' : '1px solid transparent',
+              background: vue === o.id ? 'linear-gradient(135deg,#6C422C,#90593B)' : 'transparent',
               color: vue === o.id ? '#fff' : ENCRE,
               fontFamily: 'Poppins,sans-serif', fontSize: 13, fontWeight: vue === o.id ? 700 : 500,
               boxShadow: vue === o.id ? '0 3px 10px rgba(200,123,82,0.16)' : 'none',

@@ -58,6 +58,7 @@ const PaywallOffre  = lazy(() => import('./PaywallOffre'))
 import { LeafIcon, HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
+import { isNativeApp } from './hooks/useCapacitor'
 
 // ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
 async function triggerHaptic(type = 'light') {
@@ -1684,7 +1685,7 @@ const [messages, setMessages] = useState(() => {
   }
 
   if (showForum) return <Suspense fallback={<GlowLoader fullPage />}><Forum onBack={() => setShowForum(false)} user={user} profil={profil} /></Suspense>
-  if (!user && !showAuth && !isMobile) return (
+  if (!user && !showAuth && !isNativeApp()) return (
     <Suspense fallback={<GlowLoader fullPage />}>
       {/* `onForum` est le SEUL chemin vers le forum. Landing ne l'utilise pas
           aujourd'hui : c'est volontaire, le forum est retire du lancement.
@@ -3707,7 +3708,7 @@ const st = {
   },
   btn: {
     padding: '8px 16px',
-    background: 'linear-gradient(110deg,#8F3D14 0%,#B3501F 100%)',
+    background: 'linear-gradient(110deg,#6C422C 0%,#90593B 100%)',
     color: 'rgba(255,248,235,1)',
     border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
@@ -3771,7 +3772,7 @@ const s = {
   },
   avatar: {
     width:36, height:36, borderRadius:10,
-    background:'linear-gradient(135deg,#8F3D14,#B3501F)',
+    background:'linear-gradient(135deg,#6C422C,#90593B)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',

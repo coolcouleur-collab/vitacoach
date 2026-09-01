@@ -975,7 +975,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                     data-actif={active ? '1' : '0'}
                     style={{
                       flexShrink:0, padding:'10px 20px', borderRadius:20,
-                      border: active ? '1px solid rgba(143,61,20,0.55)' : '1px solid rgba(200,123,82,0.16)',
+                      border: active ? '1px solid rgba(108,66,44,0.55)' : '1px solid rgba(200,123,82,0.16)',
                       fontSize:12, fontWeight:700,
                       cursor:'pointer', fontFamily:'Poppins,sans-serif',
                       whiteSpace:'nowrap',
@@ -984,12 +984,12 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                       // creme a 32 % sous du blanc, soit 1,37:1. Le terracotta
                       // est celui des boutons, pas une huitieme nuance.
                       background: active
-                        ? 'linear-gradient(135deg,#8F3D14,#B3501F)'
+                        ? 'linear-gradient(135deg,#6C422C,#90593B)'
                         : 'rgba(200,123,82,0.06)',
                       backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
                       color: active ? '#fff' : ENCRE,
                       boxShadow: active
-                        ? '0 6px 20px rgba(143,61,20,0.30)'
+                        ? '0 6px 20px rgba(108,66,44,0.30)'
                         : 'none',
                       transform: active ? 'scale(1.04)' : 'scale(1)',
                       transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
@@ -1085,7 +1085,7 @@ const hb = {
   aiTitle: { fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' },
   aiSub: { fontSize:10, color:ENCRE, fontWeight:600, marginTop:1 },
   aiCta: {
-    background:'linear-gradient(135deg,#8F3D14,#B3501F)',   // blanc mesure a 5,14:1
+    background:'linear-gradient(135deg,#6C422C,#90593B)',   // blanc mesure a 5,14:1
     color:'#fff', border:'none',
     padding:'9px 16px', borderRadius:12,
     fontSize:11, fontWeight:800, cursor:'pointer',

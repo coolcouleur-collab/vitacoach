@@ -2459,9 +2459,9 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
                   ? s >= 70 ? 'linear-gradient(180deg,rgba(198,222,255,0.95),rgba(150,190,245,0.85))'
                   : s >= 40 ? 'linear-gradient(180deg,rgba(160,195,240,0.70),rgba(120,160,215,0.60))'
                   : s > 0   ? 'linear-gradient(180deg,rgba(120,150,200,0.45),rgba(90,120,170,0.38))' : null
-                  : s >= 70 ? 'linear-gradient(180deg,#B3501F,#8F3D14)'
-                  : s >= 40 ? 'linear-gradient(180deg,#C87B52,#A85C34)'
-                  : s > 0   ? 'linear-gradient(180deg,#E2B79C,#CE9A79)' : null
+                  : s >= 70 ? 'linear-gradient(180deg,#90593B,#6C422C)'
+                  : s >= 40 ? 'linear-gradient(180deg,#C87B52,#A06242)'
+                  : s > 0   ? 'linear-gradient(180deg,#E4C0A9,#D2A183)' : null
                 return (
                   <div key={i} style={{ flex:1, height:BAR_H, display:'flex', alignItems:'flex-end' }}>
                     <div style={{
