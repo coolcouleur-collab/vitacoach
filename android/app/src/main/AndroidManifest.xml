@@ -46,6 +46,12 @@
             </intent-filter>
         </activity-alias>
 
+
+        <service
+            android:name=".CourseService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
     </application>
 
     <!-- ─── Permissions ──────────────────────────────────────────────── -->
@@ -72,6 +78,19 @@
 
     <!-- Localisation pour météo -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- FINE et pas seulement COARSE. La localisation grossiere donne une
+         precision de l'ordre du kilometre : le filtre de distance rejetait
+         chaque point, et la distance d'une course serait restee a zero pour
+         toujours sur Android. Ce n'est pas un raffinement, c'est ce qui fait
+         marcher la mesure. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Le service de premier plan, qui garde la course vivante ecran
+         verrouille et l'affiche sur l'ecran de veille. Depuis Android 14 son
+         type doit etre declare, ici et sur le service. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <!-- Le plugin @capacitor/local-notifications declare SCHEDULE_EXACT_ALARM
          dans SON manifeste, qui se fond dans le notre a la compilation. Google

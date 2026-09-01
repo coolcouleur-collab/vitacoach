@@ -11,6 +11,7 @@ public class MainActivity extends BridgeActivity {
         // tout seuls : ils doivent etre declares AVANT super.onCreate, sinon le
         // pont demarre sans eux et le JavaScript ne voit qu'un objet vide.
         registerPlugin(SanteConnect.class);
+        registerPlugin(EcranDeVeille.class);
         super.onCreate(savedInstanceState);
     }
 }

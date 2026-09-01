@@ -19,6 +19,7 @@ import { motion } from 'framer-motion'
 import { useChrono, formater } from './useChrono'
 import { useCourse, allure, formaterAllure, formaterDistance } from './useCourse'
 import { ENCRE, ICONE, AMBRE, VERT } from './palette'
+import { veilleDemarrer, veilleMettreAJour, veilleArreter } from './ecranVeille'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -99,13 +100,33 @@ export default function CourseActive({ onTermine, onFermer }) {
       // faisait mentir cette phrase, le compteur restait a zero sous elle.
       // Une sortie sans distance reste une sortie.
       chrono.demarrer()
+      // La notification permanente est ce qui garde la course vivante ecran
+      // verrouille : sur Android, c'est la contrepartie exigee par le systeme
+      // pour continuer a travailler en arriere plan. Si elle echoue, la course
+      // se deroule quand meme, simplement sans ecran de veille.
+      veilleDemarrer('Course en cours', '00:00')
     })
-    return () => { vivant = false }
+    return () => { vivant = false; veilleArreter() }
   }, [])   // eslint-disable-line react-hooks/exhaustive-deps
+
+  // La notification suit la course, une fois par seconde et pas quatre : le
+  // chronometre redessine tous les quarts de seconde, et rien ne justifie de
+  // reveiller le systeme aussi souvent pour un texte identique.
+  const derniereSeconde = React.useRef(-1)
+  useEffect(() => {
+    if (fini || !chrono.enCours) return
+    if (chrono.secondes === derniereSeconde.current) return
+    derniereSeconde.current = chrono.secondes
+    veilleMettreAJour(
+      chrono.texte,
+      gps.metres >= 1 ? `${formaterDistance(gps.metres)} parcourus` : 'Recherche du signal',
+    )
+  }, [chrono.secondes, chrono.enCours, chrono.texte, gps.metres, fini])
 
   function terminer() {
     const ms = chrono.arreter()
     gps.arreter()
+    veilleArreter()
     setTotalMs(ms)
     setTotalM(gps.metres)
     setFini(true)
@@ -281,7 +302,7 @@ export default function CourseActive({ onTermine, onFermer }) {
                 Continuer
               </button>
               <button
-                onClick={() => { chrono.arreter(); gps.arreter(); onFermer?.() }}
+                onClick={() => { chrono.arreter(); gps.arreter(); veilleArreter(); onFermer?.() }}
                 style={{
                   padding: '13px 16px', borderRadius: 14, cursor: 'pointer',
                   background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',

@@ -59,8 +59,11 @@
 	<string>fr</string>
 
 	<!-- ─── Notifications Push ────────────────────────────────────────────── -->
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>location</string>
 		<string>remote-notification</string>
 		<string>fetch</string>
 	</array>
@@ -72,6 +75,8 @@
 	<string>Solenn peut enregistrer certaines données dans Apple Santé (activité, bien-être) pour centraliser ton suivi.</string>
 
 	<!-- ─── Localisation ──────────────────────────────────────────────────── -->
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Solenn continue de mesurer ta sortie quand l'écran est verrouillé. Ta position n'est jamais partagée ni envoyée ailleurs.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Solenn utilise ta position pour mesurer la distance et l'allure de tes sorties, et pour adapter les recommandations météo de ta routine.</string>
 
