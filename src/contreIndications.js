@@ -67,7 +67,9 @@ function nu(t) {
 /**
  * Croise UNE fiche avec le profil.
  *
- * @param {object} profil  le profil, dont `sante` porte les situations cochées
+ * @param {object} profil  le profil, dont `sante_flags` porte les situations
+ *                         cochées. Attention : `sante` existe deja et n'est
+ *                         qu'un booléen, ce n'est pas le bon champ.
  * @param {object} fiche   une fiche de Soins, dont `contre` porte le texte
  * @returns {{ concerne: boolean, raisons: string[], cles: string[] }}
  */
@@ -75,7 +77,7 @@ export function croiser(profil, fiche) {
   const texte = nu(fiche?.contre)
   if (!texte) return { concerne: false, raisons: [], cles: [] }
 
-  const declare = profil?.sante || {}
+  const declare = profil?.sante_flags || {}
   const raisons = []
   const cles = []
 

@@ -354,7 +354,8 @@ function iconCircleStyle(isSel) {
 }
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-const DERNIERE_ETAPE = 11
+const ETAPE_CYCLE = 12
+const DERNIERE_ETAPE = 13
 
 export default function Onboarding({ onTermine, onBack }) {
   // Consentement explicite au traitement des donnees de sante. Le RGPD les
@@ -386,6 +387,7 @@ export default function Onboarding({ onTermine, onBack }) {
   const [tapped, setTapped] = useState(null)
   const [rippleKey, setRippleKey] = useState(0)
   const [santeSelections, setSanteSelections] = useState([])
+  const [situSelections, setSituSelections] = useState([])
   const nomRef = useRef(null)
 
   useEffect(() => {
@@ -471,17 +473,32 @@ function premiereLecture(a) {
 }
 
 
+  // Une etape sans objet n'est pas affichee vide : elle est sautee, dans les
+  // deux sens de navigation.
+  function etapeApplicable(s, a) {
+    if (s === ETAPE_CYCLE) return a?.sexe !== 'homme'
+    return true
+  }
+
   function goNext(newAnswers) {
     setAnswers(newAnswers)
     setSlideDir(1)
     setTapped(null)
-    setStep(s => Math.min(s + 1, DERNIERE_ETAPE))
+    setStep(s => {
+      let n = s + 1
+      while (n < DERNIERE_ETAPE && !etapeApplicable(n, newAnswers)) n++
+      return Math.min(n, DERNIERE_ETAPE)
+    })
   }
 
   function goBack() {
     setSlideDir(-1)
     setTapped(null)
-    setStep(s => s - 1)
+    setStep(s => {
+      let n = s - 1
+      while (n > 0 && !etapeApplicable(n, answers)) n--
+      return n
+    })
   }
 
   function tapThen(key, fn) {
@@ -515,7 +532,9 @@ function premiereLecture(a) {
       taille:           0,
       sante:            a.sante_conditions && a.sante_conditions.length > 0 && !a.sante_conditions.includes('Tout va bien de ce côté'),
       sante_conditions: a.sante_conditions || [],
-      cycle:            a.cycle === true,
+      sexe:             a.sexe || 'nsp',
+      sante_flags:      a.sante_flags || {},
+      cycle:            a.sexe !== 'homme' && a.cycle === true,
       // Preuve du consentement : le RGPD exige de pouvoir demontrer QUAND il a
       // ete donne, pas seulement qu'il l'a ete.
       consentSanteLe:   a.consentSanteLe || null,
@@ -699,8 +718,57 @@ function premiereLecture(a) {
       </div>
     )
 
-    // ── Étape 3 : Activité ────────────────────────────────────────────────────
+    // ── Étape 3 : Genre ───────────────────────────────────────────────
+    // Uniquement pour adapter les questions suivantes. Aucune influence sur
+    // le ton de Solenn, qui reste le même pour tout le monde.
     if (step === 3) return (
+      <div style={{display:'flex', flexDirection:'column', gap:28}}>
+        <div style={{display:'flex', flexDirection:'column', gap:10}}>
+          <AnimatedQuestion text="Tu es ?" style={S.question} />
+          <motion.p
+            initial={{ opacity:0 }}
+            animate={{ opacity:1 }}
+            transition={{ delay:0.30 }}
+            style={S.sub}
+          >
+            Juste pour ne pas te poser de questions qui ne te concernent pas.
+          </motion.p>
+        </div>
+        <div style={{display:'flex', flexDirection:'column', gap:12}}>
+          {[
+            { val:'femme',  label:'Une femme' },
+            { val:'homme',  label:'Un homme' },
+            { val:'nsp',    label:'Je préfère ne pas le dire' },
+          ].map((opt, i) => {
+            const isSel = tapped === opt.val
+            return (
+              <motion.button
+                key={opt.val}
+                initial={{ opacity:0, x:40, scale:0.93 }}
+                animate={{ opacity:1, x:0, scale:1 }}
+                transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.06 }}
+                onClick={() => tapThen(opt.val, () => goNext({ ...answers, sexe: opt.val }))}
+                whileTap={{ scale:0.97, x:2 }}
+                style={optStyle(isSel)}
+              >
+                <span style={{
+                  fontSize:15, fontWeight: isSel ? 600 : 400,
+                  color: 'rgba(255,248,235,1)',
+                  transition:'color 0.16s, font-weight 0.1s',
+                }}>
+                  {opt.label}
+                </span>
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    )
+
+
+    // ── Étape 3 : Activité ────────────────────────────────────────────────────
+    if (step === 4) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Tu en es où avec le sport${nom ? `, ${nom}` : ''} ?`} style={S.question} />
@@ -746,7 +814,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 4 : Déclencheur émotionnel ──────────────────────────────────────
-    if (step === 4) return (
+    if (step === 5) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Et là, qu'est-ce qui t'a poussé à te lancer${nom ? `, ${nom}` : ''} ?`} style={S.question} />
@@ -786,7 +854,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 5 : Baseline bien-être ──────────────────────────────────────────
-    if (step === 5) return (
+    if (step === 6) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Honnêtement${nom ? `, ${nom}` : ''}, comment tu vas ?`} style={S.question} />
@@ -826,7 +894,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 6 : Moment préféré ───────────────────────────────────────────────
-    if (step === 6) return (
+    if (step === 7) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text="Quel moment de la journée t'appartient vraiment ?" style={S.question} />
@@ -866,7 +934,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 7 : Contexte de vie ─────────────────────────────────────────────
-    if (step === 7) return (
+    if (step === 8) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Tu vis comment au quotidien${nom ? `, ${nom}` : ''} ?`} style={S.question} />
@@ -906,7 +974,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 8 : Rythme de travail ───────────────────────────────────────────
-    if (step === 8) return (
+    if (step === 9) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text={`Ton quotidien ressemble à quoi${nom ? `, ${nom}` : ''} ?`} style={S.question} />
@@ -946,7 +1014,7 @@ function premiereLecture(a) {
     )
 
     // ── Étape 9 : Santé (multi-select) ───────────────────────────────────────
-    if (step === 9) {
+    if (step === 10) {
       const toggleSante = (label) => {
         if (label === 'Tout va bien de ce côté') {
           setSanteSelections(['Tout va bien de ce côté'])
@@ -972,7 +1040,9 @@ function premiereLecture(a) {
             </motion.p>
           </div>
           <div style={{display:'flex', flexDirection:'column', gap:10}}>
-            {SANTE_OPTIONS.map((opt, i) => {
+            {SANTE_OPTIONS
+              .filter(o => answers.sexe !== 'homme' || !/endométriose/i.test(o.label))
+              .map((opt, i) => {
               const isSel = santeSelections.includes(opt.label)
               const OptIcon = opt.Icon
               return (
@@ -1060,8 +1130,79 @@ function premiereLecture(a) {
       )
     }
 
+    // ── Étape 11 : ce qui rend un remède déconseillé ──────────────────
+    // Alimente le croisement des contre-indications de Soins. Facultative :
+    // on peut continuer sans rien cocher. Les clés correspondent une à une
+    // à celles de src/contreIndications.js.
+    if (step === 11) {
+      const SITU = [
+        ...(answers.sexe !== 'homme' ? [
+          { cle:'grossesse',     label:'Je suis enceinte' },
+          { cle:'allaitement',   label:"J'allaite" },
+        ] : []),
+        { cle:'anticoagulant', label:'Un traitement anticoagulant' },
+        { cle:'tension',       label:'Un traitement pour la tension' },
+        { cle:'thyroide',      label:'Un traitement pour la thyroïde' },
+        { cle:'hormonal',      label:'Un traitement hormonal' },
+        { cle:'sedatifs',      label:'Un sédatif ou un anxiolytique' },
+        { cle:'chirurgie',     label:'Une opération prévue bientôt' },
+      ]
+      const toggle = cle => setSituSelections(prev =>
+        prev.includes(cle) ? prev.filter(c => c !== cle) : [...prev, cle])
+      return (
+        <div style={{display:'flex', flexDirection:'column', gap:24}}>
+          <div style={{display:'flex', flexDirection:'column', gap:10}}>
+            <AnimatedQuestion text="Une de ces situations te concerne ?" style={S.question} />
+            <motion.p
+              initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.30 }}
+              style={S.sub}
+            >
+              Certaines plantes sont déconseillées dans ces cas. Solenn te préviendra
+              au lieu de te les proposer. Tu peux passer si rien ne s'applique.
+            </motion.p>
+          </div>
+          <div style={{display:'flex', flexDirection:'column', gap:10}}>
+            {SITU.map((opt, i) => {
+              const isSel = situSelections.includes(opt.cle)
+              return (
+                <motion.button
+                  key={opt.cle}
+                  initial={{ opacity:0, x:40, scale:0.93 }}
+                  animate={{ opacity:1, x:0, scale:1 }}
+                  transition={{ type:'spring', stiffness:320, damping:24, delay: i * 0.05 }}
+                  onClick={() => toggle(opt.cle)}
+                  whileTap={{ scale:0.97, x:2 }}
+                  style={optStyle(isSel)}
+                >
+                  <span style={{
+                    fontSize:15, fontWeight: isSel ? 600 : 400,
+                    color: 'rgba(255,248,235,1)',
+                  }}>
+                    {opt.label}
+                  </span>
+                  <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
+                </motion.button>
+              )
+            })}
+          </div>
+          <motion.button
+            onClick={() => goNext({
+              ...answers,
+              sante_flags: situSelections.reduce((o, c) => ({ ...o, [c]: true }), {}),
+            })}
+            style={S.cta}
+          >
+            <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+              {situSelections.length ? 'Continuer' : 'Rien de tout ça'}
+            </span>
+          </motion.button>
+        </div>
+      )
+    }
+
+
     // ── Étape 10 : Cycle (optionnel) ──────────────────────────────────────────
-    if (step === 10) return (
+    if (step === 12) return (
       <div style={{display:'flex', flexDirection:'column', gap:28}}>
         <div style={{display:'flex', flexDirection:'column', gap:10}}>
           <AnimatedQuestion text="Veux-tu suivre ton cycle ?" style={S.question} />
@@ -1111,7 +1252,7 @@ function premiereLecture(a) {
 
     // ── Étape finale : la première lecture ──────────────────────────────
     // Le seul écran de l'inscription où Solenn DONNE au lieu de demander.
-    if (step === 11) {
+    if (step === 13) {
       const l = premiereLecture(answers)
       return (
         <div style={{display:'flex', flexDirection:'column', gap:26}}>

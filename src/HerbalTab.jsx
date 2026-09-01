@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
+import { croiser, phraseAlerte } from './contreIndications'
 
 // ─── PALETTE (clair, fond de page abricot) ──────────────────────────────────
 const GLASS_BG     = 'rgba(255,248,242,0.75)'
@@ -13,6 +14,11 @@ const ACCENT_FICHE       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
 const ETIQUETTE    = ENCRE   // s'appelait GREEN et contenait du terracotta a 2,3:1
 const CTA_GRAD     = 'rgba(255,235,210,0.32)'
+
+// Le profil courant, pose par HerbalTab au rendu. Les cartes de fiches sont
+// definies hors du composant et ne recoivent pas ses props : ce relais evite
+// de les reecrire toutes pour une seule information.
+let profilCourant = null
 
 // ─── LOCAL SVG ICONS (style Icons.jsx : viewBox 24, stroke) ──────────────────
 function WarnTriangleIcon({ color = '#ef4444', size = 14 }) {
@@ -255,6 +261,20 @@ function AIRecoCard({ r, onChat, index }) {
             )}
           </div>
           <div style={{ fontSize:11.5, color:TXT_SOFT, lineHeight:1.4 }}>{r.benefice}</div>
+          {/* Le croisement : cette fiche est-elle deconseillee dans SA situation ? */}
+          {(() => {
+            const x = croiser(profilCourant, r)
+            if (!x.concerne) return null
+            return (
+              <div style={{
+                marginTop:8, padding:'8px 10px', borderRadius:10,
+                background:'rgba(185,28,28,0.07)', border:'1px solid rgba(185,28,28,0.30)',
+                fontSize:11, lineHeight:1.45, color:ROUGE, fontWeight:500,
+              }}>
+                {phraseAlerte(x.raisons)}
+              </div>
+            )
+          })()}
           {/* 12. Rien ne distinguait une proposition generee d'une fiche de la
               base validee. Le lecteur doit savoir ce qu'il lit. */}
           <div style={{
@@ -750,6 +770,7 @@ function besoinDuMoment(metriques, history) {
 // directement sur cette categorie. Sans ca la page s'ouvrait toujours sur
 // Plantes et l'entree mentait sur sa destination.
 export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, metriques, history }) {
+  profilCourant = profil
   // Le besoin du moment decide de la categorie d'ouverture, sauf si l'appelant
   // en impose une (l'entree Soins ouvre sur les cheveux).
   const besoin = useMemo(() => besoinDuMoment(metriques, history), [metriques, history])
