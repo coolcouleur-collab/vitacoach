@@ -7,6 +7,7 @@
 // sessionStorage, envoyée en header x-agents-key à /api/admin/retention.
 
 import React, { useEffect, useState } from 'react'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 const F = "'Poppins', sans-serif"
 const SERIF = "'Cormorant Garamond', Georgia, serif"
@@ -22,11 +23,11 @@ const card = {
 function Stat({ label, value, sub, alert }) {
   return (
     <div style={card}>
-      <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(10,22,51,0.45)' }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: ENCRE }}>{label}</div>
       <div style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, color: alert ? '#A8442E' : '#C87B52', lineHeight: 1.15, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </div>
-      {sub && <div style={{ fontSize: 11.5, color: 'rgba(10,22,51,0.55)', marginTop: 4, lineHeight: 1.45 }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 4, lineHeight: 1.45 }}>{sub}</div>}
     </div>
   )
 }
@@ -80,13 +81,13 @@ export default function AdminRetention() {
             disabled={loading || !input}
             style={{
               width: '100%', marginTop: 10, padding: '12px', borderRadius: 12, border: 'none',
-              background: 'rgba(255,235,210,0.32)', color: '#B2663E',
+              background: 'rgba(255,235,210,0.32)', color: ROUGE,
               fontFamily: F, fontSize: 14, fontWeight: 600, cursor: 'pointer', opacity: loading ? 0.6 : 1,
             }}
           >
             {loading ? 'Chargement…' : 'Accéder'}
           </button>
-          {error && <div style={{ marginTop: 10, fontSize: 12.5, color: '#A8442E' }}>{error}</div>}
+          {error && <div style={{ marginTop: 10, fontSize: 12.5, color: ROUGE }}>{error}</div>}
         </div>
       </div>
     )
@@ -104,7 +105,7 @@ export default function AdminRetention() {
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 22 }}>
           <h1 style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 32, fontWeight: 500, color: '#0A1633', margin: 0 }}>Rétention</h1>
           <button onClick={() => charger(key)} style={{
-            fontFamily: F, fontSize: 12, fontWeight: 600, color: '#C87B52', background: 'transparent',
+            fontFamily: F, fontSize: 12, fontWeight: 600, color: AMBRE, background: 'transparent',
             border: '1px solid rgba(200,123,82,0.35)', borderRadius: 99, padding: '6px 16px', cursor: 'pointer',
           }}>
             {loading ? '…' : 'Actualiser'}
@@ -135,19 +136,19 @@ export default function AdminRetention() {
 
         {data.refSources && Object.keys(data.refSources).length > 0 && (
           <div style={{ ...card, marginTop: 12 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(10,22,51,0.45)', marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: ENCRE, marginBottom: 10 }}>
               Inscriptions par créateur (liens ?ref=)
             </div>
             {Object.entries(data.refSources).sort((a, b) => b[1] - a[1]).map(([code, n]) => (
               <div key={code} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(200,123,82,0.10)', fontSize: 13 }}>
-                <span style={{ fontWeight: 600, color: '#C87B52' }}>{code}</span>
+                <span style={{ fontWeight: 600, color: AMBRE }}>{code}</span>
                 <span style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(10,22,51,0.70)' }}>{n} inscription{n > 1 ? 's' : ''}</span>
               </div>
             ))}
           </div>
         )}
 
-        <div style={{ fontSize: 11, color: 'rgba(10,22,51,0.40)', marginTop: 22, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 11, color: ENCRE, marginTop: 22, lineHeight: 1.5 }}>
           Généré le {data.generatedAt ? new Date(data.generatedAt).toLocaleString('fr-FR') : ','}.
           Actifs = au moins une métrique enregistrée sur la période. Renouvellement calculé sur les 100 derniers abonnements Stripe.
           Conversions par code promo : Dashboard Stripe → Produits → Codes promotionnels.

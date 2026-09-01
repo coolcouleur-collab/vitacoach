@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
+import { ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 // Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
@@ -793,7 +794,7 @@ export default function SettingsSheet({
                     fontFamily: C.font,
                     fontSize: 13,
                     fontWeight: 700,
-                    color: '#9C5D08',
+                    color: ROUGE,
                   }}>
                     <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#9C5D08" /> Solenn Pro</span>
                   </span>
@@ -852,7 +853,7 @@ export default function SettingsSheet({
                         <button onClick={() => actionAbo('reprendre')} disabled={aboOccupe} style={{
                           width: '100%', padding: '11px 0', borderRadius: 12, cursor: 'pointer',
                           background: 'rgba(232,150,42,0.10)', border: '1px solid rgba(232,150,42,0.30)',
-                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: '#9C5D08',
+                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: ROUGE,
                         }}>{aboOccupe ? 'Un instant…' : 'Reprendre mon abonnement'}</button>
                       </>
                     ) : confirmResil ? (
@@ -869,7 +870,7 @@ export default function SettingsSheet({
                           <button onClick={() => actionAbo('annuler')} disabled={aboOccupe} style={{
                             flex: 1, padding: '11px 0', borderRadius: 12, cursor: 'pointer',
                             background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.22)',
-                            fontFamily: C.font, fontSize: 13, fontWeight: 700, color: 'rgba(239,68,68,0.78)',
+                            fontFamily: C.font, fontSize: 13, fontWeight: 700, color: ROUGE,
                           }}>{aboOccupe ? 'Un instant…' : 'Résilier'}</button>
                         </div>
                       </div>
@@ -882,7 +883,7 @@ export default function SettingsSheet({
                     )}
 
                     {aboMsg && (
-                      <div style={{ fontFamily: C.font, fontSize: 12, color: 'rgba(239,68,68,0.78)', marginTop: 8 }}>{aboMsg}</div>
+                      <div style={{ fontFamily: C.font, fontSize: 12, color: ROUGE, marginTop: 8 }}>{aboMsg}</div>
                     )}
                   </div>
                 )}
@@ -988,7 +989,7 @@ export default function SettingsSheet({
                     WebkitBackdropFilter: 'blur(12px)',
                     // Texte terracotta ici : le panneau Réglages est clair, le
                     // crème y serait illisible (règle des surfaces claires)
-                    color: '#B2663E',
+                    color: ROUGE,
                     fontFamily: C.font,
                     fontSize: 14,
                     fontWeight: 700,
@@ -1132,7 +1133,7 @@ export default function SettingsSheet({
                   {/* Dire ce qui est efface ET ce qui est conserve : une
                       suppression qui ne mentionne pas les factures serait
                       trompeuse, la loi comptable impose de les garder. */}
-                  <div style={{ color: 'rgba(200,50,20,0.90)' }}>
+                  <div style={{ color: ROUGE }}>
                     <strong>Effacé définitivement :</strong> ton profil, tes mesures de
                     santé, tes check-ins, tes conversations avec Solenn, ton programme,
                     tes rapports, ton suivi de cycle, tes publications du forum et ta
@@ -1148,13 +1149,13 @@ export default function SettingsSheet({
                     l'app Santé, pense à retirer l'autorisation dans Réglages, Santé,
                     Accès des apps : seul iOS peut la révoquer.
                   </div>
-                  <div style={{ color: 'rgba(200,50,20,0.90)', fontWeight: 700 }}>
+                  <div style={{ color: ROUGE, fontWeight: 700 }}>
                     Cette action est irréversible.
                   </div>
                 </div>
               )}
               {supprErreur && (
-                <div style={{ fontFamily: C.font, fontSize: 11.5, color: 'rgba(200,50,20,0.85)', lineHeight: 1.55, padding: '2px 4px 8px' }}>
+                <div style={{ fontFamily: C.font, fontSize: 11.5, color: ROUGE, lineHeight: 1.55, padding: '2px 4px 8px' }}>
                   {supprErreur}
                 </div>
               )}

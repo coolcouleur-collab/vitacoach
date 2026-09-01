@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, Ani
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
+import { ENCRE_DOUCE, VERT } from './palette'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -378,7 +379,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
 // ─── PALETTE TEXTE NUIT / JOUR ────────────────────────────────────────────────
 // Couleur unique des metriques : la meme dans l'orbite du soleil et dans la
 // feuille de saisie. Les changer separement recree l'incoherence.
-const ORBIT = '#C87B52'
+const ORBIT = ENCRE_DOUCE   // etait #C87B52 a 2,39:1 ; seuil icone 3,0, desormais 3,86:1
 
 const nightText  = (op) => `rgba(180,210,255,${op})`
 // LE point unique ou se decide la couleur de TOUT le texte de l'accueil en
@@ -1860,7 +1861,7 @@ function generateDailyTasks(profil, metriques) {
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'nutrition', Icon: FoodIcon, color:'#22c55e',
+      id:'nutrition', Icon: FoodIcon, color: VERT,
       title: regime === 'végétarien' ? 'Protéines végétales' : regime === 'vegan' ? 'Équilibre vegan' : regime === 'sans gluten' ? 'Repas sans gluten' : 'Repas équilibrés',
       detail:'3 repas / légumes · protéines · glucides lents',
       goal:3, auto:false, fmt: v => `${v}/3 repas`,

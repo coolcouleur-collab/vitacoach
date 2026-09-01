@@ -1,3 +1,4 @@
+import { AMBRE, ENCRE, ROUGE } from './palette'
 // Page « Supprimer mon compte », exigée par Google Play
 // URL : meet-solenn.com/suppression-compte
 //
@@ -26,18 +27,18 @@ const S = {
   },
   h1: {
     fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic',
-    fontSize: 34, fontWeight: 500, color: 'rgba(140,75,30,0.95)', marginBottom: 6,
+    fontSize: 34, fontWeight: 500, color: ENCRE, marginBottom: 6,
   },
-  date: { fontSize: 12, color: 'rgba(200,123,82,0.75)', marginBottom: 28 },
-  h2: { fontSize: 17, fontWeight: 700, color: 'rgba(140,75,30,0.92)', margin: '26px 0 8px' },
-  p: { fontSize: 14, color: 'rgba(120,65,25,0.85)', lineHeight: 1.75, margin: '0 0 10px' },
-  li: { fontSize: 14, color: 'rgba(120,65,25,0.85)', lineHeight: 1.75, marginBottom: 4 },
+  date: { fontSize: 12, color: AMBRE, marginBottom: 28 },
+  h2: { fontSize: 17, fontWeight: 700, color: ENCRE, margin: '26px 0 8px' },
+  p: { fontSize: 14, color: ENCRE, lineHeight: 1.75, margin: '0 0 10px' },
+  li: { fontSize: 14, color: ENCRE, lineHeight: 1.75, marginBottom: 4 },
   etape: {
     fontSize: 14, color: 'rgba(120,65,25,0.88)', lineHeight: 1.7,
     background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.5)',
     borderRadius: 14, padding: '14px 18px', margin: '0 0 10px',
   },
-  lien: { color: 'rgba(180,95,40,0.95)', fontWeight: 600 },
+  lien: { color: ROUGE, fontWeight: 600 },
 }
 
 export default function SuppressionCompte() {

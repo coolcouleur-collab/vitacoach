@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon, SparkleIcon, SunIcon, TargetIcon, SadIcon, NeutralIcon, HappyIcon } from './Icons'
+import { AMBRE, ENCRE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -12,8 +13,8 @@ const HUMEURS = [
   { val: 1, label: 'Vide',      color: 'rgba(169,97,74,0.95)',  icon: <NeutralIcon size={30} color="rgba(169,97,74,0.95)"  /> },
   { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color="rgba(192,117,81,0.95)" /> },
   { val: 3, label: 'Neutre',    color: 'rgba(212,143,82,0.95)', icon: <NeutralIcon size={30} color="rgba(212,143,82,0.95)" /> },
-  { val: 4, label: 'Bien',      color: 'rgba(232,150,42,0.95)', icon: <HappyIcon   size={30} color="rgba(232,150,42,0.95)" /> },
-  { val: 5, label: 'Super',     color: 'rgba(242,182,78,0.95)', icon: <HappyIcon   size={30} color="rgba(242,182,78,0.95)" /> },
+  { val: 4, label: 'Bien',      color: AMBRE, icon: <HappyIcon   size={30} color="rgba(232,150,42,0.95)" /> },
+  { val: 5, label: 'Super',     color: AMBRE, icon: <HappyIcon   size={30} color="rgba(242,182,78,0.95)" /> },
 ]
 
 export default function MorningCheckin({ profil, onDone, onSkip }) {
@@ -298,7 +299,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               {!intention && (
                 <button onClick={handleSubmit} style={{
                   marginTop: 12, background: 'none', border: 'none',
-                  color: 'rgba(200,123,82,0.30)', fontSize: 12,
+                  color: AMBRE, fontSize: 12,
                   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
                   padding: 8,
                 }}>
@@ -335,7 +336,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
 const btnFullStyle = {
   width: '100%', padding: '16px', borderRadius: 16,
   background: 'rgba(255,235,210,0.32)',
-  color: '#FFF6E8', fontSize: 15, fontWeight: 700,
+  color: ENCRE, fontSize: 15, fontWeight: 700,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
   letterSpacing: '-0.2px', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
   border: '1px solid rgba(255,220,160,0.60)',

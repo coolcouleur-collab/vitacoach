@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { ENCRE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 const T = '#C87B52'
@@ -622,7 +623,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
                   width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
                   background: 'rgba(200,123,82,0.14)', border: '1px solid rgba(200,123,82,0.30)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 10.5, fontWeight: 700, color: T,
+                  fontSize: 10.5, fontWeight: 700, color: ENCRE,
                 }}>{i + 1}</span>
                 <span style={{ fontSize: 13, color: '#7B421C', lineHeight: 1.55 }}>{et}</span>
               </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
 import { authHeaders } from './supabase'
+import { ENCRE, ROUGE, VERT } from './palette'
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -149,7 +150,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             background: 'rgba(255,235,210,0.32)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            color: '#FFF6E8',
+            color: ENCRE,
             border: '1px solid rgba(255,235,210,0.45)',
             borderRadius: 16,
             padding: '12px 24px',
@@ -207,7 +208,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           Chaque dimanche soir, Solenn résume ta semaine : ton score, tes victoires, et UN focus pour la suivante.
         </p>
         {error && (
-          <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#ef4444', margin: 0 }}>
+          <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: ROUGE, margin: 0 }}>
             {error}
           </p>
         )}
@@ -329,7 +330,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           gap: 10,
           border: '1px solid rgba(255,220,160,0.45)',
         }}>
-          <span style={{ fontSize: 15, color: '#1f9d55', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
+          <span style={{ fontSize: 15, color: VERT, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
           <p style={{
             fontFamily: "'Poppins', sans-serif",
             fontSize: 13,
@@ -406,7 +407,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         <p style={{
           fontFamily: 'Poppins, sans-serif',
           fontSize: 12,
-          color: '#ef4444',
+          color: ROUGE,
           margin: 0,
           textAlign: 'center',
         }}>

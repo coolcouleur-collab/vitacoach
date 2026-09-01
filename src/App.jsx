@@ -57,6 +57,7 @@ const CycleTab      = lazy(() => import('./CycleTab'))
 const PaywallOffre  = lazy(() => import('./PaywallOffre'))
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
+import { AMBRE, ENCRE, ROUGE, VERT } from './palette'
 
 // ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
 async function triggerHaptic(type = 'light') {
@@ -72,7 +73,12 @@ async function triggerHaptic(type = 'light') {
 }
 
 // ─── SOLENN MASCOT FACE ──────────────────────────────────────────────────────
-function SolennFace({ size = 34 }) {
+// HomeTab lui passe isNight depuis toujours (HomeTab.jsx:2274), le composant
+// ne l'a jamais lu : la lettre restait creme quel que soit le fond. Sur clair
+// elle tombait a 1,12:1, donc invisible, et .liquid-avatar n'apporte aucun
+// fond qui aurait pu la rattraper. Sur le navy du mode Nuit, le creme est en
+// revanche le bon choix : la couleur devait suivre le theme, pas etre figee.
+function SolennFace({ size = 34, isNight = false }) {
   return (
     <div className="liquid-avatar" style={{
       width: size, height: size,
@@ -85,7 +91,7 @@ function SolennFace({ size = 34 }) {
       <span style={{
         fontSize: size * 0.44,
         fontWeight: 700,
-        color: 'rgba(255,230,190,0.92)',
+        color: isNight ? 'rgba(255,230,190,0.92)' : ENCRE,
         fontFamily: 'Poppins, sans-serif',
         lineHeight: 1,
         letterSpacing: '-0.02em',
@@ -148,15 +154,15 @@ function HealthPermModal({ onAllow, onLater }) {
           fontFamily:"'Poppins', system-ui, sans-serif",
           fontWeight:600,
           fontSize:'clamp(1.4rem, 2vw, 1.7rem)',
-          color:'rgba(255,248,235,1)',
+          color: ENCRE,
           textAlign:'center', marginBottom:8, letterSpacing:'-0.01em',
         }}>
           Synchroniser mes données santé
         </div>
-        <div style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.62)', textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
+        <div style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: ENCRE, textAlign:'center', lineHeight:1.75, marginBottom:22 }}>
           Solenn synchronise automatiquement depuis{' '}
-          <strong style={{ color:'rgba(255,248,235,0.90)' }}>Apple Santé</strong> ou{' '}
-          <strong style={{ color:'rgba(255,248,235,0.90)' }}>Google Fit</strong>.
+          <strong style={{ color: ENCRE }}>Apple Santé</strong> ou{' '}
+          <strong style={{ color: ENCRE }}>Google Fit</strong>.
         </div>
 
         {[
@@ -173,8 +179,8 @@ function HealthPermModal({ onAllow, onLater }) {
             <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
               <Icon size={18} color="rgba(255,238,220,0.85)" />
             </span>
-            <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:500, flex:1 }}>{label}</span>
-            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color:'rgba(255,248,235,0.90)', fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
+            <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:500, flex:1 }}>{label}</span>
+            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
           </div>
         ))}
 
@@ -183,7 +189,7 @@ function HealthPermModal({ onAllow, onLater }) {
             padding:'0.85rem 2.5rem', borderRadius:'2rem',
             border:'1px solid rgba(255,220,160,0.75)',
             background:'rgba(200,100,40,0.18)',
-            color:'rgba(255,248,235,1)',
+            color: ENCRE,
             fontFamily:"'Poppins', system-ui, sans-serif",
             fontWeight:600,
             fontSize:'clamp(1.2rem, 1.3vw, 1.4rem)',
@@ -195,7 +201,7 @@ function HealthPermModal({ onAllow, onLater }) {
             padding:'12px', borderRadius:'2rem',
             border:'1px solid rgba(255,220,160,0.45)',
             background:'rgba(255,220,160,0.08)',
-            color:'rgba(255,248,235,0.88)',
+            color: ENCRE,
             fontFamily:'Poppins, sans-serif',
             fontSize:13, fontWeight:500,
             cursor:'pointer',
@@ -254,7 +260,7 @@ function CelebrationOverlay({ score, onDone }) {
         <div style={{ marginBottom:10, lineHeight:1, display:'flex', justifyContent:'center' }}>
           {score >= 90 ? <StarIcon size={48} color="#9C5D08" /> : <SparkleIcon size={48} color="#9C5D08" />}
         </div>
-        <div style={{ fontSize:50, fontWeight:900, color:'#9C5D08', lineHeight:1, letterSpacing:'-2px' }}>
+        <div style={{ fontSize:50, fontWeight:900, color: ROUGE, lineHeight:1, letterSpacing:'-2px' }}>
           {score}<span style={{ fontSize:18, color:'rgba(255,238,220,0.55)', fontWeight:400 }}>/100</span>
         </div>
         <div style={{ fontSize:15, fontWeight:700, color:'rgba(255,238,220,0.92)', marginTop:9 }}>
@@ -1915,7 +1921,7 @@ const [messages, setMessages] = useState(() => {
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
         >
-          <span style={{ fontSize: 12, color: 'rgba(80,120,200,0.90)', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+          <span style={{ fontSize: 12, color: ENCRE, fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
             Solenn est là pour toi, prends le temps qu'il faut
           </span>
           <button onClick={() => setSosMode(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.4, marginLeft: 4 }}>✕</button>
@@ -2382,16 +2388,16 @@ padding: isMobile
                       background:'rgba(255,238,228,0.07)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <span style={{ fontSize:16, fontWeight:600, color:'rgba(255,238,228,0.88)', fontFamily:F }}>
+                      <span style={{ fontSize:16, fontWeight:600, color: ENCRE, fontFamily:F }}>
                         {(profil.nom || profil.prenom || '').charAt(0).toUpperCase()}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize:18, fontWeight:600, color:'rgba(255,238,228,0.92)', fontFamily:F, letterSpacing:'0.01em' }}>
+                    <div style={{ fontSize:18, fontWeight:600, color: ENCRE, fontFamily:F, letterSpacing:'0.01em' }}>
                       {profil.nom ? profil.nom.charAt(0).toUpperCase() + profil.nom.slice(1).toLowerCase() : ''}
                     </div>
-                    <div style={{ fontSize:11.5, fontWeight:600, color:'rgba(255,238,228,0.85)', marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
+                    <div style={{ fontSize:11.5, fontWeight:600, color: ENCRE, marginTop:2, fontFamily:F }}>Niveau {level} · {xp} XP</div>
                   </div>
                 </div>
                 {/* Nav links */}
@@ -2416,7 +2422,7 @@ padding: isMobile
                       display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                       border:'none', background:'transparent', cursor:'pointer',
                       fontFamily:F, width:'100%', textAlign:'left',
-                      color:'rgba(255,238,228,0.84)', fontWeight:400, fontSize:14,
+                      color: ENCRE, fontWeight:400, fontSize:14,
                     }}>
                       <StarIcon size={18} color="rgba(255,238,228,0.82)" /> Passer à Pro
                     </button>
@@ -2425,7 +2431,7 @@ padding: isMobile
                     display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:14,
                     border:'none', background:'transparent', cursor:'pointer',
                     fontFamily:F, width:'100%', textAlign:'left',
-                    color:'rgba(255,238,228,0.70)', fontWeight:400, fontSize:14,
+                    color: ENCRE, fontWeight:400, fontSize:14,
                   }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,238,228,0.55)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     Paramètres
@@ -3054,7 +3060,7 @@ function NutritionCard({ nutrition }) {
     <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
       <div style={sr.cardHeader}>
         <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#22c55e" /></span>
-        <span style={{ ...sr.cardTitre, color:'rgba(34,197,94,0.95)', fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
+        <span style={{ ...sr.cardTitre, color: VERT, fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
@@ -3065,7 +3071,7 @@ function NutritionCard({ nutrition }) {
         </div>
       ))}
       {nutrition.supplements?.length > 0 && (
-        <div style={{ fontSize:12, color:'#22c55e', background:'rgba(34,197,94,0.08)', borderRadius:12, padding:'6px 12px', marginTop:8, border:'1px solid rgba(34,197,94,0.2)' }}>
+        <div style={{ fontSize:12, color: VERT, background:'rgba(34,197,94,0.08)', borderRadius:12, padding:'6px 12px', marginTop:8, border:'1px solid rgba(34,197,94,0.2)' }}>
           <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#22c55e" />{nutrition.supplements.join(' · ')}</span>
         </div>
       )}
@@ -3561,7 +3567,7 @@ function TenuesModule({ profil }) {
             }
           </button>
         </div>
-        {villeError && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Entre ta ville pour continuer</div>}
+        {villeError && <div style={{ fontSize: 12, color: ROUGE, marginTop: 4 }}>Entre ta ville pour continuer</div>}
 
         {/* Erreur API */}
         {apiError && (
@@ -3571,7 +3577,7 @@ function TenuesModule({ profil }) {
               <line x1="12" y1="9" x2="12" y2="13"/>
               <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
-            <span style={{ fontSize: 12, color: 'rgba(255,180,160,0.92)', fontFamily: F, fontWeight: 500, lineHeight: 1.4 }}>{apiError}</span>
+            <span style={{ fontSize: 12, color: ENCRE, fontFamily: F, fontWeight: 500, lineHeight: 1.4 }}>{apiError}</span>
           </div>
         )}
 
@@ -3592,8 +3598,8 @@ function TenuesModule({ profil }) {
                 <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
               </svg>
             </div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,248,235,0.82)', marginBottom: 6 }}>Tenues adaptées à ta météo</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,248,235,0.50)' }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: ENCRE, marginBottom: 6 }}>Tenues adaptées à ta météo</div>
+            <div style={{ fontSize: 12, color: ENCRE }}>Entre ta ville pour recevoir des suggestions personnalisées</div>
           </div>
         )}
       </div>
@@ -3773,7 +3779,7 @@ const s = {
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  mobileTitle: { fontSize:14, fontWeight:700, color:'#DA8A34', letterSpacing:'0.01em', flex:1, textAlign:'center', opacity:0.92 },
+  mobileTitle: { fontSize:14, fontWeight:700, color: AMBRE, letterSpacing:'0.01em', flex:1, textAlign:'center', opacity:0.92 },
   scorePill: { borderRadius:20, padding:'4px 10px', fontSize:11, fontWeight:700 },
 
   // ── Page header ───────────────────────────────────────────────────────────────
@@ -3808,7 +3814,7 @@ const s = {
   suggestionBig: {
     background:'rgba(255,248,242,0.96)',
     border:'1px solid rgba(200,123,82,0.20)', borderRadius:16,
-    padding:'13px 18px', fontSize:13, color:'rgba(185,112,25,0.86)', cursor:'pointer',
+    padding:'13px 18px', fontSize:13, color: ENCRE, cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
     boxShadow:'0 2px 12px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
     transition:'transform .18s, box-shadow .18s',
@@ -3837,17 +3843,17 @@ const s = {
     boxShadow:'0 4px 20px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.25)',
   },
   botBubbleRich: {
-    background:'transparent', color:'rgba(183,108,24,0.84)',
+    background:'transparent', color: ROUGE,
     padding:'4px 0', borderRadius:0, maxWidth:'90%', fontSize:14, lineHeight:1.65, fontWeight:400,
     fontFamily:'Poppins, sans-serif',
   },
-  botAvatar: { fontSize:16, color:'#DA8A34', marginTop:10, flexShrink:0, fontWeight:900 },
+  botAvatar: { fontSize:16, color: AMBRE, marginTop:10, flexShrink:0, fontWeight:900 },
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
     background:'rgba(255,248,242,0.92)',
     border:'1px solid rgba(200,123,82,0.22)', borderRadius:20,
-    padding:'7px 14px', fontSize:12, color:'rgba(185,112,25,0.88)', cursor:'pointer',
+    padding:'7px 14px', fontSize:12, color: ENCRE, cursor:'pointer',
     fontFamily:F, fontWeight:300,
   },
 
@@ -3878,7 +3884,7 @@ const s = {
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
     fontFamily:F, color:'#7B421C', position:'relative', transition:'color .2s',
   },
-  navBotActive: { color:'#DA8A34' },
+  navBotActive: { color: AMBRE },
 }
 
 // Composant isolé : l'état `input` reste ici et ne remonte jamais dans App

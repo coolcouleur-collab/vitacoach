@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
+import { ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
@@ -448,7 +449,7 @@ export default function ChatHistory({
                 <div style={{
                   fontFamily: C.font,
                   fontSize: 13,
-                  color: '#ef4444',
+                  color: ROUGE,
                   fontWeight: 500,
                 }}>
                   {error}

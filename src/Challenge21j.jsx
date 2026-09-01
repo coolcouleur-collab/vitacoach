@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
 import { matchExercice, PHOTOS_EXOS } from './ExercicesGuide'
+import { ENCRE, ROUGE, VERT } from './palette'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
@@ -68,7 +69,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
         <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>{info.nom}</div>
         <div style={{ fontSize: 11.5, color: '#7B421C' }}>{item.reps}</div>
       </div>
-      <span style={{ fontSize: 10.5, fontWeight: 600, color: '#B2663E', background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: ROUGE, background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
         Voir le geste
       </span>
       {onToggle && (
@@ -434,7 +435,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           {error && (
             <p
               style={{
-                color: '#ef4444',
+                color: ROUGE,
                 fontSize: '13px',
                 marginBottom: '16px',
                 background: 'rgba(239,68,68,0.08)',
@@ -456,7 +457,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 ? 'rgba(200,123,82,0.4)'
                 : 'rgba(255,235,210,0.32)',
               backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-              color: '#B2663E',
+              color: ROUGE,
               border: '1px solid rgba(255,220,160,0.38)',
               borderRadius: '16px',
               padding: '14px 32px',
@@ -489,7 +490,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           fontFamily: "'Poppins', sans-serif",
         }}>
           <TargetIcon size={15} color="#9C5B33" />
-          <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.4 }}>
+          <div style={{ fontSize: 12.5, color: ENCRE, lineHeight: 1.4 }}>
             {(objectifProgramme || objectifActuel)
               ? <><span style={{ fontWeight: 700 }}>Ton cap :</span> {objectifProgramme || objectifActuel}</>
               : <>Aucun objectif dans ton profil : définis-le dans Réglages, ton programme suivra ce cap.</>}
@@ -503,7 +504,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           border: '1px solid rgba(232,150,42,0.35)', borderRadius: 16,
           padding: '13px 15px', marginBottom: 14, fontFamily: "'Poppins', sans-serif",
         }}>
-          <div style={{ fontSize: 12.5, color: 'rgba(150,85,50,0.92)', lineHeight: 1.5, fontWeight: 500 }}>
+          <div style={{ fontSize: 12.5, color: ENCRE, lineHeight: 1.5, fontWeight: 500 }}>
             Ton objectif est maintenant « {objectifActuel} », mais ce programme
             visait « {objectifProgramme} ».
           </div>
@@ -512,7 +513,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             style={{
               marginTop: 9, padding: '9px 16px', borderRadius: 12, cursor: 'pointer',
               background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.55)',
-              color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+              color: ROUGE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
             Régénérer pour mon nouvel objectif
           </button>
@@ -524,7 +525,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           borderRadius: 16, padding: '14px 16px', marginBottom: 14,
           fontFamily: "'Poppins', sans-serif",
         }}>
-          <div style={{ fontSize: 13, color: 'rgba(150,85,50,0.92)', fontWeight: 600, lineHeight: 1.5 }}>
+          <div style={{ fontSize: 13, color: ENCRE, fontWeight: 600, lineHeight: 1.5 }}>
             {joursManques} jours ont sauté, ça arrive.
           </div>
           <div style={{ fontSize: 12, color: '#7B421C', lineHeight: 1.5, marginTop: 3 }}>
@@ -534,14 +535,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
             <button onClick={reprendreOuOnEnEtait} style={{
               flex: 1, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
               background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
-              color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+              color: ROUGE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
               Reprendre au jour {progression.lastIndexOf(true) + 2}
             </button>
             <button onClick={ignorerReprise} style={{
               flex: 0.8, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
               background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
-              color: 'rgba(160,100,60,0.80)', fontSize: 12, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
+              color: ENCRE, fontSize: 12, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
             }}>
               Continuer au jour {jourActuel}
             </button>
@@ -575,7 +576,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
                 <StarIcon size={30} color="#9C5D08" />
               </div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: 'rgba(150,85,50,0.95)', marginBottom: 6 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: ENCRE, marginBottom: 6 }}>
                 {numCycle > 1 ? `Cycle ${numCycle} terminé` : 'Programme terminé'}
               </div>
               <div style={{ fontSize: 13, color: '#7B421C', lineHeight: 1.55, marginBottom: 16 }}>
@@ -591,7 +592,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   background: 'rgba(255,235,210,0.45)',
                   backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,220,160,0.60)',
-                  color: '#B2663E', fontSize: 14.5, fontWeight: 800,
+                  color: ROUGE, fontSize: 14.5, fontWeight: 800,
                   fontFamily: "'Poppins', sans-serif",
                   boxShadow: '0 4px 20px rgba(200,123,82,0.30)',
                 }}>
@@ -726,7 +727,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
                   border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99,
                   padding: '7px 14px', cursor: 'pointer',
-                  fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: '#B2663E',
+                  fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: ROUGE,
                 }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#B2663E"><polygon points="6 3 20 12 6 21"/></svg>
                   Voir le geste
@@ -738,7 +739,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   style={{
                     display: 'inline-block',
                     background: 'rgba(232,150,42,0.12)',
-                    color: '#9C5D08',
+                    color: ROUGE,
                     borderRadius: '12px',
                     padding: '4px 12px',
                     fontSize: '12px',
@@ -757,7 +758,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     // corps etait la cause premiere de l'illisibilite.
                     fontFamily: "'Poppins', sans-serif",
                     fontSize: '13px',
-                    color: 'rgba(150,85,50,0.88)',
+                    color: ENCRE,
                     marginBottom: '20px',
                     lineHeight: 1.6,
                   }}
@@ -797,7 +798,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               {error && (
                 <p
                   style={{
-                    color: '#ef4444',
+                    color: ROUGE,
                     fontSize: '12px',
                     marginBottom: '12px',
                     background: 'rgba(239,68,68,0.08)',
@@ -814,7 +815,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   disabled
                   style={{
                     background: 'rgba(34,197,94,0.12)',
-                    color: '#1f9d55',
+                    color: VERT,
                     border: '1.5px solid rgba(34,197,94,0.3)',
                     borderRadius: '16px',
                     padding: '12px 24px',
@@ -837,7 +838,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   style={{
                     background: 'rgba(255,235,210,0.32)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                    color: '#B2663E',
+                    color: ROUGE,
                     border: '1px solid rgba(255,220,160,0.38)',
                     borderRadius: '16px',
                     padding: '12px 24px',
@@ -877,7 +878,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               }}>
               <StarIcon size={24} color="#9C5D08" />
               <div style={{ fontFamily: "'Poppins', sans-serif" }}>
-                <div style={{ fontSize: 14.5, fontWeight: 800, color: 'rgba(150,85,50,0.95)' }}>
+                <div style={{ fontSize: 14.5, fontWeight: 800, color: ENCRE }}>
                   Objectif du jour terminé, bravo !
                 </div>
                 <div style={{ fontSize: 11.5, color: '#7B421C', marginTop: 1 }}>
@@ -937,7 +938,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               <div
                 style={{
                   background: 'rgba(232,150,42,0.12)',
-                  color: '#9C5D08',
+                  color: ROUGE,
                   borderRadius: '12px',
                   padding: '6px 14px',
                   fontSize: '13px',
@@ -1157,7 +1158,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
-              <p style={{ fontSize: '13px', color: 'rgba(150,85,50,0.75)', margin: 0, lineHeight: 1.55 }}>
+              <p style={{ fontSize: '13px', color: ENCRE, margin: 0, lineHeight: 1.55 }}>
                 <span style={{ fontWeight: 700, color: '#7B421C' }}>
                   Prochaine étape · Jour {prochainMilestone.jour} :
                 </span>{' '}
@@ -1208,10 +1209,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               }}
             >
               <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#9C5D08" /></div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: 'rgba(150,85,50,0.95)', textAlign: 'center', marginBottom: 8 }}>
+              <div style={{ fontSize: 16, fontWeight: 600, color: ENCRE, textAlign: 'center', marginBottom: 8 }}>
                 Vers quel objectif ?
               </div>
-              <div style={{ fontSize: 12.5, color: 'rgba(160,100,60,0.75)', textAlign: 'center', marginBottom: 16, lineHeight: 1.5 }}>
+              <div style={{ fontSize: 12.5, color: ENCRE, textAlign: 'center', marginBottom: 16, lineHeight: 1.5 }}>
                 Ton nouveau programme sera construit pour lui.
                 L'actuel sera remplacé et sa progression remise à zéro.
               </div>
@@ -1231,7 +1232,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                         border: actif ? '4.5px solid #C87B52' : '1.5px solid rgba(200,123,82,0.40)',
                         background: '#FFF6EE', boxSizing: 'border-box',
                       }} />
-                      <span style={{ fontSize: 13, fontWeight: actif ? 700 : 500, color: 'rgba(150,85,50,0.92)' }}>{o}</span>
+                      <span style={{ fontSize: 13, fontWeight: actif ? 700 : 500, color: ENCRE }}>{o}</span>
                     </button>
                   )
                 })}
@@ -1243,7 +1244,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(200,123,82,0.08)',
                     border: '1px solid rgba(200,123,82,0.25)',
-                    color: 'rgba(160,100,60,0.85)', fontSize: 14,
+                    color: ENCRE, fontSize: 14,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
                 >
@@ -1260,7 +1261,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     flex: 1, padding: '12px', borderRadius: 14,
                     background: 'rgba(255,235,210,0.32)',
                     border: '1px solid rgba(255,220,160,0.30)',
-                    color: '#B2663E', fontSize: 14, fontWeight: 600,
+                    color: ROUGE, fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif",
                     cursor: objChoisi ? 'pointer' : 'not-allowed',
                     opacity: objChoisi ? 1 : 0.45,

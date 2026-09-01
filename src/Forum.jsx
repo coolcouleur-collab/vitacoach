@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './supabase'
 import { BellIcon, ChatIcon } from './Icons'
 import './tokens.css'
+import { ENCRE, ROUGE } from './palette'
 
 // ─── Moderation ───────────────────────────────────────────────────────────────
 const BANNED_WORDS = [
@@ -48,7 +49,7 @@ function Avatar({ name, size = 34 }) {
       width: size, height: size, borderRadius: size * 0.32,
       background: 'rgba(255,235,210,0.32)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.42, fontWeight: 800, color: '#B2663E', flexShrink: 0,
+      fontSize: size * 0.42, fontWeight: 800, color: ROUGE, flexShrink: 0,
       boxShadow: '0 2px 8px rgba(200,123,82,0.32)',
     }}>
       {(name || '?').charAt(0).toUpperCase()}
@@ -199,7 +200,7 @@ function ReplyForm({ onSubmit, authors = [], initialText = '', onCancel }) {
           }}>Annuler</button>
         )}
       </div>
-      {error && <div style={{ fontSize: 'max(1.1rem,11px)', color: '#ef4444', marginTop: '.4rem' }}>{error}</div>}
+      {error && <div style={{ fontSize: 'max(1.1rem,11px)', color: ROUGE, marginTop: '.4rem' }}>{error}</div>}
     </div>
   )
 }
@@ -319,7 +320,7 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
               }}>Modifier</button>
               <button onClick={() => onDelete(postId, r.id)} style={{
                 background:'none', border:'none', cursor:'pointer', padding:'2px 6px',
-                fontSize:'max(1rem,10px)', color:'#ef4444', fontFamily:'var(--font)',
+                fontSize:'max(1rem,10px)', color: ROUGE, fontFamily:'var(--font)',
               }}>Supprimer</button>
             </div>
           )}
@@ -732,7 +733,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
       {error && (
         <div style={{
           background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.28)',
-          color: '#ef4444', borderRadius: 12, padding: '.65rem 1.2rem',
+          color: ROUGE, borderRadius: 12, padding: '.65rem 1.2rem',
           fontSize: 'max(1.1rem,11px)', marginBottom: '1rem',
         }}>
           {error}
@@ -1212,7 +1213,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
           <div style={{ fontSize: 'max(1.4rem,14px)', fontWeight: 600, color: '#7B421C', marginBottom: '.5rem' }}>
             {search ? 'Aucun résultat pour cette recherche' : 'Aucune discussion pour le moment'}
           </div>
-          <div style={{ fontSize: 'max(1.2rem,12px)', color: 'rgba(180,110,60,0.65)', lineHeight: 1.75 }}>
+          <div style={{ fontSize: 'max(1.2rem,12px)', color: ENCRE, lineHeight: 1.75 }}>
             {search ? "Essaie avec d'autres mots." : 'Lance la première, la communauté t\'attend.'}
           </div>
         </div>

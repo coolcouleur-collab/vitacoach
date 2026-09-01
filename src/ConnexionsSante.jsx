@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { isHealthKitAvailable, requestHealthKitPermissions, readTodayHealthData, readWeightHistory } from './useHealthKit'
 import { authHeaders } from './supabase'
+import { ROUGE, VERT } from './palette'
 
 const HK_KEY = 'vitacoach_healthkit_connected'
 
@@ -192,7 +193,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               style={{
                 flex: 1, padding: '10px 16px',
                 background: 'rgba(255,235,210,0.32)',
-                border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12, color: '#B2663E',
+                border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12, color: ROUGE,
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
               }}
@@ -333,7 +334,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
             flex: 1, padding: '11px',
             background: 'rgba(255,235,210,0.32)',
             border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12,
-            color: '#B2663E', fontSize: 13, fontWeight: 600,
+            color: ROUGE, fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',
           }}>
             {loading ? 'Vérification…' : 'Connecter'}
@@ -540,10 +541,10 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#22c55e', lineHeight: 1.3 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: VERT, lineHeight: 1.3 }}>
                 Withings connecté !
               </div>
-              <div style={{ fontSize: 12, color: '#22c55e', marginTop: 2, opacity: 0.85 }}>
+              <div style={{ fontSize: 12, color: VERT, marginTop: 2, opacity: 0.85 }}>
                 {syncing ? 'Synchronisation en cours…' : 'Synchronisation lancée, données disponibles dans quelques secondes.'}
               </div>
             </div>
@@ -551,7 +552,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               onClick={() => setOauthBanner(null)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 18, color: '#22c55e', opacity: 0.6, padding: '0 4px',
+                fontSize: 18, color: VERT, opacity: 0.6, padding: '0 4px',
                 flexShrink: 0,
               }}
               aria-label="Fermer"
@@ -585,10 +586,10 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               <path d="M8 8l8 8M16 8l-8 8" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
             </svg>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#ef4444', lineHeight: 1.3 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: ROUGE, lineHeight: 1.3 }}>
                 Erreur de connexion Withings
               </div>
-              <div style={{ fontSize: 12, color: '#ef4444', marginTop: 2, opacity: 0.85 }}>
+              <div style={{ fontSize: 12, color: ROUGE, marginTop: 2, opacity: 0.85 }}>
                 Réessaye depuis le bouton ci-dessous, ou vérifie ton compte Withings.
               </div>
             </div>
@@ -596,7 +597,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
               onClick={() => setOauthBanner(null)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 18, color: '#ef4444', opacity: 0.6, padding: '0 4px',
+                fontSize: 18, color: ROUGE, opacity: 0.6, padding: '0 4px',
                 flexShrink: 0,
               }}
               aria-label="Fermer"

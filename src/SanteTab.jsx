@@ -5,6 +5,7 @@ import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
 import { authHeaders } from './supabase'
+import { ENCRE, ROUGE } from './palette'
 
 // hex → rgba helper
 function h2r(hex, a) {
@@ -690,7 +691,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div style={{ fontSize: 18, fontWeight: 900, color: '#7B421C', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.75)', textAlign: 'center', marginBottom: 22 }}>
+            <div style={{ fontSize: 12, color: ENCRE, textAlign: 'center', marginBottom: 22 }}>
               {editMetric.hint}
             </div>
 
@@ -713,7 +714,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                     </button>
                   ))}
                 </div>
-                <div style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,238,220,0.75)', marginBottom: 22 }}>
+                <div style={{ textAlign: 'center', fontSize: 13, color: ENCRE, marginBottom: 22 }}>
                   {tempVal ? `Humeur ${tempVal}/5` : 'Sélectionne ton humeur'}
                 </div>
               </div>
@@ -762,7 +763,7 @@ const ss = {
   btnInsights: {
     width: 'auto',
     background: 'rgba(255,235,210,0.32)',
-    color: '#B2663E',
+    color: ROUGE,
     border: '1px solid rgba(255,220,160,0.28)',
     padding: '11px 34px',
     borderRadius: 100,
@@ -788,7 +789,7 @@ const ss = {
   btnWater: {
     background: 'rgba(255,235,210,0.32)',
     border: '1px solid rgba(255,220,160,0.28)',
-    color: '#B2663E', borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
+    color: ROUGE, borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
     boxShadow: 'none',
     transition: 'transform 0.15s ease',
@@ -838,7 +839,7 @@ const ss = {
     width: '100%', padding: '18px',
     borderRadius: 20,
     border: '1.5px solid rgba(255,220,160,0.28)', background: 'rgba(255,235,210,0.10)',
-    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: 'rgba(255,238,220,0.92)',
+    fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: ENCRE,
     boxSizing: 'border-box', textAlign: 'center', marginBottom: 22, fontWeight: 800,
     boxShadow: 'none'
   },

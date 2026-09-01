@@ -1,3 +1,4 @@
+import { AMBRE, ENCRE, ROUGE } from './palette'
 // Page Politique de confidentialité, requise par App Store & Google Play
 // URL : meet-solenn.com/confidentialite
 const S = {
@@ -16,12 +17,12 @@ const S = {
   },
   h1: {
     fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic',
-    fontSize: 34, fontWeight: 500, color: 'rgba(140,75,30,0.95)', marginBottom: 6,
+    fontSize: 34, fontWeight: 500, color: ENCRE, marginBottom: 6,
   },
-  date: { fontSize: 12, color: 'rgba(200,123,82,0.75)', marginBottom: 28 },
-  h2: { fontSize: 17, fontWeight: 700, color: 'rgba(140,75,30,0.92)', margin: '26px 0 8px' },
-  p: { fontSize: 14, color: 'rgba(120,65,25,0.85)', lineHeight: 1.75, margin: '0 0 10px' },
-  li: { fontSize: 14, color: 'rgba(120,65,25,0.85)', lineHeight: 1.75, marginBottom: 4 },
+  date: { fontSize: 12, color: AMBRE, marginBottom: 28 },
+  h2: { fontSize: 17, fontWeight: 700, color: ENCRE, margin: '26px 0 8px' },
+  p: { fontSize: 14, color: ENCRE, lineHeight: 1.75, margin: '0 0 10px' },
+  li: { fontSize: 14, color: ENCRE, lineHeight: 1.75, marginBottom: 4 },
 }
 
 export default function Confidentialite() {
@@ -79,7 +80,7 @@ export default function Confidentialite() {
           toi-même à tout moment, directement dans l'application : Paramètres, puis Mes
           données, puis Supprimer mon compte. La suppression est immédiate et définitive, et
           un abonnement en cours est résilié au même moment. Le détail de ce qui est effacé
-          figure sur la page <a href="/suppression-compte" style={{ color: 'rgba(180,95,40,0.95)', fontWeight: 600 }}>Supprimer mon compte</a>.
+          figure sur la page <a href="/suppression-compte" style={{ color: ROUGE, fontWeight: 600 }}>Supprimer mon compte</a>.
         </p>
         <p style={S.p}>
           Si tu n'as plus accès à l'application, écris-nous : la suppression intervient sous 30
@@ -96,7 +97,7 @@ export default function Confidentialite() {
         <h2 style={S.h2}>7. Contact</h2>
         <p style={S.p}>
           Pour toute question ou demande concernant tes données :{' '}
-          <a href="mailto:coolcouleur@gmail.com" style={{ color: '#C87B52', fontWeight: 600 }}>
+          <a href="mailto:coolcouleur@gmail.com" style={{ color: AMBRE, fontWeight: 600 }}>
             coolcouleur@gmail.com
           </a>
         </p>

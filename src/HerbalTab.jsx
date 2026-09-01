@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 // ─── PALETTE (clair, fond de page abricot) ──────────────────────────────────
 const GLASS_BG     = 'rgba(255,248,242,0.75)'
 const GLASS_BORDER = '1px solid rgba(200,123,82,0.18)'
-const TXT_MAIN     = 'rgba(200,123,82,0.90)'
-const TXT_SOFT     = 'rgba(200,123,82,0.70)'
-const ACCENT       = '#E8962A'
+const TXT_MAIN     = ENCRE   // etait rgba(200,123,82,0.90) : 2,18:1 sur 11 textes
+const TXT_SOFT     = ENCRE   // etait 1,81:1. Meme encre, la hierarchie passe par la graisse
+const ACCENT       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
 // Le vert ne subsiste QUE sur le badge « Étudié », ou il signifie validé.
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
 const GREEN        = '#C87B52'
@@ -45,9 +46,9 @@ const LABEL_CAT = {
 const CATS = [
   { id:'sommeil',   label:'Sommeil',   color:'#7B421C' },
   { id:'stress',    label:'Stress',    color:'#7B421C' },
-  { id:'énergie',   label:'Énergie',   color:'#9C5D08' },
+  { id:'énergie',   label:'Énergie',   color: ROUGE },
   { id:'digestion', label:'Digestion', color:'#7B421C' },
-  { id:'immunité',  label:'Immunité',  color:'#9C5D08' },
+  { id:'immunité',  label:'Immunité',  color: ROUGE },
   { id:'cheveux',   label:'Cheveux',   color:'#7B421C' },
   { id:'peau',      label:'Peau',      color:'#7B421C' },
 ]
@@ -64,29 +65,29 @@ const CATS = [
 // `besoins` accepte plusieurs entrées : le gingembre sert la digestion ET
 // l'immunité, l'ortie l'immunité ET les cheveux.
 const FICHES = [
-    { nom:'Valériane', contre:'Sédatifs, anxiolytiques, alcool, grossesse. Ne pas conduire après la prise.', preuve:'Étudié', besoins:['sommeil'],     tag:'Plante',         color:'#9C5D08', benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
-    { nom:'Camomille', contre:'Allergie aux astéracées (marguerite, arnica). Prudence sous anticoagulant.', preuve:'Étudié', besoins:['sommeil'],       tag:'Tisane',   color:'#9C5D08', benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
-    { nom:'Rooibos', contre:'Aucune contre-indication connue. Prudence en cas de traitement hormonal.', preuve:'Usage traditionnel', besoins:['sommeil'],         tag:'Tisane', color:'#9C5D08', benefice:'Zéro caféine, riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
+    { nom:'Valériane', contre:'Sédatifs, anxiolytiques, alcool, grossesse. Ne pas conduire après la prise.', preuve:'Étudié', besoins:['sommeil'],     tag:'Plante',         color: ROUGE, benefice:'Facilite l\'endormissement sans accoutumance', usage:'300–600 mg, 1h avant le coucher', detail:'Augmente le GABA naturellement, favorisant un sommeil profond. Idéale en cure de 4 semaines. Pas d\'effet le lendemain matin.' },
+    { nom:'Camomille', contre:'Allergie aux astéracées (marguerite, arnica). Prudence sous anticoagulant.', preuve:'Étudié', besoins:['sommeil'],       tag:'Tisane',   color: ROUGE, benefice:'Calme l\'anxiété et prépare au sommeil en douceur', usage:'1 tasse le soir, 8–10 min d\'infusion', detail:'L\'apigénine se lie aux récepteurs GABA (comme les anxiolytiques). Réduit l\'inflammation intestinale et soulage les coliques.' },
+    { nom:'Rooibos', contre:'Aucune contre-indication connue. Prudence en cas de traitement hormonal.', preuve:'Usage traditionnel', besoins:['sommeil'],         tag:'Tisane', color: ROUGE, benefice:'Zéro caféine, riche en antioxydants uniques', usage:'Sans restriction, toute la journée', detail:'Contient de l\'aspalathin (molécule unique), anti-diabétique et anti-inflammatoire. Idéal le soir, naturellement sucré et doux.' },
     { nom:'Tilleul', contre:'Aucune contre-indication majeure. Avis médical en cas de trouble cardiaque.', preuve:'Usage traditionnel', besoins:['sommeil', 'stress'],         tag:'Tisane',      color:'#7B421C', benefice:'Relâche les tensions nerveuses et musculaires', usage:'1–2 tasses en fin d\'après-midi', detail:'Flavonoïdes sédatifs légers utilisés depuis le Moyen-Âge. Efficace contre les maux de tête de tension, l\'anxiété et l\'hypertension légère.' },
-    { nom:'Earthing', contre:'Aucune. Prudence pieds nus en cas de diabète avec neuropathie.', preuve:'Usage traditionnel', besoins:['sommeil'],            tag:'Pratique',   color:'#9C5D08', benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
+    { nom:'Earthing', contre:'Aucune. Prudence pieds nus en cas de diabète avec neuropathie.', preuve:'Usage traditionnel', besoins:['sommeil'],            tag:'Pratique',   color: ROUGE, benefice:'Neutralise les radicaux libres via les électrons du sol', usage:'20 min pieds nus sur sol naturel/herbe', detail:'Les électrons libres de la terre neutralisent les radicaux libres inflammatoires. Améliore le sommeil, réduit la douleur et régule les rythmes circadiens.' },
     { nom:'Luminothérapie', contre:'Maladie de la rétine, trouble bipolaire, traitement photosensibilisant. Avis médical avant de commencer.', preuve:'Étudié', besoins:['sommeil', 'énergie'],      tag:'Pratique', color:'#7B421C', benefice:'Régule la mélatonine et traite la dépression saisonnière', usage:'10 000 lux, 20–30 min le matin au réveil', detail:'Efficacité comparable aux antidépresseurs pour le TAS (trouble affectif saisonnier). Synchronise l\'horloge interne et améliore l\'énergie matinale.' },
     { nom:'Ashwagandha', contre:'Grossesse, allaitement, troubles thyroïdiens. Interagit avec les immunosuppresseurs et les sédatifs.', preuve:'Étudié', besoins:['stress'],   tag:'Plante',      color:'#7B421C', benefice:'Réduit le cortisol et améliore la résistance au stress', usage:'250–500 mg/jour le matin', detail:'Plante ayurvédique connue comme "ginseng indien". Améliore l\'endurance mentale et physique, réduit l\'anxiété et régule le cycle veille-sommeil.' },
     { nom:'Qi Gong', contre:'Aucune. À adapter en cas de trouble de l\'équilibre ou de douleur aiguë.', preuve:'Usage traditionnel', besoins:['énergie', 'stress'],         tag:'Méd. chinoise',    color:'#7B421C', benefice:'Harmonise corps, souffle et esprit par le mouvement', usage:'20 min le matin à jeun, quotidiennement', detail:'+800 études scientifiques. Réduit la tension artérielle, renforce l\'immunité et améliore l\'équilibre mental. Idéal pour tous les âges.' },
-    { nom:'Cohérence cardiaque', contre:'Aucune.', preuve:'Étudié', besoins:['stress'], tag:'Pratique', color:'#ef4444', benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
+    { nom:'Cohérence cardiaque', contre:'Aucune.', preuve:'Étudié', besoins:['stress'], tag:'Pratique', color: ROUGE, benefice:'Régule le stress en 5 minutes, cortisol −20%', usage:'5-5 : 5 inspirations/min, 3× par jour', detail:'L\'IHM Institute : la cohérence cardiaque augmente la sérotonine et la DHEA. Application gratuite recommandée : RespiRelax+. Posture debout pour maximiser.' },
     { nom:'Bain de forêt', contre:'Allergies aux pollens en saison.', preuve:'Étudié', besoins:['stress'],       tag:'Pratique', color:'#7B421C', benefice:'Phytoncides des arbres : cortisol −15%, NK +50%', usage:'2h minimum en forêt sans téléphone', detail:'Les cellules NK (anti-cancer) augmentent pendant 30 jours après 3h en forêt. Les phytoncides (composés volatils des arbres) traversent les poumons.' },
     { nom:'Méditation MBSR', contre:'Prudence en cas de trouble psychiatrique aigu ou de traumatisme non accompagné : à faire encadrer.', preuve:'Étudié', besoins:['stress'],     tag:'Pratique', color:'#7B421C', benefice:'Recâble le cerveau en 8 semaines, Harvard prouvé', usage:'10–20 min/jour, app ou guidance', detail:'L\'étude Harvard : augmentation de la matière grise après 8 semaines. L\'amygdale (siège de la peur) réduit de façon mesurable. MBSR = Mindfulness-Based Stress Reduction.' },
     { nom:'Rhodiola Rosea', contre:'Trouble bipolaire, grossesse, allaitement. Interagit avec les antidépresseurs.', preuve:'Étudié', besoins:['énergie'],tag:'Plante',         color:'#7B421C', benefice:'Combat la fatigue physique et améliore la concentration', usage:'200–400 mg le matin, à jeun', detail:'Plante des montagnes arctiques utilisée par les cosmonautes soviétiques. Réduit le stress oxydatif et améliore les fonctions cognitives sous pression.' },
     { nom:'Ginkgo Biloba', contre:'Anticoagulants et antiagrégants, épilepsie. À suspendre avant une chirurgie.', preuve:'Étudié', besoins:['énergie'], tag:'Plante',         color:'#7B421C', benefice:'Améliore la circulation cérébrale et la mémoire', usage:'120–240 mg/jour avec un repas', detail:'Un des suppléments les plus étudiés au monde. Augmente le flux sanguin vers le cerveau et protège les neurones du stress oxydatif.' },
     { nom:'Acupuncture', contre:'Troubles de la coagulation, anticoagulants, grossesse (certains points sont proscrits). Uniquement chez un praticien diplômé.', preuve:'Étudié', besoins:['énergie'],     tag:'Méd. chinoise',  color:'#7B421C', benefice:'Rééquilibre le Qi et soulage les douleurs chroniques', usage:'45–60 min, 1 séance/semaine', detail:'Stimulation de points précis sur les méridiens. Prouvée efficace pour : douleur chronique, insomnie, anxiété, fertilité et migraines.' },
-    { nom:'Ginseng Panax', contre:'Hypertension, insomnie, grossesse. Interagit avec les anticoagulants et les traitements du diabète.', preuve:'Étudié', besoins:['énergie'],   tag:'Méd. chinoise',   color:'#9C5D08', benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
-    { nom:'Moxibustion', contre:'Grossesse, diabète avec perte de sensibilité, asthme (la fumée est irritante). Risque de brûlure.', preuve:'Usage traditionnel', besoins:['énergie'],     tag:'Méd. chinoise',    color:'#ef4444', benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
+    { nom:'Ginseng Panax', contre:'Hypertension, insomnie, grossesse. Interagit avec les anticoagulants et les traitements du diabète.', preuve:'Étudié', besoins:['énergie'],   tag:'Méd. chinoise',   color: ROUGE, benefice:'Tonique général qui améliore énergie et libido', usage:'200–400 mg/jour le matin', detail:'Les ginsénosides Rg1 et Rb1 améliorent les performances cognitives et physiques. Le ginseng rouge coréen est le plus concentré et le plus étudié.' },
+    { nom:'Moxibustion', contre:'Grossesse, diabète avec perte de sensibilité, asthme (la fumée est irritante). Risque de brûlure.', preuve:'Usage traditionnel', besoins:['énergie'],     tag:'Méd. chinoise',    color: ROUGE, benefice:'Stimule les méridiens par la chaleur pour soulager', usage:'Avec un praticien qualifié', detail:'Combustion de l\'armoise près de points d\'acupuncture. Idéale pour : arthrite, douleurs menstruelles, digestion lente et fatigue chronique profonde.' },
     { nom:'Thérapie par le froid', contre:'Trouble cardiaque, hypertension non contrôlée, syndrome de Raynaud, grossesse. Jamais seul dans l\'eau froide.', preuve:'Étudié', besoins:['énergie'],tag:'Pratique',   color:'#7B421C', benefice:'Dopamine +250%, inflammation réduite, volonté renforcée', usage:'Douche froide 30s → 3 min progressivement', detail:'La noradrénaline monte de 300% (Wim Hof Institute). Réduit l\'inflammation chronique, améliore la récupération musculaire et renforce la résilience mentale.' },
-    { nom:'Curcuma', contre:'Anticoagulants, calculs biliaires, ulcère. À forte dose, déconseillé pendant la grossesse.', preuve:'Étudié', besoins:['digestion'],       tag:'Plante', color:'#9C5D08', benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
+    { nom:'Curcuma', contre:'Anticoagulants, calculs biliaires, ulcère. À forte dose, déconseillé pendant la grossesse.', preuve:'Étudié', besoins:['digestion'],       tag:'Plante', color: ROUGE, benefice:'Neutralise l\'inflammation chronique et protège le foie', usage:'1 c.à.c + poivre noir + huile, matin', detail:'La curcumine est 1000× plus biodisponible avec de la pipérine (poivre noir). Puissant antioxydant, soutient les articulations et la digestion.' },
     { nom:'Gingembre', contre:'Anticoagulants, calculs biliaires. À suspendre deux semaines avant une chirurgie.', preuve:'Étudié', besoins:['digestion', 'immunité'],     tag:'Plante',        color:'#7B421C', benefice:'Stimule la digestion et booste l\'immunité naturellement', usage:'Frais ou tisane, 2–3 g/jour', detail:'Anti-nausée cliniquement prouvé. Réduit les douleurs musculaires post-entraînement et stimule la thermogenèse (brûle les graisses).' },
     { nom:'Chardon-marie', contre:'Allergie aux astéracées. Modifie l\'élimination de nombreux médicaments : avis médical indispensable si tu suis un traitement.', preuve:'Étudié', besoins:['digestion'], tag:'Plante',            color:'#7B421C', benefice:'Régénère et détoxifie les cellules hépatiques', usage:'140 mg de silymarine, 3× par jour', detail:'La silymarine bloque les toxines et stimule la régénération cellulaire hépatique. Incontournable après antibiotiques, alcool ou médicaments.' },
     { nom:'Menthe poivrée', contre:'Reflux gastro-œsophagien, hernie hiatale, calculs biliaires. Pas avant 8 ans.', preuve:'Étudié', besoins:['digestion'],  tag:'Tisane',   color:'#7B421C', benefice:'Soulage les ballonnements et les douleurs intestinales', usage:'Après les repas, 2 tasses/jour max', detail:'Le menthol relâche la musculature lisse digestive. Cliniquement efficace contre le SII. Éviter en cas de reflux gastro-œsophagien.' },
-    { nom:'Ortie', contre:'Anticoagulants, diurétiques, insuffisance rénale ou cardiaque, grossesse.', preuve:'Usage traditionnel', besoins:['immunité', 'cheveux'],         tag:'Plante',        color:'#9C5D08', benefice:'Reminéralise l\'organisme et combat la fatigue de fond', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, silice et vitamines K et C. Excellent dépuratif. Aide contre l\'anémie, les douleurs articulaires et la chute de cheveux.' },
-    { nom:'Hibiscus', contre:'Hypotension, traitement antihypertenseur, grossesse et allaitement.', preuve:'Étudié', besoins:['immunité'],        tag:'Tisane',      color:'#ef4444', benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
+    { nom:'Ortie', contre:'Anticoagulants, diurétiques, insuffisance rénale ou cardiaque, grossesse.', preuve:'Usage traditionnel', besoins:['immunité', 'cheveux'],         tag:'Plante',        color: ROUGE, benefice:'Reminéralise l\'organisme et combat la fatigue de fond', usage:'Tisane ou gélules, cure de 3 semaines', detail:'Riche en fer, magnésium, silice et vitamines K et C. Excellent dépuratif. Aide contre l\'anémie, les douleurs articulaires et la chute de cheveux.' },
+    { nom:'Hibiscus', contre:'Hypotension, traitement antihypertenseur, grossesse et allaitement.', preuve:'Étudié', besoins:['immunité'],        tag:'Tisane',      color: ROUGE, benefice:'Réduit naturellement la tension artérielle', usage:'2–3 tasses/jour, froid ou chaud', detail:'Les anthocyanines réduisent la pression systolique de 7 points en 4 semaines (méta-analyse). Riche en vitamine C et antioxydants.' },
     { nom:'Gingembre-citron', contre:'Anticoagulants, reflux gastrique, calculs biliaires.', preuve:'Usage traditionnel', besoins:['immunité'],tag:'Tisane',    color:'#7B421C', benefice:'Renforce les défenses immunitaires quotidiennement', usage:'Matin à jeun avec une cuillère de miel', detail:'Synergie puissante : gingerols (anti-infectieux) + vitamine C + enzymes du miel. Le miel de Manuka amplifie les propriétés antibactériennes.' },
     { nom:'Reishi', contre:'Anticoagulants, immunosuppresseurs. À suspendre avant une chirurgie.', preuve:'Usage traditionnel', besoins:['immunité'],          tag:'Méd. chinoise',  color:'#7B421C', benefice:'"Champignon de l\'immortalité", immunité et longévité', usage:'1–2 g/jour en poudre dans une boisson chaude', detail:'Modifie le microbiome intestinal et renforce les cellules NK (natural killers). Utilisé depuis 4000 ans en médecine chinoise. Anti-tumoral étudié.' },
     { nom:'Astragale', contre:'Maladies auto-immunes, traitements immunosuppresseurs, greffe.', preuve:'Usage traditionnel', besoins:['immunité'],       tag:'Méd. chinoise',   color:'#7B421C', benefice:'Renforce l\'immunité en profondeur et ralentit le vieillissement', usage:'500 mg, 2× par jour, cure de 3 mois', detail:'Allonge les télomères (marqueurs du vieillissement cellulaire). Utilisé en complément de la chimiothérapie pour réduire les effets secondaires.' },
@@ -97,14 +98,14 @@ const FICHES = [
       prepa:['Tiédir le mélange au bain-marie', 'Masser le cuir chevelu 5 minutes, par petits cercles', 'Laisser poser 1 h, cheveux enroulés dans une serviette', 'Deux shampoings doux pour tout retirer'],
       detail:'Le ricin est très épais : pur, il est presque impossible à rincer, d\'où le mélange avec une huile fluide. Le massage compte autant que l\'huile, c\'est lui qui relance la microcirculation du bulbe.',
       precaution:'À espacer si ton cuir chevelu est déjà gras.' },
-    { nom:'Rinçage au vinaigre de cidre', contre:'Usage externe. Jamais pur, jamais sur peau lésée ou irritée.', preuve:'Usage traditionnel', besoins:['cheveux'], tag:'Recette', color:'#9C5D08',
+    { nom:'Rinçage au vinaigre de cidre', contre:'Usage externe. Jamais pur, jamais sur peau lésée ou irritée.', preuve:'Usage traditionnel', besoins:['cheveux'], tag:'Recette', color: ROUGE,
       benefice:'Redonne de la brillance et calme les pellicules',
       usage:'1 fois par semaine, après le shampoing',
       ingredients:['1 c. à soupe de vinaigre de cidre', '500 ml d\'eau froide'],
       prepa:['Mélanger dans une bouteille', 'Verser lentement sur les longueurs après le shampoing', 'Rincer rapidement à l\'eau froide'],
       detail:'L\'acidité resserre les écailles du cheveu, ce qui le rend lisse et réfléchissant. L\'odeur disparaît complètement au séchage.',
       precaution:'Jamais pur, et jamais sur un cuir chevelu irrité ou griffé.' },
-    { nom:'Masque œuf et miel', contre:'Usage externe. Allergie à l\'œuf ou aux produits de la ruche.', preuve:'Usage traditionnel', besoins:['cheveux'], tag:'Recette', color:'#9C5D08',
+    { nom:'Masque œuf et miel', contre:'Usage externe. Allergie à l\'œuf ou aux produits de la ruche.', preuve:'Usage traditionnel', besoins:['cheveux'], tag:'Recette', color: ROUGE,
       benefice:'Répare les longueurs sèches et les pointes abîmées',
       usage:'Tous les quinze jours',
       ingredients:['1 jaune d\'œuf', '1 c. à soupe de miel liquide', '1 c. à soupe d\'huile d\'olive'],
@@ -118,7 +119,7 @@ const FICHES = [
       prepa:['Mélanger dans un bol NON métallique, avec une cuillère en bois', 'Appliquer uniquement sur les racines', 'Laisser 10 minutes sans laisser sécher', 'Rincer très abondamment'],
       detail:'Le rhassoul capte le sébum par échange d\'ions au lieu de le dissoudre, contrairement à un shampoing détergent qui provoque un effet rebond.',
       precaution:'Ni bol ni cuillère en métal, cela désactive l\'argile. Plus d\'une fois par semaine, ça assèche.' },
-    { nom:'Ce qu\'il ne faut PAS faire', contre:'Ces trois recettes sont à proscrire, quelles que soient les recommandations trouvées ailleurs.', preuve:'Étudié', besoins:['peau', 'cheveux'], tag:'À éviter', color:'#ef4444',
+    { nom:'Ce qu\'il ne faut PAS faire', contre:'Ces trois recettes sont à proscrire, quelles que soient les recommandations trouvées ailleurs.', preuve:'Étudié', besoins:['peau', 'cheveux'], tag:'À éviter', color: ROUGE,
       benefice:'Trois recettes très répandues qui abîment vraiment la peau',
       usage:'À bannir, quoi qu\'on lise ailleurs',
       ingredients:['Citron sur la peau', 'Bicarbonate de soude en gommage', 'Dentifrice sur un bouton'],
@@ -132,7 +133,7 @@ const FICHES = [
       prepa:['Mélanger dans un bol non métallique', 'Appliquer en couche épaisse en évitant le contour des yeux', 'Laisser 10 minutes SANS laisser sécher, vaporiser un peu d\'eau si ça tire', 'Rincer à l\'eau tiède'],
       detail:'La règle est toujours la même avec l\'argile : elle travaille tant qu\'elle est humide. Une fois craquelée, elle tire l\'eau de la peau au lieu du sébum.',
       precaution:'Jamais jusqu\'à craquelure, c\'est ce qui provoque tiraillements et rebond de sébum.' },
-    { nom:'Miel de thym sur les boutons', contre:'Usage externe. Allergie aux produits de la ruche.', preuve:'Usage traditionnel', besoins:['peau'], tag:'Recette', color:'#9C5D08',
+    { nom:'Miel de thym sur les boutons', contre:'Usage externe. Allergie aux produits de la ruche.', preuve:'Usage traditionnel', besoins:['peau'], tag:'Recette', color: ROUGE,
       benefice:'Assainit et accélère la cicatrisation sans dessécher',
       usage:'2 à 3 fois par semaine, en local',
       ingredients:['1 c. à café de miel de thym ou de manuka'],
@@ -153,7 +154,7 @@ const FICHES = [
       prepa:['Appliquer une couche fine sur peau propre', 'Laisser pénétrer une minute', 'Ajouter une crème par-dessus si ta peau est sèche'],
       detail:'L\'aloe hydrate mais ne retient pas l\'eau seul : sans crème par-dessus, sur peau sèche, l\'effet ne tient pas la journée.',
       precaution:'Teste dans le pli du coude 24 h avant, l\'aloe est allergisant chez certaines personnes.' },
-    { nom:'Eau de rose', contre:'Usage externe. Choisir un hydrolat sans conservateur.', preuve:'Usage traditionnel', besoins:['peau'], tag:'Recette', color:'#9C5D08',
+    { nom:'Eau de rose', contre:'Usage externe. Choisir un hydrolat sans conservateur.', preuve:'Usage traditionnel', besoins:['peau'], tag:'Recette', color: ROUGE,
       benefice:'Ravive un teint terne et décongestionne les cernes',
       usage:'Matin et soir',
       ingredients:['Hydrolat de rose de Damas'],
@@ -297,7 +298,7 @@ function AIRecoCard({ r, onChat, index }) {
               border:'1px solid rgba(239,68,68,0.25)', lineHeight:1.55,
             }}>
               <span style={{ flexShrink:0, display:'flex', marginTop:2 }}><WarnTriangleIcon color="#ef4444" size={13} /></span>
-              <span><strong style={{ color:'#ef4444' }}>Précaution :</strong> {r.precaution}</span>
+              <span><strong style={{ color: ROUGE }}>Précaution :</strong> {r.precaution}</span>
             </div>
           )}
 
@@ -320,7 +321,7 @@ function AIRecoCard({ r, onChat, index }) {
               display:'inline-flex', alignItems:'center', gap:6,
               padding:'9px 15px', borderRadius:12,
               background:CTA_GRAD,
-              border:'1px solid rgba(255,220,160,0.38)', color:'#B2663E',
+              border:'1px solid rgba(255,220,160,0.38)', color: ROUGE,
               fontSize:11, fontWeight:800, cursor:'pointer',
               fontFamily:'Poppins,sans-serif',
               boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
@@ -398,7 +399,7 @@ function AIReco({ profil, onChat }) {
         )}
 
         {err && (
-          <div style={{ fontSize:11, color:'#ef4444', marginTop:10, fontWeight:600 }}>
+          <div style={{ fontSize:11, color: ROUGE, marginTop:10, fontWeight:600 }}>
             Erreur de connexion. Réessaie.
           </div>
         )}
@@ -577,7 +578,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             }}>
               <span style={{ marginTop:1, flexShrink:0 }}><WarnTriangleIcon size={13} /></span>
               <div>
-                <div style={{ fontSize:9, color:'#d64545', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:2 }}>
+                <div style={{ fontSize:9, color: ROUGE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:2 }}>
                   Contre-indications
                 </div>
                 <span style={{ fontSize:11.5, color:TXT_SOFT, lineHeight:1.5 }}>{item.contre}</span>
@@ -614,7 +615,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               padding:'9px 16px', borderRadius:12,
               background:CTA_GRAD,
               border:'1px solid rgba(255,220,160,0.38)',
-              color:'#B2663E', fontSize:11, fontWeight:800,
+              color: ROUGE, fontSize:11, fontWeight:800,
               cursor:'pointer', fontFamily:'Poppins,sans-serif',
               boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
               transition:'transform 0.15s, box-shadow 0.15s',
@@ -868,7 +869,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                 style={{
                   flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
                   background: CTA_GRAD, border: '1px solid rgba(255,220,160,0.55)',
-                  color: '#B2663E', fontSize: 12, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
+                  color: ROUGE, fontSize: 12, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
                 }}>En parler à Solenn</button>
             )}
             <button
@@ -876,7 +877,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
               style={{
                 flex: cureFinie ? 0.6 : 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
                 background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
-                color: 'rgba(160,100,60,0.75)', fontSize: 12, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
+                color: ENCRE, fontSize: 12, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
               }}>{cureFinie ? 'Terminer' : 'Arrêter la cure'}</button>
           </div>
         </div>
@@ -900,7 +901,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             style={{
               marginTop:9, padding:'8px 14px', borderRadius:12, cursor:'pointer',
               background:CTA_GRAD, border:'1px solid rgba(255,220,160,0.50)',
-              color:'#B2663E', fontSize:11.5, fontWeight:700, fontFamily:'Poppins,sans-serif',
+              color: ROUGE, fontSize:11.5, fontWeight:700, fontFamily:'Poppins,sans-serif',
             }}>
             Voir ce qui peut aider →
           </button>
@@ -1073,7 +1074,7 @@ const hb = {
   aiAskBtn: {
     width:32, height:32, borderRadius:12, flexShrink:0,
     background:'rgba(232,150,42,0.12)', border:'1px solid rgba(232,150,42,0.30)',
-    color:'#9C5D08', fontSize:14, fontWeight:900, cursor:'pointer',
+    color: ROUGE, fontSize:14, fontWeight:900, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontFamily:'Poppins,sans-serif',
   },

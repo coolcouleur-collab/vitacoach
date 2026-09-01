@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon } from './Icons'
 import { supabase } from './supabase'
+import { AMBRE, ENCRE, ROUGE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 const am = (a) => `rgba(200,123,82,${a})`
@@ -38,7 +39,7 @@ const PHASE_CONTENT = {
   menstrual: {
     name: 'Phase menstruelle',
     moonPhase: 'new',
-    color: 'rgba(200,80,80,0.70)',
+    color: ROUGE,
     bgColor: 'rgba(200,80,80,0.12)',
     energy: 'Basse',
     description: "Ton corps se régénère. C'est le moment de te reposer et de t'écouter.",
@@ -53,7 +54,7 @@ const PHASE_CONTENT = {
   follicular: {
     name: 'Phase folliculaire',
     moonPhase: 'waxing',
-    color: 'rgba(255,180,60,0.80)',
+    color: AMBRE,
     bgColor: 'rgba(255,180,60,0.12)',
     energy: 'Montante',
     description: "L'énergie remonte, la créativité aussi. Idéal pour démarrer de nouveaux projets.",
@@ -68,7 +69,7 @@ const PHASE_CONTENT = {
   ovulatory: {
     name: 'Phase ovulatoire',
     moonPhase: 'full',
-    color: 'rgba(255,200,60,0.90)',
+    color: ENCRE,
     bgColor: 'rgba(255,200,60,0.14)',
     energy: 'Pic',
     description: 'Tu es au sommet de ton énergie et de ta confiance. Profites-en !',
@@ -191,7 +192,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
           <button onClick={() => setEtape(1)} style={{
             padding: '10px 20px', borderRadius: 14, cursor: 'pointer', fontFamily: F,
             background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,220,160,0.45)', color: '#B2663E', fontSize: 12.5, fontWeight: 600,
+            border: '1px solid rgba(255,220,160,0.45)', color: ROUGE, fontSize: 12.5, fontWeight: 600,
           }}>
             Comprendre ma douleur
           </button>
@@ -369,7 +370,7 @@ export default function CycleTab({ profil, userId, onChat }) {
     padding: '12px 18px',
     background: 'rgba(255,235,210,0.32)',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-    color: '#B2663E', border: '1px solid rgba(255,220,160,0.38)',
+    color: ROUGE, border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 14, fontSize: 13, fontWeight: 600,
     cursor: 'pointer', fontFamily: F,
   }
