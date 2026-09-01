@@ -406,8 +406,8 @@ export default function Auth({ onConnecte, onBack }) {
             {loading
               ? <><LoadingIcon size={16} color="#FFFFFF" /> {T.loading}</>
               : mode==='connexion'
-                ? <>{T.ctaLogin} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>
-                : <>{T.ctaSignup} <span className="btn-arrow" style={{display:'inline-block', transition:'transform 0.25s ease'}}>→</span></>}
+                ? T.ctaLogin
+                : T.ctaSignup}
           </span>
         </button>
 

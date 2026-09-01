@@ -188,7 +188,7 @@ function CinematicSlider({ onCommencer }) {
               whiteSpace: 'nowrap',
             }}
           >
-            Commencer <span className="commencer-arrow">→</span>
+            Commencer
           </button>
         )}
 

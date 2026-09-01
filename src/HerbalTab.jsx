@@ -401,7 +401,7 @@ function AIReco({ profil, onChat }) {
                 ? <span style={{ display:'inline-flex', gap:4, alignItems:'center' }}>
                     <span style={hb.dot} /><span style={{ ...hb.dot, animationDelay:'0.15s' }} /><span style={{ ...hb.dot, animationDelay:'0.3s' }} />
                   </span>
-                : 'Analyser →'}
+                : 'Analyser'}
             </button>
           )}
           {items && (
