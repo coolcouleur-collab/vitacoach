@@ -202,7 +202,7 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
             letterSpacing:'0.04em', cursor:'pointer',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
             transition:'background 0.25s, border-color 0.25s',
-          }}>Autoriser l'accès →</button>
+          }}>Autoriser l'accès</button>
           <button onClick={onLater} style={{
             padding:'12px', borderRadius:'2rem',
             border:'1px solid rgba(255,220,160,0.45)',
