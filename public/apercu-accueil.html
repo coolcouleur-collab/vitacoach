@@ -1,0 +1,76 @@
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accueil, au plus clair possible</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+  body {
+    margin:0; padding:26px 14px 60px;
+    font-family:'Poppins',system-ui,sans-serif;
+    background: radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%);
+    min-height:100vh;
+  }
+  h1 { font-size:17px; color:#7B421C; margin:0 0 4px; }
+  .intro { font-size:13px; color:#7B421C; margin:0 0 20px; line-height:1.6; }
+  .col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; max-width:900px; margin:0 auto; }
+  .tete { font-size:11.5px; font-weight:700; letter-spacing:.04em; margin:0 0 8px; color:#7B421C; }
+
+  .carte {
+    background: rgba(255,235,210,0.22);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border:1px solid rgba(255,220,160,0.34);
+    border-radius:18px; padding:13px 14px; margin-bottom:10px;
+  }
+  .sec  { font-size:10px; font-weight:700; letter-spacing:.08em; margin:0 0 8px; }
+  .titre{ font-size:14px; font-weight:600; margin:0 0 2px; }
+  .sous { font-size:11.5px; margin:0; }
+  .gros { font-size:30px; font-weight:700; line-height:1; }
+  .mini { font-size:10px; font-weight:700; letter-spacing:.06em; margin:6px 0 2px; }
+
+  /* 1. ACTUEL */
+  .a .sec{color:rgba(200,123,82,0.80)} .a .titre{color:rgba(200,123,82,0.90)}
+  .a .sous{color:rgba(200,123,82,0.60)} .a .gros{color:#C87B52} .a .mini{color:rgba(200,123,82,0.72)}
+
+  /* 2. AU PLUS CLAIR POSSIBLE — ce que je propose */
+  .b .sec{color:#7B421C} .b .titre{color:#7B421C}
+  .b .sous{color:#7B421C} .b .gros{color:#9C5B33} .b .mini{color:#7B421C}
+
+  /* 3. MA PROPOSITION PRECEDENTE, trop foncee */
+  .c .sec{color:rgba(90,42,5,0.85)} .c .titre{color:#6B3206}
+  .c .sous{color:rgba(90,42,5,0.78)} .c .gros{color:#6B3206} .c .mini{color:rgba(90,42,5,0.80)}
+
+  .note { max-width:900px; margin:16px auto 0; font-size:12px; color:#7B421C; line-height:1.65; }
+  code { background:rgba(255,255,255,0.4); padding:1px 5px; border-radius:5px; }
+</style>
+
+<h1>Le plus clair possible, sans rester illisible</h1>
+<p class="intro">Trois versions, mêmes cartes, même verre. La colonne du milieu est ma proposition.</p>
+
+<div class="col">
+  <div class="a">
+    <div class="tete">1. AUJOURD'HUI — 1,7 à 2,5</div>
+    <div class="carte"><p class="sec">POUR TOI MAINTENANT</p><p class="titre">Routine matinale</p><p class="sous">Démarre bien ta journée</p></div>
+    <div class="carte"><p class="titre">Demander à Solenn</p><p class="sous">Disponible · répond en quelques secondes</p></div>
+    <div class="carte"><span class="gros">28</span><p class="mini">SCORE BIEN-ÊTRE DU JOUR</p><p class="sous">Chaque jour compte</p></div>
+  </div>
+
+  <div class="b">
+    <div class="tete">2. PROPOSÉ — 4,7 à 6,0</div>
+    <div class="carte"><p class="sec">POUR TOI MAINTENANT</p><p class="titre">Routine matinale</p><p class="sous">Démarre bien ta journée</p></div>
+    <div class="carte"><p class="titre">Demander à Solenn</p><p class="sous">Disponible · répond en quelques secondes</p></div>
+    <div class="carte"><span class="gros">28</span><p class="mini">SCORE BIEN-ÊTRE DU JOUR</p><p class="sous">Chaque jour compte</p></div>
+  </div>
+
+  <div class="c">
+    <div class="tete">3. TROP FONCÉ — 5,1 à 7,6</div>
+    <div class="carte"><p class="sec">POUR TOI MAINTENANT</p><p class="titre">Routine matinale</p><p class="sous">Démarre bien ta journée</p></div>
+    <div class="carte"><p class="titre">Demander à Solenn</p><p class="sous">Disponible · répond en quelques secondes</p></div>
+    <div class="carte"><span class="gros">28</span><p class="mini">SCORE BIEN-ÊTRE DU JOUR</p><p class="sous">Chaque jour compte</p></div>
+  </div>
+</div>
+
+<p class="note">
+  La colonne 2 est le <strong>plus clair mathématiquement possible</strong> en
+  restant lisible : <code>#7B421C</code> pour le texte courant, seuil 4,5, et
+  <code>#9C5B33</code> pour le grand chiffre, qui n'a besoin que de 3,0 grâce à
+  sa taille. La colonne 3 est ce que je t'ai montré la première fois : je
+  visais la sécurité au lieu du juste nécessaire.
+</p>
