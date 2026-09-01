@@ -80,7 +80,12 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       sommeil: {
         titre: 'Tu as dormi combien cette nuit ?',
         sous:  "C'est la donnée qui explique le plus de choses, humeur, faim, énergie.",
-        choix: [5, 6, 7, 8, 9].map(v => ({ label: v === 9 ? '9h+' : `${v}h`, val: v })),
+        // 4 signifie « moins de 5h ». Sans cette option, une nuit courte
+        // devait etre declaree a 5h : la donnee et le score s'en trouvaient
+        // fausses, et c'est justement la nuit ou le conseil compte le plus.
+        choix: [4, 5, 6, 7, 8, 9].map(v => ({
+          label: v === 4 ? '-5h' : v === 9 ? '9h+' : `${v}h`, val: v,
+        })),
       },
       eau: {
         titre: "Combien de verres d'eau depuis ce matin ?",
@@ -118,7 +123,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         <div style={{ fontSize: 11.5, color: tc(0.90), lineHeight: 1.45, marginBottom: 12 }}>
           {Q.sous}
         </div>
-        <div style={{ display: 'flex', gap: 7 }}>
+        <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap' }}>
           {Q.choix.map(c => (
             <button key={c.label} onClick={() => onUpdate(manque, c.val)} style={{
               flex: 1, padding: '11px 0', borderRadius: 14, cursor: 'pointer',
