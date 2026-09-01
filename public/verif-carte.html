@@ -1,66 +1,80 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Alléger sans foncer le fond</title>
+<title>La connexion allégée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
-  body { margin:0; padding:22px 14px 70px; font-family:'Poppins',sans-serif;
+  body { margin:0; padding:20px 14px 70px; font-family:'Poppins',sans-serif;
          background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#7C4C33; }
-  h1 { font-size:15px; margin:0 0 4px; }
-  p.i { font-size:12.5px; margin:0 0 6px; opacity:.85; line-height:1.6; }
+  h1 { font-size:15px; margin:0 0 3px; }
+  p.i { font-size:12.5px; margin:0 0 4px; opacity:.85; line-height:1.55; }
   .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-         margin:26px 0 8px; opacity:.72; }
-  .carte { border-radius:22px; padding:24px 22px 26px; max-width:330px; margin:0 auto;
+         margin:24px 0 8px; opacity:.72; }
+  .carte { border-radius:22px; padding:26px 24px 28px; max-width:330px; margin:0 auto;
            background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); }
-  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:42px;
-          text-align:center; line-height:1; margin-bottom:18px; color:#C87B52; }
+  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:44px;
+          text-align:center; line-height:1; margin-bottom:20px; color:#C87B52; }
+  .ong { display:flex; gap:26px; justify-content:center; margin-bottom:28px;
+         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; }
+  .ong b { font-weight:600; border-bottom:1px solid rgba(124,76,51,0.55); padding-bottom:3px; }
+  .ong span { font-weight:300; opacity:.72; }
+  .ch { border:none; border-bottom:1px solid rgba(124,76,51,0.45); background:none;
+        padding:11px 2px; font-size:15px; font-weight:300; margin-bottom:22px; }
+  .ch em { font-style:normal; opacity:.55; }
+  .sv { font-size:12.5px; font-weight:300; display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .sv i { width:14px; height:14px; border:1px solid rgba(124,76,51,0.55); border-radius:3px; display:inline-block; }
+  .btnF { display:block; margin:24px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
+          background:none; border:1px solid rgba(124,76,51,0.65); color:#7C4C33;
+          font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
+  .btnP { display:block; margin:24px auto 0; padding:12px 34px; border-radius:2rem; width:fit-content;
+          background:linear-gradient(135deg,#8F5A2A,#A06242); border:none; color:#FFF8EB;
+          font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; }
   .note { max-width:330px; margin:10px auto 0; font-size:12px; line-height:1.6; opacity:.85; }
-
-  /* A — en ligne : capitales grasses, onglets gras, bouton plein */
-  .a .ong { display:flex; gap:22px; justify-content:center; font-size:15px; margin-bottom:22px; }
-  .a .ong b { font-weight:700; } .a .ong span { font-weight:400; opacity:.85; }
-  .a .l { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
-  .a .ch { border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:14px;
-           background:rgba(255,250,244,0.55); border:1.5px solid rgba(124,76,51,0.70); }
-  .a .btn { display:block; margin:18px auto 0; padding:12px 30px; border-radius:2rem; width:fit-content;
-            background:linear-gradient(135deg,#6C422C,#90593B); color:#FFF8EB;
-            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; }
-
-  /* C — même encre, traitement allégé : serif fine, pas d'étiquettes, bouton filaire */
-  .c .ong { display:flex; gap:26px; justify-content:center; margin-bottom:26px;
-            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; }
-  .c .ong b { font-weight:600; border-bottom:1px solid rgba(124,76,51,0.55); padding-bottom:3px; }
-  .c .ong span { font-weight:300; opacity:.72; }
-  .c .ch { border:none; border-bottom:1px solid rgba(124,76,51,0.45); background:none;
-           border-radius:0; padding:11px 2px; font-size:15px; font-weight:300; margin-bottom:20px; }
-  .c .ch em { font-style:normal; opacity:.55; }
-  .c .btn { display:block; margin:26px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
-            background:none; border:1px solid rgba(124,76,51,0.65); color:#7C4C33;
-            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; font-weight:400; }
+  /* AVANT — ce qui est en ligne aujourd'hui */
+  .av .ong { display:flex; gap:22px; justify-content:center; font-family:'Poppins',sans-serif;
+             font-style:normal; font-size:15px; margin-bottom:22px; }
+  .av .ong b { font-weight:700; border:none; padding:0; }
+  .av .ong span { font-weight:400; opacity:.85; }
+  .av .l { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
+  .av .ch { border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:14px; font-weight:400;
+            background:rgba(255,250,244,0.55); border:1.5px solid rgba(124,76,51,0.70); }
+  .av .btnP { background:linear-gradient(135deg,#6C422C,#90593B); }
 </style>
 
-<h1>Garder ton fond crème, alléger l'écriture</h1>
-<p class="i">Même encre dans les deux. Seuls le poids, les capitales et le bouton changent.</p>
+<h1>La connexion allégée</h1>
+<p class="i">Ton fond crème intact. Même encre qu'aujourd'hui. Seul le poids change.</p>
 
-<div class="lab">A · en ligne aujourd'hui</div>
-<div class="carte a">
+<div class="lab">AVANT · en ligne aujourd'hui</div>
+<div class="carte av">
   <div class="logo">Solenn</div>
   <div class="ong"><b>Connexion</b><span>Inscription</span></div>
   <div class="l">Email</div><div class="ch">@</div>
   <div class="l">Mot de passe</div><div class="ch">••••••</div>
-  <div class="btn">Retrouver Solenn →</div>
+  <div class="sv"><i></i> Se souvenir de moi</div>
+  <div class="btnP">Retrouver Solenn →</div>
 </div>
-<p class="note">Deux étiquettes en capitales grasses, deux onglets gras, un bouton plein. Beaucoup de masse foncée.</p>
+<p class="note">Deux étiquettes en capitales grasses, deux onglets gras, des cadres complets, un bouton plein foncé.</p>
 
-<div class="lab">C · allégé</div>
-<div class="carte c">
+<div class="lab">C · bouton filaire</div>
+<div class="carte">
   <div class="logo">Solenn</div>
   <div class="ong"><b>Connexion</b><span>Inscription</span></div>
   <div class="ch"><em>Ton adresse email</em></div>
   <div class="ch"><em>Ton mot de passe</em></div>
-  <div class="btn">Retrouver Solenn →</div>
+  <div class="sv"><i></i> Se souvenir de moi</div>
+  <div class="btnF">Retrouver Solenn →</div>
+</div>
+<p class="note">Le plus aérien. Rien de plein sur la page.</p>
+
+<div class="lab">C bis · bouton plein, plus doux</div>
+<div class="carte">
+  <div class="logo">Solenn</div>
+  <div class="ong"><b>Connexion</b><span>Inscription</span></div>
+  <div class="ch"><em>Ton adresse email</em></div>
+  <div class="ch"><em>Ton mot de passe</em></div>
+  <div class="sv"><i></i> Se souvenir de moi</div>
+  <div class="btnP">Retrouver Solenn →</div>
 </div>
 <p class="note">
-  Les capitales disparaissent, l'étiquette vit dans le champ. Les onglets passent
-  au Cormorant fin. Les cadres deviennent un simple trait sous le champ. Le bouton
-  devient filaire. Tout reste au-dessus des seuils, et il y a trois fois moins
-  de matière sombre à l'écran.
+  Même allègement, mais l'action principale reste pleine. Le terracotta est
+  plus clair qu'aujourd'hui, donc moins lourd, et le crème dessus reste à
+  5,4:1.
 </p>
