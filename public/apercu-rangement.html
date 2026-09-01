@@ -1,0 +1,128 @@
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soins et Progrès, avant et après</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap');
+  body {
+    margin:0; padding:26px 14px 70px;
+    font-family:'Poppins',system-ui,sans-serif;
+    background: radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%);
+    min-height:100vh; color:#7B421C;
+  }
+  h1 { font-size:17px; margin:0 0 4px; }
+  h2 { font-size:13px; margin:30px 0 10px; letter-spacing:.05em; text-transform:uppercase; }
+  .intro { font-size:13px; margin:0 0 8px; line-height:1.6; }
+  .col { display:grid; grid-template-columns:1fr 1fr; gap:14px; max-width:760px; margin:0 auto; }
+  .tete { font-size:11px; font-weight:800; letter-spacing:.08em; margin:0 0 8px; opacity:.75; }
+  .carte {
+    background: rgba(255,235,210,0.22);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border:1px solid rgba(255,220,160,0.34);
+    border-radius:18px; padding:14px 12px; min-height:150px;
+  }
+  .rang { display:flex; gap:6px; overflow:hidden; padding:2px 0 8px; }
+  .pil {
+    flex-shrink:0; padding:8px 14px; border-radius:20px; font-size:11px; font-weight:700;
+    background:rgba(200,123,82,0.06); border:1px solid rgba(200,123,82,0.16); white-space:nowrap;
+  }
+  /* AVANT : actif = crème à 32 % sous du blanc */
+  .av .pil.on { background:rgba(255,235,210,0.32); border-color:rgba(232,150,42,0.45); color:#fff; }
+  .av .pil.off { color:rgba(200,123,82,0.65); }
+  /* APRÈS : pastille pleine, texte blanc, terracotta des boutons */
+  .ap .pil.on { background:linear-gradient(135deg,#8F3D14,#B3501F); border-color:rgba(143,61,20,0.55); color:#fff; }
+  .ap .pil.off { color:#7B421C; }
+  .fam { font-size:10px; font-weight:800; letter-spacing:.10em; text-transform:uppercase; opacity:.72; margin:8px 0 4px; }
+  .bloc { background:rgba(255,235,210,0.30); border-radius:12px; padding:9px 11px; margin-bottom:7px; font-size:11.5px; font-weight:600; }
+  .sect { font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:12px 0 6px; }
+  .trait { height:1px; background:rgba(200,123,82,0.20); margin:12px 2px 0; }
+  .note { max-width:760px; margin:14px auto 0; font-size:12px; line-height:1.7; }
+  code { background:rgba(255,255,255,0.42); padding:1px 5px; border-radius:5px; }
+  .chiffre { font-weight:700; }
+</style>
+
+<h1>Ce que le rangement change</h1>
+<p class="intro">Aucun contenu n'est retiré ni déplacé. Seule la hiérarchie devient visible.</p>
+
+<h2>Soins</h2>
+<div class="col">
+  <div class="av">
+    <div class="tete">AVANT</div>
+    <div class="carte">
+      <div class="rang">
+        <span class="pil on">Cheveux</span>
+        <span class="pil off">Sommeil</span>
+        <span class="pil off">Stress</span>
+        <span class="pil off">Énerg…</span>
+      </div>
+      <p style="font-size:11.5px;line-height:1.6;margin:10px 0 0;opacity:.85">
+        Sept pastilles à égalité dans une rangée qui défile. « Peau » est la
+        septième, hors écran. Rien ne dit qu'il y a deux sujets.
+      </p>
+    </div>
+  </div>
+  <div class="ap">
+    <div class="tete">APRÈS</div>
+    <div class="carte">
+      <div class="fam">Santé</div>
+      <div class="rang">
+        <span class="pil off">Sommeil</span>
+        <span class="pil off">Stress</span>
+        <span class="pil off">Énergie</span>
+      </div>
+      <div class="fam">Beauté</div>
+      <div class="rang">
+        <span class="pil on">Cheveux</span>
+        <span class="pil off">Peau</span>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="note">
+  « Peau » n'était pas mal classée, elle était simplement derrière, dans la
+  rangée qui défilait. L'onglet ouvert passait de <span class="chiffre">1,37:1</span>
+  (blanc sur <code>rgba(255,235,210,0.32)</code>) à la pastille pleine des actions
+  principales, le même terracotta que tes boutons, pas une huitième nuance.
+  Les onglets fermés passent de <span class="chiffre">1,65:1</span> à
+  <span class="chiffre">5,80:1</span>.
+</p>
+
+<h2>Progrès</h2>
+<div class="col">
+  <div>
+    <div class="tete">AVANT</div>
+    <div class="carte">
+      <div class="bloc">Score du jour</div>
+      <div class="bloc">Hydratation</div>
+      <div class="bloc">Tes métriques</div>
+      <div class="trait"></div>
+      <div class="sect">Ta semaine</div>
+      <div class="bloc">Bilan hebdo</div>
+      <div class="trait"></div>
+      <div class="sect">Sur la durée</div>
+      <div class="bloc">Progrès + historique</div>
+    </div>
+  </div>
+  <div>
+    <div class="tete">APRÈS</div>
+    <div class="carte">
+      <div class="sect">Aujourd'hui</div>
+      <div class="bloc">Score du jour</div>
+      <div class="bloc">Hydratation</div>
+      <div class="bloc">Tes métriques</div>
+      <div class="trait"></div>
+      <div class="sect">Ta semaine</div>
+      <div class="bloc">Bilan hebdo</div>
+      <div class="trait"></div>
+      <div class="sect">Sur la durée</div>
+      <div class="bloc">Progrès mesurés</div>
+      <div class="trait"></div>
+      <div class="sect">Le détail</div>
+      <div class="bloc">Historique brut</div>
+    </div>
+  </div>
+</div>
+<p class="note">
+  La moitié basse avait déjà été rangée en août. La moitié haute, non : trois
+  blocs empilés sans nom, puis deux sections nommées. C'est ce décalage qui
+  faisait brouillon. L'historique brut, lui, arrivait collé aux progrès longue
+  durée alors que c'est un troisième niveau de lecture.
+</p>
