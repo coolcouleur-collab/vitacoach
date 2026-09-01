@@ -106,11 +106,11 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 22 }}>{icon}</span>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
               {titre}
             </div>
             {heure && (
-              <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif', marginTop: 1 }}>
+              <div style={{ fontSize: 11, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginTop: 1 }}>
                 {heure}
               </div>
             )}
@@ -157,7 +157,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                 </span>
                 {e.duree && (
                   <span style={{
-                    fontSize: 10, color: 'rgba(200,123,82,0.50)',
+                    fontSize: 10, color: '#7B421C',
                     fontFamily: 'Poppins,sans-serif', marginLeft: 'auto', flexShrink: 0,
                   }}>
                     {e.duree}
@@ -213,8 +213,8 @@ function NutritionCard({ nutrition }) {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-        <span style={{ display:'flex' }}><LightbulbIcon size={22} color="#C87B52" /></span>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
+        <span style={{ display:'flex' }}><LightbulbIcon size={22} color="#9C5B33" /></span>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.3px' }}>
           {nutrition.titre || 'Nutrition du jour'}
         </div>
       </div>
@@ -230,10 +230,10 @@ function NutritionCard({ nutrition }) {
               <circle cx="6" cy="6" r="1.8" fill="#C87B52" opacity="0.75" />
             </svg>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {r.moment}
               </div>
-              <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginTop: 2, lineHeight: 1.4 }}>
                 {r.suggestion}
               </div>
             </div>
@@ -243,11 +243,11 @@ function NutritionCard({ nutrition }) {
 
       {nutrition.supplements?.length > 0 && (
         <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(200,123,82,0.06)', borderRadius: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
-            <SparkleIcon size={11} color="rgba(200,123,82,0.70)" /> Suppléments
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
+            <SparkleIcon size={11} color="#9C5B33" /> Suppléments
           </div>
           {nutrition.supplements.map((s, i) => (
-            <div key={i} style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
+            <div key={i} style={{ fontSize: 12, color: '#7B421C', fontFamily: 'Poppins,sans-serif' }}>• {s}</div>
           ))}
         </div>
       )}
@@ -266,11 +266,11 @@ function EmptyRoutine({ generating, onGenerate }) {
         justifyContent: 'center', padding: '60px 24px', textAlign: 'center',
       }}
     >
-      <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="#E8962A" /></div>
-      <div style={{ fontSize: 18, fontWeight: 700, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
+      <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="#9C5D08" /></div>
+      <div style={{ fontSize: 18, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
-      <div style={{ fontSize: 13, color: 'rgba(200,123,82,0.45)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
+      <div style={{ fontSize: 13, color: '#7B421C', fontFamily: 'Poppins,sans-serif', lineHeight: 1.6, marginBottom: 28, maxWidth: 280 }}>
         Solenn va générer une routine personnalisée pour ta journée en fonction de ton profil et de tes métriques.
       </div>
       <button
@@ -446,10 +446,10 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: 'rgba(200,123,82,0.92)', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#7B421C', fontFamily: 'Poppins,sans-serif', letterSpacing: '-0.6px' }}>
             {vue === 'programme' ? 'Ton programme' : vue === 'routine' ? 'Ta routine du jour' : 'Ta nutrition'}
           </div>
-          <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
+          <div style={{ fontSize: 12, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </div>
         </div>
@@ -461,7 +461,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             style={{
               width: 38, height: 38, borderRadius: 12, border: 'none',
               background: 'rgba(200,123,82,0.12)',
-              color: 'rgba(200,123,82,0.80)',
+              color: '#7B421C',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
             }}
@@ -477,7 +477,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             style={{
               width: 38, height: 38, borderRadius: 12, border: 'none',
               background: generating ? 'rgba(200,123,82,0.10)' : 'rgba(200,123,82,0.12)',
-              color: 'rgba(200,123,82,0.80)',
+              color: '#7B421C',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: generating ? 'default' : 'pointer',
             }}
@@ -511,7 +511,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         </div>
         {/* Chaque vue dit son rôle en une phrase : c'est la distinction que la
             page ne faisait jamais. */}
-        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.68)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, padding: '9px 4px 0' }}>
+        <div style={{ fontSize: 11.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5, padding: '9px 4px 0' }}>
           {vue === 'programme'
             ? '21 jours de sport, santé et nutrition pour atteindre ton objectif.'
             : vue === 'routine'
@@ -566,10 +566,10 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             animation: 'celebPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
             display: 'flex', alignItems: 'center', gap: 12,
           }}>
-            <span style={{ display:'flex' }}><StarIcon size={28} color="#E8962A" /></span>
+            <span style={{ display:'flex' }}><StarIcon size={28} color="#9C5D08" /></span>
             <div>
               <div style={{ fontSize: 15, fontWeight: 800, color: 'rgba(150,85,50,0.95)', fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
-              <div style={{ fontSize: 12, color: 'rgba(178,102,62,0.75)', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
+              <div style={{ fontSize: 12, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
             </div>
           </div>
         )}
@@ -617,10 +617,10 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                     position: 'absolute', inset: 0,
                     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: '#C87B52', fontFamily: 'Poppins,sans-serif', lineHeight: 1 }}>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: '#7B421C', fontFamily: 'Poppins,sans-serif', lineHeight: 1 }}>
                       {pct}%
                     </span>
-                    <span style={{ fontSize: 9, color: 'rgba(200,123,82,0.55)', fontFamily: 'Poppins,sans-serif' }}>
+                    <span style={{ fontSize: 9, color: '#7B421C', fontFamily: 'Poppins,sans-serif' }}>
                       du jour
                     </span>
                   </div>
@@ -630,14 +630,14 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 <div style={{ flex: 1 }}>
                   {routine.motivation && (
                     <div style={{
-                      fontSize: 12.5, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif',
+                      fontSize: 12.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif',
                       lineHeight: 1.55, fontStyle: 'italic', marginBottom: 8,
                       fontWeight: 500,
                     }}>
                       "{routine.motivation}"
                     </div>
                   )}
-                  <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.50)', fontFamily: 'Poppins,sans-serif' }}>
+                  <div style={{ fontSize: 11, color: '#7B421C', fontFamily: 'Poppins,sans-serif' }}>
                     {done}/{total} étapes complétées
                     {genTime && ` · générée à ${formatHeure(genTime)}`}
                   </div>
@@ -659,12 +659,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                     display: 'flex', gap: 12, alignItems: 'flex-start',
                   }}
                 >
-                  <LightbulbIcon size={22} color="#E8962A" />
+                  <LightbulbIcon size={22} color="#9C5D08" />
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#E8962A', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#9C5D08', fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 12.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif', lineHeight: 1.5 }}>
                       {routine.astuce.conseil}
                     </div>
                   </div>
@@ -674,7 +674,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               {/* ── Matin ── */}
               {routine.matin?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
-                  icon={<SunIcon size={22} color="#E8962A" />}
+                  icon={<SunIcon size={22} color="#9C5D08" />}
                   titre={routine.matin.titre || 'Matin'}
                   heure={routine.matin.heure}
                   etapes={routine.matin.etapes}
@@ -689,7 +689,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               {/* ── Après-midi ── */}
               {routine.apresmidi?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
-                  icon={<SunIcon size={22} color="#E8962A" />}
+                  icon={<SunIcon size={22} color="#9C5D08" />}
                   titre={routine.apresmidi.titre || 'Après-midi'}
                   heure={routine.apresmidi.heure}
                   etapes={routine.apresmidi.etapes}
@@ -701,7 +701,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               {/* ── Soir ── */}
               {routine.soir?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
-                  icon={<MoonIcon size={22} color="#C87B52" />}
+                  icon={<MoonIcon size={22} color="#9C5B33" />}
                   titre={routine.soir.titre || 'Soir'}
                   heure={routine.soir.heure}
                   etapes={routine.soir.etapes}
@@ -724,11 +724,11 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                       borderRadius: 20, marginTop: 8,
                     }}
                   >
-                    <div style={{ display:'flex', justifyContent:'center', marginBottom: 8 }}><StarIcon size={36} color="#E8962A" /></div>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(200,123,82,0.90)', fontFamily: 'Poppins,sans-serif' }}>
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom: 8 }}><StarIcon size={36} color="#9C5D08" /></div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: '#7B421C', fontFamily: 'Poppins,sans-serif' }}>
                       Journée accomplie !
                     </div>
-                    <div style={{ fontSize: 12.5, color: 'rgba(200,123,82,0.70)', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
+                    <div style={{ fontSize: 12.5, color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginTop: 4 }}>
                       Tu as terminé toutes tes étapes. Solenn est fière de toi !
                     </div>
                   </motion.div>
@@ -752,7 +752,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               <div style={{
                 background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
                 borderRadius: 18, padding: '18px 20px', marginBottom: 14,
-                fontFamily: 'Poppins,sans-serif', fontSize: 13, color: 'rgba(178,102,62,0.85)', lineHeight: 1.55,
+                fontFamily: 'Poppins,sans-serif', fontSize: 13, color: '#7B421C', lineHeight: 1.55,
               }}>
                 Tes repas du jour arrivent avec ta routine : génère-la dans l'onglet
                 Routine, et le petit-déjeuner, le déjeuner et le dîner apparaîtront ici.
@@ -774,8 +774,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 </svg>
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.90)' }}>Photographie ton repas</div>
-                <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Solenn l'analyse et te dit ce qu'elle en pense</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>Photographie ton repas</div>
+                <div style={{ fontSize: 11, color: '#7B421C', marginTop: 1 }}>Solenn l'analyse et te dit ce qu'elle en pense</div>
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
@@ -795,8 +795,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87B52" strokeWidth="1.8" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(200,123,82,0.90)' }}>Guide des exercices</div>
-            <div style={{ fontSize: 11, color: 'rgba(200,123,82,0.60)', marginTop: 1 }}>Les 25 gestes montrés et expliqués</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>Guide des exercices</div>
+            <div style={{ fontSize: 11, color: '#7B421C', marginTop: 1 }}>Les 25 gestes montrés et expliqués</div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.60)" strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>

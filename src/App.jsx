@@ -102,7 +102,7 @@ class MsgBoundary extends Component {
   render() {
     if (this.state.crashed) {
       return (
-        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'rgba(200,123,82,0.95)' }}>
+        <span style={{ whiteSpace:'pre-wrap', lineHeight:1.72, color:'#7B421C' }}>
           {this.props.fallback}
         </span>
       )
@@ -252,9 +252,9 @@ function CelebrationOverlay({ score, onDone }) {
         animation:'celebPop 0.55s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         <div style={{ marginBottom:10, lineHeight:1, display:'flex', justifyContent:'center' }}>
-          {score >= 90 ? <StarIcon size={48} color="#E8962A" /> : <SparkleIcon size={48} color="#E8962A" />}
+          {score >= 90 ? <StarIcon size={48} color="#9C5D08" /> : <SparkleIcon size={48} color="#9C5D08" />}
         </div>
-        <div style={{ fontSize:50, fontWeight:900, color:'#E8962A', lineHeight:1, letterSpacing:'-2px' }}>
+        <div style={{ fontSize:50, fontWeight:900, color:'#9C5D08', lineHeight:1, letterSpacing:'-2px' }}>
           {score}<span style={{ fontSize:18, color:'rgba(255,238,220,0.55)', fontWeight:400 }}>/100</span>
         </div>
         <div style={{ fontSize:15, fontWeight:700, color:'rgba(255,238,220,0.92)', marginTop:9 }}>
@@ -1873,7 +1873,7 @@ const [messages, setMessages] = useState(() => {
             }}
           >
             <div style={{ marginBottom: 6, display: 'flex', justifyContent: 'center' }}>
-              {milestone.Icon && <milestone.Icon size={34} color="#E8962A" />}
+              {milestone.Icon && <milestone.Icon size={34} color="#9C5D08" />}
             </div>
             <div style={{ fontSize: 15, fontWeight: 700, color: 'rgba(255,238,220,0.92)', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
               {milestone.titre}
@@ -2011,8 +2011,8 @@ const [messages, setMessages] = useState(() => {
 
           {/* Logo */}
           <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:'1px solid rgba(200,123,82,0.14)' }}>
-            <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color:'rgba(200,123,82,0.65)' }}>Solenn</span>
-            <span style={{ fontSize:9, fontWeight:400, color:'rgba(200,123,82,0.75)', letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
+            <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color:'#7B421C' }}>Solenn</span>
+            <span style={{ fontSize:9, fontWeight:400, color:'#7B421C', letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
               Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite' }}>,</span> guidée.
             </span>
           </div>
@@ -2040,10 +2040,10 @@ const [messages, setMessages] = useState(() => {
               <div style={s.avatar}>{profil.nom?.charAt(0).toUpperCase()}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={s.profileName}>{profil.nom}</div>
-                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#C87B52" /> {profil.objectifs[0]}</div>}
+                {profil.objectifs?.[0] && <div style={s.profileMeta}><TargetIcon size={13} color="#9C5B33" /> {profil.objectifs[0]}</div>}
               </div>
             </div>
-            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="rgba(200,123,82,0.70)" /> Solenn Pro · 44,99€/an</button>}
+            {!isPro && <button style={s.btnPro} onClick={() => passerPro('annual')}><StarIcon size={12} color="#9C5B33" /> Solenn Pro · 44,99€/an</button>}
             {/* Un seul comportement pour tous les abonnes. J'avais d'abord
                 masque le bouton pour les acces Pro poses a la main : resultat,
                 un encart qui ressemble a un bouton et ne repond pas quand on
@@ -2230,7 +2230,7 @@ padding: isMobile
                   animation:'headerShimmer 3s linear infinite',
                   lineHeight:1,
                 }}>Solenn</span>
-                <span style={{ fontSize:8.5, fontWeight:400, color:'rgba(200,123,82,0.75)', letterSpacing:'0.5px',
+                <span style={{ fontSize:8.5, fontWeight:400, color:'#7B421C', letterSpacing:'0.5px',
                   fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
                   Ton évolution<span style={{ display:'inline-block', animation:'dotPulse 2.4s ease-in-out infinite', transformOrigin:'center' }}>,</span> guidée.
                 </span>
@@ -2248,7 +2248,7 @@ padding: isMobile
                       width:34, height:34, borderRadius:10,
                       background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
                       display:'flex', alignItems:'center', justifyContent:'center',
-                      cursor:'pointer', color:'rgba(200,123,82,0.90)',
+                      cursor:'pointer', color:'#7B421C',
                     }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -2268,7 +2268,7 @@ padding: isMobile
                       height:34, padding:'0 12px', borderRadius:12, gap:6,
                       background:'rgba(200,123,82,0.10)', border:'1px solid rgba(200,123,82,0.30)',
                       display:'flex', alignItems:'center', justifyContent:'center',
-                      cursor:'pointer', color:'rgba(178,102,62,0.95)',
+                      cursor:'pointer', color:'#7B421C',
                       fontFamily:F, fontSize:12, fontWeight:600,
                       transition:'all .15s ease',
                     }}
@@ -2436,7 +2436,7 @@ padding: isMobile
                     // Terracotta et non rouge : se deconnecter est reversible en
                     // un geste, ce n'est pas une action dangereuse. Le rouge est
                     // reserve a l'irreversible (2026-08-12).
-                    color:'rgba(200,123,82,0.80)', fontWeight:400, fontSize:14,
+                    color:'#7B421C', fontWeight:400, fontSize:14,
                     marginTop:4,
                   }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,123,82,0.80)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -2509,13 +2509,13 @@ padding: isMobile
                     </div>
                     <div style={s.emptyChatSub}>Nutrition · Bien-être · Style · Gestion du stress</div>
                     {/* Transparence IA, AI Act art. 50 (obligatoire août 2026) + confiance */}
-                    <div style={{ fontSize:10.5, color:'rgba(200,123,82,0.55)', marginTop:-8, marginBottom:16 }}>
+                    <div style={{ fontSize:10.5, color:'#7B421C', marginTop:-8, marginBottom:16 }}>
                       Solenn est une intelligence artificielle, ses conseils ne remplacent pas un avis médical.
                     </div>
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
-                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'rgba(200,123,82,0.80)', display:'flex', alignItems:'center', gap:5 }}>
+                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:'#7B421C', display:'flex', alignItems:'center', gap:5 }}>
                           {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
@@ -2566,7 +2566,7 @@ padding: isMobile
                               réponse faisaient beaucoup de bruit visuel pour une
                               action rarement utilisée (retour Jean 2026-08-08) */}
                           {[
-                            { key:'👍', icon: <ThumbsUpIcon  size={13} color="rgba(200,123,82,0.80)" /> },
+                            { key:'👍', icon: <ThumbsUpIcon  size={13} color="#9C5B33" /> },
                           ].map(({ key, icon }) => (
                             <ReactionBtn
                               key={key}
@@ -2622,7 +2622,7 @@ padding: isMobile
                       <SolennFace size={30} />
                     </div>
                     <div style={{ padding:'10px 6px', display:'flex', alignItems:'center' }}>
-                      <GlowLoader count={5} size={6} color="#C87B52" glowStyle="soft" speed={1.1} gap={5} />
+                      <GlowLoader count={5} size={6} color="#9C5B33" glowStyle="soft" speed={1.1} gap={5} />
                     </div>
                   </div>
                 )}
@@ -2661,7 +2661,7 @@ padding: isMobile
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
-                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#C87B52" /> Tes progrès</div>
+                    <div style={{...s.pageTitle, display:'flex', alignItems:'center', gap:8}}><HeartIcon size={20} color="#9C5B33" /> Tes progrès</div>
                     <div style={s.pageSubtitle}>Tes mesures et ton évolution</div>
                   </div>
                 </div>
@@ -3043,8 +3043,8 @@ function NutritionCard({ nutrition }) {
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
           <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color="rgba(34,197,94,0.55)" /></span>
-          <div style={{ fontSize:12, color:'rgba(200,123,82,0.65)', lineHeight:1.5 }}>
-            <strong style={{ color:'rgba(200,123,82,0.90)', fontWeight:500 }}>{r.moment}</strong>, {r.suggestion}
+          <div style={{ fontSize:12, color:'#7B421C', lineHeight:1.5 }}>
+            <strong style={{ color:'#7B421C', fontWeight:500 }}>{r.moment}</strong>, {r.suggestion}
           </div>
         </div>
       ))}
@@ -3095,8 +3095,8 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
               <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#C87B52" fillOpacity="0.65"/></svg>
             </span>
             <div>
-              <div style={{ fontWeight:500, fontSize:13, color:'rgba(200,123,82,0.92)', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
-              <div style={{ fontSize:11, color:'rgba(200,123,82,0.60)', marginTop:2 }}>{e.detail || e.description}</div>
+              <div style={{ fontWeight:500, fontSize:13, color:'#7B421C', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
+              <div style={{ fontSize:11, color:'#7B421C', marginTop:2 }}>{e.detail || e.description}</div>
             </div>
           </div>
         )
@@ -3107,10 +3107,10 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
 
 const sr = {
   header: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16, padding:'8px 0', flexWrap:'wrap', gap:10 },
-  date: { fontSize:11, color:'rgba(200,123,82,0.65)', textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
-  titre: { fontSize:17, fontWeight:500, color:'rgba(200,123,82,0.90)', marginTop:2, letterSpacing:'-0.1px' },
+  date: { fontSize:11, color:'#7B421C', textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
+  titre: { fontSize:17, fontWeight:500, color:'#7B421C', marginTop:2, letterSpacing:'-0.1px' },
   btnGen: {
-    background:'rgba(200,123,82,0.10)', color:'rgba(200,123,82,0.90)',
+    background:'rgba(200,123,82,0.10)', color:'#7B421C',
     border:'1.5px solid rgba(200,123,82,0.25)',
     padding:'8px 14px', borderRadius:12, fontSize:12, fontWeight:600, cursor:'pointer',
     flexShrink:0, fontFamily:"'Poppins',system-ui,sans-serif",
@@ -3126,7 +3126,7 @@ const sr = {
   card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(200,123,82,0.10)', borderRadius:18, padding:'14px 16px',
     boxShadow:'none' },
   cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
-  cardTitre: { fontSize:14, fontWeight:700, color:'rgba(200,123,82,0.95)' },
+  cardTitre: { fontSize:14, fontWeight:700, color:'#7B421C' },
   etapeRow: { display:'flex', gap:10, alignItems:'flex-start', padding:'9px 0',
     borderTop:'1px solid #f8f4f0', cursor:'pointer' },
   repasRow: { display:'flex', gap:10, alignItems:'center', padding:'6px 0',
@@ -3221,13 +3221,13 @@ function TenueCard({ tenue, style: extraStyle }) {
       {/* Texte */}
       <div style={{ padding: '0 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{
-          fontWeight: 500, color: 'rgba(178,102,62,0.96)', fontSize: 20, letterSpacing: '-0.01em',
+          fontWeight: 500, color: '#7B421C', fontSize: 20, letterSpacing: '-0.01em',
           fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic',
           textAlign: 'center', marginBottom: 10, lineHeight: 1.2,
         }}>
           {tenue.titre}
         </div>
-        <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.82)', lineHeight: 1.6, fontFamily: F, textAlign: 'center',
+        <div style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.6, fontFamily: F, textAlign: 'center',
           display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {tenue.description}
         </div>
@@ -3237,8 +3237,8 @@ function TenueCard({ tenue, style: extraStyle }) {
           background: 'rgba(255,235,210,0.50)', borderRadius: 12, padding: '9px 12px',
           border: '1px solid rgba(255,220,160,0.40)', marginBottom: 18,
         }}>
-          <LightbulbIcon size={12} color="#E8962A" style={{ flexShrink: 0, marginTop: 2 }} />
-          <span style={{ fontSize: 10.5, color: 'rgba(178,102,62,0.85)', lineHeight: 1.55, fontFamily: F,
+          <LightbulbIcon size={12} color="#9C5D08" style={{ flexShrink: 0, marginTop: 2 }} />
+          <span style={{ fontSize: 10.5, color: '#7B421C', lineHeight: 1.55, fontFamily: F,
             display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {tenue.pourquoi}
           </span>
@@ -3365,7 +3365,7 @@ function CapsuleSlider({ tenues, loading }) {
             background: 'rgba(255,255,255,0.9)',
             border: '1px solid rgba(200,123,82,0.25)',
             boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
-            color: '#C87B52', fontSize: 18, fontWeight: 700,
+            color: '#7B421C', fontSize: 18, fontWeight: 700,
             cursor: active === 0 ? 'not-allowed' : 'pointer',
             opacity: active === 0 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -3406,7 +3406,7 @@ function CapsuleSlider({ tenues, loading }) {
             background: 'rgba(255,255,255,0.9)',
             border: '1px solid rgba(200,123,82,0.25)',
             boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
-            color: '#C87B52', fontSize: 18, fontWeight: 700,
+            color: '#7B421C', fontSize: 18, fontWeight: 700,
             cursor: active === count - 1 ? 'not-allowed' : 'pointer',
             opacity: active === count - 1 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -3614,7 +3614,7 @@ const st = {
   meteoBar: {
     background: 'rgba(255,235,210,0.20)', borderRadius: 12, padding: '8px 14px',
     fontSize: 12, marginBottom: 12,
-    color: 'rgba(200,123,82,0.88)', fontWeight: 500,
+    color: '#7B421C', fontWeight: 500,
     border: '1px solid rgba(255,220,160,0.25)',
     display: 'flex', alignItems: 'center', gap: 6,
   },
@@ -3624,7 +3624,7 @@ const st = {
     border: '1px solid rgba(255,220,160,0.35)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif",
-    outline: 'none', color: 'rgba(200,123,82,0.92)',
+    outline: 'none', color: '#7B421C',
     WebkitAppearance: 'none', appearance: 'none',
     boxShadow: 'none',
   },
@@ -3633,7 +3633,7 @@ const st = {
     border: '1px solid rgba(255,220,160,0.30)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
-    color: 'rgba(200,123,82,0.90)', cursor: 'pointer',
+    color: '#7B421C', cursor: 'pointer',
     appearance: 'none', WebkitAppearance: 'none',
   },
   btn: {
@@ -3685,13 +3685,13 @@ const s = {
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
-    color:'rgba(200,123,82,0.65)', fontWeight:400, textAlign:'left', width:'100%', fontSize:13,
+    color:'#7B421C', fontWeight:400, textAlign:'left', width:'100%', fontSize:13,
     letterSpacing:'0.01em', transition:'background .2s, color .2s',
   },
   navActive: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'rgba(200,123,82,0.07)',
-    cursor:'pointer', fontFamily:F, color:'rgba(200,123,82,0.90)', fontWeight:500,
+    cursor:'pointer', fontFamily:F, color:'#7B421C', fontWeight:500,
     textAlign:'left', width:'100%', fontSize:13, transition:'all .2s',
     boxShadow:'inset 0 0 0 1.5px rgba(200,123,82,0.18)',
   },
@@ -3707,10 +3707,10 @@ const s = {
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',
   },
-  profileName: { fontSize:13, fontWeight:700, color:'rgba(200,123,82,0.92)', marginBottom:1 },
-  profileMeta: { fontSize:10, color:'rgba(200,123,82,0.6)', lineHeight:1.5 },
+  profileName: { fontSize:13, fontWeight:700, color:'#7B421C', marginBottom:1 },
+  profileMeta: { fontSize:10, color:'#7B421C', lineHeight:1.5 },
   btnPro: {
-    background:'transparent', color:'rgba(200,123,82,0.70)',
+    background:'transparent', color:'#7B421C',
     border:'none', borderBottom:'1px solid rgba(200,123,82,0.25)',
     padding:'10px 0', borderRadius:0, cursor:'pointer',
     fontSize:11, fontFamily:F, fontWeight:300,
@@ -3719,12 +3719,12 @@ const s = {
     transition:'color 0.2s ease, border-color 0.2s ease',
   },
   proBadge: {
-    background:'rgba(245,212,184,0.35)', color:'rgba(200,123,82,0.70)',
+    background:'rgba(245,212,184,0.35)', color:'#7B421C',
     border:'1px solid rgba(200,123,82,.15)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:'rgba(200,123,82,0.90)', border:'1px solid rgba(200,123,82,0.14)',
+    background:'rgba(245,235,215,0.22)', color:'#7B421C', border:'1px solid rgba(200,123,82,0.14)',
     padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
@@ -3768,8 +3768,8 @@ const s = {
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',
     display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', flexShrink:0,
   },
-  pageTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', letterSpacing:'-0.03em', marginBottom:2 },
-  pageSubtitle: { fontSize:12, color:'rgba(200,123,82,0.60)', fontWeight:500 },
+  pageTitle: { fontSize:18, fontWeight:800, color:'#7B421C', letterSpacing:'-0.03em', marginBottom:2 },
+  pageSubtitle: { fontSize:12, color:'#7B421C', fontWeight:500 },
 
   // ── Chat ─────────────────────────────────────────────────────────────────────
   chatWrap: {
@@ -3786,8 +3786,8 @@ const s = {
   chatBox: { flex:1, minHeight:0, overflowY:'auto', marginBottom:10, paddingBottom:10, position:'relative', zIndex:1, WebkitOverflowScrolling:'touch', overscrollBehavior:'none', touchAction:'pan-y' },
   emptyChat: { textAlign:'center', padding:'5.6rem 2rem 2rem' },
   emptyChatIcon: { marginBottom:16 },
-  emptyChatTitle: { fontSize:18, fontWeight:800, color:'rgba(200,123,82,0.95)', marginBottom:6, letterSpacing:'-0.03em' },
-  emptyChatSub: { fontSize:13, color:'rgba(200,123,82,0.65)', marginBottom:32, lineHeight:1.7 },
+  emptyChatTitle: { fontSize:18, fontWeight:800, color:'#7B421C', marginBottom:6, letterSpacing:'-0.03em' },
+  emptyChatSub: { fontSize:13, color:'#7B421C', marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
     background:'rgba(255,248,242,0.96)',
@@ -3803,7 +3803,7 @@ const s = {
   userBubble: {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
-    color:'rgba(200,123,82,0.80)',
+    color:'#7B421C',
     // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 %, les deux
     // cumules donnaient des bulles a 58 % de l'ecran, et « Plan d'action »
     // passait sur deux lignes (constat Jean 2026-08-13).
@@ -3814,7 +3814,7 @@ const s = {
   botBubble: {
     background:'rgba(255,248,238,0.88)',
     border:'1px solid rgba(200,123,82,0.20)',
-    color:'rgba(200,123,82,0.80)',
+    color:'#7B421C',
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'100%',
     fontSize:14, lineHeight:1.65, fontWeight:400, whiteSpace:'pre-wrap',
     fontFamily:'Poppins, sans-serif',
@@ -3842,7 +3842,7 @@ const s = {
     border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
-  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'rgba(200,123,82,0.90)' },
+  inputChat: { flex:1, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:'#7B421C' },
   sendBtn: {
     background:'transparent', border:'none',
     width:36, height:36, borderRadius:12, cursor:'pointer',
@@ -3860,7 +3860,7 @@ const s = {
   navBot: {
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:0,
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',
-    fontFamily:F, color:'rgba(200,123,82,0.6)', position:'relative', transition:'color .2s',
+    fontFamily:F, color:'#7B421C', position:'relative', transition:'color .2s',
   },
   navBotActive: { color:'#DA8A34' },
 }
@@ -3996,7 +3996,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
           placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Pose une question à Solenn...'}
           disabled={disabled} />
         <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
-          <SendIcon color="rgba(200,123,82,0.58)" size={20} />
+          <SendIcon color="#9C5B33" size={20} />
         </button>
       </div>
     </div>

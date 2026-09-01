@@ -83,7 +83,7 @@ const PHASE_CONTENT = {
   luteal: {
     name: 'Phase lutéale',
     moonPhase: 'waning',
-    color: 'rgba(200,123,82,0.75)',
+    color: '#7B421C',
     bgColor: 'rgba(200,123,82,0.12)',
     energy: 'Déclinante',
     description: "L'énergie baisse progressivement. Ton corps prépare le prochain cycle.",
@@ -618,7 +618,7 @@ export default function CycleTab({ profil, userId, onChat }) {
           style={{ ...CARD, textAlign: 'center', padding: '40px 24px' }}
         >
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-            <MoonIcon size={36} color="rgba(200,123,82,0.75)" />
+            <MoonIcon size={36} color="#9C5B33" />
           </div>
           <div style={{ fontSize: 17, fontWeight: 600, color: am(0.90), marginBottom: 8, fontFamily: "'Poppins', sans-serif" }}>
             Une seule question pour démarrer :

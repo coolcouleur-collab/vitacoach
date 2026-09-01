@@ -576,10 +576,10 @@ export default function ExercicesGuide({ onClose, initial = null }) {
 
         {!exo && (
           <>
-            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)', marginBottom: 4 }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: '#7B421C', marginBottom: 4 }}>
               Guide des exercices
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(200,123,82,0.65)', marginBottom: 16, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: '#7B421C', marginBottom: 16, lineHeight: 1.5 }}>
               Chaque geste montré et expliqué. Doucement, régulièrement, jamais dans la douleur.
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -589,8 +589,8 @@ export default function ExercicesGuide({ onClose, initial = null }) {
                   borderRadius: 16, padding: '10px 12px 12px', cursor: 'pointer', textAlign: 'left', fontFamily: F,
                 }}>
                   <PhotoExo exo={e} height={130} />
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(178,102,62,0.95)', marginTop: 2 }}>{e.nom}</div>
-                  <div style={{ fontSize: 10.5, color: 'rgba(200,123,82,0.60)' }}>{e.cible} · {e.duree}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C', marginTop: 2 }}>{e.nom}</div>
+                  <div style={{ fontSize: 10.5, color: '#7B421C' }}>{e.cible} · {e.duree}</div>
                 </button>
               ))}
             </div>
@@ -601,10 +601,10 @@ export default function ExercicesGuide({ onClose, initial = null }) {
           <>
             <button onClick={() => setActif(null)} style={{
               background: 'none', border: 'none', cursor: 'pointer', fontFamily: F,
-              fontSize: 12, fontWeight: 600, color: 'rgba(200,123,82,0.75)', padding: '2px 0 10px',
+              fontSize: 12, fontWeight: 600, color: '#7B421C', padding: '2px 0 10px',
             }}>← Tous les exercices</button>
-            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: 'rgba(178,102,62,0.96)' }}>{exo.nom}</div>
-            <div style={{ fontSize: 11.5, color: 'rgba(200,123,82,0.65)', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 26, fontWeight: 500, color: '#7B421C' }}>{exo.nom}</div>
+            <div style={{ fontSize: 11.5, color: '#7B421C', marginBottom: 10 }}>{exo.cible} · {exo.duree}</div>
             <PhotoExo exo={exo} height={190} radius={18} fallback="rien" />
             <div style={{
               // 120 et non 190 : depuis que la photo montre la position, ce bloc
@@ -615,7 +615,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             }}>
               <exo.Anim />
             </div>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.75)', marginBottom: 8 }}>Comment faire</div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', marginBottom: 8 }}>Comment faire</div>
             {exo.etapes.map((et, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 8, alignItems: 'flex-start' }}>
                 <span style={{
@@ -624,17 +624,17 @@ export default function ExercicesGuide({ onClose, initial = null }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 10.5, fontWeight: 700, color: T,
                 }}>{i + 1}</span>
-                <span style={{ fontSize: 13, color: 'rgba(178,102,62,0.90)', lineHeight: 1.55 }}>{et}</span>
+                <span style={{ fontSize: 13, color: '#7B421C', lineHeight: 1.55 }}>{et}</span>
               </div>
             ))}
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(200,123,82,0.75)', margin: '14px 0 8px' }}>À éviter</div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7B421C', margin: '14px 0 8px' }}>À éviter</div>
             {exo.erreurs.map((er, i) => (
               <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6, alignItems: 'flex-start' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8442E" strokeWidth="2.2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span style={{ fontSize: 12.5, color: 'rgba(178,102,62,0.80)', lineHeight: 1.5 }}>{er}</span>
+                <span style={{ fontSize: 12.5, color: '#7B421C', lineHeight: 1.5 }}>{er}</span>
               </div>
             ))}
-            <div style={{ fontSize: 10.5, color: 'rgba(200,123,82,0.55)', marginTop: 14, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 10.5, color: '#7B421C', marginTop: 14, lineHeight: 1.5 }}>
               Écoute ton corps : une douleur (autre que l'effort) = on arrête. En cas de condition médicale, demande l'avis d'un professionnel de santé.
             </div>
           </>

@@ -16,9 +16,9 @@ const C = {
   accent: '#C87B52',
   accentLight: 'rgba(200,123,82,0.14)',
   accentMid: 'rgba(200,123,82,0.28)',
-  text: 'rgba(178,102,62,0.95)',
-  textMuted: 'rgba(200,123,82,0.62)',
-  textLight: 'rgba(200,123,82,0.40)',
+  text: '#7B421C',        // seuil 4,5
+  textMuted: '#7B421C',   // meme teinte : la hierarchie passe par la graisse
+  textLight: '#9C5B33',   // seuil 3,0, reserve aux libelles decoratifs
   handle: 'rgba(200,123,82,0.30)',
   shadow: '0 -24px 64px rgba(180,100,40,0.18), 0 -4px 20px rgba(200,100,40,0.10)',
   font: "'Poppins', system-ui, sans-serif",
@@ -133,7 +133,7 @@ function Avatar({ nom, size = 52 }) {
         <span style={{
           fontSize: size * 0.40,
           fontWeight: 600,
-          color: 'rgba(200,123,82,0.90)',
+          color: '#7B421C',
           fontFamily: "'Cormorant Garamond', Georgia, serif",
           fontStyle: 'italic',
           lineHeight: 1,
@@ -514,9 +514,9 @@ export default function SettingsSheet({
   }
 
   const PRESETS = [
-    { icon: <SunIcon size={20} color="#E8962A" />,  label: 'Jour',    value: 'day' },
-    { icon: <SunIcon size={20} color="#C87B52" />,  label: 'Lever',   value: 'sunrise' },
-    { icon: <MoonIcon size={20} color="#C87B52" />, label: 'Coucher', value: 'sunset' },
+    { icon: <SunIcon size={20} color="#9C5D08" />,  label: 'Jour',    value: 'day' },
+    { icon: <SunIcon size={20} color="#9C5B33" />,  label: 'Lever',   value: 'sunrise' },
+    { icon: <MoonIcon size={20} color="#9C5B33" />, label: 'Coucher', value: 'sunset' },
     { icon: <MoonIcon size={20} color="#8B7AB8" />, label: 'Nuit',    value: 'night' },
   ]
 
@@ -793,9 +793,9 @@ export default function SettingsSheet({
                     fontFamily: C.font,
                     fontSize: 13,
                     fontWeight: 700,
-                    color: '#E8962A',
+                    color: '#9C5D08',
                   }}>
-                    <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#E8962A" /> Solenn Pro</span>
+                    <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#9C5D08" /> Solenn Pro</span>
                   </span>
                 </div>
                 {/* Avantages */}
@@ -852,7 +852,7 @@ export default function SettingsSheet({
                         <button onClick={() => actionAbo('reprendre')} disabled={aboOccupe} style={{
                           width: '100%', padding: '11px 0', borderRadius: 12, cursor: 'pointer',
                           background: 'rgba(232,150,42,0.10)', border: '1px solid rgba(232,150,42,0.30)',
-                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: '#E8962A',
+                          fontFamily: C.font, fontSize: 13, fontWeight: 700, color: '#9C5D08',
                         }}>{aboOccupe ? 'Un instant…' : 'Reprendre mon abonnement'}</button>
                       </>
                     ) : confirmResil ? (
@@ -1110,7 +1110,7 @@ export default function SettingsSheet({
                 danger={confirmReset}
               />
               <ActionBtn
-                icon={<SparkleIcon size={18} color="#C87B52" />}
+                icon={<SparkleIcon size={18} color="#9C5B33" />}
                 label="Exporter mes données"
                 onClick={onExportData}
               />

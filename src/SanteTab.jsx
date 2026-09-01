@@ -24,20 +24,20 @@ function ScaleIcon({ color = '#C87B52', size = 18 }) {
 }
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#C87B52" />,   unit: '',      goal: 10000, color: '#C87B52', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
-  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#C87B52" />,  unit: 'h',    goal: 8,     color: '#C87B52', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
-  { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#C87B52" />, unit: ' v.',  goal: 8,     color: '#C87B52', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
-  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#C87B52" />, unit: ' bpm', goal: 70,    color: '#C87B52', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
-  { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#C87B52" />,  unit: '/5',   goal: 5,     color: '#C87B52', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
-  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#C87B52" />, unit: ' kg',  goal: null,  color: '#C87B52', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color="#9C5B33" />,   unit: '',      goal: 10000, color: '#9C5B33', fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
+  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color="#9C5B33" />,  unit: 'h',    goal: 8,     color: '#9C5B33', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
+  { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color="#9C5B33" />, unit: ' v.',  goal: 8,     color: '#9C5B33', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
+  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color="#9C5B33" />, unit: ' bpm', goal: 70,    color: '#9C5B33', fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
+  { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color="#9C5B33" />,  unit: '/5',   goal: 5,     color: '#9C5B33', fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
+  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color="#9C5B33" />, unit: ' kg',  goal: null,  color: '#9C5B33', fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
 ]
 
 const HUMEUR_ICONS = [null,
-  <SadIcon size={20} color="rgba(200,123,82,0.90)" />,
-  <SadIcon size={20} color="rgba(200,123,82,0.90)" />,
-  <NeutralIcon size={20} color="rgba(200,123,82,0.90)" />,
-  <HappyIcon size={20} color="rgba(200,123,82,0.90)" />,
-  <HappyIcon size={20} color="rgba(200,123,82,0.90)" />,
+  <SadIcon size={20} color="#9C5B33" />,
+  <SadIcon size={20} color="#9C5B33" />,
+  <NeutralIcon size={20} color="#9C5B33" />,
+  <HappyIcon size={20} color="#9C5B33" />,
+  <HappyIcon size={20} color="#9C5B33" />,
 ]
 
 function scoreJour(m) {
@@ -104,10 +104,10 @@ function Sparkline({ history, metricKey, color, goal, onLog }) {
 function HistoriqueSection({ history, onLog }) {
   const [open, setOpen] = useState(false)
   const metricsToShow = [
-    { key:'pas',     label:'Pas',     color:'#C87B52', goal:10000 },
-    { key:'sommeil', label:'Sommeil', color:'#C87B52', goal:8 },
-    { key:'eau',     label:'Eau',     color:'#C87B52', goal:8 },
-    { key:'humeur',  label:'Humeur',  color:'#C87B52', goal:5 },
+    { key:'pas',     label:'Pas',     color:'#7B421C', goal:10000 },
+    { key:'sommeil', label:'Sommeil', color:'#7B421C', goal:8 },
+    { key:'eau',     label:'Eau',     color:'#7B421C', goal:8 },
+    { key:'humeur',  label:'Humeur',  color:'#7B421C', goal:5 },
   ]
   return (
     <div style={{
@@ -123,13 +123,13 @@ function HistoriqueSection({ history, onLog }) {
         <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
           background:'rgba(200,123,82,0.12)',
           border:'1.5px solid rgba(200,123,82,0.22)',
-          display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color="#C87B52" /></div>
+          display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color="#9C5B33" /></div>
         <div style={{ flex:1, textAlign:'left' }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'rgba(200,123,82,0.72)' }}>Historique 7 jours</div>
-          <div style={{ fontSize:11, color:'rgba(200,123,82,0.62)', marginTop:1 }}>Progression de tes métriques</div>
+          <div style={{ fontSize:13, fontWeight:600, color:'#7B421C' }}>Historique 7 jours</div>
+          <div style={{ fontSize:11, color:'#7B421C', marginTop:1 }}>Progression de tes métriques</div>
         </div>
         <div style={{
-          fontSize:10, fontWeight:700, color:'rgba(200,123,82,0.60)',
+          fontSize:10, fontWeight:700, color:'#7B421C',
           background:'rgba(200,123,82,0.08)', padding:'4px 10px', borderRadius:12,
           border:'1px solid rgba(200,123,82,0.16)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
@@ -148,7 +148,7 @@ function HistoriqueSection({ history, onLog }) {
                 </div>
                 <Sparkline history={history} metricKey={m.key} color={m.color} goal={m.goal} onLog={onLog} />
                 <div style={{ display:'flex', justifyContent:'space-between', marginTop:6 }}>
-                  <span style={{ fontSize:9, color:'rgba(200,123,82,0.45)' }}>il y a 6j</span>
+                  <span style={{ fontSize:9, color:'#7B421C' }}>il y a 6j</span>
                   <span style={{ fontSize:9, color:m.color, fontWeight:700 }}>Aujourd'hui</span>
                 </div>
               </div>
@@ -198,7 +198,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
           </div>
         )}
         <div style={{
-          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: 'rgba(200,123,82,0.82)', lineHeight: 1.4,
+          fontSize: bigStat ? 12 : 13, fontWeight: 600, color: '#7B421C', lineHeight: 1.4,
           marginBottom: action ? 10 : 0,
           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>
@@ -275,12 +275,12 @@ function InsightsCarousel({ insights, onClose }) {
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 10, color: 'rgba(200,123,82,0.45)', fontWeight: 600, letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: 10, color: '#7B421C', fontWeight: 600, letterSpacing: '0.05em' }}>
             {activeIdx + 1} / {items.length}
           </span>
           <button onClick={onClose} style={{
             background: 'none', border: 'none', cursor: 'pointer',
-            color: 'rgba(200,123,82,0.35)', fontSize: 14, lineHeight: 1,
+            color: '#7B421C', fontSize: 14, lineHeight: 1,
             padding: '3px 6px', borderRadius: 12, fontFamily: 'Poppins, sans-serif',
           }}>✕</button>
         </div>
@@ -304,7 +304,7 @@ function InsightsCarousel({ insights, onClose }) {
       </div>
 
       {/* ── Hint glisse ── */}
-      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: 'rgba(200,123,82,0.30)', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
+      <div style={{ textAlign: 'center', marginTop: 10, fontSize: 10, color: '#7B421C', letterSpacing: '0.08em', fontWeight: 500, fontFamily: 'Poppins,sans-serif' }}>
         ← glisse →
       </div>
     </div>
@@ -490,8 +490,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ fontSize: 30, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{displayScore}</div>
-              <div style={{ fontSize: 9, color: 'rgba(200,123,82,0.45)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
-              <div style={{ fontSize: 8, color: 'rgba(200,123,82,0.62)', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
+              <div style={{ fontSize: 9, color: '#7B421C', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>/ 100</div>
+              <div style={{ fontSize: 8, color: '#7B421C', letterSpacing: '0.3px', marginTop: 3, fontWeight: 500 }}>
                 {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
               </div>
             </div>
@@ -505,10 +505,10 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Quick Water Bar ── */}
       <div style={ss.waterBar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(200,123,82,0.45))' }}><WaterIcon size={24} color="#C87B52" /></span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(200,123,82,0.45))' }}><WaterIcon size={24} color="#9C5B33" /></span>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 10, color: 'rgba(200,123,82,0.9)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5 }}>
-              <span style={{display:'flex',alignItems:'center',gap:5}}><WaterIcon size={11} color="rgba(200,123,82,0.9)" />Hydratation du jour</span>
+            <div style={{ fontSize: 10, color: '#7B421C', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5 }}>
+              <span style={{display:'flex',alignItems:'center',gap:5}}><WaterIcon size={11} color="#9C5B33" />Hydratation du jour</span>
             </div>
             <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
               {Array.from({ length: 8 }).map((_, i) => (
@@ -525,8 +525,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 }} />
               ))}
             </div>
-            <div style={{ fontSize: 13, color: '#C87B52', fontWeight: 800, letterSpacing: -0.3 }}>
-              {metriques.eau || 0}<span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(200,123,82,0.60)' }}> / 8 verres d'eau</span>
+            <div style={{ fontSize: 13, color: '#7B421C', fontWeight: 800, letterSpacing: -0.3 }}>
+              {metriques.eau || 0}<span style={{ fontSize: 11, fontWeight: 500, color: '#7B421C' }}> / 8 verres d'eau</span>
             </div>
           </div>
         </div>
@@ -651,7 +651,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
            suivaient sans respiration ni hierarchie : brouillon
            (constat Jean 2026-08-12). ── */}
       <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(178,102,62,0.85)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
         Ta semaine
       </div>
       {userId && (
@@ -661,7 +661,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       )}
 
       <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(178,102,62,0.85)', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
         Sur la durée
       </div>
       <TesProgres history={history} userId={userId} />
@@ -687,7 +687,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
               fontSize: 30, margin: '0 auto 12px',
               boxShadow: `0 6px 20px ${editMetric.color}25, inset 0 1px 0 rgba(255,255,255,0.8)`
             }}>{editMetric.iconEl}</div>
-            <div style={{ fontSize: 18, fontWeight: 900, color: 'rgba(200,123,82,0.92)', marginBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#7B421C', marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.75)', textAlign: 'center', marginBottom: 22 }}>
@@ -817,7 +817,7 @@ const ss = {
     background: 'linear-gradient(145deg, rgba(200,123,82,0.20), rgba(200,123,82,0.10))',
     border: '1.5px solid rgba(200,123,82,0.30)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12,
-    fontWeight: 900, color: '#C87B52', flexShrink: 0, marginTop: 1,
+    fontWeight: 900, color: '#7B421C', flexShrink: 0, marginTop: 1,
     boxShadow: '0 3px 10px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.6)'
   },
   modalOverlay: {
@@ -854,7 +854,7 @@ const ss = {
   btnCancel: {
     flex: 1, padding: '15px', background: 'rgba(255,235,210,0.08)',
     border: '1px solid rgba(255,220,160,0.20)', borderRadius: 16, fontSize: 13,
-    fontWeight: 700, cursor: 'pointer', color: 'rgba(200,123,82,0.60)', fontFamily: 'Poppins,sans-serif',
+    fontWeight: 700, cursor: 'pointer', color: '#7B421C', fontFamily: 'Poppins,sans-serif',
     boxShadow: 'inset 0 1px 0 rgba(255,235,210,0.10)'
   },
   btnSave: {

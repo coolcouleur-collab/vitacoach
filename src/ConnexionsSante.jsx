@@ -139,7 +139,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
           {provider.icon}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: 'rgba(200,123,82,0.90)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#7B421C', display: 'flex', alignItems: 'center', gap: 8 }}>
             {provider.nom}
             {!provider.disponible && (
               <span style={{ fontSize: 10, background: 'rgba(200,123,82,0.12)', color: C.orange, padding: '1px 7px', borderRadius: 12, fontWeight: 600 }}>
