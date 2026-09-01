@@ -303,11 +303,11 @@ export default function Auth({ onConnecte, onBack }) {
               <linearGradient id="authSolennGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <animate attributeName="x1" values="-150%;0%;-150%" dur="4s" repeatCount="indefinite" />
                 <animate attributeName="x2" values="-50%;100%;-50%" dur="4s" repeatCount="indefinite" />
-                <stop offset="0%"   stopColor="#FFF0D8" stopOpacity="0.90" />
-                <stop offset="30%"  stopColor="#FFF8EC" stopOpacity="0.95" />
-                <stop offset="50%"  stopColor="#FFFFFF" stopOpacity="1.00" />
-                <stop offset="70%"  stopColor="#FFF8EC" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#FFF0D8" stopOpacity="0.90" />
+                <stop offset="0%"   stopColor="#B8693A" stopOpacity="1" />
+                <stop offset="30%"  stopColor="#C87B52" stopOpacity="1" />
+                <stop offset="50%"  stopColor="#D4854A" stopOpacity="1" />
+                <stop offset="70%"  stopColor="#C87B52" stopOpacity="1" />
+                <stop offset="100%" stopColor="#B8693A" stopOpacity="1" />
               </linearGradient>
             </defs>
             <text

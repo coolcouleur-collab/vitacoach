@@ -87,7 +87,12 @@ body {
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%;
   background: var(--bg);
-  color: rgba(255,238,220,0.92);
+  /* L'encre de Solenn. C'etait rgba(255,238,220,0.92), un creme herite de
+     l'epoque ou l'app etait sombre : tout element sans couleur propre
+     devenait invisible sur le fond clair. Le mot « Solenn » de la carte de
+     connexion etait ainsi a 1,02:1 sans qu'aucune recherche dans le JSX ne
+     puisse le trouver, sa couleur n'y etant pas ecrite (2026-09-01). */
+  color: #7C4C33;
   font-family: var(--font);
   line-height: 1.6;
   overflow: hidden;
