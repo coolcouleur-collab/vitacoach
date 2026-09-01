@@ -8,6 +8,7 @@ import { matchExercice, PHOTOS_EXOS } from './ExercicesGuide'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
+const SeanceActive = lazy(() => import('./SeanceActive'))
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -162,7 +163,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const ETAPES_CREATION = [
     'Je lis ton profil et ton objectif…',
     'Je regarde tes données de la semaine…',
-    'Je construis tes 21 jours, séances et nutrition…',
+    'Je construis tes jours, séances et nutrition…',
     "Je vérifie l'équilibre et la progression…",
     'Dernières retouches…',
   ]
@@ -174,6 +175,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creating])
   const [exoGuide, setExoGuide] = useState(null)
+  const [seanceOuverte, setSeanceOuverte] = useState(false)
 
   const fetchChallenge = async () => {
     try {
@@ -239,24 +241,31 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   }
 
   // ── Calcul des données ──────────────────────────────────────────
+  // La duree n'est plus 21. Le catalogue en propose de 21, 28 et 42 jours, et
+  // les quinze « 21 » ecrits en dur dans ce fichier auraient plafonne la
+  // remise en mouvement au jour 21 pour toujours : jour fige, barre bloquee a
+  // la moitie, grille tronquee, et programme declare fini a mi-parcours.
+  // On la lit dans le plan lui-meme, la ou elle est vraie.
   let jourActuel = 1
-  let progression = Array(21).fill(false)
+  let duree = challenge?.challenge?.jours?.length || challenge?.duree || 21
+  let progression = Array(duree).fill(false)
   let completedCount = 0
   let jours = []
   let milestones = []
 
   if (challenge) {
+    jours = challenge.challenge?.jours || []
+    milestones = challenge.challenge?.milestones || []
+    duree = jours.length || challenge.duree || 21
+
     const dateDebut = new Date(challenge.date_debut)
     const now = new Date()
     const diffMs = now - dateDebut
     const diffJours = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-    jourActuel = Math.min(Math.max(diffJours + 1, 1), 21)
+    jourActuel = Math.min(Math.max(diffJours + 1, 1), duree)
 
-    progression = challenge.progression || Array(21).fill(false)
+    progression = challenge.progression || Array(duree).fill(false)
     completedCount = progression.filter(Boolean).length
-
-    jours = challenge.challenge?.jours || []
-    milestones = challenge.challenge?.milestones || []
   }
 
   // L'objectif du profil peut avoir changé DEPUIS la création du programme :
@@ -280,7 +289,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   const [repriseVue, setRepriseVue] = useState(() => {
     try { return cleReprise ? !!localStorage.getItem(cleReprise) : false } catch { return false }
   })
-  const proposerReprise = joursManques >= 2 && !progression[jourActuel - 1] && !repriseVue && !(challenge && (Math.floor((Date.now() - new Date(challenge.date_debut)) / 86400000) + 1) > 21)
+  const proposerReprise = joursManques >= 2 && !progression[jourActuel - 1] && !repriseVue && !(challenge && (Math.floor((Date.now() - new Date(challenge.date_debut)) / 86400000) + 1) > duree)
 
   function ignorerReprise() {
     try { localStorage.setItem(cleReprise, '1') } catch {}
@@ -340,7 +349,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
   // Fin de programme : jours ecoules NON bornes a 21, sinon un programme
   // depasse depuis une semaine s'affiche encore comme un jour 21 ordinaire.
   const joursEcoules = challenge ? Math.floor((Date.now() - new Date(challenge.date_debut)) / 86400000) + 1 : 0
-  const programmeTermine = !!challenge && (joursEcoules > 21 || (jourActuel === 21 && jourActuelComplete))
+  const programmeTermine = !!challenge && (joursEcoules > duree || (jourActuel === duree && jourActuelComplete))
   const numCycle = challenge?.challenge?.cycle || 1
 
   const prochainsJoursMilestone = milestones
@@ -348,7 +357,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
     .sort((a, b) => a.jour - b.jour)
   const prochainMilestone = prochainsJoursMilestone[0] || null
 
-  const MILESTONES_JOURS = [7, 14, 21]
+  // Les paliers suivent la duree : sur 42 jours, feliciter au 21e et plus
+  // jamais ensuite laisse toute la seconde moitie sans un seul repere.
+  const MILESTONES_JOURS = duree <= 21 ? [7, 14, duree] : [7, 14, 21, Math.round(duree / 2) + 7, duree]
 
   // ── STYLES ────────────────────────────────────────────────────────
   const styles = {
@@ -526,9 +537,9 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 {numCycle > 1 ? `Cycle ${numCycle} terminé` : 'Programme terminé'}
               </div>
               <div style={{ fontSize: 13, color: ENCRE, lineHeight: 1.55, marginBottom: 16 }}>
-                {progression.filter(Boolean).length} jours validés sur 21.
-                {progression.filter(Boolean).length >= 15
-                  ? ' Ce que tu tiens 21 jours, tu peux le tenir à l\'année.'
+                {progression.filter(Boolean).length} jours validés sur {duree}.
+                {progression.filter(Boolean).length >= Math.round(duree * 0.7)
+                  ? ' Ce que tu tiens ' + duree + ' jours, tu peux le tenir à l\'année.'
                   : ' L\'important n\'est pas le score, c\'est de continuer.'}
               </div>
               <button
@@ -609,6 +620,23 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
+                  {/* Le bouton passe AVANT la liste : c'est l'action, la liste
+                      n'est que l'apercu de ce qui va se passer. Il ne remplace
+                      pas les cases a cocher, qui restent la pour ceux qui font
+                      leur seance sans le telephone. */}
+                  {!jourActuelComplete && (
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSeanceOuverte(true)}
+                      style={{
+                        width: '100%', marginBottom: 12, padding: '14px 16px', borderRadius: 16,
+                        background: 'transparent', border: `1.5px solid ${ICONE}`,
+                        color: ENCRE, fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                        fontFamily: "'Poppins',sans-serif",
+                      }}>
+                      Démarrer la séance
+                    </motion.button>
+                  )}
                   {jourActuelData.seance.map((s, i) => (
                     <SeanceRow key={i} item={s} index={i}
                       fait={!!exosFaits[i]}
@@ -715,7 +743,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
 
               {/* Aperçu de demain, donne envie de revenir, et montre que le
                   programme est plus riche que le jour qu'on a sous les yeux. */}
-              {jourSuivantData && jourActuel < 21 && (
+              {jourSuivantData && jourActuel < duree && (
                 <div style={{
                   display: 'flex', alignItems: 'flex-start', gap: 10,
                   background: 'rgba(255,235,210,0.28)',
@@ -828,7 +856,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   Objectif du jour terminé, bravo !
                 </div>
                 <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>
-                  Jour {jourActuel} validé · {progression.filter(Boolean).length + 1} sur 21
+                  Jour {jourActuel} validé · {progression.filter(Boolean).length + 1} sur {duree}
                 </div>
               </div>
             </motion.div>
@@ -838,6 +866,27 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
           {exoGuide && (
             <Suspense fallback={null}>
               <ExercicesGuide initial={exoGuide} onClose={() => setExoGuide(null)} />
+            </Suspense>
+          )}
+
+          {/* Le lecteur de seance. Sa fin coche les exercices ET valide le
+              jour : quelqu'un qui vient de faire sa seance dans l'app n'a
+              aucune raison de devoir la recocher a la main ensuite. */}
+          {seanceOuverte && jourActuelData?.seance?.length > 0 && (
+            <Suspense fallback={null}>
+              <SeanceActive
+                seance={jourActuelData.seance}
+                titre={jourActuelData.titre || jourActuelData.action}
+                jour={jourActuel}
+                onFermer={() => setSeanceOuverte(false)}
+                onTermine={() => {
+                  const tous = {}
+                  jourActuelData.seance.forEach((_, i) => { tous[i] = true })
+                  try { localStorage.setItem(cleExos, JSON.stringify(tous)) } catch {}
+                  setExosFaits(tous)
+                  setSeanceOuverte(false)
+                }}
+              />
             </Suspense>
           )}
 
@@ -878,7 +927,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                     ne disait rien a personne : le suivi porte un nom
                     fonctionnel, l'objectif est deja dans Ton cap
                     (constat Jean 2026-08-13). */}
-                Ta progression sur 21 jours{numCycle > 1 ? ` · cycle ${numCycle}` : ''}
+                Ta progression sur {duree} jours{numCycle > 1 ? ` · cycle ${numCycle}` : ''}
               </h2>
 
               <div
@@ -892,7 +941,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Jour {jourActuel} / 21
+                Jour {jourActuel} / {duree}
               </div>
             </div>
 
@@ -908,7 +957,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
               >
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${(completedCount / 21) * 100}%` }}
+                  animate={{ width: `${(completedCount / duree) * 100}%` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   style={{
                     height: '100%',
@@ -925,7 +974,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   textAlign: 'right',
                 }}
               >
-                {completedCount} / 21 jours complétés
+                {completedCount} / {duree} jours complétés
               </p>
               <button
                 onClick={() => setShowGrille(v => !v)}
@@ -977,7 +1026,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                 gap: '8px',
               }}
             >
-              {Array.from({ length: 21 }, (_, i) => {
+              {Array.from({ length: duree }, (_, i) => {
                 const numJour = i + 1
                 const estPasse = numJour < jourActuel
                 const estAujourdhui = numJour === jourActuel
