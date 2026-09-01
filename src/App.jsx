@@ -1823,7 +1823,12 @@ const [messages, setMessages] = useState(() => {
     <div style={s.app}>
       {/* ── Morning Check-in ── */}
       <AnimatePresence>
-        {showCheckin && profil && (
+        {/* !profilLoading est INDISPENSABLE. Le check-in lit profil.nom, qui au
+            demarrage vient du stockage local, donc potentiellement du compte
+            PRECEDENT tant que la base n'a pas repondu. Jean a vu « BONJOUR SAM »
+            sur un compte nomme Camille (2026-09-01). Sur un telephone partage,
+            c'est le prenom de quelqu'un d'autre qui s'affiche. */}
+        {showCheckin && profil && !profilLoading && (
           <Suspense fallback={null}>
           <MorningCheckin
             profil={profil}

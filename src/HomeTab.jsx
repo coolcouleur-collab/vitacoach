@@ -823,6 +823,19 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
   ].filter(Boolean).filter(x => !enCours || x.cle !== enCours).sort((a, b) => b.ecart - a.ecart)
 
   if (!manques.length) {
+    // ⚠️ NE JAMAIS dire « tout est en place » sans regarder le score.
+    // Les constats ci-dessus ne se declenchent que dans certains creneaux
+    // horaires. Tot le matin, aucun ne s'applique, la liste est vide, et
+    // l'ancienne version concluait « rien a corriger, profite » A COTE d'un
+    // score de 28 sur 100. Jean l'a vu sur ses captures du 2026-09-01 : la
+    // phrase decredibilise tout le reste, parce qu'elle contredit le chiffre
+    // affiche juste au-dessus.
+    if ((score || 0) < 50) {
+      return { cle: null, quoi: 'La journée commence, rien n\'est encore mesuré.', action: 'Renseigne ton sommeil ou tes pas et je te dis où tu en es.' }
+    }
+    if ((score || 0) < 70) {
+      return { cle: null, quoi: 'Ça tient, sans plus.', action: 'Un verre d\'eau ou dix minutes de marche feraient la différence.' }
+    }
     return streak >= 3
       ? { cle: null, quoi: `${streak} jours de suite, tu es sur ta meilleure série.`, action: 'Garde ce rythme, il commence à payer.' }
       : { cle: null, quoi: 'Tout est en place aujourd\'hui.', action: 'Rien à corriger, profite.' }
@@ -1286,7 +1299,12 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
           borderRadius:'28px 28px 0 0',
           padding:'12px 24px 48px',
-          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 48px)',
+          // 118px, pas 48. La barre de navigation flotte a safe-area + 10px et
+          // fait environ 62px de haut : 48 la laissait recouvrir les derniers
+          // blocs de l'accueil, constate sur les captures iPhone de Jean
+          // (2026-09-01). Meme valeur que les autres onglets, qui eux etaient
+          // deja corrects.
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 118px)',
           boxShadow:'0 -10px 52px rgba(0,0,0,0.16)',
           border:'1.5px solid rgba(200,123,82,0.16)',
           borderBottom:'none',
