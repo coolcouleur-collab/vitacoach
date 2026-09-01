@@ -61,7 +61,9 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
         // Voile chaud : le noir neutre laissait transparaître l'app en dessous
         // et virait au bleu-pétrole. Ici un brun-terracotta profond, cohérent
         // avec l'univers, qui garde le focus sur la question posée.
-        background: 'linear-gradient(165deg, rgba(58,26,12,0.90) 0%, rgba(38,16,7,0.94) 100%)',
+        // Le fond de l'app, pas un ecran a part. C'etait le seul ecran en brun
+        // fonce de tout Solenn, et il detonnait (Jean, 2026-09-01).
+        background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
         backdropFilter: 'blur(32px)',
         WebkitBackdropFilter: 'blur(32px)',
         display: 'flex', flexDirection: 'column',
@@ -101,9 +103,9 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
         onClick={onSkip}
         style={{
           position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 20px)', right: 20, zIndex: 10,
-          background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.15)',
+          background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
           borderRadius: 20, padding: '6px 14px',
-          color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 500,
+          color: '#7B421C', fontSize: 12, fontWeight: 500,
           fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
           backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
         }}
@@ -125,7 +127,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           animate={{ opacity: 1, y: 0 }}
           style={{
             fontSize: 13, fontWeight: 600, letterSpacing: '0.08em',
-            color: 'rgba(200,123,82,0.70)', textTransform: 'uppercase',
+            color: '#7B421C', textTransform: 'uppercase',
             marginBottom: 40, textAlign: 'center',
           }}
         >
@@ -147,12 +149,12 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><MoonIcon size={56} color="rgba(255,220,140,0.90)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
                 lineHeight: 1.2,
               }}>
                 Combien d'heures<br/>tu as dormi ?
               </h2>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 48 }}>
+              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 48 }}>
                 Objectif recommandé : 8h
               </p>
 
@@ -160,10 +162,10 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 16, position: 'relative' }}>
                 <div style={{
                   fontSize: 72, fontWeight: 900, lineHeight: 1,
-                  color: '#fff', letterSpacing: '-3px', marginBottom: 24,
+                  color: '#7B421C', letterSpacing: '-3px', marginBottom: 24,
                   fontVariantNumeric: 'tabular-nums',
                 }}>
-                  {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: 'rgba(200,123,82,0.80)', marginLeft: 4 }}>h</span>
+                  {sommeil}<span style={{ fontSize: 28, fontWeight: 600, color: '#9C5B33', marginLeft: 4 }}>h</span>
                 </div>
                 <input
                   className="mc-sleep-slider"
@@ -173,13 +175,13 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                     width: '100%', accentColor: '#C87B52',
                     height: 6, cursor: 'pointer',
                     appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #C87B52 0%, #E8962A ${((sommeil-2)/10)*100}%, rgba(255,255,255,0.15) ${((sommeil-2)/10)*100}%, rgba(255,255,255,0.15) 100%)`,
+                    background: `linear-gradient(to right, #C87B52 0%, #E8962A ${((sommeil-2)/10)*100}%, rgba(200,123,82,0.20) ${((sommeil-2)/10)*100}%, rgba(200,123,82,0.20) 100%)`,
                     borderRadius: 6, outline: 'none', border: 'none',
                   }}
                 />
                 <div style={{
                   display: 'flex', justifyContent: 'space-between',
-                  fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 8,
+                  fontSize: 11, color: '#9C5B33', marginTop: 8,
                 }}>
                   <span>2h</span><span>12h</span>
                 </div>
@@ -203,11 +205,11 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SparkleIcon size={56} color="rgba(255,220,140,0.90)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
               }}>
                 Ton humeur ce matin ?
               </h2>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 48 }}>
+              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 48 }}>
                 Sois honnête, Solenn adapte ses conseils
               </p>
 
@@ -226,10 +228,10 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                       borderRadius: 20,
                       background: humeur === h.val
                         ? 'rgba(200,123,82,0.25)'
-                        : 'rgba(255,255,255,0.07)',
+                        : 'rgba(255,235,210,0.30)',
                       border: humeur === h.val
                         ? '2px solid rgba(200,123,82,0.70)'
-                        : '1.5px solid rgba(255,255,255,0.12)',
+                        : '1.5px solid rgba(255,220,160,0.55)',
                       cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
                       backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
@@ -237,7 +239,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                     }}
                   >
                     <span style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>{h.icon}</span>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.60)', fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
+                    <span style={{ fontSize: 10, color: '#7B421C', fontWeight: 500, fontFamily: 'Poppins, sans-serif' }}>
                       {h.label}
                     </span>
                   </motion.button>
@@ -258,11 +260,11 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><TargetIcon size={56} color="rgba(200,123,82,0.80)" /></div>
               <h2 style={{
                 fontSize: 'clamp(22px,5vw,28px)', fontWeight: 800,
-                color: '#fff', marginBottom: 8, letterSpacing: '-0.5px',
+                color: '#7B421C', marginBottom: 8, letterSpacing: '-0.5px',
               }}>
                 Une intention<br/>pour aujourd'hui ?
               </h2>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.40)', marginBottom: 36 }}>
+              <p style={{ fontSize: 13, color: '#7B421C', marginBottom: 36 }}>
                 Optionnel, mais ça aide vraiment
               </p>
 
@@ -277,10 +279,10 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   width: '100%', boxSizing: 'border-box',
                   padding: '16px 20px', borderRadius: 16,
                   border: '1.5px solid rgba(200,123,82,0.30)',
-                  background: 'rgba(255,255,255,0.08)',
+                  background: 'rgba(255,235,210,0.32)',
                   backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                   fontSize: 16, fontFamily: 'Poppins, sans-serif',
-                  color: '#fff', outline: 'none', marginBottom: 24,
+                  color: '#7B421C', outline: 'none', marginBottom: 24,
                   textAlign: 'center',
                 }}
               />
@@ -288,7 +290,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               <button onClick={handleSubmit} style={{
                 ...btnFullStyle,
                 background: 'rgba(255,235,210,0.32)',
-                color: '#fff',
+                color: '#7B421C',
               }}>
                 <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Lancer ma journée</span>
               </button>
@@ -296,7 +298,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
               {!intention && (
                 <button onClick={handleSubmit} style={{
                   marginTop: 12, background: 'none', border: 'none',
-                  color: 'rgba(255,255,255,0.30)', fontSize: 12,
+                  color: 'rgba(200,123,82,0.30)', fontSize: 12,
                   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
                   padding: 8,
                 }}>
@@ -319,7 +321,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
           <div key={i} style={{
             height: 6, borderRadius: 6,
             width: i === step ? 24 : 6,
-            background: i <= step ? 'rgba(200,123,82,0.85)' : 'rgba(255,255,255,0.15)',
+            background: i <= step ? 'rgba(200,123,82,0.85)' : 'rgba(200,123,82,0.20)',
             transition: 'all 0.3s ease',
           }} />
         ))}
