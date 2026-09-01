@@ -1013,6 +1013,13 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
         à l'intérieur, elle décalait le cercle par rapport au soleil du décor. */}
     {(() => {
           const p = phrase
+          // Meme calcul que JourneePrete : la carte questionne la premiere
+          // metrique absente, dans cet ordre. Si le verdict parle de la meme,
+          // sa ligne d'action est une redite.
+          const manqueCarte = !metriques?.sommeil ? 'sommeil'
+                            : !metriques?.eau     ? 'eau'
+                            : !metriques?.pas     ? 'pas' : null
+          const redite = p.cle && p.cle === manqueCarte
           return (
             <div style={{ maxWidth: 320, margin: '0 auto', textAlign: 'center', padding: '10px 22px 2px' }}>
               {/* La série n'apparaissait que dans la branche où tout va bien :
@@ -1032,7 +1039,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   {streak >= 7
                     ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
                     : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />}
-                  {streak === 1 ? 'Premier jour' : `${streak} jours de suite`}
+                  {`${streak} jour${streak > 1 ? 's' : ''} d'affilée`}
                 </div>
               )}
               <div style={{
@@ -1040,8 +1047,9 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 fontFamily: "'Poppins',system-ui,sans-serif",
                 color: isNight ? 'rgba(200,222,255,0.92)' : ENCRE,
               }}>
-                {score > 0 ? `${score}. ` : ''}{p.quoi}
+                {p.quoi}
               </div>
+              {!redite && (
               <div style={{
                 fontSize: 12.5, lineHeight: 1.45, marginTop: 5,
                 fontFamily: "'Poppins',system-ui,sans-serif",
@@ -1049,6 +1057,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               }}>
                 {p.action}
               </div>
+              )}
 
               {/* Le mot « score » n'était explicité nulle part. Affiché tant que
                   l'utilisateur n'a aucun historique, donc au tout début
@@ -1686,7 +1695,7 @@ export function StreakXP({ streak, xp, level }) {
                 {streak}<span style={{ fontSize:10, fontWeight:300, color:ENCRE, marginLeft:6 }}>jours</span>
               </div>
               <div style={{ fontSize:9, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px', marginTop:6 }}>
-                {streak >= 7 ? 'En feu !' : streak > 0 ? 'Streak actif' : 'Premier jour'}
+                {streak >= 7 ? 'En feu !' : streak > 0 ? `${streak} jour${streak > 1 ? 's' : ''} d'affilée` : 'À commencer'}
               </div>
             </div>
           </div>
