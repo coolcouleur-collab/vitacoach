@@ -473,9 +473,9 @@ const s = {
   field: { marginBottom:16 },
   label: { display:'block', marginBottom:6, fontWeight:500, fontSize:12,
     color:ENCRE, letterSpacing:'1.2px', textTransform:'uppercase' },
-  input: { width:'100%', padding:'12px 14px', border:'1px solid rgba(255,220,160,0.30)',
-    borderRadius:10, background:'rgba(255,235,200,0.10)', fontSize:16, fontFamily:'Poppins, sans-serif',
-    boxSizing:'border-box', outline:'none', color:ENCRE, transition:'border-color 0.2s, background 0.2s' },
+  input: { width:'100%', padding:'12px 14px', border:'1.5px solid rgba(124,76,51,0.70)',   // 3,11:1 mesure, etait a 1,02
+    borderRadius:10, background:'rgba(255,250,244,0.55)', fontSize:16, fontFamily:'Poppins, sans-serif',
+    boxSizing:'border-box', outline:'none', color:ENCRE, transition:'border-color 0.2s, background 0.2s, box-shadow 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
   btn: { width:'auto', padding:'0.85rem 2.5rem', background:'linear-gradient(135deg,#6C422C,#90593B)', display:'block', margin:'12px auto 0',
     color:'#FFF8EB', border:'1px solid rgba(108,66,44,0.55)', borderRadius:'2rem',
