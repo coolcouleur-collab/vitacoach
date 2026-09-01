@@ -40,7 +40,18 @@ function todayStr() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
+// Eclaircit une couleur vers le blanc sans toucher a sa teinte. Rend bien un
+// hexadecimal a 6 chiffres : les usages en fond et en bordure lui accolent
+// une transparence (`${c}26`), un format plus court les casserait.
+function versLeClair(hex, part) {
+  const m = /^#([0-9a-fA-F]{6})$/.exec(hex || '')
+  if (!m) return hex
+  const v = [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16))
+  return '#' + v.map(x => Math.round(x + (255 - x) * part).toString(16).padStart(2, '0')).join('')
+}
+
 export default function CheckinCard({ userId, onUpdate, isNight = false, preset = 'day' }) {
+  const teinteHumeur = (c) => (isNight ? versLeClair(c, 0.40) : c)
   // Aligné sur les autres titres du HomeTab (2 variantes jour/nuit, pas de
   // variante sunset, source d'incohérence relevée par Jean le 2026-07-24)
   const tc = isNight ? nightText : warmText
@@ -133,13 +144,13 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       // 45 % de texte, les cinq visages étaient à peine visibles
                       // et ne semblaient pas cliquables (retour Jean 2026-08-08).
                       // C'est pourtant la première interaction de la journée.
-                      background: active ? `${m.color}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(255,246,238,0.55)'),
-                      border: `1.5px solid ${active ? `${m.color}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(200,123,82,0.30)')}`,
+                      background: active ? `${teinteHumeur(m.color)}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(255,246,238,0.55)'),
+                      border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(200,123,82,0.30)')}`,
                       color: tc(active ? 0.95 : 0.72),
                     }}
                   >
                     <MoodFace mood={m} active={active} size={30} />
-                    <span style={{ fontSize: 9, fontWeight: active ? 700 : 500, color: active ? m.color : tc(0.75), fontFamily: F }}>
+                    <span style={{ fontSize: 9, fontWeight: active ? 700 : 500, color: active ? teinteHumeur(m.color) : tc(0.75), fontFamily: F }}>
                       {m.label}
                     </span>
                   </motion.button>
@@ -207,7 +218,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
             }}
           >
             {savedMood && (
-              <span style={{ color: savedMood.color, display: 'flex', flexShrink: 0 }}>
+              <span style={{ color: teinteHumeur(savedMood.color), display: 'flex', flexShrink: 0 }}>
                 <MoodFace mood={savedMood} active size={30} />
               </span>
             )}
