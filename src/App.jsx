@@ -3660,7 +3660,7 @@ const st = {
   },
   btn: {
     padding: '8px 16px',
-    background: 'linear-gradient(110deg,rgba(180,90,35,0.68) 0%,rgba(200,123,82,0.68) 100%)',
+    background: 'linear-gradient(110deg,#8F3D14 0%,#B3501F 100%)',
     color: 'rgba(255,248,235,1)',
     border: '1px solid rgba(255,220,160,0.38)',
     borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
@@ -3724,7 +3724,7 @@ const s = {
   },
   avatar: {
     width:36, height:36, borderRadius:10,
-    background:'linear-gradient(135deg,#C87B52,#E8A07A)',
+    background:'linear-gradient(135deg,#8F3D14,#B3501F)',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
     boxShadow:'0 4px 12px rgba(200,123,82,.35)',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
-import { ROUGE } from './palette'
+import { ENCRE, ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 // Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
@@ -1031,7 +1031,16 @@ export default function SettingsSheet({
             )}
 
             {/* ── 3. APPARENCE ────────────────────────────────────────── */}
-            <SectionTitle>Apparence</SectionTitle>
+            {/* « Apparence » promettait un theme complet ; le mode Nuit ne
+                colore en realite que l'accueil (HomeTab peint body en #070f1e
+                tant qu'il est monte, et lui seul). Plutot que de retoucher 600
+                couleurs en dur a quelques jours de la sortie, on nomme la
+                limite pour ce qu'elle est. Le vrai theme sombre est le
+                chantier n°1 d'apres lancement (arbitrage Jean, 2026-09-01). */}
+            <SectionTitle>Ambiance de l'accueil</SectionTitle>
+            <div style={{ fontSize: 11.5, color: ENCRE, opacity: 0.78, margin: '-6px 0 10px', lineHeight: 1.5 }}>
+              Le reste de l'app reste clair pour l'instant.
+            </div>
             <Card>
               <div style={{ display: 'flex', gap: 8 }}>
                 {PRESETS.map(p => (

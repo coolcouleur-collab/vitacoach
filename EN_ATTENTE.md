@@ -222,3 +222,18 @@ Bugs corrigés, dont plusieurs anciens et invisibles :
 
 Ajouts : le cycle 2 en fin de programme, la bibliothèque passée de 12 à 25
 exercices.
+
+## Après le lancement, chantier n°1 : le vrai thème sombre
+
+Décidé le 1er septembre 2026. Le mode Nuit ne colore aujourd'hui QUE l'accueil :
+`HomeTab` peint `document.body` en `#070f1e` tant qu'il est monté, et lui seul.
+Étendre aux autres pages représente environ 600 couleurs écrites en dur, donc
+un risque de régression réel à quelques jours de la sortie.
+
+Décision : ne pas étendre maintenant, nommer la limite. Le réglage s'appelle
+« Ambiance de l'accueil » et le dit explicitement. Ce n'est pas un abandon :
+une app dont le moment signature est « Prépare ton sommeil » aura besoin d'un
+vrai thème sombre, et les testeuses le demanderont.
+
+`src/palette.js` a été créé pour ça. Le jour où on l'étend, il suffira de
+donner une variante nuit aux six jetons au lieu de chasser 600 valeurs.
