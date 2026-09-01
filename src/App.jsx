@@ -2764,7 +2764,7 @@ padding: isMobile
               catInitiale={onglet === 'beaute' ? 'cheveux' : null}
               metriques={metriques}
               history={history}
-              onChat={msg => { setOnglet('chat'); envoyerMessage(msg) }}
+              onChat={(msg, aff) => { setOnglet('chat'); envoyerMessage(msg, aff) }}
               onBack={() => setOnglet('accueil')}
             />
             </Suspense>

@@ -351,9 +351,17 @@ function AIRecoCard({ r, onChat, index }) {
               fontFamily:'Poppins,sans-serif',
               boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
             }}
-            onClick={e => { e.stopPropagation(); onChat(`Parle-moi en détail de ${r.nom} selon mon profil`) }}
+            onClick={e => {
+              e.stopPropagation()
+              onChat(
+                `Pourquoi ${r.nom} pour ${LABEL_CAT[cat] || cat} ? Explique-moi ce que ça fait concrètement, `
+                + `au bout de combien de temps on ressent quelque chose, et si ce n'est pas adapté à mon profil, `
+                + `dis-le franchement et propose-moi autre chose.`,
+                `Pourquoi ${r.nom} pour ${LABEL_CAT[cat] || cat} ?`
+              )
+            }}
           >
-            <ChatIcon color="#fff" size={13} /> En savoir plus
+            <ChatIcon color="#fff" size={13} /> Pourquoi celle-ci ?
           </button>
         </div>
       </div>
@@ -647,10 +655,16 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             }}
             onClick={e => {
               e.stopPropagation()
-              onChat(`Explique-moi comment utiliser ${item.nom} selon mon profil`)
+              // Ce que Solenn recoit, et ce que la bulle montre : deux choses.
+              onChat(
+                `Pourquoi ${item.nom} pour ${LABEL_CAT[cat] || cat} ? Explique-moi ce que ça fait concrètement, `
+                + `au bout de combien de temps on ressent quelque chose, et si ce n'est pas adapté à mon profil, `
+                + `dis-le franchement et propose-moi autre chose.`,
+                `Pourquoi ${item.nom} pour ${LABEL_CAT[cat] || cat} ?`
+              )
             }}
           >
-            <ChatIcon color="#fff" size={13} /> Conseils personnalisés
+            <ChatIcon color="#fff" size={13} /> Pourquoi celle-ci ?
           </button>
         </div>
       </div>
