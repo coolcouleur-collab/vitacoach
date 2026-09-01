@@ -7,7 +7,7 @@
 // sessionStorage, envoyée en header x-agents-key à /api/admin/retention.
 
 import React, { useEffect, useState } from 'react'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE } from './palette'
 
 const F = "'Poppins', sans-serif"
 const SERIF = "'Cormorant Garamond', Georgia, serif"
@@ -24,7 +24,7 @@ function Stat({ label, value, sub, alert }) {
   return (
     <div style={card}>
       <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: ENCRE }}>{label}</div>
-      <div style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, color: alert ? '#A8442E' : '#C87B52', lineHeight: 1.15, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
+      <div style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, color: alert ? ROUGE : ENCRE_DOUCE, lineHeight: 1.15, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </div>
       {sub && <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 4, lineHeight: 1.45 }}>{sub}</div>}

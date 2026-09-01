@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, Ani
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
-import { ENCRE_DOUCE, VERT } from './palette'
+import { ENCRE, ENCRE_DOUCE, VERT } from './palette'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -1460,7 +1460,7 @@ function NovaLogBtn({ onClick }) {
         background: hovered ? 'rgba(200,123,82,0.08)' : 'rgba(255,248,240,0.18)',
         border:'1px solid rgba(200,123,82,0.22)',
         fontFamily:"'Poppins',system-ui,sans-serif", fontSize:13, fontWeight:500,
-        color: hovered ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.72)',
+        color: ENCRE,   // le survol se voit au fond de la carte, pas au texte
         boxShadow: hovered
           ? '0 8px 24px rgba(200,123,82,0.18), 0 2px 8px rgba(0,0,0,0.06)'
           : '0 4px 16px rgba(200,123,82,0.10), 0 1px 4px rgba(0,0,0,0.05)',

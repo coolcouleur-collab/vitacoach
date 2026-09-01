@@ -150,7 +150,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                 </svg>
                 <span style={{
                   fontSize: 13, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
-                  color: checked[e.id] ? 'rgba(200,123,82,0.35)' : 'rgba(200,123,82,0.92)',
+                  color: ENCRE,   // l'etat fait est deja porte par le line-through et la puce
                   textDecoration: checked[e.id] ? 'line-through' : 'none',
                   transition: 'all 0.2s',
                 }}>
@@ -167,7 +167,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
               </div>
               {e.description && (
                 <div style={{
-                  fontSize: 11.5, color: checked[e.id] ? 'rgba(200,123,82,0.25)' : 'rgba(200,123,82,0.50)',
+                  fontSize: 11.5, color: ENCRE,
                   fontFamily: 'Poppins,sans-serif', lineHeight: 1.5,
                   transition: 'color 0.2s',
                 }}>
@@ -281,7 +281,7 @@ function EmptyRoutine({ generating, onGenerate }) {
           padding: '14px 28px', borderRadius: 16, border: 'none',
           background: generating ? 'rgba(200,123,82,0.20)' : 'rgba(255,235,210,0.32)',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          color: generating ? 'rgba(200,123,82,0.60)' : '#B2663E',
+          color: ENCRE,   // l'attente est signalee par l'animation, pas par un texte efface
           fontSize: 14, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
           cursor: generating ? 'default' : 'pointer',
           display: 'flex', alignItems: 'center', gap: 8,

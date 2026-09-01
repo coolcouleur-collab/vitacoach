@@ -312,6 +312,20 @@ function InsightsCarousel({ insights, onClose }) {
   )
 }
 
+// Le meme titre de section etait recopie a l'identique a chaque usage. Un
+// role, un endroit : c'est la regle qu'on vient de poser pour les couleurs,
+// elle vaut aussi pour la mise en page.
+function SousTitre({ children, premier = false }) {
+  return (
+    <>
+      {!premier && <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />}
+      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: ENCRE, fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
+        {children}
+      </div>
+    </>
+  )
+}
+
 export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
@@ -465,6 +479,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           z-index: 2;
         }
       `}</style>
+
+      <SousTitre premier>Aujourd'hui</SousTitre>
 
       {/* ── Score Card ── */}
 
@@ -651,21 +667,16 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
            duree arrivaient AVANT le bilan de la semaine et les blocs se
            suivaient sans respiration ni hierarchie : brouillon
            (constat Jean 2026-08-12). ── */}
-      <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
-        Ta semaine
-      </div>
+      <SousTitre>Ta semaine</SousTitre>
       {userId && (
         <div style={{ marginBottom: 22 }}>
           <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>
       )}
 
-      <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />
-      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B421C', fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
-        Sur la durée
-      </div>
+      <SousTitre>Sur la durée</SousTitre>
       <TesProgres history={history} userId={userId} />
+      <SousTitre>Le détail</SousTitre>
       <HistoriqueSection history={history} onLog={openEdit} />
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :

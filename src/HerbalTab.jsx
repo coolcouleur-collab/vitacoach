@@ -43,6 +43,18 @@ const LABEL_CAT = {
   digestion: 'la digestion', 'immunit\u00e9': 'les d\u00e9fenses', cheveux: 'les cheveux', peau: 'la peau',
 }
 
+// Sept onglets alignes a egalite, alors que ce sont DEUX sujets : cinq besoins
+// de sante et deux soins exterieurs. Rien ne le disait, il fallait lire les
+// sept libelles pour comprendre qu'il y avait deux familles, et la page
+// paraissait brouillonne (Jean, 2026-09-01). Le contenu ne bouge pas, seule la
+// hierarchie devient visible. C'est aussi ce qui faisait croire que la fiche
+// Peau etait rangee sous Cheveux : elle etait simplement derriere, dans une
+// rangee qui defilait.
+const GROUPES = [
+  { titre: 'Santé',  ids: ['sommeil', 'stress', 'énergie', 'digestion', 'immunité'] },
+  { titre: 'Beauté', ids: ['cheveux', 'peau'] },
+]
+
 const CATS = [
   { id:'sommeil',   label:'Sommeil',   color:'#7B421C' },
   { id:'stress',    label:'Stress',    color:'#7B421C' },
@@ -600,7 +612,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
                 padding: '11px 16px', borderRadius: 12,
                 background: cureActive ? 'rgba(200,123,82,0.08)' : 'linear-gradient(135deg, rgba(232,150,42,0.20), rgba(200,123,82,0.12))',
                 border: '1px solid rgba(232,150,42,0.40)',
-                color: cureActive ? 'rgba(160,100,60,0.55)' : '#B2663E',
+                color: ENCRE,
                 fontSize: 12.5, fontWeight: 800, cursor: cureActive ? 'default' : 'pointer',
                 fontFamily: 'Poppins,sans-serif',
               }}>
@@ -934,43 +946,54 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       </div>
 
       {/* Le fondu a droite signale qu'il reste des categories : sans lui, la
-          cinquieme est coupee net et rien n'indique qu'on peut faire defiler. */}
-      <div style={{ position:'relative' }}>
-      <div ref={catRowRef} style={hb.catRow}>
-        {CATS.map(c => {
-          const active = cat === c.id
-          return (
-            <button
-              key={c.id}
-              data-actif={active ? '1' : '0'}
-              style={{
-                flexShrink:0, padding:'10px 20px', borderRadius:20,
-                border: active ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(200,123,82,0.16)',
-                fontSize:12, fontWeight:700,
-                cursor:'pointer', fontFamily:'Poppins,sans-serif',
-                whiteSpace:'nowrap',
-                background: active
-                  ? CTA_GRAD
-                  : 'rgba(200,123,82,0.06)',
-                backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-                color: active ? '#fff' : 'rgba(200,123,82,0.65)',
-                boxShadow: active
-                  ? '0 6px 20px rgba(200,123,82,0.35)'
-                  : 'none',
-                transform: active ? 'scale(1.04)' : 'scale(1)',
-                transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-              }}
-              onClick={() => setCat(c.id)}
-            >
-              {c.label}
-            </button>
-          )
-        })}
-      </div>
-      <div style={{
-        position:'absolute', top:0, right:0, bottom:0, width:34, pointerEvents:'none',
-        background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.85) 100%)',
-      }} />
+          derniere est coupee net et rien n'indique qu'on peut faire defiler. */}
+      <div ref={catRowRef}>
+        {GROUPES.map(g => (
+          <div key={g.titre} style={{ position:'relative' }}>
+            <div style={hb.groupeTitre}>{g.titre}</div>
+            <div style={hb.catRow}>
+              {g.ids.map(id => {
+                const c = CATS.find(x => x.id === id)
+                if (!c) return null
+                const active = cat === c.id
+                return (
+                  <button
+                    key={c.id}
+                    data-actif={active ? '1' : '0'}
+                    style={{
+                      flexShrink:0, padding:'10px 20px', borderRadius:20,
+                      border: active ? '1px solid rgba(143,61,20,0.55)' : '1px solid rgba(200,123,82,0.16)',
+                      fontSize:12, fontWeight:700,
+                      cursor:'pointer', fontFamily:'Poppins,sans-serif',
+                      whiteSpace:'nowrap',
+                      // Pastille pleine + texte blanc pour l'onglet ouvert, la
+                      // regle des actions principales. L'ancien fond etait du
+                      // creme a 32 % sous du blanc, soit 1,37:1. Le terracotta
+                      // est celui des boutons, pas une huitieme nuance.
+                      background: active
+                        ? 'linear-gradient(135deg,#8F3D14,#B3501F)'
+                        : 'rgba(200,123,82,0.06)',
+                      backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+                      color: active ? '#fff' : ENCRE,
+                      boxShadow: active
+                        ? '0 6px 20px rgba(143,61,20,0.30)'
+                        : 'none',
+                      transform: active ? 'scale(1.04)' : 'scale(1)',
+                      transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                    }}
+                    onClick={() => setCat(c.id)}
+                  >
+                    {c.label}
+                  </button>
+                )
+              })}
+            </div>
+            <div style={{
+              position:'absolute', top:0, right:0, bottom:0, width:34, pointerEvents:'none',
+              background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.85) 100%)',
+            }} />
+          </div>
+        ))}
       </div>
 
       {/* ── Count row ── */}
@@ -1080,8 +1103,12 @@ const hb = {
   },
 
   // ── Category pills
+  groupeTitre: {
+    fontSize:10.5, fontWeight:700, letterSpacing:'0.10em', textTransform:'uppercase',
+    color:ENCRE, opacity:0.72, padding:'12px 16px 0', fontFamily:'Poppins,sans-serif',
+  },
   catRow: {
-    display:'flex', gap:8, padding:'14px 16px 10px',
+    display:'flex', gap:8, padding:'8px 16px 10px',
     overflowX:'auto', scrollbarWidth:'none', WebkitOverflowScrolling:'touch',
   },
 
