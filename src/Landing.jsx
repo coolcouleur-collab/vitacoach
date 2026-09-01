@@ -121,7 +121,7 @@ function CinematicSlider({ onCommencer }) {
           position: 'relative',
           overflow: 'hidden',
           width: '100%',
-          height: '100%',
+          height: '100dvh',
           background: 'transparent',
           display: 'grid',
           gridTemplateColumns: '1fr',
@@ -422,7 +422,7 @@ function CinematicSlider({ onCommencer }) {
         {/* ── Progress bar ── */}
         <div style={{ position: 'absolute', bottom: 'env(safe-area-inset-bottom, 0px)', left: 0, right: 0, height: 2, zIndex: 20, background: 'rgba(255,255,255,0.08)' }}>
           <div style={{
-            height: '100%',
+            height: '100%',   // remplissage de la barre de progression, haute de 2px
             width: `${((cur + 1) / N) * 100}%`,
             background: `linear-gradient(90deg,${SLIDE.color},${SLIDE.accent})`,
             transition: 'width 0.65s cubic-bezier(0.76,0,0.24,1), background 0.4s',
@@ -598,7 +598,7 @@ export default function Landing({ onCommencer }) {
   }, [])
 
   return (
-    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100%', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
+    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100dvh', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
       <style>{`
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
@@ -660,7 +660,7 @@ export default function Landing({ onCommencer }) {
         }
       `}</style>
 
-      <div style={{ position: 'relative', height: '100%', overflow: 'hidden', zIndex: 1 }}>
+      <div style={{ position: 'relative', height: '100dvh', overflow: 'hidden', zIndex: 1 }}>
         <div className="globe-wrapper"><GlobeBg opacity={0.35} fixed={false} /></div>
         <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
           background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
