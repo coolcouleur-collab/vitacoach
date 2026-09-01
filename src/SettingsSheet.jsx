@@ -1088,7 +1088,7 @@ export default function SettingsSheet({
                     Suivi du cycle menstruel
                   </div>
                   <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
-                    {profil.cycle ? "Activé, l'onglet Cycle est visible" : 'Désactivé, active-le quand tu veux'}
+                    {profil.cycle ? "Activé, tu le trouves dans « Tes outils » sur l'accueil" : "Désactivé, active-le quand tu veux"}
                   </div>
                 </div>
                 <ToggleSwitch

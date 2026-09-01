@@ -3551,7 +3551,7 @@ function TenuesModule({ profil }) {
         <div style={{ marginBottom: 8 }}>
           <input
             className="tenues-ville-input"
-            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? '#ef4444' : undefined }}
+            style={{ ...st.input, width:'100%', boxSizing:'border-box', borderColor: villeError ? ROUGE : undefined }}
             placeholder="Ta ville (ex: Paris)" value={ville}
             onChange={e => { setVille(e.target.value); setVilleError(false) }}
             onKeyDown={e => e.key === 'Enter' && getTenues()}
