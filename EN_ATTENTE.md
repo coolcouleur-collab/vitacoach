@@ -67,6 +67,28 @@ verrouille, ET la distance aussi. Si le temps avance mais pas la distance,
 c'est l'autorisation de position restee sur « quand j'utilise l'app » au lieu
 de « toujours ».
 
+### Play Console : deux formulaires que le chantier rend obligatoires
+
+Le paquet Android a gagne des permissions. Google en examine deux categories,
+et un envoi peut etre refuse tant que le formulaire n'est pas rempli.
+
+1. **Services de premier plan.** Depuis Android 14, tout type de service doit
+   etre declare et justifie dans la console. Le notre est de type `location`.
+   Justification a donner : « mesure de la distance et de la duree d'une
+   sortie sportive lancee par l'utilisateur, affichee en permanence dans une
+   notification pendant l'activite ». Une courte video de la fonction est
+   souvent demandee.
+
+2. **Applications de sante.** Les permissions Health Connect (pas, sommeil,
+   rythme cardiaque, poids) demandent le formulaire des applications de sante.
+   Il etait deja du, puisque les permissions etaient declarees depuis
+   longtemps ; la difference est qu'elles sont maintenant reellement
+   utilisees, donc la justification est enfin vraie.
+
+Bonne nouvelle en revanche : `ACCESS_BACKGROUND_LOCATION` n'est PAS demandee.
+Le service de premier plan suffit, et c'est cette permission la qui declenche
+le gros dossier de Google. Verifie apres compilation.
+
 ### Reconstruire les paquets
 
 Le bundle Android depose chez Google date du 30 aout, l'iOS embarque du
