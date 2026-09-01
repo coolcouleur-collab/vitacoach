@@ -1,45 +1,44 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Le crème est-il possible ?</title>
+<title>Alléger sans foncer le fond</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Poppins:wght@400;500;600;700&display=swap');
-  body { margin:0; padding:22px 14px 60px; font-family:'Poppins',sans-serif;
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
+  body { margin:0; padding:22px 14px 70px; font-family:'Poppins',sans-serif;
          background:linear-gradient(160deg,#FFF6E8 0%,#F5DDB0 50%,#FFF6E8 100%); color:#7C4C33; }
   h1 { font-size:15px; margin:0 0 4px; }
-  p.i { font-size:12.5px; margin:0 0 20px; opacity:.85; line-height:1.6; }
+  p.i { font-size:12.5px; margin:0 0 6px; opacity:.85; line-height:1.6; }
   .lab { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-         margin:22px 0 8px; opacity:.75; }
-  .carte { border-radius:22px; padding:22px 20px 24px; max-width:330px; margin:0 auto; }
-  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:40px;
-          text-align:center; line-height:1; margin-bottom:16px; }
-  .ong { display:flex; gap:22px; justify-content:center; font-size:14px; margin-bottom:20px; }
-  .ong b { font-weight:700; } .ong span { font-weight:400; opacity:.8; }
-  .l { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
-  .ch { border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:14px; }
-  .btn { display:block; margin:16px auto 0; padding:12px 30px; border-radius:2rem;
-         font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; text-align:center; width:fit-content; }
+         margin:26px 0 8px; opacity:.72; }
+  .carte { border-radius:22px; padding:24px 22px 26px; max-width:330px; margin:0 auto;
+           background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); }
+  .logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:42px;
+          text-align:center; line-height:1; margin-bottom:18px; color:#C87B52; }
   .note { max-width:330px; margin:10px auto 0; font-size:12px; line-height:1.6; opacity:.85; }
 
-  /* A — ce qui est en ligne : carte claire, encre foncee */
-  .a { background:rgba(255,235,210,0.25); border:1px solid rgba(255,220,160,0.30); color:#7C4C33; }
-  .a .logo { color:#C87B52; }
-  .a .ch { background:rgba(255,250,244,0.55); border:1.5px solid rgba(124,76,51,0.70); }
-  .a .btn { background:linear-gradient(135deg,#6C422C,#90593B); color:#FFF8EB; }
+  /* A — en ligne : capitales grasses, onglets gras, bouton plein */
+  .a .ong { display:flex; gap:22px; justify-content:center; font-size:15px; margin-bottom:22px; }
+  .a .ong b { font-weight:700; } .a .ong span { font-weight:400; opacity:.85; }
+  .a .l { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
+  .a .ch { border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:14px;
+           background:rgba(255,250,244,0.55); border:1.5px solid rgba(124,76,51,0.70); }
+  .a .btn { display:block; margin:18px auto 0; padding:12px 30px; border-radius:2rem; width:fit-content;
+            background:linear-gradient(135deg,#6C422C,#90593B); color:#FFF8EB;
+            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; }
 
-  /* B — carte terracotta profonde, texte creme. Le FOND DE PAGE ne bouge pas. */
-  .b { background:linear-gradient(160deg,#8F5A2A 0%,#7C4C33 100%);
-       border:1px solid rgba(255,220,160,0.30); color:#FFF8EB;
-       box-shadow:0 18px 50px rgba(124,76,51,0.30); }
-  .b .logo { color:#F2C98A; }
-  .b .ch { background:rgba(255,248,235,0.10); border:1.5px solid rgba(255,235,200,0.45); color:#FFF8EB; }
-  .b .btn { background:rgba(255,248,235,0.94); color:#7C4C33; }
+  /* C — même encre, traitement allégé : serif fine, pas d'étiquettes, bouton filaire */
+  .c .ong { display:flex; gap:26px; justify-content:center; margin-bottom:26px;
+            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; }
+  .c .ong b { font-weight:600; border-bottom:1px solid rgba(124,76,51,0.55); padding-bottom:3px; }
+  .c .ong span { font-weight:300; opacity:.72; }
+  .c .ch { border:none; border-bottom:1px solid rgba(124,76,51,0.45); background:none;
+           border-radius:0; padding:11px 2px; font-size:15px; font-weight:300; margin-bottom:20px; }
+  .c .ch em { font-style:normal; opacity:.55; }
+  .c .btn { display:block; margin:26px auto 0; padding:11px 34px; border-radius:2rem; width:fit-content;
+            background:none; border:1px solid rgba(124,76,51,0.65); color:#7C4C33;
+            font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; font-weight:400; }
 </style>
 
-<h1>Peut-on garder le crème ?</h1>
-<p class="i">
-  Pas sur un fond clair : entre deux tons proches du blanc, le contraste plafonne
-  vers 1,3:1 quelle que soit l'opacité. Mais on peut foncer <em>la carte</em>
-  sans toucher au fond de la page.
-</p>
+<h1>Garder ton fond crème, alléger l'écriture</h1>
+<p class="i">Même encre dans les deux. Seuls le poids, les capitales et le bouton changent.</p>
 
 <div class="lab">A · en ligne aujourd'hui</div>
 <div class="carte a">
@@ -49,18 +48,19 @@
   <div class="l">Mot de passe</div><div class="ch">••••••</div>
   <div class="btn">Retrouver Solenn →</div>
 </div>
-<p class="note">Encre terracotta sur carte claire. Lisible, mesuré à 5,2:1.</p>
+<p class="note">Deux étiquettes en capitales grasses, deux onglets gras, un bouton plein. Beaucoup de masse foncée.</p>
 
-<div class="lab">B · carte terracotta, texte crème</div>
-<div class="carte b">
+<div class="lab">C · allégé</div>
+<div class="carte c">
   <div class="logo">Solenn</div>
   <div class="ong"><b>Connexion</b><span>Inscription</span></div>
-  <div class="l">Email</div><div class="ch">@</div>
-  <div class="l">Mot de passe</div><div class="ch">••••••</div>
+  <div class="ch"><em>Ton adresse email</em></div>
+  <div class="ch"><em>Ton mot de passe</em></div>
   <div class="btn">Retrouver Solenn →</div>
 </div>
 <p class="note">
-  Crème sur terracotta profond, mesuré à <b>5,4:1</b>. Le fond de la page, son
-  dégradé et son halo doré ne bougent pas d'un pixel : seule la carte devient
-  un panneau chaud posé dessus. Le logo reprend l'or.
+  Les capitales disparaissent, l'étiquette vit dans le champ. Les onglets passent
+  au Cormorant fin. Les cadres deviennent un simple trait sous le champ. Le bouton
+  devient filaire. Tout reste au-dessus des seuils, et il y a trois fois moins
+  de matière sombre à l'écran.
 </p>
