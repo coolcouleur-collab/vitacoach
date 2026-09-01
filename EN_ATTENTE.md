@@ -14,8 +14,12 @@ place. L'inscription en entier, le chat avec la dictée, un programme généré,
 routine, la nutrition, les Soins, les Paramètres. C'est là que sortiront les
 problèmes de rendu mobile, jamais vérifiés jusqu'ici.
 
-**2. Resend.** Attendre que le domaine passe au vert (SPF et DMARC en
-propagation), créer la clé, puis `RESEND_API_KEY` dans les variables Render.
+**2. Resend.** ~~Attendre la propagation~~ : les trois enregistrements sont
+en place et vérifiés le 1er septembre 2026 par deux résolveurs indépendants
+(SPF `v=spf1 include:amazonses.com ~all` sur `send`, MX vers
+`feedback-smtp.eu-west-1.amazonses.com`, DKIM `resend._domainkey`). Le SPF du
+sous-domaine était le seul qui manquait. Reste : cliquer « Verify DNS Records »
+dans Resend, créer la clé, puis `RESEND_API_KEY` dans les variables Render.
 Sans elle, la suppression de compte fonctionne mais n'envoie aucun email de
 confirmation.
 
