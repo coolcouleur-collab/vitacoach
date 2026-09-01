@@ -19,7 +19,7 @@
 // sentait sans se nommer. Quinze centièmes de contraste échangés contre
 // vingt-deux points de couleur, et il reste de la marge au-dessus du seuil
 // de 4,5 pour les écrans à venir.
-export const ENCRE       = '#7C4C33'
+export const ENCRE       = '#944D26'
 // 3,86:1. Ne passe PAS le seuil du texte courant : réservée aux icônes et aux
 // textes d'au moins 24px. Elle s'appelait ENCRE_DOUCE, et ce nom d'encre
 // invitait à l'employer comme une encre : trouvée trois fois sur du texte de
@@ -32,7 +32,7 @@ export const ENCRE       = '#7C4C33'
 // Réchauffée dans la même proportion que l'encre : une icône restée grise à
 // côté d'un texte devenu chaud se voit immédiatement. Elle y gagne sur les
 // deux tableaux, chroma 141 contre 105 et contraste 4,07 contre 3,86.
-export const ICONE = '#A06242'
+export const ICONE = '#AF5B2D'
 export const ACCENT      = '#C87B52'   // 2,39:1 — fonds, bordures, traits. JAMAIS du texte
 export const AMBRE       = '#8A5206'   // 4,65:1 — accent chaud lisible
 export const VERT        = '#166534'   // 5,19:1 — état positif

@@ -3,6 +3,7 @@ import { supabase } from './supabase'
 import { FlashIcon, LoadingIcon } from './Icons'
 import LiquidImage from './LiquidImage'
 import GlobeBg from './GlobeBg'
+import { ENCRE } from './palette'
 
 const LANGS = [
   { code: 'fr', name: 'Français' },
@@ -239,7 +240,7 @@ export default function Auth({ onConnecte, onBack }) {
           border:'1px solid rgba(255,220,160,0.35)', borderRadius:'2rem',
           padding:'6px 12px', cursor:'pointer',
           fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight:500, letterSpacing:'0.08em',
-          color:'#C87B52', transition:'background 0.2s',
+          color:ENCRE, transition:'background 0.2s',
         }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
@@ -259,11 +260,11 @@ export default function Auth({ onConnecte, onBack }) {
             {LANGS.map(({ code, name }) => (
               <button key={code} onClick={() => switchLang(code)} style={{
                 display:'block', width:'100%', textAlign:'left',
-                padding:'9px 16px', background: lang===code ? '#C87B52' : 'none',
+                padding:'9px 16px', background: lang===code ? ENCRE : 'none',
                 border:'none', cursor:'pointer',
                 fontFamily:'Poppins, sans-serif', fontSize:13,
                 fontWeight: lang===code ? 600 : 400,
-                color: lang===code ? '#C87B52' : '#C87B52',
+                color: lang===code ? ENCRE : ENCRE,
                 transition:'background 0.15s',
               }}>
                 {name}
@@ -342,7 +343,7 @@ export default function Auth({ onConnecte, onBack }) {
         <div style={{...s.field, position:'relative'}}>
           <div style={{position:'relative'}}>
             <svg style={{position:'absolute', left:4, top:'50%', transform:'translateY(-50%)',
-              opacity:0.82, pointerEvents:'none', color:'#C87B52'}}
+              opacity:0.82, pointerEvents:'none', color:ENCRE}}
               width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2"/>
@@ -362,7 +363,7 @@ export default function Auth({ onConnecte, onBack }) {
               type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
               style={{ cursor:'pointer' }}
             />
-            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:'#C87B52' }}>
+            <span style={{ fontFamily:'Poppins, sans-serif', fontSize:13, color:ENCRE }}>
               {T.remember}
             </span>
           </label>
@@ -380,7 +381,7 @@ export default function Auth({ onConnecte, onBack }) {
               fontFamily: 'Poppins, sans-serif',
               fontStyle: 'normal',
               fontSize: '1rem',
-              color: '#C87B52',
+              color: ENCRE,
               letterSpacing: '0.01em',
             }}>
               {message}
@@ -412,7 +413,7 @@ export default function Auth({ onConnecte, onBack }) {
         {mode === 'inscription' && (
           <div style={s.footer}>
             {T.terms}<br />
-            <span style={{ color:'#C87B52', fontWeight:600 }}>{T.termsLink}</span>.
+            <span style={{ color:ENCRE, fontWeight:600 }}>{T.termsLink}</span>.
           </div>
         )}
 
@@ -440,7 +441,7 @@ const s = {
     paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
     position:'relative', overflowY:'auto', overflowX:'hidden' },
   blob1: { position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(148,77,38,0.60) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
     background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
@@ -458,37 +459,37 @@ const s = {
     border:'1px solid rgba(255,220,160,0.30)',
     animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', marginBottom:6 },
-  tagline: { textAlign:'center', fontSize:13, color:'#C87B52', marginBottom:36 },
+  tagline: { textAlign:'center', fontSize:13, color:ENCRE, marginBottom:36 },
   tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
     borderBottom:'1px solid rgba(255,220,160,0.20)' },
   tab: { flex:1, padding:'11px 4px', background:'transparent', border:'none', cursor:'pointer',
     fontSize:15, fontFamily:'Poppins, sans-serif',
-    color:'#C87B52', fontWeight:400, opacity:0.75,
+    color:ENCRE, fontWeight:400, opacity:0.75,
     borderBottom:'1px solid transparent', marginBottom:'-1px' },
   tabActive: { flex:1, padding:'11px 4px', background:'transparent', border:'none', cursor:'pointer',
     fontSize:15, fontFamily:'Poppins, sans-serif',
-    color:'#C87B52', fontWeight:600,
-    borderBottom:'1px solid rgba(200,123,82,0.60)', marginBottom:'-1px' },
+    color:ENCRE, fontWeight:600,
+    borderBottom:'1px solid rgba(148,77,38,0.70)', marginBottom:'-1px' },
   field: { marginBottom:16 },
   label: { display:'block', marginBottom:6, fontWeight:500, fontSize:12,
-    color:'#C87B52', letterSpacing:'1.2px', textTransform:'uppercase' },
-  input: { width:'100%', padding:'11px 2px', border:'none', borderBottom:'1px solid rgba(200,123,82,0.50)',
+    color:ENCRE, letterSpacing:'1.2px', textTransform:'uppercase' },
+  input: { width:'100%', padding:'11px 2px', border:'none', borderBottom:'1px solid rgba(148,77,38,0.60)',
     borderRadius:0, background:'none', fontSize:16, fontFamily:'Poppins, sans-serif',
-    color:'#C87B52',
+    color:ENCRE,
     boxSizing:'border-box', outline:'none', transition:'border-color 0.2s, background 0.2s, box-shadow 0.2s' },
   msg: { padding:'11px 16px', borderRadius:12, fontSize:13, marginBottom:14 },
   btn: { width:'auto', padding:'0.85rem 2.5rem', background:'none', display:'block', margin:'20px auto 0',
-    color:'#C87B52', border:'1px solid rgba(200,123,82,0.65)', borderRadius:'2rem',
+    color:ENCRE, border:'1px solid rgba(148,77,38,0.70)', borderRadius:'2rem',
     fontSize:15, fontWeight:600, letterSpacing:'0.02em',
     cursor:'pointer', fontFamily:'Poppins, sans-serif',
     letterSpacing:'0.10em', marginTop:0,
     transition:'background 0.25s, border-color 0.25s' },
-  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:'#C87B52', letterSpacing:'0.02em' },
-  footer: { marginTop:20, textAlign:'center', fontSize:14, color:'#C87B52', lineHeight:1.6 },
+  reassurance: { marginTop:10, textAlign:'center', fontSize:11, color:ENCRE, letterSpacing:'0.02em' },
+  footer: { marginTop:20, textAlign:'center', fontSize:14, color:ENCRE, lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,
     background:'rgba(255,235,210,0.22)', border:'1px solid rgba(255,220,160,0.40)', cursor:'pointer',
-    color:'#C87B52', fontSize:22, fontWeight:500,
+    color:ENCRE, fontSize:22, fontWeight:500,
     fontFamily:'Poppins, sans-serif', padding:'0.55rem 1.8rem',
     borderRadius:'2rem', transition:'background 0.25s, border-color 0.25s',
   },
