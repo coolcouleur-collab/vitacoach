@@ -1,0 +1,41 @@
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le score en mode nuit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+  body { margin:0; padding:24px 16px 60px; font-family:'Poppins',sans-serif; background:#070f1e; color:rgba(190,216,255,.9); }
+  h1 { font-size:15px; margin:0 0 6px; color:rgba(198,222,255,.96); }
+  p.i { font-size:12.5px; margin:0 0 22px; color:rgba(190,216,255,.7); }
+  .carte { background:rgba(15,28,58,.70); border:1px solid rgba(160,200,255,.20);
+           border-radius:15px; padding:14px 15px; max-width:340px; margin-bottom:16px; }
+  .l { display:flex; align-items:baseline; gap:5px; }
+  /* Valeurs EXACTES du code, HomeTab ligne 2329 */
+  .n { font-size:28px; font-weight:700; line-height:1; letter-spacing:-.02em;
+       color:rgba(180,210,255,.82); font-variant-numeric:tabular-nums; }
+  .c { font-size:12px; font-weight:400; color:rgba(180,210,255,.55); }
+  .lib { font-size:10px; font-weight:500; letter-spacing:.05em; text-transform:uppercase;
+         color:rgba(180,210,255,.60); margin-top:6px; }
+  .ph { font-size:12px; font-weight:500; color:rgba(180,210,255,.88); margin-top:3px; }
+  .note { font-size:12px; color:rgba(190,216,255,.62); max-width:340px; line-height:1.6; }
+  .av { background:rgba(15,28,58,.70); border:1px solid rgba(160,200,255,.20);
+        border-radius:15px; padding:14px 15px; max-width:340px; margin-bottom:8px; }
+  .av .n { color:#9C5B33; }
+  .av .c, .av .lib, .av .ph { color:rgba(180,210,255,.55); }
+</style>
+<h1>Ce que le code produit aujourd'hui, en mode nuit</h1>
+<p class="i">Valeurs copiées telles quelles depuis HomeTab, ligne 2329.</p>
+
+<div class="carte">
+  <div class="l"><span class="n">28</span><span class="c">/100</span></div>
+  <div class="lib">Score bien-être du jour</div>
+  <div class="ph">Chaque jour compte</div>
+</div>
+<p class="note" style="margin-bottom:26px">↑ Voilà ce que tu dois voir. Le 28 est bleu clair.</p>
+
+<div class="av">
+  <div class="l"><span class="n">28</span><span class="c">/100</span></div>
+  <div class="lib">Score bien-être du jour</div>
+  <div class="ph">Chaque jour compte</div>
+</div>
+<p class="note">↑ Et voilà l'ancienne version, avant correction. Le 28 est brun orangé.<br><br>
+Si c'est <b>celle du bas</b> que tu vois sur ton téléphone, alors ton appareil te sert une copie
+d'avant le correctif, et le problème n'est pas dans le code.</p>
