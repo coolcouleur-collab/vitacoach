@@ -48,6 +48,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { Capacitor, registerPlugin } from '@capacitor/core'
+
+// Le pont CoreLocation, ecrit pour l'iPhone. @capacitor/geolocation fait tres
+// bien son travail au premier plan et rien du tout ecran verrouille : iOS
+// demande une declaration explicite pour continuer a localiser en arriere
+// plan, et un plugin generaliste ne peut pas la faire pour tout le monde.
+const PositionCourse = registerPlugin('PositionCourse')
+
+const surIphone = () =>
+  Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
 
 const PRECISION_MAX  = 25    // mètres
 const BOND_MIN       = 5     // mètres, plancher absolu
@@ -154,10 +164,35 @@ export function useCourse() {
 
   const dernier = useRef(null)
   const veille = useRef(null)
+  const ecoute = useRef(null)
   const trace = useRef([])
+
+  /**
+   * Le traitement d'un relevé, quelle que soit sa provenance.
+   *
+   * Les deux sources, CoreLocation et le plugin générique, ne donnent pas
+   * leurs relevés dans la même forme. Elles sont normalisées avant d'arriver
+   * ici, pour qu'il n'existe qu'UN seul endroit où la distance s'additionne :
+   * deux copies de ce calcul, c'est la garantie qu'un jour l'une des deux
+   * n'aura pas la correction de l'autre.
+   */
+  const traiter = useCallback(point => {
+    setPrecision(Math.round(point.precision || 0))
+    const verdict = evaluerPoint(dernier.current, point)
+    if (!verdict.garde) { setRejetes(n => n + 1); return }
+    dernier.current = point
+    trace.current.push(point)
+    setPoints(n => n + 1)
+    if (verdict.metres > 0) setMetres(d => d + verdict.metres)
+  }, [])
 
   const arreter = useCallback(async () => {
     setActif(false)
+    if (ecoute.current) {
+      try { (await ecoute.current).remove() } catch {}
+      ecoute.current = null
+      try { await PositionCourse.arreter() } catch {}
+    }
     if (veille.current != null) {
       try {
         const { Geolocation } = await import('@capacitor/geolocation')
@@ -173,6 +208,35 @@ export function useCourse() {
     trace.current = []
     setMetres(0); setPoints(0); setRejetes(0)
 
+    // ── L'iPhone, par le pont CoreLocation ──────────────────────────────
+    if (surIphone()) {
+      try {
+        const perm = await PositionCourse.demanderAutorisation()
+        if (!perm?.accorde) {
+          setErreur("Sans acces a ta position, la distance ne peut pas etre mesuree.")
+          return false
+        }
+        ecoute.current = PositionCourse.addListener('position', traiter)
+        const r = await PositionCourse.demarrer()
+        if (!r?.demarre) {
+          setErreur("La position n'a pas pu demarrer.")
+          return false
+        }
+        if (!r?.arrierePlan) {
+          // Dit, et non taise : sans l'autorisation « toujours », la distance
+          // se figera au verrouillage. Mieux vaut le savoir avant de partir
+          // que de decouvrir un compteur arrete a l'arrivee.
+          setErreur("Autorise la position « toujours » pour que la distance continue ecran verrouille.")
+        }
+        setActif(true)
+        return true
+      } catch (e) {
+        setErreur("La position n'est pas disponible sur cet appareil.")
+        return false
+      }
+    }
+
+    // ── Android et le web, par le plugin generique ──────────────────────
     try {
       const { Geolocation } = await import('@capacitor/geolocation')
       const perm = await Geolocation.requestPermissions()
@@ -185,22 +249,13 @@ export function useCourse() {
         { enableHighAccuracy: true, timeout: 15000 },
         (pos, err) => {
           if (err || !pos?.coords) return
-          const point = {
+          traiter({
             lat: pos.coords.latitude,
             lon: pos.coords.longitude,
             t: pos.timestamp || Date.now(),
             precision: pos.coords.accuracy,
             vitesse: pos.coords.speed,
-          }
-          setPrecision(Math.round(point.precision || 0))
-
-          const verdict = evaluerPoint(dernier.current, point)
-          if (!verdict.garde) { setRejetes(n => n + 1); return }
-
-          dernier.current = point
-          trace.current.push(point)
-          setPoints(n => n + 1)
-          if (verdict.metres > 0) setMetres(d => d + verdict.metres)
+          })
         },
       )
       setActif(true)
@@ -209,7 +264,7 @@ export function useCourse() {
       setErreur("La position n'est pas disponible sur cet appareil.")
       return false
     }
-  }, [])
+  }, [traiter])
 
   // Une montre de position qui survit au demontage du composant continue de
   // consommer la batterie, indefiniment et sans rien afficher.

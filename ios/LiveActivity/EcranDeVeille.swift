@@ -49,8 +49,9 @@ public class EcranDeVeille: CAPPlugin {
 
         let titre = call.getString("titre") ?? "Course en cours"
         let etat = SolennActiviteAttributes.ContentState(
-            duree: call.getString("texte") ?? "00:00",
-            distance: "",
+            debut: Self.instant(call),
+            dureeFigee: call.getString("fige") ?? "00:00",
+            distance: call.getString("texte") ?? "",
             allure: nil
         )
 
@@ -75,7 +76,8 @@ public class EcranDeVeille: CAPPlugin {
         }
 
         let etat = SolennActiviteAttributes.ContentState(
-            duree: call.getString("titre") ?? "",
+            debut: Self.instant(call),
+            dureeFigee: call.getString("fige") ?? "",
             distance: call.getString("texte") ?? "",
             allure: call.getString("allure")
         )
@@ -84,6 +86,16 @@ public class EcranDeVeille: CAPPlugin {
             await a.update(.init(state: etat, staleDate: nil))
             call.resolve()
         }
+    }
+
+    /// L'instant d'ou le systeme doit compter, ou nil si la course est en
+    /// pause. Le JavaScript envoie `base` en millisecondes, comme pour Android :
+    /// une seule facon de dire la meme chose des deux cotes.
+    private static func instant(_ call: CAPPluginCall) -> Date? {
+        guard call.getBool("court") ?? true else { return nil }
+        let ms = call.getDouble("base") ?? 0
+        guard ms > 0 else { return Date() }
+        return Date(timeIntervalSince1970: ms / 1000.0)
     }
 
     @objc func arreter(_ call: CAPPluginCall) {

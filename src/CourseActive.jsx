@@ -13,7 +13,7 @@
 // laisser croire.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { useChrono, formater } from './useChrono'
@@ -104,24 +104,43 @@ export default function CourseActive({ onTermine, onFermer }) {
       // verrouille : sur Android, c'est la contrepartie exigee par le systeme
       // pour continuer a travailler en arriere plan. Si elle echoue, la course
       // se deroule quand meme, simplement sans ecran de veille.
-      veilleDemarrer('Course en cours', '00:00')
+      veilleDemarrer({
+        titre: 'Course en cours',
+        texte: 'Recherche du signal',
+        base: Date.now(),
+        court: true,
+        fige: '00:00',
+      })
     })
     return () => { vivant = false; veilleArreter() }
   }, [])   // eslint-disable-line react-hooks/exhaustive-deps
 
-  // La notification suit la course, une fois par seconde et pas quatre : le
-  // chronometre redessine tous les quarts de seconde, et rien ne justifie de
-  // reveiller le systeme aussi souvent pour un texte identique.
-  const derniereSeconde = React.useRef(-1)
+  // La notification n'est plus poussee chaque seconde, et c'est le coeur du
+  // montage : le TEMPS est compte par le systeme a partir de `base`, donc il
+  // continue d'avancer sur l'ecran verrouille meme quand l'application est
+  // completement endormie. Ne restent a envoyer que la distance, qui change
+  // tous les dix metres, et la pause, qui change rarement.
+  //
+  // On envoie donc sur CHANGEMENT du texte affiche, pas sur battement d'horloge.
+  const dernierEnvoi = useRef('')
   useEffect(() => {
-    if (fini || !chrono.enCours) return
-    if (chrono.secondes === derniereSeconde.current) return
-    derniereSeconde.current = chrono.secondes
-    veilleMettreAJour(
-      chrono.texte,
-      gps.metres >= 1 ? `${formaterDistance(gps.metres)} parcourus` : 'Recherche du signal',
-    )
-  }, [chrono.secondes, chrono.enCours, chrono.texte, gps.metres, fini])
+    if (fini) return
+    const texte = gps.metres >= 1
+      ? `${formaterDistance(gps.metres)} parcourus`
+      : 'Recherche du signal'
+    const empreinte = `${texte}|${chrono.enCours}`
+    if (empreinte === dernierEnvoi.current) return
+    dernierEnvoi.current = empreinte
+    veilleMettreAJour({
+      titre: 'Course en cours',
+      texte,
+      // Maintenant moins l'ecoule : c'est ce qui permet au systeme de
+      // retrouver le bon compte apres une pause, sans repartir de zero.
+      base: Date.now() - chrono.ms,
+      court: chrono.enCours,
+      fige: chrono.texte,
+    })
+  }, [gps.metres, chrono.enCours, fini])   // eslint-disable-line react-hooks/exhaustive-deps
 
   function terminer() {
     const ms = chrono.arreter()

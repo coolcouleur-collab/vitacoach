@@ -36,7 +36,7 @@ struct SolennActiviteWidget: Widget {
                     .foregroundColor(ambre)
 
                 HStack(alignment: .firstTextBaseline, spacing: 18) {
-                    Chiffre(valeur: contexte.state.duree, libelle: "Durée")
+                    Duree(debut: contexte.state.debut, figee: contexte.state.dureeFigee)
                     if !contexte.state.distance.isEmpty {
                         Chiffre(valeur: contexte.state.distance, libelle: "Distance")
                     }
@@ -54,7 +54,7 @@ struct SolennActiviteWidget: Widget {
             DynamicIsland {
                 // ── L'îlot déplié ───────────────────────────────────────────
                 DynamicIslandExpandedRegion(.leading) {
-                    Chiffre(valeur: contexte.state.duree, libelle: "Durée")
+                    Duree(debut: contexte.state.debut, figee: contexte.state.dureeFigee)
                         .padding(.leading, 6)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
@@ -74,10 +74,18 @@ struct SolennActiviteWidget: Widget {
                 Image(systemName: "figure.run").foregroundColor(encre)
             } compactTrailing: {
                 // La pastille est minuscule : le temps seul, et rien d'autre.
-                Text(contexte.state.duree)
-                    .font(.system(size: 13, weight: .semibold))
-                    .monospacedDigit()
-                    .foregroundColor(encre)
+                if let debut = contexte.state.debut {
+                    Text(timerInterval: debut...Date.distantFuture, countsDown: false)
+                        .font(.system(size: 13, weight: .semibold))
+                        .monospacedDigit()
+                        .foregroundColor(encre)
+                        .frame(maxWidth: 52)
+                } else {
+                    Text(contexte.state.dureeFigee)
+                        .font(.system(size: 13, weight: .semibold))
+                        .monospacedDigit()
+                        .foregroundColor(encre)
+                }
             } minimal: {
                 Image(systemName: "figure.run").foregroundColor(encre)
             }
@@ -98,11 +106,56 @@ private struct Chiffre: View {
                 // seconde, parce que le 1 est plus étroit que le 8.
                 .monospacedDigit()
                 .foregroundColor(encre)
-            Text(libelle.uppercased())
-                .font(.system(size: 9, weight: .semibold))
-                .kerning(0.8)
-                .foregroundColor(ambre)
+            Legende(libelle)
         }
+    }
+}
+
+/// Le temps, compté par le système et non par nous.
+///
+/// `Text(timerInterval:)` s'actualise tout seul sur l'écran verrouillé, sans
+/// que l'application soit réveillée. C'est ce qui empêche le compteur de se
+/// figer pendant que le téléphone dort, et c'est pour ça que le `ContentState`
+/// transporte un instant de départ plutôt qu'un texte.
+///
+/// À la pause, il n'y a plus d'instant de départ : un compteur système ne sait
+/// pas s'interrompre, alors on affiche le temps figé que l'application a
+/// calculé.
+private struct Duree: View {
+    let debut: Date?
+    let figee: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            if let debut {
+                Text(timerInterval: debut...Date.distantFuture, countsDown: false)
+                    .font(.system(size: 26, weight: .bold))
+                    .monospacedDigit()
+                    .foregroundColor(encre)
+                    // Sans largeur fixe, la vue se redimensionne au passage de
+                    // 9:59 a 10:00 et fait sauter tout ce qui est a cote.
+                    .frame(maxWidth: 92, alignment: .leading)
+            } else {
+                Text(figee)
+                    .font(.system(size: 26, weight: .bold))
+                    .monospacedDigit()
+                    .foregroundColor(encre)
+                    .frame(maxWidth: 92, alignment: .leading)
+            }
+            Legende(debut == nil ? "En pause" : "Durée")
+        }
+    }
+}
+
+private struct Legende: View {
+    let texte: String
+    init(_ texte: String) { self.texte = texte }
+
+    var body: some View {
+        Text(texte.uppercased())
+            .font(.system(size: 9, weight: .semibold))
+            .kerning(0.8)
+            .foregroundColor(ambre)
     }
 }
 

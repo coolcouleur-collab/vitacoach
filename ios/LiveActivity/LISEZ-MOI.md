@@ -2,15 +2,22 @@
 
 ## Ce que ce dossier contient, et ce qu'il ne contient pas
 
-Quatre fichiers Swift, écrits et relus, **jamais compilés**. Tout le reste du
-chantier a été passé au compilateur avant d'être livré, le Kotlin comme le
-JavaScript. Pas celui-ci : compiler du Swift demande un Mac et Xcode, et le
-travail a été fait sous Windows. C'est la seule partie du projet dont personne
-ne peut encore dire qu'elle fonctionne.
+Sept fichiers, écrits et relus, **jamais compilés**. Tout le reste du chantier
+est passé au compilateur avant d'être livré, le Kotlin comme le JavaScript. Pas
+ceux-ci : compiler du Swift demande un Mac et Xcode, et le travail a été fait
+sous Windows. C'est la seule partie du projet dont personne ne peut encore dire
+qu'elle fonctionne.
 
 Il faut donc s'attendre à corriger deux ou trois choses à la première
 compilation. Ce sont des erreurs de frappe et de signature, pas de conception :
 la logique est la même que celle du service Android, qui, elle, est vérifiée.
+
+| Fichier | Cible | Rôle |
+|---|---|---|
+| `SolennActiviteAttributes.swift` | **App ET extension** | le contrat entre les deux |
+| `SolennActiviteWidget.swift` | extension | l'écran verrouillé et l'îlot dynamique |
+| `EcranDeVeille.swift` + `.m` | App | démarre et met à jour la Live Activity |
+| `PositionCourse.swift` + `.m` | App | le GPS qui continue écran verrouillé |
 
 ## Pourquoi une extension séparée
 
@@ -45,23 +52,36 @@ celui de l'application.
    parlent pas de la même chose et l'activité ne démarre jamais. C'est l'erreur
    la plus fréquente sur ce montage.
 
-5. Copier `EcranDeVeille.swift` et `EcranDeVeille.m` dans `ios/App/App/`, et
-   les ajouter à la cible `App` uniquement.
+5. Copier dans `ios/App/App/`, et ajouter à la cible **App uniquement** :
+   `EcranDeVeille.swift`, `EcranDeVeille.m`, `PositionCourse.swift`,
+   `PositionCourse.m`.
 
-6. Vérifier que `NSSupportsLiveActivities` vaut `YES` dans le `Info.plist` de
-   l'application. Il y a déjà été ajouté, il s'agit juste de le confirmer.
+6. Vérifier dans le `Info.plist` de l'application, où tout a déjà été ajouté :
+   `NSSupportsLiveActivities` à `YES`, `location` dans `UIBackgroundModes`, et
+   les deux descriptions de localisation.
 
 7. Compiler sur un **iPhone réel**. Les Live Activities ne s'affichent pas dans
-   le simulateur.
+   le simulateur, et le GPS non plus.
 
-## Ce qui reste à faire après, et qui n'est pas fait
+## Deux choses qui expliquent la forme du code
 
-**Le GPS en arrière plan.** Le mode `location` est déclaré dans le
-`Info.plist`, mais le plugin `@capacitor/geolocation` ne demande pas
-`allowsBackgroundLocationUpdates` à CoreLocation. Sans cette ligne, iOS coupe
-les relevés dès que l'écran se verrouille : le chronomètre continuera, la
-distance se figera. Il faudra soit un petit pont CoreLocation écrit comme
-celui de Health Connect, soit remplacer le plugin.
+**Le temps n'est pas envoyé, il est déduit.** Le `ContentState` transporte un
+instant de départ, pas un texte. Une application suspendue ne peut pas
+rafraîchir sa Live Activity chaque seconde : iOS ne la réveille pas pour ça, et
+le compteur se figerait sur l'écran verrouillé, c'est à dire exactement là où
+il doit vivre. `Text(timerInterval:)` laisse le système compter tout seul.
+Android fait la même chose avec le chronomètre de sa notification, et pour la
+même raison.
+
+**Le GPS a besoin de trois réglages, pas d'un.** `@capacitor/geolocation` fait
+très bien son travail au premier plan et rien du tout écran verrouillé, parce
+qu'un plugin généraliste ne peut pas activer l'arrière plan pour tout le monde.
+`PositionCourse.swift` pose les trois : la déclaration d'arrière plan, la mise
+en pause automatique désactivée (sinon un arrêt à un feu rouge peut coûter la
+fin de la course), et le type d'activité `fitness`, sans lequel le filtrage
+d'iOS jette des relevés de coureur. Il en manque un, iOS coupe en silence.
+
+## Ce qui restera ouvert après
 
 **Le rythme cardiaque en direct.** Il ne viendra pas de là. HealthKit ne
 diffuse pas les battements depuis l'iPhone : le direct suppose une Apple Watch
@@ -71,6 +91,7 @@ séance, ce que l'app fait déjà.
 
 ## Pour vérifier que ça marche
 
-Lancer une course, verrouiller l'écran, attendre trente secondes. Le temps doit
-continuer d'avancer sur l'écran verrouillé. La distance, elle, restera figée
-tant que le point ci-dessus n'est pas traité, et c'est normal.
+Lancer une course, verrouiller l'écran, marcher deux cents mètres, attendre une
+minute. Le temps doit avoir avancé sur l'écran verrouillé, **et la distance
+aussi**. Si le temps avance mais pas la distance, c'est l'autorisation de
+position qui est restée sur « quand j'utilise l'app » au lieu de « toujours ».

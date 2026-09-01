@@ -28,22 +28,49 @@ choisi de tout construire quitte a decaler le lancement.
 - **L'ecran de veille Android.** Service de premier plan, notification
   permanente, course qui survit au verrouillage.
 
-### Ce qui reste, et qui demande un Mac
+## POUR DEMAIN, SUR LE MAC
 
-1. **La Live Activity iOS.** Ecrite dans `ios/LiveActivity/`, jamais
-   compilee : c'est la seule partie du chantier qui n'est pas passee par un
-   compilateur. Le LISEZ-MOI de ce dossier donne les etapes Xcode, dont le
-   piege du fichier d'attributs qui doit appartenir aux DEUX cibles. Prevoir
-   deux ou trois corrections a la premiere compilation.
+Tout est ecrit, rien n'est compile. Environ une heure, dont la moitie a
+attendre Xcode. Tout est detaille dans `ios/LiveActivity/LISEZ-MOI.md`, y
+compris le tableau qui dit quel fichier va dans quelle cible.
 
-2. **Le GPS en arriere plan sur iOS.** Le mode `location` est declare dans le
-   Info.plist, mais `@capacitor/geolocation` ne demande pas
-   `allowsBackgroundLocationUpdates` a CoreLocation. Ecran verrouille, le
-   temps continuera, la distance se figera. Il faudra un petit pont
-   CoreLocation, sur le modele de celui de Health Connect.
+1. Ouvrir `ios/App/App.xcworkspace`. **Le workspace, pas le xcodeproj**, sinon
+   les dependances Capacitor manquent.
 
-3. **Reconstruire les paquets.** Le bundle Android depose chez Google date du
-   30 aout, l'iOS embarque du 21 juillet. Tout ce chantier n'y est pas.
+2. File, New, Target, **Widget Extension**, nommee exactement `SolennActivite`.
+   Decocher « Include Configuration App Intent », **cocher « Include Live
+   Activity »**. Supprimer le fichier d'exemple qu'Xcode cree.
+
+3. Glisser depuis `ios/LiveActivity/` :
+   - `SolennActiviteWidget.swift` dans la cible **SolennActivite**
+   - `SolennActiviteAttributes.swift` dans **les DEUX cibles**, App et
+     SolennActivite. C'est le piege le plus frequent de ce montage : si une
+     seule des deux compile ce fichier, l'activite ne demarre jamais et rien
+     n'explique pourquoi.
+   - `EcranDeVeille.swift`, `EcranDeVeille.m`, `PositionCourse.swift` et
+     `PositionCourse.m` dans `ios/App/App/`, cible **App uniquement**.
+
+4. Compiler sur un **iPhone reel**. Ni les Live Activities ni le GPS ne
+   fonctionnent dans le simulateur.
+
+5. Prevoir deux ou trois corrections de frappe ou de signature a la premiere
+   compilation. La logique, elle, est celle du service Android, qui est
+   verifiee. Si une erreur resiste, la copier telle quelle.
+
+**A savoir avant de commencer :** ajouter une extension change la composition
+du paquet. Le prochain envoi repasse donc par une revue App Store, et il faut
+un profil de provisionnement pour l'extension en plus de celui de l'app.
+
+**Le test qui tranche :** lancer une course, verrouiller l'ecran, marcher deux
+cents metres, attendre une minute. Le temps doit avoir avance sur l'ecran
+verrouille, ET la distance aussi. Si le temps avance mais pas la distance,
+c'est l'autorisation de position restee sur « quand j'utilise l'app » au lieu
+de « toujours ».
+
+### Reconstruire les paquets
+
+Le bundle Android depose chez Google date du 30 aout, l'iOS embarque du
+21 juillet. Rien de ce chantier n'y est.
 
 ### A verifier sur un vrai telephone, ce qu'aucun test ne remplace
 

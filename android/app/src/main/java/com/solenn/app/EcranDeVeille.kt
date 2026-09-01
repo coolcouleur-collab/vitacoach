@@ -44,8 +44,7 @@ class EcranDeVeille : Plugin() {
         try {
             val i = Intent(context, CourseService::class.java).apply {
                 action = CourseService.ACTION_DEMARRER
-                putExtra(CourseService.EXTRA_TITRE, call.getString("titre") ?: "Course en cours")
-                putExtra(CourseService.EXTRA_TEXTE, call.getString("texte") ?: "")
+                remplir(this, call)
             }
             context.startForegroundService(i)
             call.resolve(JSObject().put("demarre", true))
@@ -59,8 +58,7 @@ class EcranDeVeille : Plugin() {
         try {
             val i = Intent(context, CourseService::class.java).apply {
                 action = CourseService.ACTION_MAJ
-                putExtra(CourseService.EXTRA_TITRE, call.getString("titre") ?: "Course en cours")
-                putExtra(CourseService.EXTRA_TEXTE, call.getString("texte") ?: "")
+                remplir(this, call)
             }
             context.startService(i)
         } catch (e: Throwable) {
@@ -68,6 +66,19 @@ class EcranDeVeille : Plugin() {
             // arrive une seconde plus tard.
         }
         call.resolve()
+    }
+
+    /**
+     * Les memes cinq valeurs pour le demarrage et pour la mise a jour. Les
+     * recopier deux fois, c'est se garantir qu'un jour l'une des deux oubliera
+     * l'instant de depart, et que le chronometre repartira de zero.
+     */
+    private fun remplir(i: Intent, call: PluginCall) {
+        i.putExtra(CourseService.EXTRA_TITRE, call.getString("titre") ?: "Course en cours")
+        i.putExtra(CourseService.EXTRA_TEXTE, call.getString("texte") ?: "")
+        i.putExtra(CourseService.EXTRA_BASE, call.getLong("base") ?: 0L)
+        i.putExtra(CourseService.EXTRA_COURT, call.getBoolean("court") ?: true)
+        i.putExtra(CourseService.EXTRA_FIGE, call.getString("fige") ?: "")
     }
 
     @PluginMethod

@@ -14,10 +14,24 @@ package com.solenn.app
 // un lecteur de musique. La notification N'EST PAS un effet secondaire, elle
 // est la contrepartie exigee par le systeme.
 //
-// Ce service ne mesure rien lui-meme. La position, la distance et le temps
-// sont calcules cote JavaScript, qui lui envoie les deux lignes a afficher. Le
-// service, lui, ne sert qu'a deux choses : garder le processus en vie, et
-// tenir la promesse a l'ecran.
+// Ce service ne mesure pas la distance : elle est calculee cote JavaScript,
+// qui la lui envoie. Le temps, LUI, est affiche par le systeme et non par
+// nous, et c'est un point de conception, pas un detail.
+//
+// La premiere version rafraichissait la notification depuis une boucle
+// JavaScript, une fois par seconde. Ca ne pouvait pas marcher : Android
+// ETRANGLE les minuteurs d'une page en arriere plan, jusqu'a une fois par
+// minute. Ecran verrouille, le compteur se serait fige sur l'ecran de veille,
+// c'est-a-dire precisement la ou il doit vivre.
+//
+// Une notification Android sait compter le temps toute seule. On lui donne un
+// instant de depart, elle affiche l'ecoule et l'actualise chaque seconde, sans
+// qu'une ligne de notre code ne s'execute. Le temps ne peut donc plus se
+// figer, meme si l'application est completement endormie.
+//
+// Un chronometre systeme ne sait pas se mettre en pause. A la pause, on
+// bascule donc sur un texte fige, et a la reprise on recalcule un nouvel
+// instant de depart : maintenant moins le temps deja ecoule.
 //
 // Depuis Android 14, un service qui accompagne une activite geolocalisee doit
 // declarer son type, et le systeme REFUSE de le demarrer si l'application n'a
@@ -51,6 +65,12 @@ class CourseService : Service() {
 
         const val EXTRA_TITRE = "titre"
         const val EXTRA_TEXTE = "texte"
+        /** Instant de depart, en millisecondes, d'ou le systeme compte. */
+        const val EXTRA_BASE  = "base"
+        /** Le chronometre tourne-t-il, ou affiche-t-on un temps fige ? */
+        const val EXTRA_COURT = "court"
+        /** Le temps fige a montrer quand le chronometre ne tourne pas. */
+        const val EXTRA_FIGE  = "fige"
 
         /**
          * Le systeme refuse un service de type « location » a une application
@@ -75,8 +95,11 @@ class CourseService : Service() {
             else -> {
                 val titre = intent?.getStringExtra(EXTRA_TITRE) ?: "Course en cours"
                 val texte = intent?.getStringExtra(EXTRA_TEXTE) ?: ""
+                val base  = intent?.getLongExtra(EXTRA_BASE, 0L) ?: 0L
+                val court = intent?.getBooleanExtra(EXTRA_COURT, true) ?: true
+                val fige  = intent?.getStringExtra(EXTRA_FIGE) ?: ""
                 creerCanal()
-                val notif = construire(titre, texte)
+                val notif = construire(titre, texte, base, court, fige)
 
                 if (intent?.action == ACTION_MAJ) {
                     // Une simple mise a jour : notify suffit, et surtout ne
@@ -114,7 +137,13 @@ class CourseService : Service() {
         nm.createNotificationChannel(canal)
     }
 
-    private fun construire(titre: String, texte: String): Notification {
+    private fun construire(
+        titre: String,
+        texte: String,
+        base: Long,
+        court: Boolean,
+        fige: String,
+    ): Notification {
         // Toucher la notification doit ramener dans l'app, sur la course en
         // cours, et non en ouvrir une seconde instance par dessus.
         val ouvrir = Intent(this, MainActivity::class.java).apply {
@@ -125,8 +154,11 @@ class CourseService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        return NotificationCompat.Builder(this, CANAL)
-            .setContentTitle(titre)
+        // Le titre porte le temps. Quand le chronometre tourne, le systeme
+        // l'ecrit lui-meme a partir de `base` ; a la pause, on inscrit le temps
+        // fige que le JavaScript nous a donne.
+        val builder = NotificationCompat.Builder(this, CANAL)
+            .setContentTitle(if (court || fige.isEmpty()) titre else "$titre, $fige")
             .setContentText(texte)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setContentIntent(pending)
@@ -136,7 +168,17 @@ class CourseService : Service() {
             .setCategory(NotificationCompat.CATEGORY_WORKOUT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setUsesChronometer(false)
-            .build()
+
+        if (court && base > 0L) {
+            // C'est ici que tout se joue : le systeme compte a notre place, et
+            // continue de compter quand l'application ne s'execute plus.
+            builder.setWhen(base)
+            builder.setUsesChronometer(true)
+        } else {
+            builder.setShowWhen(false)
+            builder.setUsesChronometer(false)
+        }
+
+        return builder.build()
     }
 }
