@@ -176,7 +176,10 @@ function DouleurExplorer({ onChat, phaseNom }) {
   function envoyer(moment) {
     const msg = `J'ai mal aujourd'hui. Localisation : ${ou.toLowerCase()}. Intensité : ${niveau}/5. Moment : ${moment.toLowerCase()}.${phaseNom ? ` Phase actuelle de mon cycle : ${phaseNom}.` : ''} Mets-moi sur des pistes SANS poser de diagnostic, et réponds COURT et aéré : 2-3 causes possibles en phrases simples, 2 gestes concrets qui peuvent soulager aujourd'hui, puis en 2 lignes les signes qui doivent faire consulter un médecin. Pas de pavé.`
     setEtape(0); setOu(null); setNiveau(null)
-    onChat && onChat(msg)
+    // Ce que Solenn recoit reste le prompt complet ; ce que la bulle montre
+    // est une phrase que quelqu'un pourrait avoir ecrite.
+    const affichage = `J'ai mal au ${ou.toLowerCase()} aujourd'hui, intensité ${niveau}/5, ${moment.toLowerCase()}.`
+    onChat && onChat(msg, affichage)
   }
 
   return (

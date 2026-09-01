@@ -1514,7 +1514,7 @@ const [messages, setMessages] = useState(() => {
     }
   }
 
-  async function envoyerMessage(msg) {
+  async function envoyerMessage(msg, affichage = null) {
     if (!msg?.trim()) return
     if (isSendingRef.current) return     // verrou : un seul envoi à la fois
     isSendingRef.current = true
@@ -1540,7 +1540,7 @@ const [messages, setMessages] = useState(() => {
       return
     }
     isAtBottomRef.current = true   // on redescend toujours sur SON propre message
-    setMessages(prev => [...prev, { role:'user', content: msg }])
+    setMessages(prev => [...prev, { role:'user', content: msg, affichage }])
     setLoading(true)
     if (!hasFullAccess) incrementMsgCount()
     detectSOS(msg)
@@ -2582,7 +2582,7 @@ padding: isMobile
                         {msg.role==='user'
                           ? (<>
                               {msg.image && <img src={msg.image} alt="Photo de repas" style={{ maxWidth:'100%', maxHeight:220, borderRadius:12, display:'block', marginBottom: msg.content ? 6 : 0, objectFit:'cover' }} />}
-                              {msg.content}
+                              {msg.affichage || msg.content}
                             </>)
                           : (
                             <MsgBoundary fallback={msg.content}>
@@ -2776,7 +2776,7 @@ padding: isMobile
 
           {/* ── Cycle ── */}
           {onglet === 'cycle' && profil?.cycle && (
-            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} userId={user?.id} onChat={msg => { setOnglet('chat'); setTimeout(() => envoyerMessage(msg), 400) }} /></Suspense>
+            <Suspense fallback={<GlowLoader fullPage />}><CycleTab profil={profil} userId={user?.id} onChat={(msg, aff) => { setOnglet('chat'); setTimeout(() => envoyerMessage(msg, aff), 400) }} /></Suspense>
           )}
 
           {/* ── Routine ── */}

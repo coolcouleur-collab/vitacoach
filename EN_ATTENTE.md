@@ -257,3 +257,23 @@ seulement les valeurs littérales.
 Non trouvé : l'option « moins de 5h » de sommeil signalée comme manquante.
 Le seul réglage de durée est le curseur du check-in du matin, qui va de 2h à
 12h. Moins de 5h y est donc déjà possible.
+
+
+## Photos d'exercices : 14 manquantes sur 25, chiffre verifie
+
+Compte du 1er septembre 2026 dans `src/ExercicesGuide.jsx` : la table
+`PHOTOS_EXOS` contient 11 entrees, la bibliotheque en compte 25.
+
+Avec photo : squat, gainage, fente, pont, chaise, chatvache, marche,
+etirement, pompe, dips, superman.
+
+Sans photo, donc affiches avec la silhouette animee de repli : pompegenoux,
+mountainclimber, jumpingjack, crunch, russiantwist, birddog, donkeykick,
+mollets, stepup, genouxhauts, squatsaute, fentelaterale, planchelateral,
+legraise.
+
+Ce n'est pas casse : `PhotoExo` retombe volontairement sur `<exo.Anim />`.
+Mais le melange se voit, onze photos et quatorze dessins. Deux issues, au
+choix de Jean : trouver 14 photos, ou passer les 25 a l'animation pour que ce
+soit homogene en attendant. Je n'invente pas d'adresses Unsplash : une
+reference non verifiee donne une image absente ou hors sujet.
