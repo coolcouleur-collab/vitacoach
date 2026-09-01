@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, Ani
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
-import { ENCRE, ENCRE_DOUCE, VERT } from './palette'
+import { ENCRE, ICONE, VERT } from './palette'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -379,7 +379,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
 // ─── PALETTE TEXTE NUIT / JOUR ────────────────────────────────────────────────
 // Couleur unique des metriques : la meme dans l'orbite du soleil et dans la
 // feuille de saisie. Les changer separement recree l'incoherence.
-const ORBIT = ENCRE_DOUCE   // etait #C87B52 a 2,39:1 ; seuil icone 3,0, desormais 3,86:1
+const ORBIT = ICONE   // etait #C87B52 a 2,39:1 ; seuil icone 3,0, desormais 3,86:1
 
 const nightText  = (op) => `rgba(180,210,255,${op})`
 // LE point unique ou se decide la couleur de TOUT le texte de l'accueil en
@@ -1438,7 +1438,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           transition:'border-color 0.2s ease, color 0.2s ease',
         }}
           onMouseEnter={e => { e.currentTarget.style.color='rgba(160,110,60,1)'; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.color={ENCRE_DOUCE}; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.35)' }}
+          onMouseLeave={e => { e.currentTarget.style.color={ICONE}; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.35)' }}
         >sauvegarder</button>
       </motion.div>
     </>,
@@ -1620,10 +1620,10 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
 
 function MetricRings({ metriques }) {
   const items = [
-    { iconEl:<WaterIcon size={17} color={ENCRE_DOUCE} />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:ENCRE_DOUCE, fmt: v => `${v}/8` },
-    { iconEl:<RunIcon size={17} color={ENCRE_DOUCE} />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:ENCRE_DOUCE, fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
-    { iconEl:<MoonIcon size={17} color={ENCRE_DOUCE} />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:ENCRE_DOUCE, fmt: v => `${v}h` },
-    { iconEl:<MoodIcon size={17} color={ENCRE_DOUCE} />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:ENCRE_DOUCE, fmt: v => `${v}/5` },
+    { iconEl:<WaterIcon size={17} color={ICONE} />, label:'Eau',     val:metriques?.eau||0,     goal:8,     color:ICONE, fmt: v => `${v}/8` },
+    { iconEl:<RunIcon size={17} color={ICONE} />,   label:'Pas',     val:metriques?.pas||0,     goal:10000, color:ICONE, fmt: v => v>=1000 ? `${Math.round(v/1000)}k` : `${v}` },
+    { iconEl:<MoonIcon size={17} color={ICONE} />,  label:'Sommeil', val:metriques?.sommeil||0, goal:8,     color:ICONE, fmt: v => `${v}h` },
+    { iconEl:<MoodIcon size={17} color={ICONE} />,  label:'Humeur',  val:metriques?.humeur||0,  goal:5,     color:ICONE, fmt: v => `${v}/5` },
   ]
   return (
     <div style={{ display:'flex', gap:6, padding:'8px 14px' }}>
@@ -1838,7 +1838,7 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', Icon: WaterIcon, color:ENCRE_DOUCE,
+      id:'eau', Icon: WaterIcon, color:ICONE,
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
@@ -1850,7 +1850,7 @@ function generateDailyTasks(profil, metriques) {
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', Icon: SunIcon, color:ENCRE_DOUCE,
+      id:'matin', Icon: SunIcon, color:ICONE,
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
@@ -2117,7 +2117,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
   // (bug 2026-08-08). Une seule source de vérité pour le thème ET les cartes.
   const h = ({ sunrise: 7, day: 11, sunset: 19, night: 23 }[presetManuel]) ?? new Date().getHours()
 
-  const TC = isNight ? 'rgba(190,216,255,0.90)' : ENCRE_DOUCE
+  const TC = isNight ? 'rgba(190,216,255,0.90)' : ICONE
 
   // Chaque carte porte une PRIORITÉ (petit = urgent) et la liste est triée
   // avant d'être coupée. Avant, elle était simplement coupée aux deux premières

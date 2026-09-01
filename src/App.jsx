@@ -57,7 +57,7 @@ const CycleTab      = lazy(() => import('./CycleTab'))
 const PaywallOffre  = lazy(() => import('./PaywallOffre'))
 import { HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
-import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE, VERT } from './palette'
+import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
 // ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
 async function triggerHaptic(type = 'light') {
@@ -143,8 +143,8 @@ function HealthPermModal({ onAllow, onLater }) {
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
-            { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color={ENCRE_DOUCE} /> },
-            { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color={ENCRE_DOUCE} /> },
+            { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color={ICONE} /> },
+            { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color={ICONE} /> },
           ].map(({ bg, icon }, idx) => (
             <div key={idx} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center' }}>{icon}</div>
           ))}
@@ -177,7 +177,7 @@ function HealthPermModal({ onAllow, onLater }) {
             background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.18)',
           }}>
             <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-              <Icon size={18} color={ENCRE_DOUCE} />
+              <Icon size={18} color={ICONE} />
             </span>
             <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:500, flex:1 }}>{label}</span>
             <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: ENCRE, fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
@@ -2154,7 +2154,7 @@ padding: isMobile
               }}>
                 {pullRefreshing
                   ? <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(200,123,82,0.18)', borderTop: '2px solid rgba(200,123,82,0.85)', animation: 'spin360 0.7s linear infinite' }} />
-                  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${Math.min(pullDist / PULL_THRESHOLD * 180, 180)}deg)`, transition: 'none' }}>
+                  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${Math.min(pullDist / PULL_THRESHOLD * 180, 180)}deg)`, transition: 'none' }}>
                       <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
                       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                     </svg>
@@ -2216,7 +2216,7 @@ padding: isMobile
                 {[0,1,2].map(i => (
                   <span key={i} style={{
                     display:'block', borderRadius:2,
-                    background: homePreset === 'night' ? 'rgba(190,216,255,0.88)' : ENCRE_DOUCE,
+                    background: homePreset === 'night' ? 'rgba(190,216,255,0.88)' : ICONE,
                     filter:'drop-shadow(0 1px 5px rgba(0,0,0,0.45))',
                     transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
                     width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 16 : menuOpen && i===2 ? 16 : i===1 ? 10 : 16,
@@ -2234,7 +2234,7 @@ padding: isMobile
             const onChat = onglet === 'chat'
             // 0.58 rendait le hamburger quasi invisible sur les fonds clairs
             // (constat Jean 2026-08-12).
-            const iconColor = ENCRE_DOUCE   // etait rgba(178,102,62,0.92) : 2,9:1, sous le seuil 3,0
+            const iconColor = ICONE   // etait rgba(178,102,62,0.92) : 2,9:1, sous le seuil 3,0
             return (
             <div style={s.mobileHeader}>
               {/* Logo, identique sur tous les onglets */}
@@ -2433,7 +2433,7 @@ padding: isMobile
                       fontFamily:F, width:'100%', textAlign:'left',
                       color: ENCRE, fontWeight:400, fontSize:14,
                     }}>
-                      <StarIcon size={18} color={ENCRE_DOUCE} /> Passer à Pro
+                      <StarIcon size={18} color={ICONE} /> Passer à Pro
                     </button>
                   )}
                   <button onClick={() => { setShowSettings(true); setMenuOpen(false) }} style={{
@@ -2442,7 +2442,7 @@ padding: isMobile
                     fontFamily:F, width:'100%', textAlign:'left',
                     color: ENCRE, fontWeight:400, fontSize:14,
                   }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     Paramètres
                   </button>
                   {/* « Modifier ton profil » retire le 2026-08-12 : il appelait
@@ -2470,7 +2470,7 @@ padding: isMobile
                     color:'#7B421C', fontWeight:400, fontSize:14,
                     marginTop:4,
                   }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
                     </svg>
                     Se déconnecter
@@ -2748,7 +2748,7 @@ padding: isMobile
               }}
             >
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                stroke={ENCRE_DOUCE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
             </button>
@@ -3079,7 +3079,7 @@ function NutritionCard({ nutrition }) {
       </div>
       {nutrition.repas?.map((r, i) => (
         <div key={i} style={sr.repasRow}>
-          <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color={ENCRE_DOUCE} /></span>
+          <span style={{ fontSize:16, display:'flex', alignItems:'center' }}><FoodIcon size={14} color={ICONE} /></span>
           <div style={{ fontSize:12, color:'#7B421C', lineHeight:1.5 }}>
             <strong style={{ color:'#7B421C', fontWeight:500 }}>{r.moment}</strong>, {r.suggestion}
           </div>
@@ -3129,7 +3129,7 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
               {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
             </div>
             <span style={{ minWidth:26, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill={ENCRE_DOUCE} fillOpacity="0.65"/></svg>
+              <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill={ICONE} fillOpacity="0.65"/></svg>
             </span>
             <div>
               <div style={{ fontWeight:500, fontSize:13, color:'#7B421C', textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
@@ -3247,7 +3247,7 @@ function TenueCard({ tenue, style: extraStyle }) {
               background: 'rgba(255,235,210,0.70)', border: '1px solid rgba(255,220,160,0.60)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
               </svg>
             </div>
@@ -3307,7 +3307,7 @@ function SkeletonCard({ style: extraStyle }) {
         animation: 'capsuleSkeleton 1.4s ease infinite',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
           <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
           <path d="M12 6 L5 13 h14 L12 6Z"/>
           <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
@@ -3564,7 +3564,7 @@ function TenuesModule({ profil }) {
               {occasions.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
             <svg style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }} width="11" height="7" viewBox="0 0 11 7" fill="none">
-              <path d="M1 1l4.5 4.5L10 1" stroke={ENCRE_DOUCE} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1 1l4.5 4.5L10 1" stroke={ICONE} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
           <button
@@ -3606,7 +3606,7 @@ function TenuesModule({ profil }) {
         {!loading && tenues.length === 0 && !ville && (
           <div style={{ textAlign:'center', padding:'32px 0 8px' }}>
             <div style={{ marginBottom: 12, display:'flex', justifyContent:'center' }}>
-              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3a1.5 1.5 0 0 1 0 3"/>
                 <path d="M12 6 L5 13 h14 L12 6Z"/>
                 <path d="M5 13 v6 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2-2 v-6"/>
@@ -4001,7 +4001,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
         <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:'none' }} />
         <button style={{ ...s.sendBtn, marginRight:-4 }} title="Photographier mon repas"
           onClick={() => { triggerHaptic('light'); fileRef.current?.click() }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
             <circle cx="12" cy="13" r="4"/>
           </svg>
@@ -4011,12 +4011,12 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
           onClick={toggleMic}>
           <style>{`@keyframes micPulse { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.55; transform:scale(1.15) } }`}</style>
           {micState === 'trans' ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round" style={{ animation:'spin 1s linear infinite' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" style={{ animation:'spin 1s linear infinite' }}>
               <path d="M21 12a9 9 0 1 1-6.2-8.56"/>
             </svg>
           ) : (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke={micState === 'rec' ? '#C0392B' : ENCRE_DOUCE}
+              stroke={micState === 'rec' ? '#C0392B' : ICONE}
               strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
               style={micState === 'rec' ? { animation:'micPulse 1.1s ease-in-out infinite' } : undefined}>
               <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
@@ -4032,7 +4032,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
           placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Pose une question à Solenn...'}
           disabled={disabled} />
         <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
-          <SendIcon color={ENCRE_DOUCE} size={20} />
+          <SendIcon color={ICONE} size={20} />
         </button>
       </div>
     </div>

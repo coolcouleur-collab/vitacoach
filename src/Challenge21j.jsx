@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { TargetIcon, SparkleIcon, StarIcon } from './Icons'
 import { authHeaders } from './supabase'
 import { matchExercice, PHOTOS_EXOS } from './ExercicesGuide'
-import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE, VERT } from './palette'
+import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 
@@ -63,7 +63,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
       <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(255,240,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {img
           ? <img src={img} alt={info.nom} loading="lazy" onError={() => setImg(null)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', objectPosition: `center ${photo?.pos || '50%'}` }} />
-          : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.6" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>}
+          : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.6" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: '#7B421C' }}>{info.nom}</div>
@@ -713,7 +713,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil }) {
                   background: 'rgba(255,235,210,0.35)', border: '1px solid rgba(255,220,160,0.40)',
                   borderRadius: 12, padding: '9px 12px', marginBottom: 12,
                 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
                   <span style={{ fontSize: 11.5, color: '#7B421C', lineHeight: 1.55, fontFamily: "'Poppins', sans-serif" }}>
                     {jourActuelData.nutrition}
                   </span>

@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { authHeaders } from './supabase'
-import { ENCRE, ENCRE_DOUCE } from './palette'
+import { ENCRE, ICONE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 
@@ -35,7 +35,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
   const panneau2= isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,246,238,0.62)'
   const trait   = isNight ? 'rgba(180,210,255,0.20)': 'rgba(200,123,82,0.22)'
   const trait2  = isNight ? 'rgba(180,210,255,0.24)': 'rgba(200,123,82,0.30)'
-  const icone   = isNight ? 'rgba(180,210,255,0.78)': ENCRE_DOUCE
+  const icone   = isNight ? 'rgba(180,210,255,0.78)': ICONE
   const [data, setData] = useState(null)
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         fontFamily: F,
       }}>
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: tc(0.90), display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Solenn te demande
         </div>
         <div style={{ fontSize: 14.5, fontWeight: 600, color: tc(0.90), marginBottom: 4, lineHeight: 1.4 }}>
@@ -145,7 +145,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: tc(0.90), display: 'flex', alignItems: 'center', gap: 6 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
           Ta journée est prête
         </div>
       </div>

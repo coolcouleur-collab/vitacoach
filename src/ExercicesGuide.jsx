@@ -7,12 +7,12 @@
 
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ENCRE, ENCRE_DOUCE } from './palette'
+import { ENCRE, ICONE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
 const T = '#C87B52'
 const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
-const SOL = <path d="M12 92 L88 92" stroke={ENCRE_DOUCE} strokeWidth="3" strokeLinecap="round" fill="none" />
+const SOL = <path d="M12 92 L88 92" stroke={ICONE} strokeWidth="3" strokeLinecap="round" fill="none" />
 
 // Deux poses en alternance, le cœur du système, 100 % compatible mobile.
 // labelA/labelB : mot-clé synchronisé avec chaque pose (« Descends » quand la
@@ -29,11 +29,11 @@ function DeuxPoses({ poseA, poseB, labelA, labelB, duree = 2.6 }) {
       {SOL}
       <g className="exo-a" style={{ animation: `exoPoseA ${duree}s ease-in-out infinite` }}>
         {poseA}
-        {labelA && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ENCRE_DOUCE} fontFamily="Poppins, sans-serif">{labelA}</text>}
+        {labelA && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ICONE} fontFamily="Poppins, sans-serif">{labelA}</text>}
       </g>
       <g className="exo-b" style={{ animation: `exoPoseB ${duree}s ease-in-out infinite` }}>
         {poseB}
-        {labelB && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ENCRE_DOUCE} fontFamily="Poppins, sans-serif">{labelB}</text>}
+        {labelB && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ICONE} fontFamily="Poppins, sans-serif">{labelB}</text>}
       </g>
     </svg>
   )
@@ -55,7 +55,7 @@ function TroisPoses({ poses, labels, duree = 3.3 }) {
       {poses.map((pose, i) => (
         <g key={i} className="exo-p" style={{ animation: `exoP${i + 1} ${duree}s ease-in-out infinite` }}>
           {pose}
-          {labels?.[i] && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ENCRE_DOUCE} fontFamily="Poppins, sans-serif">{labels[i]}</text>}
+          {labels?.[i] && <text x="50" y="99" textAnchor="middle" fontSize="7.5" fontWeight="600" fill={ICONE} fontFamily="Poppins, sans-serif">{labels[i]}</text>}
         </g>
       ))}
     </svg>
@@ -103,7 +103,7 @@ const AnimChaise = () => (
   <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
     <style>{`@keyframes exoChaise { 0%,100% { transform: translateY(0) } 50% { transform: translateY(2px) } }`}</style>
     {SOL}
-    <path d="M72 28 L72 92" stroke={ENCRE_DOUCE} strokeWidth="4" strokeLinecap="round" fill="none" />
+    <path d="M72 28 L72 92" stroke={ICONE} strokeWidth="4" strokeLinecap="round" fill="none" />
     <g style={{ animation: 'exoChaise 2.4s ease-in-out infinite' }}>
       <circle cx="62" cy="24" r="7" {...S} />
       <path d="M64 31 L68 56 M68 56 L46 60 L46 92" {...S} />
@@ -161,8 +161,8 @@ const AnimSuperman = () => (
 
 const AnimDips = () => (
   <DeuxPoses labelA="Bras tendus" labelB="Plie les coudes"
-    poseA={<><circle cx="46" cy="26" r="7" {...S} /><path d="M46 33 L46 58 M46 36 L30 46 L30 66 M46 58 L70 62 L70 88" {...S} /><path d="M22 66 L38 66" stroke={ENCRE_DOUCE} strokeWidth="4" strokeLinecap="round" fill="none" /></>}
-    poseB={<><circle cx="46" cy="40" r="7" {...S} /><path d="M46 47 L46 66 M46 48 L30 52 L30 66 M46 66 L70 68 L70 88" {...S} /><path d="M22 66 L38 66" stroke={ENCRE_DOUCE} strokeWidth="4" strokeLinecap="round" fill="none" /></>}
+    poseA={<><circle cx="46" cy="26" r="7" {...S} /><path d="M46 33 L46 58 M46 36 L30 46 L30 66 M46 58 L70 62 L70 88" {...S} /><path d="M22 66 L38 66" stroke={ICONE} strokeWidth="4" strokeLinecap="round" fill="none" /></>}
+    poseB={<><circle cx="46" cy="40" r="7" {...S} /><path d="M46 47 L46 66 M46 48 L30 52 L30 66 M46 66 L70 68 L70 88" {...S} /><path d="M22 66 L38 66" stroke={ICONE} strokeWidth="4" strokeLinecap="round" fill="none" /></>}
     duree={2.8}
   />
 )
@@ -227,8 +227,8 @@ const AnimMollets = () => (
 
 const AnimStepUp = () => (
   <DeuxPoses labelA="Pied sur la marche" labelB="Monte, pousse fort"
-    poseA={<><path d="M58 92 L58 74 L92 74 L92 92" stroke={ENCRE_DOUCE} strokeWidth="4" strokeLinecap="round" fill="none" /><circle cx="38" cy="26" r="7" {...S} /><path d="M38 33 L40 60 M38 40 L50 48 M40 60 L34 76 L34 92 M40 60 L58 66 L62 74" {...S} /></>}
-    poseB={<><path d="M58 92 L58 74 L92 74 L92 92" stroke={ENCRE_DOUCE} strokeWidth="4" strokeLinecap="round" fill="none" /><circle cx="64" cy="14" r="7" {...S} /><path d="M64 21 L66 46 M64 28 L76 36 M66 46 L62 62 L62 74 M66 46 L74 60 L74 74" {...S} /></>}
+    poseA={<><path d="M58 92 L58 74 L92 74 L92 92" stroke={ICONE} strokeWidth="4" strokeLinecap="round" fill="none" /><circle cx="38" cy="26" r="7" {...S} /><path d="M38 33 L40 60 M38 40 L50 48 M40 60 L34 76 L34 92 M40 60 L58 66 L62 74" {...S} /></>}
+    poseB={<><path d="M58 92 L58 74 L92 74 L92 92" stroke={ICONE} strokeWidth="4" strokeLinecap="round" fill="none" /><circle cx="64" cy="14" r="7" {...S} /><path d="M64 21 L66 46 M64 28 L76 36 M66 46 L62 62 L62 74 M66 46 L74 60 L74 74" {...S} /></>}
     duree={2.6}
   />
 )
@@ -570,7 +570,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 10px rgba(200,123,82,0.15)', marginLeft: 8,
         }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ENCRE_DOUCE} strokeWidth="2.4" strokeLinecap="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.4" strokeLinecap="round">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>

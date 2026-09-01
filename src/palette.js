@@ -12,7 +12,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ENCRE       = '#7B421C'   // 5,80:1 — tout le texte courant
-export const ENCRE_DOUCE = '#9C5B33'   // 3,86:1 — icônes et grands chiffres SEULEMENT
+// 3,86:1. Ne passe PAS le seuil du texte courant : réservée aux icônes et aux
+// textes d'au moins 24px. Elle s'appelait ENCRE_DOUCE, et ce nom d'encre
+// invitait à l'employer comme une encre : trouvée trois fois sur du texte de
+// 10 à 12px le 1er septembre 2026. Le nom dit maintenant sa contrainte.
+//
+// S'il te faut une seconde encre pour du petit texte, la plus claire qui passe
+// encore le seuil est #8C4E22, à 4,74:1. Mesuré : au-delà, #935426 tombe à
+// 4,32 et échoue. L'écart avec ENCRE étant trop faible pour créer une
+// hiérarchie visible, la hiérarchie passe par la graisse, pas par la teinte.
+export const ICONE = '#9C5B33'
 export const ACCENT      = '#C87B52'   // 2,39:1 — fonds, bordures, traits. JAMAIS du texte
 export const AMBRE       = '#8A5206'   // 4,65:1 — accent chaud lisible
 export const VERT        = '#166534'   // 5,19:1 — état positif

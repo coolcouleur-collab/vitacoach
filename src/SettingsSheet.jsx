@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon, SendIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
-import { AMBRE, ENCRE, ENCRE_DOUCE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 // Verre ambré clair (2026-07-24, retour Jean : le panneau sombre ne collait
@@ -1113,7 +1113,7 @@ export default function SettingsSheet({
             <SectionTitle>Mes Données</SectionTitle>
             <div>
               <ActionBtn
-                icon={<RefreshIcon size={18} color={confirmReset ? ROUGE : ENCRE_DOUCE} />}
+                icon={<RefreshIcon size={18} color={confirmReset ? ROUGE : ICONE} />}
                 label={confirmReset ? 'Confirmer la réinitialisation ?' : 'Réinitialiser mémoire IA'}
                 onClick={handleResetClick}
                 danger={confirmReset}
@@ -1127,7 +1127,7 @@ export default function SettingsSheet({
                   Double confirmation : c'est irréversible, un seul appui de
                   travers ne doit pas effacer des mois de données. */}
               <ActionBtn
-                icon={<TrashIcon size={18} color={confirmSuppr ? ROUGE : ENCRE_DOUCE} />}
+                icon={<TrashIcon size={18} color={confirmSuppr ? ROUGE : ICONE} />}
                 label={
                   supprEnCours ? 'Suppression en cours…'
                   : confirmSuppr ? 'Tout supprimer définitivement ?'

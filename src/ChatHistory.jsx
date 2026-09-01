@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from './supabase'
-import { ENCRE_DOUCE, ROUGE } from './palette'
+import { ICONE, ROUGE } from './palette'
 
 // ─── COULEURS & TOKENS ────────────────────────────────────────────────────────
 const C = {
@@ -469,7 +469,7 @@ export default function ChatHistory({
               }}>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={ENCRE_DOUCE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={ICONE} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
                 <div style={{
