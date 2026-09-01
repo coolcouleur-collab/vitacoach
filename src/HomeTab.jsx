@@ -1026,7 +1026,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(200,123,82,0.24)',
                   fontFamily: "'Poppins',system-ui,sans-serif",
                   fontSize: 10.5, fontWeight: 600,
-                  color: isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)',
+                  color: isNight ? 'rgba(190,215,250,0.85)' : '#7B421C',
                 }}>
                   {streak >= 7
                     ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
@@ -1037,14 +1037,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               <div style={{
                 fontSize: 14.5, lineHeight: 1.45, fontWeight: 500,
                 fontFamily: "'Poppins',system-ui,sans-serif",
-                color: isNight ? 'rgba(200,222,255,0.92)' : 'rgba(178,102,62,0.94)',
+                color: isNight ? 'rgba(200,222,255,0.92)' : '#7B421C',
               }}>
                 {score > 0 ? `${score}. ` : ''}{p.quoi}
               </div>
               <div style={{
                 fontSize: 12.5, lineHeight: 1.45, marginTop: 5,
                 fontFamily: "'Poppins',system-ui,sans-serif",
-                color: isNight ? 'rgba(180,205,240,0.66)' : 'rgba(200,123,82,0.74)',
+                color: isNight ? 'rgba(180,205,240,0.66)' : '#7B421C',
               }}>
                 {p.action}
               </div>
@@ -1056,7 +1056,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 <div style={{
                   fontSize: 11, lineHeight: 1.45, marginTop: 9,
                   fontFamily: "'Poppins',system-ui,sans-serif",
-                  color: isNight ? 'rgba(170,198,235,0.58)' : 'rgba(200,123,82,0.62)',
+                  color: isNight ? 'rgba(170,198,235,0.58)' : '#7B421C',
                 }}>
                   Ton score se calcule sur ton sommeil, ton eau, tes pas et ton humeur.
                 </div>
@@ -1430,7 +1430,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           display:'block', margin:'0 auto',
           background:'none', border:'none',
           fontSize:12, fontWeight:500, letterSpacing:'0.22em',
-          color:'rgba(160,110,60,0.92)', textTransform:'uppercase',
+          color:'#7B421C', textTransform:'uppercase',
           cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
           padding:'8px 24px',
           borderBottom:'1px solid rgba(160,110,60,0.20)',
