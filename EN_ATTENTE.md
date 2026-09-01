@@ -17,26 +17,48 @@ choisi de tout construire quitte a decaler le lancement.
 - **Les rappels locaux.** Poses sur le telephone, fenetre glissante de 10
   jours a cause de la limite de 64 d'iOS, reposee a chaque ouverture.
 
-### Reste a faire
+### Fait aussi, et compile
 
-1. **Health Connect sur Android.** Le manifeste declare deja READ_STEPS,
-   READ_HEART_RATE et READ_SLEEP, mais AUCUN code ne les lit : seul HealthKit
-   est implemente. Les utilisateurs Android n'ont donc aucune metrique
-   automatique, et Google refuse les permissions sante declarees sans usage
-   visible. C'est le point le plus urgent des trois.
-2. **Le suivi de course.** GPS en arriere plan, distance, allure, tracé.
-   Demande `UIBackgroundModes: location` cote iOS, absent aujourd'hui, et une
-   justification a Apple.
-3. **L'ecran de veille.** Live Activity iOS en SwiftUI, service de premier
-   plan Android en Kotlin. Plusieurs jours, et une nouvelle revue App Store.
+- **Health Connect**, pont Kotlin ecrit a la main. Les permissions sante que
+  le manifeste reclamait depuis toujours sont enfin utilisees. Kotlin ajoute
+  au projet, minSdk passe de 24 a 26.
+- **Le suivi de course.** Temps, distance, allure. Le filtrage GPS est la
+  piece delicate et il est mesure : 0 metre pour un telephone immobile la ou
+  un compteur naif en annonce 2382.
+- **L'ecran de veille Android.** Service de premier plan, notification
+  permanente, course qui survit au verrouillage.
+
+### Ce qui reste, et qui demande un Mac
+
+1. **La Live Activity iOS.** Ecrite dans `ios/LiveActivity/`, jamais
+   compilee : c'est la seule partie du chantier qui n'est pas passee par un
+   compilateur. Le LISEZ-MOI de ce dossier donne les etapes Xcode, dont le
+   piege du fichier d'attributs qui doit appartenir aux DEUX cibles. Prevoir
+   deux ou trois corrections a la premiere compilation.
+
+2. **Le GPS en arriere plan sur iOS.** Le mode `location` est declare dans le
+   Info.plist, mais `@capacitor/geolocation` ne demande pas
+   `allowsBackgroundLocationUpdates` a CoreLocation. Ecran verrouille, le
+   temps continuera, la distance se figera. Il faudra un petit pont
+   CoreLocation, sur le modele de celui de Health Connect.
+
+3. **Reconstruire les paquets.** Le bundle Android depose chez Google date du
+   30 aout, l'iOS embarque du 21 juillet. Tout ce chantier n'y est pas.
+
+### A verifier sur un vrai telephone, ce qu'aucun test ne remplace
+
+- une course reelle, dehors, pour confronter la distance a un parcours connu
+- le verrouillage de l'ecran pendant une course, sur Android
+- la connexion Health Connect, et les metriques qui remontent
+- les rappels du programme, qui doivent arriver aux heures prevues
 
 ### Ce qui ne pourra pas se faire sans une montre
 
 Le rythme cardiaque EN DIRECT pendant l'effort ne vient pas de HealthKit. Il
 suppose une Apple Watch executant une session d'entrainement, donc une
 application watchOS compagnon, qui est un projet a part entiere. Sans elle, le
-cardio est relu APRES la seance. Les pas en direct, eux, viennent du telephone
-seul, et la distance vient du GPS.
+cardio est relu APRES la seance, ce que l'app fait deja. Les pas en direct,
+eux, viennent du telephone seul, et la distance vient du GPS.
 
 ### Deja branche cote serveur, a rebrancher cote ecran
 
