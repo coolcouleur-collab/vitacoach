@@ -1035,7 +1035,18 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 // clair, et le plus gros element de l'ecran etait une tache.
                 // La lune est CLAIRE : l'encre doit donc etre sombre, pas
                 // claire. #22385E donne 11:1 au centre, sans quitter la nuit.
-                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 && assezPourUnScore ? score : `${connues.length}/4`}</span>
+                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)',
+                // Un halo pale, la nuit seulement. La lune n'est pas d'une
+                // seule teinte : elle porte un croissant d'ombre sur sa droite,
+                // et le chiffre etant centre, sa moitie droite tombait dedans.
+                // Verifie au zoom sur le site : le « 0/ » se lisait, le « 4 »
+                // disparaissait. Le vrai score avait le meme defaut des qu'il
+                // depassait un caractere.
+                // Encre sombre pour la partie claire, halo clair pour la partie
+                // sombre : le chiffre se detache des deux.
+                textShadow: preset === 'night'
+                  ? '0 0 5px rgba(248,251,255,0.92), 0 0 12px rgba(248,251,255,0.55)'
+                  : 'none' }}>{score > 0 && assezPourUnScore ? score : `${connues.length}/4`}</span>
             </div>
           </div>
 
