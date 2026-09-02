@@ -327,7 +327,7 @@ function SousTitre({ children, premier = false }) {
   )
 }
 
-export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro, onSwitchTab }) {
+export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro, onSwitchTab }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -686,7 +686,10 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           a l'accueil d'ou ce graphique arrive.
           `avecObservations={false}` : TesProgres, deux lignes plus bas, affiche
           deja les memes observations. */}
-      <WeeklySparkline history={history} isNight={false} preset="day"
+      {/* isNight={false} preset="day" etait ecrit en dur ici : en deplacant le
+          graphe de l'accueil vers Progres, je lui ai fige le jour. Sa carte de
+          verre restait donc en creme sous une encre de nuit, a 4,08:1. */}
+      <WeeklySparkline history={history} isNight={ambiance === 'night'} preset={ambiance}
         userId={userId} avecObservations={false} />
       <TesSeances profil={profil} />
       <ProgressionProgramme userId={userId} />

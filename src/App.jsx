@@ -2929,7 +2929,7 @@ padding: isMobile
                   </div>
                 </div>
               )}
-              <Suspense fallback={<GlowLoader fullPage />}><SanteTab metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={hasFullAccess} onPasserPro={passerPro} onSwitchTab={setOnglet} /></Suspense>
+              <Suspense fallback={<GlowLoader fullPage />}><SanteTab ambiance={ambiance} metriques={metriques} profil={profil} onUpdate={mettreAJourMetrique} score={score} history={history} userId={user?.id} isPro={hasFullAccess} onPasserPro={passerPro} onSwitchTab={setOnglet} /></Suspense>
             </div>
           )}
 
