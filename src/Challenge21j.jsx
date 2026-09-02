@@ -604,7 +604,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           <div style={{ display: 'flex', gap: 8, marginTop: 11 }}>
             <button onClick={reprendreOuOnEnEtait} style={{
               flex: 1, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
-              background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
+              background: 'rgba(var(--rgb-bouton), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
               color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
               Reprendre au jour {progression.lastIndexOf(true) + 2}

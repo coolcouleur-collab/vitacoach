@@ -1957,14 +1957,16 @@ const [messages, setMessages] = useState(() => {
   const score = scoreJour(metriques)
   const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? 'var(--or-plein)' : '#ef4444'
 
-  // L'encre de la barre laterale doit suivre le theme, pas rester fixe.
-  // Elle etait figee en brun profond depuis le correctif de contraste du
-  // 2026-09-01 : sur le fond navy du mode Nuit, toute la navigation tombait
-  // a 2,41:1, donc illisible. La condition est la MEME que celle de la barre
-  // mobile (DynamicNav, ligne 437) : le fond ne devient sombre que sur
-  // l'accueil, donc l'encre claire ne vaut que la. Ailleurs le fond reste
-  // creme et l'encre doit rester brune, sinon on cree le bug en miroir.
-  const nuitNav       = homePreset === 'night' && onglet === 'accueil'
+  // L'encre de la barre laterale suit le theme. Elle etait figee en brun
+  // profond, ce qui donnait 2,41:1 sur le navy, donc illisible.
+  //
+  // Cette ligne portait `&& onglet === 'accueil'`, la meme garde que isNight,
+  // et je l'ai oubliee en retirant l'autre. Elle datait du temps ou seul
+  // l'accueil s'assombrissait. Depuis que la nuit couvre toute l'app, elle
+  // produisait l'inverse du bug qu'elle evitait : la nav repassait en couleurs
+  // de jour des qu'on quittait l'accueil, alors que le fond restait navy.
+  // C'est de la que venait « Rappels actives » en vert sombre sur le navy.
+  const nuitNav       = homePreset === 'night'
   const navEncre      = nuitNav ? 'rgba(190,216,255,0.95)' : ENCRE
   const navIcone      = nuitNav ? 'rgba(190,216,255,0.78)' : ICONE
   const navIconeOff   = nuitNav ? 'rgba(190,216,255,0.55)' : 'rgba(var(--rgb-terracotta), 0.48)'
@@ -3051,7 +3053,7 @@ padding: isMobile
       {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
 
       {/* Health permission modal, 1er lancement */}
-      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} isNight={homePreset === 'night' && onglet === 'accueil'} />}
+      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} isNight={homePreset === 'night'} />}
 
       {/* Global animations */}
       <style>{`
