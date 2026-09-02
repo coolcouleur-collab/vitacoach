@@ -930,6 +930,32 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
     { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur', atteint:atteint('humeur', metriques?.humeur),  fmt: v => v+'/5' },
     { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc', atteint:atteint('fc', metriques?.fc),      fmt: v => v },
   ]
+  /**
+   * Combien de metriques Solenn connait vraiment aujourd'hui.
+   *
+   * Les quatre que le score annonce mesurer, et pas la frequence cardiaque,
+   * qui vient de Sante et que personne ne saisit a la main.
+   */
+  const connues = ['sommeil', 'eau', 'pas', 'humeur']
+    .filter(c => (metriques?.[c] || 0) > 0)
+
+  /**
+   * En dessous de trois metriques, le chiffre ne veut pas dire ce qu'il a
+   * l'air de vouloir dire.
+   *
+   * Avec le seul sommeil renseigne a 4 h, le calcul donne 5 sur 100, et
+   * l'anneau affichait « 5 » comme un verdict de sante. Il signifiait surtout
+   * « je ne sais rien des quatre autres ». Quelqu'un qui ouvre l'app le matin
+   * et voit 5 se croit en tres mauvaise sante alors qu'il n'a rien saisi.
+   *
+   * L'app traitait deja le cas du zero par un tiret, exactement pour cette
+   * raison. Un seul champ rempli retombait dans le meme piege.
+   */
+  const assezPourUnScore = connues.length >= 3
+  const manquantes = ['sommeil', 'eau', 'pas', 'humeur']
+    .filter(c => !connues.includes(c))
+    .map(c => ({ sommeil: 'ton sommeil', eau: 'ton eau', pas: 'tes pas', humeur: 'ton humeur' })[c])
+
   const paused = circleHovered || !!activeMetric
 
   // ── Couleur de l'arc selon le score, identique à SanteTab ──
@@ -978,16 +1004,16 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   donc purement décoratif. Un tiret et non un 0 : « 0 » se lit comme
                   un mauvais résultat alors qu'il n'y a simplement pas encore de
                   donnée (2026-08-11). */}
-              <span style={{ fontSize: score > 0 ? 26 : 24, fontWeight:500, lineHeight:1,
+              <span style={{ fontSize: score > 0 && assezPourUnScore ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
-                opacity: score > 0 ? 1 : 0.55,
+                opacity: score > 0 && assezPourUnScore ? 1 : 0.55,
                 // MESURE : en rgba(180,210,255,0.90), ce chiffre affichait 1,07
                 // a 1,43 pour 1 sur le disque, dont le degrade commence a
                 // #F8FBFF. Le minimum est 3. C'etait du bleu clair sur du bleu
                 // clair, et le plus gros element de l'ecran etait une tache.
                 // La lune est CLAIRE : l'encre doit donc etre sombre, pas
                 // claire. #22385E donne 11:1 au centre, sans quitter la nuit.
-                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '·'}</span>
+                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 && assezPourUnScore ? score : '·'}</span>
             </div>
           </div>
 
@@ -1100,6 +1126,25 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               }}>
                 {p.action}
               </div>
+              )}
+
+              {/* Le chiffre est retenu : on dit pourquoi, et ce qui le
+                  debloque. Sans cette ligne, le tiret ressemble a une panne
+                  alors qu'il attend simplement deux saisies. */}
+              {/* `connues.length > 0` : quand RIEN n'est renseigne, la phrase
+                  au-dessus dit deja « rien n'est encore mesure » et invite a
+                  saisir. Ajouter la liste des quatre manquantes ferait une
+                  troisieme ligne qui repete la deuxieme. */}
+              {!assezPourUnScore && connues.length > 0 && (
+                <div style={{
+                  fontSize: 11.5, lineHeight: 1.45, marginTop: 9,
+                  fontFamily: "'Poppins',system-ui,sans-serif",
+                  color: isNight ? 'rgba(180,205,240,0.66)' : ENCRE,
+                }}>
+                  {manquantes.length === 1
+                    ? `Il me manque ${manquantes[0]} pour te donner un vrai chiffre.`
+                    : `Il me manque ${manquantes.slice(0, -1).join(', ')} et ${manquantes[manquantes.length - 1]} pour te donner un vrai chiffre.`}
+                </div>
               )}
 
               {/* Le mot « score » n'était explicité nulle part. Affiché tant que

@@ -79,6 +79,22 @@ async function triggerHaptic(type = 'light') {
 // elle tombait a 1,12:1, donc invisible, et .liquid-avatar n'apporte aucun
 // fond qui aurait pu la rattraper. Sur le navy du mode Nuit, le creme est en
 // revanche le bon choix : la couleur devait suivre le theme, pas etre figee.
+/**
+ * La signature, selon l'heure.
+ *
+ * « Ton soleil au quotidien » s'affichait a 1h49 du matin sous une lune et sur
+ * un fond bleu nuit. Le mot soleil est celui de la marque et il reste : c'est
+ * la fin de la phrase qui change, pour que la signature cesse de contredire
+ * l'ecran sur lequel elle est posee.
+ *
+ * Les bornes sont celles de l'anneau, 21h a 6h, comme partout ailleurs.
+ */
+function signatureSolenn(heure = new Date().getHours()) {
+  return (heure >= 21 || heure < 6)
+    ? 'Ton soleil, même la nuit'
+    : 'Ton soleil au quotidien'
+}
+
 function SolennFace({ size = 34, isNight = false }) {
   return (
     <div className="liquid-avatar" style={{
@@ -2043,7 +2059,7 @@ const [messages, setMessages] = useState(() => {
           <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:`1px solid ${navTrait}` }}>
             <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color: navEncre }}>Solenn</span>
             <span style={{ fontSize:9, fontWeight:400, color: navEncre, letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
-              Ton soleil au quotidien
+              {signatureSolenn()}
             </span>
           </div>
 
@@ -2215,7 +2231,7 @@ padding: isMobile
                     fontSize:8.5, fontWeight:400, letterSpacing:'0.5px', display:'block', marginTop:2,
                     fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic',
                     color: subColor,
-                  }}>Ton soleil au quotidien</span>
+                  }}>{signatureSolenn()}</span>
                 </div>
                 )
               })()}
@@ -2274,7 +2290,7 @@ padding: isMobile
                 }}>Solenn</span>
                 <span style={{ fontSize:8.5, fontWeight:400, color:ENCRE, letterSpacing:'0.5px',
                   fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
-                  Ton soleil au quotidien
+                  {signatureSolenn()}
                 </span>
               </div>
 
