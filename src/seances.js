@@ -28,6 +28,10 @@ export const TYPES_SEANCE = {
   course: {
     id: 'course',
     nom: 'Course à pied',
+    // Le pluriel est ecrit, pas fabrique. « Course a pied » donne « courses
+    // a pied » et non « course a pieds » : ajouter un s a la fin de la chaine
+    // met la marque au mauvais mot.
+    pluriel: 'courses à pied',
     verbe: 'Sortie enregistrée',
     emoji: '🏃',
     mesureDistance: true,
@@ -35,6 +39,7 @@ export const TYPES_SEANCE = {
   marche: {
     id: 'marche',
     nom: 'Marche',
+    pluriel: 'marches',
     verbe: 'Marche enregistrée',
     emoji: '🚶',
     mesureDistance: true,
@@ -42,6 +47,7 @@ export const TYPES_SEANCE = {
   seance: {
     id: 'seance',
     nom: 'Séance du programme',
+    pluriel: 'séances du programme',
     verbe: 'Séance enregistrée',
     emoji: '💪',
     mesureDistance: false,

@@ -5,6 +5,7 @@ import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
 import ProgressionProgramme from './ProgressionProgramme'
+import TesSeances from './TesSeances'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 
@@ -680,6 +681,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           repondait a « ou j'en suis ? » au milieu d'un ecran qui repond a
           « qu'est-ce que je fais aujourd'hui ? ». Deux questions qu'on ne se
           pose pas au meme moment. */}
+      {/* Ce qu'on a FAIT avant ou on en est : le premier se constate, le
+          second se compare. On regarde d'abord ce qu'on a accompli. */}
+      <TesSeances profil={profil} />
       <ProgressionProgramme userId={userId} />
       <TesProgres history={history} userId={userId} />
       <SousTitre>Le détail</SousTitre>
