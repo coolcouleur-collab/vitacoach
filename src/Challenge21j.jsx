@@ -908,12 +908,19 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 </div>
               )}
               {/* ── Conseil nutrition du jour ──
-                  Affiche UNIQUEMENT dans l'onglet Nutrition. Programme est
-                  specifiquement sportif, regle posee par Jean : ce conseil
-                  s'y intercalait entre la seance du jour et celle de demain.
-                  Le meme composant sert les deux onglets, `famille` les
-                  distingue deja, il suffisait de s'en servir. */}
-              {famille === 'nutrition' && jourActuelData.nutrition && (
+                  J'avais restreint ce bloc a l'onglet Nutrition, au nom de la
+                  regle « Programme est specifiquement sportif ». Verifie
+                  ensuite en ligne : il ne DEPLACAIT rien, il supprimait.
+
+                  Les deux onglets s'excluent, on ne suit qu'un programme a la
+                  fois. Quand le programme actif est sportif, l'onglet
+                  Nutrition n'affiche aucune donnee du jour, juste « il est
+                  dans l'onglet Sport ». Ce conseil, ecrit jour par jour dans
+                  le programme, n'existe que la ou ce programme se deroule.
+
+                  La regle de Jean separait des SECTIONS et une navigation,
+                  pas une ligne de contexte attachee a la journee. */}
+              {jourActuelData.nutrition && (
                 <div style={{
                   display: 'flex', gap: 8, alignItems: 'flex-start',
                   background: 'rgba(var(--rgb-verre), 0.35)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
