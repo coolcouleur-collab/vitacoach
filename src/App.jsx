@@ -923,6 +923,12 @@ const [messages, setMessages] = useState(() => {
   useEffect(() => {
     const appliquer = () => {
       document.documentElement.setAttribute('data-theme', ambiance === 'night' ? 'night' : 'day')
+      // La bande du haut du telephone, autour de l'heure et du reseau, est
+      // peinte par `theme-color` et non par la page : html et body etaient
+      // deja en navy, elle restait claire quand meme. Le jour garde sa valeur
+      // d'origine, seule la nuit est nouvelle.
+      const meta = document.querySelector('meta[name="theme-color"]')
+      if (meta) meta.setAttribute('content', ambiance === 'night' ? '#0F1C3A' : '#C87B52')
       // L'heure avance meme quand personne ne regarde l'accueil : sans cette
       // ligne, l'app restait dans l'ambiance du dernier passage par l'accueil.
       setHomePreset(p => { const n = getOceanPreset(new Date().getHours()); return n === p ? p : n })
@@ -2431,14 +2437,20 @@ padding: isMobile
                     50%       { opacity: 0.55; transform: scale(1.35); }
                   }
                 `}</style>
+                {/* Le degrade du mot part du brun de la marque, #B8693A. Sur le
+                    navy il disparait : le logo etait a peine lisible la nuit
+                    (capture de Jean, 2 septembre). Son jumeau plus haut avait
+                    deja sa branche de nuit, celui-ci non. Meme traitement. */}
                 <span style={{
                   fontSize:30, fontWeight:400,
                   fontFamily:"'Cormorant Garamond', Georgia, serif",
                   fontStyle:'italic', letterSpacing:'-0.05em',
-                  background:'linear-gradient(90deg, #B8693A 0%, var(--accent) 28%, #D4854A 50%, var(--accent) 72%, #B8693A 100%)',
-                  backgroundSize:'200% auto',
-                  WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
-                  animation:'headerShimmer 3s linear infinite',
+                  ...(ambiance === 'night'
+                    ? { color:'rgba(198,222,255,0.96)' }
+                    : { background:'linear-gradient(90deg, #B8693A 0%, var(--accent) 28%, #D4854A 50%, var(--accent) 72%, #B8693A 100%)',
+                        backgroundSize:'200% auto',
+                        WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+                        animation:'headerShimmer 3s linear infinite' }),
                   lineHeight:1,
                 }}>Solenn</span>
                 <span style={{ fontSize:8.5, fontWeight:400, color:ENCRE, letterSpacing:'0.5px',
