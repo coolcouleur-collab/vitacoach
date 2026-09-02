@@ -121,11 +121,47 @@ function nu(t) {
  * attraper « laitue », alors que « cacahuetes » doit bien correspondre à
  * « cacahuete ».
  */
+/**
+ * Distance d'edition, plafonnee : on s'arrete des qu'elle depasse `max`.
+ * Sert a rattraper une faute de frappe, pas a deviner un synonyme.
+ */
+function distance(a, b, max = 1) {
+  if (Math.abs(a.length - b.length) > max) return max + 1
+  let prec = Array.from({ length: b.length + 1 }, (_, i) => i)
+  for (let i = 1; i <= a.length; i++) {
+    const cour = [i]
+    let mini = i
+    for (let j = 1; j <= b.length; j++) {
+      const cout = a[i - 1] === b[j - 1] ? 0 : 1
+      cour[j] = Math.min(cour[j - 1] + 1, prec[j] + 1, prec[j - 1] + cout)
+      if (cour[j] < mini) mini = cour[j]
+    }
+    if (mini > max) return max + 1
+    prec = cour
+  }
+  return prec[b.length]
+}
+
 function contientAliment(texte, aliment) {
   const m = nu(aliment).trim()
   if (m.length < 3) return false
   const echappe = m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  return new RegExp(`\\b${echappe}(s|x|es)?\\b`).test(texte)
+  if (new RegExp(`\\b${echappe}(s|x|es)?\\b`).test(texte)) return true
+
+  // Rattrapage des fautes de frappe, question de Jean : « on fait comment si
+  // l'utilisateur se trompe sur l'orthographe d'un mot ? »
+  //
+  // Le modele, lui, comprend « choclat » sans aide : la consigne lui part
+  // telle quelle. C'est le FILET qui devenait aveugle, donc silencieux au
+  // moment ou il compte. Une lettre d'ecart suffit a le rouvrir.
+  //
+  // Seulement a partir de 5 lettres : en dessous, une lettre d'ecart change
+  // le mot (« ail » et « oeil », « riz » et « ris ») et le filet bloquerait
+  // des recettes parfaitement valables.
+  if (m.length < 5) return false
+  return texte.split(/[^a-z0-9]+/).some(
+    mot => mot.length >= 5 && distance(mot, m, 1) <= 1,
+  )
 }
 
 /**
@@ -136,6 +172,32 @@ function contientAliment(texte, aliment) {
  * qu'une allergie ignorée n'est pas une maladresse, c'est un danger, et qu'on
  * préfère ne rien servir plutôt que servir approximatif.
  */
+/**
+ * Tout ce qu'une personne ne mange pas : les mots de son regime, ce qu'elle a
+ * ecrit elle-meme, et la FAMILLE de ce qu'elle a ecrit quand elle nomme un
+ * aliment qu'un regime connait deja.
+ *
+ * Ce dernier point corrige un angle mort signale par Jean : quelqu'un qui tape
+ * « porc » dans le champ libre sans choisir le regime « sans porc » ne
+ * bloquait que le mot « porc ». Le jambon, les lardons et le chorizo
+ * passaient, alors que le regime, lui, connait toute la famille.
+ */
+export function motsInterdits(profil) {
+  const prefs = profil?.preferences_alimentaires || {}
+  const regime = REGIMES[prefs.regime] || REGIMES.aucun
+  const libres = (prefs.evictions || '').split(/[,;]/).map(t => t.trim()).filter(Boolean)
+
+  const familles = []
+  for (const mot of libres) {
+    const m = nu(mot)
+    for (const r of Object.values(REGIMES)) {
+      if ((r.mots || []).some(x => nu(x) === m)) familles.push(...r.mots)
+    }
+  }
+  return [...new Set([...libres, ...(regime.mots || []), ...familles])]
+    .filter(m => m && m.length >= 3)
+}
+
 export function recettesSures(recettes, motsInterdits) {
   if (!motsInterdits?.length) return true
   for (const r of recettes || []) {
@@ -273,7 +335,10 @@ Format JSON :
   // une recette qui contient ce que la personne ne peut pas manger.
   // Les mots du regime, et non un decoupage de sa phrase : « viande et
   // poisson » se coupait en deux mots que le modele n'ecrit jamais.
-  const interdits = [...evictions, ...(regime.mots || [])].filter(m => m && m.length >= 3)
+  // Une seule definition de « ce qu'elle ne mange pas », partagee avec la
+  // route qui relit le cache. Deux listes qui divergent, c'est une recette
+  // filtree a la generation et servie sans controle le lendemain.
+  const interdits = motsInterdits(profil)
 
   if (!recettesSures(recettes, interdits)) {
     console.warn('[Recettes] generation rejetee : un interdit alimentaire est present')

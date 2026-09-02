@@ -18,7 +18,7 @@ import {
   extraireMoments, sauvegarderMoments,
 } from './agents/index.js'
 import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken } from './agents/sync-sante.js'
-import { genererRecettes } from './agents/recettes.js'
+import { genererRecettes, recettesSures, motsInterdits } from './agents/recettes.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
 import { ownerGuard, adminGuard } from './api/_auth.js'
@@ -2025,6 +2025,20 @@ app.get('/api/recettes', ownerGuard, async (req, res) => {
       .from('profils').select('profil').eq('user_id', userId).single()
     const cache = data?.profil?.recettes_cache || null
     const aujourdhui = new Date().toISOString().split('T')[0]
+
+    // LE CACHE EST RELU CONTRE LES EXCLUSIONS DU MOMENT.
+    //
+    // Le controle de securite ne tournait qu'a la GENERATION. Cette route
+    // servait le cache tel quel, et le cache de la veille avec. Quelqu'un qui
+    // declarait une allergie apres coup continuait donc a voir des idees
+    // fabriquees avant, sans que rien ne les revoie (constat de Jean,
+    // 3 septembre : « les recettes ne s'adaptent pas »).
+    //
+    // On ne sert rien plutot que de servir approximatif : l'ecran propose alors
+    // de relancer, et la generation, elle, respecte les exclusions.
+    if (cache?.liste?.length && !recettesSures(cache.liste, motsInterdits(data?.profil))) {
+      return res.json({ recettes: null, date: null, dujour: false })
+    }
     // Un cache d'hier est servi quand meme : des idees de repas ne se perimen
     // pas a minuit, et un ecran vide au reveil vaut moins qu'une idee de la
     // veille. La date part avec, l'ecran dira qu'elles datent.

@@ -4243,7 +4243,12 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
             boxShadow:'0 2px 12px rgba(var(--rgb-terracotta), 0.15)' }}>↓</button>
       )}
       <div style={s.inputBox}>
-        <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:'none' }} />
+        {/* PAS d'attribut `capture`. Il forcait l'appareil photo arriere et
+            supprimait purement et simplement l'acces a la galerie, sur iOS
+            comme sur Android : impossible d'envoyer une photo deja prise
+            (constat de Jean, 3 septembre). Sans lui, le systeme propose les
+            deux, photothèque ou appareil, et l'utilisateur choisit. */}
+        <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{ display:'none' }} />
         <button style={{ ...s.sendBtn, marginRight:-4 }} title="Photographier mon repas"
           onClick={() => { triggerHaptic('light'); fileRef.current?.click() }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
