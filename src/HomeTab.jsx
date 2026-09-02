@@ -2274,12 +2274,23 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
 // page. Sans ce filtre, l'accueil disait deux fois la même chose à quelques
 // centimètres d'écart, « Il te manque surtout l'eau, 4 verres sur 8 » puis
 // « Hydratation en retard · 4/8 verres » (2026-08-11).
-function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, presetManuel = null, dejaDit = null }) {
+function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, score = 0, dejaDit = null }) {
   const tc = isNight ? nightText : warmText
   // Le moment suit l'ambiance choisie dans Réglages, pas l'horloge : sans ça
   // l'app affichait « Nuit » et les suggestions du soir à 10 h du matin
   // (bug 2026-08-08). Une seule source de vérité pour le thème ET les cartes.
-  const h = ({ sunrise: 7, day: 11, sunset: 19, night: 23 }[presetManuel]) ?? new Date().getHours()
+  // L'HEURE REELLE, toujours. Cette ligne deduisait autrefois une heure feinte
+  // de l'ambiance choisie : ambiance nuit, donc « il est 23h ». Or le reglage
+  // s'appelle « Ambiance de l'accueil » et ne propose que des couleurs. Jean a
+  // donc eu, a 11h44, une section intitulee « Nuit » qui lui proposait de
+  // preparer son sommeil, pendant que la carte deux blocs plus haut lui
+  // demandait son eau « depuis ce matin » en lisant la vraie horloge. Deux
+  // sources de verite sur le meme ecran, et elles se contredisaient.
+  //
+  // La regle, desormais : l'ambiance decide des COULEURS, l'heure decide du
+  // CONTENU. Quelqu'un qui prefere un ecran sombre a midi ne demande pas qu'on
+  // l'envoie se coucher.
+  const h = new Date().getHours()
 
   const TC = isNight ? 'rgba(190,216,255,0.90)' : ICONE
 
@@ -2825,7 +2836,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           à faire, un tableau de bord, pas un coach. Les suggestions du moment
           remontent donc juste après le check-in ; l'historique et les analyses
           restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
-      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} presetManuel={presetManuel} dejaDit={phrase.cle} />
+      <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} dejaDit={phrase.cle} />
 
       {/* Évolution = raccourci vers Progrès. Toujours affichée, même sans
           donnée : Jean la garde pour l'équilibre visuel de la page. Elle porte
