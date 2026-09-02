@@ -94,6 +94,26 @@ le gros dossier de Google. Verifie apres compilation.
 Le bundle Android depose chez Google date du 30 aout, l'iOS embarque du
 21 juillet. Rien de ce chantier n'y est.
 
+### Un defaut confirme, PAS corrige : le rapport hebdomadaire
+
+Le rapport envoie a Solenn la ligne « Score bien-etre : X/100 ». Ce X vient de
+la moyenne de la colonne `score` de `user_metrics`. Or cette colonne ne
+contient PAS le score de bien-etre : elle est remplie par `agents/sync-sante.js`
+avec le SCORE DE SOMMEIL remonte par Oura ou Withings.
+
+Consequence : pour quelqu'un avec une montre connectee, le rapport
+hebdomadaire commente son bien-etre en se basant sur son sommeil. Pour les
+autres la colonne est vide, donc le rapport dit « non calcule », ce qui est
+honnete mais prive tout le monde de l'information.
+
+Le correctif est simple depuis que le calcul vit dans `src/score.js`, qui n'a
+aucune dependance et s'importe cote serveur comme `src/programmes.js` :
+calculer la moyenne des scores journaliers a partir des metriques brutes, dans
+`agents/rapport-hebdo.js`, au lieu de lire la colonne.
+
+Deux notions differentes portent le meme nom dans la base. Renommer la colonne
+serait plus propre, mais demande une migration.
+
 ### Deux choses notees en chemin, pas urgentes
 
 **La barre du bas deborde a 130 % de taille de texte.** Mesure faite le
@@ -106,6 +126,21 @@ reduisant le libelle ou en passant l'icone seule sous une certaine largeur.
 programme installe des habitudes semaine par semaine, les idees de repas
 repondent a « je fais quoi ce soir ». Elles s'ignorent. Les idees pourraient
 suivre le theme de la semaine en cours du programme.
+
+### Une lecon du 2 septembre, pour moi
+
+J'ai casse l'accueil en production. En sortant une fonction d'un fichier, ma
+decoupe a emporte cinq declarations voisines : le bloc des metriques de
+l'anneau et les variables du score. `ReferenceError` a l'ouverture de l'app.
+
+Le point important n'est pas l'erreur, c'est que `vite build` EST PASSE AU
+VERT. Il ne verifie pas qu'une variable existe : une reference manquante est
+du JavaScript valide jusqu'a l'execution. Une compilation reussie ne prouve
+donc rien sur ce point, et je l'avais prise pour une garantie.
+
+Deux consequences pour la suite : regarder ce qu'il y a ENTRE deux ancres
+avant de couper, et charger reellement la page apres un remaniement, pas
+seulement compiler.
 
 ### A verifier sur un vrai telephone, ce qu'aucun test ne remplace
 
