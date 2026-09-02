@@ -2272,9 +2272,9 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
     // reste peu de temps pour rattraper. Borné à 22 h : conseiller de boire à
     // 2 h du matin dessert le sommeil.
     eau < 6 && h >= 12 && h < 22 && dejaDit !== 'eau' && { prio: (h >= 17 && eau < 4) ? 1 : 4,
-      icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard',   sub:`${eau}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
+      icon:<WaterIcon size={15} color={TC} />, label:'Pense à boire',           sub:`${eau} verre${eau > 1 ? 's' : ''} sur 8 aujourd'hui`, tab:'sante', color:TC },
     pas < 5000 && h >= 12 && h < 20 && dejaDit !== 'pas' && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
-      icon:<RunIcon size={15} color={TC} />,   label:'Objectif pas',            sub:`${formaterPas(pas)} / 10k pas`, tab:'sante', color:TC },
+      icon:<RunIcon size={15} color={TC} />,   label:'Bouger un peu plus',            sub:`${formaterPas(pas)} / 10k pas`, tab:'sante', color:TC },
 
     // Cartes du moment
     h >= 5  && h < 12 && { prio:3, icon:<SunIcon size={15} color={TC} />,   label:'Routine matinale',      sub:'Démarre bien ta journée',              tab:'routine', color:TC },
