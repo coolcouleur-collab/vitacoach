@@ -2423,8 +2423,15 @@ padding: isMobile
             // 0.58 rendait le hamburger quasi invisible sur les fonds clairs
             // (constat Jean 2026-08-12).
             const iconColor = ICONE   // etait rgba(178,102,62,0.92) : 2,9:1, sous le seuil 3,0
+            // Le voile de l'en-tete mobile est un style STATIQUE, donc
+            // incapable de lire l'ambiance : il restait creme sur le navy, et
+            // c'est cette bande claire en haut de la capture de Jean. Son
+            // jumeau quelques lignes plus haut avait deja sa version de nuit.
+            // Memes points d'arret, memes opacites, autre couleur.
             return (
-            <div style={s.mobileHeader}>
+            <div style={ambiance === 'night'
+              ? { ...s.mobileHeader, background:'linear-gradient(180deg, rgba(7,15,30,1) 0%, rgba(7,15,30,0.98) 48%, rgba(7,15,30,0.70) 72%, rgba(7,15,30,0) 100%)' }
+              : s.mobileHeader}>
               {/* Logo, identique sur tous les onglets */}
               <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
                 <style>{`
