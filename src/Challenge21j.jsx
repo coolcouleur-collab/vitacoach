@@ -624,34 +624,40 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <motion.div
           key="challenge-main"
           initial={{ opacity: 0, y: 20 }}
-          // L'opacite passe par `animate` et NON par `style` : framer-motion
-          // pilote deja cette propriete sur ce bloc. Mettre les deux laissait
-          // l'element a l'opacite `initial`, soit 0, et le contenu du jour
-          // devenait carrement invisible. Verifie a la mesure, en ligne.
-          animate={{ opacity: proposerReprise ? 0.32 : 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          // Tant que la question « on reprend au jour X ou on continue au
-          // jour Y ? » n'a pas de reponse, ce bloc est inerte.
-          //
-          // Avant, il affichait deja la seance du jour le plus avance, avec
-          // son titre, ses exercices et son compteur, juste sous la question.
-          // La decision avait donc l'air deja prise, et le choix decoratif.
-          //
-          // On le grise plutot que de le cacher : voir ce qui est en jeu aide
-          // a choisir, et la page ne se vide pas d'un coup sous les yeux.
-          // `inert` plutot que `aria-hidden` : pointerEvents:none arrete la
-          // souris mais laisse les boutons accessibles au clavier, et
-          // aria-hidden sur un conteneur focalisable est un contresens.
-          // React 19 passe `inert` tel quel.
-          inert={proposerReprise || undefined}
-          style={{
-            display: 'flex', flexDirection: 'column', gap: '20px',
-            filter: proposerReprise ? 'saturate(0.45)' : 'none',
-            pointerEvents: proposerReprise ? 'none' : 'auto',
-            userSelect: proposerReprise ? 'none' : 'auto',
-            transition: 'filter .3s ease',
-          }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
         >
+          {/* ── LE VOILE D'ATTENTE DE REPONSE ──
+              Tant que « on reprend au jour X ou on continue au jour Y ? »
+              n'a pas de reponse, tout ce qui suit est inerte et grise.
+
+              Avant, la seance du jour le plus avance s'affichait deja sous la
+              question, depliee, avec son titre et ses exercices : la decision
+              avait l'air prise et le choix decoratif. Grise plutot que cache,
+              car voir ce qui est en jeu aide a choisir.
+
+              Ce voile est un div ORDINAIRE, pas le motion.div ci-dessus.
+              Premiere version : j'avais pose `inert` et l'opacite sur
+              l'element anime lui-meme. AnimatePresence se sert d'`inert`
+              pour ses propres sorties : l'animation d'entree n'a jamais
+              demarre, le bloc est reste a son opacite `initial`, zero, et le
+              contenu du jour a disparu en production. Les deux roles doivent
+              rester separes.
+
+              `inert` et non `aria-hidden` : pointerEvents:none arrete la
+              souris mais laisse les boutons atteignables au clavier. */}
+          <div
+            inert={proposerReprise || undefined}
+            style={{
+              display: 'flex', flexDirection: 'column', gap: '20px',
+              opacity: proposerReprise ? 0.32 : 1,
+              filter: proposerReprise ? 'saturate(0.45)' : 'none',
+              pointerEvents: proposerReprise ? 'none' : 'auto',
+              userSelect: proposerReprise ? 'none' : 'auto',
+              transition: 'opacity .3s ease, filter .3s ease',
+            }}
+          >
           {/* ── PROGRAMME TERMINÉ, le jour 21 ouvrait sur RIEN : bravo, puis
                le vide, au moment exact où l'abonné décide de rester ou partir.
                La fin propose le cycle suivant (chantier A, Jean 2026-08-13). */}
@@ -1177,6 +1183,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           {/* Le bouton de regeneration a quitte le bas de page : c'est la
               fleche d'actualisation du header, comme pour la routine
               (demande Jean 2026-08-13). Voir RoutineTab. */}
+          </div>
         </motion.div>
       </AnimatePresence>
 
