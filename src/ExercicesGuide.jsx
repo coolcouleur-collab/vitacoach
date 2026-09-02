@@ -291,7 +291,18 @@ const P = id => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?
 export const PHOTOS_EXOS = {
   squat:     { url: P(8032754), pos: '50%' },
   gainage:   { url: P(7900683), pos: '50%' },
-  fente:     { url: P(8038573), pos: '50%' },
+  // La photo 8038573 montre une fente LATERALE, pas une fente avant : verifiee
+  // en la regardant, le 3 septembre, apres un doute de Jean sur la vignette.
+  // Elle est donc descendue sur `fentelaterale`, qui n'en avait aucune, et
+  // `fente` retombe sur son animation.
+  //
+  // La note plus bas disait « fente laterale -> uniquement des fentes avant » :
+  // c'etait l'inverse. La photo cherchee pour l'une etait posee sur l'autre.
+  //
+  // Regle posee en aout, apres le meme constat sur les pompes sur genoux : une
+  // photo qui enseigne un AUTRE geste est pire que l'animation, qui montre le
+  // bon. Mieux vaut pas d'image qu'une image fausse.
+  fente:     null,
   pont:      { url: P(4534643), pos: '70%' },
   chaise:    { url: P(6740054), pos: '50%' },
   chatvache: { url: P(6303431), pos: '50%' },
@@ -335,9 +346,14 @@ export const PHOTOS_EXOS = {
   //   bird dog -> des chiens et du yoga ;
   //   donkey kick -> des elastiques, pas le mouvement ;
   //   squat saute -> uniquement des sauts sur caisse, autre geste ;
-  //   fente laterale -> uniquement des fentes avant.
- birddog: null, donkeykick: null,
-  squatsaute: null, fentelaterale: null,
+  //   (fente laterale : rayee le 3 septembre, la photo existait, elle etait
+  //    simplement rangee sous « fentes alternees ».)
+  birddog: null, donkeykick: null,
+  squatsaute: null,
+  // Trouvee le 3 septembre, la ou on ne la cherchait plus : elle etait posee
+  // sur « Fentes alternees ». Adducteurs et appui lateral, c'est bien ce
+  // mouvement-la.
+  fentelaterale: { url: P(8038573), pos: '50%' },
 }
 
 // Sans photo (ou si elle ne charge pas), on retombe sur la silhouette animée.
