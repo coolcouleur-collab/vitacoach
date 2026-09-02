@@ -558,3 +558,45 @@ Deux changements faits avec l'accord de Jean :
 GitHub. Vercel passe par une GitHub App, installee et fonctionnelle aux cotes
 de Railway et Render. Reconnecter le depot n'aurait donc rien recree, et aurait
 coupe la chaine de production pour rien.
+
+---
+
+## Le 3 septembre : les exclusions alimentaires
+
+**Ce qui n'allait pas, et pourquoi ca a mis du temps a se voir.** Jean signale
+que les recettes ignorent « ce que je ne mange pas ». Trois causes se
+superposaient, et seule la troisieme comptait vraiment :
+
+1. La route qui SERT les recettes rendait le cache sans jamais le confronter
+   aux exclusions du moment. Le controle ne tournait qu'a la generation.
+2. Le champ libre ne tirait pas sa famille de mots : taper « porc » sans
+   choisir le regime laissait passer jambon, lardons et chorizo.
+3. **Les exclusions ne s'enregistraient pas du tout.** L'ecriture passait par
+   un upsert brut dans un `try { } catch {}` muet : l'echec ressemblait a une
+   reussite, l'app confirmait, la base ne recevait rien, et le rechargement
+   suivant effacait la copie locale.
+
+La troisieme est la vraie. Les deux premieres sont corrigees aussi, mais elles
+n'auraient rien change tant qu'il n'y avait rien a quoi s'adapter.
+
+**La lecon, et elle s'est deja repetee.** Le meme bug avait ete diagnostique le
+14 aout, « je remplis mon profil et ca s'enleve », et corrige DANS UN SEUL
+endroit. Deux ecrans faisaient encore l'ancienne version. La fonction solide
+vit desormais dans `src/profilSync.js` et les trois l'utilisent. **Toute
+nouvelle sauvegarde de profil doit passer par elle**, jamais par un
+`supabase.from('profils').upsert()` direct.
+
+### Repere, pas traite
+
+- **Le panneau des exclusions initialise ses champs une seule fois**, a
+  l'ouverture. Si le profil arrive de la base juste apres, le champ reste vide
+  alors que les exclusions existent. Le risque n'est pas l'affichage : c'est
+  qu'un reenregistrement depuis ce champ vide efface ce qui etait stocke.
+- **Neuf endroits jettent le message d'erreur du serveur** pour lever le leur,
+  generique. Le serveur repond pourtant quelque chose d'exploitable sur 30 de
+  ses routes. Les deux qui comptent : la generation du rapport hebdomadaire,
+  meme cas que le programme, et la suppression de compte, ou etre vague est le
+  plus dommageable. Corrige pour la creation de programme uniquement.
+- **La generation d'un programme se fait en un seul essai**, sans relance. Un
+  echec de l'IA renvoie l'utilisateur a un message, la ou une seconde tentative
+  suffirait probablement.
