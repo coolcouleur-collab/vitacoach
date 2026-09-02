@@ -862,8 +862,47 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     // score de 28 sur 100. Jean l'a vu sur ses captures du 2026-09-01 : la
     // phrase decredibilise tout le reste, parce qu'elle contredit le chiffre
     // affiche juste au-dessus.
+    // CE BLOC MENTAIT. Il annoncait « rien n'est encore mesure » des que le
+    // score passait sous 50, sans jamais regarder ce qui etait mesure. Jean
+    // l'a vu a 11h22 : sept heures de sommeil enregistrees, affichees dans
+    // l'anneau avec leur coche verte, et juste en dessous « rien n'est encore
+    // mesure » suivi de « renseigne ton sommeil ». On lui reclamait ce
+    // qu'elle venait de donner.
+    const CLES = ['sommeil', 'eau', 'pas', 'humeur']
+    const LIB = { sommeil: 'ton sommeil', eau: 'ton eau', pas: 'tes pas', humeur: 'ton humeur' }
+    const connues = CLES.filter(c => (m[c] || 0) > 0)
+
+    if (!connues.length) {
+      return {
+        cle: null,
+        quoi: 'La journée commence, rien n\'est encore mesuré.',
+        action: 'Renseigne ton sommeil ou tes pas et je te dis où tu en es.',
+      }
+    }
+
+    // Quelque chose est mesure, mais pas assez pour un chiffre. On le dit dans
+    // ce sens la, et on nomme ce qui manque au lieu de reclamer en bloc.
+    if (connues.length < 3) {
+      const manquantes = CLES.filter(c => !connues.includes(c)).map(c => LIB[c])
+      const liste = manquantes.length === 1
+        ? manquantes[0]
+        : manquantes.slice(0, -1).join(', ') + ' et ' + manquantes[manquantes.length - 1]
+      return {
+        cle: null,
+        quoi: `${connues.length} mesure${connues.length > 1 ? 's' : ''} sur quatre pour aujourd'hui.`,
+        action: `Il me manque ${liste} pour te donner un vrai chiffre.`,
+      }
+    }
+
+    // Ici on SAIT que trois mesures au moins existent : la branche vide est
+    // traitee plus haut. Dire « rien n'est encore mesure » a ce stade serait
+    // le meme mensonge, deplace d'un cran.
     if ((score || 0) < 50) {
-      return { cle: null, quoi: 'La journée commence, rien n\'est encore mesuré.', action: 'Renseigne ton sommeil ou tes pas et je te dis où tu en es.' }
+      return {
+        cle: null,
+        quoi: `Ton score est bas aujourd'hui, ${score} sur 100.`,
+        action: 'Le sommeil et les pas sont ce qui le fait bouger le plus.',
+      }
     }
     if ((score || 0) < 70) {
       return { cle: null, quoi: 'Ça tient, sans plus.', action: 'Un verre d\'eau ou dix minutes de marche feraient la différence.' }
@@ -1006,7 +1045,11 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   donnée (2026-08-11). */}
               <span style={{ fontSize: score > 0 && assezPourUnScore ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
-                opacity: score > 0 && assezPourUnScore ? 1 : 0.55,
+                // 0,55 datait de l'encre claire sur fond navy. Avec l'encre
+                // sombre sur la lune claire, ce meme 0,55 donne 2,61 a 3,12
+                // pour 1, soit juste sous le seuil de 3. Le tiret redevient
+                // lisible sans redevenir aussi present qu'un vrai score.
+                opacity: score > 0 && assezPourUnScore ? 1 : 0.78,
                 // MESURE : en rgba(180,210,255,0.90), ce chiffre affichait 1,07
                 // a 1,43 pour 1 sur le disque, dont le degrade commence a
                 // #F8FBFF. Le minimum est 3. C'etait du bleu clair sur du bleu
@@ -1130,12 +1173,12 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
 
               {/* Le chiffre est retenu : on dit pourquoi, et ce qui le
                   debloque. Sans cette ligne, le tiret ressemble a une panne
-                  alors qu'il attend simplement deux saisies. */}
-              {/* `connues.length > 0` : quand RIEN n'est renseigne, la phrase
-                  au-dessus dit deja « rien n'est encore mesure » et invite a
-                  saisir. Ajouter la liste des quatre manquantes ferait une
-                  troisieme ligne qui repete la deuxieme. */}
-              {!assezPourUnScore && connues.length > 0 && (
+                  alors qu'il attend simplement deux saisies.
+                  Elle ne s'affiche QUE si un verdict occupe les deux lignes du
+                  dessus (`p.cle`). Sinon la phrase de repli nomme deja ce qui
+                  manque, et cette ligne en formait une troisieme qui redisait
+                  la deuxieme, en la contredisant parfois. */}
+              {!assezPourUnScore && connues.length > 0 && p.cle && (
                 <div style={{
                   fontSize: 11.5, lineHeight: 1.45, marginTop: 9,
                   fontFamily: "'Poppins',system-ui,sans-serif",
