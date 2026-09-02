@@ -875,7 +875,17 @@ const [messages, setMessages] = useState(() => {
     const todayStr = new Date().toDateString()
     return hr >= 6 && hr < 11 && lastCheckin !== todayStr
   })
-  const [homePreset, setHomePreset] = useState('day')
+  // `useState('day')` etait le second point ou l'ambiance se dedoublait.
+  //
+  // homePreset est REMONTE par HomeTab, qui ne se monte que sur l'accueil.
+  // Sur un demarrage qui n'y passe pas, et pendant les premieres frames de
+  // celui qui y passe, il vaut donc 'day' pendant que la racine, elle, a
+  // deja calcule la nuit. La barre du bas, l'en-tete, la signature et le
+  // modal Sante partaient tous de cette valeur : ils s'affichaient en
+  // couleurs de jour sur une app devenue navy.
+  //
+  // On part donc de l'heure, comme la racine, au lieu de partir de 'day'.
+  const [homePreset, setHomePreset] = useState(() => getOceanPreset(new Date().getHours()))
   // Ambiance choisie à la main dans Réglages. Distincte de homePreset, qui est
   // l'ambiance COURANTE remontée par HomeTab : sans cette séparation le choix
   // de l'utilisateur était aussitôt écrasé par l'heure (bug signalé 2026-08-08).
@@ -893,6 +903,12 @@ const [messages, setMessages] = useState(() => {
   // fin de la fenetre qui contient l'heure du choix plus une heure.
   const [presetManuel, setPresetManuel] = useState(() => lireAmbianceManuelle())
 
+  // L'AMBIANCE, une fois pour toutes. Le choix manuel prime sur le deroule
+  // de l'heure, exactement comme dans HomeTab. Tout ce qui s'assombrit dans
+  // l'app doit lire CETTE valeur, et rien d'autre : c'est en laissant deux
+  // calculs coexister qu'on obtient une nav claire sur un fond sombre.
+  const ambiance = presetManuel || homePreset
+
   // L'AMBIANCE DE TOUTE L'APP, et plus seulement de l'accueil.
   //
   // On pose l'attribut sur la racine du document : les variables de theme.css
@@ -903,8 +919,10 @@ const [messages, setMessages] = useState(() => {
   // `theme-jour` : ce sont des portes d'entree, pas des ecrans de travail.
   useEffect(() => {
     const appliquer = () => {
-      const a = presetManuel || getOceanPreset(new Date().getHours())
-      document.documentElement.setAttribute('data-theme', a === 'night' ? 'night' : 'day')
+      document.documentElement.setAttribute('data-theme', ambiance === 'night' ? 'night' : 'day')
+      // L'heure avance meme quand personne ne regarde l'accueil : sans cette
+      // ligne, l'app restait dans l'ambiance du dernier passage par l'accueil.
+      setHomePreset(p => { const n = getOceanPreset(new Date().getHours()); return n === p ? p : n })
     }
     appliquer()
     // Meme cadence que l'expiration du choix manuel : l'ambiance doit basculer
@@ -915,7 +933,7 @@ const [messages, setMessages] = useState(() => {
       clearInterval(t)
       document.removeEventListener('visibilitychange', appliquer)
     }
-  }, [presetManuel])
+  }, [ambiance])
 
   // L'expiration ne peut pas attendre le prochain demarrage de l'app :
   // quelqu'un qui force la nuit a 17h55 doit voir le coucher de soleil arriver
@@ -1966,7 +1984,7 @@ const [messages, setMessages] = useState(() => {
   // produisait l'inverse du bug qu'elle evitait : la nav repassait en couleurs
   // de jour des qu'on quittait l'accueil, alors que le fond restait navy.
   // C'est de la que venait « Rappels actives » en vert sombre sur le navy.
-  const nuitNav       = homePreset === 'night'
+  const nuitNav       = ambiance === 'night'
   const navEncre      = nuitNav ? 'rgba(190,216,255,0.95)' : ENCRE
   const navIcone      = nuitNav ? 'rgba(190,216,255,0.78)' : ICONE
   const navIconeOff   = nuitNav ? 'rgba(190,216,255,0.55)' : 'rgba(var(--rgb-terracotta), 0.48)'
@@ -2089,7 +2107,7 @@ const [messages, setMessages] = useState(() => {
           <SettingsSheet
             authHeaders={authHeaders}
             profil={profil}
-            preset={homePreset}
+            preset={ambiance}
             notifsEnabled={notifEnabled}
             isPro={isPro}
             onPasserPro={passerPro}
@@ -2191,7 +2209,7 @@ const [messages, setMessages] = useState(() => {
           <div style={{ marginBottom:'1rem', paddingBottom:'1rem', borderBottom:`1px solid ${navTrait}` }}>
             <span style={{ fontSize:26, fontWeight:400, letterSpacing:'-0.05em', fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:'italic', color: navEncre }}>Solenn</span>
             <span style={{ fontSize:9, fontWeight:400, color: navEncre, letterSpacing:'0.4px', marginTop:1, fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic', display:'block' }}>
-              {signatureSolenn(presetManuel || homePreset)}
+              {signatureSolenn(ambiance)}
             </span>
           </div>
 
@@ -2323,7 +2341,7 @@ padding: isMobile
           {isMobile && onglet === 'accueil' && (
             <div style={{
               position:'fixed', top:0, left:0, right:0, zIndex:50,
-              background: homePreset === 'night'
+              background: ambiance === 'night'
                 ? 'linear-gradient(180deg, rgba(7,15,30,0.92) 0%, rgba(7,15,30,0.72) 55%, rgba(7,15,30,0) 100%)'
                 : 'linear-gradient(180deg, rgba(240,220,203,0.92) 0%, rgba(240,220,203,0.70) 55%, rgba(240,220,203,0) 100%)',
               backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
@@ -2339,7 +2357,7 @@ padding: isMobile
                 // ciel bleu de l'accueil et different des autres pages
                 // (constat Jean 2026-08-12). La nuit garde sa teinte bleutee,
                 // seule exception lisible.
-                const nuitAcc  = homePreset === 'night'
+                const nuitAcc  = ambiance === 'night'
                 // De jour, exactement le degrade des autres pages. De nuit, un
                 // aplat clair : un degrade terracotta sur du navy serait aussi
                 // illisible que le creme l'etait sur l'ambre.
@@ -2363,7 +2381,7 @@ padding: isMobile
                     fontSize:8.5, fontWeight:400, letterSpacing:'0.5px', display:'block', marginTop:2,
                     fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic',
                     color: subColor,
-                  }}>{signatureSolenn(presetManuel || homePreset)}</span>
+                  }}>{signatureSolenn(ambiance)}</span>
                 </div>
                 )
               })()}
@@ -2377,7 +2395,7 @@ padding: isMobile
                 {[0,1,2].map(i => (
                   <span key={i} style={{
                     display:'block', borderRadius:2,
-                    background: homePreset === 'night' ? 'rgba(190,216,255,0.88)' : ICONE,
+                    background: ambiance === 'night' ? 'rgba(190,216,255,0.88)' : ICONE,
                     filter:'drop-shadow(0 1px 5px rgba(0,0,0,0.45))',
                     transition:'transform 0.36s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease, width 0.28s ease',
                     width: menuOpen && i===1 ? 0 : menuOpen && i===0 ? 16 : menuOpen && i===2 ? 16 : i===1 ? 10 : 16,
@@ -2422,7 +2440,7 @@ padding: isMobile
                 }}>Solenn</span>
                 <span style={{ fontSize:8.5, fontWeight:400, color:ENCRE, letterSpacing:'0.5px',
                   fontFamily:"'Poppins',system-ui,sans-serif", fontStyle:'italic' }}>
-                  {signatureSolenn(presetManuel || homePreset)}
+                  {signatureSolenn(ambiance)}
                 </span>
               </div>
 
@@ -3046,14 +3064,14 @@ padding: isMobile
         )}
 
         {/* ══ DYNAMIC NAV (mobile) ══ */}
-        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={homePreset} items={navItems} />}
+        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={ambiance} items={navItems} />}
       </main>
 
       {/* Celebration overlay */}
       {celebrate && <CelebrationOverlay score={score} onDone={() => setCelebrate(false)} />}
 
       {/* Health permission modal, 1er lancement */}
-      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} isNight={homePreset === 'night'} />}
+      {showHealthPerm && <HealthPermModal onAllow={allowHealth} onLater={laterHealth} isNight={ambiance === 'night'} />}
 
       {/* Global animations */}
       <style>{`

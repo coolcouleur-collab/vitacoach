@@ -97,6 +97,9 @@
   /* Le cadre d'attente derriere une photo qui charge. Sans jeton, il
      flashe en creme au milieu du navy. */
   --rgb-photo:           255, 240, 220;
+  /* L'encre heritee par le document. tokens.css la posait en dur a
+     #7C4C33 : tout element sans couleur propre restait brun sur le navy. */
+  --texte-base:          #7C4C33;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -167,6 +170,7 @@
   --rgb-surface-lin:      24,  42,  74;
   --rgb-surface-sable:    22,  38,  70;
   --rgb-photo:            24,  42,  74;
+  --texte-base:          #C8DEFF;
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -255,6 +259,9 @@
   /* Le cadre d'attente derriere une photo qui charge. Sans jeton, il
      flashe en creme au milieu du navy. */
   --rgb-photo:           255, 240, 220;
+  /* L'encre heritee par le document. tokens.css la posait en dur a
+     #7C4C33 : tout element sans couleur propre restait brun sur le navy. */
+  --texte-base:          #7C4C33;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -262,4 +269,9 @@
   --aurore-4:  #E8B87A;
   --aurore-5:  #EED4B0;
   --aurore-6:  #FAE8CC;
+
+  /* La couleur elle-meme, pas seulement la variable. `body` calcule son
+     `color` plus haut dans l'arbre : redefinir --texte-base ici ne suffit
+     pas, la valeur deja heritee ne serait pas recalculee. */
+  color: var(--texte-base);
 }
