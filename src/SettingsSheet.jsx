@@ -518,7 +518,7 @@ export default function SettingsSheet({
     { icon: <SunIcon size={20} color="var(--ambre-fonce)" />,  label: 'Jour',    value: 'day' },
     { icon: <SunIcon size={20} color={ICONE} />,  label: 'Lever',   value: 'sunrise' },
     { icon: <MoonIcon size={20} color={ICONE} />, label: 'Coucher', value: 'sunset' },
-    { icon: <MoonIcon size={20} color="#8B7AB8" />, label: 'Nuit',    value: 'night' },
+    { icon: <MoonIcon size={20} color="var(--lune)" />, label: 'Nuit',    value: 'night' },
   ]
 
   return (
@@ -1002,7 +1002,7 @@ export default function SettingsSheet({
                   onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
                   onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
                 >
-                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="#B2663E" /> Passer à Solenn Pro · 44,99€/an</span>
+                  <span style={{display:'flex',alignItems:'center',gap:6}}><StarIcon size={14} color="var(--icone-bouton)" /> Passer à Solenn Pro · 44,99€/an</span>
                 </button>
                 {/* Sous-texte */}
                 <div style={{

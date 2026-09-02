@@ -152,7 +152,7 @@ function BookingCard({ data }) {
                 style={{ textDecoration:'none' }}>
                 <div style={{
                   padding:'12px 16px', borderRadius:16,
-                  background:'#fff', color:ENCRE,
+                  background:'rgb(var(--rgb-surface-blanche))', color:ENCRE,
                   border:'1.5px solid #f0e8e0',
                   fontSize:13, fontWeight:600,
                   boxShadow:'0 4px 14px rgba(0,0,0,0.06)',
@@ -244,7 +244,7 @@ function TypeHeader({ cfg, count }) {
       <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:`1px solid ${cfg.accent}30`, borderRadius:20, padding:'7px 16px' }}>
         <span style={{ fontSize:13, fontWeight:700, color:`${cfg.accent}dd`, letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
       </div>
-      {count > 0 && <span style={{ fontSize:11, color:'rgba(160,120,80,0.55)', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
+      {count > 0 && <span style={{ fontSize:11, color:'rgba(var(--rgb-sourdine), 0.55)', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
     </div>
   )
 }

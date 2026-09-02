@@ -222,7 +222,7 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
           marginTop: 18, borderRadius: 16, padding: '12px 14px',
           background: 'rgba(185,28,28,0.07)', border: '1px solid rgba(185,28,28,0.20)',
         }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: '#B91C1C', marginBottom: 4 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--rouge)', marginBottom: 4 }}>
             À vérifier avant de commencer
           </div>
           <div style={{ fontSize: 12.5, lineHeight: 1.55, color: ENCRE }}>{avis.phrase}</div>

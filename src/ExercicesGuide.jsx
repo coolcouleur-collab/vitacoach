@@ -354,7 +354,7 @@ function PhotoExo({ exo, height = 130, radius = 12, fallback = 'anim' }) {
   return (
     <div style={{
       height, borderRadius: radius, overflow: 'hidden', marginBottom: fallback === 'rien' ? 12 : 0,
-      background: 'rgba(255,240,220,0.60)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+      background: 'rgba(var(--rgb-photo), 0.60)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
     }}>
       <img src={photo.url} alt={exo.nom} loading="lazy" onError={() => setKo(true)}
         style={{
@@ -579,7 +579,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
       `}</style>
       <div onClick={e => e.stopPropagation()} style={{
         width: '100%', maxWidth: 520, maxHeight: '88dvh', overflowY: 'auto',
-        background: 'rgba(255,244,232,0.96)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
+        background: 'rgba(var(--rgb-surface-sable), 0.96)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
         borderRadius: '28px 28px 0 0', border: '1px solid rgba(var(--rgb-terracotta), 0.20)', borderBottom: 'none',
         padding: '14px 20px calc(24px + env(safe-area-inset-bottom))',
         fontFamily: F, animation: 'exoSheetUp 0.38s cubic-bezier(0.22,1,0.36,1) both',

@@ -73,6 +73,30 @@
   --rgb-bulle: 255, 248, 238;
   --rgb-encre: 124, 76, 51;
   --rgb-bouton: 255, 235, 210;
+  /* ── Les teintes isolees, repassees ecran par ecran le 2 septembre ──
+     Chaque valeur de JOUR ci-dessous est EXACTEMENT celle qui etait ecrite
+     en dur a l'appel. Le mode jour ne bouge donc pas d'un pixel : seule la
+     colonne de nuit est nouvelle, et chacune est mesuree sur le navy. */
+  --rgb-humeur-1:    169,  97,  74;   /* Vide / Tres mal */
+  --rgb-humeur-2:    192, 117,  81;   /* Difficile / Pas top */
+  --rgb-humeur-3:    212, 143,  82;   /* Neutre / Ca va */
+  --rgb-survol:      160, 110,  60;   /* le survol du bouton sauvegarder */
+  --rgb-tache:       212, 170,  90;   /* le trait des taches non faites */
+  --rgb-sourdine:    160, 120,  80;   /* le compteur de suggestions */
+  --rgb-suppression: 120,  65,  25;   /* le texte de suppression de compte */
+  --icone-bouton:    #B2663E;         /* l'etoile et l'etincelle sur bouton clair */
+  --lune:            #8B7AB8;         /* la lune de l'ambiance Nuit */
+  /* ── Les surfaces claires, converties le 2 septembre ──
+     Une carte blanche qui reste blanche la nuit rend l'encre de nuit
+     invisible : c'est le bug en miroir du texte trop sombre. Meme methode,
+     valeurs de jour identiques a l'octet pres. */
+  --rgb-surface-blanche: 255, 255, 255;
+  --rgb-surface-ivoire:  255, 252, 245;
+  --rgb-surface-lin:     255, 250, 245;
+  --rgb-surface-sable:   255, 244, 232;
+  /* Le cadre d'attente derriere une photo qui charge. Sans jeton, il
+     flashe en creme au milieu du navy. */
+  --rgb-photo:           255, 240, 220;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -125,6 +149,24 @@
   --rgb-bulle: 26, 44, 78;
   --rgb-encre: 200, 222, 255;
   --rgb-bouton: 26, 44, 78;
+  /* Les memes, en nuit. Mesures : humeur 4,77 / 5,31 / 6,76:1 ; survol
+     12,30:1 ; trait 4,05:1 ; sourdine 4,61:1 ; suppression 9,77:1 ;
+     icone sur bouton 7,04:1 ; lune 4,72:1. */
+  --rgb-humeur-1:    107, 144, 196;
+  --rgb-humeur-2:    116, 153, 202;
+  --rgb-humeur-3:    138, 174, 220;
+  --rgb-survol:      200, 222, 255;
+  --rgb-tache:       200, 222, 255;
+  --rgb-sourdine:    200, 222, 255;
+  --rgb-suppression: 200, 222, 255;
+  --icone-bouton:    #C8DEFF;
+  --lune:            #B9AEE8;
+  /* Mesures avec l'encre de nuit dessus : 10,14 a 11,56:1 selon l'opacite. */
+  --rgb-surface-blanche:  26,  44,  78;
+  --rgb-surface-ivoire:   26,  44,  78;
+  --rgb-surface-lin:      24,  42,  74;
+  --rgb-surface-sable:    22,  38,  70;
+  --rgb-photo:            24,  42,  74;
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -189,6 +231,30 @@
   --rgb-bulle: 255, 248, 238;
   --rgb-encre: 124, 76, 51;
   --rgb-bouton: 255, 235, 210;
+  /* ── Les teintes isolees, repassees ecran par ecran le 2 septembre ──
+     Chaque valeur de JOUR ci-dessous est EXACTEMENT celle qui etait ecrite
+     en dur a l'appel. Le mode jour ne bouge donc pas d'un pixel : seule la
+     colonne de nuit est nouvelle, et chacune est mesuree sur le navy. */
+  --rgb-humeur-1:    169,  97,  74;   /* Vide / Tres mal */
+  --rgb-humeur-2:    192, 117,  81;   /* Difficile / Pas top */
+  --rgb-humeur-3:    212, 143,  82;   /* Neutre / Ca va */
+  --rgb-survol:      160, 110,  60;   /* le survol du bouton sauvegarder */
+  --rgb-tache:       212, 170,  90;   /* le trait des taches non faites */
+  --rgb-sourdine:    160, 120,  80;   /* le compteur de suggestions */
+  --rgb-suppression: 120,  65,  25;   /* le texte de suppression de compte */
+  --icone-bouton:    #B2663E;         /* l'etoile et l'etincelle sur bouton clair */
+  --lune:            #8B7AB8;         /* la lune de l'ambiance Nuit */
+  /* ── Les surfaces claires, converties le 2 septembre ──
+     Une carte blanche qui reste blanche la nuit rend l'encre de nuit
+     invisible : c'est le bug en miroir du texte trop sombre. Meme methode,
+     valeurs de jour identiques a l'octet pres. */
+  --rgb-surface-blanche: 255, 255, 255;
+  --rgb-surface-ivoire:  255, 252, 245;
+  --rgb-surface-lin:     255, 250, 245;
+  --rgb-surface-sable:   255, 244, 232;
+  /* Le cadre d'attente derriere une photo qui charge. Sans jeton, il
+     flashe en creme au milieu du navy. */
+  --rgb-photo:           255, 240, 220;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;

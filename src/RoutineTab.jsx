@@ -290,7 +290,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         }}
       >
         <RefreshSVG spinning={generating} />
-        {generating ? 'Génération en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="#B2663E" />Générer ma routine</span>}
+        {generating ? 'Génération en cours…' : <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="var(--icone-bouton)" />Générer ma routine</span>}
       </button>
     </motion.div>
   )

@@ -1478,7 +1478,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
         transition={{ type:'spring', stiffness:360, damping:38 }}
         style={{
           position:'fixed', bottom:0, left:0, right:0, zIndex:201,
-          background:'rgba(255,250,245,0.45)',
+          background:'rgba(var(--rgb-surface-lin), 0.45)',
           backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
           borderRadius:'28px 28px 0 0',
           padding:'12px 24px 48px',
@@ -1603,8 +1603,8 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           borderBottom:'1px solid rgba(160,110,60,0.20)',
           transition:'border-color 0.2s ease, color 0.2s ease',
         }}
-          onMouseEnter={e => { e.currentTarget.style.color='rgba(160,110,60,1)'; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.45)' }}
-          onMouseLeave={e => { e.currentTarget.style.color={ICONE}; e.currentTarget.style.borderBottomColor='rgba(160,110,60,0.35)' }}
+          onMouseEnter={e => { e.currentTarget.style.color='rgba(var(--rgb-survol), 1)'; e.currentTarget.style.borderBottomColor='rgba(var(--rgb-survol), 0.45)' }}
+          onMouseLeave={e => { e.currentTarget.style.color=ICONE; e.currentTarget.style.borderBottomColor='rgba(var(--rgb-survol), 0.35)' }}
         >sauvegarder</button>
       </motion.div>
     </>,
@@ -1985,7 +1985,7 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
             {t.fmt(t.current)}
           </div>
         : <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-            stroke={t.isDone ? t.color : 'rgba(212,170,90,0.50)'} strokeWidth="2.5"
+            stroke={t.isDone ? t.color : 'rgba(var(--rgb-tache), 0.50)'} strokeWidth="2.5"
             strokeLinecap="round" strokeLinejoin="round"
             className="arrow-anim"
             style={{ flexShrink:0 }}>
@@ -2915,7 +2915,7 @@ const hc = {
     transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)' },
 
   strip: { display:'flex', gap:10, padding:'14px 18px' },
-  stripItem: { flex:1, background:'#ffffff', border:'1px solid',
+  stripItem: { flex:1, background:'rgb(var(--rgb-surface-blanche))', border:'1px solid',
     borderRadius:20, padding:'12px 12px 10px', transition:'box-shadow 0.2s' },
 
   cardsWrap: { padding:'8px 18px 8px' },

@@ -215,7 +215,7 @@ function Preferences({ prefs, onEnregistrer, onFermer }) {
         placeholder="arachides, coriandre, champignons"
         style={{
           width: '100%', boxSizing: 'border-box', padding: '11px 13px', borderRadius: 13,
-          background: 'rgba(255,255,255,0.35)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
+          background: 'rgba(var(--rgb-surface-blanche), 0.35)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
           color: ENCRE, fontSize: 13, fontFamily: "'Poppins',sans-serif", outline: 'none',
         }}
       />

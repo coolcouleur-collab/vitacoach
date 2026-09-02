@@ -2740,7 +2740,7 @@ padding: isMobile
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
-                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:ENCRE, display:'flex', alignItems:'center', gap:5 }}>
+                        <span style={{ background:'rgba(var(--rgb-surface-ivoire), 0.92)', border:'1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:ENCRE, display:'flex', alignItems:'center', gap:5 }}>
                           {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
@@ -3407,7 +3407,7 @@ function TenueCard({ tenue, style: extraStyle }) {
       ...extraStyle,
     }}>
       {/* Zone visuelle : photo flat-lay, skeleton clair, ou icône en secours */}
-      <div style={{ height: 178, margin: '8px 8px 0', borderRadius: 18, overflow: 'hidden', position: 'relative', flexShrink: 0, background: 'rgba(255,240,220,0.60)' }}>
+      <div style={{ height: 178, margin: '8px 8px 0', borderRadius: 18, overflow: 'hidden', position: 'relative', flexShrink: 0, background: 'rgba(var(--rgb-photo), 0.60)' }}>
         {imgState === 'loading' && (
           <div style={{
             position: 'absolute', inset: 0,
@@ -3593,7 +3593,7 @@ function CapsuleSlider({ tenues, loading }) {
           disabled={active === 0}
           style={{
             width: 40, height: 40, borderRadius: 24,
-            background: 'rgba(255,255,255,0.9)',
+            background: 'rgba(var(--rgb-surface-blanche), 0.9)',
             border: '1px solid rgba(var(--rgb-terracotta), 0.25)',
             boxShadow: '0 2px 12px rgba(var(--rgb-terracotta), 0.18)',
             color: ENCRE, fontSize: 18, fontWeight: 700,
@@ -3634,7 +3634,7 @@ function CapsuleSlider({ tenues, loading }) {
           disabled={active === count - 1}
           style={{
             width: 40, height: 40, borderRadius: 24,
-            background: 'rgba(255,255,255,0.9)',
+            background: 'rgba(var(--rgb-surface-blanche), 0.9)',
             border: '1px solid rgba(var(--rgb-terracotta), 0.25)',
             boxShadow: '0 2px 12px rgba(var(--rgb-terracotta), 0.18)',
             color: ENCRE, fontSize: 18, fontWeight: 700,

@@ -34,7 +34,7 @@ const S = {
   p: { fontSize: 14, color: ENCRE, lineHeight: 1.75, margin: '0 0 10px' },
   li: { fontSize: 14, color: ENCRE, lineHeight: 1.75, marginBottom: 4 },
   etape: {
-    fontSize: 14, color: 'rgba(120,65,25,0.88)', lineHeight: 1.7,
+    fontSize: 14, color: 'rgba(var(--rgb-suppression), 0.88)', lineHeight: 1.7,
     background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.5)',
     borderRadius: 14, padding: '14px 18px', margin: '0 0 10px',
   },

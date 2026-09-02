@@ -66,7 +66,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
       fontFamily: "'Poppins', sans-serif", textAlign: 'left',
       transition: 'background 0.25s, border-color 0.25s',
     }}>
-      <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(255,240,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'rgba(var(--rgb-photo), 0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {img
           ? <img src={img} alt={info.nom} loading="lazy" onError={() => setImg(null)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', objectPosition: `center ${photo?.pos || '50%'}` }} />
           : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.6" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>}

@@ -99,7 +99,7 @@ export default function TesProgres({ history, userId }) {
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(progres.stats.length, 3)}, 1fr)`, gap: 10, marginBottom: 10 }}>
           {progres.stats.map((st, i) => (
             <div key={i} style={{
-              background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+              background: 'rgba(var(--rgb-surface-blanche), 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               border: '1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
               <div style={{ fontSize: 10.5, fontWeight: 600, color: ENCRE }}>{st.label}</div>
@@ -123,7 +123,7 @@ export default function TesProgres({ history, userId }) {
           sait que la preuve arrive et a une raison de continuer a saisir. */}
       {progres?.enAttente > 0 && (
         <div style={{
-          background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          background: 'rgba(var(--rgb-surface-blanche), 0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
           border: '1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius: 14, padding: '13px 15px',
           fontFamily: F, marginBottom: insights.length ? 12 : 0,
         }}>

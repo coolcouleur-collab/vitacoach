@@ -10,9 +10,9 @@ const HUMEURS = [
   // doré. Avant, cet écran mêlait un gris ardoise, un vert et deux jaunes
   // Tailwind, du bleu, du vert et du gris au milieu d'une palette chaude
   // (retour Jean 2026-08-08).
-  { val: 1, label: 'Vide',      color: 'rgba(169,97,74,0.95)',  icon: <NeutralIcon size={30} color="rgba(169,97,74,0.95)"  /> },
-  { val: 2, label: 'Difficile', color: 'rgba(192,117,81,0.95)', icon: <SadIcon     size={30} color={ICONE} /> },
-  { val: 3, label: 'Neutre',    color: 'rgba(212,143,82,0.95)', icon: <NeutralIcon size={30} color={ICONE} /> },
+  { val: 1, label: 'Vide',      color: 'rgba(var(--rgb-humeur-1), 0.95)',  icon: <NeutralIcon size={30} color="rgba(var(--rgb-humeur-1), 0.95)"  /> },
+  { val: 2, label: 'Difficile', color: 'rgba(var(--rgb-humeur-2), 0.95)', icon: <SadIcon     size={30} color={ICONE} /> },
+  { val: 3, label: 'Neutre',    color: 'rgba(var(--rgb-humeur-3), 0.95)', icon: <NeutralIcon size={30} color={ICONE} /> },
   { val: 4, label: 'Bien',      color: AMBRE, icon: <HappyIcon   size={30} color={ICONE} /> },
   { val: 5, label: 'Super',     color: AMBRE, icon: <HappyIcon   size={30} color={ICONE} /> },
 ]
