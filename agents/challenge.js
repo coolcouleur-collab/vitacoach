@@ -21,6 +21,7 @@
  */
 
 import Groq from 'groq-sdk'
+import { motsInterdits, motInterditDans } from './recettes.js'
 import { programmeParId, INTENSITES } from '../src/programmes.js'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
@@ -204,6 +205,15 @@ Moment préféré pour soi : ${profil?.moment || 'non renseigné'}
 Point de départ ressenti : ${profil?.baseline || 'non renseigné'}
 Ce qui l'a décidé : ${profil?.declencheur || 'non renseigné'}
 ${profil?.sante_conditions?.length ? `⚠️ À PRENDRE EN COMPTE : ${profil.sante_conditions.join(', ')}` : ''}
+${(() => {
+  const pa = profil?.preferences_alimentaires || {}
+  const bouts = []
+  if (pa.regime && pa.regime !== 'aucun') bouts.push(`régime ${pa.regime}`)
+  if (pa.evictions) bouts.push(`ne mange pas : ${pa.evictions}`)
+  return bouts.length
+    ? `⛔ INTERDIT ALIMENTAIRE, sans exception : ${bouts.join(' · ')}. Aucun conseil "nutrition" ne doit en contenir, ni sous un autre nom.`
+    : ''
+})()}
 
 ═══ CE QUE DISENT SES DONNÉES ═══
 ${faiblesses.length ? faiblesses.join(', ') : 'pas encore assez de données'}
@@ -389,6 +399,35 @@ Format JSON :
       throw new Error(`La generation du programme « ${prog.titre} » n'a pas abouti. Reessaie dans un instant.`)
     }
     challenge = PROGRAMME_POIDS
+  }
+
+  // LE FILET SUR LES CONSEILS NUTRITION.
+  //
+  // Chaque journee porte un conseil alimentaire concret, affiche tous les
+  // jours. Ce generateur ne connaissait pas du tout les exclusions : il
+  // recevait l'age, l'activite, le foyer, et meme les conditions de sante,
+  // mais pas ce que la personne ne peut pas manger (constat du 3 septembre).
+  //
+  // Un conseil fautif est mis a null plutot que de faire echouer tout le
+  // programme : le champ est deja declare optionnel dans le format, la
+  // journee reste valable sans lui, et perdre une phrase vaut mieux que
+  // perdre vingt-huit jours de plan.
+  {
+    const interdits = motsInterdits(profil)
+    if (interdits.length && Array.isArray(challenge.jours)) {
+      let retires = 0
+      challenge = {
+        ...challenge,
+        jours: challenge.jours.map(j => {
+          if (!j?.nutrition) return j
+          const faute = motInterditDans(j.nutrition, interdits)
+          if (!faute) return j
+          retires++
+          return { ...j, nutrition: null }
+        }),
+      }
+      if (retires) console.warn(`[Challenge] ${retires} conseil(s) nutrition retire(s) : interdit alimentaire`)
+    }
   }
 
   // L'objectif qui a produit ce programme est grave dedans : le client detecte

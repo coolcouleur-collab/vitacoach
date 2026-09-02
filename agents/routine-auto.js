@@ -17,6 +17,7 @@
 
 import Groq from 'groq-sdk'
 import { createClient } from '@supabase/supabase-js'
+import { motsInterdits, motInterditDans } from './recettes.js'
 
 let _sb = null
 function getSupabase() {
@@ -52,7 +53,36 @@ function getMidnightExpiry() {
 }
 
 // ─── Génère la routine pour un profil + métriques ────────────────────────────
+/**
+ * La routine, VERIFIEE. C'est ce nom que le reste du fichier appelle deja,
+ * donc tous les appels existants passent par le controle sans etre touches.
+ *
+ * Un second essai avant de renoncer : le modele respecte la consigne la
+ * plupart du temps, et un unique ecart ne doit pas priver quelqu'un de sa
+ * routine entiere. Si le second echoue aussi, le bloc nutrition est remplace
+ * plutot que servi. Le reste de la routine n'a rien a voir avec
+ * l'alimentation et reste valable.
+ */
 async function genererRoutine(profil, metriques = {}) {
+  let routine = null
+  for (let essai = 1; essai <= 2; essai++) {
+    routine = await genererRoutineBrute(profil, metriques)
+    const v = nutritionSure(routine, profil)
+    if (v.sure) return routine
+    console.warn(`[RoutineAuto] essai ${essai} : repas contenant « ${v.faute} », rejete`)
+  }
+  return {
+    ...routine,
+    nutrition: {
+      titre: 'Nutrition du jour',
+      repas: [],
+      supplements: [],
+      indisponible: "Je n'ai pas réussi à composer des repas qui respectent ce que tu ne manges pas. Passe par « Trouve-moi des idées » plus bas, qui les vérifie une par une.",
+    },
+  }
+}
+
+async function genererRoutineBrute(profil, metriques = {}) {
   const prompt = `Tu es Solenn, coach de vie IA. Génère une routine de journée personnalisée pour ${profil.nom}.
 Profil : ${profil.age || '?'} ans, objectifs : ${profil.objectifs?.join(', ') || 'bien-être général'}, réveil : ${profil.reveil || '7h00'}, coucher : ${profil.coucher || '23h00'}.
 Rythme de vie : ${profil.rythme || 'non renseigné'} · Foyer : ${profil.vie || 'non renseigné'}
@@ -62,6 +92,17 @@ Métriques d'hier : sommeil ${metriques.sommeil || 0}h, pas ${metriques.pas || 0
 Les suggestions de repas doivent être CONCRÈTES (un plat nommé, pas une catégorie)
 et adaptées au profil et aux métriques : nuit courte, privilégie protéines et
 glucides lents ; peu de pas, repas plus légers.
+${(() => {
+  const p = profil?.preferences_alimentaires || {}
+  const bouts = []
+  if (p.regime && p.regime !== 'aucun') bouts.push(`régime ${p.regime}`)
+  if (p.evictions) bouts.push(`ne mange pas : ${p.evictions}`)
+  return bouts.length
+    ? `
+⛔ INTERDIT ALIMENTAIRE, sans exception, y compris en trace ou en accompagnement : ${bouts.join(' · ')}.
+Aucun des trois repas ne doit en contenir, ni sous un autre nom.`
+    : ''
+})()}
 INTERDIT : le tiret cadratin (—) dans tous les textes.
 
 Réponds UNIQUEMENT en JSON valide :
@@ -116,6 +157,32 @@ Chaque section doit avoir 3-4 étapes. Adapte tout au profil.`
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error('JSON invalide dans routine')
   return JSON.parse(jsonMatch[0])
+}
+
+/**
+ * Le filet, apres la consigne.
+ *
+ * Ce generateur nomme trois plats concrets par jour et ne connaissait pas du
+ * tout les exclusions : quelqu'un allergique aux arachides voyait son filet
+ * marcher sur les recettes qu'il demande, et recevait chaque matin trois repas
+ * que rien n'avait relus. Ces trois repas sont le PREMIER bloc de l'onglet
+ * Nutrition, avant les recettes (constat de Jean, 3 septembre).
+ *
+ * On ne sert pas un repas approximatif : le bloc entier est remplace par une
+ * phrase honnete, et les recettes a la demande, elles, restent disponibles.
+ */
+function nutritionSure(routine, profil) {
+  const interdits = motsInterdits(profil)
+  if (!interdits.length) return { sure: true }
+  for (const r of routine?.nutrition?.repas || []) {
+    const faute = motInterditDans(`${r?.moment || ''} ${r?.suggestion || ''}`, interdits)
+    if (faute) return { sure: false, faute }
+  }
+  for (const sup of routine?.nutrition?.supplements || []) {
+    const faute = motInterditDans(sup, interdits)
+    if (faute) return { sure: false, faute }
+  }
+  return { sure: true }
 }
 
 // ─── Fonction principale : pré-génère les routines pour tous les users ────────

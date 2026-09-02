@@ -68,7 +68,14 @@ export const REGIMES = {
     mots: ['viande', 'poulet', 'boeuf', 'veau', 'agneau', 'porc', 'dinde', 'canard',
            'lardon', 'jambon', 'bacon', 'saucisse', 'chorizo', 'steak', 'escalope',
            'poisson', 'saumon', 'thon', 'cabillaud', 'crevette', 'gambas', 'anchois',
-           'sardine', 'maquereau', 'moule', 'calamar', 'surimi'],
+           'sardine', 'maquereau', 'moule', 'calamar', 'surimi',
+           // Les PLATS, pas seulement les ingredients : « bolognaise » ne contient
+           // pas le mot « boeuf », et le filet est litteral (3 septembre).
+           'bolognaise', 'carbonara', 'merguez', 'rillettes', 'pate en croute',
+           'foie gras', 'magret', 'confit de canard', 'andouille', 'boudin',
+           'salami', 'mortadelle', 'coppa', 'prosciutto', 'charcuterie',
+           'poulpe', 'crabe', 'homard', 'dorade', 'truite', 'hareng', 'tarama',
+           'bouillabaisse', 'tartare de boeuf', 'blanquette', 'pot au feu'],
   },
 
   vegetalien: {
@@ -78,29 +85,46 @@ export const REGIMES = {
            'lardon', 'jambon', 'bacon', 'saucisse', 'chorizo', 'steak', 'escalope',
            'poisson', 'saumon', 'thon', 'cabillaud', 'crevette', 'gambas', 'anchois',
            'sardine', 'maquereau', 'moule', 'calamar', 'surimi',
+           // Les PLATS, pas seulement les ingredients : « bolognaise » ne contient
+           // pas le mot « boeuf », et le filet est litteral (3 septembre).
+           'bolognaise', 'carbonara', 'merguez', 'rillettes', 'pate en croute',
+           'foie gras', 'magret', 'confit de canard', 'andouille', 'boudin',
+           'salami', 'mortadelle', 'coppa', 'prosciutto', 'charcuterie',
+           'poulpe', 'crabe', 'homard', 'dorade', 'truite', 'hareng', 'tarama',
+           'bouillabaisse', 'tartare de boeuf', 'blanquette', 'pot au feu',
            'oeuf', 'lait', 'beurre', 'creme', 'fromage', 'yaourt', 'parmesan',
-           'mozzarella', 'feta', 'chevre', 'miel'],
+           'mozzarella', 'feta', 'chevre', 'miel',
+           // Idem : une omelette ne contient pas le mot « oeuf ».
+           'omelette', 'frittata', 'quiche', 'mayonnaise', 'meringue', 'flan',
+           'bechamel', 'raclette', 'camembert', 'comte', 'emmental', 'gruyere',
+           'burrata', 'brie', 'roquefort', 'ricotta', 'mascarpone', 'creme fraiche'],
   },
 
   sansPorc: {
     nom: 'Sans porc',
     interdit: 'porc et derives, y compris charcuterie et gelatine',
     mots: ['porc', 'lardon', 'jambon', 'bacon', 'saucisson', 'chorizo', 'pancetta',
-           'charcuterie', 'gelatine', 'saindoux'],
+           'charcuterie', 'gelatine', 'saindoux', 'rillettes', 'andouille', 'boudin',
+           'jambonneau', 'coppa', 'speck', 'prosciutto', 'salami', 'mortadelle'],
   },
 
   sansGluten: {
     nom: 'Sans gluten',
     interdit: 'ble, orge, seigle, et tout ce qui en contient',
     mots: ['ble', 'farine', 'pain', 'pate', 'pates', 'semoule', 'couscous', 'boulgour',
-           'orge', 'seigle', 'epeautre', 'chapelure', 'biscotte', 'brioche', 'tortilla'],
+           'orge', 'seigle', 'epeautre', 'chapelure', 'biscotte', 'brioche', 'tortilla',
+           'baguette', 'croissant', 'pizza', 'spaghetti', 'tagliatelle', 'ravioli',
+           'lasagne', 'gnocchi', 'crepe', 'blini', 'panure', 'panee', 'wrap', 'bagel',
+           'viennoiserie', 'seitan', 'boulgour', 'muesli'],
   },
 
   sansLactose: {
     nom: 'Sans lactose',
     interdit: 'lait et produits laitiers non delactoses',
     mots: ['lait', 'beurre', 'creme', 'fromage', 'yaourt', 'parmesan', 'mozzarella',
-           'feta', 'ricotta', 'mascarpone', 'creme fraiche'],
+           'feta', 'ricotta', 'mascarpone', 'creme fraiche',
+           'bechamel', 'gratin dauphinois', 'raclette', 'camembert', 'comte',
+           'emmental', 'gruyere', 'burrata', 'brie', 'roquefort', 'lactose'],
   },
 }
 
@@ -182,6 +206,31 @@ function contientAliment(texte, aliment) {
  * bloquait que le mot « porc ». Le jambon, les lardons et le chorizo
  * passaient, alors que le regime, lui, connait toute la famille.
  */
+/**
+ * Les autres noms d'un aliment ecrit dans le champ libre.
+ *
+ * Quelqu'un qui tape « arachides » ne sera pas protege d'une « sauce
+ * cacahuete » : le filet compare des mots, il ne sait pas qu'ils designent la
+ * meme chose. Sur une allergie, l'ecart n'est pas une maladresse.
+ *
+ * Cette table ne couvre que les allergenes ou l'erreur est grave et le
+ * synonyme courant en francais. Elle n'a pas vocation a devenir un
+ * dictionnaire : la consigne donnee au modele fait le gros du travail, ceci
+ * est le filet.
+ */
+const SYNONYMES = {
+  arachide: ['cacahuete', 'cacahuètes', 'beurre de cacahuete'],
+  cacahuete: ['arachide', 'arachides'],
+  'fruits a coque': ['noix', 'noisette', 'amande', 'pistache', 'cajou', 'pecan'],
+  noix: ['fruits a coque', 'noisette', 'amande', 'pistache', 'cajou'],
+  lactose: ['lait', 'creme', 'beurre', 'fromage'],
+  gluten: ['ble', 'farine', 'pain', 'pates', 'semoule'],
+  crustaces: ['crevette', 'gambas', 'homard', 'crabe', 'langoustine'],
+  fruits_de_mer: ['moule', 'huitre', 'palourde', 'coquille saint jacques'],
+  soja: ['tofu', 'edamame', 'tempeh'],
+  sesame: ['tahini', 'houmous'],
+}
+
 export function motsInterdits(profil) {
   const prefs = profil?.preferences_alimentaires || {}
   const regime = REGIMES[prefs.regime] || REGIMES.aucun
@@ -194,8 +243,37 @@ export function motsInterdits(profil) {
       if ((r.mots || []).some(x => nu(x) === m)) familles.push(...r.mots)
     }
   }
-  return [...new Set([...libres, ...(regime.mots || []), ...familles])]
+  // Les synonymes de ce qui a ete tape a la main. Une allergie declaree sous
+  // un nom doit proteger sous l'autre.
+  const synonymes = []
+  for (const mot of libres) {
+    const m = nu(mot).replace(/s$/, '')
+    for (const [cle, autres] of Object.entries(SYNONYMES)) {
+      if (nu(cle).replace(/s$/, '') === m) synonymes.push(...autres)
+    }
+  }
+
+  return [...new Set([...libres, ...(regime.mots || []), ...familles, ...synonymes])]
     .filter(m => m && m.length >= 3)
+}
+
+/**
+ * Le premier mot interdit present dans un texte, ou null.
+ *
+ * Le meme filet que pour les recettes, mais utilisable sur n'importe quel
+ * texte : les trois repas du jour de la routine, le conseil nutrition d'une
+ * journee de programme. Ces deux-la ne connaissaient pas du tout les
+ * exclusions, alors qu'ils nomment des plats concrets tous les jours
+ * (constat du 3 septembre).
+ *
+ * Renvoie le mot fautif et pas un booleen : on veut pouvoir le journaliser.
+ */
+export function motInterditDans(texte, mots) {
+  const t = nu(texte || '')
+  for (const m of mots || []) {
+    if (contientAliment(t, m)) return m
+  }
+  return null
 }
 
 export function recettesSures(recettes, motsInterdits) {
