@@ -88,7 +88,12 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         })),
       },
       eau: {
-        titre: "Combien de verres d'eau depuis ce matin ?",
+        // « Depuis ce matin » a 1h49 demande de compter dans une matinee qui
+        // n'a pas encore eu lieu. Avant 6 h, la question porte sur la journee
+        // qui vient de s'ecouler, pas sur celle qui commence.
+        titre: new Date().getHours() < 6
+          ? "Combien de verres d'eau hier ?"
+          : "Combien de verres d'eau depuis ce matin ?",
         sous:  'Même approximatif, ça suffit pour voir la tendance.',
         choix: [0, 2, 4, 6, 8].map(v => ({ label: `${v}`, val: v })),
       },

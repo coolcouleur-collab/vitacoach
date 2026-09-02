@@ -5,6 +5,7 @@ import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafI
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
 import { ENCRE, ICONE, VERT } from './palette'
+import { programmeParId } from './programmes'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
 function BikeIcon({ color = '#C87B52', size = 20 }) {
@@ -817,10 +818,19 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     },
 
     // ── Constats du jour ──
+    // Le conseil suit l'ECART, il n'est plus le meme pour tout le monde.
+    // « Vise 30 minutes de plus » a quelqu'un qui dort 4 h propose de passer a
+    // 4 h 30 : la personne sait que ca ne repare rien, et un conseil qu'on sait
+    // insuffisant fait douter de tous les autres. Sous 5 h 30, on nomme l'ecart
+    // au lieu de proposer un pas derisoire.
     m.sommeil > 0 && m.sommeil < 7 && {
       cle: 'sommeil', ecart: (7 - m.sommeil) / 7,
       quoi: `Ton sommeil tire le reste vers le bas, ${m.sommeil} h cette nuit.`,
-      action: h < 18 ? 'Vise 30 minutes de plus ce soir.' : 'Ce soir, écrans coupés 30 minutes plus tôt.',
+      action: m.sommeil < 5.5
+        ? `Il te manque environ ${Math.round((7 - m.sommeil) * 10) / 10} h. Une nuit ne rattrape pas ça, mais deux couchers plus tôt cette semaine, oui.`
+        : h < 18
+          ? 'Vise 30 minutes de plus ce soir.'
+          : 'Ce soir, écrans coupés 30 minutes plus tôt.',
     },
     m.humeur > 0 && m.humeur < 3 && {
       cle: 'humeur', ecart: (3 - m.humeur) / 3,
@@ -887,12 +897,38 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   // ciel, un indigo, un rouge et un jaune Tailwind au milieu d'une palette
   // chaude (demande Jean 2026-08-08).
   const orbitC = isNight ? '#9FC4E8' : '#C87B52'
+  /**
+   * Une metrique est-elle dans le vert ?
+   *
+   * Les seuils sont ceux des VERDICTS affiches sur le meme ecran, et c'est
+   * la seule regle qui compte ici : la pastille ne doit jamais approuver ce
+   * que la phrase juste en dessous reproche. C'est exactement ce qui se
+   * passait avec une nuit de 4 h, cochee en vert sous « ton sommeil tire le
+   * reste vers le bas ».
+   *
+   * D'ou des seuils qui peuvent paraitre severes, 10 000 pas notamment : ce
+   * n'est pas un choix separe, c'est le chiffre que la phrase reclame deja
+   * quelques lignes plus bas dans ce fichier. Les deux bougent ensemble.
+   *
+   * `null` quand la metrique n'est pas renseignee : la pastille ne s'affiche
+   * pas dans ce cas, et il ne faut surtout pas repondre « non atteint ».
+   */
+  const atteint = (cle, v) => {
+    if (!v) return null
+    if (cle === 'eau')     return v >= 8        // verdict : « < 8 » apres midi
+    if (cle === 'pas')     return v >= 10000    // verdict : « < 10000 »
+    if (cle === 'sommeil') return v >= 7        // verdict : « < 7 tire vers le bas »
+    if (cle === 'humeur')  return v >= 3        // verdict : « < 3 »
+    if (cle === 'fc')      return v >= 50 && v <= 80
+    return null
+  }
+
   const METRICS = [
-    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau',     fmt: v => v+'v' },
-    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas',     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', fmt: v => v+'h' },
-    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur',  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc',      fmt: v => v },
+    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau', atteint:atteint('eau', metriques?.eau),     fmt: v => v+'v' },
+    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas', atteint:atteint('pas', metriques?.pas),     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', atteint:atteint('sommeil', metriques?.sommeil), fmt: v => v+'h' },
+    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur', atteint:atteint('humeur', metriques?.humeur),  fmt: v => v+'/5' },
+    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc', atteint:atteint('fc', metriques?.fc),      fmt: v => v },
   ]
   const paused = circleHovered || !!activeMetric
 
@@ -945,7 +981,13 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               <span style={{ fontSize: score > 0 ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
                 opacity: score > 0 ? 1 : 0.55,
-                color: preset === 'night' ? 'rgba(180,210,255,0.90)' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '·'}</span>
+                // MESURE : en rgba(180,210,255,0.90), ce chiffre affichait 1,07
+                // a 1,43 pour 1 sur le disque, dont le degrade commence a
+                // #F8FBFF. Le minimum est 3. C'etait du bleu clair sur du bleu
+                // clair, et le plus gros element de l'ecran etait une tache.
+                // La lune est CLAIRE : l'encre doit donc etre sombre, pas
+                // claire. #22385E donne 11:1 au centre, sans quitter la nuit.
+                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 ? score : '·'}</span>
             </div>
           </div>
 
@@ -1136,13 +1178,24 @@ function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day',
           animation:'metricGlowRing 0.65s cubic-bezier(0.25,0.46,0.45,0.94) forwards',
         }} />
       ))}
+      {/* La pastille disait « tu as renseigne cette metrique » et se lisait
+          « c'est bien ». Elle apparaissait donc, coche verte comprise, a cote
+          d'un « 4 h » que la phrase juste en dessous accusait de tirer tout le
+          reste vers le bas : l'ecran felicitait une nuit de quatre heures.
+          Elle porte desormais l'ETAT et non la simple presence : une coche
+          quand la metrique est dans le vert, un point quand elle ne l'est pas.
+          Renseigner reste visible, mais ne vaut plus approbation. */}
       {filled && (
         <div style={{
           position:'absolute', top:-5, right:-5, width:14, height:14, borderRadius:'50%',
-          background:m.color, display:'flex', alignItems:'center', justifyContent:'center',
-          boxShadow:`0 0 8px ${m.color}`, animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
+          background: m.atteint === false ? 'rgba(120,140,175,0.85)' : m.color,
+          display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow: m.atteint === false ? 'none' : `0 0 8px ${m.color}`,
+          animation:'badgePop .3s cubic-bezier(0.34,1.56,0.64,1)',
         }}>
-          <span style={{ fontSize:10, color:'#fff', fontWeight:500, lineHeight:1 }}>✓</span>
+          <span style={{ fontSize:10, color:'#fff', fontWeight:500, lineHeight:1 }}>
+            {m.atteint === false ? '·' : '✓'}
+          </span>
         </div>
       )}
       <span style={{
@@ -2020,11 +2073,22 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
   // Même calcul que dans Challenge21j : le jour découle de la date de début,
   // pas d'un compteur stocké, pour rester juste si l'app n'est pas ouverte.
   const debut = new Date(challenge.date_debut)
-  const jour = Math.min(Math.max(Math.floor((new Date() - debut) / 86400000) + 1, 1), 21)
-  const progression = challenge.progression || Array(21).fill(false)
+  // La duree vient du plan, comme dans l'ecran du programme. Les trois 21
+  // ecrits en dur ici avaient survecu au passage au catalogue : un programme
+  // de 42 jours se serait fige au jour 21, et la carte aurait affiche « jour
+  // 30 sur 21 » avant de ne plus rien afficher du tout.
+  const jours = challenge.challenge?.jours || []
+  const duree = jours.length || challenge.duree || 21
+  const jour = Math.min(Math.max(Math.floor((new Date() - debut) / 86400000) + 1, 1), duree)
+  const progression = challenge.progression || Array(duree).fill(false)
   const fait = progression[jour - 1] || false
-  const donnee = (challenge.challenge?.jours || [])[jour - 1] || null
+  const donnee = jours[jour - 1] || null
   if (!donnee) return null
+
+  // Le titre ecrit a la main du catalogue plutot que celui invente par le
+  // modele, qui produisait des « Equilibre Vital 21 Jours » ne parlant a
+  // personne. Repli sur « Ton programme » pour les plans anterieurs.
+  const titreProgramme = programmeParId(challenge.challenge?.type)?.titre || 'Ton programme'
 
   async function marquerFait(e) {
     e.stopPropagation()
@@ -2033,7 +2097,7 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
     // Coché tout de suite : attendre le serveur pour un geste aussi simple
     // donne l'impression que le bouton n'a pas répondu.
     setChallenge(c => {
-      const p = [...(c.progression || Array(21).fill(false))]
+      const p = [...(c.progression || Array(duree).fill(false))]
       p[jour - 1] = true
       return { ...c, progression: p }
     })
@@ -2071,7 +2135,9 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
             fontSize: 9.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em',
             color: tc(0.72), marginBottom: 3,
           }}>
-            Ton défi · jour {jour} sur 21
+            {/* Le nom du programme suivi, et non « Ton defi ». Le mot defi ne
+                designe plus qu'un des quatre programmes du catalogue. */}
+            {titreProgramme} · jour {jour} sur {duree}
           </div>
           <div style={{
             fontSize: 13.5, fontWeight: 500, color: tc(0.92), lineHeight: 1.35,
@@ -2173,7 +2239,11 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
         <span style={{ ...hc.cardsTitle, color:tc(0.90) }}>Pour toi maintenant</span>
         <span style={{ fontSize:10, color:tc(0.72), fontWeight:300 }}>
-          {h < 12 ? 'Matin' : h < 18 ? 'Après-midi' : h < 22 ? 'Soirée' : 'Nuit'}
+          {/* Les bornes sont celles de l'anneau, et pas d'autres. A 1h49 du
+              matin, cette etiquette annoncait « Matin » pendant que l'anneau
+              juste au-dessus affichait sa lune : deux morceaux du meme ecran
+              n'etaient pas d'accord sur l'heure qu'il etait. */}
+          {h < 6 ? 'Nuit' : h < 12 ? 'Matin' : h < 18 ? 'Après-midi' : h < 21 ? 'Soirée' : 'Nuit'}
         </span>
       </div>
 
