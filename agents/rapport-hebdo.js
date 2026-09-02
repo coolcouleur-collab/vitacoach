@@ -18,6 +18,9 @@
 import Groq from 'groq-sdk'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
+// Le meme calcul que celui affiche dans l'app. Aucune dependance dans ce
+// fichier, il s'importe donc cote serveur comme src/programmes.js.
+import { scoreJour } from '../src/score.js'
 
 let _groq = null
 let _supabase = null
@@ -72,6 +75,20 @@ export async function genererRapportUser(userId) {
   const nbSessions  = chats?.length || 0
   const nbMessages  = chats?.reduce((acc, c) => acc + (c.messages?.filter(m => m.role === 'user').length || 0), 0) || 0
 
+  /**
+   * La moyenne des scores JOURNALIERS, sur les jours qui ont des donnees.
+   *
+   * Les jours vides sont ecartes plutot que comptes a zero : une semaine ou
+   * trois jours seulement ont ete renseignes ne vaut pas une mauvaise semaine,
+   * et la moyenne le dirait pourtant.
+   */
+  const moyenneScores = (arr) => {
+    const scores = (arr || []).map(m => scoreJour(m)).filter(v => v > 0)
+    return scores.length
+      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      : null
+  }
+
   // Calculs moyennes
   const calcMoy = (arr, key) => {
     const vals = (arr || []).map(m => m[key]).filter(v => v != null && v > 0)
@@ -82,7 +99,13 @@ export async function genererRapportUser(userId) {
     avgEau:      calcMoy(metriques, 'eau')?.toFixed(1),
     avgPas:      Math.round(calcMoy(metriques, 'pas') || 0),
     avgHumeur:   calcMoy(metriques, 'humeur')?.toFixed(1),
-    avgScore:    Math.round(calcMoy(metriques, 'score') || 0),
+    // Le score est RECALCULE a partir des metriques brutes, il n'est plus lu
+    // dans la colonne `score`. Cette colonne ne contient pas le score de
+    // bien-etre : agents/sync-sante.js y ecrit le SCORE DE SOMMEIL remonte par
+    // Oura ou Withings. Le rapport commentait donc le bien-etre de quiconque
+    // porte une montre en se basant sur son sommeil, et disait « non calcule »
+    // a tous les autres. Deux notions differentes portaient le meme nom.
+    avgScore:    moyenneScores(metriques),
     joursData:   metriques?.length || 0,
     nbSessions,
     nbMessages,
