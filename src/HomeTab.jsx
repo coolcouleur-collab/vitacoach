@@ -2316,10 +2316,22 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
     // plus rien à proposer entre 0 h et 5 h.
     (h >= 22 || h < 5) && { prio:2, icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',   sub:'Écrans off · respiration · détente',   tab:'sante',   color:TC },
 
-    // Style : toujours proposé, jamais prioritaire
-    { prio:8, icon:<SparkleIcon size={18} color={TC} />,
-      label: h < 12 ? 'Style du jour' : h < 18 ? 'Inspiration style' : 'Style de demain',
-      sub: 'Tenues · looks · inspirations', tab:'style', color:TC },
+    // La carte Style a ete retiree le 2 septembre. Deux raisons.
+    //
+    // Elle etait le SEUL element de cette liste sans condition d'heure : elle
+    // passait donc a n'importe quel moment, et son libelle testait `h < 12`.
+    // Resultat sur la capture de Jean, a 1h49 : « Prepare ton sommeil » suivi
+    // de « Style du jour ». L'une disait d'aller se coucher, l'autre de choisir
+    // sa tenue.
+    //
+    // Et elle faisait doublon avec le bouton Style de « Tes outils », trois
+    // centimetres plus bas. Un commentaire du 11 aout note qu'un doublon avait
+    // deja ete corrige ici ; celui-la avait survecu.
+    //
+    // Elle servait de remplissage, pour que la section ne soit jamais vide.
+    // Verifie avant de la retirer : les creneaux horaires des autres cartes
+    // couvrent les 24 heures sans trou, 5-12, 12-18, 18-22 et 22-5. La section
+    // garde donc toujours au moins une carte.
   ].filter(Boolean).sort((a, b) => a.prio - b.prio).slice(0, 3)
 
   return (
@@ -2453,72 +2465,14 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         </svg>
       </motion.div>
 
-      {/* ── Ta progression cette semaine ── */}
-      {score > 0 && (
-      <motion.div
-        initial={{ opacity:0, y:14 }}
-        animate={{ opacity:1, y:0 }}
-        transition={{ delay:0.30, type:'spring', stiffness:280, damping:24 }}
-        style={{
-          marginTop:0, marginBottom:28,
-          padding:16,
-          borderRadius:20,
-          background: isNight
-            ? 'rgba(15,28,58,0.70)'
-            : 'linear-gradient(135deg, rgba(255,165,80,0.18) 0%, rgba(200,123,82,0.10) 60%, rgba(200,123,82,0.05) 100%)',
-          backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
-          border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.28)',
-          boxShadow: isNight
-            ? '0 6px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,200,100,0.06)'
-            : '0 6px 22px rgba(200,123,82,0.14), inset 0 1px 0 rgba(255,255,255,0.70)',
-          display:'flex', alignItems:'center', gap:14,
-        }}
-      >
-        <div style={{
-          width:38, height:38, borderRadius:12, flexShrink:0,
-          background: isNight
-            ? 'rgba(180,210,255,0.10)'
-            : (score > 50
-              ? 'linear-gradient(135deg, rgba(255,149,0,0.10), rgba(255,100,0,0.06))'
-              : 'linear-gradient(135deg, rgba(200,123,82,0.10), rgba(200,123,82,0.06))'),
-          border: `1px solid ${isNight ? 'rgba(180,210,255,0.22)' : (score > 50 ? 'rgba(255,149,0,0.20)' : 'rgba(200,123,82,0.18)')}`,
-          display:'flex', alignItems:'center', justifyContent:'center',
-        }}>
-          <StarIcon size={16} color={isNight ? 'rgba(190,216,255,0.85)' : (score > 50 ? 'rgba(255,149,0,0.75)' : ICONE)} />
-        </div>
-        <div style={{ flex:1, minWidth:0 }}>
-          <div style={{ display:'flex', alignItems:'baseline', gap:6, marginBottom:2 }}>
-            {score > 0 ? (
-              <>
-                <span style={{
-                  fontSize:28, fontWeight:700, lineHeight:1,
-                  // 28px en gras : seuil de 3,0. #E8962A n'atteignait que
-                  // 1,41 et #C87B52 que 1,94, donc le chiffre le plus
-                  // important de l'ecran etait le moins lisible. Memes
-                  // teintes, un cran plus profondes : 3,12 et 3,14.
-                  // En nuit l'orange et le brun se posaient sur du navy.
-                  color: isNight
-                    ? (score > 50 ? 'rgba(200,222,255,0.95)' : 'rgba(180,210,255,0.82)')
-                    : (score > 50 ? '#9C5D08' : ICONE),
-                  fontFamily:"'Poppins',system-ui,sans-serif",
-                  letterSpacing:'-0.02em',
-                }}>{score}</span>
-                <span style={{ fontSize:12, color:tc(0.55), fontWeight:400 }}>/100</span>
-              </>
-            ) : (
-              <span style={{ fontSize:24, fontWeight:400, lineHeight:1, color:tc(0.45), fontFamily:"'Poppins',system-ui,sans-serif" }}>·</span>
-            )}
-          </div>
-          <div style={{ fontSize:10, color:tc(0.60), marginBottom:4, letterSpacing:'0.3px', textTransform:'uppercase', fontWeight:500 }}>
-            Score bien-être du jour
-          </div>
-          <div style={{ fontSize:12, fontWeight:500, color:tc(0.88),
-            fontFamily:"'Poppins',system-ui,sans-serif" }}>
-            {score > 50 ? 'Continue comme ça !' : 'Chaque jour compte'}
-          </div>
-        </div>
-      </motion.div>
-      )}
+      {/* La carte « Score bien-etre du jour » a ete retiree le 2 septembre.
+          Elle affichait le MEME chiffre que l'anneau, six cents pixels plus
+          bas, avec sa legende. Sur une page qu'on parcourt en dix secondes,
+          le score apparaissait ainsi trois fois : l'anneau, cette carte, et
+          le graphique d'evolution. Constat de Jean sur sa capture.
+          Sa phrase de repli, « Chaque jour compte », part avec elle : elle
+          ne disait rien, dans une app qui sait dire « c'est la troisieme
+          fois cette semaine ». ── */}
     </div>
   )
 }
@@ -2532,7 +2486,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
 // marche). Deux moteurs de suggestions en parallèle sur la même page. Le
 // carrousel est supprimé, seules les observations survivent, ici, sous le
 // graphe auquel elles se rapportent (décision Jean 2026-08-11).
-function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onParler }) {
+export function WeeklySparkline({ history, isNight = false, preset = 'day', userId, avecObservations = true, onParler }) {
   const tc = isNight ? nightText : warmText
 
   const [observations, setObservations] = useState(() => {
@@ -2666,7 +2620,10 @@ function WeeklySparkline({ history, isNight = false, preset = 'day', userId, onP
             </div>
 
             {/* Ce que Solenn a remarqué sur ces 14 jours */}
-            {observations.length > 0 && (
+            {/* Dans Progres, TesProgres affiche deja « Ce que Solenn a
+                remarque » juste en dessous : les repeter ici mettrait deux fois
+                la meme observation sur le meme ecran. */}
+            {avecObservations && observations.length > 0 && (
               <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${isNight ? 'rgba(140,180,240,0.16)' : 'rgba(200,123,82,0.16)'}` }}>
                 <div style={{ fontSize:9, color:tc(0.80), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:7 }}>
                   Solenn a remarqué
@@ -2867,11 +2824,11 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           donnée : Jean la garde pour l'équilibre visuel de la page. Elle porte
           désormais aussi les observations de Solenn, le carrousel d'insights
           ayant été supprimé (il répétait « Pour toi maintenant »). */}
-      <div onClick={() => onSwitchTab('sante')} style={{ cursor: 'pointer' }}>
-        <WeeklySparkline history={history} isNight={isNight} preset={currentPreset}
-          userId={userId}
-          onParler={prompt => { onSwitchTab('chat'); onChat(prompt) }} />
-      </div>
+      {/* Le graphique d'evolution a ete deplace dans Progres le 2 septembre.
+          Il repondait a « ou j'en suis ? » sur un ecran qui repond a « qu'est-ce
+          que je fais aujourd'hui ? ». Le detail qui a emporte la decision : il
+          etait deja cliquable et renvoyait vers Progres. C'etait un apercu qui
+          pointait vers la page ou il aurait du vivre. */}
 
       {/* Metric bottom sheet */}
       <AnimatePresence>

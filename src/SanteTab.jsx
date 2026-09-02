@@ -4,6 +4,11 @@ import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, SadIcon, NeutralIcon
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
+// Le graphique d'evolution vient de l'accueil, ou il repondait a la mauvaise
+// question. Il reste dans HomeTab.jsx parce qu'il y depend de quatre choses
+// du module : le duplicer ici creerait quatre sources de verite pour une
+// economie nulle, l'accueil etant de toute facon deja charge.
+import { WeeklySparkline } from './HomeTab'
 import ProgressionProgramme from './ProgressionProgramme'
 import TesSeances from './TesSeances'
 import { authHeaders } from './supabase'
@@ -683,6 +688,12 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           pose pas au meme moment. */}
       {/* Ce qu'on a FAIT avant ou on en est : le premier se constate, le
           second se compare. On regarde d'abord ce qu'on a accompli. */}
+      {/* Toujours en clair : Progres n'a pas d'ambiance de nuit, contrairement
+          a l'accueil d'ou ce graphique arrive.
+          `avecObservations={false}` : TesProgres, deux lignes plus bas, affiche
+          deja les memes observations. */}
+      <WeeklySparkline history={history} isNight={false} preset="day"
+        userId={userId} avecObservations={false} />
       <TesSeances profil={profil} />
       <ProgressionProgramme userId={userId} />
       <TesProgres history={history} userId={userId} />
