@@ -20,7 +20,7 @@ const S = {
   },
   card: {
     maxWidth: 720, margin: '0 auto',
-    background: 'rgba(var(--rgb-creme), 0.28)',
+    background: 'rgba(var(--rgb-verre), 0.28)',
     backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.32)',
     borderRadius: 24, padding: '40px 32px',
@@ -35,7 +35,7 @@ const S = {
   li: { fontSize: 14, color: ENCRE, lineHeight: 1.75, marginBottom: 4 },
   etape: {
     fontSize: 14, color: 'rgba(var(--rgb-suppression), 0.88)', lineHeight: 1.7,
-    background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.5)',
+    background: 'rgba(var(--rgb-verre), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.5)',
     borderRadius: 14, padding: '14px 18px', margin: '0 0 10px',
   },
   lien: { color: AMBRE, fontWeight: 600 },

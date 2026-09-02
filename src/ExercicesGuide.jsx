@@ -610,7 +610,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {EXOS.map(e => (
                 <button key={e.id} onClick={() => setActif(e.id)} style={{
-                  background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                  background: 'rgba(var(--rgb-verre), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
                   borderRadius: 16, padding: '10px 12px 12px', cursor: 'pointer', textAlign: 'left', fontFamily: F,
                 }}>
                   <PhotoExo exo={e} height={130} />
@@ -635,7 +635,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
               // 120 et non 190 : depuis que la photo montre la position, ce bloc
               // ne sert plus qu'à décomposer le geste. À 190 il repoussait
               // « Comment faire » sous la ligne de flottaison.
-              height: 120, background: 'rgba(var(--rgb-creme), 0.40)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+              height: 120, background: 'rgba(var(--rgb-verre), 0.40)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,
             }}>
               <exo.Anim />

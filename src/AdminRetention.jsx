@@ -81,7 +81,7 @@ export default function AdminRetention() {
             disabled={loading || !input}
             style={{
               width: '100%', marginTop: 10, padding: '12px', borderRadius: 12, border: 'none',
-              background: 'rgba(var(--rgb-creme), 0.32)', color: AMBRE,
+              background: 'rgba(var(--rgb-verre), 0.32)', color: AMBRE,
               fontFamily: F, fontSize: 14, fontWeight: 600, cursor: 'pointer', opacity: loading ? 0.6 : 1,
             }}
           >

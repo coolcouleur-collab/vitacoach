@@ -147,7 +147,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           style={{
             // Verre de cuivre profond, CTA unifié Solenn (2026-07-24)
             marginTop: 8,
-            background: 'rgba(var(--rgb-creme), 0.32)',
+            background: 'rgba(var(--rgb-verre), 0.32)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             color: ENCRE,
@@ -322,7 +322,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Une seule phrase mise en avant : la victoire (ou la stat phare) */}
       {(rapport.victoire_semaine || rapport.stat_phare) && (
         <div style={{
-          background: 'rgba(var(--rgb-creme), 0.35)',
+          background: 'rgba(var(--rgb-verre), 0.35)',
           borderRadius: 16,
           padding: '12px 16px',
           display: 'flex',
@@ -351,7 +351,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         const ouvert = openSection === s.key
         return (
           <div key={s.key} style={{
-            background: ouvert ? 'rgba(var(--rgb-terracotta), 0.10)' : 'rgba(var(--rgb-creme), 0.22)',
+            background: ouvert ? 'rgba(var(--rgb-terracotta), 0.10)' : 'rgba(var(--rgb-verre), 0.22)',
             border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
             borderRadius: 16,
             overflow: 'hidden',
@@ -421,7 +421,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           onClick={handleGenerer}
           disabled={generating}
           style={{
-            background: 'rgba(var(--rgb-creme), 0.32)',
+            background: 'rgba(var(--rgb-verre), 0.32)',
             color: ENCRE,
             border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
             borderRadius: 12,

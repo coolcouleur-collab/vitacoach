@@ -192,7 +192,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                     whileTap={{ scale: 0.97 }}
                     style={{
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                      background: 'rgba(var(--rgb-creme), 0.32)',
+                      background: 'rgba(var(--rgb-verre), 0.32)',
                       backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                       color: AMBRE, fontSize: 13, fontWeight: 700, fontFamily: F,
                       boxShadow: '0 3px 14px rgba(var(--rgb-terracotta), 0.30)', outline: 'none',

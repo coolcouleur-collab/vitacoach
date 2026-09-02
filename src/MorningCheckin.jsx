@@ -104,7 +104,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
         onClick={onSkip}
         style={{
           position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 20px)', right: 20, zIndex: 10,
-          background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
+          background: 'rgba(var(--rgb-verre), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
           borderRadius: 20, padding: '6px 14px',
           color: ENCRE, fontSize: 12, fontWeight: 500,
           fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
@@ -280,7 +280,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
                   width: '100%', boxSizing: 'border-box',
                   padding: '16px 20px', borderRadius: 16,
                   border: '1.5px solid rgba(var(--rgb-terracotta), 0.30)',
-                  background: 'rgba(var(--rgb-creme), 0.32)',
+                  background: 'rgba(var(--rgb-verre), 0.32)',
                   backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
                   fontSize: 16, fontFamily: 'Poppins, sans-serif',
                   color: ENCRE, outline: 'none', marginBottom: 24,
@@ -290,7 +290,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
 
               <button onClick={handleSubmit} style={{
                 ...btnFullStyle,
-                background: 'rgba(var(--rgb-creme), 0.32)',
+                background: 'rgba(var(--rgb-verre), 0.32)',
                 color: ENCRE,
               }}>
                 <span style={{display:'flex',alignItems:'center',gap:6}}><SparkleIcon size={13} color="white" />Lancer ma journée</span>
@@ -335,7 +335,7 @@ export default function MorningCheckin({ profil, onDone, onSkip }) {
 // sur fond sombre donnait un brun foncé éteint, exactement ce qu'elle refuse.
 const btnFullStyle = {
   width: '100%', padding: '16px', borderRadius: 16,
-  background: 'rgba(var(--rgb-creme), 0.32)',
+  background: 'rgba(var(--rgb-verre), 0.32)',
   color: ENCRE, fontSize: 15, fontWeight: 700,
   fontFamily: 'Poppins, sans-serif', cursor: 'pointer',
   letterSpacing: '-0.2px', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',

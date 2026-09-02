@@ -218,7 +218,7 @@ function PresetBtn({ icon, label, value, active, onClick }) {
         border: active
           ? `1.5px solid ${C.accent}`
           : `1px solid ${C.border}`,
-        background: active ? C.accentLight : 'rgba(var(--rgb-creme), 0.40)',
+        background: active ? C.accentLight : 'rgba(var(--rgb-verre), 0.40)',
         cursor: 'pointer',
         transition: 'all 0.20s ease',
         outline: 'none',
@@ -863,7 +863,7 @@ export default function SettingsSheet({
                         <div style={{ display: 'flex', gap: 8 }}>
                           <button onClick={() => setConfirmResil(false)} style={{
                             flex: 1, padding: '11px 0', borderRadius: 12, cursor: 'pointer',
-                            background: 'rgba(var(--rgb-creme), 0.55)', border: '1px solid ' + C.border,
+                            background: 'rgba(var(--rgb-verre), 0.55)', border: '1px solid ' + C.border,
                             fontFamily: C.font, fontSize: 13, fontWeight: 700, color: C.text,
                           }}>Garder</button>
                           <button onClick={() => actionAbo('annuler')} disabled={aboOccupe} style={{
@@ -956,7 +956,7 @@ export default function SettingsSheet({
                       <span style={{
                         width: 18, height: 18,
                         borderRadius: '50%',
-                        background: 'rgba(var(--rgb-creme), 0.08)',
+                        background: 'rgba(var(--rgb-verre), 0.08)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 11, flexShrink: 0, color: C.textLight,
                       }}>
@@ -983,7 +983,7 @@ export default function SettingsSheet({
                     padding: '14px',
                     borderRadius: 16,
                     border: '1px solid rgba(var(--rgb-creme), 0.45)',
-                    background: 'rgba(var(--rgb-creme), 0.32)',
+                    background: 'rgba(var(--rgb-verre), 0.32)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
                     // Texte terracotta ici : le panneau Réglages est clair, le

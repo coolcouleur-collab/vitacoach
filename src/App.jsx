@@ -3470,7 +3470,7 @@ function TenueCard({ tenue, style: extraStyle }) {
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
             <div style={{
               width: 74, height: 74, borderRadius: '50%',
-              background: 'rgba(var(--rgb-creme), 0.70)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
+              background: 'rgba(var(--rgb-verre), 0.70)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
@@ -3497,7 +3497,7 @@ function TenueCard({ tenue, style: extraStyle }) {
         <div style={{ flex: 1 }} />
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: 6,
-          background: 'rgba(var(--rgb-creme), 0.50)', borderRadius: 12, padding: '9px 12px',
+          background: 'rgba(var(--rgb-verre), 0.50)', borderRadius: 12, padding: '9px 12px',
           border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', marginBottom: 18,
         }}>
           <LightbulbIcon size={12} color="var(--ambre-fonce)" style={{ flexShrink: 0, marginTop: 2 }} />
@@ -3857,24 +3857,24 @@ function TenuesModule({ profil }) {
 const st = {
   trigger: {
     width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '16px',
-    background: 'rgba(var(--rgb-creme), 0.22)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    background: 'rgba(var(--rgb-verre), 0.22)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius: 18, cursor: 'pointer',
     fontFamily: "'Poppins',system-ui,sans-serif",
   },
   triggerIcon: {
     width: 48, height: 48,
-    background: 'rgba(var(--rgb-creme), 0.28)',
+    background: 'rgba(var(--rgb-verre), 0.28)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.35)', borderRadius: 14,
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: 'rgba(var(--rgb-creme), 0.22)',
+    background: 'rgba(var(--rgb-verre), 0.22)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius: 20, padding: 16,
     boxShadow: '0 8px 32px rgba(180,80,20,0.08)',
   },
   meteoBar: {
-    background: 'rgba(var(--rgb-creme), 0.20)', borderRadius: 12, padding: '8px 14px',
+    background: 'rgba(var(--rgb-verre), 0.20)', borderRadius: 12, padding: '8px 14px',
     fontSize: 12, marginBottom: 12,
     color: ENCRE, fontWeight: 500,
     border: '1px solid rgba(var(--rgb-creme-dore), 0.25)',

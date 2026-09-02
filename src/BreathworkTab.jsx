@@ -11,7 +11,7 @@ const F = "'Poppins', system-ui, sans-serif"
 const am = (a) => ENCRE
 
 const CARD = {
-  background: 'rgba(var(--rgb-creme), 0.22)',
+  background: 'rgba(var(--rgb-verre), 0.22)',
   backdropFilter: 'blur(18px)',
   WebkitBackdropFilter: 'blur(18px)',
   border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
@@ -162,7 +162,7 @@ export default function BreathworkTab() {
               padding: '7px 14px',
               borderRadius: 20,
               border: `1px solid ${sel ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.35)'}`,
-              background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-creme), 0.35)',
+              background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               color: sel ? '#fff' : ENCRE,
@@ -260,7 +260,7 @@ export default function BreathworkTab() {
         {!isActive && !done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'rgba(var(--rgb-creme), 0.32)',
+            background: 'rgba(var(--rgb-verre), 0.32)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             color: AMBRE, border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
@@ -272,7 +272,7 @@ export default function BreathworkTab() {
         {isActive && (
           <button onClick={stop} style={{
             padding: '13px 36px',
-            background: 'rgba(var(--rgb-creme), 0.15)', color: am(0.88),
+            background: 'rgba(var(--rgb-verre), 0.15)', color: am(0.88),
             border: '1px solid rgba(var(--rgb-creme-dore), 0.25)',
             borderRadius: 50, fontSize: 14, fontWeight: 500,
             cursor: 'pointer', fontFamily: F,
@@ -283,7 +283,7 @@ export default function BreathworkTab() {
         {done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'rgba(var(--rgb-creme), 0.32)',
+            background: 'rgba(var(--rgb-verre), 0.32)',
             color: '#fff', border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
@@ -302,7 +302,7 @@ export default function BreathworkTab() {
             return (
               <div key={i} style={{
                 flex: 1, textAlign: 'center',
-                background: active ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-creme), 0.35)',
+                background: active ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
                 border: `1px solid ${active ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
                 borderRadius: 14, padding: '10px 4px',
                 transition: 'all 0.3s ease',

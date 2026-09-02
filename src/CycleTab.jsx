@@ -25,7 +25,7 @@ function MoonPhaseSVG({ phase, size = 16, color = 'rgba(var(--rgb-terracotta), 0
 }
 
 const CARD = {
-  background: 'rgba(var(--rgb-creme), 0.22)',
+  background: 'rgba(var(--rgb-verre), 0.22)',
   backdropFilter: 'blur(18px)',
   WebkitBackdropFilter: 'blur(18px)',
   border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
@@ -168,7 +168,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
   const chip = (sel) => ({
     padding: '9px 15px', borderRadius: 20,
     border: `1px solid ${sel ? 'rgba(var(--rgb-terracotta), 0.55)' : 'rgba(var(--rgb-terracotta), 0.25)'}`,
-    background: sel ? 'rgba(var(--rgb-creme), 0.50)' : 'rgba(var(--rgb-creme), 0.20)',
+    background: sel ? 'rgba(var(--rgb-verre), 0.50)' : 'rgba(var(--rgb-verre), 0.20)',
     color: am(sel ? 0.95 : 0.70), fontSize: 12.5, fontWeight: sel ? 600 : 400,
     cursor: 'pointer', fontFamily: F, transition: 'all 0.18s',
   })
@@ -197,7 +197,7 @@ function DouleurExplorer({ onChat, phaseNom }) {
           </div>
           <button onClick={() => setEtape(1)} style={{
             padding: '10px 20px', borderRadius: 14, cursor: 'pointer', fontFamily: F,
-            background: 'rgba(var(--rgb-creme), 0.45)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            background: 'rgba(var(--rgb-verre), 0.45)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             border: '1px solid rgba(var(--rgb-creme-dore), 0.45)', color: AMBRE, fontSize: 12.5, fontWeight: 600,
           }}>
             Comprendre ma douleur
@@ -374,7 +374,7 @@ export default function CycleTab({ profil, userId, onChat }) {
 
   const btnPrimary = {
     padding: '12px 18px',
-    background: 'rgba(var(--rgb-creme), 0.32)',
+    background: 'rgba(var(--rgb-verre), 0.32)',
     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
     color: AMBRE, border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
     borderRadius: 14, fontSize: 13, fontWeight: 600,
@@ -382,7 +382,7 @@ export default function CycleTab({ profil, userId, onChat }) {
   }
   const btnGhost = {
     padding: '12px 18px',
-    background: 'rgba(var(--rgb-creme), 0.14)',
+    background: 'rgba(var(--rgb-verre), 0.14)',
     color: am(0.85), border: '1px solid rgba(var(--rgb-creme-dore), 0.30)',
     borderRadius: 14, fontSize: 13, fontWeight: 600,
     cursor: 'pointer', fontFamily: F,
@@ -442,7 +442,7 @@ export default function CycleTab({ profil, userId, onChat }) {
               onChange={e => setPickDate(e.target.value)}
               style={{
                 flex: 1, padding: '10px 14px', borderRadius: 14,
-                background: 'rgba(var(--rgb-creme), 0.15)',
+                background: 'rgba(var(--rgb-verre), 0.15)',
                 border: '1px solid rgba(var(--rgb-creme-dore), 0.30)',
                 color: am(0.90), fontSize: 16, fontFamily: F,
                 outline: 'none', colorScheme: 'dark',
@@ -470,7 +470,7 @@ export default function CycleTab({ profil, userId, onChat }) {
                 return (
                   <div key={p.id} style={{
                     flex: span,
-                    background: active ? p.bgColor : 'rgba(var(--rgb-creme), 0.10)',
+                    background: active ? p.bgColor : 'rgba(var(--rgb-verre), 0.10)',
                     border: `1px solid ${active ? p.color : 'rgba(var(--rgb-creme-dore), 0.16)'}`,
                     borderRadius: 12, padding: '8px 4px',
                     textAlign: 'center', transition: 'all 0.3s',
@@ -545,7 +545,7 @@ export default function CycleTab({ profil, userId, onChat }) {
                         padding: '7px 14px',
                         borderRadius: 20,
                         border: `1px solid ${sel ? 'rgba(var(--rgb-creme-dore), 0.55)' : 'rgba(var(--rgb-creme-dore), 0.20)'}`,
-                        background: sel ? 'rgba(var(--rgb-creme), 0.32)' : 'rgba(var(--rgb-creme), 0.10)',
+                        background: sel ? 'rgba(var(--rgb-verre), 0.32)' : 'rgba(var(--rgb-verre), 0.10)',
                         color: sel ? am(0.92) : am(0.52),
                         fontSize: 12, fontWeight: sel ? 600 : 400,
                         cursor: 'pointer', fontFamily: F,
@@ -587,7 +587,7 @@ export default function CycleTab({ profil, userId, onChat }) {
                         <div key={p.start_date} style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                           padding: '9px 12px', borderRadius: 12,
-                          background: 'rgba(var(--rgb-creme), 0.10)',
+                          background: 'rgba(var(--rgb-verre), 0.10)',
                           border: '1px solid rgba(var(--rgb-creme-dore), 0.16)',
                         }}>
                           <span style={{ fontSize: 13, color: am(0.82), fontWeight: 500 }}>

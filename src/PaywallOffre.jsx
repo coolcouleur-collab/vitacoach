@@ -110,7 +110,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
 
         {/* Avantages, carte verre ambré clair */}
         <div style={{
-          background: 'rgba(var(--rgb-creme), 0.28)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          background: 'rgba(var(--rgb-verre), 0.28)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(var(--rgb-creme-dore), 0.32)', borderRadius: 18,
           padding: '16px 18px', marginBottom: 16,
           boxShadow: '0 8px 40px rgba(180,80,20,0.10)',
@@ -137,7 +137,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
               return (
                 <button key={p.key} onClick={() => setPlan(p.key)} style={{
                   flex: 1, position: 'relative', cursor: 'pointer', fontFamily: F, textAlign: 'left',
-                  background: actif ? 'rgba(var(--rgb-creme), 0.42)' : 'rgba(var(--rgb-creme), 0.18)',
+                  background: actif ? 'rgba(var(--rgb-verre), 0.42)' : 'rgba(var(--rgb-verre), 0.18)',
                   backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
                   border: actif ? '1.5px solid rgba(var(--rgb-creme-dore), 0.75)' : '1px solid rgba(var(--rgb-creme-dore), 0.30)',
                   borderRadius: 16, padding: '14px 14px 12px',
@@ -167,7 +167,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
         <button onClick={onStart} style={{
           width: '100%', cursor: 'pointer', fontFamily: F, fontWeight: 600, fontSize: 15,
           color: CREME, borderRadius: 16, padding: '15px 20px',
-          background: 'rgba(var(--rgb-creme), 0.32)',
+          background: 'rgba(var(--rgb-verre), 0.32)',
           backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
           border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
           boxShadow: '0 0 26px rgba(232,190,100,0.25), inset 0 1px 0 rgba(255,240,200,0.28)',

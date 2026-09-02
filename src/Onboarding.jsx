@@ -135,7 +135,7 @@ function RevealScreen({ answers, onEnter }) {
         {/* Avatar au-dessus de la carte */}
         <div style={{
           width:88, height:88, borderRadius:'50%',
-          background:'rgba(var(--rgb-creme), 0.32)',
+          background:'rgba(var(--rgb-verre), 0.32)',
           backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
           border:'1px solid rgba(var(--rgb-creme-dore), 0.45)',
           display:'flex', alignItems:'center', justifyContent:'center',
@@ -154,7 +154,7 @@ function RevealScreen({ answers, onEnter }) {
         {/* Carte glassmorphism, même style qu'Auth */}
         <div style={{
           width:'100%',
-          background:'rgba(var(--rgb-creme), 0.28)',
+          background:'rgba(var(--rgb-verre), 0.28)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
           border:'1px solid rgba(var(--rgb-creme-dore), 0.32)',
           borderRadius:24,
@@ -180,7 +180,7 @@ function RevealScreen({ answers, onEnter }) {
                 {objectifs.map(o => (
                   <span key={o} style={{
                     padding:'7px 16px', borderRadius:20,
-                    background:'rgba(var(--rgb-creme), 0.22)',
+                    background:'rgba(var(--rgb-verre), 0.22)',
                     border:'1px solid rgba(var(--rgb-creme-dore), 0.45)',
                     fontSize:12, fontWeight:600, color:'rgba(var(--rgb-creme-pale), 0.97)',
                   }}>{o}</span>
@@ -193,7 +193,7 @@ function RevealScreen({ answers, onEnter }) {
               {tags.map(t => (
                 <span key={t} style={{
                   padding:'5px 12px', borderRadius:20,
-                  background:'rgba(var(--rgb-creme), 0.16)',
+                  background:'rgba(var(--rgb-verre), 0.16)',
                   border:'1px solid rgba(var(--rgb-creme-dore), 0.35)',
                   fontSize:11, fontWeight:500, color:'rgba(var(--rgb-creme-pale), 1)',
                 }}>{t}</span>
@@ -204,7 +204,7 @@ function RevealScreen({ answers, onEnter }) {
             onClick={onEnter}
             style={{
               width:'100%', height:52,
-              background:'rgba(var(--rgb-creme), 0.32)',
+              background:'rgba(var(--rgb-verre), 0.32)',
               color:'#FFFFFF', border:'1px solid rgba(var(--rgb-creme-dore), 0.45)', borderRadius:30,
               fontSize:15, fontWeight:600, cursor:'pointer',
               fontFamily:'Poppins, sans-serif',
@@ -320,7 +320,7 @@ const S = {
   cta: {
     // Verre de cuivre profond, translucide + texte crème (palette Solenn)
     width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(var(--rgb-creme), 0.45)',
-    background:'rgba(var(--rgb-creme), 0.32)',
+    background:'rgba(var(--rgb-verre), 0.32)',
     backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
     color:'var(--fond-haut)', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'Poppins', sans-serif", letterSpacing:'0.3px',
@@ -335,7 +335,7 @@ function optStyle(isSel) {
   return {
     width:'100%', padding:'12px 18px', borderRadius:16,
     border:`1px solid ${isSel ? 'rgba(var(--rgb-creme-dore), 0.72)' : 'rgba(var(--rgb-creme-dore), 0.25)'}`,
-    background: isSel ? 'rgba(var(--rgb-creme), 0.32)' : 'rgba(var(--rgb-creme), 0.14)',
+    background: isSel ? 'rgba(var(--rgb-verre), 0.32)' : 'rgba(var(--rgb-verre), 0.14)',
     backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
     boxShadow: isSel ? '0 6px 24px rgba(220,160,90,0.18)' : '0 2px 12px rgba(180,80,20,0.08)',
     transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
@@ -347,7 +347,7 @@ function optStyle(isSel) {
 function iconCircleStyle(isSel) {
   return {
     width:40, height:40, borderRadius:'50%',
-    background: isSel ? 'rgba(var(--rgb-creme), 0.42)' : 'rgba(var(--rgb-creme), 0.20)',
+    background: isSel ? 'rgba(var(--rgb-verre), 0.42)' : 'rgba(var(--rgb-verre), 0.20)',
     display:'flex', alignItems:'center', justifyContent:'center',
     flexShrink:0, transition:'background 0.18s',
   }
@@ -605,7 +605,7 @@ function premiereLecture(a) {
                   transition={{ duration:0.65, ease:'easeOut' }}
                   style={{
                     position:'absolute', inset:0, borderRadius:16,
-                    background:'rgba(var(--rgb-creme), 0.22)', pointerEvents:'none', zIndex:2,
+                    background:'rgba(var(--rgb-verre), 0.22)', pointerEvents:'none', zIndex:2,
                   }}
                 />
               )}
@@ -1080,7 +1080,7 @@ function premiereLecture(a) {
             style={{
               display:'flex', alignItems:'flex-start', gap:12, textAlign:'left',
               padding:'13px 15px', borderRadius:16, cursor:'pointer',
-              background: consentSante ? 'rgba(var(--rgb-creme), 0.22)' : 'rgba(255,255,255,0.06)',
+              background: consentSante ? 'rgba(var(--rgb-verre), 0.22)' : 'rgba(255,255,255,0.06)',
               border: consentSante ? '1px solid rgba(var(--rgb-creme-dore), 0.55)' : '1px solid rgba(var(--rgb-creme-pale), 0.22)',
               transition:'background 0.18s, border-color 0.18s',
             }}
@@ -1283,7 +1283,7 @@ function premiereLecture(a) {
             whileTap={{ scale:0.97 }}
             style={{
               padding:'15px 26px', borderRadius:16, cursor:'pointer',
-              background:'rgba(var(--rgb-creme), 0.32)',
+              background:'rgba(var(--rgb-verre), 0.32)',
               backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
               border:'1px solid rgba(var(--rgb-creme-dore), 0.60)',
               color:'rgba(var(--rgb-creme-pale), 1)', fontSize:15, fontWeight:600,
@@ -1374,7 +1374,7 @@ function premiereLecture(a) {
       <div className="ob-header" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:100,
         backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-        background:'rgba(var(--rgb-creme), 0.22)',
+        background:'rgba(var(--rgb-verre), 0.22)',
         borderBottom:'1px solid rgba(var(--rgb-creme-dore), 0.28)',
         boxShadow:'0 2px 24px rgba(180,80,20,0.07)',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 20px)',
@@ -1391,7 +1391,7 @@ function premiereLecture(a) {
               style={{
                 position:'absolute', left:20,
                 width:36, height:36, borderRadius:'50%',
-                background:'rgba(var(--rgb-creme), 0.22)',
+                background:'rgba(var(--rgb-verre), 0.22)',
                 border:'none', cursor:'pointer',
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}

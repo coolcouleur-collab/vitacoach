@@ -10,7 +10,7 @@ const S = {
   },
   card: {
     maxWidth: 720, margin: '0 auto',
-    background: 'rgba(var(--rgb-creme), 0.28)',
+    background: 'rgba(var(--rgb-verre), 0.28)',
     backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.32)',
     borderRadius: 24, padding: '40px 32px',

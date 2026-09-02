@@ -199,7 +199,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               onClick={() => onConnect(provider)}
               style={{
                 flex: 1, padding: '10px 16px',
-                background: 'rgba(var(--rgb-creme), 0.32)',
+                background: 'rgba(var(--rgb-verre), 0.32)',
                 border: '1px solid rgba(var(--rgb-creme-dore), 0.38)', borderRadius: 12, color: AMBRE,
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
@@ -339,7 +339,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
           }}>Annuler</button>
           <button onClick={connecter} disabled={loading || !token.trim()} style={{
             flex: 1, padding: '11px',
-            background: 'rgba(var(--rgb-creme), 0.32)',
+            background: 'rgba(var(--rgb-verre), 0.32)',
             border: '1px solid rgba(var(--rgb-creme-dore), 0.38)', borderRadius: 12,
             color: AMBRE, fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',

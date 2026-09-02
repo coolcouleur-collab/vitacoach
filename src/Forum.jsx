@@ -47,7 +47,7 @@ function Avatar({ name, size = 34 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: size * 0.32,
-      background: 'rgba(var(--rgb-creme), 0.32)',
+      background: 'rgba(var(--rgb-verre), 0.32)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.42, fontWeight: 800, color: AMBRE, flexShrink: 0,
       boxShadow: '0 2px 8px rgba(var(--rgb-terracotta), 0.32)',

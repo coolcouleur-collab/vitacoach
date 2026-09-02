@@ -316,7 +316,7 @@ function CinematicSlider({ onCommencer }) {
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
                   color: ENCRE,
-                  background: 'rgba(var(--rgb-creme), 0.18)',
+                  background: 'rgba(var(--rgb-verre), 0.18)',
                   border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
                   borderRadius: '2rem', padding: '4px 13px',
                 }}>
@@ -553,7 +553,7 @@ function EarlyAccessSection() {
               type="submit"
               disabled={status === 'loading'}
               style={{
-                background: 'rgba(var(--rgb-creme), 0.32)',
+                background: 'rgba(var(--rgb-verre), 0.32)',
                 border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
                 borderRadius: '2rem',
                 boxShadow: '0 0 22px rgba(var(--rgb-or), 0.22)',

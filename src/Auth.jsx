@@ -455,7 +455,7 @@ const s = {
     pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' },
   card: {
     position:'relative', zIndex:3, width:'100%', maxWidth:380,
-    background:'rgba(var(--rgb-creme), 0.25)',
+    background:'rgba(var(--rgb-verre), 0.25)',
     borderRadius: 20,
     padding:'20px 16px',
     backdropFilter:'blur(18px)',
@@ -492,7 +492,7 @@ const s = {
   footer: { marginTop:20, textAlign:'center', fontSize:14, color:ENCRE, lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,
-    background:'rgba(var(--rgb-creme), 0.22)', border:'1px solid rgba(var(--rgb-creme-dore), 0.40)', cursor:'pointer',
+    background:'rgba(var(--rgb-verre), 0.22)', border:'1px solid rgba(var(--rgb-creme-dore), 0.40)', cursor:'pointer',
     color:ENCRE, fontSize:22, fontWeight:500,
     fontFamily:'Poppins, sans-serif', padding:'0.55rem 1.8rem',
     borderRadius:'2rem', transition:'background 0.25s, border-color 0.25s',

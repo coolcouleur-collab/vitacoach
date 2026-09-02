@@ -27,7 +27,7 @@ import { ENCRE, ICONE, ACCENT, AMBRE } from './palette'
 const EASE = [0.22, 1, 0.36, 1]
 
 const VERRE = {
-  background: 'rgba(var(--rgb-creme), 0.32)',
+  background: 'rgba(var(--rgb-verre), 0.32)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
   border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',

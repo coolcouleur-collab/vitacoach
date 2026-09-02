@@ -66,7 +66,7 @@ export default function ProgressionProgramme({ userId }) {
       {/* ── HEADER ── */}
       <div
         style={{
-          background: 'rgba(var(--rgb-creme), 0.22)',
+          background: 'rgba(var(--rgb-verre), 0.22)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
           borderRadius: '20px',
@@ -171,7 +171,7 @@ export default function ProgressionProgramme({ userId }) {
       {showGrille && (
       <div
         style={{
-          background: 'rgba(var(--rgb-creme), 0.22)',
+          background: 'rgba(var(--rgb-verre), 0.22)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
           borderRadius: '20px',

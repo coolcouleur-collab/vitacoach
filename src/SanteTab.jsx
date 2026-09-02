@@ -113,7 +113,7 @@ function HistoriqueSection({ history, onLog }) {
   ]
   return (
     <div style={{
-      background:'rgba(var(--rgb-creme), 0.22)', border:'1.5px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius:20,
+      background:'rgba(var(--rgb-verre), 0.22)', border:'1.5px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius:20,
       overflow:'hidden', marginBottom:14,
       backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
     }}>
@@ -181,7 +181,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
   return (
     <div className="lg-card" style={{
       width: cardW, flexShrink: 0, borderRadius: 20, overflow: 'hidden',
-      background: 'rgba(var(--rgb-creme), 0.22)',
+      background: 'rgba(var(--rgb-verre), 0.22)',
       backdropFilter: 'blur(18px)',
       WebkitBackdropFilter: 'blur(18px)',
       boxShadow: `0 8px 32px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(255,255,255,0.18)`,
@@ -570,7 +570,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div key={m.key}
               style={{
                 ...ss.metricCard,
-                background: 'rgba(var(--rgb-creme), 0.22)',
+                background: 'rgba(var(--rgb-verre), 0.22)',
                 backdropFilter: 'blur(18px)',
                 WebkitBackdropFilter: 'blur(18px)',
                 border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
@@ -703,7 +703,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           onClick={() => onSwitchTab('cycle')}
           style={{
             width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-            background: 'rgba(var(--rgb-creme), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+            background: 'rgba(var(--rgb-verre), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
             backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
             borderRadius: 18, padding: '14px 16px', marginBottom: 22,
             cursor: 'pointer', textAlign: 'left', fontFamily: "'Poppins', sans-serif",
@@ -813,7 +813,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
 const ss = {
   scoreCard: {
-    background: 'rgba(var(--rgb-creme), 0.22)',
+    background: 'rgba(var(--rgb-verre), 0.22)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 28, padding: '20px',
@@ -822,7 +822,7 @@ const ss = {
   },
   btnInsights: {
     width: 'auto',
-    background: 'rgba(var(--rgb-creme), 0.32)',
+    background: 'rgba(var(--rgb-verre), 0.32)',
     color: AMBRE,
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     padding: '11px 34px',
@@ -834,20 +834,20 @@ const ss = {
     transition: 'transform 0.15s ease',
   },
   insightsCard: {
-    background: 'rgba(var(--rgb-creme), 0.22)',
+    background: 'rgba(var(--rgb-verre), 0.22)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '14px 0 12px', marginBottom: 14,
   },
   waterBar: {
-    background: 'rgba(var(--rgb-creme), 0.22)',
+    background: 'rgba(var(--rgb-verre), 0.22)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
   },
   btnWater: {
-    background: 'rgba(var(--rgb-creme), 0.32)',
+    background: 'rgba(var(--rgb-verre), 0.32)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     color: AMBRE, borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
@@ -862,7 +862,7 @@ const ss = {
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',
   },
   appleSection: {
-    background: 'rgba(var(--rgb-creme), 0.22)',
+    background: 'rgba(var(--rgb-verre), 0.22)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, overflow: 'hidden',
@@ -898,7 +898,7 @@ const ss = {
   modalInput: {
     width: '100%', padding: '18px',
     borderRadius: 20,
-    border: '1.5px solid rgba(var(--rgb-creme-dore), 0.28)', background: 'rgba(var(--rgb-creme), 0.10)',
+    border: '1.5px solid rgba(var(--rgb-creme-dore), 0.28)', background: 'rgba(var(--rgb-verre), 0.10)',
     fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: ENCRE,
     boxSizing: 'border-box', textAlign: 'center', marginBottom: 22, fontWeight: 800,
     boxShadow: 'none'
@@ -906,14 +906,14 @@ const ss = {
   humeurBtn: {
     width: 56, height: 56, borderRadius: 20,
     border: '1.5px solid rgba(var(--rgb-creme-dore), 0.22)',
-    background: 'rgba(var(--rgb-creme), 0.10)',
+    background: 'rgba(var(--rgb-verre), 0.10)',
     fontSize: 28, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     transition: 'all 0.2s ease',
     boxShadow: 'none'
   },
   btnCancel: {
-    flex: 1, padding: '15px', background: 'rgba(var(--rgb-creme), 0.08)',
+    flex: 1, padding: '15px', background: 'rgba(var(--rgb-verre), 0.08)',
     border: '1px solid rgba(var(--rgb-creme-dore), 0.20)', borderRadius: 16, fontSize: 13,
     fontWeight: 700, cursor: 'pointer', color: ENCRE, fontFamily: 'Poppins,sans-serif',
     boxShadow: 'inset 0 1px 0 rgba(var(--rgb-creme), 0.10)'
