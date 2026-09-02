@@ -182,7 +182,9 @@ ${numCycle > 1
 
   if (memoire?.points_attention?.length) faiblesses.push(...memoire.points_attention.slice(0, 2))
 
-  const res = await groq.chat.completions.create({
+  // La requete est preparee ici mais PAS envoyee : elle est rejouee plus
+  // bas, apres la definition du validateur, pour pouvoir la retenter.
+  const requete = {
     model: 'openai/gpt-oss-120b',
     messages: [
       {
@@ -309,7 +311,7 @@ Format JSON :
     // les conseils nutrition, un programme de 21 jours depasse : le JSON etait
     // tronque et la generation echouait (2026-08-12).
     max_tokens: 6000,
-  })
+  }
 
   // Le programme genere doit passer trois controles avant d'etre servi. Un
   // JSON valide ne suffit pas : un programme tronque a 6 jours ou entierement
@@ -346,17 +348,32 @@ Format JSON :
     return true
   }
 
+  // DEUX ESSAIS, pas un.
+  //
+  // La generation etait faite en un seul coup : un JSON tronque ou un
+  // programme incomplet renvoyait la personne a un message d'erreur, alors
+  // qu'un second appel aboutit la plupart du temps. Jean l'a vu le
+  // 2 septembre sur « Reequilibrage alimentaire » : « Erreur lors de la
+  // creation », et rien d'autre a faire que recommencer a la main.
+  //
+  // Deux et pas plus : au-dela, on fait attendre quelqu'un devant un ecran
+  // fige pour un modele qui, visiblement, n'y arrive pas aujourd'hui.
   let challenge = null
-  try {
-    const raw   = res.choices[0].message.content
-    const match = raw.match(/\{[\s\S]*\}/)
-    if (match) {
-      const parse = JSON.parse(match[0])
-      if (programmeValable(parse)) challenge = parse
-      else console.warn('[Challenge] génération rejetée (incomplete ou mono-thème) → repli')
+  for (let essai = 1; essai <= 2 && !challenge; essai++) {
+    try {
+      const res   = await groq.chat.completions.create(requete)
+      const raw   = res.choices[0].message.content
+      const match = raw.match(/\{[\s\S]*\}/)
+      if (match) {
+        const parse = JSON.parse(match[0])
+        if (programmeValable(parse)) challenge = parse
+        else console.warn(`[Challenge] essai ${essai} rejete (incomplet ou mono-theme)`)
+      } else {
+        console.warn(`[Challenge] essai ${essai} : aucun JSON dans la reponse`)
+      }
+    } catch (e) {
+      console.warn(`[Challenge] essai ${essai} illisible :`, e.message)
     }
-  } catch (e) {
-    console.warn('[Challenge] JSON illisible → repli:', e.message)
   }
 
   // Repli : le programme ecrit a la main. Il vaut mieux un bon programme

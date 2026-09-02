@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { erreurServeur } from './erreurs'
 import CatalogueProgrammes from './CatalogueProgrammes'
 import { programmeParId, FAMILLES } from './programmes'
 import { syncProfilSupabase } from './profilSync'
@@ -199,7 +200,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       if (!challenge) setLoading(true)
       setError(null)
       const res = await fetch(`${API}/api/challenge?userId=${userId}`, { headers: await authHeaders() })
-      if (!res.ok) throw new Error('Erreur lors du chargement')
+      if (!res.ok) throw await erreurServeur(res, "Ton programme n'a pas pu être chargé. Réessaie dans un instant.")
       const data = await res.json()
       setChallenge(data.challenge || null)
       try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(data.challenge || null)) } catch {}
@@ -265,7 +266,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId, jour: jourIndex, complete: true }),
       })
-      if (!res.ok) throw new Error('Erreur lors de la mise à jour')
+      if (!res.ok) throw await erreurServeur(res, "Ce jour n'a pas pu être validé. Réessaie dans un instant.")
       await fetchChallenge()
     } catch (err) {
       setError(err.message)

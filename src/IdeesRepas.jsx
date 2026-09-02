@@ -374,6 +374,17 @@ export default function IdeesRepas({ userId, profil, onProfilMaj }) {
 
       {reglages && (
         <Preferences
+          /* La `key` force un remontage quand les preferences changent, donc
+             une reinitialisation des champs a partir de la valeur STOCKEE.
+
+             Sans elle, `Preferences` lisait `prefs` une seule fois, au premier
+             rendu. Si le profil arrivait de la base juste apres, le panneau
+             restait vide alors que les exclusions existaient. Le danger n'est
+             pas l'affichage : c'est qu'un enregistrement depuis ce champ vide
+             ecrase ce qui etait stocke. Le panneau ne s'ouvre que par un clic,
+             et il se ferme des qu'on enregistre, donc ce remontage ne peut pas
+             effacer une saisie en cours. */
+          key={JSON.stringify(prefs || null)}
           prefs={prefs}
           onEnregistrer={enregistrerPrefs}
           onFermer={() => setReglages(false)}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { erreurServeur } from './erreurs'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SunIcon, MoonIcon, RefreshIcon, SparkleIcon, StarIcon, TrashIcon, SendIcon } from './Icons'
 import ConnexionsSante from './ConnexionsSante'
@@ -482,7 +483,7 @@ export default function SettingsSheet({
         headers: { 'Content-Type': 'application/json', ...(await m.authHeaders()) },
         body: JSON.stringify({ userId }),
       })
-      if (!res.ok) throw new Error("Le serveur n'a pas pu supprimer le compte.")
+      if (!res.ok) throw await erreurServeur(res, "Le serveur n'a pas pu supprimer le compte.")
       // Le lien vers l'app Sante est retire explicitement avant le vidage
       // general : ne pas dependre d'un localStorage.clear() pour une donnee de
       // sante, et rendre l'intention lisible.

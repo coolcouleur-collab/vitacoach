@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { erreurServeur } from './erreurs'
 import { motion, AnimatePresence } from 'framer-motion'
 import { StarIcon, SparkleIcon, LightbulbIcon, CalendarIcon } from './Icons'
 import { authHeaders } from './supabase'
@@ -21,7 +22,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     setError(null)
     try {
       const res = await fetch(`${API}/api/rapport-hebdo?userId=${userId}`, { headers: await authHeaders() })
-      if (!res.ok) throw new Error('Erreur lors du chargement du rapport')
+      if (!res.ok) throw await erreurServeur(res, "Le rapport n'a pas pu être chargé. Réessaie dans un instant.")
       const data = await res.json()
       setRapport(data.rapport || null)
       setSemaine(data.semaine || null)
@@ -46,7 +47,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({ userId }),
       })
-      if (!res.ok) throw new Error('Erreur lors de la génération du rapport')
+      if (!res.ok) throw await erreurServeur(res, "Le rapport n'a pas pu être généré. Réessaie dans un instant.")
       await fetchRapport()
     } catch (err) {
       setError(err.message)
