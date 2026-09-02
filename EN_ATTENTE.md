@@ -28,6 +28,30 @@ choisi de tout construire quitte a decaler le lancement.
 - **L'ecran de veille Android.** Service de premier plan, notification
   permanente, course qui survit au verrouillage.
 
+## POURQUOI RIEN NE S'AFFICHE SUR L'ECRAN VERROUILLE D'UN IPHONE
+
+Question de Jean le 2 septembre. Ce n'est pas un bug, la fonction n'existe
+pas encore de ce cote. Trois blocages se superposent, tous verifies :
+
+1. `src/ecranVeille.js` renvoie `false` avant meme de demander quoi que ce
+   soit des que la plateforme n'est pas Android :
+   `if (!androidNatif()) return false`. C'etait voulu, ce fichier a ete ecrit
+   comme une facade Android avec iOS en point d'accroche.
+
+2. L'extension n'est pas dans le projet Xcode. Les sept fichiers Swift sont
+   sur le disque, mais `SolennActivite` apparait **zero fois** dans
+   `project.pbxproj` et la seule cible declaree est `App`.
+
+3. Le `www` embarque dans le projet iOS date du **21 juillet**. Meme installee
+   aujourd'hui, l'app native ne contiendrait aucun travail des deux derniers
+   mois. Android a ete resynchronise le 2 septembre.
+
+Et sur meet-solenn.com, ca ne marchera jamais : une page web ne peut pas
+dessiner sur l'ecran verrouille d'un iPhone. Il faut l'app native.
+
+**Ce qui est testable des maintenant, sans Mac** : tout le reste de la course,
+chrono, GPS, distance, et l'ecran de veille lui-meme, sur un Android.
+
 ## POUR DEMAIN, SUR LE MAC
 
 Tout est ecrit, rien n'est compile. Environ une heure, dont la moitie a
