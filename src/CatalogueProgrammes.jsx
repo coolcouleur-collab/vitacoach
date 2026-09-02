@@ -380,8 +380,14 @@ export default function CatalogueProgrammes({
               {titre || 'Choisis ton programme'}
             </h2>
             <p style={{ fontSize: 13, lineHeight: 1.6, color: ENCRE, margin: '0 0 18px' }}>
-              {sousTitre || `${liste.length === 1 ? 'Un programme' : liste.length + ' programmes'}, `
-                + 'construits à partir de ton profil. Tu pourras en changer quand tu veux.'}
+              {/* La phrase etait assemblee en deux morceaux et le second ne
+                  s'accordait pas : avec un seul programme dans la famille,
+                  l'ecran affichait « Un programme, CONSTRUITS a partir de ton
+                  profil ». C'est le cas de Nutrition, qui n'en propose qu'un.
+                  Les deux versions sont maintenant ecrites en entier. */}
+              {sousTitre || (liste.length === 1
+                ? 'Un programme, construit à partir de ton profil. Tu pourras en changer quand tu veux.'
+                : `${liste.length} programmes, construits à partir de ton profil. Tu pourras en changer quand tu veux.`)}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
