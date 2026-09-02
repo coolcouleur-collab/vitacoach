@@ -61,6 +61,14 @@
   /* ── Les fonds ── */
   --fond:      #EDD8CC;
   --fond-haut: #FFF6E8;
+  /* Le halo plein ecran, derriere tous les onglets. Sans lui, la nuit
+     n'etait qu'un texte bleu clair pose sur un fond reste orange. */
+  --halo-1:    #EDB16D;
+  --halo-2:    #EDB980;
+  --halo-3:    #EDCBB8;
+  /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
+     ici pour que le document lui-meme suive l'ambiance. */
+  --bg:        #EDD8CC;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -97,6 +105,11 @@
 
   --fond:      #0F1C3A;
   --fond-haut: #0B1530;
+  /* Le halo de nuit reprend les bleus du ciel de l'accueil. */
+  --halo-1:    #1B3057;
+  --halo-2:    #16294F;
+  --halo-3:    #122140;
+  --bg:        #0F1C3A;
 }
 
 
@@ -141,4 +154,12 @@
   /* ── Les fonds ── */
   --fond:      #EDD8CC;
   --fond-haut: #FFF6E8;
+  /* Le halo plein ecran, derriere tous les onglets. Sans lui, la nuit
+     n'etait qu'un texte bleu clair pose sur un fond reste orange. */
+  --halo-1:    #EDB16D;
+  --halo-2:    #EDB980;
+  --halo-3:    #EDCBB8;
+  /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
+     ici pour que le document lui-meme suive l'ambiance. */
+  --bg:        #EDD8CC;
 }

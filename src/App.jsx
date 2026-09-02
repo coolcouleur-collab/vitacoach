@@ -2164,7 +2164,10 @@ const [messages, setMessages] = useState(() => {
            un mode de fusion. Ne pas réintroduire de mixBlendMode ici. */}
       <div style={{
         position:'fixed', inset:0, zIndex:0, pointerEvents:'none',
-        background:'radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, var(--fond) 100%)',
+        // Les trois teintes passent en variables : c'est le halo qui remplit
+        // TOUT l'ecran derriere les onglets. Sans lui, la nuit n'etait
+        // qu'un texte bleu clair pose sur un fond reste orange.
+        background:'radial-gradient(circle at center, var(--halo-1) 0%, var(--halo-2) 35%, var(--halo-3) 70%, var(--fond) 100%)',
       }} />
 
       {/* ══ AURORA, plein écran fixe, actif uniquement sur l'onglet chat ══ */}
