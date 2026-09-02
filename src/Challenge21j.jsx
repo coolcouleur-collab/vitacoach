@@ -919,11 +919,20 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                         try { localStorage.setItem(cleExos, JSON.stringify(tous)) } catch {}
                         setExosFaits(tous)
                       }}
+                      // Un lien souligne pose dans le corps du texte se lit
+                      // comme une note de bas de page. Or c'est l'action la
+                      // plus engageante de la carte : elle valide la journee
+                      // entiere d'un coup, et « Demarrer la seance » juste au
+                      // dessus est massif et encadre. Meme correction que pour
+                      // « Ce que je ne mange pas » dans Nutrition.
                       style={{
-                        background: 'none', border: 'none', cursor: 'pointer',
-                        padding: '2px 2px 8px', fontSize: 11.5, fontWeight: 600,
+                        background: 'rgba(var(--rgb-verre), 0.32)',
+                        border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                        borderRadius: 999, cursor: 'pointer',
+                        padding: '7px 14px', marginBottom: 8,
+                        fontSize: 11.5, fontWeight: 600,
                         color: ENCRE, fontFamily: "'Poppins',sans-serif",
-                        textDecoration: 'underline', textUnderlineOffset: 3,
+                        alignSelf: 'flex-start',
                       }}>
                       Séance déjà faite ? Tout valider
                     </button>
