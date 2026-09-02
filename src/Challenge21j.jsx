@@ -624,7 +624,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <motion.div
           key="challenge-main"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          // L'opacite passe par `animate` et NON par `style` : framer-motion
+          // pilote deja cette propriete sur ce bloc. Mettre les deux laissait
+          // l'element a l'opacite `initial`, soit 0, et le contenu du jour
+          // devenait carrement invisible. Verifie a la mesure, en ligne.
+          animate={{ opacity: proposerReprise ? 0.32 : 1, y: 0 }}
           transition={{ duration: 0.5 }}
           // Tant que la question « on reprend au jour X ou on continue au
           // jour Y ? » n'a pas de reponse, ce bloc est inerte.
@@ -642,11 +646,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           inert={proposerReprise || undefined}
           style={{
             display: 'flex', flexDirection: 'column', gap: '20px',
-            opacity: proposerReprise ? 0.32 : 1,
             filter: proposerReprise ? 'saturate(0.45)' : 'none',
             pointerEvents: proposerReprise ? 'none' : 'auto',
             userSelect: proposerReprise ? 'none' : 'auto',
-            transition: 'opacity .3s ease, filter .3s ease',
+            transition: 'filter .3s ease',
           }}
         >
           {/* ── PROGRAMME TERMINÉ, le jour 21 ouvrait sur RIEN : bravo, puis
