@@ -2643,7 +2643,10 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
                 return (
                   <div key={i} style={{
                     flex:1, textAlign:'center', fontSize:7,
-                    color: isToday ? tc(0.92) : tc(isNight ? 0.55 : 0.80),
+                    // 0,55 donnait 3,9:1 sur la carte de nuit, pour du 7 px.
+                    // 0,72 donne 5,6:1. Le jour n'est pas concerne : warmText
+                    // renvoie ENCRE quelle que soit l'opacite qu'on lui passe.
+                    color: isToday ? tc(0.92) : tc(isNight ? 0.72 : 0.80),
                     fontWeight: isToday ? 700 : 400,
                   }}>
                     {isToday ? '●' : i % 2 === 0 ? dayName : ''}
