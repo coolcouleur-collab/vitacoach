@@ -1017,11 +1017,15 @@ export default function SettingsSheet({
                 </div>
                 <button
                   onClick={() => onPasserPro && onPasserPro('monthly')}
+                  // Meme raison qu'au paywall : un engagement payant se lit
+                  // comme une commande, pas comme une note de bas de page. Il
+                  // reste secondaire, il cesse d'etre ambigu.
                   style={{
-                    width: '100%', marginTop: 6, padding: '6px 0',
-                    background: 'transparent', border: 'none', cursor: 'pointer',
+                    width: '100%', marginTop: 10, padding: '9px 12px',
+                    background: 'transparent', cursor: 'pointer',
+                    border: `1px solid ${C.border}`, borderRadius: 999,
                     fontFamily: C.font, fontSize: 11.5, fontWeight: 500,
-                    color: C.textMuted, textDecoration: 'underline', textUnderlineOffset: 3,
+                    color: C.textMuted,
                     outline: 'none', WebkitTapHighlightColor: 'transparent',
                   }}
                 >

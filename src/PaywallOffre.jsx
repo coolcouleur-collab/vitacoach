@@ -177,10 +177,21 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
 
         {/* CTA secondaire : s'abonner tout de suite (web uniquement) */}
         {!isNative && (
+            // Un engagement payant ne doit pas ressembler a une note de bas de
+            // page. Il RESTE volontairement secondaire, l'essai est le chemin
+            // principal et le mettre en avant lui ferait concurrence, mais il
+            // se lit desormais comme une commande : une bordure discrete
+            // plutot qu'un soulignement.
+            //
+            // Verifie avant de toucher a quoi que ce soit : ce bouton ouvre une
+            // session Stripe, la carte se saisit sur leur page. Aucun
+            // prelevement accidentel n'est possible, le probleme etait de
+            // lisibilite, pas de securite.
           <button onClick={() => onSubscribe(plan)} style={{
             width: '100%', cursor: 'pointer', fontFamily: F, fontWeight: 500, fontSize: 12.5,
-            color: CREME_70, background: 'transparent', border: 'none',
-            padding: '13px 0 2px', textDecoration: 'underline', textUnderlineOffset: 3,
+            color: CREME_70, background: 'transparent',
+            border: `1px solid ${CREME_50}`, borderRadius: 999,
+            padding: '11px 14px', marginTop: 12,
           }}>
             Ou passe directement à Pro, {plan === 'annual' ? '44,99 €/an' : '7,99 €/mois'}, résiliable à tout moment
           </button>
