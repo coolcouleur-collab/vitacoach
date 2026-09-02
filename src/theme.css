@@ -107,6 +107,12 @@
   /* Le fond de page en triplet, pour les voiles de fondu qui l'imitent
      avec une opacite. Le voile des suggestions du chat le faisait en dur. */
   --rgb-fond:            237, 216, 204;
+  /* Le halo anime du bouton « Demander a Solenn ». L'animation vit dans
+     tokens.css et ses deux etapes etaient ecrites en dur : un anneau creme
+     et une lueur terracotta, qui detonnaient sur le navy (capture de Jean,
+     2 septembre). Les valeurs de jour sont reprises a l'identique. */
+  --ombre-cta-1: 0 0 0 1.5px rgba(255,240,200,0.28), 0 6px 22px rgba(200,123,82,0.10), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75);
+  --ombre-cta-2: 0 0 0 1.5px rgba(255,240,200,0.50), 0 6px 22px rgba(200,123,82,0.18), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75);
   /* Des degrades entiers portes par un jeton : plus lisible que six
      couleurs separees, et la valeur de jour reste identique au caractere pres. */
   --degrade-bouton:        linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%);
@@ -187,6 +193,8 @@
   --rgb-photo:            24,  42,  74;
   --texte-base:          #C8DEFF;
   --rgb-fond:             15,  28,  58;
+  --ombre-cta-1: 0 0 0 1.5px rgba(200,222,255,0.22), 0 6px 22px rgba(100,150,255,0.12), 0 2px 6px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.10);
+  --ombre-cta-2: 0 0 0 1.5px rgba(200,222,255,0.40), 0 6px 22px rgba(100,150,255,0.20), 0 2px 6px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.10);
   /* L'encre de nuit y tient a 10,14:1 et 8,62:1. */
   --degrade-bouton:        linear-gradient(150deg,#16264A 0%,#1A2C4E 50%,#22375F 100%);
   --degrade-bouton-survol: linear-gradient(150deg,#1E3055 0%,#22375F 50%,#2A4270 100%);
@@ -290,6 +298,12 @@
   /* Le fond de page en triplet, pour les voiles de fondu qui l'imitent
      avec une opacite. Le voile des suggestions du chat le faisait en dur. */
   --rgb-fond:            237, 216, 204;
+  /* Le halo anime du bouton « Demander a Solenn ». L'animation vit dans
+     tokens.css et ses deux etapes etaient ecrites en dur : un anneau creme
+     et une lueur terracotta, qui detonnaient sur le navy (capture de Jean,
+     2 septembre). Les valeurs de jour sont reprises a l'identique. */
+  --ombre-cta-1: 0 0 0 1.5px rgba(255,240,200,0.28), 0 6px 22px rgba(200,123,82,0.10), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75);
+  --ombre-cta-2: 0 0 0 1.5px rgba(255,240,200,0.50), 0 6px 22px rgba(200,123,82,0.18), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75);
   /* Des degrades entiers portes par un jeton : plus lisible que six
      couleurs separees, et la valeur de jour reste identique au caractere pres. */
   --degrade-bouton:        linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%);

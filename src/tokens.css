@@ -217,8 +217,8 @@ body {
 }
 
 @keyframes chatGlow {
-  0%,100% { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.28), 0 6px 22px rgba(200,123,82,0.10), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75); }
-  50%     { box-shadow: 0 0 0 1.5px rgba(255,240,200,0.50), 0 6px 22px rgba(200,123,82,0.18), 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75); }
+  0%,100% { box-shadow: var(--ombre-cta-1); }
+  50%     { box-shadow: var(--ombre-cta-2); }
 }
 .chat-glow {
   animation: chatGlow 3s ease-in-out infinite;
