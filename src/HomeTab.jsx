@@ -936,6 +936,38 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   const orbitC = isNight ? '#9FC4E8' : '#C87B52'
   // `atteint` vient de score.js : les seuils de la pastille et ceux du
   // score doivent bouger ensemble, et deux definitions ne le garantissent pas.
+  const METRICS = [
+    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau', atteint:atteint('eau', metriques?.eau),     fmt: v => v+'v' },
+    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas', atteint:atteint('pas', metriques?.pas),     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
+    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', atteint:atteint('sommeil', metriques?.sommeil), fmt: v => v+'h' },
+    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur', atteint:atteint('humeur', metriques?.humeur),  fmt: v => v+'/5' },
+    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc', atteint:atteint('fc', metriques?.fc),      fmt: v => v },
+  ]
+  /**
+   * Combien de metriques Solenn connait vraiment aujourd'hui.
+   *
+   * Les quatre que le score annonce mesurer, et pas la frequence cardiaque,
+   * qui vient de Sante et que personne ne saisit a la main.
+   */
+  const connues = ['sommeil', 'eau', 'pas', 'humeur']
+    .filter(c => (metriques?.[c] || 0) > 0)
+
+  /**
+   * En dessous de trois metriques, le chiffre ne veut pas dire ce qu'il a
+   * l'air de vouloir dire.
+   *
+   * Avec le seul sommeil renseigne a 4 h, le calcul donne 5 sur 100, et
+   * l'anneau affichait « 5 » comme un verdict de sante. Il signifiait surtout
+   * « je ne sais rien des quatre autres ». Quelqu'un qui ouvre l'app le matin
+   * et voit 5 se croit en tres mauvaise sante alors qu'il n'a rien saisi.
+   *
+   * L'app traitait deja le cas du zero par un tiret, exactement pour cette
+   * raison. Un seul champ rempli retombait dans le meme piege.
+   */
+  const assezPourUnScore = connues.length >= 3
+  const manquantes = ['sommeil', 'eau', 'pas', 'humeur']
+    .filter(c => !connues.includes(c))
+    .map(c => ({ sommeil: 'ton sommeil', eau: 'ton eau', pas: 'tes pas', humeur: 'ton humeur' })[c])
 
   const paused = circleHovered || !!activeMetric
 
