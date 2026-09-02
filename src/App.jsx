@@ -601,22 +601,59 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
 
 // ─── PRESET HEURE (sunrise 6-9, day 9-18, sunset 18-21, night 21-6) ──────────
 /**
+ * La fin de la fenetre d'ambiance qui contient cet instant.
+ *
+ * Les fenetres commencent a 6h, 9h, 18h et 21h. Celle de la nuit court de 21h
+ * a 6h le lendemain, d'ou le passage au jour suivant.
+ */
+function finDeFenetre(d) {
+  const bornes = [6, 9, 18, 21]
+  const suivante = bornes.find(b => b > d.getHours())
+  const fin = new Date(d)
+  if (suivante === undefined) {
+    fin.setDate(fin.getDate() + 1)
+    fin.setHours(6, 0, 0, 0)
+  } else {
+    fin.setHours(suivante, 0, 0, 0)
+  }
+  return fin
+}
+
+/**
+ * Jusqu'a quand un choix d'ambiance reste valable.
+ *
+ * La regle tient en une phrase : jusqu'a la fin de la fenetre qui contient
+ * l'heure du choix PLUS UNE HEURE.
+ *
+ * L'heure ajoutee n'est pas un detail, c'est ce qui rend la regle vivable.
+ * Sans elle, quelqu'un qui force la nuit a 17h55 la perdait a 18h00, cinq
+ * minutes plus tard : l'app avait l'air de ne pas ecouter. Avec elle, ce choix
+ * tient jusqu'a 21h.
+ *
+ * Et elle donne toujours le comportement demande dans l'autre sens : une nuit
+ * forcee a 8h du matin expire a 18h, donc l'ambiance suivante affichee est le
+ * coucher de soleil, la journee ayant ete sautee.
+ */
+function finDeChoixAmbiance(pose) {
+  return finDeFenetre(new Date(pose + 3600000)).getTime()
+}
+
+/**
  * L'ambiance choisie a la main, si elle est encore valable.
  *
- * Rend null des que la fenetre naturelle a change depuis la pose du choix, et
- * nettoie le stockage au passage : une preference perimee qui traine finit par
- * ressortir un jour ou personne ne l'attend.
+ * Nettoie le stockage quand le choix a expire : une preference perimee qui
+ * traine finit par ressortir un jour ou personne ne l'attend.
  */
 function lireAmbianceManuelle() {
   try {
     const brut = localStorage.getItem('solenn_preset_manuel')
     if (!brut) return null
-    // Ancien format : une simple chaine, sans fenetre. On la considere posee
-    // dans la fenetre courante, donc valable jusqu'au prochain changement.
-    const o = brut.startsWith('{')
-      ? JSON.parse(brut)
-      : { valeur: brut, fenetre: getOceanPreset(new Date().getHours()) }
-    if (o.fenetre === getOceanPreset(new Date().getHours())) return o.valeur
+    // Ancien format : une simple chaine, sans horodatage. On la considere
+    // posee a l'instant, ce qui lui laisse sa duree normale plutot que de la
+    // faire disparaitre sous les yeux de quelqu'un qui vient de mettre a jour.
+    const o = brut.startsWith('{') ? JSON.parse(brut) : { valeur: brut, pose: Date.now() }
+    if (!o?.valeur || !o?.pose) return null
+    if (Date.now() < finDeChoixAmbiance(o.pose)) return o.valeur
     localStorage.removeItem('solenn_preset_manuel')
     return null
   } catch {
@@ -624,12 +661,12 @@ function lireAmbianceManuelle() {
   }
 }
 
-/** Pose un choix d'ambiance, en gravant la fenetre ou il a ete fait. */
+/** Pose un choix d'ambiance, horodate. */
 function poserAmbianceManuelle(valeur) {
   try {
     localStorage.setItem('solenn_preset_manuel', JSON.stringify({
       valeur,
-      fenetre: getOceanPreset(new Date().getHours()),
+      pose: Date.now(),
     }))
   } catch {}
 }
@@ -835,14 +872,18 @@ const [messages, setMessages] = useState(() => {
   // Ambiance choisie à la main dans Réglages. Distincte de homePreset, qui est
   // l'ambiance COURANTE remontée par HomeTab : sans cette séparation le choix
   // de l'utilisateur était aussitôt écrasé par l'heure (bug signalé 2026-08-08).
-  // L'ambiance choisie a la main tient jusqu'au PROCHAIN changement naturel,
-  // puis l'app reprend son deroulé. Regle posee par Jean le 2 septembre :
-  // quelqu'un qui met la nuit un matin veut un ecran sombre maintenant, pas
-  // une app bloquee en nuit jusqu'a ce qu'il y repense. A la prochaine bascule
-  // de l'horloge, le choix expire et l'ambiance suivante s'affiche.
+  // L'ambiance choisie a la main est TEMPORAIRE : l'app reprend son deroule
+  // ensuite. Regle posee par Jean le 2 septembre, en deux temps.
   //
-  // On memorise donc la FENETRE dans laquelle le choix a ete pose. Des que la
-  // fenetre naturelle change, le choix ne vaut plus.
+  // D'abord : quelqu'un qui met la nuit un matin veut un ecran sombre
+  // maintenant, pas une app bloquee en nuit jusqu'a ce qu'il y repense.
+  //
+  // Ensuite, et c'est ce qui a corrige ma premiere version : « si l'utilisateur
+  // a 17h55 force la nuit il va s'enerver si 5 minutes apres l'app remet le
+  // soleil ». Expirer a la prochaine bascule etait donc trop brutal.
+  //
+  // D'ou la regle finale, dans finDeChoixAmbiance : le choix tient jusqu'a la
+  // fin de la fenetre qui contient l'heure du choix plus une heure.
   const [presetManuel, setPresetManuel] = useState(() => lireAmbianceManuelle())
 
   // L'expiration ne peut pas attendre le prochain demarrage de l'app :
