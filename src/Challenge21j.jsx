@@ -107,7 +107,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
  *                          famille, et propose sinon le catalogue de la
  *                          famille demandee.
  */
-export default function Challenge21j({ userId, isPro, onPasserPro, profil, famille = 'sport' }) {
+export default function Challenge21j({ userId, isPro, onPasserPro, profil, famille = 'sport', onMarcher }) {
   // Affichage immediat depuis le cache : chaque ouverture de l'onglet
   // repassait par Render, reveil compris, et la page restait vide plusieurs
   // secondes (constat Jean 2026-08-12). Le cache rend l'ecran instantane, le
@@ -626,7 +626,28 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+          // Tant que la question « on reprend au jour X ou on continue au
+          // jour Y ? » n'a pas de reponse, ce bloc est inerte.
+          //
+          // Avant, il affichait deja la seance du jour le plus avance, avec
+          // son titre, ses exercices et son compteur, juste sous la question.
+          // La decision avait donc l'air deja prise, et le choix decoratif.
+          //
+          // On le grise plutot que de le cacher : voir ce qui est en jeu aide
+          // a choisir, et la page ne se vide pas d'un coup sous les yeux.
+          // `inert` plutot que `aria-hidden` : pointerEvents:none arrete la
+          // souris mais laisse les boutons accessibles au clavier, et
+          // aria-hidden sur un conteneur focalisable est un contresens.
+          // React 19 passe `inert` tel quel.
+          inert={proposerReprise || undefined}
+          style={{
+            display: 'flex', flexDirection: 'column', gap: '20px',
+            opacity: proposerReprise ? 0.32 : 1,
+            filter: proposerReprise ? 'saturate(0.45)' : 'none',
+            pointerEvents: proposerReprise ? 'none' : 'auto',
+            userSelect: proposerReprise ? 'none' : 'auto',
+            transition: 'opacity .3s ease, filter .3s ease',
+          }}
         >
           {/* ── PROGRAMME TERMINÉ, le jour 21 ouvrait sur RIEN : bravo, puis
                le vide, au moment exact où l'abonné décide de rester ou partir.
@@ -779,6 +800,41 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   )
                 })()}
 
+                {/* ── La marche, juste sous la course ──
+                    Elle etait en avant-derniere position de l'onglet, sous un
+                    message qui parle de la FIN du programme. Or c'est une
+                    action pour maintenant, et l'option la plus accessible les
+                    jours sans elan : quelqu'un qui renonce a la seance devait
+                    descendre tout en bas pour la trouver. Elle est comptee au
+                    meme titre que la course, sa place est ici. */}
+                {onMarcher && (
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onMarcher}
+                    style={{
+                      width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
+                      display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
+                      background: 'rgba(var(--rgb-verre), 0.32)',
+                      border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                      cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
+                    }}>
+                    <div style={{
+                      width: 34, height: 34, borderRadius: 11, flexShrink: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
+                    }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
+                      </svg>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>Aller marcher</div>
+                      <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>Comptée aussi, sans allure à tenir</div>
+                    </div>
+                  </motion.button>
+                )}
+
               {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
@@ -842,8 +898,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   )}
                 </div>
               )}
-              {/* ── Conseil nutrition du jour ── */}
-              {jourActuelData.nutrition && (
+              {/* ── Conseil nutrition du jour ──
+                  Affiche UNIQUEMENT dans l'onglet Nutrition. Programme est
+                  specifiquement sportif, regle posee par Jean : ce conseil
+                  s'y intercalait entre la seance du jour et celle de demain.
+                  Le meme composant sert les deux onglets, `famille` les
+                  distingue deja, il suffisait de s'en servir. */}
+              {famille === 'nutrition' && jourActuelData.nutrition && (
                 <div style={{
                   display: 'flex', gap: 8, alignItems: 'flex-start',
                   background: 'rgba(var(--rgb-verre), 0.35)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
@@ -1094,8 +1155,16 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               }}
             >
               <p style={{ fontSize: '13px', color: ENCRE, margin: 0, lineHeight: 1.55 }}>
+                {/* « Prochaine étape » se lisait comme si ce jour suivait
+                    celui affiche juste au dessus, sous « Demain · jour N+1 ».
+                    Les jours intermediaires disparaissaient.
+                    « Palier » et non « cap » : le haut de la page annonce deja
+                    « Ton cap : <objectif> », et deux caps differents sur le
+                    meme ecran auraient ete pire que le probleme de depart. Un
+                    palier est un seuil qu'on franchit, ce qui est exactement
+                    ce que decrivent ces messages. */}
                 <span style={{ fontWeight: 700, color: ENCRE }}>
-                  Prochaine étape · Jour {prochainMilestone.jour} :
+                  Palier · Jour {prochainMilestone.jour} :
                 </span>{' '}
                 {prochainMilestone.message}
               </p>

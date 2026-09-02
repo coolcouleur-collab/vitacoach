@@ -542,7 +542,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 l'essentiel juste dessous (constat Jean 2026-08-13). */}
             <React.Suspense fallback={null}>
               <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
-                profil={profil} famille="sport" />
+                profil={profil} famille="sport"
+                onMarcher={() => setCourseOuverte(true)} />
             </React.Suspense>
           </div>
         )}
@@ -829,33 +830,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
         )}
 
-        {/* ── 3. La marche.
-             La COURSE a quitte cet endroit : elle est devenue l'activite
-             maitresse, presente dans les exercices de chaque jour, quel que
-             soit le programme. Ce qui reste ici est la marche, qui se compte
-             aussi mais n'est pas la meme chose : on ne s'y prepare pas, on
-             n'a pas d'allure a tenir, et elle doit rester disponible meme un
-             jour ou on ne veut surtout pas courir. ── */}
-        {vue === 'programme' && (
-        <button onClick={() => setCourseOuverte(true)} style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-          background: 'rgba(var(--rgb-verre), 0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', borderRadius: 18,
-          padding: '14px 16px', cursor: 'pointer', marginTop: 4, marginBottom: 8,
-          fontFamily: 'Poppins,sans-serif', textAlign: 'left',
-        }}>
-          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="4" r="2" />
-              <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
-            </svg>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>Aller marcher</div>
-            <div style={{ fontSize: 11, color: ENCRE, marginTop: 1 }}>Comptée aussi, sans allure à tenir</div>
-          </div>
-        </button>
-        )}
+        {/* ── 3. La marche a REMONTE dans Challenge21j, juste sous la course.
+             Elle etait ici, en avant-derniere position, sous un message qui
+             parle de la fin du programme. C'est une action pour maintenant :
+             sa place est avec les autres actions du jour. Le bouton est
+             desormais rendu par Challenge21j via `onMarcher`, l'ouverture de
+             CourseActive reste pilotee ici. ── */}
 
         {/* ── 4. Ressource : le guide des gestes, côté Programme ── */}
         {vue === 'programme' && (
