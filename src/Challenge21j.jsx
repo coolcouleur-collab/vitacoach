@@ -783,90 +783,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 </p>
               )}
 
-                {/* LA COURSE, tous les jours et quel que soit le programme.
-                    Elle ne vient pas du plan genere : elle est posee ici en
-                    dur, parce qu'elle est l'activite maitresse et qu'elle ne
-                    doit dependre ni du jour tire ni du programme choisi.
-                    Elle ne conditionne pas la validation du jour : c'est un
-                    socle, pas une punition supplementaire. */}
-                {(() => {
-                  const courses = faitesAujourdhui.filter(x => x.type === 'course')
-                  const metres = courses.reduce((n, c) => n + (c.metres || 0), 0)
-                  const minutes = Math.round(courses.reduce((n, c) => n + c.dureeMs, 0) / 60000)
-                  return (
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setCourseOuverte(true)}
-                      style={{
-                        width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
-                        display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
-                        background: courses.length ? 'rgba(22,101,52,0.07)' : 'rgba(var(--rgb-verre), 0.32)',
-                        border: courses.length
-                          ? '1px solid rgba(22,101,52,0.28)'
-                          : `1.5px solid ${ICONE}`,
-                        cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
-                      }}>
-                      <div style={{
-                        width: 34, height: 34, borderRadius: 11, flexShrink: 0, fontSize: 17,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
-                      }}>🏃</div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>
-                          Course à pied
-                        </div>
-                        <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>
-                          {courses.length
-                            ? `Fait aujourd'hui : ${minutes} min${metres > 0 ? `, ${(metres / 1000).toFixed(2).replace('.', ',')} km` : ''}`
-                            : 'Chronomètre, distance et allure, tous les jours'}
-                        </div>
-                      </div>
-                      {courses.length > 0 && (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={VERT}
-                             strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-                             style={{ flexShrink: 0 }}>
-                          <path d="M20 6 9 17l-5-5" />
-                        </svg>
-                      )}
-                    </motion.button>
-                  )
-                })()}
-
-                {/* ── La marche, juste sous la course ──
-                    Elle etait en avant-derniere position de l'onglet, sous un
-                    message qui parle de la FIN du programme. Or c'est une
-                    action pour maintenant, et l'option la plus accessible les
-                    jours sans elan : quelqu'un qui renonce a la seance devait
-                    descendre tout en bas pour la trouver. Elle est comptee au
-                    meme titre que la course, sa place est ici. */}
-                {onMarcher && (
-                  <motion.button
-                    whileTap={{ scale: 0.98 }}
-                    onClick={onMarcher}
-                    style={{
-                      width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
-                      display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
-                      background: 'rgba(var(--rgb-verre), 0.32)',
-                      border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
-                      cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
-                    }}>
-                    <div style={{
-                      width: 34, height: 34, borderRadius: 11, flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
-                    }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="4" r="2" />
-                        <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
-                      </svg>
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>Aller marcher</div>
-                      <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>Comptée aussi, sans allure à tenir</div>
-                    </div>
-                  </motion.button>
-                )}
-
               {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
@@ -939,6 +855,89 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   )}
                 </div>
               )}
+
+                {/* LA COURSE, tous les jours et quel que soit le programme.
+                    Elle ne vient pas du plan genere : elle est posee ici en
+                    dur, parce qu'elle est l'activite maitresse et qu'elle ne
+                    doit dependre ni du jour tire ni du programme choisi.
+                    Elle ne conditionne pas la validation du jour : c'est un
+                    socle, pas une punition supplementaire. */}
+                {(() => {
+                  const courses = faitesAujourdhui.filter(x => x.type === 'course')
+                  const metres = courses.reduce((n, c) => n + (c.metres || 0), 0)
+                  const minutes = Math.round(courses.reduce((n, c) => n + c.dureeMs, 0) / 60000)
+                  return (
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setCourseOuverte(true)}
+                      style={{
+                        width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
+                        display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
+                        background: courses.length ? 'rgba(22,101,52,0.07)' : 'rgba(var(--rgb-verre), 0.32)',
+                        border: courses.length
+                          ? '1px solid rgba(22,101,52,0.28)'
+                          : `1.5px solid ${ICONE}`,
+                        cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
+                      }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: 11, flexShrink: 0, fontSize: 17,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
+                      }}>🏃</div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>
+                          Course à pied
+                        </div>
+                        <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>
+                          {courses.length
+                            ? `Fait aujourd'hui : ${minutes} min${metres > 0 ? `, ${(metres / 1000).toFixed(2).replace('.', ',')} km` : ''}`
+                            : 'Chronomètre, distance et allure, tous les jours'}
+                        </div>
+                      </div>
+                      {courses.length > 0 && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={VERT}
+                             strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+                             style={{ flexShrink: 0 }}>
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      )}
+                    </motion.button>
+                  )
+                })()}
+                {/* ── La marche, juste sous la course ──
+                    Elle etait en avant-derniere position de l'onglet, sous un
+                    message qui parle de la FIN du programme. Or c'est une
+                    action pour maintenant, et l'option la plus accessible les
+                    jours sans elan : quelqu'un qui renonce a la seance devait
+                    descendre tout en bas pour la trouver. Elle est comptee au
+                    meme titre que la course, sa place est ici. */}
+                {onMarcher && (
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onMarcher}
+                    style={{
+                      width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
+                      display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
+                      background: 'rgba(var(--rgb-verre), 0.32)',
+                      border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                      cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
+                    }}>
+                    <div style={{
+                      width: 34, height: 34, borderRadius: 11, flexShrink: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
+                    }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="4" r="2" />
+                        <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
+                      </svg>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>Aller marcher</div>
+                      <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>Comptée aussi, sans allure à tenir</div>
+                    </div>
+                  </motion.button>
+                )}
               {/* ── Conseil nutrition du jour ──
                   J'avais restreint ce bloc a l'onglet Nutrition, au nom de la
                   regle « Programme est specifiquement sportif ». Verifie
@@ -1012,33 +1011,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 </p>
               )}
 
-              {/* Aperçu de demain, donne envie de revenir, et montre que le
-                  programme est plus riche que le jour qu'on a sous les yeux. */}
-              {jourSuivantData && jourActuel < duree && (
-                <div style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 10,
-                  background: 'rgba(var(--rgb-verre), 0.28)',
-                  border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
-                  borderRadius: 14, padding: '11px 13px', marginBottom: 20,
-                }}>
-                  <span style={{ flexShrink: 0, marginTop: 1 }}>
-                    <SparkleIcon size={14} color={ICONE} />
-                  </span>
-                  <div>
-                    <div style={{ fontSize: 9.5, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: ENCRE, marginBottom: 3 }}>
-                      Demain · jour {jourActuel + 1}
-                    </div>
-                    <div style={{ fontSize: 12.5, color: ENCRE, lineHeight: 1.45, fontWeight: 500 }}>
-                      {jourSuivantData.titre}
-                    </div>
-                    {jourSuivantData.seance?.length > 0 && (
-                      <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 3 }}>
-                        {jourSuivantData.seance.map(x => EXO_INFOS[x.exo]?.nom || x.exo).join(' · ')}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
 
               {error && (
                 <p
@@ -1100,6 +1072,41 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               )}
             </motion.div>
           )}
+
+          {/* DEMAIN, carte SOEUR et non enfant.
+              Ce bloc etait a l'interieur du cadre « AUJOURD'HUI » : la
+              hierarchie visuelle disait donc que demain fait partie
+              d'aujourd'hui. C'est de la que venait la confusion qu'on avait
+              traitee a moitie en renommant « Prochaine etape » en « Palier » :
+              on avait corrige le symptome, pas la cause.
+
+              Sorti du cadre, l'ecran se lit sur trois niveaux : ce que je fais
+              maintenant, ce qui vient demain, ou ca me mene. */}
+            {jourSuivantData && jourActuel < duree && (
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', gap: 10,
+                background: 'rgba(var(--rgb-verre), 0.28)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                borderRadius: 14, padding: '11px 13px',
+              }}>
+                <span style={{ flexShrink: 0, marginTop: 1 }}>
+                  <SparkleIcon size={14} color={ICONE} />
+                </span>
+                <div>
+                  <div style={{ fontSize: 9.5, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: ENCRE, marginBottom: 3 }}>
+                    Demain · jour {jourActuel + 1}
+                  </div>
+                  <div style={{ fontSize: 12.5, color: ENCRE, lineHeight: 1.45, fontWeight: 500 }}>
+                    {jourSuivantData.titre}
+                  </div>
+                  {jourSuivantData.seance?.length > 0 && (
+                    <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 3 }}>
+                      {jourSuivantData.seance.map(x => EXO_INFOS[x.exo]?.nom || x.exo).join(' · ')}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
           {/* Bandeau de victoire du jour */}
           {showBravo && (
