@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   LE THÈME DE SOLENN, JOUR ET NUIT
+
+   Ce fichier existe pour une raison mesurée : l'app portait 2 082 couleurs
+   écrites en dur, dont 833 passaient par palette.js et le reste à la main.
+   Rendre l'app sombre en modifiant chaque endroit était hors de portée.
+
+   Mais ces 2 082 couleurs ne sont pas 2 082 choix. Ce sont HUIT couleurs de
+   base déclinées en dizaines d'opacités, et elles couvrent plus de la moitié
+   de l'app. En faire des variables suffit donc à basculer l'essentiel.
+
+   ── Deux formes, et il faut les deux ──────────────────────────────────────
+
+   Les jetons complets, `--encre`, servent là où la couleur est utilisée
+   telle quelle : `color: var(--encre)`.
+
+   Les bases en TRIPLET, `--rgb-terracotta: 200,123,82`, servent partout où
+   l'app écrit une opacité : `rgba(var(--rgb-terracotta), 0.12)`. Sans cette
+   forme, les centaines de variations d'opacité auraient dû être réécrites
+   une par une.
+
+   ── Ce qui NE change pas la nuit ──────────────────────────────────────────
+
+   Rien ici n'est décoratif : chaque valeur de nuit vient soit de l'accueil,
+   où elle est à l'écran depuis des jours et validée à l'œil, soit d'une
+   mesure de contraste sur le fond #0F1C3A.
+
+   Deux corrections que la mesure a imposées : le vert #166534 et le rouge
+   #B91C1C tombent à 2,36 et 2,60 pour 1 sur ce fond, donc illisibles. Les
+   couleurs de sens ont besoin d'une version de nuit elles aussi, ce à quoi
+   on ne pense pas en pensant « mode sombre ».
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Les jetons de palette.js, valeurs de JOUR, inchangées ── */
+  --encre:   #944D26;   /* 4,57:1 sur le fond crème */
+  --icone:   #AF5B2D;   /* 3,51:1, sa sœur claire */
+  --accent:  #C87B52;   /* décor seulement, jamais du texte */
+  --ambre:   #8A5206;
+  --vert:    #166534;
+  --rouge:   #B91C1C;
+
+  /* ── Les huit familles, en triplets, pour les opacités ── */
+  --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
+  --rgb-creme-dore: 255, 220, 160;   /* 163 */
+  --rgb-creme:      255, 235, 210;   /* 129 */
+  --rgb-or:         232, 150, 42;    /* 111 */
+  --rgb-blanc:      255, 255, 255;   /*  94 */
+  --rgb-creme-pale: 255, 248, 235;   /*  58 */
+  --rgb-noir:         0,   0,   0;   /*  56 */
+  --rgb-creme-clair: 255, 246, 232;  /*  29 */
+
+  /* ── Les fonds ── */
+  --fond:      #EDD8CC;
+  --fond-haut: #FFF6E8;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LA NUIT
+
+   Les valeurs viennent de l'accueil, qui porte déjà cette ambiance :
+   le navy #0F1C3A en fond, les bleus clairs pour l'écriture.
+   ───────────────────────────────────────────────────────────────────────── */
+:root[data-theme="night"] {
+  --encre:   #C8DEFF;   /* 12,30:1 sur le navy — c'est le rgba(200,222,255) de l'accueil */
+  --icone:   #9FC4E8;   /*  9,25:1 — exactement l'orbitC de nuit de l'anneau */
+  --accent:  #B4D2FF;   /* le rgba(180,210,255) de l'accueil, décor seulement */
+  --ambre:   #8FB3E0;   /*  7,77:1 — le bleu sourd des petites capitales */
+  --vert:    #4ADE80;   /*  9,66:1 — le #166534 tombait à 2,36, illisible */
+  --rouge:   #F87171;   /*  6,09:1 — le #B91C1C tombait à 2,60 */
+
+  /* Les familles chaudes deviennent froides, en gardant leur rôle :
+     la terracotta reste la couleur des traits et des fonds légers, le crème
+     reste celle du verre. Ce sont les mêmes surfaces, dans l'autre lumière. */
+  --rgb-terracotta: 180, 210, 255;
+  --rgb-creme-dore: 140, 180, 240;
+  --rgb-creme:      100, 150, 255;
+  --rgb-or:         159, 196, 232;
+  --rgb-blanc:      200, 222, 255;
+  --rgb-creme-pale: 120, 160, 220;
+  --rgb-creme-clair: 150, 190, 245;
+
+  --fond:      #0F1C3A;
+  --fond-haut: #0B1530;
+}

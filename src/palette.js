@@ -19,7 +19,29 @@
 // sentait sans se nommer. Quinze centièmes de contraste échangés contre
 // vingt-deux points de couleur, et il reste de la marge au-dessus du seuil
 // de 4,5 pour les écrans à venir.
-export const ENCRE       = '#944D26'
+// ─────────────────────────────────────────────────────────────────────────────
+// DEPUIS LE 2 SEPTEMBRE, CES JETONS SONT DES VARIABLES CSS
+//
+// Les valeurs elles-memes vivent dans theme.css, en deux jeux : le jour, qui
+// reprend a l'identique les couleurs ci-dessus, et la nuit.
+//
+// Pourquoi ce detour plutot que six constantes : l'app compte 2 082 couleurs
+// ecrites en dur. En passant par des variables, les 833 usages de ces six
+// jetons, repartis dans 30 fichiers, suivent le theme sans qu'aucun composant
+// ne soit touche.
+//
+// Ce qui a ete verifie avant de le faire, parce qu'une variable CSS ne se
+// comporte pas comme une chaine de caracteres :
+//   · aucun jeton n'est concatene ni manipule (`${ENCRE}b0` n'existe pas)
+//   · aucun n'est passe a un canvas, qui ne resout pas les variables
+//   · les attributs SVG `stroke=` et `fill=` les resolvent bien, teste dans
+//     le navigateur, y compris avec le basculement de theme
+//
+// Les commentaires de ratio ci-dessus restent vrais pour le jour. Les mesures
+// de nuit sont dans theme.css, a cote des valeurs qu'elles justifient.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ENCRE       = 'var(--encre)'
 // 3,86:1. Ne passe PAS le seuil du texte courant : réservée aux icônes et aux
 // textes d'au moins 24px. Elle s'appelait ENCRE_DOUCE, et ce nom d'encre
 // invitait à l'employer comme une encre : trouvée trois fois sur du texte de
@@ -32,11 +54,11 @@ export const ENCRE       = '#944D26'
 // Réchauffée dans la même proportion que l'encre : une icône restée grise à
 // côté d'un texte devenu chaud se voit immédiatement. Elle y gagne sur les
 // deux tableaux, chroma 141 contre 105 et contraste 4,07 contre 3,86.
-export const ICONE = '#AF5B2D'
-export const ACCENT      = '#C87B52'   // 2,39:1 — fonds, bordures, traits. JAMAIS du texte
-export const AMBRE       = '#8A5206'   // 4,65:1 — accent chaud lisible
-export const VERT        = '#166534'   // 5,19:1 — état positif
-export const ROUGE       = '#B91C1C'   // 4,71:1 — erreur, suppression
+export const ICONE       = 'var(--icone)'
+export const ACCENT      = 'var(--accent)'   // 2,39:1 — fonds, bordures, traits. JAMAIS du texte
+export const AMBRE       = 'var(--ambre)'   // 4,65:1 — accent chaud lisible
+export const VERT        = 'var(--vert)'   // 5,19:1 — état positif
+export const ROUGE       = 'var(--rouge)'   // 4,71:1 — erreur, suppression
 
 // Couleurs d'IDENTITÉ, hors échelle et volontairement épargnées : les teintes
 // propres à chaque métrique (Eau, Sommeil, Humeur) et les cinq couleurs

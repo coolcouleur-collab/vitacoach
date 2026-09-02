@@ -5,6 +5,9 @@ import App from './App'
 import BusinessLanding from './BusinessLanding'
 import Confidentialite from './Confidentialite'
 import './tokens.css'
+// Apres tokens.css : il porte les valeurs des jetons de palette.js, et doit
+// pouvoir les redefinir.
+import './theme.css'
 
 // ── Error boundary global, affiche l'erreur au lieu de page blanche
 class RootBoundary extends Component {
