@@ -477,3 +477,43 @@ Reste à faire : trois questions facultatives à l'inscription (grossesse ou
 allaitement, traitements réguliers, opération prévue), et l'affichage sur la
 fiche. La phrase signale, n'interdit pas, et renvoie au pharmacien : Solenn
 n'est pas un dispositif médical, et la mention doit le rester.
+
+---
+
+## Le mode nuit, passe ecran par ecran (2 septembre)
+
+Fait par la mesure, pas a l'oeil : deux balayages de tout `src`, l'un sur les
+couleurs de TEXTE ecrites en dur trop sombres sur le navy, l'autre sur les
+FONDS restes trop clairs pour l'encre de nuit. Le second cas est le bug en
+miroir du premier et ne se voit pas quand on ne cherche que du texte sombre.
+
+28 textes et 23 fonds analyses, 22 corriges, le reste ecarte apres verification
+(pastilles a texte blanc, etoiles du ciel, ecrans qui posent leur propre fond
+clair). Le mode jour est prouve inchange : les 16 nouveaux jetons valent en
+jour exactement le litteral qu'ils remplacent.
+
+**La lecon, et c'est la troisieme fois que ce bug revient** : l'ambiance se
+calculait a deux endroits, la racine d'un cote et `homePreset` de l'autre.
+Il y a desormais une seule valeur, `ambiance`, dans App.jsx. Tout ce qui
+s'assombrit doit la lire, et rien d'autre. Si un ecran ressort clair sur fond
+sombre, chercher d'abord un second calcul d'ambiance.
+
+### Reste a verifier sur un vrai telephone
+
+- Les ecrans qui demandent une session : Programmes, Progres, Soins, Forum,
+  la seance en cours, le bilan de course. Verifies en jetons, pas a l'oeil.
+- Le passage automatique a 21h sans relancer l'app.
+
+### Defauts trouves en chemin, sans rapport avec la nuit
+
+- `App.jsx` l.4083 : le style `bottomNav` n'est reference nulle part.
+- La colonne `score` de Supabase porte toujours deux sens differents.
+
+### Deploiement
+
+Vercel a manque les evenements GitHub deux fois aujourd'hui. Un commit vide
+n'a pas suffi la seconde fois, le deploiement est reparti seul apres une
+vingtaine de minutes. Si ca recommence : reconnecter le depot dans Vercel,
+`Settings` puis `Git`, ce qui recree le webhook cote GitHub. Au passage, deux
+projets (`vitacoach` et `vitacoach-w3yd`) se construisent a chaque push alors
+qu'un seul sert meet-solenn.com.
