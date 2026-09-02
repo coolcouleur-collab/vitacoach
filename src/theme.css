@@ -104,6 +104,15 @@
   /* L'encre heritee par le document. tokens.css la posait en dur a
      #7C4C33 : tout element sans couleur propre restait brun sur le navy. */
   --texte-base:          #7C4C33;
+  /* Le fond de page en triplet, pour les voiles de fondu qui l'imitent
+     avec une opacite. Le voile des suggestions du chat le faisait en dur. */
+  --rgb-fond:            237, 216, 204;
+  /* Des degrades entiers portes par un jeton : plus lisible que six
+     couleurs separees, et la valeur de jour reste identique au caractere pres. */
+  --degrade-bouton:        linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%);
+  --degrade-bouton-survol: linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%);
+  --degrade-squelette:     linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%);
+  --degrade-squelette-2:   linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -177,6 +186,12 @@
   --rgb-surface-sable:    22,  38,  70;
   --rgb-photo:            24,  42,  74;
   --texte-base:          #C8DEFF;
+  --rgb-fond:             15,  28,  58;
+  /* L'encre de nuit y tient a 10,14:1 et 8,62:1. */
+  --degrade-bouton:        linear-gradient(150deg,#16264A 0%,#1A2C4E 50%,#22375F 100%);
+  --degrade-bouton-survol: linear-gradient(150deg,#1E3055 0%,#22375F 50%,#2A4270 100%);
+  --degrade-squelette:     linear-gradient(110deg, rgba(30,50,90,0.55) 30%, rgba(45,70,120,0.95) 50%, rgba(30,50,90,0.55) 70%);
+  --degrade-squelette-2:   linear-gradient(110deg, rgba(30,50,90,0.6) 30%, rgba(45,70,120,0.9) 50%, rgba(30,50,90,0.6) 70%);
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -272,6 +287,15 @@
   /* L'encre heritee par le document. tokens.css la posait en dur a
      #7C4C33 : tout element sans couleur propre restait brun sur le navy. */
   --texte-base:          #7C4C33;
+  /* Le fond de page en triplet, pour les voiles de fondu qui l'imitent
+     avec une opacite. Le voile des suggestions du chat le faisait en dur. */
+  --rgb-fond:            237, 216, 204;
+  /* Des degrades entiers portes par un jeton : plus lisible que six
+     couleurs separees, et la valeur de jour reste identique au caractere pres. */
+  --degrade-bouton:        linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%);
+  --degrade-bouton-survol: linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%);
+  --degrade-squelette:     linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%);
+  --degrade-squelette-2:   linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;

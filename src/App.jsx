@@ -2917,7 +2917,7 @@ padding: isMobile
                 </div>
                   <div style={{
                     position:'absolute', top:0, right:0, bottom:10, width:28, pointerEvents:'none',
-                    background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.88) 100%)',
+                    background:'linear-gradient(90deg, rgba(var(--rgb-fond),0) 0%, rgba(var(--rgb-fond),0.88) 100%)',
                   }} />
                 </div>
               )}
@@ -3462,7 +3462,7 @@ function TenueCard({ tenue, style: extraStyle }) {
         {imgState === 'loading' && (
           <div style={{
             position: 'absolute', inset: 0,
-            background: 'linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%)',
+            background: 'var(--degrade-squelette)',
             backgroundSize: '200% 100%', animation: 'capsuleSkeleton 1.4s ease infinite',
           }} />
         )}
@@ -3547,7 +3547,7 @@ function SkeletonCard({ style: extraStyle }) {
     }}>
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%)',
+        background: 'var(--degrade-squelette-2)',
         backgroundSize: '200% 100%',
         animation: 'capsuleSkeleton 1.4s ease infinite',
         display: 'flex', alignItems: 'center', justifyContent: 'center',

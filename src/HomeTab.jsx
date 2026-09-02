@@ -1643,8 +1643,8 @@ function NovaLogBtn({ onClick }) {
 function MagneticGlowBtn({ label, iconEl, onClick }) {
   return (
     <GlassyButtonWrap
-      background="linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%)"
-      hoverBackground="linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%)"
+      background="var(--degrade-bouton)"
+      hoverBackground="var(--degrade-bouton-survol)"
       borderRadius={24} blur={0} lightDirection="top-left"
       shadowHoverColor="rgba(var(--rgb-terracotta), 0.28)" shadowHoverIntensity={1.1}
       style={{ userSelect:'none' }}
