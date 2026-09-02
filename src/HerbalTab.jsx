@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { formaterPas } from './score'
 import { LeafIcon, SparkleIcon, ChevronIcon, PillIcon, TargetIcon, ChatIcon } from './Icons'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
@@ -758,7 +759,7 @@ function besoinDuMoment(metriques, history) {
     },
     pas > 0 && pas < 5000 && {
       cat: '\u00e9nergie', ecart: (5000 - pas) / 5000 * 0.7,
-      constat: `Tu marches ${Math.round(pas / 100) / 10}k pas par jour en moyenne.`,
+      constat: `Tu marches ${formaterPas(pas)} pas par jour en moyenne.`,
     },
   ].filter(Boolean).sort((a, b) => b.ecart - a.ecart)
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, startTransition } from 'react'
-import { scoreJour, atteint, CLES as CLES_SCORE } from './score'
+import { scoreJour, atteint, formaterPas, CLES as CLES_SCORE } from './score'
 import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
@@ -622,7 +622,7 @@ function moyenneMetrique(history, cle, depuis, jusqu) {
 const LIBELLE_ESSAI = {
   sommeil: { nom: 'ton sommeil', fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
   eau:     { nom: 'ton hydratation', fmt: v => `${Math.round(v * 10) / 10} verres` },
-  pas:     { nom: 'tes pas', fmt: v => `${Math.round(v / 100) / 10}k` },
+  pas:     { nom: 'tes pas', fmt: v => formaterPas(v) },
   humeur:  { nom: 'ton humeur', fmt: v => `${Math.round(v * 10) / 10} sur 5` },
 }
 
@@ -665,7 +665,7 @@ const TOPIC_METRIQUE = {
   énergie: { cle: 'sommeil', label: 'tes nuits',  monte: 'sont passées de', baisse: 'sont descendues de', seuil: 0.6,  fmt: v => `${Math.floor(v)} h${Math.round((v % 1) * 60) >= 5 ? ' ' + String(Math.round((v % 1) * 60)).padStart(2, '0') : ''}` },
   humeur:  { cle: 'humeur',  label: 'ton humeur', monte: 'est passée de',   baisse: 'est descendue de',   seuil: 0.5,  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
   stress:  { cle: 'humeur',  label: 'ton humeur', monte: 'est passée de',   baisse: 'est descendue de',   seuil: 0.5,  fmt: v => `${Math.round(v * 10) / 10} sur 5` },
-  fitness: { cle: 'pas',     label: 'tes pas',    monte: 'sont passés de',  baisse: 'sont descendus de',  seuil: 1500, fmt: v => `${Math.round(v / 100) / 10}k` },
+  fitness: { cle: 'pas',     label: 'tes pas',    monte: 'sont passés de',  baisse: 'sont descendus de',  seuil: 1500, fmt: v => formaterPas(v) },
 }
 
 function pontMemoire(memories, history) {
@@ -838,7 +838,11 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     },
     (m.pas || 0) < 10000 && h >= 12 && h < 21 && {
       cle: 'pas', ecart: (10000 - (m.pas || 0)) / 10000 * 0.7,
-      quoi: `C'est le mouvement qui manque, ${Math.round((m.pas || 0) / 100) / 10}k pas.`,
+      // Zero pas n'est pas « 0k pas » : c'est l'absence de depart, et la
+      // phrase le dit avec des mots plutot qu'avec un chiffre absurde.
+      quoi: (m.pas || 0) === 0
+        ? "C'est le mouvement qui manque, tu n'as pas encore bougé aujourd'hui."
+        : `C'est le mouvement qui manque, ${formaterPas(m.pas)} pas.`,
       action: '10 minutes de marche suffisent à débloquer le compteur.',
     },
   ].filter(Boolean)
@@ -2270,7 +2274,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
     eau < 6 && h >= 12 && h < 22 && dejaDit !== 'eau' && { prio: (h >= 17 && eau < 4) ? 1 : 4,
       icon:<WaterIcon size={15} color={TC} />, label:'Hydratation en retard',   sub:`${eau}/8 verres · rattrape-toi !`, tab:'sante', color:TC },
     pas < 5000 && h >= 12 && h < 20 && dejaDit !== 'pas' && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
-      icon:<RunIcon size={15} color={TC} />,   label:'Objectif pas',            sub:`${Math.round(pas/1000*10)/10}k / 10k pas`, tab:'sante', color:TC },
+      icon:<RunIcon size={15} color={TC} />,   label:'Objectif pas',            sub:`${formaterPas(pas)} / 10k pas`, tab:'sante', color:TC },
 
     // Cartes du moment
     h >= 5  && h < 12 && { prio:3, icon:<SunIcon size={15} color={TC} />,   label:'Routine matinale',      sub:'Démarre bien ta journée',              tab:'routine', color:TC },

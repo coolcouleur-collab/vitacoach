@@ -77,6 +77,29 @@ export function scoreJour(m) {
   return Math.min(s, 100)
 }
 
+/**
+ * Un nombre de pas, écrit comme on l'écrit en français.
+ *
+ * L'ancienne formule, `Math.round(v / 100) / 10 + 'k'`, était fausse de
+ * quatre façons à la fois, et elle vivait en cinq exemplaires :
+ *
+ *   ·     0 pas donnait « 0k pas », ce que Jean a vu sur sa capture
+ *   ·   400 pas donnait « 0.4k pas » au lieu de « 400 pas »
+ *   ·   950 pas donnait « 1k pas » : elle ARRONDISSAIT VERS LE HAUT et
+ *       annonçait un millier que la personne n'avait pas atteint
+ *   ·  8200 pas donnait « 8.2k » avec un point, alors que le français
+ *       sépare les décimales par une virgule
+ *
+ * Sous mille, on écrit le nombre exact. Au dessus, on tronque au lieu
+ * d'arrondir : mieux vaut annoncer un peu moins que ce qui est fait qu'un peu
+ * plus, un compteur qui gonfle se paie cher en confiance.
+ */
+export function formaterPas(v) {
+  const n = Math.max(0, Math.round(Number(v) || 0))
+  if (n < 1000) return String(n)
+  return String(Math.floor(n / 100) / 10).replace('.', ',') + 'k'
+}
+
 /** Les métriques réellement renseignées aujourd'hui. */
 export function mesuresConnues(m) {
   return CLES.filter(c => (m?.[c] || 0) > 0)
