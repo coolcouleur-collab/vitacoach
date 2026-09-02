@@ -22,7 +22,7 @@ import {
   PROGRAMMES, programmesDe, avisProgramme,
   INTENSITES, INTENSITE_DEFAUT, reglableEnIntensite,
 } from './programmes'
-import { ENCRE, ICONE, ACCENT, AMBRE } from './palette'
+import { ENCRE, ICONE, ACCENT, AMBRE, ROUGE } from './palette'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -119,7 +119,7 @@ function Choix({ titre, options, valeur, onChoisir, aide = null }) {
 
 // ─── LA FICHE D'UN PROGRAMME ─────────────────────────────────────────────────
 
-function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, error }) {
+function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, error, avertissement = null }) {
   const avis = avisProgramme(profil, prog)
 
   // La duree par defaut est celle que la fiche annonce plus haut : changer ce
@@ -239,6 +239,21 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
         </div>
       )}
 
+      {avertissement && (
+        <div style={{
+          display: 'flex', gap: 8, alignItems: 'flex-start',
+          background: 'rgba(239,68,68,0.10)',
+          border: '1px solid rgba(239,68,68,0.30)',
+          borderRadius: 14, padding: '11px 13px', marginBottom: 12,
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={ROUGE} strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span style={{ fontSize: 12, lineHeight: 1.55, color: ENCRE }}>{avertissement}</span>
+        </div>
+      )}
       <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
         <button
           onClick={onRetour}
@@ -321,6 +336,9 @@ function Vignette({ prog, index, onOuvrir }) {
 export default function CatalogueProgrammes({
   profil, onCommencer, creating = false, creatingLabel = null, error = null,
   onAnnuler = null, famille = null, titre = null, sousTitre = null,
+  // Ce qui sera perdu si l'utilisateur commence un programme. Chaine vide ou
+  // null quand il n'y a rien en cours : la fiche n'affiche alors rien.
+  avertissement = null,
 }) {
   const [ouvert, setOuvert] = useState(null)
   // Sans famille, le catalogue entier. C'est ce que voit l'ecran de
@@ -344,6 +362,7 @@ export default function CatalogueProgrammes({
             creatingLabel={creatingLabel}
             error={error}
             onCommencer={onCommencer}
+            avertissement={avertissement}
             onRetour={() => setOuvert(null)}
           />
         ) : (

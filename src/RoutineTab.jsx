@@ -471,7 +471,17 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               cursor: 'pointer',
             }}
           >
-            <RefreshSVG spinning={false} />
+            {/* PAS l'icone de regeneration. Les deux fleches circulaires
+                sont aussi celles du bouton de la routine, quelques lignes plus
+                bas, ou elles ne font que rafraichir sans consequence. Ici le
+                meme dessin remet un programme entier a zero. Meme icone, deux
+                poids tres differents. Un plus dit « nouveau », pas
+                « actualiser ». */}
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
           </button>
         )}
         {vue === 'routine' && routine && (

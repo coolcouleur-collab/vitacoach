@@ -477,9 +477,19 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             </div>
           </div>
         )}
+        {/* L'avertissement suit l'utilisateur jusqu'a la fiche.
+            Il n'existait que sur CETTE liste. On touchait une carte pour en
+            savoir plus, on arrivait sur une page qui donne envie, et le bouton
+            du bas effacait le programme en cours sans plus rien rappeler.
+            Quelqu'un au jour 14 avait bien lu l'avertissement, deux ecrans
+            plus tot, avant de savoir qu'il allait cliquer. La phrase doit
+            etre la ou se prend la decision. */}
         <CatalogueProgrammes
           profil={profil}
           famille={famille}
+          avertissement={ailleurs
+            ? `« ${enCours?.titre || challenge.challenge?.titre} » est en cours dans l'onglet ${FAMILLES[familleEnCours]?.onglet || 'Sport'}. Le commencer ici le remplacera, et sa progression sera perdue.`
+            : null}
           creating={creating}
           creatingLabel={ETAPES_CREATION[etapeCreation]}
           error={error}
