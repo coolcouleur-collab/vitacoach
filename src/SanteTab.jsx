@@ -333,7 +333,7 @@ function SousTitre({ children, premier = false }) {
   )
 }
 
-export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro }) {
+export default function SanteTab({ metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro, onSwitchTab }) {
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -697,6 +697,40 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       <TesSeances profil={profil} />
       <ProgressionProgramme userId={userId} />
       <TesProgres history={history} userId={userId} />
+      {/* Le Cycle arrive de « Tes outils », sur l'accueil, ou il etait range
+          avec Style, Respiration et Soins. Ces trois-la s'ouvrent pour FAIRE
+          quelque chose ; le cycle s'ouvre pour consulter, comme tout ce qui
+          l'entoure ici.
+          Il reste une carte et non une section depliee : le suivi du cycle est
+          un ecran a lui seul, et le fondre dans cette page la rendrait
+          interminable pour celles qui ne le suivent pas. */}
+      {profil?.cycle && onSwitchTab && (
+        <button
+          onClick={() => onSwitchTab('cycle')}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+            background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+            backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+            borderRadius: 18, padding: '14px 16px', marginBottom: 22,
+            cursor: 'pointer', textAlign: 'left', fontFamily: "'Poppins', sans-serif",
+          }}
+        >
+          <div style={{
+            width: 38, height: 38, borderRadius: 12, flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+          }}>
+            <MoonIcon size={18} color={ICONE} />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>Ton cycle</div>
+            <div style={{ fontSize: 11, color: ENCRE, marginTop: 1 }}>
+              Phases, symptômes, et ce qu'ils expliquent de ta semaine
+            </div>
+          </div>
+        </button>
+      )}
+
       <SousTitre>Le détail</SousTitre>
       <HistoriqueSection history={history} onLog={openEdit} />
 

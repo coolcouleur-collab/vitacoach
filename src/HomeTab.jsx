@@ -2412,7 +2412,14 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
             // cartes horaires de « Pour toi maintenant », donc invisible en
             // dehors de leurs créneaux (constat Jean 2026-08-11).
             { tab:'beaute',     label:'Soins',       icon:<LeafIcon     size={17} color={TC} /> },
-            ...(profil?.cycle ? [{ tab:'cycle', label:'Cycle', icon:<MoonIcon size={17} color={TC} /> }] : []),
+            // Le Cycle a quitte « Tes outils » le 2 septembre. Ce n'est pas un
+            // outil : on n'ouvre pas le suivi de son cycle pour FAIRE quelque
+            // chose, on l'ouvre pour consulter, exactement comme Progres. Il
+            // etait range avec Style, Respiration et Soins, qui sont trois
+            // choses qu'on ouvre pour agir.
+            // Il vit desormais dans Progres, avec les autres suivis. Les
+            // entrees du menu restent : ce n'est pas un rangement thematique,
+            // c'est la navigation globale.
           ].map(o => (
             <motion.button
               key={o.tab}
