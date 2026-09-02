@@ -57,7 +57,7 @@ function BookingCard({ data }) {
 
   return (
     <div style={{
-      background:'linear-gradient(145deg, #FFF3EE, #FFF8F4)',
+      background:'linear-gradient(145deg, var(--carte-haut), var(--carte-bas))',
       border:'2px solid rgba(var(--rgb-terracotta), 0.22)',
       borderRadius:24,
       overflow:'hidden',
