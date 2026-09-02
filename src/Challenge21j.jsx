@@ -495,6 +495,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <CatalogueProgrammes
           profil={profil}
           famille={famille}
+          // « Choisis ton programme » est un imperatif, place juste sous
+          // « en commencer un ici remplacera celui-la ». L'app ordonnait ce
+          // qu'elle venait de deconseiller. Descriptif quand un programme
+          // tourne, imperatif seulement quand il n'y en a aucun.
+          titre={ailleurs ? 'Les autres programmes' : null}
           remplacement={ailleurs}
           avertissement={ailleurs
             ? `« ${enCours?.titre || challenge.challenge?.titre} » est en cours dans l'onglet ${FAMILLES[familleEnCours]?.onglet || 'Sport'}. Le commencer ici le remplacera, et sa progression sera perdue.`

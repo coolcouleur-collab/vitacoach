@@ -347,9 +347,15 @@ export default function IdeesRepas({ userId, profil, onProfilMaj }) {
           {prefs ? 'Modifier mes exclusions' : 'Ce que je ne mange pas'}
         </button>
       </div>
+      {/* La phrase etait au present et decrivait trois propositions qui
+          n'existaient pas encore : rien ne s'affiche tant qu'on n'a pas
+          demande. On lisait la description, on cherchait les propositions des
+          yeux, elles n'etaient nulle part. Elle annonce donc l'action tant
+          qu'il n'y a rien, et decrit le resultat une fois qu'il est la. */}
       <div style={{ fontSize: 12, lineHeight: 1.55, color: ENCRE, marginBottom: 13 }}>
-        Trois propositions construites pour toi, et qui te disent pourquoi elles
-        te vont.
+        {recettes?.length
+          ? 'Trois propositions construites pour toi, et qui te disent pourquoi elles te vont.'
+          : 'Choisis un repas, et je te propose trois idées faites pour toi, en te disant pourquoi elles te vont.'}
       </div>
 
       {reglages && (

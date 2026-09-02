@@ -791,22 +791,11 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               </div>
             )}
 
-            {/* Les repas du jour racontent aujourd'hui. Le programme, lui,
-                installe des habitudes sur quatre semaines : ce sont deux
-                choses differentes, et l'ordre le dit. */}
-            {userId && (
-              <div style={{ marginTop: 18, marginBottom: 4 }}>
-                <React.Suspense fallback={null}>
-                  <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
-                    profil={profil} famille="nutrition" />
-                </React.Suspense>
-              </div>
-            )}
-
-            {/* Les idees de repas apres le programme : le programme installe
-                des habitudes, les idees repondent a « je fais quoi ce soir ».
-                La seconde question se pose tous les jours, la premiere une
-                fois, d'ou cet ordre. */}
+            {/* Les idees de repas AVANT le programme. L'onglet posait trois
+                blocs qui parlent de manger, repas du jour, idees et photo, avec
+                le programme plante au milieu : le contenu quotidien etait coupe
+                en deux. La regle etait deja la bonne, « le quotidien d'abord,
+                l'engagement ensuite », elle n'allait juste pas jusqu'au bout. */}
             {userId && (
               <React.Suspense fallback={null}>
                 <IdeesRepas userId={userId} profil={profil} />
@@ -833,6 +822,18 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
+
+            {/* Le programme APRES tout le quotidien. Il n'installe pas une
+                reponse a « je mange quoi ce soir » mais des habitudes sur
+                quatre semaines : c'est un engagement, il vient en dernier. */}
+            {userId && (
+              <div style={{ marginTop: 18, marginBottom: 4 }}>
+                <React.Suspense fallback={null}>
+                  <Challenge21j userId={userId} isPro={isPro} onPasserPro={onPasserPro}
+                    profil={profil} famille="nutrition" />
+                </React.Suspense>
+              </div>
+            )}
           </div>
         )}
 
