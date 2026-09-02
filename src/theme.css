@@ -69,6 +69,13 @@
   /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
      ici pour que le document lui-meme suive l'ambiance. */
   --bg:        #EDD8CC;
+  /* L'aurore animee, le fond de l'onglet Solenn. */
+  --aurore-1:  #FFD49A;
+  --aurore-2:  #F5C8AA;
+  --aurore-3:  #FFF4E0;
+  --aurore-4:  #E8B87A;
+  --aurore-5:  #EED4B0;
+  --aurore-6:  #FAE8CC;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -110,6 +117,14 @@
   --halo-2:    #16294F;
   --halo-3:    #122140;
   --bg:        #0F1C3A;
+  /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
+     du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
+  --aurore-1:  #050E22;
+  --aurore-2:  #091830;
+  --aurore-3:  #0C2040;
+  --aurore-4:  #020712;
+  --aurore-5:  #071426;
+  --aurore-6:  #0A1B38;
 }
 
 
@@ -162,4 +177,11 @@
   /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
      ici pour que le document lui-meme suive l'ambiance. */
   --bg:        #EDD8CC;
+  /* L'aurore animee, le fond de l'onglet Solenn. */
+  --aurore-1:  #FFD49A;
+  --aurore-2:  #F5C8AA;
+  --aurore-3:  #FFF4E0;
+  --aurore-4:  #E8B87A;
+  --aurore-5:  #EED4B0;
+  --aurore-6:  #FAE8CC;
 }

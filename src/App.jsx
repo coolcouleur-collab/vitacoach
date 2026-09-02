@@ -471,7 +471,14 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
     }
   }, [])
 
-  const isNight = preset === 'night' && onglet === 'accueil'
+  // `&& onglet === 'accueil'` a saute le 2 septembre. Cette condition datait
+  // du temps ou seul l'accueil avait une ambiance de nuit, et le reglage le
+  // disait : « Le reste de l'app reste clair pour l'instant ».
+  //
+  // C'est elle qui laissait, la nuit, la barre du bas en brun, l'en-tete en
+  // creme pale et le chat entierement chaud sous un texte devenu bleu clair.
+  // Une seule ligne tenait les trois.
+  const isNight = preset === 'night'
   // Couleurs adaptées au mode nuit / jour.
   //
   // ⚠️ EN JOUR, LE TEXTE EST TERRACOTTA, PAS CRÈME. Mesuré le 2026-09-01 sur
@@ -3074,8 +3081,8 @@ padding: isMobile
         }
         .aurora-bg {
           background: linear-gradient(135deg,
-            #FFD49A 0%, #F5C8AA 18%, #FFF4E0 36%,
-            #E8B87A 52%, #EED4B0 68%, #FAE8CC 84%, #FFD49A 100%);
+            var(--aurore-1) 0%, var(--aurore-2) 18%, var(--aurore-3) 36%,
+            var(--aurore-4) 52%, var(--aurore-5) 68%, var(--aurore-6) 84%, var(--aurore-1) 100%);
           background-size: 400% 400%;
           animation: aurora 14s ease infinite, auroraFadeIn 0.5s ease both;
           opacity: 0.72;
