@@ -17,7 +17,7 @@
 
 import Groq from 'groq-sdk'
 import { createClient } from '@supabase/supabase-js'
-import { motsInterdits, motInterditDans } from './recettes.js'
+import { motsInterdits, motInterditDans, relectureModele } from './recettes.js'
 
 let _sb = null
 function getSupabase() {
@@ -67,9 +67,23 @@ async function genererRoutine(profil, metriques = {}) {
   let routine = null
   for (let essai = 1; essai <= 2; essai++) {
     routine = await genererRoutineBrute(profil, metriques)
+
+    // Deux filets qui ne se recouvrent pas. Le litteral attrape ce que le
+    // modele laisse passer par distraction ; la relecture attrape ce qu'aucune
+    // liste de mots ne pouvait prevoir, « sauce cacahuete » pour quelqu'un qui
+    // a declare « arachides ».
     const v = nutritionSure(routine, profil)
-    if (v.sure) return routine
-    console.warn(`[RoutineAuto] essai ${essai} : repas contenant « ${v.faute} », rejete`)
+    if (!v.sure) {
+      console.warn(`[RoutineAuto] essai ${essai} : repas contenant « ${v.faute} », rejete`)
+      continue
+    }
+    const interdits = motsInterdits(profil)
+    const repas = (routine?.nutrition?.repas || []).map(
+      r => [r?.suggestion, ...(r?.ingredients || [])].filter(Boolean).join(' : '),
+    )
+    const relu = await relectureModele(repas, interdits)
+    if (relu.sur) return routine
+    console.warn(`[RoutineAuto] essai ${essai} rejete a la relecture : ${relu.faute}`)
   }
   return {
     ...routine,
@@ -103,6 +117,9 @@ ${(() => {
 Aucun des trois repas ne doit en contenir, ni sous un autre nom.`
     : ''
 })()}
+Chaque repas liste ses INGRÉDIENTS, un par entrée, nommés simplement.
+Cette liste n'est pas décorative : c'est elle qu'on relit pour vérifier qu'un
+repas ne contient rien d'interdit. « Omelette » ne dit pas qu'il y a des oeufs.
 INTERDIT : le tiret cadratin (—) dans tous les textes.
 
 Réponds UNIQUEMENT en JSON valide :
@@ -118,9 +135,9 @@ Réponds UNIQUEMENT en JSON valide :
   "nutrition": {
     "titre": "Nutrition du jour",
     "repas": [
-      { "emoji": "🌅", "moment": "Petit-déjeuner", "suggestion": "suggestion adaptée au profil" },
-      { "emoji": "☀️", "moment": "Déjeuner",       "suggestion": "suggestion adaptée" },
-      { "emoji": "🌙", "moment": "Dîner",           "suggestion": "suggestion légère et adaptée" }
+      { "emoji": "🌅", "moment": "Petit-déjeuner", "suggestion": "suggestion adaptée au profil", "ingredients": ["chaque ingrédient, nommé simplement"] },
+      { "emoji": "☀️", "moment": "Déjeuner",       "suggestion": "suggestion adaptée",           "ingredients": ["idem"] },
+      { "emoji": "🌙", "moment": "Dîner",           "suggestion": "suggestion légère et adaptée", "ingredients": ["idem"] }
     ],
     "supplements": ["supplément si pertinent selon profil"]
   },
@@ -175,7 +192,12 @@ function nutritionSure(routine, profil) {
   const interdits = motsInterdits(profil)
   if (!interdits.length) return { sure: true }
   for (const r of routine?.nutrition?.repas || []) {
-    const faute = motInterditDans(`${r?.moment || ''} ${r?.suggestion || ''}`, interdits)
+    // Les INGREDIENTS avec le titre : c'est tout l'interet de les demander.
+    // « Omelette aux champignons » ne contient pas le mot « oeuf », mais sa
+    // liste d'ingredients, si. Le filet est litteral, il lui faut de la
+    // matiere a comparer.
+    const texte = [r?.moment, r?.suggestion, ...(r?.ingredients || [])].filter(Boolean).join(' ')
+    const faute = motInterditDans(texte, interdits)
     if (faute) return { sure: false, faute }
   }
   for (const sup of routine?.nutrition?.supplements || []) {

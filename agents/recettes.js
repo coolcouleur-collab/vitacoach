@@ -268,6 +268,60 @@ export function motsInterdits(profil) {
  *
  * Renvoie le mot fautif et pas un booleen : on veut pouvoir le journaliser.
  */
+/**
+ * LA RELECTURE PAR LE MODELE.
+ *
+ * Le filet ci-dessus compare des mots ; il ne comprend pas ce qu'il lit. Une
+ * « sauce cacahuete » echappe a quelqu'un qui a declare « arachides », et
+ * aucune liste ne peut prevoir tous les noms de plats. Ce controle-la, lui,
+ * comprend : c'est la seule facon de fermer ce trou.
+ *
+ * Les deux ne se recouvrent pas, ils se rattrapent. Le filet litteral attrape
+ * ce que le modele laisse passer par distraction, le modele attrape ce
+ * qu'aucune liste de mots ne pouvait prevoir.
+ *
+ * EN CAS DE PANNE, ON LAISSE PASSER. Un incident reseau ne doit pas priver
+ * tout le monde de ses repas : le filet litteral, lui, a deja tourne. C'est
+ * un controle SUPPLEMENTAIRE, pas le seul.
+ *
+ * @returns {Promise<{sur: boolean, faute: string|null}>}
+ */
+export async function relectureModele(textes, interdits) {
+  const liste = (textes || []).filter(Boolean)
+  if (!liste.length || !interdits?.length) return { sur: true, faute: null }
+  try {
+    const res = await getGroq().chat.completions.create({
+      model: 'openai/gpt-oss-120b',
+      messages: [
+        {
+          role: 'system',
+          content: "Tu verifies des propositions de repas pour une personne qui ne peut pas manger certains aliments. Tu connais les plats et leurs ingredients habituels : une omelette contient des oeufs, une sauce cacahuete contient de l'arachide, une bolognaise contient du boeuf. Reponds UNIQUEMENT en JSON.",
+        },
+        {
+          role: 'user',
+          content: `Cette personne NE MANGE PAS : ${interdits.join(', ')}.
+
+Propositions a verifier :
+${liste.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+
+L'une d'elles contient-elle un aliment interdit, y compris sous un autre nom, en trace, en sauce ou en accompagnement habituel ?
+Reponds {"probleme": true, "faute": "<l'aliment et la proposition concernee>"} ou {"probleme": false}.`,
+        },
+      ],
+      temperature: 0,
+      max_tokens: 200,
+    })
+    const brut = res.choices[0].message.content
+    const m = brut.match(/\{[\s\S]*\}/)
+    if (!m) return { sur: true, faute: null }
+    const r = JSON.parse(m[0])
+    return r?.probleme ? { sur: false, faute: r.faute || 'non precise' } : { sur: true, faute: null }
+  } catch (e) {
+    console.warn('[Relecture] indisponible, on s en tient au filet litteral :', e.message)
+    return { sur: true, faute: null }
+  }
+}
+
 export function motInterditDans(texte, mots) {
   const t = nu(texte || '')
   for (const m of mots || []) {
@@ -420,6 +474,18 @@ Format JSON :
 
   if (!recettesSures(recettes, interdits)) {
     console.warn('[Recettes] generation rejetee : un interdit alimentaire est present')
+    throw new Error("Une des idees ne respectait pas tes exclusions. Relance, Solenn recommence.")
+  }
+
+  // Le second filet, celui qui comprend. Il attrape ce qu'aucune liste de mots
+  // ne pouvait prevoir : un plat au nom inattendu, un ingredient sous un autre
+  // nom, une sauce qui en contient sans le dire.
+  const relu = await relectureModele(
+    recettes.map(r => [r.titre, ...(r.ingredients || [])].join(' : ')),
+    interdits,
+  )
+  if (!relu.sur) {
+    console.warn('[Recettes] rejetee a la relecture :', relu.faute)
     throw new Error("Une des idees ne respectait pas tes exclusions. Relance, Solenn recommence.")
   }
 

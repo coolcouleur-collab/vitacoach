@@ -21,7 +21,7 @@
  */
 
 import Groq from 'groq-sdk'
-import { motsInterdits, motInterditDans } from './recettes.js'
+import { motsInterdits, motInterditDans, relectureModele } from './recettes.js'
 import { programmeParId, INTENSITES } from '../src/programmes.js'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
@@ -427,6 +427,16 @@ Format JSON :
         }),
       }
       if (retires) console.warn(`[Challenge] ${retires} conseil(s) nutrition retire(s) : interdit alimentaire`)
+
+      // La relecture, sur ce qui a survecu au filet litteral. Un conseil
+      // signale est retire lui aussi : le champ est optionnel, et un conseil
+      // en moins vaut mieux qu'un conseil dangereux.
+      const restants = challenge.jours.map(j => j?.nutrition).filter(Boolean)
+      const relu = await relectureModele(restants, interdits)
+      if (!relu.sur) {
+        console.warn(`[Challenge] conseils nutrition retires a la relecture : ${relu.faute}`)
+        challenge = { ...challenge, jours: challenge.jours.map(j => ({ ...j, nutrition: null })) }
+      }
     }
   }
 
