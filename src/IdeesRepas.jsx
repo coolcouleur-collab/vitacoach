@@ -332,10 +332,16 @@ export default function IdeesRepas({ userId, profil, onProfilMaj }) {
         </div>
         <button
           onClick={() => setReglages(r => !r)}
+          // Un lien souligne dans un bandeau de titre se lit comme une note
+          // de bas de page. Or ce reglage conditionne TOUTES les propositions
+          // qui suivent : ce qu'on exclut change chaque recette proposee. Il
+          // prend donc la forme des autres commandes de la page.
           style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            background: 'rgba(var(--rgb-verre), 0.32)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+            borderRadius: 999, cursor: 'pointer', padding: '6px 12px',
             fontSize: 12, fontWeight: 600, color: ENCRE, fontFamily: "'Poppins',sans-serif",
-            textDecoration: 'underline', textUnderlineOffset: 3,
+            whiteSpace: 'nowrap',
           }}
         >
           {prefs ? 'Modifier mes exclusions' : 'Ce que je ne mange pas'}

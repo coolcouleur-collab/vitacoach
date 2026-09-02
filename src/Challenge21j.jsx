@@ -238,7 +238,15 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           intensite: reglages.intensite || null,
         }),
       })
-      if (!res.ok) throw new Error('Erreur lors de la création')
+      if (!res.ok) {
+        // Le serveur explique POURQUOI, et en francais : « La generation du
+        // programme "X" n'a pas abouti. Reessaie dans un instant. » Le client
+        // jetait ce message pour afficher son propre « Erreur lors de la
+        // creation », qui ne dit rien et ne suggere rien. Constat sur une
+        // capture de Jean, onglet Nutrition, le 2 septembre.
+        const detail = await res.json().catch(() => null)
+        throw new Error(detail?.error || "La création n'a pas abouti. Réessaie dans un instant.")
+      }
       // L'autorisation est demandee ICI et pas au demarrage de l'app : on la
       // demande au moment ou elle a un sens, juste apres s'etre engage sur un
       // programme. Demandee a froid au premier lancement, elle est refusee, et
