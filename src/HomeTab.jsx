@@ -1600,7 +1600,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           color:ENCRE, textTransform:'uppercase',
           cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
           padding:'8px 24px',
-          borderBottom:'1px solid rgba(160,110,60,0.20)',
+          borderBottom:'1px solid rgba(var(--rgb-survol), 0.20)',
           transition:'border-color 0.2s ease, color 0.2s ease',
         }}
           onMouseEnter={e => { e.currentTarget.style.color='rgba(var(--rgb-survol), 1)'; e.currentTarget.style.borderBottomColor='rgba(var(--rgb-survol), 0.45)' }}

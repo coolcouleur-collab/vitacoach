@@ -161,7 +161,7 @@ export default function BreathworkTab() {
               flexShrink: 0,
               padding: '7px 14px',
               borderRadius: 20,
-              border: `1px solid ${sel ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.35)'}`,
+              border: `1px solid ${sel ? 'rgba(var(--rgb-brun-fonce),0.55)' : 'rgba(var(--rgb-terracotta), 0.35)'}`,
               background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -303,7 +303,7 @@ export default function BreathworkTab() {
               <div key={i} style={{
                 flex: 1, textAlign: 'center',
                 background: active ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
-                border: `1px solid ${active ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
+                border: `1px solid ${active ? 'rgba(var(--rgb-brun-fonce),0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
                 borderRadius: 14, padding: '10px 4px',
                 transition: 'all 0.3s ease',
               }}>

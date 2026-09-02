@@ -1011,7 +1011,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                     data-actif={active ? '1' : '0'}
                     style={{
                       flexShrink:0, padding:'10px 20px', borderRadius:20,
-                      border: active ? '1px solid rgba(108,66,44,0.55)' : '1px solid rgba(var(--rgb-terracotta), 0.16)',
+                      border: active ? '1px solid rgba(var(--rgb-brun-fonce),0.55)' : '1px solid rgba(var(--rgb-terracotta), 0.16)',
                       fontSize:12, fontWeight:700,
                       cursor:'pointer', fontFamily:'Poppins,sans-serif',
                       whiteSpace:'nowrap',
@@ -1025,7 +1025,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                       backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
                       color: active ? '#fff' : ENCRE,
                       boxShadow: active
-                        ? '0 6px 20px rgba(108,66,44,0.30)'
+                        ? '0 6px 20px rgba(var(--rgb-brun-fonce),0.30)'
                         : 'none',
                       transform: active ? 'scale(1.04)' : 'scale(1)',
                       transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',

@@ -165,14 +165,14 @@ function CinematicSlider({ onCommencer }) {
           <button
             onClick={onCommencer}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(144,89,59,0.90)'; e.currentTarget.style.boxShadow = '0 0 38px rgba(232,190,100,0.40), inset 0 1px 0 rgba(255,240,200,0.30)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(108,66,44,0.55)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(var(--rgb-brun-fonce),0.55)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(232,190,100,0.22), inset 0 1px 0 rgba(255,240,200,0.18)' }}
             style={{
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               // Verre de cuivre profond, translucide + texte crème (palette Solenn)
               background: 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))',
               backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-              border: '1px solid rgba(108,66,44,0.55)',
+              border: '1px solid rgba(var(--rgb-brun-fonce),0.55)',
               borderRadius: '2rem',
               boxShadow: '0 0 24px rgba(var(--rgb-terracotta), 0.22), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.30)',
               color: '#FFF8EB',
