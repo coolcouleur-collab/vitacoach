@@ -103,7 +103,7 @@ function MentionTextarea({ value, onChange, authors = [], style, placeholder, ro
       {suggestions.length > 0 && (
         <div style={{
           position:'absolute', top:'100%', left:0, right:0, zIndex:300, marginTop:4,
-          background:'rgba(255,248,242,0.97)', backdropFilter:'blur(20px)',
+          background:'rgba(var(--rgb-bulle), 0.97)', backdropFilter:'blur(20px)',
           border:'1px solid rgba(var(--rgb-terracotta), 0.22)', borderRadius:12,
           boxShadow:'0 4px 18px rgba(var(--rgb-terracotta), 0.13)', overflow:'hidden',
         }}>
@@ -213,7 +213,7 @@ function PostCard({ post, onLike, onOpen, userId }) {
 
   return (
     <div onClick={() => onOpen(post)} style={{
-      background: 'rgba(255,248,242,0.96)',
+      background: 'rgba(var(--rgb-bulle), 0.96)',
       borderRadius: 20, padding: '1.4rem 1.6rem',
       border: '1px solid rgba(var(--rgb-terracotta), 0.16)',
       boxShadow: '0 2px 14px rgba(var(--rgb-terracotta), 0.06), inset 0 1px 0 rgba(255,255,255,0.70)',
@@ -515,7 +515,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
 
       {/* Post */}
       <div style={{
-        background:'rgba(255,248,242,0.70)', borderRadius:20, padding:'1.6rem',
+        background:'rgba(var(--rgb-bulle), 0.70)', borderRadius:20, padding:'1.6rem',
         border:'1px solid rgba(var(--rgb-terracotta), 0.18)',
         boxShadow:'0 4px 20px rgba(var(--rgb-terracotta), 0.07), inset 0 1px 0 rgba(255,255,255,0.80)',
         marginBottom:'1.4rem',
@@ -631,7 +631,7 @@ function PostDetail({ post, onReply, onLike, onEditReply, onDeleteReply, onBack,
           aria-label="Retour en haut"
           style={{
             position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
-            background: 'rgba(255,248,242,0.82)',
+            background: 'rgba(var(--rgb-bulle), 0.82)',
             backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
             border: '1px solid rgba(var(--rgb-terracotta), 0.22)',
             borderRadius: 100,
@@ -675,7 +675,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
 
   return (
     <div style={{
-      background: 'rgba(255,248,242,0.98)',
+      background: 'rgba(var(--rgb-bulle), 0.98)',
       borderRadius: 20, padding: '2.2rem 2rem',
       border: '1.5px solid rgba(var(--rgb-terracotta), 0.22)',
       boxShadow: '0 8px 36px rgba(var(--rgb-terracotta), 0.13), inset 0 1px 0 rgba(255,255,255,0.88)',
@@ -770,7 +770,7 @@ function Skeleton() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
       {[1, 2, 3].map(i => (
         <div key={i} style={{
-          background: 'rgba(255,248,242,0.60)', borderRadius: 20,
+          background: 'rgba(var(--rgb-bulle), 0.60)', borderRadius: 20,
           padding: '1.8rem', border: '1.5px solid rgba(var(--rgb-terracotta), 0.10)',
           animation: 'pulse 1.5s ease infinite',
         }}>
@@ -1076,7 +1076,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* ── Panel notifications ── */}
       {showNotifs && (
         <div className="forum-in" style={{
-          background:'rgba(255,248,242,0.92)', borderRadius:20, marginBottom:'1.2rem',
+          background:'rgba(var(--rgb-bulle), 0.92)', borderRadius:20, marginBottom:'1.2rem',
           border:'1px solid rgba(var(--rgb-terracotta), 0.18)', overflow:'hidden',
           backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(var(--rgb-terracotta), 0.08)',
         }}>
@@ -1127,7 +1127,7 @@ export default function Forum({ onBack, user, profil, showForm = false, setShowF
       {/* Rules panel */}
       {showRules && (
         <div className="forum-in" style={{
-          background: 'rgba(255,248,242,0.80)', borderRadius: 20,
+          background: 'rgba(var(--rgb-bulle), 0.80)', borderRadius: 20,
           padding: '1.6rem 1.8rem',
           border: '1.5px solid rgba(var(--rgb-terracotta), 0.17)', marginBottom: '1.4rem',
           backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',

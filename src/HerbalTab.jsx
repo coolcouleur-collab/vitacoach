@@ -6,7 +6,7 @@ import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 import { croiser, phraseAlerte } from './contreIndications'
 
 // ─── PALETTE (clair, fond de page abricot) ──────────────────────────────────
-const GLASS_BG     = 'rgba(255,248,242,0.75)'
+const GLASS_BG     = 'rgba(var(--rgb-bulle), 0.75)'
 const GLASS_BORDER = '1px solid rgba(var(--rgb-terracotta), 0.18)'
 const TXT_MAIN     = ENCRE   // etait rgba(var(--rgb-terracotta), 0.90) : 2,18:1 sur 11 textes
 const TXT_SOFT     = ENCRE   // etait 1,81:1. Meme encre, la hierarchie passe par la graisse
@@ -201,7 +201,7 @@ function HeroBg() {
       {/* Animated aurora gradient, subtle warm/green glow on dark */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(-45deg, rgba(var(--rgb-or), 0.14), rgba(255,248,242,0.10), rgba(var(--rgb-or), 0.12), rgba(var(--rgb-creme-dore), 0.10), rgba(var(--rgb-terracotta), 0.14))',
+        background:'linear-gradient(-45deg, rgba(var(--rgb-or), 0.14), rgba(var(--rgb-bulle), 0.10), rgba(var(--rgb-or), 0.12), rgba(var(--rgb-creme-dore), 0.10), rgba(var(--rgb-terracotta), 0.14))',
         backgroundSize:'400% 400%',
         animation:'heroGradient 10s ease infinite',
       }} />
@@ -873,7 +873,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
              chercher ne protege personne. */}
       <div style={{
         margin:'0 16px 4px', padding:'10px 13px', borderRadius:14,
-        background:'rgba(255,248,242,0.72)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
+        background:'rgba(var(--rgb-bulle), 0.72)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
         display:'flex', alignItems:'flex-start', gap:9,
       }}>
         <span style={{ marginTop:1, flexShrink:0 }}><WarnTriangleIcon size={13} color={ICONE} /></span>
@@ -978,7 +978,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           style={{
             width:'100%', boxSizing:'border-box', padding:'11px 36px 11px 14px',
             borderRadius:14, border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
-            background:'rgba(255,248,242,0.72)', color:TXT_MAIN,
+            background:'rgba(var(--rgb-bulle), 0.72)', color:TXT_MAIN,
             fontSize:13, fontFamily:'Poppins,sans-serif', outline:'none',
           }}
         />

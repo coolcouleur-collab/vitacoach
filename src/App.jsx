@@ -3316,7 +3316,7 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
           <div key={i} style={{ ...sr.etapeRow, opacity: done ? 0.50 : 1 }} onClick={() => onToggle(`${id}_${i}`)}>
             <div style={{ width:22, height:22, borderRadius:7, flexShrink:0, cursor:'pointer',
               border: `1.5px solid ${done ? accent : accent+'30'}`,
-              background: done ? accent+'18' : 'rgba(255,248,242,0.60)',
+              background: done ? accent+'18' : 'rgba(var(--rgb-bulle), 0.60)',
               display:'flex', alignItems:'center', justifyContent:'center' }}>
               {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
             </div>
@@ -3346,13 +3346,13 @@ const sr = {
     display:'flex', alignItems:'center', gap:5,
     boxShadow:'none',
   },
-  progressBar: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:14,
+  progressBar: { background:'rgba(var(--rgb-bulle), 0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:14,
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(var(--rgb-terracotta), 0.05)' },
-  empty: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:20, padding:'48px 32px',
+  empty: { background:'rgba(var(--rgb-bulle), 0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:20, padding:'48px 32px',
     textAlign:'center', boxShadow:'0 4px 20px rgba(var(--rgb-terracotta), 0.06)' },
   motivCard: { background:'rgba(var(--rgb-bulle), 0.28)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.08)', borderRadius:16, padding:'14px 18px', textAlign:'center' },
-  card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(var(--rgb-terracotta), 0.10)', borderRadius:18, padding:'14px 16px',
+  card: { background:'rgba(var(--rgb-bulle), 0.70)', border:'1px solid rgba(var(--rgb-terracotta), 0.10)', borderRadius:18, padding:'14px 16px',
     boxShadow:'none' },
   cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
   cardTitre: { fontSize:14, fontWeight:700, color:ENCRE },
@@ -4018,7 +4018,7 @@ const s = {
   emptyChatSub: { fontSize:13, color:ENCRE, marginBottom:32, lineHeight:1.7 },
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
-    background:'rgba(255,248,242,0.96)',
+    background:'rgba(var(--rgb-bulle), 0.96)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.20)', borderRadius:16,
     padding:'13px 18px', fontSize:13, color: ENCRE, cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
@@ -4057,7 +4057,7 @@ const s = {
 
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
-    background:'rgba(255,248,242,0.92)',
+    background:'rgba(var(--rgb-bulle), 0.92)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.22)', borderRadius:20,
     padding:'7px 14px', fontSize:12, color: ENCRE, cursor:'pointer',
     fontFamily:F, fontWeight:300,
@@ -4065,7 +4065,7 @@ const s = {
 
   inputRow: { paddingBottom:10, position:'relative', zIndex:1 },
   inputBox: {
-    display:'flex', gap:8, background:'rgba(255,252,248,0.96)',
+    display:'flex', gap:8, background:'rgba(var(--rgb-bulle), 0.96)',
     borderRadius:20, padding:'8px 8px 8px 18px',
     border:'1px solid rgba(var(--rgb-terracotta), 0.22)', alignItems:'center',
     boxShadow:'0 4px 24px rgba(var(--rgb-terracotta), 0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
@@ -4185,7 +4185,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
         <button onClick={onScrollDown}
           style={{ position:'absolute', bottom:74, right:16, zIndex:10,
             width:32, height:32, borderRadius:'50%', border:'1px solid rgba(var(--rgb-terracotta), 0.25)',
-            background:'rgba(255,248,242,0.96)',
+            background:'rgba(var(--rgb-bulle), 0.96)',
             cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
             boxShadow:'0 2px 12px rgba(var(--rgb-terracotta), 0.15)' }}>↓</button>
       )}
