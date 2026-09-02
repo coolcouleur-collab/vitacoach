@@ -5,16 +5,16 @@ import { AMBRE, ENCRE, ROUGE } from './palette'
 const F = "'Poppins', system-ui, sans-serif"
 // L'opacite recue est volontairement IGNOREE, comme warmText sur l'accueil.
 // Les 15 appels servent tous a `color`, jamais a un fond : cette fabrique
-// partait de #C87B52, une couleur de FOND (2,39:1), et l'alpha ne faisait
+// partait de var(--accent), une couleur de FOND (2,39:1), et l'alpha ne faisait
 // que l'effacer davantage. L'etat selectionne passe desormais par la
 // pastille pleine, plus par un ecart d'opacite illisible.
 const am = (a) => ENCRE
 
 const CARD = {
-  background: 'rgba(255,235,210,0.22)',
+  background: 'rgba(var(--rgb-creme), 0.22)',
   backdropFilter: 'blur(18px)',
   WebkitBackdropFilter: 'blur(18px)',
-  border: '1px solid rgba(255,220,160,0.28)',
+  border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
   borderRadius: 24,
   padding: '18px 20px',
 }
@@ -29,7 +29,7 @@ const TECHNIQUES = [
       { label: 'Expire',  dur: 5, big: false },
     ],
     totalCycles: 18,
-    accent: 'rgba(200,123,82,0.80)',
+    accent: 'rgba(var(--rgb-terracotta), 0.80)',
   },
   {
     id: '478',
@@ -41,7 +41,7 @@ const TECHNIQUES = [
       { label: 'Expire',   dur: 8, big: false },
     ],
     totalCycles: 4,
-    accent: 'rgba(200,123,82,0.80)',
+    accent: 'rgba(var(--rgb-terracotta), 0.80)',
   },
   {
     id: 'box',
@@ -54,7 +54,7 @@ const TECHNIQUES = [
       { label: 'Retiens',  dur: 4, big: false },
     ],
     totalCycles: 4,
-    accent: 'rgba(200,123,82,0.80)',
+    accent: 'rgba(var(--rgb-terracotta), 0.80)',
   },
   {
     id: 'wimhof',
@@ -65,7 +65,7 @@ const TECHNIQUES = [
       { label: 'Expire rapide',  dur: 1.5, big: false },
     ],
     totalCycles: 30,
-    accent: 'rgba(200,123,82,0.80)',
+    accent: 'rgba(var(--rgb-terracotta), 0.80)',
   },
 ]
 
@@ -161,8 +161,8 @@ export default function BreathworkTab() {
               flexShrink: 0,
               padding: '7px 14px',
               borderRadius: 20,
-              border: `1px solid ${sel ? 'rgba(108,66,44,0.55)' : 'rgba(200,123,82,0.35)'}`,
-              background: sel ? 'linear-gradient(135deg,#6C422C,#90593B)' : 'rgba(255,235,210,0.35)',
+              border: `1px solid ${sel ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.35)'}`,
+              background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-creme), 0.35)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               color: sel ? '#fff' : ENCRE,
@@ -187,7 +187,7 @@ export default function BreathworkTab() {
           {/* Outer ring (static) */}
           <div style={{
             position: 'absolute', inset: 0, borderRadius: '50%',
-            border: '1px solid rgba(200,123,82,0.32)',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.32)',
           }}/>
 
           {/* Animated circle */}
@@ -260,9 +260,9 @@ export default function BreathworkTab() {
         {!isActive && !done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'rgba(255,235,210,0.32)',
+            background: 'rgba(var(--rgb-creme), 0.32)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            color: AMBRE, border: '1px solid rgba(255,220,160,0.38)',
+            color: AMBRE, border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>
@@ -272,8 +272,8 @@ export default function BreathworkTab() {
         {isActive && (
           <button onClick={stop} style={{
             padding: '13px 36px',
-            background: 'rgba(255,235,210,0.15)', color: am(0.88),
-            border: '1px solid rgba(255,220,160,0.25)',
+            background: 'rgba(var(--rgb-creme), 0.15)', color: am(0.88),
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.25)',
             borderRadius: 50, fontSize: 14, fontWeight: 500,
             cursor: 'pointer', fontFamily: F,
           }}>
@@ -283,8 +283,8 @@ export default function BreathworkTab() {
         {done && (
           <button onClick={start} style={{
             padding: '13px 40px',
-            background: 'rgba(255,235,210,0.32)',
-            color: '#fff', border: '1px solid rgba(255,220,160,0.38)',
+            background: 'rgba(var(--rgb-creme), 0.32)',
+            color: '#fff', border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
             borderRadius: 50, fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: F,
           }}>
@@ -302,8 +302,8 @@ export default function BreathworkTab() {
             return (
               <div key={i} style={{
                 flex: 1, textAlign: 'center',
-                background: active ? 'linear-gradient(135deg,#6C422C,#90593B)' : 'rgba(255,235,210,0.35)',
-                border: `1px solid ${active ? 'rgba(108,66,44,0.55)' : 'rgba(200,123,82,0.28)'}`,
+                background: active ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-creme), 0.35)',
+                border: `1px solid ${active ? 'rgba(108,66,44,0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
                 borderRadius: 14, padding: '10px 4px',
                 transition: 'all 0.3s ease',
               }}>
@@ -323,7 +323,7 @@ export default function BreathworkTab() {
             <div key={i} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               padding: '9px 0',
-              borderBottom: i < Math.min(4, sessions.length - 1) ? '1px solid rgba(255,220,160,0.12)' : 'none',
+              borderBottom: i < Math.min(4, sessions.length - 1) ? '1px solid rgba(var(--rgb-creme-dore), 0.12)' : 'none',
             }}>
               <span style={{ fontSize: 13, color: am(0.78) }}>{s.technique}</span>
               <span style={{ fontSize: 11, color: am(0.40) }}>

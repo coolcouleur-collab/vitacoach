@@ -6,13 +6,13 @@
  *
  * Props (compatibles avec l'ancien composant, les props dots sont ignorées) :
  *   size     {number}  Diamètre du soleil en px (défaut 34)
- *   color    {string}  Couleur principale (défaut copper #C87B52)
+ *   color    {string}  Couleur principale (défaut copper var(--accent))
  *   fullPage {boolean} Overlay plein écran centré
  */
 
 export default function GlowLoader({
   size = 34,
-  color = '#C87B52',
+  color = 'var(--accent)',
   fullPage = false,
 }) {
   const halo = size * 2.4
@@ -45,7 +45,7 @@ export default function GlowLoader({
         {/* Cœur du soleil */}
         <div className="solenn-loader-core" style={{
           width: size, height: size, borderRadius: '50%',
-          background: `radial-gradient(circle at 38% 34%, #F5DDB0 0%, #E8962A 55%, ${color} 100%)`,
+          background: `radial-gradient(circle at 38% 34%, var(--creme-milieu) 0%, var(--or-plein) 55%, ${color} 100%)`,
           boxShadow: `0 0 ${size * 0.7}px ${color}55`,
           animation: 'solennBreath 2.4s ease-in-out infinite',
         }} />

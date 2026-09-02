@@ -66,13 +66,13 @@ export default function ProgressionProgramme({ userId }) {
       {/* ── HEADER ── */}
       <div
         style={{
-          background: 'rgba(255,235,210,0.22)',
+          background: 'rgba(var(--rgb-creme), 0.22)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
           borderRadius: '20px',
           padding: '24px 28px',
-          border: '1px solid rgba(255,220,160,0.28)',
-          boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+          boxShadow: '0 4px 24px rgba(var(--rgb-terracotta), 0.08)',
         }}
       >
         <div
@@ -107,7 +107,7 @@ export default function ProgressionProgramme({ userId }) {
 
           <div
             style={{
-              background: 'rgba(232,150,42,0.12)',
+              background: 'rgba(var(--rgb-or), 0.12)',
               color: AMBRE,
               borderRadius: '12px',
               padding: '6px 14px',
@@ -126,7 +126,7 @@ export default function ProgressionProgramme({ userId }) {
             style={{
               height: '6px',
               borderRadius: '12px',
-              background: 'rgba(200,123,82,0.12)',
+              background: 'rgba(var(--rgb-terracotta), 0.12)',
               overflow: 'hidden',
             }}
           >
@@ -137,7 +137,7 @@ export default function ProgressionProgramme({ userId }) {
               style={{
                 height: '100%',
                 borderRadius: '12px',
-                background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 100%)',
+                background: 'linear-gradient(90deg, var(--accent) 0%, var(--or-plein) 100%)',
               }}
             />
           </div>
@@ -155,7 +155,7 @@ export default function ProgressionProgramme({ userId }) {
             onClick={() => setShowGrille(v => !v)}
             style={{
               marginTop: 8, padding: '7px 14px', borderRadius: 12, cursor: 'pointer',
-              background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+              background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
               color: ENCRE, fontSize: 11.5, fontWeight: 600,
               fontFamily: "'Poppins', sans-serif",
             }}>
@@ -171,13 +171,13 @@ export default function ProgressionProgramme({ userId }) {
       {showGrille && (
       <div
         style={{
-          background: 'rgba(255,235,210,0.22)',
+          background: 'rgba(var(--rgb-creme), 0.22)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
           borderRadius: '20px',
           padding: '24px 28px',
-          border: '1px solid rgba(255,220,160,0.28)',
-          boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+          boxShadow: '0 4px 24px rgba(var(--rgb-terracotta), 0.08)',
         }}
       >
         <h3
@@ -209,9 +209,9 @@ export default function ProgressionProgramme({ userId }) {
             const estComplete = progression[i]
             const estMilestone = MILESTONES_JOURS.includes(numJour)
 
-            let bgColor = 'rgba(200,123,82,0.04)'
-            let borderColor = 'rgba(200,123,82,0.08)'
-            let textColor = 'rgba(200,123,82,0.35)'
+            let bgColor = 'rgba(var(--rgb-terracotta), 0.04)'
+            let borderColor = 'rgba(var(--rgb-terracotta), 0.08)'
+            let textColor = 'rgba(var(--rgb-terracotta), 0.35)'
             let borderWidth = '1px'
 
             if (estPasse && estComplete) {
@@ -223,13 +223,13 @@ export default function ProgressionProgramme({ userId }) {
               // Une grille de 13 cases rouges transforme un programme raté
               // en mur d'échecs et donne envie de fermer l'app, l'inverse
               // de ce qu'un coach doit produire (retour Jean 2026-08-08).
-              bgColor = 'rgba(200,123,82,0.05)'
-              borderColor = 'rgba(200,123,82,0.12)'
-              textColor = 'rgba(200,123,82,0.28)'
+              bgColor = 'rgba(var(--rgb-terracotta), 0.05)'
+              borderColor = 'rgba(var(--rgb-terracotta), 0.12)'
+              textColor = 'rgba(var(--rgb-terracotta), 0.28)'
             } else if (estAujourdhui) {
-              bgColor = 'rgba(232,150,42,0.18)'
-              borderColor = '#E8962A'
-              textColor = '#C87B52'
+              bgColor = 'rgba(var(--rgb-or), 0.18)'
+              borderColor = 'var(--or-plein)'
+              textColor = 'var(--accent)'
               borderWidth = '2px'
             }
 
@@ -262,7 +262,7 @@ export default function ProgressionProgramme({ userId }) {
                       position: 'absolute',
                       inset: '-3px',
                       borderRadius: '12px',
-                      border: '2px solid #E8962A',
+                      border: '2px solid var(--or-plein)',
                       pointerEvents: 'none',
                     }}
                   />

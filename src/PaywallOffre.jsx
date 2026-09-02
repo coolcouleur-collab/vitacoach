@@ -16,9 +16,9 @@ import { motion } from 'framer-motion'
 
 const F = "'Poppins', sans-serif"
 const SERIF = "'Cormorant Garamond', Georgia, serif"
-const CREME = 'rgba(255,248,235,1)'
-const CREME_70 = 'rgba(255,248,235,0.78)'
-const CREME_50 = 'rgba(255,248,235,0.55)'
+const CREME = 'rgba(var(--rgb-creme-pale), 1)'
+const CREME_70 = 'rgba(var(--rgb-creme-pale), 0.78)'
+const CREME_50 = 'rgba(var(--rgb-creme-pale), 0.55)'
 
 const CheckSvg = ({ size = 15 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={CREME} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.9 }}>
@@ -50,11 +50,11 @@ function Halos() {
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       <div style={{
         position: 'absolute', top: '-15%', left: '-10%', width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(200,123,82,0.50) 0%, rgba(200,100,40,0.22) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.50) 0%, rgba(200,100,40,0.22) 45%, transparent 70%)',
       }} />
       <div style={{
         position: 'absolute', bottom: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(200,123,82,0.38) 0%, rgba(180,90,30,0.16) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.38) 0%, rgba(180,90,30,0.16) 45%, transparent 70%)',
       }} />
       <div style={{
         position: 'absolute', top: '30%', left: '25%', width: 700, height: 700, borderRadius: '50%',
@@ -85,7 +85,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
       // qui defile se fait couper EN HAUT, sans moyen de remonter.
       height: '100%', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden',
       position: 'relative', display: 'flex', justifyContent: 'center',
-      background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+      background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
       padding: '24px 20px calc(24px + env(safe-area-inset-bottom))', fontFamily: F,
     }}>
       <Halos />
@@ -110,8 +110,8 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
 
         {/* Avantages, carte verre ambré clair */}
         <div style={{
-          background: 'rgba(255,235,210,0.28)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,220,160,0.32)', borderRadius: 18,
+          background: 'rgba(var(--rgb-creme), 0.28)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.32)', borderRadius: 18,
           padding: '16px 18px', marginBottom: 16,
           boxShadow: '0 8px 40px rgba(180,80,20,0.10)',
         }}>
@@ -119,7 +119,7 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0',
               fontSize: 13.5, color: CREME,
-              borderBottom: i < AVANTAGES.length - 1 ? '1px solid rgba(255,220,160,0.22)' : 'none',
+              borderBottom: i < AVANTAGES.length - 1 ? '1px solid rgba(var(--rgb-creme-dore), 0.22)' : 'none',
             }}>
               <CheckSvg /> {a}
             </div>
@@ -137,9 +137,9 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
               return (
                 <button key={p.key} onClick={() => setPlan(p.key)} style={{
                   flex: 1, position: 'relative', cursor: 'pointer', fontFamily: F, textAlign: 'left',
-                  background: actif ? 'rgba(255,235,210,0.42)' : 'rgba(255,235,210,0.18)',
+                  background: actif ? 'rgba(var(--rgb-creme), 0.42)' : 'rgba(var(--rgb-creme), 0.18)',
                   backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-                  border: actif ? '1.5px solid rgba(255,220,160,0.75)' : '1px solid rgba(255,220,160,0.30)',
+                  border: actif ? '1.5px solid rgba(var(--rgb-creme-dore), 0.75)' : '1px solid rgba(var(--rgb-creme-dore), 0.30)',
                   borderRadius: 16, padding: '14px 14px 12px',
                   boxShadow: actif ? '0 8px 26px rgba(180,80,20,0.14), inset 0 1px 0 rgba(255,240,200,0.30)' : 'none',
                   transition: 'all .2s ease',
@@ -148,9 +148,9 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
                     <div style={{
                       position: 'absolute', top: -9, left: 12, fontSize: 9.5, fontWeight: 600,
                       letterSpacing: '0.06em', textTransform: 'uppercase', color: CREME,
-                      background: 'rgba(200,123,82,0.75)',
+                      background: 'rgba(var(--rgb-terracotta), 0.75)',
                       backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(255,235,210,0.45)',
+                      border: '1px solid rgba(var(--rgb-creme), 0.45)',
                       padding: '2px 9px', borderRadius: 99,
                     }}>{p.badge}</div>
                   )}
@@ -167,9 +167,9 @@ export default function PaywallOffre({ nom, isNative, onStart, onSubscribe }) {
         <button onClick={onStart} style={{
           width: '100%', cursor: 'pointer', fontFamily: F, fontWeight: 600, fontSize: 15,
           color: CREME, borderRadius: 16, padding: '15px 20px',
-          background: 'rgba(255,235,210,0.32)',
+          background: 'rgba(var(--rgb-creme), 0.32)',
           backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255,220,160,0.60)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
           boxShadow: '0 0 26px rgba(232,190,100,0.25), inset 0 1px 0 rgba(255,240,200,0.28)',
         }}>
           Commencer mes 21 jours offerts

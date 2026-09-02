@@ -29,10 +29,10 @@ const EASE = [0.22, 1, 0.36, 1]
 const REPOS_SECONDES = 45
 
 const VERRE = {
-  background: 'rgba(255,235,210,0.42)',
+  background: 'rgba(var(--rgb-creme), 0.42)',
   backdropFilter: 'blur(14px)',
   WebkitBackdropFilter: 'blur(14px)',
-  border: '1px solid rgba(255,220,160,0.45)',
+  border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
 }
 
 /** Les infos du guide pour un identifiant d'exercice, ou un repli honnête. */
@@ -177,7 +177,7 @@ export default function SeanceActive({ seance = [], titre = '', jour = null, onT
       transition={{ duration: 0.25 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 9000,
-        background: 'linear-gradient(165deg, #FFF6E8 0%, #F5DDB0 55%, #FFF6E8 100%)',
+        background: 'linear-gradient(165deg, var(--fond-haut) 0%, var(--creme-milieu) 55%, var(--fond-haut) 100%)',
         display: 'flex', flexDirection: 'column',
         fontFamily: "'Poppins', sans-serif",
         paddingTop: 'calc(env(safe-area-inset-top, 0px) + 14px)',
@@ -203,7 +203,7 @@ export default function SeanceActive({ seance = [], titre = '', jour = null, onT
           aria-label="Fermer la séance"
           style={{
             width: 38, height: 38, borderRadius: 12, flexShrink: 0, cursor: 'pointer',
-            background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+            background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -264,7 +264,7 @@ export default function SeanceActive({ seance = [], titre = '', jour = null, onT
             onClick={() => (chrono.enCours ? chrono.pause() : chrono.reprise())}
             style={{
               padding: '15px 18px', borderRadius: 16, cursor: 'pointer',
-              background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+              background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
               color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
             }}
           >
@@ -321,7 +321,7 @@ export default function SeanceActive({ seance = [], titre = '', jour = null, onT
                   onClick={() => { chrono.arreter(); onFermer?.() }}
                   style={{
                     padding: '13px 16px', borderRadius: 14, cursor: 'pointer',
-                    background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+                    background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
                     color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
                   }}
                 >
@@ -349,7 +349,7 @@ function Exercice({ exo }) {
       {exo.photo && (
         <div style={{
           height: 190, borderRadius: 20, overflow: 'hidden', marginBottom: 16,
-          border: '1px solid rgba(255,220,160,0.45)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
           backgroundImage: `url(${exo.photo.url})`,
           backgroundSize: 'cover',
           backgroundPosition: `50% ${exo.photo.pos || '50%'}`,
@@ -362,7 +362,7 @@ function Exercice({ exo }) {
         {exo.reps && (
           <span style={{
             fontSize: 15, fontWeight: 700, color: ENCRE,
-            background: 'rgba(200,123,82,0.14)', border: '1px solid rgba(200,123,82,0.24)',
+            background: 'rgba(var(--rgb-terracotta), 0.14)', border: '1px solid rgba(var(--rgb-terracotta), 0.24)',
             borderRadius: 999, padding: '5px 13px',
           }}>
             {exo.reps}
@@ -416,7 +416,7 @@ function Repos({ restant, suivant, onPasser }) {
         onClick={onPasser}
         style={{
           marginTop: 22, padding: '12px 22px', borderRadius: 15, cursor: 'pointer',
-          background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+          background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
           color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
         }}
       >
@@ -456,7 +456,7 @@ function Bilan({ totalMs, exos, onEnregistrer }) {
           {exos.map((e, i) => (
             <li key={i} style={{
               display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0',
-              borderTop: i === 0 ? 'none' : '1px solid rgba(200,123,82,0.14)',
+              borderTop: i === 0 ? 'none' : '1px solid rgba(var(--rgb-terracotta), 0.14)',
             }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={VERT}
                    strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>

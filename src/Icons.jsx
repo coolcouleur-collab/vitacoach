@@ -2,7 +2,7 @@ import React from 'react'
 
 // ─── Stroke-based SVG icon set ────────────────────────────────────────────────
 
-export function HomeIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function HomeIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"
@@ -13,7 +13,7 @@ export function HomeIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function ChatIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function ChatIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
@@ -22,7 +22,7 @@ export function ChatIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function HeartIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function HeartIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
@@ -31,7 +31,7 @@ export function HeartIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function RoutineIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function RoutineIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
@@ -44,7 +44,7 @@ export function RoutineIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function LeafIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function LeafIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 22s8-4 8-10c0-4-3-7-8-7S4 8 4 12c0 4 4 7 8 10z"
@@ -55,7 +55,7 @@ export function LeafIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function StyleIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function StyleIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46l2.38 4 2-1.14V20a1 1 0 001 1h6a1 1 0 001-1V6.32l2 1.14z"
@@ -64,7 +64,7 @@ export function StyleIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function BreathworkIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function BreathworkIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3H4"
@@ -77,7 +77,7 @@ export function BreathworkIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) 
   )
 }
 
-export function CycleIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function CycleIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
@@ -90,7 +90,7 @@ export function CycleIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function BackIcon({ color = 'rgba(255,238,220,0.92)', size = 20 }) {
+export function BackIcon({ color = 'rgba(var(--rgb-creme-rose), 0.92)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M19 12H5M12 5l-7 7 7 7"
@@ -99,7 +99,7 @@ export function BackIcon({ color = 'rgba(255,238,220,0.92)', size = 20 }) {
   )
 }
 
-export function SparkleIcon({ color = '#E8962A', size = 20 }) {
+export function SparkleIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"
@@ -109,7 +109,7 @@ export function SparkleIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function ChevronIcon({ color = 'rgba(255,238,220,0.55)', size = 16, direction = 'down' }) {
+export function ChevronIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 16, direction = 'down' }) {
   const rotate = direction === 'up' ? 'rotate(180deg)' : direction === 'left' ? 'rotate(90deg)' : direction === 'right' ? 'rotate(-90deg)' : 'none'
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -120,7 +120,7 @@ export function ChevronIcon({ color = 'rgba(255,238,220,0.55)', size = 16, direc
   )
 }
 
-export function PlusIcon({ color = '#E8962A', size = 18 }) {
+export function PlusIcon({ color = 'var(--or-plein)', size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 5v14M5 12h14"
@@ -149,7 +149,7 @@ export function SendIcon({ color = '#fff', size = 18 }) {
 
 // ─── New icons ────────────────────────────────────────────────────────────────
 
-export function WaterIcon({ color = '#E8962A', size = 20 }) {
+export function WaterIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 2C12 2 5 9.5 5 14a7 7 0 0014 0c0-4.5-7-12-7-12z"
@@ -159,7 +159,7 @@ export function WaterIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function MoodIcon({ color = '#E8962A', size = 20 }) {
+export function MoodIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2"/>
@@ -170,7 +170,7 @@ export function MoodIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function SadIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
+export function SadIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2"/>
@@ -181,7 +181,7 @@ export function SadIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
   )
 }
 
-export function NeutralIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
+export function NeutralIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2"/>
@@ -203,7 +203,7 @@ export function HappyIcon({ color = '#22c55e', size = 20 }) {
   )
 }
 
-export function LightbulbIcon({ color = '#E8962A', size = 20 }) {
+export function LightbulbIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M9 21h6M10 21v-2a7 7 0 01-3-5.7A7 7 0 0112 5a7 7 0 015 12.3V21"
@@ -212,7 +212,7 @@ export function LightbulbIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function BrainIcon({ color = '#E8962A', size = 20 }) {
+export function BrainIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M9.5 2A2.5 2.5 0 007 4.5v.5A2.5 2.5 0 004.5 7.5a2.5 2.5 0 00.5 5 2.5 2.5 0 002.5 3h1"
@@ -225,7 +225,7 @@ export function BrainIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function FlashIcon({ color = '#E8962A', size = 20 }) {
+export function FlashIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"
@@ -235,7 +235,7 @@ export function FlashIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function FireIcon({ color = '#E8962A', size = 20 }) {
+export function FireIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M8.5 14.5A4.5 4.5 0 0012 19a4.5 4.5 0 004.5-4.5c0-1.5-.5-3-1.5-4L12 8l-3 2.5c-1 1-1.5 2.5-0.5 4z"
@@ -247,7 +247,7 @@ export function FireIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function MoonIcon({ color = '#C87B52', size = 20 }) {
+export function MoonIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
@@ -257,7 +257,7 @@ export function MoonIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function SunIcon({ color = '#E8962A', size = 20 }) {
+export function SunIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="5" stroke={color} strokeWidth="2" fill={color} fillOpacity="0.2"/>
@@ -282,7 +282,7 @@ export function BellIcon({ color = '#22c55e', size = 20 }) {
   )
 }
 
-export function BellOffIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
+export function BellOffIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M13.73 21a2 2 0 01-3.46 0M18.63 13A17.89 17.89 0 0118 8M6.26 6.26A5.86 5.86 0 006 8c0 7-3 9-3 9h14M18 8a6 6 0 00-9.33-5"
@@ -292,7 +292,7 @@ export function BellOffIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
   )
 }
 
-export function TargetIcon({ color = '#E8962A', size = 20 }) {
+export function TargetIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2"/>
@@ -302,7 +302,7 @@ export function TargetIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function StarIcon({ color = '#E8962A', size = 20 }) {
+export function StarIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
@@ -312,7 +312,7 @@ export function StarIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function DiamondIcon({ color = '#E8962A', size = 20 }) {
+export function DiamondIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <polygon points="12,2 22,9 12,22 2,9"
@@ -323,7 +323,7 @@ export function DiamondIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function CalendarIcon({ color = '#E8962A', size = 20 }) {
+export function CalendarIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <rect x="3" y="4" width="18" height="18" rx="2" stroke={color} strokeWidth="2"/>
@@ -343,7 +343,7 @@ export function FoodIcon({ color = '#22c55e', size = 20 }) {
   )
 }
 
-export function PillIcon({ color = '#C87B52', size = 20 }) {
+export function PillIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M10.5 20.5L3.5 13.5a5 5 0 017.07-7.07l7 7a5 5 0 01-7.07 7.07z"
@@ -354,7 +354,7 @@ export function PillIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function MuscleIcon({ color = '#E8962A', size = 20 }) {
+export function MuscleIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M14.5 9.5c-.83-.83-2-.83-3 0l-4 4c-1 1-1 2.17 0 3s2.17 1 3 0l1.5-1.5"
@@ -367,7 +367,7 @@ export function MuscleIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function RunIcon({ color = '#E8962A', size = 20 }) {
+export function RunIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="13" cy="4" r="2" stroke={color} strokeWidth="2"/>
@@ -377,7 +377,7 @@ export function RunIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function MeditateIcon({ color = '#C87B52', size = 20 }) {
+export function MeditateIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="5" r="2" stroke={color} strokeWidth="2"/>
@@ -387,7 +387,7 @@ export function MeditateIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function ClockIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
+export function ClockIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2"/>
@@ -396,7 +396,7 @@ export function ClockIcon({ color = 'rgba(255,238,220,0.55)', size = 20 }) {
   )
 }
 
-export function LoadingIcon({ color = '#E8962A', size = 20 }) {
+export function LoadingIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       style={{ animation: 'spin 1s linear infinite' }}>
@@ -405,7 +405,7 @@ export function LoadingIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function WeatherIcon({ color = '#E8962A', size = 20 }) {
+export function WeatherIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="9" r="4" stroke={color} strokeWidth="2" fill={color} fillOpacity="0.2"/>
@@ -416,7 +416,7 @@ export function WeatherIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function PhoneIcon({ color = '#E8962A', size = 20 }) {
+export function PhoneIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <rect x="5" y="2" width="14" height="20" rx="2" stroke={color} strokeWidth="2"/>
@@ -425,7 +425,7 @@ export function PhoneIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function RefreshIcon({ color = '#E8962A', size = 20 }) {
+export function RefreshIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <polyline points="1,4 1,10 7,10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -434,7 +434,7 @@ export function RefreshIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function ForumIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
+export function ForumIcon({ color = 'rgba(var(--rgb-creme-rose), 0.55)', size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -442,7 +442,7 @@ export function ForumIcon({ color = 'rgba(255,238,220,0.55)', size = 22 }) {
   )
 }
 
-export function ThumbsUpIcon({ color = '#E8962A', size = 20 }) {
+export function ThumbsUpIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M7 22V11M2 13v7a2 2 0 0 0 2 2h11.34a2 2 0 0 0 1.97-1.67l1.31-8A2 2 0 0 0 16.65 11H13V7a2 2 0 0 0-2-2h-1.5L7 11" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -450,7 +450,7 @@ export function ThumbsUpIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function GiftIcon({ color = '#E8962A', size = 20 }) {
+export function GiftIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <polyline points="20,12 20,22 4,22 4,12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -462,7 +462,7 @@ export function GiftIcon({ color = '#E8962A', size = 20 }) {
   )
 }
 
-export function BalanceIcon({ color = '#C87B52', size = 20 }) {
+export function BalanceIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <line x1="12" y1="4" x2="12" y2="21" stroke={color} strokeWidth="2" strokeLinecap="round"/>
@@ -474,7 +474,7 @@ export function BalanceIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function WalkIcon({ color = '#C87B52', size = 20 }) {
+export function WalkIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="4" r="2" stroke={color} strokeWidth="2"/>
@@ -484,7 +484,7 @@ export function WalkIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function SofaIcon({ color = '#C87B52', size = 20 }) {
+export function SofaIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M20 9V7a2 2 0 00-2-2H6a2 2 0 00-2 2v2" stroke={color} strokeWidth="2" strokeLinecap="round"/>
@@ -496,7 +496,7 @@ export function SofaIcon({ color = '#C87B52', size = 20 }) {
   )
 }
 
-export function WaveIcon({ color = '#E8962A', size = 20 }) {
+export function WaveIcon({ color = 'var(--or-plein)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M2 11c2-3 4-3 6 0s4 3 6 0 4-3 6 0" stroke={color} strokeWidth="2" strokeLinecap="round"/>

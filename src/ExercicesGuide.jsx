@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom'
 import { ENCRE, ICONE } from './palette'
 
 const F = "'Poppins', system-ui, sans-serif"
-const T = '#C87B52'
+const T = 'var(--accent)'
 const S = { stroke: T, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }
 const SOL = <path d="M12 92 L88 92" stroke={ICONE} strokeWidth="3" strokeLinecap="round" fill="none" />
 
@@ -354,7 +354,7 @@ function PhotoExo({ exo, height = 130, radius = 12, fallback = 'anim' }) {
   return (
     <div style={{
       height, borderRadius: radius, overflow: 'hidden', marginBottom: fallback === 'rien' ? 12 : 0,
-      background: 'rgba(255,240,220,0.60)', border: '1px solid rgba(255,220,160,0.40)',
+      background: 'rgba(255,240,220,0.60)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
     }}>
       <img src={photo.url} alt={exo.nom} loading="lazy" onError={() => setKo(true)}
         style={{
@@ -580,19 +580,19 @@ export default function ExercicesGuide({ onClose, initial = null }) {
       <div onClick={e => e.stopPropagation()} style={{
         width: '100%', maxWidth: 520, maxHeight: '88dvh', overflowY: 'auto',
         background: 'rgba(255,244,232,0.96)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
-        borderRadius: '28px 28px 0 0', border: '1px solid rgba(200,123,82,0.20)', borderBottom: 'none',
+        borderRadius: '28px 28px 0 0', border: '1px solid rgba(var(--rgb-terracotta), 0.20)', borderBottom: 'none',
         padding: '14px 20px calc(24px + env(safe-area-inset-bottom))',
         fontFamily: F, animation: 'exoSheetUp 0.38s cubic-bezier(0.22,1,0.36,1) both',
         WebkitOverflowScrolling: 'touch',
       }}>
-        <div style={{ width: 44, height: 5, background: 'rgba(200,123,82,0.30)', borderRadius: 8, margin: '0 auto 14px' }} />
+        <div style={{ width: 44, height: 5, background: 'rgba(var(--rgb-terracotta), 0.30)', borderRadius: 8, margin: '0 auto 14px' }} />
 
         <button onClick={onClose} aria-label="Fermer le guide" style={{
           position: 'sticky', top: 0, float: 'right', zIndex: 5,
           width: 32, height: 32, borderRadius: '50%', cursor: 'pointer',
-          background: 'rgba(255,246,238,0.92)', border: '1px solid rgba(200,123,82,0.30)',
+          background: 'rgba(255,246,238,0.92)', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(200,123,82,0.15)', marginLeft: 8,
+          boxShadow: '0 2px 10px rgba(var(--rgb-terracotta), 0.15)', marginLeft: 8,
         }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.4" strokeLinecap="round">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -610,7 +610,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {EXOS.map(e => (
                 <button key={e.id} onClick={() => setActif(e.id)} style={{
-                  background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.40)',
+                  background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
                   borderRadius: 16, padding: '10px 12px 12px', cursor: 'pointer', textAlign: 'left', fontFamily: F,
                 }}>
                   <PhotoExo exo={e} height={130} />
@@ -635,7 +635,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
               // 120 et non 190 : depuis que la photo montre la position, ce bloc
               // ne sert plus qu'à décomposer le geste. À 190 il repoussait
               // « Comment faire » sous la ligne de flottaison.
-              height: 120, background: 'rgba(255,235,210,0.40)', border: '1px solid rgba(255,220,160,0.40)',
+              height: 120, background: 'rgba(var(--rgb-creme), 0.40)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
               borderRadius: 18, marginBottom: 14, padding: 10,
             }}>
               <exo.Anim />
@@ -645,7 +645,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
               <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 8, alignItems: 'flex-start' }}>
                 <span style={{
                   width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                  background: 'rgba(200,123,82,0.14)', border: '1px solid rgba(200,123,82,0.30)',
+                  background: 'rgba(var(--rgb-terracotta), 0.14)', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 10.5, fontWeight: 700, color: ENCRE,
                 }}>{i + 1}</span>

@@ -30,7 +30,7 @@ export default function SplashScreen({ onDone }) {
       transition={{ duration: 0.65, ease: EASE_OUT_QUART }}
       style={{
         position: 'fixed', inset: 0, zIndex: 9999,
-        background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+        background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         pointerEvents: exiting ? 'none' : 'all',
       }}
@@ -47,7 +47,7 @@ export default function SplashScreen({ onDone }) {
           transition={{ duration: 0.55, ease: EASE_OUT_EXPO, delay: 0 }}
           style={{
             width: 56, height: 1.5, marginBottom: 30,
-            background: 'linear-gradient(90deg, transparent 0%, rgba(200,123,82,0.38) 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(var(--rgb-terracotta), 0.38) 50%, transparent 100%)',
             transformOrigin: 'center',
           }}
         />
@@ -59,15 +59,15 @@ export default function SplashScreen({ onDone }) {
           transition={{ duration: 0.70, ease: EASE_SPRING, delay: 0.06 }}
           style={{
             width: 88, height: 88, borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(200,123,82,0.28), rgba(190,112,30,0.18))',
+            background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.28), rgba(190,112,30,0.18))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 0 10px rgba(200,123,82,0.07), 0 0 0 20px rgba(200,123,82,0.04)',
+            boxShadow: '0 0 0 10px rgba(var(--rgb-terracotta), 0.07), 0 0 0 20px rgba(var(--rgb-terracotta), 0.04)',
             position: 'relative', overflow: 'hidden',
             marginBottom: 24,
           }}
         >
           <span style={{
-            fontSize: 44, fontWeight: 900, color: 'rgba(200,123,82,0.90)',
+            fontSize: 44, fontWeight: 900, color: 'rgba(var(--rgb-terracotta), 0.90)',
             fontFamily: "'Poppins', 'Inter', system-ui, sans-serif",
             letterSpacing: '-2px',
           }}>S</span>
@@ -83,7 +83,7 @@ export default function SplashScreen({ onDone }) {
             letterSpacing: '-0.02em', lineHeight: 1,
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
-            background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 28%, #C87B52 50%, #F0B060 72%, #C87B52 100%)',
+            background: 'linear-gradient(90deg, var(--accent) 0%, var(--or-plein) 28%, var(--accent) 50%, #F0B060 72%, var(--accent) 100%)',
             backgroundSize: '200% auto',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -103,7 +103,7 @@ export default function SplashScreen({ onDone }) {
           style={{
             fontSize: 12.5, fontWeight: 400,
             letterSpacing: '0.22em',
-            color: 'rgba(200,123,82,0.42)',
+            color: 'rgba(var(--rgb-terracotta), 0.42)',
             fontFamily: "'Poppins', system-ui, sans-serif",
             marginBottom: 30,
           }}
@@ -118,7 +118,7 @@ export default function SplashScreen({ onDone }) {
           transition={{ duration: 0.55, ease: EASE_OUT_EXPO, delay: 0.46 }}
           style={{
             width: 56, height: 1.5,
-            background: 'linear-gradient(90deg, transparent 0%, rgba(200,123,82,0.38) 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(var(--rgb-terracotta), 0.38) 50%, transparent 100%)',
             transformOrigin: 'center',
           }}
         />

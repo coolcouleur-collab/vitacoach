@@ -166,16 +166,16 @@ export default function Auth({ onConnecte, onBack }) {
   }
 
   return (
-    <div style={s.page}>
+    <div className="theme-jour" style={s.page}>
       <style>{`
         @keyframes authFadeUp {
           from { opacity:0; transform:translateY(18px); }
           to   { opacity:1; transform:translateY(0); }
         }
         @keyframes authGlow {
-          0%,100% { box-shadow: 0 4px 16px rgba(200,123,82,0.25); transform: scale(1) rotate(0deg); }
-          25%      { box-shadow: 0 6px 28px rgba(200,123,82,0.55); transform: scale(1.08) rotate(-4deg); }
-          75%      { box-shadow: 0 6px 28px rgba(200,123,82,0.55); transform: scale(1.08) rotate(4deg); }
+          0%,100% { box-shadow: 0 4px 16px rgba(var(--rgb-terracotta), 0.25); transform: scale(1) rotate(0deg); }
+          25%      { box-shadow: 0 6px 28px rgba(var(--rgb-terracotta), 0.55); transform: scale(1.08) rotate(-4deg); }
+          75%      { box-shadow: 0 6px 28px rgba(var(--rgb-terracotta), 0.55); transform: scale(1.08) rotate(4deg); }
         }
         @keyframes authShimmer {
           0%   { background-position: -200% center; }
@@ -209,7 +209,7 @@ export default function Auth({ onConnecte, onBack }) {
         input[type="checkbox"] {
           appearance: none; -webkit-appearance: none;
           width: 15px; height: 15px; flex-shrink: 0;
-          border: 1.5px solid rgba(255,220,160,0.60);
+          border: 1.5px solid rgba(var(--rgb-creme-dore), 0.60);
           border-radius: 3px;
           background: rgba(255,235,200,0.12);
           cursor: pointer; position: relative;
@@ -217,18 +217,18 @@ export default function Auth({ onConnecte, onBack }) {
         }
         input[type="checkbox"]:checked {
           background: rgba(220,165,90,0.38);
-          border-color: rgba(255,220,160,0.90);
+          border-color: rgba(var(--rgb-creme-dore), 0.90);
         }
         input[type="checkbox"]:checked::after {
           content: '✓'; position: absolute;
-          color: rgba(255,248,235,1); font-size: 11px;
+          color: rgba(var(--rgb-creme-pale), 1); font-size: 11px;
           top: -2px; left: 1px; font-weight: 600;
         }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
           -webkit-box-shadow: 0 0 0px 1000px rgba(220,160,100,0.18) inset !important;
-          -webkit-text-fill-color: rgba(255,248,235,1) !important;
+          -webkit-text-fill-color: rgba(var(--rgb-creme-pale), 1) !important;
           transition: background-color 5000s ease-in-out 0s;
         }
       `}</style>
@@ -237,7 +237,7 @@ export default function Auth({ onConnecte, onBack }) {
         <button onClick={() => setLangOpen(o => !o)} style={{
           display:'flex', alignItems:'center', gap:5,
           background:'rgba(180,95,35,0.32)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-          border:'1px solid rgba(255,220,160,0.35)', borderRadius:'2rem',
+          border:'1px solid rgba(var(--rgb-creme-dore), 0.35)', borderRadius:'2rem',
           padding:'6px 12px', cursor:'pointer',
           fontFamily:'Poppins, sans-serif', fontSize:11, fontWeight:500, letterSpacing:'0.08em',
           color:ENCRE, transition:'background 0.2s',
@@ -252,7 +252,7 @@ export default function Auth({ onConnecte, onBack }) {
           <div style={{
             position:'absolute', right:0, top:'calc(100% + 6px)',
             background:'rgba(160,80,25,0.88)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)',
-            border:'1px solid rgba(255,220,160,0.30)', borderRadius:12,
+            border:'1px solid rgba(var(--rgb-creme-dore), 0.30)', borderRadius:12,
             padding:'4px 0', minWidth:140,
             boxShadow:'0 8px 28px rgba(80,30,5,0.25)',
             animation:'msgSlideIn 0.18s ease both',
@@ -305,9 +305,9 @@ export default function Auth({ onConnecte, onBack }) {
                 <animate attributeName="x1" values="-150%;0%;-150%" dur="4s" repeatCount="indefinite" />
                 <animate attributeName="x2" values="-50%;100%;-50%" dur="4s" repeatCount="indefinite" />
                 <stop offset="0%"   stopColor="#B8693A" stopOpacity="1" />
-                <stop offset="30%"  stopColor="#C87B52" stopOpacity="1" />
+                <stop offset="30%"  stopColor="var(--accent)" stopOpacity="1" />
                 <stop offset="50%"  stopColor="#D4854A" stopOpacity="1" />
-                <stop offset="70%"  stopColor="#C87B52" stopOpacity="1" />
+                <stop offset="70%"  stopColor="var(--accent)" stopOpacity="1" />
                 <stop offset="100%" stopColor="#B8693A" stopOpacity="1" />
               </linearGradient>
             </defs>
@@ -398,7 +398,7 @@ export default function Auth({ onConnecte, onBack }) {
             if (arrow) { arrow.style.animation = 'none'; arrow.style.transform = 'translateX(6px)' }
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.borderColor = 'rgba(255,220,160,0.30)'
+            e.currentTarget.style.borderColor = 'rgba(var(--rgb-creme-dore), 0.30)'
             const arrow = e.currentTarget.querySelector('.btn-arrow')
             if (arrow) { arrow.style.animation = ''; arrow.style.transform = '' }
           }}>
@@ -437,7 +437,7 @@ const s = {
   // centre par align-items dans un conteneur qui defile se fait couper EN
   // HAUT, sans moyen de remonter. La marge automatique centre aussi, mais
   // laisse le defilement atteindre les deux extremites.
-  page: { height:'100dvh', background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', display:'block',
+  page: { height:'100dvh', background:'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)', display:'block',
     fontFamily:'Poppins, sans-serif', padding:20,
     paddingTop:    'calc(env(safe-area-inset-top, 0px) + 72px)',
     paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
@@ -447,7 +447,7 @@ const s = {
     background:'radial-gradient(circle,rgba(148,77,38,0.60) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' },
   blob2: { position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-    background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+    background:'radial-gradient(circle,rgba(var(--rgb-terracotta), 0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
     pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' },
   liquidWrap: { position:'absolute', inset:0, zIndex:0, pointerEvents:'none' },
   blob3: { position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
@@ -455,17 +455,17 @@ const s = {
     pointerEvents:'none', zIndex:0, animation:'floatOrb 17s ease-in-out infinite' },
   card: {
     position:'relative', zIndex:3, width:'100%', maxWidth:380,
-    background:'rgba(255,235,210,0.25)',
+    background:'rgba(var(--rgb-creme), 0.25)',
     borderRadius: 20,
     padding:'20px 16px',
     backdropFilter:'blur(18px)',
     WebkitBackdropFilter:'blur(18px)',
-    border:'1px solid rgba(255,220,160,0.30)',
+    border:'1px solid rgba(var(--rgb-creme-dore), 0.30)',
     animation:'slideUp 0.45s ease' },
   logoWrap: { display:'flex', alignItems:'center', justifyContent:'center', marginBottom:6 },
   tagline: { textAlign:'center', fontSize:13, color:ENCRE, marginBottom:36 },
   tabs: { display:'flex', marginBottom:32, background:'transparent', padding:'0', gap:0,
-    borderBottom:'1px solid rgba(255,220,160,0.20)' },
+    borderBottom:'1px solid rgba(var(--rgb-creme-dore), 0.20)' },
   tab: { flex:1, padding:'11px 4px', background:'transparent', border:'none', cursor:'pointer',
     fontSize:15, fontFamily:'Poppins, sans-serif',
     color:ENCRE, fontWeight:400, opacity:0.75,
@@ -492,7 +492,7 @@ const s = {
   footer: { marginTop:20, textAlign:'center', fontSize:14, color:ENCRE, lineHeight:1.6 },
   backBtn: {
     position:'fixed', top:'calc(env(safe-area-inset-top, 0px) + 24px)', left:24, zIndex:10,
-    background:'rgba(255,235,210,0.22)', border:'1px solid rgba(255,220,160,0.40)', cursor:'pointer',
+    background:'rgba(var(--rgb-creme), 0.22)', border:'1px solid rgba(var(--rgb-creme-dore), 0.40)', cursor:'pointer',
     color:ENCRE, fontSize:22, fontWeight:500,
     fontFamily:'Poppins, sans-serif', padding:'0.55rem 1.8rem',
     borderRadius:'2rem', transition:'background 0.25s, border-color 0.25s',

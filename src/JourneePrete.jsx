@@ -11,7 +11,7 @@ import { ENCRE, ICONE } from './palette'
 const F = "'Poppins', system-ui, sans-serif"
 
 function AdaptIcon({ type }) {
-  const stroke = '#C87B52'
+  const stroke = 'var(--accent)'
   const common = { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke, strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', style: { flexShrink: 0 } }
   switch (type) {
     case 'allege': // plume, journée allégée
@@ -33,8 +33,8 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
   const tc      = isNight ? (op) => `rgba(180,210,255,${op})` : () => ENCRE
   const panneau = isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,255,255,0.22)'
   const panneau2= isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,246,238,0.62)'
-  const trait   = isNight ? 'rgba(180,210,255,0.20)': 'rgba(200,123,82,0.22)'
-  const trait2  = isNight ? 'rgba(180,210,255,0.24)': 'rgba(200,123,82,0.30)'
+  const trait   = isNight ? 'rgba(180,210,255,0.20)': 'rgba(var(--rgb-terracotta), 0.22)'
+  const trait2  = isNight ? 'rgba(180,210,255,0.24)': 'rgba(var(--rgb-terracotta), 0.30)'
   const icone   = isNight ? 'rgba(180,210,255,0.78)': ICONE
   const [data, setData] = useState(null)
 
@@ -115,7 +115,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
         backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
         border: `1px solid ${trait}`,
         borderRadius: 18, padding: '16px 18px', margin: '14px 18px 14px',
-        boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
+        boxShadow: '0 8px 28px rgba(var(--rgb-terracotta), 0.10)',
         fontFamily: F,
       }}>
         <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: tc(0.90), display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
@@ -150,7 +150,7 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       border: `1px solid ${trait}`,
       borderRadius: 18, padding: '16px 18px', margin: '14px 18px 14px',
-      boxShadow: '0 8px 28px rgba(200,123,82,0.10)',
+      boxShadow: '0 8px 28px rgba(var(--rgb-terracotta), 0.10)',
       fontFamily: F,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>

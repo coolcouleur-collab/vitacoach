@@ -11,7 +11,7 @@ function Splash({ done }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 200,
-      background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+      background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
       display: 'grid', placeItems: 'center',
       opacity: done ? 0 : 1,
       pointerEvents: done ? 'none' : 'all',
@@ -30,19 +30,19 @@ function Splash({ done }) {
       `}</style>
       <div style={{
         position: 'absolute', top: '-15%', left: '-10%', width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(200,123,82,0.35) 0%, rgba(200,100,40,0.14) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.35) 0%, rgba(200,100,40,0.14) 45%, transparent 70%)',
         pointerEvents: 'none', animation: 'splashBlob 8s ease-in-out infinite',
       }} />
       <div style={{
         position: 'absolute', bottom: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(200,123,82,0.28) 0%, rgba(180,90,30,0.10) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.28) 0%, rgba(180,90,30,0.10) 45%, transparent 70%)',
         pointerEvents: 'none', animation: 'splashBlob 11s ease-in-out infinite reverse',
       }} />
       <div style={{ display: 'flex', gap: '0.55rem', alignItems: 'center', position: 'relative', zIndex: 1 }}>
         {[0, 1, 2].map(i => (
           <div key={i} style={{
             width: 6, height: 6, borderRadius: '50%',
-            background: 'rgba(200,123,82,0.55)',
+            background: 'rgba(var(--rgb-terracotta), 0.55)',
             animation: `splashDot 1.1s ease-in-out ${i * 0.18}s infinite`,
           }} />
         ))}
@@ -57,7 +57,7 @@ const FX_SLIDES = [
     num: '01', tag: 'Vitalité',
     title: ['Ce que tu manges,', 'te reconstruit.'],
     sub: 'Solenn analyse ton corps en temps réel et adapte chaque repas à ce dont il a vraiment besoin.',
-    color: ENCRE, accent: '#E8962A',
+    color: ENCRE, accent: 'var(--or-plein)',
     bg: 'transparent',
     items: ['Nutrition intuitive', 'Données santé', 'Temps réel'],
   },
@@ -65,7 +65,7 @@ const FX_SLIDES = [
     num: '02', tag: 'Sommeil',
     title: ['Dormir mieux,', 'dès ce soir.'],
     sub: 'Un sommeil qui récupère vraiment, Solenn ajuste ta routine du soir pour que chaque nuit compte.',
-    color: ENCRE, accent: '#E8962A',
+    color: ENCRE, accent: 'var(--or-plein)',
     bg: 'transparent',
     items: ['Récupération profonde', 'Gestion du stress', 'Routine nocturne'],
   },
@@ -73,7 +73,7 @@ const FX_SLIDES = [
     num: '03', tag: 'Rythme',
     title: ['Chaque jour,', 'à ta mesure.'],
     sub: 'Quand chaque habitude s\'aligne sur ton rythme naturel, tout devient plus fluide.',
-    color: ENCRE, accent: '#E8962A',
+    color: ENCRE, accent: 'var(--or-plein)',
     bg: 'transparent',
     items: ['Habitudes durables', 'Journée alignée', 'Sans friction'],
   },
@@ -170,11 +170,11 @@ function CinematicSlider({ onCommencer }) {
               position: 'absolute', top: '65%', left: '50%',
               transform: 'translateX(-50%)', zIndex: 20,
               // Verre de cuivre profond, translucide + texte crème (palette Solenn)
-              background: 'linear-gradient(135deg,#6C422C,#90593B)',
+              background: 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))',
               backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
               border: '1px solid rgba(108,66,44,0.55)',
               borderRadius: '2rem',
-              boxShadow: '0 0 24px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,248,235,0.30)',
+              boxShadow: '0 0 24px rgba(var(--rgb-terracotta), 0.22), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.30)',
               color: '#FFF8EB',
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontStyle: 'italic',
@@ -279,7 +279,7 @@ function CinematicSlider({ onCommencer }) {
             background: 'rgba(200,100,40,0.14)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,220,160,0.50)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.50)',
             boxShadow: '0 8px 32px rgba(140,65,15,0.20)',
             borderRadius: 20,
             padding: '36px 26px 32px',
@@ -316,8 +316,8 @@ function CinematicSlider({ onCommencer }) {
                 <span key={item} style={{
                   fontSize: '0.88rem', fontFamily: 'Poppins, sans-serif', fontWeight: 500,
                   color: ENCRE,
-                  background: 'rgba(255,235,210,0.18)',
-                  border: '1px solid rgba(255,220,160,0.38)',
+                  background: 'rgba(var(--rgb-creme), 0.18)',
+                  border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
                   borderRadius: '2rem', padding: '4px 13px',
                 }}>
                   {item}
@@ -372,7 +372,7 @@ function CinematicSlider({ onCommencer }) {
               }}
               onMouseEnter={e => {
                 if (soundOn) playFxSound('hover')
-                if (i !== cur) { e.currentTarget.style.color = 'rgba(255,248,235,1)' }
+                if (i !== cur) { e.currentTarget.style.color = 'rgba(var(--rgb-creme-pale), 1)' }
               }}
               onMouseLeave={e => {
                 if (i !== cur) { e.currentTarget.style.color = ENCRE }
@@ -413,8 +413,8 @@ function CinematicSlider({ onCommencer }) {
             letterSpacing: '0.06em', textDecoration: 'none',
             transition: 'color 0.25s',
           }}
-          onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,248,235,0.85)'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,248,235,0.72)'}
+          onMouseEnter={e => e.currentTarget.style.color = 'rgba(var(--rgb-creme-pale), 0.85)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(var(--rgb-creme-pale), 0.72)'}
         >
           contact@solenn.app
         </a>
@@ -455,7 +455,7 @@ function EarlyAccessSection() {
 
   return (
     <section style={{
-      background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+      background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
       padding: 'clamp(5rem, 10vw, 9rem) 1.5rem',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -463,13 +463,13 @@ function EarlyAccessSection() {
       <div style={{
         position: 'absolute', top: '-20%', right: '-10%', width: 500, height: 500,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(200,123,82,0.18) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.18) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
       <div style={{
         position: 'absolute', bottom: '-15%', left: '-8%', width: 400, height: 400,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,150,42,0.14) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-or), 0.14) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -480,7 +480,7 @@ function EarlyAccessSection() {
         background: 'rgba(200,100,40,0.14)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255,220,160,0.50)',
+        border: '1px solid rgba(var(--rgb-creme-dore), 0.50)',
         boxShadow: '0 8px 32px rgba(140,65,15,0.20)',
         borderRadius: 24,
         padding: 'clamp(2.4rem, 5vw, 3.6rem) clamp(1.4rem, 4vw, 2.8rem)',
@@ -540,7 +540,7 @@ function EarlyAccessSection() {
                 background: 'rgba(255,235,200,0.14)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,220,160,0.45)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
                 borderRadius: '2rem',
                 color: ENCRE,
                 fontFamily: 'Poppins, sans-serif',
@@ -553,10 +553,10 @@ function EarlyAccessSection() {
               type="submit"
               disabled={status === 'loading'}
               style={{
-                background: 'rgba(255,235,210,0.32)',
-                border: '1px solid rgba(255,220,160,0.60)',
+                background: 'rgba(var(--rgb-creme), 0.32)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
                 borderRadius: '2rem',
-                boxShadow: '0 0 22px rgba(232,150,42,0.22)',
+                boxShadow: '0 0 22px rgba(var(--rgb-or), 0.22)',
                 color: ENCRE,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: 'italic',
@@ -598,7 +598,7 @@ export default function Landing({ onCommencer }) {
   }, [])
 
   return (
-    <div style={{ background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)', minHeight: '100dvh', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
+    <div className="theme-jour" style={{ background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)', minHeight: '100dvh', overflowX: 'hidden', fontFamily: 'var(--font)' }}>
       <style>{`
         @keyframes waiterPulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.04); opacity:.85; } }
         @keyframes fxWipeIn {
@@ -663,10 +663,10 @@ export default function Landing({ onCommencer }) {
       <div style={{ position: 'relative', height: '100dvh', overflow: 'hidden', zIndex: 1 }}>
         <div className="globe-wrapper"><GlobeBg opacity={0.35} fixed={false} /></div>
         <div style={{ position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+          background:'radial-gradient(circle,rgba(var(--rgb-terracotta), 0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
           pointerEvents:'none', zIndex:0, animation:'floatOrb 10s ease-in-out infinite' }} />
         <div style={{ position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+          background:'radial-gradient(circle,rgba(var(--rgb-terracotta), 0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
           pointerEvents:'none', zIndex:0, animation:'floatOrb 13s ease-in-out infinite reverse' }} />
         <div style={{ position:'absolute', top:'30%', left:'25%', width:700, height:700, borderRadius:'50%',
           background:'radial-gradient(circle,rgba(190,105,35,0.22) 0%,rgba(160,80,20,0.10) 40%,transparent 70%)',

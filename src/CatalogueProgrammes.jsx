@@ -27,10 +27,10 @@ import { ENCRE, ICONE, ACCENT, AMBRE } from './palette'
 const EASE = [0.22, 1, 0.36, 1]
 
 const VERRE = {
-  background: 'rgba(255,235,210,0.32)',
+  background: 'rgba(var(--rgb-creme), 0.32)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
-  border: '1px solid rgba(255,220,160,0.40)',
+  border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
 }
 
 /** Le petit bandeau qui dit la durée, présent partout où un programme est nommé. */
@@ -39,7 +39,7 @@ function Duree({ jours }) {
   return (
     <span style={{
       fontSize: 11, fontWeight: 600, color: AMBRE, whiteSpace: 'nowrap',
-      background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.22)',
+      background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.22)',
       borderRadius: 999, padding: '3px 9px',
     }}>
       {jours} jours, {semaines} semaines
@@ -97,8 +97,8 @@ function Choix({ titre, options, valeur, onChoisir, aide = null }) {
               onClick={() => onChoisir(o.id)}
               style={{
                 flex: 1, padding: '11px 6px', borderRadius: 13, cursor: 'pointer',
-                background: actif ? 'rgba(200,123,82,0.16)' : 'transparent',
-                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(200,123,82,0.28)',
+                background: actif ? 'rgba(var(--rgb-terracotta), 0.16)' : 'transparent',
+                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(var(--rgb-terracotta), 0.28)',
                 color: ENCRE, fontSize: 13, fontWeight: actif ? 700 : 500,
                 fontFamily: "'Poppins', sans-serif",
               }}
@@ -144,7 +144,7 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
         <div style={{
           width: 46, height: 46, borderRadius: 15, flexShrink: 0, fontSize: 24,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+          background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
         }}>
           {prog.emoji}
         </div>
@@ -245,7 +245,7 @@ function Fiche({ prog, profil, onCommencer, onRetour, creating, creatingLabel, e
           disabled={creating}
           style={{
             padding: '13px 16px', borderRadius: 15, cursor: creating ? 'not-allowed' : 'pointer',
-            background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+            background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
             color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
           }}
         >
@@ -289,7 +289,7 @@ function Vignette({ prog, index, onOuvrir }) {
       <div style={{
         width: 44, height: 44, borderRadius: 14, flexShrink: 0, fontSize: 22,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+        background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
       }}>
         {prog.emoji}
       </div>
@@ -376,7 +376,7 @@ export default function CatalogueProgrammes({
                 onClick={onAnnuler}
                 style={{
                   width: '100%', marginTop: 16, padding: '12px 16px', borderRadius: 15,
-                  background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+                  background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
                   color: ENCRE, fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
                   fontFamily: "'Poppins', sans-serif",
                 }}

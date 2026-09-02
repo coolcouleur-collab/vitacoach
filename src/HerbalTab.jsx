@@ -7,14 +7,14 @@ import { croiser, phraseAlerte } from './contreIndications'
 
 // ─── PALETTE (clair, fond de page abricot) ──────────────────────────────────
 const GLASS_BG     = 'rgba(255,248,242,0.75)'
-const GLASS_BORDER = '1px solid rgba(200,123,82,0.18)'
-const TXT_MAIN     = ENCRE   // etait rgba(200,123,82,0.90) : 2,18:1 sur 11 textes
+const GLASS_BORDER = '1px solid rgba(var(--rgb-terracotta), 0.18)'
+const TXT_MAIN     = ENCRE   // etait rgba(var(--rgb-terracotta), 0.90) : 2,18:1 sur 11 textes
 const TXT_SOFT     = ENCRE   // etait 1,81:1. Meme encre, la hierarchie passe par la graisse
-const ACCENT_FICHE       = AMBRE   // etait #E8962A : 1,73:1 en texte de 9px
+const ACCENT_FICHE       = AMBRE   // etait var(--or-plein) : 1,73:1 en texte de 9px
 // Le vert ne subsiste QUE sur le badge « Étudié », ou il signifie validé.
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
 const ETIQUETTE    = ENCRE   // s'appelait GREEN et contenait du terracotta a 2,3:1
-const CTA_GRAD     = 'rgba(255,235,210,0.32)'
+const CTA_GRAD     = 'rgba(var(--rgb-creme), 0.32)'
 
 // Le profil courant, pose par HerbalTab au rendu. Les cartes de fiches sont
 // definies hors du composant et ne recoivent pas ses props : ce relais evite
@@ -33,7 +33,7 @@ function WarnTriangleIcon({ color = '#ef4444', size = 14 }) {
   )
 }
 
-function LinkChainIcon({ color = '#E8962A', size = 14 }) {
+function LinkChainIcon({ color = 'var(--or-plein)', size = 14 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"
@@ -201,7 +201,7 @@ function HeroBg() {
       {/* Animated aurora gradient, subtle warm/green glow on dark */}
       <div style={{
         position:'absolute', inset:0,
-        background:'linear-gradient(-45deg, rgba(232,150,42,0.14), rgba(255,248,242,0.10), rgba(232,150,42,0.12), rgba(255,220,160,0.10), rgba(200,123,82,0.14))',
+        background:'linear-gradient(-45deg, rgba(var(--rgb-or), 0.14), rgba(255,248,242,0.10), rgba(var(--rgb-or), 0.12), rgba(var(--rgb-creme-dore), 0.10), rgba(var(--rgb-terracotta), 0.14))',
         backgroundSize:'400% 400%',
         animation:'heroGradient 10s ease infinite',
       }} />
@@ -213,7 +213,7 @@ function HeroBg() {
       }} />
       <div style={{
         position:'absolute', bottom:'-12%', left:'-5%', width:200, height:200,
-        borderRadius:'50%', background:'radial-gradient(circle, rgba(232,150,42,0.18) 0%, transparent 65%)',
+        borderRadius:'50%', background:'radial-gradient(circle, rgba(var(--rgb-or), 0.18) 0%, transparent 65%)',
         animation:'floatOrb 12s ease-in-out infinite reverse', filter:'blur(8px)',
       }} />
       <div style={{
@@ -234,7 +234,7 @@ function AIRecoCard({ r, onChat, index }) {
   return (
     <div
       style={{
-        background:'rgba(200,123,82,0.10)', border:'1px solid rgba(200,123,82,0.22)', borderRadius:16,
+        background:'rgba(var(--rgb-terracotta), 0.10)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)', borderRadius:16,
         overflow:'hidden',
         transform: pressed ? 'scale(0.985)' : 'scale(1)',
         transition:'transform 0.18s cubic-bezier(0.34,1.56,0.64,1)',
@@ -256,7 +256,7 @@ function AIRecoCard({ r, onChat, index }) {
             {r.tag && (
               <span style={{
                 fontSize:9, fontWeight:800, padding:'2px 8px', borderRadius:12,
-                background:'rgba(200,123,82,0.12)', color:c, border:'1px solid rgba(200,123,82,0.25)',
+                background:'rgba(var(--rgb-terracotta), 0.12)', color:c, border:'1px solid rgba(var(--rgb-terracotta), 0.25)',
                 textTransform:'uppercase', letterSpacing:'0.4px',
               }}>{r.tag}</span>
             )}
@@ -282,15 +282,15 @@ function AIRecoCard({ r, onChat, index }) {
             display:'inline-flex', alignItems:'center', gap:4, marginTop:6,
             fontSize:8.5, fontWeight:700, padding:'2px 7px', borderRadius:10,
             textTransform:'uppercase', letterSpacing:'0.3px',
-            background:'rgba(232,150,42,0.10)', color:ENCRE,
-            border:'1px dashed rgba(232,150,42,0.40)',
+            background:'rgba(var(--rgb-or), 0.10)', color:ENCRE,
+            border:'1px dashed rgba(var(--rgb-or), 0.40)',
           }}>
             Généré par l'IA · à vérifier
           </div>
         </div>
         <div style={{
           width:28, height:28, borderRadius:'50%', flexShrink:0,
-          background:'rgba(200,123,82,0.10)', border:'1px solid rgba(200,123,82,0.22)',
+          background:'rgba(var(--rgb-terracotta), 0.10)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
           display:'flex', alignItems:'center', justifyContent:'center',
           transform: open ? 'rotate(180deg)' : 'rotate(0)',
           transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
@@ -301,13 +301,13 @@ function AIRecoCard({ r, onChat, index }) {
 
       {/* Expanded details */}
       <div style={{ overflow:'hidden', maxHeight: open ? 520 : 0, transition:'max-height 0.38s cubic-bezier(0.4,0,0.2,1)' }}>
-        <div style={{ padding:'0 14px 14px', borderTop:'1px solid rgba(200,123,82,0.18)' }}>
+        <div style={{ padding:'0 14px 14px', borderTop:'1px solid rgba(var(--rgb-terracotta), 0.18)' }}>
 
           {/* Pourquoi, personnalisé */}
           {r.pourquoi && (
             <div style={{
-              background:'rgba(200,123,82,0.08)',
-              border:'1px solid rgba(200,123,82,0.20)', borderRadius:12,
+              background:'rgba(var(--rgb-terracotta), 0.08)',
+              border:'1px solid rgba(var(--rgb-terracotta), 0.20)', borderRadius:12,
               padding:'10px 12px', margin:'10px 0 8px',
             }}>
               <div style={{ fontSize:9, color:ACCENT_FICHE, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', marginBottom:4 }}>
@@ -321,7 +321,7 @@ function AIRecoCard({ r, onChat, index }) {
           {r.usage && (
             <div style={{
               display:'flex', gap:9, alignItems:'flex-start',
-              background:'rgba(232,150,42,0.10)', border:'1px solid rgba(232,150,42,0.22)',
+              background:'rgba(var(--rgb-or), 0.10)', border:'1px solid rgba(var(--rgb-or), 0.22)',
               borderRadius:12, padding:'10px 12px', marginBottom:8,
             }}>
               <span style={{ flexShrink:0, display:'flex' }}><PillIcon size={16} color={ACCENT_FICHE} /></span>
@@ -353,9 +353,9 @@ function AIRecoCard({ r, onChat, index }) {
             <div style={{
               display:'flex', gap:8, alignItems:'flex-start',
               fontSize:11.5, color:ENCRE,
-              background:'rgba(232,150,42,0.08)', borderRadius:12,
+              background:'rgba(var(--rgb-or), 0.08)', borderRadius:12,
               padding:'8px 11px', marginBottom:10,
-              border:'1px solid rgba(232,150,42,0.20)', lineHeight:1.55,
+              border:'1px solid rgba(var(--rgb-or), 0.20)', lineHeight:1.55,
             }}>
               <span style={{ flexShrink:0, display:'flex', marginTop:2 }}><LinkChainIcon color={ACCENT_FICHE} size={13} /></span>
               <span><strong style={{ color:ACCENT_FICHE }}>Synergie :</strong> {r.synergie}</span>
@@ -367,10 +367,10 @@ function AIRecoCard({ r, onChat, index }) {
               display:'inline-flex', alignItems:'center', gap:6,
               padding:'9px 15px', borderRadius:12,
               background:CTA_GRAD,
-              border:'1px solid rgba(255,220,160,0.38)', color: AMBRE,
+              border:'1px solid rgba(var(--rgb-creme-dore), 0.38)', color: AMBRE,
               fontSize:11, fontWeight:800, cursor:'pointer',
               fontFamily:'Poppins,sans-serif',
-              boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
+              boxShadow:'0 4px 14px rgba(var(--rgb-terracotta), 0.35)',
             }}
             onClick={e => {
               e.stopPropagation()
@@ -435,8 +435,8 @@ function AIReco({ profil, onChat }) {
           )}
           {items && (
             <button
-              style={{ ...hb.aiCta, background:'rgba(232,150,42,0.12)', color:ACCENT_FICHE,
-                border:'1px solid rgba(232,150,42,0.35)', boxShadow:'none', fontSize:10 }}
+              style={{ ...hb.aiCta, background:'rgba(var(--rgb-or), 0.12)', color:ACCENT_FICHE,
+                border:'1px solid rgba(var(--rgb-or), 0.35)', boxShadow:'none', fontSize:10 }}
               onClick={() => setItems(null)}
             >
               Refaire
@@ -445,7 +445,7 @@ function AIReco({ profil, onChat }) {
         </div>
 
         {items && (
-          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(200,123,82,0.18)', paddingTop:14 }}>
+          <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(var(--rgb-terracotta), 0.18)', paddingTop:14 }}>
             {items.map((r, i) => (
               <AIRecoCard key={i} r={r} onChat={onChat} index={i} />
             ))}
@@ -499,8 +499,8 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
             <span style={{ fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' }}>{item.nom}</span>
             <span style={{
               fontSize:9, fontWeight:800, padding:'3px 9px', borderRadius:12,
-              background:'rgba(232,150,42,0.12)', color:ACCENT_FICHE,
-              border:'1px solid rgba(232,150,42,0.25)', letterSpacing:'0.4px', textTransform:'uppercase',
+              background:'rgba(var(--rgb-or), 0.12)', color:ACCENT_FICHE,
+              border:'1px solid rgba(var(--rgb-or), 0.25)', letterSpacing:'0.4px', textTransform:'uppercase',
             }}>
               {item.tag}
             </span>
@@ -516,9 +516,9 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               <span style={{
                 fontSize:8.5, fontWeight:700, padding:'2px 7px', borderRadius:10,
                 textTransform:'uppercase', letterSpacing:'0.3px',
-                background: item.preuve === 'Étudié' ? 'rgba(34,197,94,0.12)' : 'rgba(200,123,82,0.10)',
-                color: item.preuve === 'Étudié' ? '#1f9d55' : 'rgba(200,123,82,0.75)',
-                border: item.preuve === 'Étudié' ? '1px solid rgba(34,197,94,0.28)' : '1px solid rgba(200,123,82,0.22)',
+                background: item.preuve === 'Étudié' ? 'rgba(34,197,94,0.12)' : 'rgba(var(--rgb-terracotta), 0.10)',
+                color: item.preuve === 'Étudié' ? '#1f9d55' : 'rgba(var(--rgb-terracotta), 0.75)',
+                border: item.preuve === 'Étudié' ? '1px solid rgba(34,197,94,0.28)' : '1px solid rgba(var(--rgb-terracotta), 0.22)',
               }}>{item.preuve}</span>
             </div>
           )}
@@ -528,7 +528,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
           width:30, height:30, borderRadius:'50%', flexShrink:0,
           // 0.08 / 0.20 : le chevron ne se lisait pas comme un bouton et rien
           // n'indiquait qu'on pouvait deplier la fiche.
-          background:'rgba(200,123,82,0.16)', border:'1px solid rgba(200,123,82,0.38)',
+          background:'rgba(var(--rgb-terracotta), 0.16)', border:'1px solid rgba(var(--rgb-terracotta), 0.38)',
           display:'flex', alignItems:'center', justifyContent:'center',
           transition:'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)',
           transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -548,15 +548,15 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
       }}>
         <div style={{
           padding:'0 15px 15px',
-          borderTop:'1px solid rgba(200,123,82,0.18)',
+          borderTop:'1px solid rgba(var(--rgb-terracotta), 0.18)',
         }}>
           {/* Usage box, vert par defaut. Rouge sur la fiche des recettes a
               proscrire : un encadre vert intitule « Comment utiliser » pour dire
               « a bannir » se contredit lui-meme. */}
           <div style={{
             display:'flex', alignItems:'flex-start', gap:11,
-            background: item.tag === 'À éviter' ? 'rgba(239,68,68,0.09)' : 'rgba(200,123,82,0.10)',
-            border: item.tag === 'À éviter' ? '1px solid rgba(239,68,68,0.22)' : '1px solid rgba(200,123,82,0.20)',
+            background: item.tag === 'À éviter' ? 'rgba(239,68,68,0.09)' : 'rgba(var(--rgb-terracotta), 0.10)',
+            border: item.tag === 'À éviter' ? '1px solid rgba(239,68,68,0.22)' : '1px solid rgba(var(--rgb-terracotta), 0.20)',
             borderRadius:12, padding:'11px 13px', margin:'12px 0 10px',
           }}>
             <div style={{
@@ -598,7 +598,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
                 <div key={k} style={{ display:'flex', alignItems:'flex-start', gap:9, marginBottom:6 }}>
                   <span style={{
                     width:17, height:17, borderRadius:'50%', flexShrink:0, marginTop:1,
-                    background:'rgba(232,150,42,0.14)', border:'1px solid rgba(232,150,42,0.30)',
+                    background:'rgba(var(--rgb-or), 0.14)', border:'1px solid rgba(var(--rgb-or), 0.30)',
                     color:ACCENT_FICHE, fontSize:9, fontWeight:800,
                     display:'flex', alignItems:'center', justifyContent:'center',
                   }}>{k + 1}</span>
@@ -652,8 +652,8 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               style={{
                 display: 'block', width: '100%', marginBottom: 10,
                 padding: '11px 16px', borderRadius: 12,
-                background: cureActive ? 'rgba(200,123,82,0.08)' : 'linear-gradient(135deg, rgba(232,150,42,0.20), rgba(200,123,82,0.12))',
-                border: '1px solid rgba(232,150,42,0.40)',
+                background: cureActive ? 'rgba(var(--rgb-terracotta), 0.08)' : 'linear-gradient(135deg, rgba(var(--rgb-or), 0.20), rgba(var(--rgb-terracotta), 0.12))',
+                border: '1px solid rgba(var(--rgb-or), 0.40)',
                 color: ENCRE,
                 fontSize: 12.5, fontWeight: 800, cursor: cureActive ? 'default' : 'pointer',
                 fontFamily: 'Poppins,sans-serif',
@@ -668,10 +668,10 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               display:'inline-flex', alignItems:'center', gap:6,
               padding:'9px 16px', borderRadius:12,
               background:CTA_GRAD,
-              border:'1px solid rgba(255,220,160,0.38)',
+              border:'1px solid rgba(var(--rgb-creme-dore), 0.38)',
               color: AMBRE, fontSize:11, fontWeight:800,
               cursor:'pointer', fontFamily:'Poppins,sans-serif',
-              boxShadow:'0 4px 14px rgba(200,123,82,0.35)',
+              boxShadow:'0 4px 14px rgba(var(--rgb-terracotta), 0.35)',
               transition:'transform 0.15s, box-shadow 0.15s',
             }}
             onClick={e => {
@@ -840,7 +840,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             width:64, height:64, borderRadius:20,
             background:CTA_GRAD,
             display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow:'0 8px 28px rgba(200,123,82,0.40), 0 2px 6px rgba(232,150,42,0.30)',
+            boxShadow:'0 8px 28px rgba(var(--rgb-terracotta), 0.40), 0 2px 6px rgba(var(--rgb-or), 0.30)',
             animation:'popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
             <LeafIcon color="#fff" size={28} />
@@ -873,7 +873,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
              chercher ne protege personne. */}
       <div style={{
         margin:'0 16px 4px', padding:'10px 13px', borderRadius:14,
-        background:'rgba(255,248,242,0.72)', border:'1px solid rgba(200,123,82,0.22)',
+        background:'rgba(255,248,242,0.72)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
         display:'flex', alignItems:'flex-start', gap:9,
       }}>
         <span style={{ marginTop:1, flexShrink:0 }}><WarnTriangleIcon size={13} color={ICONE} /></span>
@@ -889,8 +889,8 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       {cure && (
         <div style={{
           margin: '0 16px 10px', padding: '14px 15px', borderRadius: 16,
-          background: 'linear-gradient(135deg, rgba(232,150,42,0.16), rgba(200,123,82,0.07))',
-          border: '1px solid rgba(232,150,42,0.40)', fontFamily: 'Poppins,sans-serif',
+          background: 'linear-gradient(135deg, rgba(var(--rgb-or), 0.16), rgba(var(--rgb-terracotta), 0.07))',
+          border: '1px solid rgba(var(--rgb-or), 0.40)', fontFamily: 'Poppins,sans-serif',
         }}>
           <div style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: ACCENT_FICHE, marginBottom: 4 }}>
             {cureFinie ? 'Cure terminée, le verdict' : `Cure en cours · jour ${cureJour} sur ${CURE_JOURS}`}
@@ -903,8 +903,8 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                 Suis la posologie de la fiche, et continue de saisir {cureConf?.nom || 'tes données'} :
                 c'est lui qui rendra le verdict au jour {CURE_JOURS}.
               </div>
-              <div style={{ marginTop: 9, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.15)' }}>
-                <div style={{ width: `${Math.round(cureJour / CURE_JOURS * 100)}%`, height: '100%', background: 'rgba(232,150,42,0.75)', transition: 'width 0.4s ease' }} />
+              <div style={{ marginTop: 9, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(var(--rgb-terracotta), 0.15)' }}>
+                <div style={{ width: `${Math.round(cureJour / CURE_JOURS * 100)}%`, height: '100%', background: 'rgba(var(--rgb-or), 0.75)', transition: 'width 0.4s ease' }} />
               </div>
             </>
           )}
@@ -929,7 +929,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                 onClick={() => { onChat(`J'ai terminé ma cure de 14 jours de ${cure.nom}. Qu'est-ce qu'on en conclut, et on fait quoi maintenant ?`); arreterCure() }}
                 style={{
                   flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
-                  background: CTA_GRAD, border: '1px solid rgba(255,220,160,0.55)',
+                  background: CTA_GRAD, border: '1px solid rgba(var(--rgb-creme-dore), 0.55)',
                   color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
                 }}>En parler à Solenn</button>
             )}
@@ -937,7 +937,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
               onClick={arreterCure}
               style={{
                 flex: cureFinie ? 0.6 : 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
-                background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+                background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
                 color: ENCRE, fontSize: 12, fontWeight: 600, fontFamily: 'Poppins,sans-serif',
               }}>{cureFinie ? 'Terminer' : 'Arrêter la cure'}</button>
           </div>
@@ -948,8 +948,8 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       {besoin && !q && (
         <div style={{
           margin:'0 16px 10px', padding:'13px 15px', borderRadius:16,
-          background:'linear-gradient(135deg, rgba(200,123,82,0.14), rgba(200,123,82,0.05))',
-          border:'1px solid rgba(200,123,82,0.28)',
+          background:'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.14), rgba(var(--rgb-terracotta), 0.05))',
+          border:'1px solid rgba(var(--rgb-terracotta), 0.28)',
         }}>
           <div style={{ fontSize:9, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.7px', color:ACCENT_FICHE, marginBottom:4 }}>
             Ce que disent tes données
@@ -961,7 +961,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             onClick={() => setCat(besoin.cat)}
             style={{
               marginTop:9, padding:'8px 14px', borderRadius:12, cursor:'pointer',
-              background:CTA_GRAD, border:'1px solid rgba(255,220,160,0.50)',
+              background:CTA_GRAD, border:'1px solid rgba(var(--rgb-creme-dore), 0.50)',
               color: AMBRE, fontSize:11.5, fontWeight:700, fontFamily:'Poppins,sans-serif',
             }}>
             Voir ce qui peut aider
@@ -977,7 +977,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
           placeholder="Pellicules, ballonnements, insomnie…"
           style={{
             width:'100%', boxSizing:'border-box', padding:'11px 36px 11px 14px',
-            borderRadius:14, border:'1px solid rgba(200,123,82,0.22)',
+            borderRadius:14, border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
             background:'rgba(255,248,242,0.72)', color:TXT_MAIN,
             fontSize:13, fontFamily:'Poppins,sans-serif', outline:'none',
           }}
@@ -1011,7 +1011,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                     data-actif={active ? '1' : '0'}
                     style={{
                       flexShrink:0, padding:'10px 20px', borderRadius:20,
-                      border: active ? '1px solid rgba(108,66,44,0.55)' : '1px solid rgba(200,123,82,0.16)',
+                      border: active ? '1px solid rgba(108,66,44,0.55)' : '1px solid rgba(var(--rgb-terracotta), 0.16)',
                       fontSize:12, fontWeight:700,
                       cursor:'pointer', fontFamily:'Poppins,sans-serif',
                       whiteSpace:'nowrap',
@@ -1020,8 +1020,8 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                       // creme a 32 % sous du blanc, soit 1,37:1. Le terracotta
                       // est celui des boutons, pas une huitieme nuance.
                       background: active
-                        ? 'linear-gradient(135deg,#6C422C,#90593B)'
-                        : 'rgba(200,123,82,0.06)',
+                        ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))'
+                        : 'rgba(var(--rgb-terracotta), 0.06)',
                       backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
                       color: active ? '#fff' : ENCRE,
                       boxShadow: active
@@ -1108,25 +1108,25 @@ const hb = {
   },
   aiBoxTint: {
     position:'absolute', inset:0, zIndex:0, borderRadius:'inherit',
-    background:'linear-gradient(145deg, rgba(232,150,42,0.08), rgba(200,123,82,0.05))',
+    background:'linear-gradient(145deg, rgba(var(--rgb-or), 0.08), rgba(var(--rgb-terracotta), 0.05))',
     pointerEvents:'none',
   },
   aiTop: { display:'flex', alignItems:'center', gap:12 },
   aiIconWrap: {
     width:44, height:44, borderRadius:16, flexShrink:0,
-    background:'linear-gradient(135deg, rgba(232,150,42,0.16), rgba(200,123,82,0.12))',
-    border:'1px solid rgba(232,150,42,0.30)',
+    background:'linear-gradient(135deg, rgba(var(--rgb-or), 0.16), rgba(var(--rgb-terracotta), 0.12))',
+    border:'1px solid rgba(var(--rgb-or), 0.30)',
     display:'flex', alignItems:'center', justifyContent:'center',
   },
   aiTitle: { fontSize:14, fontWeight:800, color:TXT_MAIN, letterSpacing:'-0.2px' },
   aiSub: { fontSize:10, color:ENCRE, fontWeight:600, marginTop:1 },
   aiCta: {
-    background:'linear-gradient(135deg,#6C422C,#90593B)',   // blanc mesure a 5,14:1
+    background:'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))',   // blanc mesure a 5,14:1
     color:'#fff', border:'none',
     padding:'9px 16px', borderRadius:12,
     fontSize:11, fontWeight:800, cursor:'pointer',
     fontFamily:'Poppins,sans-serif', flexShrink:0,
-    boxShadow:'0 5px 16px rgba(200,123,82,0.38)',
+    boxShadow:'0 5px 16px rgba(var(--rgb-terracotta), 0.38)',
     transition:'opacity 0.15s, transform 0.15s',
   },
   dot: {
@@ -1136,17 +1136,17 @@ const hb = {
   },
   aiResults: {
     marginTop:14, display:'flex', flexDirection:'column', gap:8,
-    borderTop:'1px solid rgba(200,123,82,0.18)', paddingTop:14,
+    borderTop:'1px solid rgba(var(--rgb-terracotta), 0.18)', paddingTop:14,
   },
   aiItem: {
     display:'flex', alignItems:'center', gap:11,
-    background:'rgba(200,123,82,0.08)',
-    border:'1px solid rgba(200,123,82,0.18)',
+    background:'rgba(var(--rgb-terracotta), 0.08)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.18)',
     borderRadius:12, padding:'11px 13px',
   },
   aiAskBtn: {
     width:32, height:32, borderRadius:12, flexShrink:0,
-    background:'rgba(232,150,42,0.12)', border:'1px solid rgba(232,150,42,0.30)',
+    background:'rgba(var(--rgb-or), 0.12)', border:'1px solid rgba(var(--rgb-or), 0.30)',
     color: AMBRE, fontSize:14, fontWeight:900, cursor:'pointer',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontFamily:'Poppins,sans-serif',
@@ -1181,8 +1181,8 @@ const hb = {
     display:'flex', gap:8, alignItems:'flex-start',
     margin:'14px 16px 0',
     padding:'10px 14px',
-    background:'rgba(200,123,82,0.05)',
-    border:'1px solid rgba(200,123,82,0.14)',
+    background:'rgba(var(--rgb-terracotta), 0.05)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.14)',
     borderRadius:12,
     fontSize:10, color:ENCRE, lineHeight:1.6,
     fontStyle:'italic',

@@ -10,17 +10,17 @@ import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 // conformément à la règle des surfaces claires.
 const C = {
   bg: 'rgba(255,244,232,0.90)',
-  bgCard: 'rgba(255,235,210,0.45)',
+  bgCard: 'rgba(var(--rgb-creme), 0.45)',
   bgCardHover: 'rgba(255,232,212,0.60)',
-  border: 'rgba(200,123,82,0.20)',
-  borderStrong: 'rgba(200,123,82,0.38)',
-  accent: '#C87B52',
-  accentLight: 'rgba(200,123,82,0.14)',
-  accentMid: 'rgba(200,123,82,0.28)',
+  border: 'rgba(var(--rgb-terracotta), 0.20)',
+  borderStrong: 'rgba(var(--rgb-terracotta), 0.38)',
+  accent: 'var(--accent)',
+  accentLight: 'rgba(var(--rgb-terracotta), 0.14)',
+  accentMid: 'rgba(var(--rgb-terracotta), 0.28)',
   text: ENCRE,        // seuil 4,5
   textMuted: ENCRE,   // meme teinte : la hierarchie passe par la graisse
   textLight: ICONE,   // seuil 3,0, reserve aux libelles decoratifs
-  handle: 'rgba(200,123,82,0.30)',
+  handle: 'rgba(var(--rgb-terracotta), 0.30)',
   shadow: '0 -24px 64px rgba(180,100,40,0.18), 0 -4px 20px rgba(200,100,40,0.10)',
   font: "'Poppins', system-ui, sans-serif",
 }
@@ -109,11 +109,11 @@ function Avatar({ nom, size = 52 }) {
       >
         <defs>
           <linearGradient id="settingsOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"   stopColor="rgba(200,123,82,0.0)"/>
-            <stop offset="30%"  stopColor="rgba(200,123,82,0.25)"/>
-            <stop offset="55%"  stopColor="rgba(232,150,42,0.55)"/>
-            <stop offset="80%"  stopColor="rgba(200,123,82,0.18)"/>
-            <stop offset="100%" stopColor="rgba(200,123,82,0.0)"/>
+            <stop offset="0%"   stopColor="rgba(var(--rgb-terracotta), 0.0)"/>
+            <stop offset="30%"  stopColor="rgba(var(--rgb-terracotta), 0.25)"/>
+            <stop offset="55%"  stopColor="rgba(var(--rgb-or), 0.55)"/>
+            <stop offset="80%"  stopColor="rgba(var(--rgb-terracotta), 0.18)"/>
+            <stop offset="100%" stopColor="rgba(var(--rgb-terracotta), 0.0)"/>
           </linearGradient>
         </defs>
         <circle
@@ -127,8 +127,8 @@ function Avatar({ nom, size = 52 }) {
       <div style={{
         position: 'absolute', inset: 2,
         borderRadius: '50%',
-        background: 'rgba(200,123,82,0.10)',
-        border: '1px solid rgba(200,123,82,0.28)',
+        background: 'rgba(var(--rgb-terracotta), 0.10)',
+        border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <span style={{
@@ -177,13 +177,13 @@ function ToggleSwitch({ enabled, onToggle }) {
         width: 48, height: 28,
         borderRadius: 12,
         background: enabled
-          ? `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`
-          : 'rgba(200,123,82,0.18)',
+          ? `linear-gradient(135deg, ${C.accent} 0%, var(--or-plein) 100%)`
+          : 'rgba(var(--rgb-terracotta), 0.18)',
         position: 'relative',
         cursor: 'pointer',
         transition: 'background 0.28s ease',
         flexShrink: 0,
-        boxShadow: enabled ? `0 2px 8px rgba(200,123,82,0.38)` : 'none',
+        boxShadow: enabled ? `0 2px 8px rgba(var(--rgb-terracotta), 0.38)` : 'none',
       }}
     >
       <motion.div
@@ -218,7 +218,7 @@ function PresetBtn({ icon, label, value, active, onClick }) {
         border: active
           ? `1.5px solid ${C.accent}`
           : `1px solid ${C.border}`,
-        background: active ? C.accentLight : 'rgba(255,235,210,0.40)',
+        background: active ? C.accentLight : 'rgba(var(--rgb-creme), 0.40)',
         cursor: 'pointer',
         transition: 'all 0.20s ease',
         outline: 'none',
@@ -515,7 +515,7 @@ export default function SettingsSheet({
   }
 
   const PRESETS = [
-    { icon: <SunIcon size={20} color="#9C5D08" />,  label: 'Jour',    value: 'day' },
+    { icon: <SunIcon size={20} color="var(--ambre-fonce)" />,  label: 'Jour',    value: 'day' },
     { icon: <SunIcon size={20} color={ICONE} />,  label: 'Lever',   value: 'sunrise' },
     { icon: <MoonIcon size={20} color={ICONE} />, label: 'Coucher', value: 'sunset' },
     { icon: <MoonIcon size={20} color="#8B7AB8" />, label: 'Nuit',    value: 'night' },
@@ -690,14 +690,14 @@ export default function SettingsSheet({
                        creme a 90 % y etait quasi invisible, saisie comprise
                        (constat Jean 2026-08-12). */
                     .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
-                      border:1px solid rgba(200,123,82,0.32); background:rgba(255,255,255,0.55);
+                      border:1px solid rgba(var(--rgb-terracotta), 0.32); background:rgba(255,255,255,0.55);
                       font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(110,60,30,0.95); outline:none;
                       transition:border-color 0.18s; }
-                    .ss-edit-input:focus { border-color:#C87B52; }
-                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(200,123,82,0.32);
+                    .ss-edit-input:focus { border-color:var(--accent); }
+                    .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(var(--rgb-terracotta), 0.32);
                       background:rgba(255,255,255,0.55); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
                       color:rgba(110,60,30,0.95); outline:none; }
-                    .ss-time-input:focus { border-color:#C87B52; }
+                    .ss-time-input:focus { border-color:var(--accent); }
                   `}</style>
 
                   <EditField label="Prénom / Pseudo">
@@ -757,10 +757,10 @@ export default function SettingsSheet({
                     onClick={handleSaveProfil}
                     style={{
                       width: '100%', padding: '14px', borderRadius: 16, border: 'none',
-                      background: `linear-gradient(135deg, ${C.accent} 0%, #E8962A 100%)`,
+                      background: `linear-gradient(135deg, ${C.accent} 0%, var(--or-plein) 100%)`,
                       color: '#fff', fontFamily: C.font, fontSize: 14, fontWeight: 700,
                       cursor: 'pointer', outline: 'none',
-                      boxShadow: '0 4px 18px rgba(200,123,82,0.32)',
+                      boxShadow: '0 4px 18px rgba(var(--rgb-terracotta), 0.32)',
                       WebkitTapHighlightColor: 'transparent',
                     }}
                     onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)' }}
@@ -777,8 +777,8 @@ export default function SettingsSheet({
             {isPro ? (
               /* Card Pro */
               <Card style={{
-                background: 'linear-gradient(135deg, rgba(232,150,42,0.08) 0%, rgba(200,123,82,0.08) 100%)',
-                border: '1px solid rgba(232,150,42,0.28)',
+                background: 'linear-gradient(135deg, rgba(var(--rgb-or), 0.08) 0%, rgba(var(--rgb-terracotta), 0.08) 100%)',
+                border: '1px solid rgba(var(--rgb-or), 0.28)',
               }}>
                 {/* Badge Pro */}
                 <div style={{ marginBottom: 14 }}>
@@ -786,8 +786,8 @@ export default function SettingsSheet({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: 5,
-                    background: 'rgba(232,150,42,0.12)',
-                    border: '1px solid rgba(232,150,42,0.30)',
+                    background: 'rgba(var(--rgb-or), 0.12)',
+                    border: '1px solid rgba(var(--rgb-or), 0.30)',
                     borderRadius: 20,
                     padding: '5px 12px',
                     fontFamily: C.font,
@@ -795,7 +795,7 @@ export default function SettingsSheet({
                     fontWeight: 700,
                     color: AMBRE,
                   }}>
-                    <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="#9C5D08" /> Solenn Pro</span>
+                    <span style={{display:'flex',alignItems:'center',gap:5}}><SparkleIcon size={13} color="var(--ambre-fonce)" /> Solenn Pro</span>
                   </span>
                 </div>
                 {/* Avantages */}
@@ -823,7 +823,7 @@ export default function SettingsSheet({
                   fontSize: 12,
                   color: C.textMuted,
                   fontWeight: 500,
-                  borderTop: `1px solid rgba(232,150,42,0.18)`,
+                  borderTop: `1px solid rgba(var(--rgb-or), 0.18)`,
                   paddingTop: 10,
                 }}>
                   Merci de faire partie de l'aventure
@@ -831,7 +831,7 @@ export default function SettingsSheet({
 
                 {/* ── Detail et resiliation ───────────────────────────────── */}
                 {aboEtat === 'pret' && abo && (
-                  <div style={{ marginTop: 14, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 12 }}>
+                  <div style={{ marginTop: 14, borderTop: '1px solid rgba(var(--rgb-or), 0.18)', paddingTop: 12 }}>
                     {[
                       ['Formule', 'Solenn Pro · ' + (abo.periode === 'an' ? 'annuel' : 'mensuel')],
                       ['Montant', abo.montant != null ? abo.montant.toFixed(2).replace('.', ',') + ' € par ' + abo.periode : null],
@@ -851,7 +851,7 @@ export default function SettingsSheet({
                         </div>
                         <button onClick={() => actionAbo('reprendre')} disabled={aboOccupe} style={{
                           width: '100%', padding: '11px 0', borderRadius: 12, cursor: 'pointer',
-                          background: 'rgba(232,150,42,0.10)', border: '1px solid rgba(232,150,42,0.30)',
+                          background: 'rgba(var(--rgb-or), 0.10)', border: '1px solid rgba(var(--rgb-or), 0.30)',
                           fontFamily: C.font, fontSize: 13, fontWeight: 700, color: AMBRE,
                         }}>{aboOccupe ? 'Un instant…' : 'Reprendre mon abonnement'}</button>
                       </>
@@ -863,7 +863,7 @@ export default function SettingsSheet({
                         <div style={{ display: 'flex', gap: 8 }}>
                           <button onClick={() => setConfirmResil(false)} style={{
                             flex: 1, padding: '11px 0', borderRadius: 12, cursor: 'pointer',
-                            background: 'rgba(255,235,210,0.55)', border: '1px solid ' + C.border,
+                            background: 'rgba(var(--rgb-creme), 0.55)', border: '1px solid ' + C.border,
                             fontFamily: C.font, fontSize: 13, fontWeight: 700, color: C.text,
                           }}>Garder</button>
                           <button onClick={() => actionAbo('annuler')} disabled={aboOccupe} style={{
@@ -888,14 +888,14 @@ export default function SettingsSheet({
                 )}
 
                 {aboEtat === 'offert' && (
-                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 10,
+                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(var(--rgb-or), 0.18)', paddingTop: 10,
                                 fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.55 }}>
                     Accès offert, activé directement sur ton compte. Aucun prélèvement, rien à résilier.
                   </div>
                 )}
 
                 {aboEtat === 'erreur' && (
-                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(232,150,42,0.18)', paddingTop: 10,
+                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(var(--rgb-or), 0.18)', paddingTop: 10,
                                 fontFamily: C.font, fontSize: 12, color: C.textMuted, lineHeight: 1.55 }}>
                     Je n’arrive pas à lire le détail de ton abonnement pour le moment.
                   </div>
@@ -912,8 +912,8 @@ export default function SettingsSheet({
                   <span style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    background: 'rgba(200,123,82,0.12)',
-                    border: `1px solid rgba(200,123,82,0.30)`,
+                    background: 'rgba(var(--rgb-terracotta), 0.12)',
+                    border: `1px solid rgba(var(--rgb-terracotta), 0.30)`,
                     borderRadius: 20,
                     padding: '3px 10px',
                     fontFamily: C.font,
@@ -932,7 +932,7 @@ export default function SettingsSheet({
                     <div style={{
                       height: 6,
                       borderRadius: 8,
-                      background: 'rgba(200,123,82,0.14)',
+                      background: 'rgba(var(--rgb-terracotta), 0.14)',
                       overflow: 'hidden',
                       marginBottom: 5,
                     }}>
@@ -940,7 +940,7 @@ export default function SettingsSheet({
                         height: '100%',
                         width: `${Math.max(0, Math.min(100, (msgsRestants / 5) * 100))}%`,
                         borderRadius: 8,
-                        background: `linear-gradient(90deg, ${C.accent} 0%, #E8962A 100%)`,
+                        background: `linear-gradient(90deg, ${C.accent} 0%, var(--or-plein) 100%)`,
                         transition: 'width 0.4s ease',
                       }} />
                     </div>
@@ -956,7 +956,7 @@ export default function SettingsSheet({
                       <span style={{
                         width: 18, height: 18,
                         borderRadius: '50%',
-                        background: 'rgba(255,235,210,0.08)',
+                        background: 'rgba(var(--rgb-creme), 0.08)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 11, flexShrink: 0, color: C.textLight,
                       }}>
@@ -982,8 +982,8 @@ export default function SettingsSheet({
                     width: '100%',
                     padding: '14px',
                     borderRadius: 16,
-                    border: '1px solid rgba(255,235,210,0.45)',
-                    background: 'rgba(255,235,210,0.32)',
+                    border: '1px solid rgba(var(--rgb-creme), 0.45)',
+                    background: 'rgba(var(--rgb-creme), 0.32)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
                     // Texte terracotta ici : le panneau Réglages est clair, le
@@ -995,7 +995,7 @@ export default function SettingsSheet({
                     cursor: 'pointer',
                     outline: 'none',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 8px 24px rgba(158,88,52,0.20), inset 0 1px 0 rgba(255,248,235,0.32)',
+                    boxShadow: '0 8px 24px rgba(158,88,52,0.20), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.32)',
                     marginBottom: 8,
                     transition: 'opacity 0.15s ease, transform 0.12s ease',
                   }}

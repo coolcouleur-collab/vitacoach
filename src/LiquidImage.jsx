@@ -4,7 +4,7 @@
  *
  * Props:
  *   src        {string}   URL d'image (optionnel, si absent, gradient généré)
- *   gradient   {string[]} Tableau de couleurs CSS pour le dégradé (ex: ['#C87B52','#E8962A'])
+ *   gradient   {string[]} Tableau de couleurs CSS pour le dégradé (ex: ['var(--accent)','var(--or-plein)'])
  *   width      {number}   Résolution WebGL interne en px (défaut 512)
  *   height     {number}   Résolution WebGL interne en px (défaut 512)
  *   intensity  {number}   Force de la distorsion 0–2 (défaut 1.0)
@@ -151,6 +151,9 @@ function imageTexture(gl, src, onReady) {
 }
 
 // ─── Default gradient ─────────────────────────────────────────────────────────
+// Litteral et non var() : ces couleurs vont dans un canvas WebGL, qui ne
+// resout pas les variables CSS. Corrige apres un plantage a l'ouverture,
+// « var(--fond) could not be parsed as a color » (2 septembre).
 const DEFAULT_GRADIENT = ['#C87B52', '#E8962A', '#F0C070', '#9E5C35', '#C87B52']
 
 // ─── Component ────────────────────────────────────────────────────────────────

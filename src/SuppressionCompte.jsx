@@ -14,15 +14,15 @@ import { AMBRE, ENCRE, ROUGE } from './palette'
 const S = {
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+    background: 'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
     fontFamily: "'Poppins', system-ui, sans-serif",
     padding: '48px 20px 80px',
   },
   card: {
     maxWidth: 720, margin: '0 auto',
-    background: 'rgba(255,235,210,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.28)',
     backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,220,160,0.32)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.32)',
     borderRadius: 24, padding: '40px 32px',
   },
   h1: {
@@ -35,7 +35,7 @@ const S = {
   li: { fontSize: 14, color: ENCRE, lineHeight: 1.75, marginBottom: 4 },
   etape: {
     fontSize: 14, color: 'rgba(120,65,25,0.88)', lineHeight: 1.7,
-    background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.5)',
+    background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.5)',
     borderRadius: 14, padding: '14px 18px', margin: '0 0 10px',
   },
   lien: { color: AMBRE, fontWeight: 600 },

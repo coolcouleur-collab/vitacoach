@@ -62,7 +62,7 @@ export default function TesSeances({ profil }) {
 
   return (
     <div style={{
-      background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+      background: 'rgba(var(--rgb-creme), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
       borderRadius: 18, padding: '16px 16px', marginBottom: 18,
       backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
       fontFamily: F,
@@ -91,7 +91,7 @@ export default function TesSeances({ profil }) {
       {detail.length > 0 && (
         <div style={{
           fontSize: 12, lineHeight: 1.5, color: ENCRE, marginTop: 13, paddingTop: 12,
-          borderTop: '1px solid rgba(200,123,82,0.16)',
+          borderTop: '1px solid rgba(var(--rgb-terracotta), 0.16)',
         }}>
           {detail.join(', ')}.
         </div>

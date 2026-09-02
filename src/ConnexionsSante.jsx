@@ -18,13 +18,13 @@ const HK_KEY = 'vitacoach_healthkit_connected'
 
 const C = {
   bg:       'rgba(255,248,244,0.0)',
-  card:     'rgba(255,235,210,0.22)',
-  border:   'rgba(255,220,160,0.28)',
-  orange:   '#C87B52',
-  or:       '#E8962A',
-  nuit:     'rgba(255,238,220,0.92)',
-  texte:    'rgba(255,238,220,0.92)',
-  texte2:   ENCRE,   // etait rgba(200,123,82,0.70) : 1,98:1 sur tous les libelles
+  card:     'rgba(var(--rgb-creme), 0.22)',
+  border:   'rgba(var(--rgb-creme-dore), 0.28)',
+  orange:   'var(--accent)',
+  or:       'var(--or-plein)',
+  nuit:     'rgba(var(--rgb-creme-rose), 0.92)',
+  texte:    'rgba(var(--rgb-creme-rose), 0.92)',
+  texte2:   ENCRE,   // etait rgba(var(--rgb-terracotta), 0.70) : 1,98:1 sur tous les libelles
   vert:     '#22c55e',
   rouge:    '#ef4444',
 }
@@ -63,7 +63,7 @@ const PROVIDERS = [
     nom:         'Withings',
     icon:        ICONS.withings,
     description: 'Balance, tensiomètre, montre, marque française',
-    couleur:     '#C87B52',
+    couleur:     'var(--accent)',
     donnees:     ['Poids', 'Tension artérielle', 'FC repos', 'Sommeil', 'Température'],
     methode:     'oauth',   // redirect OAuth
     disponible:  true,
@@ -73,7 +73,7 @@ const PROVIDERS = [
     nom:         'Oura Ring',
     icon:        ICONS.oura,
     description: 'Meilleure qualité de données sommeil au monde',
-    couleur:     '#E8962A',
+    couleur:     'var(--or-plein)',
     donnees:     ['Sommeil (stades)', 'HRV', 'Readiness', 'Pas', 'FC'],
     methode:     'token',   // Personal Access Token
     disponible:  true,
@@ -83,7 +83,7 @@ const PROVIDERS = [
     nom:         'Garmin',
     icon:        ICONS.garmin,
     description: 'GPS, sport, stress, fréquence cardiaque',
-    couleur:     '#C87B52',
+    couleur:     'var(--accent)',
     donnees:     ['Pas', 'Calories', 'Stress', 'Sommeil', 'FC'],
     methode:     'oauth',
     disponible:  true,
@@ -150,7 +150,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
           <div style={{ fontSize: 15, fontWeight: 700, color: ENCRE, display: 'flex', alignItems: 'center', gap: 8 }}>
             {provider.nom}
             {!provider.disponible && (
-              <span style={{ fontSize: 10, background: 'rgba(200,123,82,0.12)', color: C.orange, padding: '1px 7px', borderRadius: 12, fontWeight: 600 }}>
+              <span style={{ fontSize: 10, background: 'rgba(var(--rgb-terracotta), 0.12)', color: C.orange, padding: '1px 7px', borderRadius: 12, fontWeight: 600 }}>
                 Bientôt
               </span>
             )}
@@ -166,8 +166,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
         {provider.donnees.map(d => (
           <span key={d} style={{
             fontSize: 11, color: C.texte2,
-            background: 'rgba(200,123,82,0.08)',
-            border: '1px solid rgba(200,123,82,0.16)',
+            background: 'rgba(var(--rgb-terracotta), 0.08)',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.16)',
             borderRadius: 12, padding: '2px 8px',
           }}>
             {d}
@@ -189,7 +189,7 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
             disabled ? (
               <div style={{
                 flex: 1, padding: '10px 16px', borderRadius: 12, textAlign: 'center',
-                background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.16)',
+                background: 'rgba(var(--rgb-terracotta), 0.08)', border: '1px solid rgba(var(--rgb-terracotta), 0.16)',
                 fontSize: 13, color: C.texte2, fontWeight: 500,
               }}>
                 {disabledLabel || 'Non disponible'}
@@ -199,8 +199,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
               onClick={() => onConnect(provider)}
               style={{
                 flex: 1, padding: '10px 16px',
-                background: 'rgba(255,235,210,0.32)',
-                border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12, color: AMBRE,
+                background: 'rgba(var(--rgb-creme), 0.32)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.38)', borderRadius: 12, color: AMBRE,
                 fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 fontFamily: 'Poppins, sans-serif',
               }}
@@ -215,8 +215,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                 disabled={loading}
                 style={{
                   flex: 1, padding: '9px 14px',
-                  background: 'rgba(200,123,82,0.10)',
-                  border: '1px solid rgba(200,123,82,0.20)',
+                  background: 'rgba(var(--rgb-terracotta), 0.10)',
+                  border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
                   borderRadius: 12, color: C.orange,
                   fontSize: 13, fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
                   fontFamily: 'Poppins, sans-serif',
@@ -231,8 +231,8 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
                 }}
                 style={{
                   padding: '9px 14px',
-                  background: confirmeDeconnect ? 'rgba(239,68,68,0.12)' : 'rgba(200,123,82,0.08)',
-                  border: `1px solid ${confirmeDeconnect ? 'rgba(239,68,68,0.30)' : 'rgba(200,123,82,0.16)'}`,
+                  background: confirmeDeconnect ? 'rgba(239,68,68,0.12)' : 'rgba(var(--rgb-terracotta), 0.08)',
+                  border: `1px solid ${confirmeDeconnect ? 'rgba(239,68,68,0.30)' : 'rgba(var(--rgb-terracotta), 0.16)'}`,
                   borderRadius: 12,
                   color: confirmeDeconnect ? C.rouge : C.texte2,
                   fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins, sans-serif',
@@ -291,7 +291,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
         style={{
           background: 'rgba(40,20,5,0.92)', borderRadius: 20,
           backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255,220,160,0.28)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
           padding: 28, width: '100%', maxWidth: 380,
           boxShadow: '0 24px 60px rgba(0,0,0,0.50)',
         }}
@@ -320,7 +320,7 @@ function ModalOura({ userId, onSuccess, onClose }) {
           onChange={e => setToken(e.target.value)}
           style={{
             width: '100%', padding: '12px 14px',
-            border: `1.5px solid ${erreur ? C.rouge : 'rgba(200,123,82,0.25)'}`,
+            border: `1.5px solid ${erreur ? C.rouge : 'rgba(var(--rgb-terracotta), 0.25)'}`,
             borderRadius: 12, fontSize: 16,
             fontFamily: 'monospace',
             background: 'rgba(255,240,228,0.30)',
@@ -333,14 +333,14 @@ function ModalOura({ userId, onSuccess, onClose }) {
 
         <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
           <button onClick={onClose} style={{
-            flex: 1, padding: '11px', background: 'rgba(200,123,82,0.08)',
-            border: '1px solid rgba(200,123,82,0.16)', borderRadius: 12,
+            flex: 1, padding: '11px', background: 'rgba(var(--rgb-terracotta), 0.08)',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.16)', borderRadius: 12,
             color: C.texte2, fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins',
           }}>Annuler</button>
           <button onClick={connecter} disabled={loading || !token.trim()} style={{
             flex: 1, padding: '11px',
-            background: 'rgba(255,235,210,0.32)',
-            border: '1px solid rgba(255,220,160,0.38)', borderRadius: 12,
+            background: 'rgba(var(--rgb-creme), 0.32)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.38)', borderRadius: 12,
             color: AMBRE, fontSize: 13, fontWeight: 600,
             cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'Poppins',
           }}>

@@ -4,8 +4,8 @@ import { BrainIcon, MoonIcon, FlashIcon } from './Icons'
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const T = {
   cream:   '#FFF8F4',
-  copper:  '#C87B52',
-  amber:   '#E8962A',
+  copper:  'var(--accent)',
+  amber:   'var(--or-plein)',
   navy:    '#0A1633',
   green:   '#22c55e',
   red:     '#ef4444',

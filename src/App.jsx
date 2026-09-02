@@ -147,7 +147,7 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
   // l'encre terracotta disparait. Meme regle que la barre laterale.
   const encre  = isNight ? 'rgba(198,222,255,0.95)' : ENCRE
   const encre2 = isNight ? 'rgba(190,216,255,0.78)' : ENCRE
-  const trait  = isNight ? 'rgba(160,200,255,0.22)' : 'rgba(255,220,160,0.28)'
+  const trait  = isNight ? 'rgba(160,200,255,0.22)' : 'rgba(var(--rgb-creme-dore), 0.28)'
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:1500,
@@ -160,7 +160,7 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
         backdropFilter:'blur(28px)',
         WebkitBackdropFilter:'blur(28px)',
         borderRadius:'28px 28px 0 0',
-        border:'1px solid rgba(255,220,160,0.25)',
+        border:'1px solid rgba(var(--rgb-creme-dore), 0.25)',
         borderBottom:'none',
         padding:'10px 26px',
         paddingBottom:'calc(env(safe-area-inset-bottom, 0px) + 52px)',
@@ -168,14 +168,14 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
         boxShadow:'0 -20px 60px rgba(200,100,40,0.15), inset 0 1px 0 rgba(255,255,255,0.15)',
         animation:'slideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
-        <div style={{ width:44, height:5, background:'rgba(255,220,160,0.30)', borderRadius:12, margin:'12px auto 26px' }} />
+        <div style={{ width:44, height:5, background:'rgba(var(--rgb-creme-dore), 0.30)', borderRadius:12, margin:'12px auto 26px' }} />
 
         <div style={{ display:'flex', justifyContent:'center', gap:14, marginBottom:20 }}>
           {[
             { bg:'rgba(200,100,40,0.12)', icon: <HeartIcon size={28} color={encre2} /> },
             { bg:'rgba(200,100,40,0.08)', icon: <RunIcon   size={28} color={encre2} /> },
           ].map(({ bg, icon }, idx) => (
-            <div key={idx} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(255,220,160,0.20)', display:'flex', alignItems:'center', justifyContent:'center' }}>{icon}</div>
+            <div key={idx} style={{ width:56, height:56, borderRadius:18, background:bg, border:'1px solid rgba(var(--rgb-creme-dore), 0.20)', display:'flex', alignItems:'center', justifyContent:'center' }}>{icon}</div>
           ))}
         </div>
 
@@ -203,20 +203,20 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
           <div key={label} style={{
             display:'flex', alignItems:'center', gap:12,
             padding:'10px 14px', borderRadius:13, marginBottom:7,
-            background:'rgba(200,100,40,0.06)', border:'1px solid rgba(255,220,160,0.18)',
+            background:'rgba(200,100,40,0.06)', border:'1px solid rgba(var(--rgb-creme-dore), 0.18)',
           }}>
             <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
               <Icon size={18} color={encre2} />
             </span>
             <span style={{ fontSize:13, fontFamily:'Poppins, sans-serif', color: encre, fontWeight:500, flex:1 }}>{label}</span>
-            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: encre, fontWeight:600, background:'rgba(255,220,160,0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(255,220,160,0.35)' }}>Lecture seule</span>
+            <span style={{ fontSize:10, fontFamily:'Poppins, sans-serif', color: encre, fontWeight:600, background:'rgba(var(--rgb-creme-dore), 0.22)', padding:'3px 8px', borderRadius:12, border:'1px solid rgba(var(--rgb-creme-dore), 0.35)' }}>Lecture seule</span>
           </div>
         ))}
 
         <div style={{ marginTop:22, display:'flex', flexDirection:'column', gap:10 }}>
           <button onClick={onAllow} style={{
             padding:'0.85rem 2.5rem', borderRadius:'2rem',
-            border:'1px solid rgba(255,220,160,0.75)',
+            border:'1px solid rgba(var(--rgb-creme-dore), 0.75)',
             background:'rgba(200,100,40,0.18)',
             color: encre,
             fontFamily:"'Poppins', system-ui, sans-serif",
@@ -228,8 +228,8 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
           }}>Autoriser l'accès</button>
           <button onClick={onLater} style={{
             padding:'12px', borderRadius:'2rem',
-            border:'1px solid rgba(255,220,160,0.45)',
-            background:'rgba(255,220,160,0.08)',
+            border:'1px solid rgba(var(--rgb-creme-dore), 0.45)',
+            background:'rgba(var(--rgb-creme-dore), 0.08)',
             color: encre,
             fontFamily:'Poppins, sans-serif',
             fontSize:13, fontWeight:500,
@@ -250,7 +250,7 @@ function CelebrationOverlay({ score, onDone }) {
     const t2 = setTimeout(() => { if (alive) onDone() }, 3120)
     return () => { alive = false; clearTimeout(t1); clearTimeout(t2) }
   }, [onDone])
-  const CELEB_COLORS = ['#E8962A', '#C87B52', '#22c55e']
+  const CELEB_COLORS = ['var(--or-plein)', 'var(--accent)', '#22c55e']
   const sparks = Array.from({ length: 16 }, (_, i) => ({
     id: i,
     color: CELEB_COLORS[i % 3],
@@ -283,19 +283,19 @@ function CelebrationOverlay({ score, onDone }) {
         background:'rgba(30,15,5,0.85)', backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
         borderRadius:28, padding:'36px 52px', textAlign:'center',
         boxShadow:'0 28px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.15)',
-        border:'1.5px solid rgba(255,220,160,0.28)',
+        border:'1.5px solid rgba(var(--rgb-creme-dore), 0.28)',
         animation:'celebPop 0.55s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         <div style={{ marginBottom:10, lineHeight:1, display:'flex', justifyContent:'center' }}>
-          {score >= 90 ? <StarIcon size={48} color="#9C5D08" /> : <SparkleIcon size={48} color="#9C5D08" />}
+          {score >= 90 ? <StarIcon size={48} color="var(--ambre-fonce)" /> : <SparkleIcon size={48} color="var(--ambre-fonce)" />}
         </div>
-        <div style={{ fontSize:50, fontWeight:900, color:'#9C5D08', lineHeight:1, letterSpacing:'-2px' }}>
-          {score}<span style={{ fontSize:18, color:'rgba(255,238,220,0.55)', fontWeight:400 }}>/100</span>
+        <div style={{ fontSize:50, fontWeight:900, color:'var(--ambre-fonce)', lineHeight:1, letterSpacing:'-2px' }}>
+          {score}<span style={{ fontSize:18, color:'rgba(var(--rgb-creme-rose), 0.55)', fontWeight:400 }}>/100</span>
         </div>
-        <div style={{ fontSize:15, fontWeight:700, color:'rgba(255,238,220,0.92)', marginTop:9 }}>
+        <div style={{ fontSize:15, fontWeight:700, color:'rgba(var(--rgb-creme-rose), 0.92)', marginTop:9 }}>
           {score >= 90 ? 'Journée parfaite !' : score >= 80 ? 'Excellente journée !' : 'Objectif atteint !'}
         </div>
-        <div style={{ fontSize:11, color:'rgba(255,238,220,0.65)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
+        <div style={{ fontSize:11, color:'rgba(var(--rgb-creme-rose), 0.65)', marginTop:5, fontWeight:500, letterSpacing:'0.3px' }}>
           Score santé du jour
         </div>
       </div>
@@ -310,14 +310,14 @@ function ReactionBtn({ emoji, icon, active, onClick }) {
       type="button"
       onClick={e => { e.stopPropagation(); e.preventDefault(); onClick(); setPressed(true); setTimeout(() => setPressed(false), 350) }}
       style={{
-        background: active ? 'rgba(200,123,82,0.15)' : 'transparent',
-        border: active ? '1.5px solid rgba(200,123,82,0.60)' : '1.5px solid rgba(200,123,82,0.18)',
+        background: active ? 'rgba(var(--rgb-terracotta), 0.15)' : 'transparent',
+        border: active ? '1.5px solid rgba(var(--rgb-terracotta), 0.60)' : '1.5px solid rgba(var(--rgb-terracotta), 0.18)',
         borderRadius: 12, padding: '4px 9px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer',
         transition: 'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
         transform: pressed ? 'scale(1.40)' : active ? 'scale(1.10)' : 'scale(1)',
-        boxShadow: active ? '0 2px 10px rgba(200,123,82,0.20)' : 'none',
+        boxShadow: active ? '0 2px 10px rgba(var(--rgb-terracotta), 0.20)' : 'none',
         filter: active ? 'none' : 'opacity(0.45)',
         outline: 'none',
       }}
@@ -885,6 +885,30 @@ const [messages, setMessages] = useState(() => {
   // D'ou la regle finale, dans finDeChoixAmbiance : le choix tient jusqu'a la
   // fin de la fenetre qui contient l'heure du choix plus une heure.
   const [presetManuel, setPresetManuel] = useState(() => lireAmbianceManuelle())
+
+  // L'AMBIANCE DE TOUTE L'APP, et plus seulement de l'accueil.
+  //
+  // On pose l'attribut sur la racine du document : les variables de theme.css
+  // en decoulent, et les 1 192 couleurs converties suivent sans qu'aucun
+  // composant ne soit touche.
+  //
+  // La connexion et la page de vente s'en protegent par la classe
+  // `theme-jour` : ce sont des portes d'entree, pas des ecrans de travail.
+  useEffect(() => {
+    const appliquer = () => {
+      const a = presetManuel || getOceanPreset(new Date().getHours())
+      document.documentElement.setAttribute('data-theme', a === 'night' ? 'night' : 'day')
+    }
+    appliquer()
+    // Meme cadence que l'expiration du choix manuel : l'ambiance doit basculer
+    // a 21h sans qu'on ait a relancer l'app.
+    const t = setInterval(appliquer, 60000)
+    document.addEventListener('visibilitychange', appliquer)
+    return () => {
+      clearInterval(t)
+      document.removeEventListener('visibilitychange', appliquer)
+    }
+  }, [presetManuel])
 
   // L'expiration ne peut pas attendre le prochain demarrage de l'app :
   // quelqu'un qui force la nuit a 17h55 doit voir le coucher de soleil arriver
@@ -1924,7 +1948,7 @@ const [messages, setMessages] = useState(() => {
 
   // ── MAIN APP ════════════════════════════════════════════════════════════════
   const score = scoreJour(metriques)
-  const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? '#E8962A' : '#ef4444'
+  const scoreColor = score >= 70 ? '#22c55e' : score >= 40 ? 'var(--or-plein)' : '#ef4444'
 
   // L'encre de la barre laterale doit suivre le theme, pas rester fixe.
   // Elle etait figee en brun profond depuis le correctif de contraste du
@@ -1936,9 +1960,9 @@ const [messages, setMessages] = useState(() => {
   const nuitNav       = homePreset === 'night' && onglet === 'accueil'
   const navEncre      = nuitNav ? 'rgba(190,216,255,0.95)' : ENCRE
   const navIcone      = nuitNav ? 'rgba(190,216,255,0.78)' : ICONE
-  const navIconeOff   = nuitNav ? 'rgba(190,216,255,0.55)' : 'rgba(200,123,82,0.48)'
-  const navAccent     = nuitNav ? 'rgba(160,200,255,0.95)' : '#C87B52'
-  const navTrait      = nuitNav ? 'rgba(160,200,255,0.20)' : 'rgba(200,123,82,0.14)'
+  const navIconeOff   = nuitNav ? 'rgba(190,216,255,0.55)' : 'rgba(var(--rgb-terracotta), 0.48)'
+  const navAccent     = nuitNav ? 'rgba(160,200,255,0.95)' : 'var(--accent)'
+  const navTrait      = nuitNav ? 'rgba(160,200,255,0.20)' : 'rgba(var(--rgb-terracotta), 0.14)'
   // Vert « rappels actifs » : #22c55e ne donnait que 1,66:1 sur le creme.
   const navVert       = nuitNav ? 'rgba(134,239,172,0.95)' : '#166534'   // 4,87:1 mesure
 
@@ -2008,19 +2032,19 @@ const [messages, setMessages] = useState(() => {
               position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 100px)', left: '50%', transform: 'translateX(-50%)',
               zIndex: 900, background: 'rgba(30,15,5,0.85)',
               backdropFilter: 'blur(22px)', WebkitBackdropFilter: 'blur(22px)',
-              border: '1.5px solid rgba(255,220,160,0.28)',
+              border: '1.5px solid rgba(var(--rgb-creme-dore), 0.28)',
               borderRadius: 22, padding: '16px 24px', minWidth: 280, maxWidth: 340,
               boxShadow: '0 12px 40px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.15)',
               textAlign: 'center',
             }}
           >
             <div style={{ marginBottom: 6, display: 'flex', justifyContent: 'center' }}>
-              {milestone.Icon && <milestone.Icon size={34} color="#9C5D08" />}
+              {milestone.Icon && <milestone.Icon size={34} color="var(--ambre-fonce)" />}
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: 'rgba(255,238,220,0.92)', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'rgba(var(--rgb-creme-rose), 0.92)', fontFamily: 'Poppins, sans-serif', marginBottom: 6 }}>
               {milestone.titre}
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,238,220,0.70)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: 'rgba(var(--rgb-creme-rose), 0.70)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.5 }}>
               {milestone.texte}
             </div>
           </motion.div>
@@ -2128,7 +2152,7 @@ const [messages, setMessages] = useState(() => {
       {/* ══ GLOBAL BACKGROUND ══════════════════════════════════════════════
            Un seul dégradé, SANS mixBlendMode. Le fond était auparavant composé
            de deux halos (#FFF991 à .6 et #FF7112 à .3) en mixBlendMode:multiply
-           par-dessus #EDD8CC. Ce rendu est correct sur navigateur de bureau,
+           par-dessus var(--fond). Ce rendu est correct sur navigateur de bureau,
            mais iOS applique mal, voire ignore, le mode multiply en PWA
            installée : les deux calques se posaient alors en simple
            semi-transparence, ce qui pâlissait le fond et le faisait virer au
@@ -2140,7 +2164,7 @@ const [messages, setMessages] = useState(() => {
            un mode de fusion. Ne pas réintroduire de mixBlendMode ici. */}
       <div style={{
         position:'fixed', inset:0, zIndex:0, pointerEvents:'none',
-        background:'radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, #EDD8CC 100%)',
+        background:'radial-gradient(circle at center, #EDB16D 0%, #EDB980 35%, #EDCBB8 70%, var(--fond) 100%)',
       }} />
 
       {/* ══ AURORA, plein écran fixe, actif uniquement sur l'onglet chat ══ */}
@@ -2267,13 +2291,13 @@ padding: isMobile
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: '50%',
-                background: 'rgba(255,248,235,0.95)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                border: '1.5px solid rgba(200,123,82,0.28)',
-                boxShadow: '0 4px 16px rgba(200,123,82,0.15)',
+                background: 'rgba(var(--rgb-creme-pale), 0.95)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                border: '1.5px solid rgba(var(--rgb-terracotta), 0.28)',
+                boxShadow: '0 4px 16px rgba(var(--rgb-terracotta), 0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {pullRefreshing
-                  ? <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(200,123,82,0.18)', borderTop: '2px solid rgba(200,123,82,0.85)', animation: 'spin360 0.7s linear infinite' }} />
+                  ? <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(var(--rgb-terracotta), 0.18)', borderTop: '2px solid rgba(var(--rgb-terracotta), 0.85)', animation: 'spin360 0.7s linear infinite' }} />
                   : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${Math.min(pullDist / PULL_THRESHOLD * 180, 180)}deg)`, transition: 'none' }}>
                       <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
                       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
@@ -2309,7 +2333,7 @@ padding: isMobile
                 // illisible que le creme l'etait sur l'ambre.
                 const logoStyle = nuitAcc
                   ? { color: 'rgba(198,222,255,0.96)' }
-                  : { background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
+                  : { background:'linear-gradient(90deg, #B8693A 0%, var(--accent) 28%, #D4854A 50%, var(--accent) 72%, #B8693A 100%)',
                       backgroundSize:'200% auto',
                       WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                       animation:'headerShimmer 3s linear infinite' }
@@ -2378,7 +2402,7 @@ padding: isMobile
                   fontSize:30, fontWeight:400,
                   fontFamily:"'Cormorant Garamond', Georgia, serif",
                   fontStyle:'italic', letterSpacing:'-0.05em',
-                  background:'linear-gradient(90deg, #B8693A 0%, #C87B52 28%, #D4854A 50%, #C87B52 72%, #B8693A 100%)',
+                  background:'linear-gradient(90deg, #B8693A 0%, var(--accent) 28%, #D4854A 50%, var(--accent) 72%, #B8693A 100%)',
                   backgroundSize:'200% auto',
                   WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
                   animation:'headerShimmer 3s linear infinite',
@@ -2400,7 +2424,7 @@ padding: isMobile
                     title="Historique des conversations"
                     style={{
                       width:34, height:34, borderRadius:10,
-                      background:'rgba(200,123,82,0.08)', border:'1px solid rgba(200,123,82,0.22)',
+                      background:'rgba(var(--rgb-terracotta), 0.08)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                       cursor:'pointer', color:ENCRE,
                     }}
@@ -2420,7 +2444,7 @@ padding: isMobile
                       // disait pas qu'elle recommencait la conversation
                       // (constat Jean 2026-08-12).
                       height:34, padding:'0 12px', borderRadius:12, gap:6,
-                      background:'rgba(200,123,82,0.10)', border:'1px solid rgba(200,123,82,0.30)',
+                      background:'rgba(var(--rgb-terracotta), 0.10)', border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                       cursor:'pointer', color:ENCRE,
                       fontFamily:F, fontSize:12, fontWeight:600,
@@ -2704,7 +2728,7 @@ padding: isMobile
 
                     {streak > 0 && (
                       <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
-                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(200,123,82,0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:ENCRE, display:'flex', alignItems:'center', gap:5 }}>
+                        <span style={{ background:'rgba(255,252,245,0.92)', border:'1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius:20, padding:'5px 14px', fontSize:11, fontWeight:700, color:ENCRE, display:'flex', alignItems:'center', gap:5 }}>
                           {streak} jour{streak > 1 ? 's' : ''} de suite
                         </span>
                       </div>
@@ -2900,8 +2924,8 @@ padding: isMobile
                 width:38, height:38, borderRadius:'50%', cursor:'pointer',
                 background:'rgba(255,246,238,0.82)',
                 backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-                border:'1px solid rgba(200,123,82,0.30)',
-                boxShadow:'0 4px 16px rgba(200,123,82,0.18)',
+                border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
+                boxShadow:'0 4px 16px rgba(var(--rgb-terracotta), 0.18)',
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}
             >
@@ -2978,11 +3002,11 @@ padding: isMobile
             style={{
               position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
               width: 52, height: 52, borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(200,123,82,0.42), rgba(190,112,30,0.48))',
+              background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.42), rgba(190,112,30,0.48))',
               border: '1px solid rgba(255,220,170,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.18)',
+              boxShadow: '0 4px 16px rgba(var(--rgb-terracotta), 0.15), inset 0 1px 0 rgba(255,255,255,0.18)',
               zIndex: 200,
               transition: 'transform .15s cubic-bezier(.34,1.56,.64,1)',
             }}
@@ -3204,8 +3228,8 @@ padding: isMobile
           50%      { transform:scale(1.35); opacity:1; }
         }
         @keyframes pulseDot2 {
-          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(200,123,82,0.4); }
-          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(200,123,82,0.7); }
+          0%,100% { transform:scale(1);    opacity:0.85; box-shadow:0 0 8px rgba(var(--rgb-terracotta), 0.4); }
+          50%      { transform:scale(1.4);  opacity:1;    box-shadow:0 0 16px rgba(var(--rgb-terracotta), 0.7); }
         }
         @keyframes pulseDot3 {
           0%,100% { transform:scale(1);    opacity:0.7; }
@@ -3305,20 +3329,20 @@ const sr = {
   date: { fontSize:11, color:ENCRE, textTransform:'capitalize', letterSpacing:0.5, fontWeight:400 },
   titre: { fontSize:17, fontWeight:500, color:ENCRE, marginTop:2, letterSpacing:'-0.1px' },
   btnGen: {
-    background:'rgba(200,123,82,0.10)', color:ENCRE,
-    border:'1.5px solid rgba(200,123,82,0.25)',
+    background:'rgba(var(--rgb-terracotta), 0.10)', color:ENCRE,
+    border:'1.5px solid rgba(var(--rgb-terracotta), 0.25)',
     padding:'8px 14px', borderRadius:12, fontSize:12, fontWeight:600, cursor:'pointer',
     flexShrink:0, fontFamily:"'Poppins',system-ui,sans-serif",
     display:'flex', alignItems:'center', gap:5,
     boxShadow:'none',
   },
-  progressBar: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(200,123,82,0.12)', borderRadius:14,
-    padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(200,123,82,0.05)' },
-  empty: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(200,123,82,0.12)', borderRadius:20, padding:'48px 32px',
-    textAlign:'center', boxShadow:'0 4px 20px rgba(200,123,82,0.06)' },
+  progressBar: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:14,
+    padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(var(--rgb-terracotta), 0.05)' },
+  empty: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:20, padding:'48px 32px',
+    textAlign:'center', boxShadow:'0 4px 20px rgba(var(--rgb-terracotta), 0.06)' },
   motivCard: { background:'rgba(255,246,238,0.28)',
-    border:'1px solid rgba(200,123,82,0.08)', borderRadius:16, padding:'14px 18px', textAlign:'center' },
-  card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(200,123,82,0.10)', borderRadius:18, padding:'14px 16px',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.08)', borderRadius:16, padding:'14px 18px', textAlign:'center' },
+  card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(var(--rgb-terracotta), 0.10)', borderRadius:18, padding:'14px 16px',
     boxShadow:'none' },
   cardHeader: { display:'flex', alignItems:'center', gap:10, marginBottom:12 },
   cardTitre: { fontSize:14, fontWeight:700, color:ENCRE },
@@ -3365,8 +3389,8 @@ function TenueCard({ tenue, style: extraStyle }) {
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
       boxShadow: '0 16px 48px rgba(180,100,40,0.18), 0 2px 8px rgba(180,100,40,0.10)',
-      border: '1px solid rgba(255,220,160,0.45)',
-      background: 'linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%)',
+      border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
+      background: 'linear-gradient(165deg, rgba(var(--rgb-creme-clair), 0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%)',
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       ...extraStyle,
     }}>
@@ -3402,7 +3426,7 @@ function TenueCard({ tenue, style: extraStyle }) {
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
             <div style={{
               width: 74, height: 74, borderRadius: '50%',
-              background: 'rgba(255,235,210,0.70)', border: '1px solid rgba(255,220,160,0.60)',
+              background: 'rgba(var(--rgb-creme), 0.70)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
@@ -3429,10 +3453,10 @@ function TenueCard({ tenue, style: extraStyle }) {
         <div style={{ flex: 1 }} />
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: 6,
-          background: 'rgba(255,235,210,0.50)', borderRadius: 12, padding: '9px 12px',
-          border: '1px solid rgba(255,220,160,0.40)', marginBottom: 18,
+          background: 'rgba(var(--rgb-creme), 0.50)', borderRadius: 12, padding: '9px 12px',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', marginBottom: 18,
         }}>
-          <LightbulbIcon size={12} color="#9C5D08" style={{ flexShrink: 0, marginTop: 2 }} />
+          <LightbulbIcon size={12} color="var(--ambre-fonce)" style={{ flexShrink: 0, marginTop: 2 }} />
           <span style={{ fontSize: 10.5, color: ENCRE, lineHeight: 1.55, fontFamily: F,
             display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {tenue.pourquoi}
@@ -3452,9 +3476,9 @@ function SkeletonCard({ style: extraStyle }) {
       borderRadius: 24,
       overflow: 'hidden',
       position: 'relative',
-      background: 'rgba(255,246,232,0.90)',
+      background: 'rgba(var(--rgb-creme-clair), 0.90)',
       boxShadow: '0 16px 48px rgba(180,100,40,0.14)',
-      border: '1px solid rgba(255,220,160,0.45)',
+      border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
       flexShrink: 0,
       ...extraStyle,
     }}>
@@ -3472,9 +3496,9 @@ function SkeletonCard({ style: extraStyle }) {
         </svg>
       </div>
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 16px 16px' }}>
-        <div style={{ height: 14, borderRadius: 7, background: 'rgba(200,123,82,0.18)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 9, borderRadius: 5, background: 'rgba(200,123,82,0.10)', marginBottom: 5, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
-        <div style={{ height: 9, borderRadius: 5, background: 'rgba(200,123,82,0.10)', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 14, borderRadius: 7, background: 'rgba(var(--rgb-terracotta), 0.18)', marginBottom: 8, width: '60%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(var(--rgb-terracotta), 0.10)', marginBottom: 5, animation: 'capsuleSkeleton 1.4s ease infinite' }} />
+        <div style={{ height: 9, borderRadius: 5, background: 'rgba(var(--rgb-terracotta), 0.10)', width: '80%', animation: 'capsuleSkeleton 1.4s ease infinite' }} />
       </div>
     </div>
   )
@@ -3558,8 +3582,8 @@ function CapsuleSlider({ tenues, loading }) {
           style={{
             width: 40, height: 40, borderRadius: 24,
             background: 'rgba(255,255,255,0.9)',
-            border: '1px solid rgba(200,123,82,0.25)',
-            boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.25)',
+            boxShadow: '0 2px 12px rgba(var(--rgb-terracotta), 0.18)',
             color: ENCRE, fontSize: 18, fontWeight: 700,
             cursor: active === 0 ? 'not-allowed' : 'pointer',
             opacity: active === 0 ? 0.35 : 1,
@@ -3582,7 +3606,7 @@ function CapsuleSlider({ tenues, loading }) {
                 height: 6,
                 width: i === active ? 18 : 6,
                 borderRadius: 12,
-                background: i === active ? '#C87B52' : 'rgba(200,123,82,0.28)',
+                background: i === active ? 'var(--accent)' : 'rgba(var(--rgb-terracotta), 0.28)',
                 border: 'none',
                 cursor: 'pointer',
                 padding: 0,
@@ -3599,8 +3623,8 @@ function CapsuleSlider({ tenues, loading }) {
           style={{
             width: 40, height: 40, borderRadius: 24,
             background: 'rgba(255,255,255,0.9)',
-            border: '1px solid rgba(200,123,82,0.25)',
-            boxShadow: '0 2px 12px rgba(200,123,82,0.18)',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.25)',
+            boxShadow: '0 2px 12px rgba(var(--rgb-terracotta), 0.18)',
             color: ENCRE, fontSize: 18, fontWeight: 700,
             cursor: active === count - 1 ? 'not-allowed' : 'pointer',
             opacity: active === count - 1 ? 0.35 : 1,
@@ -3694,12 +3718,12 @@ function TenuesModule({ profil }) {
   return (
     <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
       <style>{`
-  .tenues-ville-input { border: 1px solid rgba(255,220,160,0.35) !important; box-shadow: none !important; }
-  .tenues-ville-input:focus { border-color: rgba(200,123,82,0.50) !important; box-shadow: 0 0 0 3px rgba(200,123,82,0.10) !important; outline: none !important; }
+  .tenues-ville-input { border: 1px solid rgba(var(--rgb-creme-dore), 0.35) !important; box-shadow: none !important; }
+  .tenues-ville-input:focus { border-color: rgba(var(--rgb-terracotta), 0.50) !important; box-shadow: 0 0 0 3px rgba(var(--rgb-terracotta), 0.10) !important; outline: none !important; }
   .tenues-ville-input:-webkit-autofill,
   .tenues-ville-input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
-    -webkit-text-fill-color: rgba(200,123,82,0.92) !important;
+    -webkit-text-fill-color: rgba(var(--rgb-terracotta), 0.92) !important;
   }
   .tenues-select option { background: #F5E8D8; color: rgba(160,80,20,0.92); }
 `}</style>
@@ -3731,8 +3755,8 @@ function TenuesModule({ profil }) {
             disabled={loading}
           >
             {loading
-              ? <LoadingIcon size={16} color="rgba(255,248,235,0.90)" />
-              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,248,235,0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              ? <LoadingIcon size={16} color="rgba(var(--rgb-creme-pale), 0.90)" />
+              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(var(--rgb-creme-pale), 0.90)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
                   <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                 </svg>
@@ -3789,33 +3813,33 @@ function TenuesModule({ profil }) {
 const st = {
   trigger: {
     width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '16px',
-    background: 'rgba(255,235,210,0.22)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
-    border: '1px solid rgba(255,220,160,0.28)', borderRadius: 18, cursor: 'pointer',
+    background: 'rgba(var(--rgb-creme), 0.22)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius: 18, cursor: 'pointer',
     fontFamily: "'Poppins',system-ui,sans-serif",
   },
   triggerIcon: {
     width: 48, height: 48,
-    background: 'rgba(255,235,210,0.28)',
-    border: '1px solid rgba(255,220,160,0.35)', borderRadius: 14,
+    background: 'rgba(var(--rgb-creme), 0.28)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.35)', borderRadius: 14,
     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
   },
   panel: {
-    background: 'rgba(255,235,210,0.22)',
+    background: 'rgba(var(--rgb-creme), 0.22)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
-    border: '1px solid rgba(255,220,160,0.28)', borderRadius: 20, padding: 16,
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius: 20, padding: 16,
     boxShadow: '0 8px 32px rgba(180,80,20,0.08)',
   },
   meteoBar: {
-    background: 'rgba(255,235,210,0.20)', borderRadius: 12, padding: '8px 14px',
+    background: 'rgba(var(--rgb-creme), 0.20)', borderRadius: 12, padding: '8px 14px',
     fontSize: 12, marginBottom: 12,
     color: ENCRE, fontWeight: 500,
-    border: '1px solid rgba(255,220,160,0.25)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.25)',
     display: 'flex', alignItems: 'center', gap: 6,
   },
   row: { display: 'flex', gap: 6, marginBottom: 12, alignItems: 'center' },
   input: {
     flex: 1, padding: '9px 14px', borderRadius: 12,
-    border: '1px solid rgba(255,220,160,0.35)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.35)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif",
     outline: 'none', color: ENCRE,
@@ -3824,7 +3848,7 @@ const st = {
   },
   select: {
     padding: '8px 30px 8px 12px', borderRadius: 12,
-    border: '1px solid rgba(255,220,160,0.30)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.30)',
     background: 'rgba(255,235,200,0.15)',
     fontSize: 16, fontFamily: "'Poppins',system-ui,sans-serif", outline: 'none',
     color: ENCRE, cursor: 'pointer',
@@ -3832,9 +3856,9 @@ const st = {
   },
   btn: {
     padding: '8px 16px',
-    background: 'linear-gradient(110deg,#6C422C 0%,#90593B 100%)',
-    color: 'rgba(255,248,235,1)',
-    border: '1px solid rgba(255,220,160,0.38)',
+    background: 'linear-gradient(110deg,var(--brun-fonce) 0%,var(--brun-moyen) 100%)',
+    color: 'rgba(var(--rgb-creme-pale), 1)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
     borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer',
     fontFamily: "'Poppins',system-ui,sans-serif",
     boxShadow: 'none',
@@ -3853,18 +3877,18 @@ const s = {
     width:260,
     background:'transparent',
     backdropFilter:'none', WebkitBackdropFilter:'none',
-    borderRight:'1px solid rgba(200,123,82,0.12)',
+    borderRight:'1px solid rgba(var(--rgb-terracotta), 0.12)',
     boxShadow:'none',
     position:'fixed', top:0, left:0, height:'100vh',
     zIndex:50,
     overflowY:'auto', overflowX:'hidden',
     padding:'1.2rem 1rem', boxSizing:'border-box',
   },
-  sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(200,123,82,0.14)' },
+  sidebarTop: { marginBottom:'1.4rem', paddingBottom:'1.2rem', borderBottom:'1px solid rgba(var(--rgb-terracotta), 0.14)' },
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
     /* Géré par ShinyLogoText, statique par défaut, shimmer au hover/tap */
-    background:'linear-gradient(90deg, #C87B52 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, #C87B52 66%, #FCDEC8 82%, #C87B52 100%)',
+    background:'linear-gradient(90deg, var(--accent) 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, var(--accent) 66%, #FCDEC8 82%, var(--accent) 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
@@ -3875,7 +3899,7 @@ const s = {
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },
   sidebarNav: { display:'flex', flexDirection:'column', gap:4 },
-  sidebarBottom: { display:'flex', flexDirection:'column', gap:6, marginTop:'auto', paddingTop:'1rem', borderTop:'1px solid rgba(200,123,82,0.12)' },
+  sidebarBottom: { display:'flex', flexDirection:'column', gap:6, marginTop:'auto', paddingTop:'1rem', borderTop:'1px solid rgba(var(--rgb-terracotta), 0.12)' },
   nav: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
     border:'none', background:'transparent', cursor:'pointer', fontFamily:F,
@@ -3884,28 +3908,28 @@ const s = {
   },
   navActive: {
     display:'flex', alignItems:'center', gap:10, padding:'11px 14px', borderRadius:14,
-    border:'none', background:'rgba(200,123,82,0.07)',
+    border:'none', background:'rgba(var(--rgb-terracotta), 0.07)',
     cursor:'pointer', fontFamily:F, color:ENCRE, fontWeight:500,
     textAlign:'left', width:'100%', fontSize:13, transition:'all .2s',
-    boxShadow:'inset 0 0 0 1.5px rgba(200,123,82,0.18)',
+    boxShadow:'inset 0 0 0 1.5px rgba(var(--rgb-terracotta), 0.18)',
   },
   profileCard: {
     display:'flex', alignItems:'center', gap:10,
-    background:'rgba(200,123,82,0.06)',
-    border:'1px solid rgba(200,123,82,0.14)', borderRadius:14, padding:'12px 14px',
+    background:'rgba(var(--rgb-terracotta), 0.06)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.14)', borderRadius:14, padding:'12px 14px',
   },
   avatar: {
     width:36, height:36, borderRadius:10,
-    background:'linear-gradient(135deg,#6C422C,#90593B)',
+    background:'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))',
     display:'flex', alignItems:'center', justifyContent:'center',
     fontSize:15, fontWeight:800, color:'#fff', flexShrink:0,
-    boxShadow:'0 4px 12px rgba(200,123,82,.35)',
+    boxShadow:'0 4px 12px rgba(var(--rgb-terracotta), .35)',
   },
   profileName: { fontSize:13, fontWeight:700, color:ENCRE, marginBottom:1 },
   profileMeta: { fontSize:10, color:ENCRE, lineHeight:1.5 },
   btnPro: {
     background:'transparent', color:ENCRE,
-    border:'none', borderBottom:'1px solid rgba(200,123,82,0.25)',
+    border:'none', borderBottom:'1px solid rgba(var(--rgb-terracotta), 0.25)',
     padding:'10px 0', borderRadius:0, cursor:'pointer',
     fontSize:11, fontFamily:F, fontWeight:300,
     letterSpacing:'0.18em', textTransform:'uppercase',
@@ -3914,11 +3938,11 @@ const s = {
   },
   proBadge: {
     background:'rgba(245,212,184,0.35)', color:ENCRE,
-    border:'1px solid rgba(200,123,82,.15)',
+    border:'1px solid rgba(var(--rgb-terracotta), .15)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:ENCRE, border:'1px solid rgba(200,123,82,0.14)',
+    background:'rgba(245,235,215,0.22)', color:ENCRE, border:'1px solid rgba(var(--rgb-terracotta), 0.14)',
     padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
@@ -3955,7 +3979,7 @@ const s = {
   scorePill: { borderRadius:20, padding:'4px 10px', fontSize:11, fontWeight:700 },
 
   // ── Page header ───────────────────────────────────────────────────────────────
-  pageHeader: { padding:'2.8rem 0 2rem', borderBottom:'1px solid rgba(255,220,160,0.18)', marginBottom:'2rem' },
+  pageHeader: { padding:'2.8rem 0 2rem', borderBottom:'1px solid rgba(var(--rgb-creme-dore), 0.18)', marginBottom:'2rem' },
   tabHeaderMobile: { display:'flex', alignItems:'center', gap:10, padding:'16px 0 12px', marginBottom:4 },
   backBtnInline: {
     width:34, height:34, borderRadius:10,
@@ -3985,10 +4009,10 @@ const s = {
   suggestionsPile: { display:'flex', flexDirection:'column', gap:8, maxWidth:360, margin:'0 auto' },
   suggestionBig: {
     background:'rgba(255,248,242,0.96)',
-    border:'1px solid rgba(200,123,82,0.20)', borderRadius:16,
+    border:'1px solid rgba(var(--rgb-terracotta), 0.20)', borderRadius:16,
     padding:'13px 18px', fontSize:13, color: ENCRE, cursor:'pointer',
     fontFamily:F, textAlign:'left', fontWeight:500,
-    boxShadow:'0 2px 12px rgba(200,123,82,0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
+    boxShadow:'0 2px 12px rgba(var(--rgb-terracotta), 0.06), inset 0 1px 0 rgba(255,255,255,0.55)',
     transition:'transform .18s, box-shadow .18s',
   },
 
@@ -3996,18 +4020,18 @@ const s = {
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:10, gap:10 },
   userBubble: {
     background:'rgba(255,248,238,0.88)',
-    border:'1px solid rgba(200,123,82,0.20)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.20)',
     color:ENCRE,
     // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 %, les deux
     // cumules donnaient des bulles a 58 % de l'ecran, et « Plan d'action »
     // passait sur deux lignes (constat Jean 2026-08-13).
     padding:'13px 18px', borderRadius:'20px 20px 5px 20px', maxWidth:'100%',
     fontSize:14, lineHeight:1.65,
-    boxShadow:'0 4px 22px rgba(200,123,82,0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
+    boxShadow:'0 4px 22px rgba(var(--rgb-terracotta), 0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
     background:'rgba(255,248,238,0.88)',
-    border:'1px solid rgba(200,123,82,0.20)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.20)',
     color:ENCRE,
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'100%',
     fontSize:14, lineHeight:1.65, fontWeight:400, whiteSpace:'pre-wrap',
@@ -4024,7 +4048,7 @@ const s = {
   suggestionsRow: { display:'flex', gap:7, marginBottom:10, flexWrap:'wrap', position:'relative', zIndex:1 },
   suggestion: {
     background:'rgba(255,248,242,0.92)',
-    border:'1px solid rgba(200,123,82,0.22)', borderRadius:20,
+    border:'1px solid rgba(var(--rgb-terracotta), 0.22)', borderRadius:20,
     padding:'7px 14px', fontSize:12, color: ENCRE, cursor:'pointer',
     fontFamily:F, fontWeight:300,
   },
@@ -4033,8 +4057,8 @@ const s = {
   inputBox: {
     display:'flex', gap:8, background:'rgba(255,252,248,0.96)',
     borderRadius:20, padding:'8px 8px 8px 18px',
-    border:'1px solid rgba(200,123,82,0.22)', alignItems:'center',
-    boxShadow:'0 4px 24px rgba(200,123,82,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
+    border:'1px solid rgba(var(--rgb-terracotta), 0.22)', alignItems:'center',
+    boxShadow:'0 4px 24px rgba(var(--rgb-terracotta), 0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
   },
   inputChat: { flex:1, minWidth:0, border:'none', outline:'none', fontSize:16, fontFamily:F, background:'transparent', color:ENCRE },
   sendBtn: {
@@ -4150,10 +4174,10 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
       {showScrollBtn && (
         <button onClick={onScrollDown}
           style={{ position:'absolute', bottom:74, right:16, zIndex:10,
-            width:32, height:32, borderRadius:'50%', border:'1px solid rgba(200,123,82,0.25)',
+            width:32, height:32, borderRadius:'50%', border:'1px solid rgba(var(--rgb-terracotta), 0.25)',
             background:'rgba(255,248,242,0.96)',
             cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow:'0 2px 12px rgba(200,123,82,0.15)' }}>↓</button>
+            boxShadow:'0 2px 12px rgba(var(--rgb-terracotta), 0.15)' }}>↓</button>
       )}
       <div style={s.inputBox}>
         <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:'none' }} />

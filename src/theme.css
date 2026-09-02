@@ -49,6 +49,14 @@
   --rgb-creme-pale: 255, 248, 235;   /*  58 */
   --rgb-noir:         0,   0,   0;   /*  56 */
   --rgb-creme-clair: 255, 246, 232;  /*  29 */
+  --rgb-creme-rose:  255, 238, 220;  /*  25 */
+
+  /* ── Les teintes pleines, hors palette, repandues dans les ecrans ── */
+  --or-plein:     #E8962A;   /* 50 occurrences : etoiles, badges */
+  --ambre-fonce:  #9C5D08;   /* 20 : petites capitales et chiffres */
+  --creme-milieu: #F5DDB0;   /* 15 : le milieu des degrades de fond */
+  --brun-fonce:   #6C422C;   /*  9 : l'onglet actif */
+  --brun-moyen:   #90593B;   /*  9 : l'onglet actif, l'autre bout */
 
   /* ── Les fonds ── */
   --fond:      #EDD8CC;
@@ -79,7 +87,58 @@
   --rgb-blanc:      200, 222, 255;
   --rgb-creme-pale: 120, 160, 220;
   --rgb-creme-clair: 150, 190, 245;
+  --rgb-creme-rose:  190, 215, 250;
+
+  --or-plein:     #A9C9F5;
+  --ambre-fonce:  #8FB3E0;
+  --creme-milieu: #14213F;
+  --brun-fonce:   #24395F;
+  --brun-moyen:   #35507E;
 
   --fond:      #0F1C3A;
   --fond-haut: #0B1530;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   LES PAGES QUI RESTENT EN JOUR, QUOI QU'IL ARRIVE
+
+   La connexion et la page de vente sont la premiere impression de la marque.
+   Elles restent creme meme en pleine nuit : decision de Jean, et elle a
+   raison, ce n'est pas un ecran de travail, c'est une porte d'entree.
+
+   Les variables etant heritees, redefinir les valeurs de jour sur un
+   conteneur suffit a proteger tout ce qu'il contient, quelle que soit
+   l'ambiance posee sur la racine.
+   ───────────────────────────────────────────────────────────────────────── */
+.theme-jour {
+  /* ── Les jetons de palette.js, valeurs de JOUR, inchangées ── */
+  --encre:   #944D26;   /* 4,57:1 sur le fond crème */
+  --icone:   #AF5B2D;   /* 3,51:1, sa sœur claire */
+  --accent:  #C87B52;   /* décor seulement, jamais du texte */
+  --ambre:   #8A5206;
+  --vert:    #166534;
+  --rouge:   #B91C1C;
+
+  /* ── Les huit familles, en triplets, pour les opacités ── */
+  --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
+  --rgb-creme-dore: 255, 220, 160;   /* 163 */
+  --rgb-creme:      255, 235, 210;   /* 129 */
+  --rgb-or:         232, 150, 42;    /* 111 */
+  --rgb-blanc:      255, 255, 255;   /*  94 */
+  --rgb-creme-pale: 255, 248, 235;   /*  58 */
+  --rgb-noir:         0,   0,   0;   /*  56 */
+  --rgb-creme-clair: 255, 246, 232;  /*  29 */
+  --rgb-creme-rose:  255, 238, 220;  /*  25 */
+
+  /* ── Les teintes pleines, hors palette, repandues dans les ecrans ── */
+  --or-plein:     #E8962A;   /* 50 occurrences : etoiles, badges */
+  --ambre-fonce:  #9C5D08;   /* 20 : petites capitales et chiffres */
+  --creme-milieu: #F5DDB0;   /* 15 : le milieu des degrades de fond */
+  --brun-fonce:   #6C422C;   /*  9 : l'onglet actif */
+  --brun-moyen:   #90593B;   /*  9 : l'onglet actif, l'autre bout */
+
+  /* ── Les fonds ── */
+  --fond:      #EDD8CC;
+  --fond-haut: #FFF6E8;
 }

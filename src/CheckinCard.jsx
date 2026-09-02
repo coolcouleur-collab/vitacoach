@@ -17,7 +17,7 @@ const MOODS = [
   { val: 1, label: 'Très mal',   color: '#A9614A', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
   { val: 2, label: 'Pas top',    color: '#C07551', mouth: 'M8 16 Q11 14.5 14 16' },
   { val: 3, label: 'Ça va',      color: '#D48F52', mouth: 'M8 15.5 L14 15.5' },
-  { val: 4, label: 'Bien',       color: '#9C5D08', mouth: 'M8 14.5 Q11 16.5 14 14.5' },
+  { val: 4, label: 'Bien',       color: 'var(--ambre-fonce)', mouth: 'M8 14.5 Q11 16.5 14 14.5' },
   { val: 5, label: 'Très bien',  color: AMBRE, mouth: 'M8 14 Q11 17.5 14 14' },
 ]
 
@@ -145,7 +145,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       // et ne semblaient pas cliquables (retour Jean 2026-08-08).
                       // C'est pourtant la première interaction de la journée.
                       background: active ? `${teinteHumeur(m.color)}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(255,246,238,0.55)'),
-                      border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(200,123,82,0.30)')}`,
+                      border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(var(--rgb-terracotta), 0.30)')}`,
                       color: tc(active ? 0.95 : 0.72),
                     }}
                   >
@@ -177,7 +177,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                           padding: '6px 13px', borderRadius: 20, cursor: 'pointer', outline: 'none',
                           WebkitTapHighlightColor: 'transparent', fontFamily: F,
                           fontSize: 12, fontWeight: sel ? 700 : 500,
-                          border: `1px solid ${sel ? warmText(0.55) : (isNight ? 'rgba(180,210,255,0.14)' : 'rgba(200,123,82,0.16)')}`,
+                          border: `1px solid ${sel ? warmText(0.55) : (isNight ? 'rgba(180,210,255,0.14)' : 'rgba(var(--rgb-terracotta), 0.16)')}`,
                           background: sel ? warmText(0.14) : 'transparent',
                           color: sel ? (isNight ? nightText(0.95) : warmText(0.95)) : tc(0.60),
                           transition: 'all 0.18s',
@@ -192,10 +192,10 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                     whileTap={{ scale: 0.97 }}
                     style={{
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                      background: 'rgba(255,235,210,0.32)',
+                      background: 'rgba(var(--rgb-creme), 0.32)',
                       backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                       color: AMBRE, fontSize: 13, fontWeight: 700, fontFamily: F,
-                      boxShadow: '0 3px 14px rgba(200,123,82,0.30)', outline: 'none',
+                      boxShadow: '0 3px 14px rgba(var(--rgb-terracotta), 0.30)', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',
                     }}
                   >
@@ -213,8 +213,8 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
             style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '12px 14px', borderRadius: 16,
-              background: isNight ? 'rgba(180,210,255,0.05)' : 'rgba(200,123,82,0.06)',
-              border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(200,123,82,0.14)'}`,
+              background: isNight ? 'rgba(180,210,255,0.05)' : 'rgba(var(--rgb-terracotta), 0.06)',
+              border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-terracotta), 0.14)'}`,
             }}
           >
             {savedMood && (
@@ -236,7 +236,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
               onClick={() => { setEditing(true); setMood(saved.mood); setTags(saved.tags || []) }}
               style={{
                 padding: '6px 13px', borderRadius: 20, cursor: 'pointer', outline: 'none',
-                border: `1px solid ${isNight ? 'rgba(180,210,255,0.16)' : 'rgba(200,123,82,0.22)'}`,
+                border: `1px solid ${isNight ? 'rgba(180,210,255,0.16)' : 'rgba(var(--rgb-terracotta), 0.22)'}`,
                 background: 'transparent', color: tc(0.70),
                 fontSize: 11, fontWeight: 600, fontFamily: F, flexShrink: 0,
                 WebkitTapHighlightColor: 'transparent',

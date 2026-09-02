@@ -23,7 +23,7 @@ function h2r(hex, a) {
   return `rgba(${r},${g},${b},${a})`
 }
 
-function ScaleIcon({ color = '#C87B52', size = 18 }) {
+function ScaleIcon({ color = 'var(--accent)', size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="3 3 18 19" fill="none">
       <path d="M12 5v15M5 10l7-5 7 5M7 20h10" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -113,7 +113,7 @@ function HistoriqueSection({ history, onLog }) {
   ]
   return (
     <div style={{
-      background:'rgba(255,235,210,0.22)', border:'1.5px solid rgba(255,220,160,0.28)', borderRadius:20,
+      background:'rgba(var(--rgb-creme), 0.22)', border:'1.5px solid rgba(var(--rgb-creme-dore), 0.28)', borderRadius:20,
       overflow:'hidden', marginBottom:14,
       backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
     }}>
@@ -123,8 +123,8 @@ function HistoriqueSection({ history, onLog }) {
         onClick={() => setOpen(v => !v)}
       >
         <div style={{ width:38, height:38, borderRadius:12, flexShrink:0,
-          background:'rgba(200,123,82,0.12)',
-          border:'1.5px solid rgba(200,123,82,0.22)',
+          background:'rgba(var(--rgb-terracotta), 0.12)',
+          border:'1.5px solid rgba(var(--rgb-terracotta), 0.22)',
           display:'flex', alignItems:'center', justifyContent:'center' }}><CalendarIcon size={18} color={ICONE} /></div>
         <div style={{ flex:1, textAlign:'left' }}>
           <div style={{ fontSize:13, fontWeight:600, color:ENCRE }}>Historique 7 jours</div>
@@ -132,13 +132,13 @@ function HistoriqueSection({ history, onLog }) {
         </div>
         <div style={{
           fontSize:10, fontWeight:700, color:ENCRE,
-          background:'rgba(200,123,82,0.08)', padding:'4px 10px', borderRadius:12,
-          border:'1px solid rgba(200,123,82,0.16)',
+          background:'rgba(var(--rgb-terracotta), 0.08)', padding:'4px 10px', borderRadius:12,
+          border:'1px solid rgba(var(--rgb-terracotta), 0.16)',
           transform: open ? 'rotate(180deg)' : 'none', transition:'transform 0.28s ease',
         }}>▼</div>
       </button>
       {open && (
-        <div style={{ padding:'4px 18px 18px', borderTop:'1px solid rgba(255,220,160,0.28)' }}>
+        <div style={{ padding:'4px 18px 18px', borderTop:'1px solid rgba(var(--rgb-creme-dore), 0.28)' }}>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginTop:12 }}>
             {metricsToShow.map(m => (
               <div key={m.key} style={{
@@ -164,7 +164,7 @@ function HistoriqueSection({ history, onLog }) {
 
 // ─── CAROUSEL CARD ────────────────────────────────────────────────────────────
 function CarouselCard({ item, index, trackX, cardW, gap }) {
-  const ACCENTS = ['#C87B52', '#C87B52', '#C87B52', '#C87B52', '#C87B52', '#C87B52']
+  const ACCENTS = ['var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)']
   const accent  = ACCENTS[index % ACCENTS.length]
   const slotW   = cardW + gap
 
@@ -181,7 +181,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
   return (
     <div className="lg-card" style={{
       width: cardW, flexShrink: 0, borderRadius: 20, overflow: 'hidden',
-      background: 'rgba(255,235,210,0.22)',
+      background: 'rgba(var(--rgb-creme), 0.22)',
       backdropFilter: 'blur(18px)',
       WebkitBackdropFilter: 'blur(18px)',
       boxShadow: `0 8px 32px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(255,255,255,0.18)`,
@@ -228,7 +228,7 @@ function CarouselCard({ item, index, trackX, cardW, gap }) {
 // ─── INSIGHTS CAROUSEL ────────────────────────────────────────────────────────
 function InsightsCarousel({ insights, onClose }) {
   const items   = insights.insights || insights.points || []
-  const ACCENTS = ['#C87B52', '#C87B52', '#C87B52', '#C87B52', '#C87B52', '#C87B52']
+  const ACCENTS = ['var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)', 'var(--accent)']
   const [activeIdx, setActiveIdx] = useState(0)
   const containerRef = useRef(null)
   const [cardW, setCardW] = useState(260)
@@ -271,7 +271,7 @@ function InsightsCarousel({ insights, onClose }) {
             <div key={i} onClick={() => snapTo(i)} style={{
               height: 4, borderRadius: 99, cursor: 'pointer',
               width: i === activeIdx ? 22 : 7,
-              background: i <= activeIdx ? ACCENTS[i % ACCENTS.length] : 'rgba(200,123,82,0.15)',
+              background: i <= activeIdx ? ACCENTS[i % ACCENTS.length] : 'rgba(var(--rgb-terracotta), 0.15)',
               transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)',
             }} />
           ))}
@@ -319,7 +319,7 @@ function InsightsCarousel({ insights, onClose }) {
 function SousTitre({ children, premier = false }) {
   return (
     <>
-      {!premier && <div style={{ height: 1, background: 'rgba(200,123,82,0.14)', margin: '26px 4px 18px' }} />}
+      {!premier && <div style={{ height: 1, background: 'rgba(var(--rgb-terracotta), 0.14)', margin: '26px 4px 18px' }} />}
       <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: ENCRE, fontFamily: 'Poppins,sans-serif', marginBottom: 12 }}>
         {children}
       </div>
@@ -337,8 +337,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
   const animRef    = useRef(null)
   const prevScoreRef = useRef(0)
 
-  const scoreColor = score > 0 ? '#C87B52' : 'rgba(200,123,82,0.72)'
-  const scoreTrack = 'rgba(200,123,82,0.10)'
+  const scoreColor = score > 0 ? 'var(--accent)' : 'rgba(var(--rgb-terracotta), 0.72)'
+  const scoreTrack = 'rgba(var(--rgb-terracotta), 0.10)'
   const scoreLabel = score >= 80 ? 'Excellent !' : score >= 60 ? 'Bonne forme' : score >= 40 ? 'En progression' : score > 0 ? 'À améliorer' : 'Commence !'
   const labelColor = scoreColor
   const circumference = 2 * Math.PI * 52
@@ -423,8 +423,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
     <div style={{ paddingBottom: 20, paddingTop: 16 }}>
       <style>{`
         @keyframes iaGlow {
-          0%,100% { box-shadow: 0 0 0 0px rgba(200,123,82,0), 0 4px 18px rgba(200,123,82,0.12); }
-          50%     { box-shadow: 0 0 0 5px rgba(200,123,82,0.18), 0 4px 26px rgba(200,123,82,0.35); }
+          0%,100% { box-shadow: 0 0 0 0px rgba(var(--rgb-terracotta), 0), 0 4px 18px rgba(var(--rgb-terracotta), 0.12); }
+          50%     { box-shadow: 0 0 0 5px rgba(var(--rgb-terracotta), 0.18), 0 4px 26px rgba(var(--rgb-terracotta), 0.35); }
         }
         .ia-glow { animation: iaGlow 2.8s ease-in-out infinite; }
 
@@ -451,9 +451,9 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           position: absolute; inset: 0;
           border-radius: inherit;
           background: linear-gradient(145deg,
-            rgba(255,235,210,0.12) 0%,
-            rgba(255,235,210,0.04) 45%,
-            rgba(255,235,210,0.08) 100%
+            rgba(var(--rgb-creme), 0.12) 0%,
+            rgba(var(--rgb-creme), 0.04) 45%,
+            rgba(var(--rgb-creme), 0.08) 100%
           );
           pointer-events: none;
           z-index: 1;
@@ -466,12 +466,12 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           border-radius: inherit;
           padding: 1px;
           background: linear-gradient(130deg,
-            rgba(200,123,82,0.55)  0%,
-            rgba(232,150,42,0.38) 18%,
-            rgba(200,123,82,0.42) 38%,
-            rgba(232,150,42,0.52) 62%,
-            rgba(200,123,82,0.42) 82%,
-            rgba(232,150,42,0.55) 100%
+            rgba(var(--rgb-terracotta), 0.55)  0%,
+            rgba(var(--rgb-or), 0.38) 18%,
+            rgba(var(--rgb-terracotta), 0.42) 38%,
+            rgba(var(--rgb-or), 0.52) 62%,
+            rgba(var(--rgb-terracotta), 0.42) 82%,
+            rgba(var(--rgb-or), 0.55) 100%
           );
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: destination-out;
@@ -523,7 +523,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       {/* ── Quick Water Bar ── */}
       <div style={ss.waterBar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(200,123,82,0.45))' }}><WaterIcon size={24} color={ICONE} /></span>
+          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(var(--rgb-terracotta), 0.45))' }}><WaterIcon size={24} color={ICONE} /></span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 10, color: ENCRE, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5 }}>
               <span style={{display:'flex',alignItems:'center',gap:5}}><WaterIcon size={11} color={ICONE} />Hydratation du jour</span>
@@ -533,13 +533,13 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 <div key={i} style={{
                   flex: 1, height: 14, borderRadius: 7,
                   background: i < (metriques.eau || 0)
-                    ? 'linear-gradient(180deg, rgba(232,150,42,0.9), rgba(200,123,82,0.9))'
-                    : 'rgba(200,123,82,0.10)',
+                    ? 'linear-gradient(180deg, rgba(var(--rgb-or), 0.9), rgba(var(--rgb-terracotta), 0.9))'
+                    : 'rgba(var(--rgb-terracotta), 0.10)',
                   boxShadow: i < (metriques.eau || 0)
-                    ? '0 3px 8px rgba(200,123,82,0.30), inset 0 1px 0 rgba(255,255,255,0.5)'
+                    ? '0 3px 8px rgba(var(--rgb-terracotta), 0.30), inset 0 1px 0 rgba(255,255,255,0.5)'
                     : 'none',
                   transition: 'all 0.3s ease',
-                  border: i < (metriques.eau || 0) ? 'none' : '1px solid rgba(255,220,160,0.28)'
+                  border: i < (metriques.eau || 0) ? 'none' : '1px solid rgba(var(--rgb-creme-dore), 0.28)'
                 }} />
               ))}
             </div>
@@ -570,13 +570,13 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
             <div key={m.key}
               style={{
                 ...ss.metricCard,
-                background: 'rgba(255,235,210,0.22)',
+                background: 'rgba(var(--rgb-creme), 0.22)',
                 backdropFilter: 'blur(18px)',
                 WebkitBackdropFilter: 'blur(18px)',
-                border: '1px solid rgba(255,220,160,0.28)',
-                borderTop: '2.5px solid #C87B52',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+                borderTop: '2.5px solid var(--accent)',
                 boxShadow: done
-                  ? '0 6px 20px rgba(200,123,82,0.28), 0 2px 6px rgba(0,0,0,0.05)'
+                  ? '0 6px 20px rgba(var(--rgb-terracotta), 0.28), 0 2px 6px rgba(0,0,0,0.05)'
                   : '0 4px 14px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
               }}
               onClick={() => openEdit(m.key)}
@@ -631,7 +631,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
                 const same   = delta === 0
                 return (
                   <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 8,
-                    color: same ? 'rgba(200,123,82,0.60)' : up ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.75)' }}>
+                    color: same ? 'rgba(var(--rgb-terracotta), 0.60)' : up ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(var(--rgb-terracotta), 0.75)' }}>
                     {same ? '= même poids' : `${up ? '▲ +' : '▼ '}${Math.abs(delta)} kg vs hier`}
                   </div>
                 )
@@ -703,7 +703,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           onClick={() => onSwitchTab('cycle')}
           style={{
             width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-            background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+            background: 'rgba(var(--rgb-creme), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
             backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
             borderRadius: 18, padding: '14px 16px', marginBottom: 22,
             cursor: 'pointer', textAlign: 'left', fontFamily: "'Poppins', sans-serif",
@@ -712,7 +712,7 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
           <div style={{
             width: 38, height: 38, borderRadius: 12, flexShrink: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+            background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
           }}>
             <MoonIcon size={18} color={ICONE} />
           </div>
@@ -813,8 +813,8 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
 
 const ss = {
   scoreCard: {
-    background: 'rgba(255,235,210,0.22)',
-    border: '1px solid rgba(255,220,160,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.22)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 28, padding: '20px',
     display: 'flex', alignItems: 'center', gap: 18, marginBottom: 14,
@@ -822,9 +822,9 @@ const ss = {
   },
   btnInsights: {
     width: 'auto',
-    background: 'rgba(255,235,210,0.32)',
+    background: 'rgba(var(--rgb-creme), 0.32)',
     color: AMBRE,
-    border: '1px solid rgba(255,220,160,0.28)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     padding: '11px 34px',
     borderRadius: 100,
     fontSize: 11.5,
@@ -834,21 +834,21 @@ const ss = {
     transition: 'transform 0.15s ease',
   },
   insightsCard: {
-    background: 'rgba(255,235,210,0.22)',
-    border: '1px solid rgba(255,220,160,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.22)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '14px 0 12px', marginBottom: 14,
   },
   waterBar: {
-    background: 'rgba(255,235,210,0.22)',
-    border: '1px solid rgba(255,220,160,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.22)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, padding: '16px 18px', marginBottom: 14,
     display: 'flex', alignItems: 'center', gap: 12,
   },
   btnWater: {
-    background: 'rgba(255,235,210,0.32)',
-    border: '1px solid rgba(255,220,160,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.32)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     color: AMBRE, borderRadius: 50, padding: '10px 18px', fontSize: 12, fontWeight: 700,
     cursor: 'pointer', fontFamily: 'Poppins,sans-serif', flexShrink: 0,
     boxShadow: 'none',
@@ -862,8 +862,8 @@ const ss = {
     transition: 'transform 0.15s ease, box-shadow 0.2s ease',
   },
   appleSection: {
-    background: 'rgba(255,235,210,0.22)',
-    border: '1px solid rgba(255,220,160,0.28)',
+    background: 'rgba(var(--rgb-creme), 0.22)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
     backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
     borderRadius: 20, overflow: 'hidden',
   },
@@ -871,15 +871,15 @@ const ss = {
     width: '100%', background: 'transparent', border: 'none', padding: '16px 18px',
     display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', fontFamily: 'Poppins,sans-serif'
   },
-  appleBody: { padding: '4px 18px 18px', borderTop: '1px solid rgba(255,220,160,0.28)' },
+  appleBody: { padding: '4px 18px 18px', borderTop: '1px solid rgba(var(--rgb-creme-dore), 0.28)' },
   appleStep: { display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 10, paddingTop: 10 },
   appleStepNum: {
     width: 30, height: 30, borderRadius: '50%',
-    background: 'linear-gradient(145deg, rgba(200,123,82,0.20), rgba(200,123,82,0.10))',
-    border: '1.5px solid rgba(200,123,82,0.30)',
+    background: 'linear-gradient(145deg, rgba(var(--rgb-terracotta), 0.20), rgba(var(--rgb-terracotta), 0.10))',
+    border: '1.5px solid rgba(var(--rgb-terracotta), 0.30)',
     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12,
     fontWeight: 900, color: ENCRE, flexShrink: 0, marginTop: 1,
-    boxShadow: '0 3px 10px rgba(200,123,82,0.15), inset 0 1px 0 rgba(255,255,255,0.6)'
+    boxShadow: '0 3px 10px rgba(var(--rgb-terracotta), 0.15), inset 0 1px 0 rgba(255,255,255,0.6)'
   },
   modalOverlay: {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
@@ -889,34 +889,34 @@ const ss = {
     background: 'rgba(40,20,5,0.94)',
     backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
     borderRadius: '28px 28px 0 0', padding: '10px 26px 48px', width: '100%', maxWidth: 520,
-    boxShadow: '0 -12px 50px rgba(0,0,0,0.45)', border: '1px solid rgba(255,220,160,0.14)'
+    boxShadow: '0 -12px 50px rgba(0,0,0,0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.14)'
   },
   modalHandle: {
-    width: 44, height: 5, background: 'rgba(255,220,160,0.22)', borderRadius: 12,
+    width: 44, height: 5, background: 'rgba(var(--rgb-creme-dore), 0.22)', borderRadius: 12,
     margin: '12px auto 22px'
   },
   modalInput: {
     width: '100%', padding: '18px',
     borderRadius: 20,
-    border: '1.5px solid rgba(255,220,160,0.28)', background: 'rgba(255,235,210,0.10)',
+    border: '1.5px solid rgba(var(--rgb-creme-dore), 0.28)', background: 'rgba(var(--rgb-creme), 0.10)',
     fontSize: 32, fontFamily: 'Poppins,sans-serif', outline: 'none', color: ENCRE,
     boxSizing: 'border-box', textAlign: 'center', marginBottom: 22, fontWeight: 800,
     boxShadow: 'none'
   },
   humeurBtn: {
     width: 56, height: 56, borderRadius: 20,
-    border: '1.5px solid rgba(255,220,160,0.22)',
-    background: 'rgba(255,235,210,0.10)',
+    border: '1.5px solid rgba(var(--rgb-creme-dore), 0.22)',
+    background: 'rgba(var(--rgb-creme), 0.10)',
     fontSize: 28, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     transition: 'all 0.2s ease',
     boxShadow: 'none'
   },
   btnCancel: {
-    flex: 1, padding: '15px', background: 'rgba(255,235,210,0.08)',
-    border: '1px solid rgba(255,220,160,0.20)', borderRadius: 16, fontSize: 13,
+    flex: 1, padding: '15px', background: 'rgba(var(--rgb-creme), 0.08)',
+    border: '1px solid rgba(var(--rgb-creme-dore), 0.20)', borderRadius: 16, fontSize: 13,
     fontWeight: 700, cursor: 'pointer', color: ENCRE, fontFamily: 'Poppins,sans-serif',
-    boxShadow: 'inset 0 1px 0 rgba(255,235,210,0.10)'
+    boxShadow: 'inset 0 1px 0 rgba(var(--rgb-creme), 0.10)'
   },
   btnSave: {
     flex: 2, padding: '15px', border: 'none', borderRadius: 16, fontSize: 13,

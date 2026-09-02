@@ -60,8 +60,8 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
       transition={{ type: 'spring', stiffness: 320, damping: 26, delay: index * 0.08 }}
       onClick={onFiche} style={{
       width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-      background: fait ? 'rgba(232,150,42,0.16)' : 'rgba(255,235,210,0.30)',
-      border: fait ? '1px solid rgba(232,150,42,0.45)' : '1px solid rgba(255,220,160,0.35)',
+      background: fait ? 'rgba(var(--rgb-or), 0.16)' : 'rgba(var(--rgb-creme), 0.30)',
+      border: fait ? '1px solid rgba(var(--rgb-or), 0.45)' : '1px solid rgba(var(--rgb-creme-dore), 0.35)',
       borderRadius: 14, padding: '8px 10px', marginBottom: 8, cursor: 'pointer',
       fontFamily: "'Poppins', sans-serif", textAlign: 'left',
       transition: 'background 0.25s, border-color 0.25s',
@@ -75,7 +75,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
         <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>{info.nom}</div>
         <div style={{ fontSize: 11.5, color: ENCRE }}>{item.reps}</div>
       </div>
-      <span style={{ fontSize: 10.5, fontWeight: 600, color: AMBRE, background: 'rgba(255,235,210,0.55)', border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
+      <span style={{ fontSize: 10.5, fontWeight: 600, color: AMBRE, background: 'rgba(var(--rgb-creme), 0.55)', border: '1px solid rgba(var(--rgb-creme-dore), 0.45)', borderRadius: 99, padding: '4px 10px', flexShrink: 0 }}>
         Voir le geste
       </span>
       {onToggle && (
@@ -85,13 +85,13 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
           onClick={e => { e.stopPropagation(); onToggle() }}
           style={{
             width: 30, height: 30, borderRadius: '50%', flexShrink: 0, cursor: 'pointer',
-            background: fait ? 'rgba(200,123,82,0.90)' : 'rgba(255,246,238,0.70)',
-            border: fait ? '1.5px solid rgba(200,123,82,0.90)' : '1.5px solid rgba(200,123,82,0.40)',
+            background: fait ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(255,246,238,0.70)',
+            border: fait ? '1.5px solid rgba(var(--rgb-terracotta), 0.90)' : '1.5px solid rgba(var(--rgb-terracotta), 0.40)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
           }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke={fait ? '#fff' : 'rgba(200,123,82,0.45)'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            stroke={fait ? '#fff' : 'rgba(var(--rgb-terracotta), 0.45)'} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </span>
@@ -397,13 +397,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       margin: '0 auto',
     },
     card: {
-      background: 'rgba(255,235,210,0.22)',
+      background: 'rgba(var(--rgb-creme), 0.22)',
       backdropFilter: 'blur(18px)',
       WebkitBackdropFilter: 'blur(18px)',
       borderRadius: '20px',
       padding: '28px',
-      border: '1px solid rgba(255,220,160,0.28)',
-      boxShadow: '0 4px 24px rgba(200,123,82,0.10)',
+      border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+      boxShadow: '0 4px 24px rgba(var(--rgb-terracotta), 0.10)',
     },
   }
 
@@ -413,7 +413,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       <div style={styles.container}>
         <div
           style={{
-            background: 'rgba(200,123,82,0.06)',
+            background: 'rgba(var(--rgb-terracotta), 0.06)',
             borderRadius: '20px',
             padding: '28px',
             display: 'flex',
@@ -429,7 +429,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               style={{
                 height: i === 2 ? '80px' : '20px',
                 width: `${width}px`,
-                background: 'rgba(200,123,82,0.18)',
+                background: 'rgba(var(--rgb-terracotta), 0.18)',
                 borderRadius: '12px',
               }}
             />
@@ -462,7 +462,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             pardonne pas. */}
         {ailleurs && (
           <div style={{
-            background: 'rgba(255,235,210,0.32)', border: '1px solid rgba(255,220,160,0.40)',
+            background: 'rgba(var(--rgb-creme), 0.32)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 18, padding: '14px 16px', marginBottom: 14,
             fontFamily: "'Poppins', sans-serif",
@@ -499,7 +499,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
           padding: '10px 14px', borderRadius: 14,
-          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(200,123,82,0.20)',
+          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
           fontFamily: "'Poppins', sans-serif",
         }}>
           <TargetIcon size={15} color={ICONE} />
@@ -519,7 +519,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           Replie par defaut, parce qu'on ne relit pas ca tous les jours. */}
       {progCourant && (
         <div style={{
-          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(200,123,82,0.20)',
+          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
           borderRadius: 14, padding: '10px 14px', marginBottom: 12,
           fontFamily: "'Poppins', sans-serif",
         }}>
@@ -570,8 +570,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
 
       {objectifChange && (
         <div style={{
-          background: 'linear-gradient(135deg, rgba(232,150,42,0.14), rgba(200,123,82,0.07))',
-          border: '1px solid rgba(232,150,42,0.35)', borderRadius: 16,
+          background: 'linear-gradient(135deg, rgba(var(--rgb-or), 0.14), rgba(var(--rgb-terracotta), 0.07))',
+          border: '1px solid rgba(var(--rgb-or), 0.35)', borderRadius: 16,
           padding: '13px 15px', marginBottom: 14, fontFamily: "'Poppins', sans-serif",
         }}>
           <div style={{ fontSize: 12.5, color: ENCRE, lineHeight: 1.5, fontWeight: 500 }}>
@@ -582,7 +582,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             onClick={handleNouveauChallenge}
             style={{
               marginTop: 9, padding: '9px 16px', borderRadius: 12, cursor: 'pointer',
-              background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.55)',
+              background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.55)',
               color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
             Régénérer pour mon nouvel objectif
@@ -591,7 +591,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       )}
       {proposerReprise && (
         <div style={{
-          background: 'rgba(255,246,238,0.70)', border: '1px solid rgba(200,123,82,0.28)',
+          background: 'rgba(255,246,238,0.70)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
           borderRadius: 16, padding: '14px 16px', marginBottom: 14,
           fontFamily: "'Poppins', sans-serif",
         }}>
@@ -604,14 +604,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           <div style={{ display: 'flex', gap: 8, marginTop: 11 }}>
             <button onClick={reprendreOuOnEnEtait} style={{
               flex: 1, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
-              background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.60)',
+              background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
               color: AMBRE, fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
             }}>
               Reprendre au jour {progression.lastIndexOf(true) + 2}
             </button>
             <button onClick={ignorerReprise} style={{
               flex: 0.8, padding: '10px 0', borderRadius: 12, cursor: 'pointer',
-              background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+              background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
               color: ENCRE, fontSize: 12, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
             }}>
               Continuer au jour {jourActuel}
@@ -636,15 +636,15 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               style={{
-                background: 'rgba(255,235,210,0.30)',
+                background: 'rgba(var(--rgb-creme), 0.30)',
                 backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
                 borderRadius: '22px', padding: '26px 28px',
-                border: '1.5px solid rgba(232,150,42,0.45)',
-                boxShadow: '0 8px 36px rgba(200,123,82,0.18)',
+                border: '1.5px solid rgba(var(--rgb-or), 0.45)',
+                boxShadow: '0 8px 36px rgba(var(--rgb-terracotta), 0.18)',
                 textAlign: 'center', fontFamily: "'Poppins', sans-serif",
               }}>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-                <StarIcon size={30} color="#9C5D08" />
+                <StarIcon size={30} color="var(--ambre-fonce)" />
               </div>
               <div style={{ fontSize: 18, fontWeight: 800, color: ENCRE, marginBottom: 6 }}>
                 {numCycle > 1 ? `Cycle ${numCycle} terminé` : 'Programme terminé'}
@@ -659,12 +659,12 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 onClick={handleNouveauChallenge}
                 style={{
                   width: '100%', padding: '14px 0', borderRadius: 16, cursor: 'pointer',
-                  background: 'rgba(255,235,210,0.45)',
+                  background: 'rgba(var(--rgb-creme), 0.45)',
                   backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,220,160,0.60)',
+                  border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
                   color: AMBRE, fontSize: 14.5, fontWeight: 800,
                   fontFamily: "'Poppins', sans-serif",
-                  boxShadow: '0 4px 20px rgba(200,123,82,0.30)',
+                  boxShadow: '0 4px 20px rgba(var(--rgb-terracotta), 0.30)',
                 }}>
                 Lancer le cycle {numCycle + 1}
               </button>
@@ -681,13 +681,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               style={{
-                background: 'rgba(255,235,210,0.30)',
+                background: 'rgba(var(--rgb-creme), 0.30)',
                 backdropFilter: 'blur(18px)',
                 WebkitBackdropFilter: 'blur(18px)',
                 borderRadius: '22px',
                 padding: '24px 28px',
-                border: '1.5px solid rgba(232,150,42,0.45)',
-                boxShadow: '0 8px 36px rgba(200,123,82,0.18)',
+                border: '1.5px solid rgba(var(--rgb-or), 0.45)',
+                boxShadow: '0 8px 36px rgba(var(--rgb-terracotta), 0.18)',
               }}
             >
               <p
@@ -747,7 +747,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                       style={{
                         width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
                         display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
-                        background: courses.length ? 'rgba(22,101,52,0.07)' : 'rgba(255,235,210,0.32)',
+                        background: courses.length ? 'rgba(22,101,52,0.07)' : 'rgba(var(--rgb-creme), 0.32)',
                         border: courses.length
                           ? '1px solid rgba(22,101,52,0.28)'
                           : `1.5px solid ${ICONE}`,
@@ -756,7 +756,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                       <div style={{
                         width: 34, height: 34, borderRadius: 11, flexShrink: 0, fontSize: 17,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+                        background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
                       }}>🏃</div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>
@@ -810,8 +810,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                     const faits = jourActuelData.seance.filter((_, i) => exosFaits[i]).length
                     return (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '2px 2px 6px' }}>
-                        <div style={{ flex: 1, height: 4, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.14)' }}>
-                          <div style={{ width: `${total ? Math.round(faits / total * 100) : 0}%`, height: '100%', borderRadius: 2, background: 'linear-gradient(90deg,#C87B52,#E8962A)', transition: 'width 0.35s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                        <div style={{ flex: 1, height: 4, borderRadius: 2, overflow: 'hidden', background: 'rgba(var(--rgb-terracotta), 0.14)' }}>
+                          <div style={{ width: `${total ? Math.round(faits / total * 100) : 0}%`, height: '100%', borderRadius: 2, background: 'linear-gradient(90deg,var(--accent),var(--or-plein))', transition: 'width 0.35s cubic-bezier(0.34,1.56,0.64,1)' }} />
                         </div>
                         <span style={{ fontSize: 11, fontWeight: 700, color: ENCRE, fontFamily: "'Poppins',sans-serif", flexShrink: 0 }}>
                           {faits}/{total}
@@ -846,7 +846,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               {jourActuelData.nutrition && (
                 <div style={{
                   display: 'flex', gap: 8, alignItems: 'flex-start',
-                  background: 'rgba(255,235,210,0.35)', border: '1px solid rgba(255,220,160,0.40)',
+                  background: 'rgba(var(--rgb-creme), 0.35)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
                   borderRadius: 12, padding: '9px 12px', marginBottom: 12,
                 }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
@@ -860,8 +860,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               {!jourActuelData.seance?.length && matchExercice(jourActuelData.action) && (
                 <button onClick={() => setExoGuide(matchExercice(jourActuelData.action))} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10,
-                  background: 'rgba(255,235,210,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255,220,160,0.45)', borderRadius: 99,
+                  background: 'rgba(var(--rgb-creme), 0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(var(--rgb-creme-dore), 0.45)', borderRadius: 99,
                   padding: '7px 14px', cursor: 'pointer',
                   fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 600, color: AMBRE,
                 }}>
@@ -874,7 +874,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 <span
                   style={{
                     display: 'inline-block',
-                    background: 'rgba(232,150,42,0.12)',
+                    background: 'rgba(var(--rgb-or), 0.12)',
                     color: AMBRE,
                     borderRadius: '12px',
                     padding: '4px 12px',
@@ -908,8 +908,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               {jourSuivantData && jourActuel < duree && (
                 <div style={{
                   display: 'flex', alignItems: 'flex-start', gap: 10,
-                  background: 'rgba(255,235,210,0.28)',
-                  border: '1px solid rgba(255,220,160,0.40)',
+                  background: 'rgba(var(--rgb-creme), 0.28)',
+                  border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
                   borderRadius: 14, padding: '11px 13px', marginBottom: 20,
                 }}>
                   <span style={{ flexShrink: 0, marginTop: 1 }}>
@@ -972,10 +972,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   whileTap={{ scale: 0.98 }}
                   onClick={() => { if (navigator.vibrate) navigator.vibrate([50, 40, 80]); handleMarquerFait(jourActuel - 1) }}
                   style={{
-                    background: 'rgba(255,235,210,0.32)',
+                    background: 'rgba(var(--rgb-creme), 0.32)',
                     backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                     color: AMBRE,
-                    border: '1px solid rgba(255,220,160,0.38)',
+                    border: '1px solid rgba(var(--rgb-creme-dore), 0.38)',
                     borderRadius: '16px',
                     padding: '12px 24px',
                     fontSize: '14px',
@@ -983,7 +983,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                     fontFamily: "'Poppins', sans-serif",
                     cursor: 'pointer',
                     width: '100%',
-                    boxShadow: '0 4px 16px rgba(200,123,82,0.3)',
+                    boxShadow: '0 4px 16px rgba(var(--rgb-terracotta), 0.3)',
                   }}
                 >
                   ✓ Marquer comme fait
@@ -1008,11 +1008,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 left: 0, right: 0, margin: '0 auto', zIndex: 9999,
                 background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
                 borderRadius: 20, padding: '14px 24px',
-                border: '1.5px solid rgba(255,220,160,0.60)',
+                border: '1.5px solid rgba(var(--rgb-creme-dore), 0.60)',
                 boxShadow: '0 16px 48px rgba(120,60,20,0.25)',
                 display: 'flex', alignItems: 'center', gap: 12, width: 'max-content', maxWidth: '88vw',
               }}>
-              <StarIcon size={24} color="#9C5D08" />
+              <StarIcon size={24} color="var(--ambre-fonce)" />
               <div style={{ fontFamily: "'Poppins', sans-serif" }}>
                 <div style={{ fontSize: 14.5, fontWeight: 800, color: ENCRE }}>
                   Objectif du jour terminé, bravo !
@@ -1086,10 +1086,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               style={{
-                background: 'rgba(200,123,82,0.05)',
+                background: 'rgba(var(--rgb-terracotta), 0.05)',
                 borderRadius: '16px',
                 padding: '16px 20px',
-                border: '1px solid rgba(200,123,82,0.12)',
+                border: '1px solid rgba(var(--rgb-terracotta), 0.12)',
                 backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
               }}
             >
@@ -1136,14 +1136,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 // l'app, il jurait avec la charte (constat Jean 2026-08-12).
                 background: 'rgba(255,246,238,0.96)',
                 backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(200,123,82,0.28)',
+                border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
                 boxShadow: '0 18px 60px rgba(120,60,20,0.28)',
                 borderRadius: 24, padding: '28px 24px',
                 maxWidth: 340, width: '100%',
                 fontFamily: "'Poppins', sans-serif",
               }}
             >
-              <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="#9C5D08" /></div>
+              <div style={{ display:'flex', justifyContent:'center', marginBottom: 10 }}><SparkleIcon size={22} color="var(--ambre-fonce)" /></div>
               <div style={{ fontSize: 16, fontWeight: 600, color: ENCRE, textAlign: 'center', marginBottom: 8 }}>
                 Vers quel objectif ?
               </div>
@@ -1158,13 +1158,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                     <button key={o} onClick={() => setObjChoisi(o)} style={{
                       display: 'flex', alignItems: 'center', gap: 9, textAlign: 'left',
                       padding: '10px 13px', borderRadius: 13, cursor: 'pointer',
-                      background: actif ? 'rgba(255,235,210,0.55)' : 'rgba(255,246,238,0.40)',
-                      border: actif ? '1.5px solid rgba(232,150,42,0.60)' : '1px solid rgba(200,123,82,0.20)',
+                      background: actif ? 'rgba(var(--rgb-creme), 0.55)' : 'rgba(255,246,238,0.40)',
+                      border: actif ? '1.5px solid rgba(var(--rgb-or), 0.60)' : '1px solid rgba(var(--rgb-terracotta), 0.20)',
                       fontFamily: "'Poppins', sans-serif", transition: 'all 0.15s',
                     }}>
                       <span style={{
                         width: 15, height: 15, borderRadius: '50%', flexShrink: 0,
-                        border: actif ? '4.5px solid #C87B52' : '1.5px solid rgba(200,123,82,0.40)',
+                        border: actif ? '4.5px solid var(--accent)' : '1.5px solid rgba(var(--rgb-terracotta), 0.40)',
                         background: '#FFF6EE', boxSizing: 'border-box',
                       }} />
                       <span style={{ fontSize: 13, fontWeight: actif ? 700 : 500, color: ENCRE }}>{o}</span>
@@ -1177,8 +1177,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   onClick={() => setConfirmReset(false)}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
-                    background: 'rgba(200,123,82,0.08)',
-                    border: '1px solid rgba(200,123,82,0.25)',
+                    background: 'rgba(var(--rgb-terracotta), 0.08)',
+                    border: '1px solid rgba(var(--rgb-terracotta), 0.25)',
                     color: ENCRE, fontSize: 14,
                     fontFamily: "'Poppins', sans-serif", cursor: 'pointer',
                   }}
@@ -1194,8 +1194,8 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                   }}
                   style={{
                     flex: 1, padding: '12px', borderRadius: 14,
-                    background: 'rgba(255,235,210,0.32)',
-                    border: '1px solid rgba(255,220,160,0.30)',
+                    background: 'rgba(var(--rgb-creme), 0.32)',
+                    border: '1px solid rgba(var(--rgb-creme-dore), 0.30)',
                     color: AMBRE, fontSize: 14, fontWeight: 600,
                     fontFamily: "'Poppins', sans-serif",
                     cursor: objChoisi ? 'pointer' : 'not-allowed',

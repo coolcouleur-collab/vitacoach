@@ -22,12 +22,12 @@ function parseRich(text) {
 
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
-  meals:     { accent:'#C87B52', labelEl:<><FoodIcon size={13} color={ICONE} /> Repas</>,      gradient:'rgba(255,235,210,0.32)' },
+  meals:     { accent:'var(--accent)', labelEl:<><FoodIcon size={13} color={ICONE} /> Repas</>,      gradient:'rgba(var(--rgb-creme), 0.32)' },
   exercises: { accent:'#F59E0B', labelEl:<><MuscleIcon size={13} color="#F59E0B" /> Exercices</>,  gradient:'linear-gradient(135deg,#F59E0B,#D97706)' },
-  tips:      { accent:'#C87B52', labelEl:<><LightbulbIcon size={13} color={ICONE} /> Conseils</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
+  tips:      { accent:'var(--accent)', labelEl:<><LightbulbIcon size={13} color={ICONE} /> Conseils</>, gradient:'linear-gradient(135deg,var(--accent),#9E5C35)' },
   plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
   routine:   { accent:'#38bdf8', labelEl:<><CalendarIcon size={13} color="#38bdf8" /> Programme</>,gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
-  generic:   { accent:'#C87B52', labelEl:<><ChatIcon size={13} color={ICONE} /> Suggestions</>, gradient:'linear-gradient(135deg,#C87B52,#9E5C35)' },
+  generic:   { accent:'var(--accent)', labelEl:<><ChatIcon size={13} color={ICONE} /> Suggestions</>, gradient:'linear-gradient(135deg,var(--accent),#9E5C35)' },
 }
 
 // ─── Global keyframes injected once ──────────────────────────────────────────
@@ -58,16 +58,16 @@ function BookingCard({ data }) {
   return (
     <div style={{
       background:'linear-gradient(145deg, #FFF3EE, #FFF8F4)',
-      border:'2px solid rgba(200,123,82,0.22)',
+      border:'2px solid rgba(var(--rgb-terracotta), 0.22)',
       borderRadius:24,
       overflow:'hidden',
-      boxShadow:'0 16px 48px rgba(200,123,82,0.14), 0 4px 14px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)',
+      boxShadow:'0 16px 48px rgba(var(--rgb-terracotta), 0.14), 0 4px 14px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.95)',
       animation:'slideUp 0.4s ease both',
     }}>
 
       {/* Header gradient */}
       <div style={{
-        background:'linear-gradient(135deg, #C87B52, #9E5C35)',
+        background:'linear-gradient(135deg, var(--accent), #9E5C35)',
         padding:'16px 20px',
         display:'flex', alignItems:'center', gap:14,
       }}>
@@ -114,8 +114,8 @@ function BookingCard({ data }) {
         {data.note && (
           <div style={{
             display:'flex', gap:10, alignItems:'flex-start',
-            background:'rgba(200,123,82,0.06)',
-            border:'1px solid rgba(200,123,82,0.15)',
+            background:'rgba(var(--rgb-terracotta), 0.06)',
+            border:'1px solid rgba(var(--rgb-terracotta), 0.15)',
             borderRadius:14, padding:'12px 14px',
           }}>
             <span style={{ flexShrink:0, display:'flex' }}><ChatIcon size={18} color={ICONE} /></span>
@@ -131,10 +131,10 @@ function BookingCard({ data }) {
             onClick={() => setAdded(true)}>
             <div style={{
               padding:'14px 16px', borderRadius:16,
-              background: added ? 'linear-gradient(135deg,#34c759,#16a34a)' : 'linear-gradient(135deg,#C87B52,#9E5C35)',
+              background: added ? 'linear-gradient(135deg,#34c759,#16a34a)' : 'linear-gradient(135deg,var(--accent),#9E5C35)',
               color:'#fff',
               fontSize:14, fontWeight:700,
-              boxShadow: added ? '0 6px 20px rgba(52,199,89,0.35)' : '0 6px 24px rgba(200,123,82,0.38)',
+              boxShadow: added ? '0 6px 20px rgba(52,199,89,0.35)' : '0 6px 24px rgba(var(--rgb-terracotta), 0.38)',
               display:'flex', alignItems:'center', justifyContent:'center', gap:8,
               transition:'all 0.3s ease',
               cursor:'pointer',
@@ -160,8 +160,8 @@ function BookingCard({ data }) {
                   cursor:'pointer',
                 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink:0 }}>
-                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                   <span style={{ flex:1 }}>{link.label}</span>
                   <span style={{ fontSize:12, color:'#c4b5a8' }}>↗</span>

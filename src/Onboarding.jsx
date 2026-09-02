@@ -14,7 +14,7 @@ import {
   Star, Target, Tree, Crown, ArrowUpRight,
 } from '@phosphor-icons/react'
 
-const ph = (I, w = 'light') => ({ color = '#C87B52', size = 20 }) =>
+const ph = (I, w = 'light') => ({ color = 'var(--accent)', size = 20 }) =>
   <I weight={w} color={color} size={size} />
 
 const G = {
@@ -70,12 +70,12 @@ function BgBlobs() {
     <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0,overflow:'hidden'}}>
       <div style={{
         position:'absolute', top:'-15%', left:'-10%', width:500, height:500, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(var(--rgb-terracotta), 0.50) 0%,rgba(200,100,40,0.22) 45%,transparent 70%)',
         animation:'liquidBlob1 10s ease-in-out infinite',
       }}/>
       <div style={{
         position:'absolute', bottom:'-10%', right:'-8%', width:600, height:600, borderRadius:'50%',
-        background:'radial-gradient(circle,rgba(200,123,82,0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
+        background:'radial-gradient(circle,rgba(var(--rgb-terracotta), 0.38) 0%,rgba(180,90,30,0.16) 45%,transparent 70%)',
         animation:'liquidBlob2 13s ease-in-out infinite reverse',
       }}/>
       <div style={{
@@ -119,7 +119,7 @@ function RevealScreen({ answers, onEnter }) {
   return (
     <div style={{
       position:'fixed', inset:0, zIndex:200,
-      background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+      background:'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       padding:'40px 28px',
       fontFamily:"'Poppins', sans-serif",
@@ -135,16 +135,16 @@ function RevealScreen({ answers, onEnter }) {
         {/* Avatar au-dessus de la carte */}
         <div style={{
           width:88, height:88, borderRadius:'50%',
-          background:'rgba(255,235,210,0.32)',
+          background:'rgba(var(--rgb-creme), 0.32)',
           backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-          border:'1px solid rgba(255,220,160,0.45)',
+          border:'1px solid rgba(var(--rgb-creme-dore), 0.45)',
           display:'flex', alignItems:'center', justifyContent:'center',
           marginBottom:-44, zIndex:2, position:'relative',
-          boxShadow:'0 0 0 8px rgba(200,123,82,0.10), 0 0 0 16px rgba(200,123,82,0.05)',
+          boxShadow:'0 0 0 8px rgba(var(--rgb-terracotta), 0.10), 0 0 0 16px rgba(var(--rgb-terracotta), 0.05)',
           animation:'revealPulse 2.8s ease-in-out infinite',
         }}>
           <span style={{
-            fontSize:38, fontWeight:800, color:'rgba(255,248,235,1)',
+            fontSize:38, fontWeight:800, color:'rgba(var(--rgb-creme-pale), 1)',
             fontFamily:'Poppins, sans-serif', letterSpacing:'-0.02em',
           }}>
             {nom.charAt(0).toUpperCase()}
@@ -154,35 +154,35 @@ function RevealScreen({ answers, onEnter }) {
         {/* Carte glassmorphism, même style qu'Auth */}
         <div style={{
           width:'100%',
-          background:'rgba(255,235,210,0.28)',
+          background:'rgba(var(--rgb-creme), 0.28)',
           backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          border:'1px solid rgba(255,220,160,0.32)',
+          border:'1px solid rgba(var(--rgb-creme-dore), 0.32)',
           borderRadius:24,
           padding:'56px 24px 28px',
           display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
           boxShadow:'0 8px 40px rgba(180,80,20,0.10)',
         }}>
-          <div style={{fontSize:12, fontWeight:700, color:'rgba(255,248,235,1)', letterSpacing:'1.8px', textTransform:'uppercase', marginBottom:10}}>
+          <div style={{fontSize:12, fontWeight:700, color:'rgba(var(--rgb-creme-pale), 1)', letterSpacing:'1.8px', textTransform:'uppercase', marginBottom:10}}>
             Profil créé
           </div>
-          <h1 style={{fontSize:'clamp(26px,7vw,38px)', fontWeight:500, color:'rgba(255,248,235,1)', letterSpacing:'-0.02em', marginBottom:8, lineHeight:1.2, fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic'}}>
+          <h1 style={{fontSize:'clamp(26px,7vw,38px)', fontWeight:500, color:'rgba(var(--rgb-creme-pale), 1)', letterSpacing:'-0.02em', marginBottom:8, lineHeight:1.2, fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic'}}>
             Bonjour, {nom} !
           </h1>
-          <p style={{fontSize:15, color:'rgba(255,248,235,1)', marginBottom:28, lineHeight:1.6}}>
+          <p style={{fontSize:15, color:'rgba(var(--rgb-creme-pale), 1)', marginBottom:28, lineHeight:1.6}}>
             Solenn connaît ton profil et est prête à t'accompagner.
           </p>
           {objectifs.length > 0 && (
             <div style={{marginBottom:18, width:'100%'}}>
-              <div style={{fontSize:11, fontWeight:700, color:'rgba(255,248,235,1)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
+              <div style={{fontSize:11, fontWeight:700, color:'rgba(var(--rgb-creme-pale), 1)', letterSpacing:'0.8px', textTransform:'uppercase', marginBottom:10}}>
                 Ton objectif
               </div>
               <div style={{display:'flex', flexWrap:'wrap', gap:8, justifyContent:'center'}}>
                 {objectifs.map(o => (
                   <span key={o} style={{
                     padding:'7px 16px', borderRadius:20,
-                    background:'rgba(255,235,210,0.22)',
-                    border:'1px solid rgba(255,220,160,0.45)',
-                    fontSize:12, fontWeight:600, color:'rgba(255,248,235,0.97)',
+                    background:'rgba(var(--rgb-creme), 0.22)',
+                    border:'1px solid rgba(var(--rgb-creme-dore), 0.45)',
+                    fontSize:12, fontWeight:600, color:'rgba(var(--rgb-creme-pale), 0.97)',
                   }}>{o}</span>
                 ))}
               </div>
@@ -193,9 +193,9 @@ function RevealScreen({ answers, onEnter }) {
               {tags.map(t => (
                 <span key={t} style={{
                   padding:'5px 12px', borderRadius:20,
-                  background:'rgba(255,235,210,0.16)',
-                  border:'1px solid rgba(255,220,160,0.35)',
-                  fontSize:11, fontWeight:500, color:'rgba(255,248,235,1)',
+                  background:'rgba(var(--rgb-creme), 0.16)',
+                  border:'1px solid rgba(var(--rgb-creme-dore), 0.35)',
+                  fontSize:11, fontWeight:500, color:'rgba(var(--rgb-creme-pale), 1)',
                 }}>{t}</span>
               ))}
             </div>
@@ -204,8 +204,8 @@ function RevealScreen({ answers, onEnter }) {
             onClick={onEnter}
             style={{
               width:'100%', height:52,
-              background:'rgba(255,235,210,0.32)',
-              color:'#FFFFFF', border:'1px solid rgba(255,220,160,0.45)', borderRadius:30,
+              background:'rgba(var(--rgb-creme), 0.32)',
+              color:'#FFFFFF', border:'1px solid rgba(var(--rgb-creme-dore), 0.45)', borderRadius:30,
               fontSize:15, fontWeight:600, cursor:'pointer',
               fontFamily:'Poppins, sans-serif',
               display:'flex', alignItems:'center', justifyContent:'center', gap:8,
@@ -300,31 +300,31 @@ const RYTHME_OPTIONS = [
 const S = {
   question: {
     fontSize:'clamp(22px,5vw,28px)', fontWeight:600, lineHeight:1.35,
-    color:'rgba(255,248,235,0.95)', fontFamily:"'Poppins', sans-serif",
+    color:'rgba(var(--rgb-creme-pale), 0.95)', fontFamily:"'Poppins', sans-serif",
     letterSpacing:'-0.01em',
   },
   sub: {
-    fontSize:14, fontWeight:400, color:'rgba(255,248,235,0.65)',
+    fontSize:14, fontWeight:400, color:'rgba(var(--rgb-creme-pale), 0.65)',
     fontFamily:"'Poppins', sans-serif", lineHeight:1.55,
   },
   input: {
     width:'100%', padding:'16px 20px', borderRadius:16, boxSizing:'border-box',
-    border:'1px solid rgba(255,220,160,0.35)',
+    border:'1px solid rgba(var(--rgb-creme-dore), 0.35)',
     background:'rgba(255,235,200,0.15)',
     backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
-    fontSize:16, fontFamily:"'Poppins', sans-serif", color:'rgba(255,248,235,1)',
+    fontSize:16, fontFamily:"'Poppins', sans-serif", color:'rgba(var(--rgb-creme-pale), 1)',
     outline:'none', fontWeight:500,
     boxShadow:'0 2px 14px rgba(180,80,20,0.08)',
     transition:'border-color 0.2s, box-shadow 0.2s',
   },
   cta: {
     // Verre de cuivre profond, translucide + texte crème (palette Solenn)
-    width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(255,235,210,0.45)',
-    background:'rgba(255,235,210,0.32)',
+    width:'100%', padding:'17px', borderRadius:16, border:'1px solid rgba(var(--rgb-creme), 0.45)',
+    background:'rgba(var(--rgb-creme), 0.32)',
     backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-    color:'#FFF6E8', fontSize:16, fontWeight:600, cursor:'pointer',
+    color:'var(--fond-haut)', fontSize:16, fontWeight:600, cursor:'pointer',
     fontFamily:"'Poppins', sans-serif", letterSpacing:'0.3px',
-    boxShadow:'0 8px 24px rgba(200,123,82,0.22), inset 0 1px 0 rgba(255,248,235,0.30)',
+    boxShadow:'0 8px 24px rgba(var(--rgb-terracotta), 0.22), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.30)',
     transition:'opacity 0.2s, box-shadow 0.2s',
     outline:'none',
   },
@@ -334,8 +334,8 @@ const S = {
 function optStyle(isSel) {
   return {
     width:'100%', padding:'12px 18px', borderRadius:16,
-    border:`1px solid ${isSel ? 'rgba(255,220,160,0.72)' : 'rgba(255,220,160,0.25)'}`,
-    background: isSel ? 'rgba(255,235,210,0.32)' : 'rgba(255,235,210,0.14)',
+    border:`1px solid ${isSel ? 'rgba(var(--rgb-creme-dore), 0.72)' : 'rgba(var(--rgb-creme-dore), 0.25)'}`,
+    background: isSel ? 'rgba(var(--rgb-creme), 0.32)' : 'rgba(var(--rgb-creme), 0.14)',
     backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
     boxShadow: isSel ? '0 6px 24px rgba(220,160,90,0.18)' : '0 2px 12px rgba(180,80,20,0.08)',
     transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
@@ -347,7 +347,7 @@ function optStyle(isSel) {
 function iconCircleStyle(isSel) {
   return {
     width:40, height:40, borderRadius:'50%',
-    background: isSel ? 'rgba(255,235,210,0.42)' : 'rgba(255,235,210,0.20)',
+    background: isSel ? 'rgba(var(--rgb-creme), 0.42)' : 'rgba(var(--rgb-creme), 0.20)',
     display:'flex', alignItems:'center', justifyContent:'center',
     flexShrink:0, transition:'background 0.18s',
   }
@@ -605,7 +605,7 @@ function premiereLecture(a) {
                   transition={{ duration:0.65, ease:'easeOut' }}
                   style={{
                     position:'absolute', inset:0, borderRadius:16,
-                    background:'rgba(255,235,210,0.22)', pointerEvents:'none', zIndex:2,
+                    background:'rgba(var(--rgb-creme), 0.22)', pointerEvents:'none', zIndex:2,
                   }}
                 />
               )}
@@ -625,7 +625,7 @@ function premiereLecture(a) {
             >
               <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
                 Continuer
-                <ChevronIcon color="rgba(255,248,235,1)" size={16} direction="right" />
+                <ChevronIcon color="rgba(var(--rgb-creme-pale), 1)" size={16} direction="right" />
               </span>
             </motion.button>
           </div>
@@ -655,17 +655,17 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ flex:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400, display:'block',
-                    color: 'rgba(255,248,235,1)',
+                    color: 'rgba(var(--rgb-creme-pale), 1)',
                     transition:'color 0.16s',
                   }}>{opt.label}</span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -701,16 +701,16 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <AgeIcon color='#C87B52' size={20}/>
+                  <AgeIcon color='var(--accent)' size={20}/>
                 </div>
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
-                  color: 'rgba(255,248,235,1)',
+                  color: 'rgba(var(--rgb-creme-pale), 1)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {range}
                 </span>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -753,12 +753,12 @@ function premiereLecture(a) {
               >
                 <span style={{
                   fontSize:15, fontWeight: isSel ? 600 : 400,
-                  color: 'rgba(255,248,235,1)',
+                  color: 'rgba(var(--rgb-creme-pale), 1)',
                   transition:'color 0.16s, font-weight 0.1s',
                 }}>
                   {opt.label}
                 </span>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
               </motion.button>
             )
           })}
@@ -791,21 +791,21 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400,
-                    color: 'rgba(255,248,235,1)',
+                    color: 'rgba(var(--rgb-creme-pale), 1)',
                     transition:'color 0.16s',
                   }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>
                     {opt.desc}
                   </span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -837,15 +837,15 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -877,15 +877,15 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -917,15 +917,15 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -957,15 +957,15 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -997,15 +997,15 @@ function premiereLecture(a) {
                 style={optStyle(isSel)}
               >
                 <div style={iconCircleStyle(isSel)}>
-                  <OptIcon color='#C87B52' size={20}/>
+                  <OptIcon color='var(--accent)' size={20}/>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -1056,16 +1056,16 @@ function premiereLecture(a) {
                   style={optStyle(isSel)}
                 >
                   <div style={iconCircleStyle(isSel)}>
-                    <OptIcon color='#C87B52' size={20}/>
+                    <OptIcon color='var(--accent)' size={20}/>
                   </div>
                   <div style={{ display:'flex', flexDirection:'column', gap:1, flex:1 }}>
-                    <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                    <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                       {opt.label}
                     </span>
-                    <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                    <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                   </div>
-                  <div style={{width:18,height:18,borderRadius:'50%',border:`1.5px solid ${isSel ? 'rgba(255,220,160,0.90)' : 'rgba(255,220,160,0.40)'}`,background:isSel?'rgba(200,123,82,0.65)':'transparent',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.15s'}}>
-                    {isSel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="rgba(255,248,235,1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  <div style={{width:18,height:18,borderRadius:'50%',border:`1.5px solid ${isSel ? 'rgba(var(--rgb-creme-dore), 0.90)' : 'rgba(var(--rgb-creme-dore), 0.40)'}`,background:isSel?'rgba(var(--rgb-terracotta), 0.65)':'transparent',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.15s'}}>
+                    {isSel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="rgba(var(--rgb-creme-pale), 1)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                   </div>
                 </motion.button>
               )
@@ -1080,15 +1080,15 @@ function premiereLecture(a) {
             style={{
               display:'flex', alignItems:'flex-start', gap:12, textAlign:'left',
               padding:'13px 15px', borderRadius:16, cursor:'pointer',
-              background: consentSante ? 'rgba(255,235,210,0.22)' : 'rgba(255,255,255,0.06)',
-              border: consentSante ? '1px solid rgba(255,220,160,0.55)' : '1px solid rgba(255,248,235,0.22)',
+              background: consentSante ? 'rgba(var(--rgb-creme), 0.22)' : 'rgba(255,255,255,0.06)',
+              border: consentSante ? '1px solid rgba(var(--rgb-creme-dore), 0.55)' : '1px solid rgba(var(--rgb-creme-pale), 0.22)',
               transition:'background 0.18s, border-color 0.18s',
             }}
           >
             <span style={{
               width:20, height:20, borderRadius:6, flexShrink:0, marginTop:1,
-              background: consentSante ? 'rgba(255,220,160,0.90)' : 'transparent',
-              border: consentSante ? '1px solid rgba(255,220,160,0.90)' : '1.5px solid rgba(255,248,235,0.45)',
+              background: consentSante ? 'rgba(var(--rgb-creme-dore), 0.90)' : 'transparent',
+              border: consentSante ? '1px solid rgba(var(--rgb-creme-dore), 0.90)' : '1.5px solid rgba(var(--rgb-creme-pale), 0.45)',
               display:'flex', alignItems:'center', justifyContent:'center',
             }}>
               {consentSante && (
@@ -1098,7 +1098,7 @@ function premiereLecture(a) {
                 </svg>
               )}
             </span>
-            <span style={{ fontSize:12.5, lineHeight:1.55, color:'rgba(255,248,235,0.92)' }}>
+            <span style={{ fontSize:12.5, lineHeight:1.55, color:'rgba(var(--rgb-creme-pale), 0.92)' }}>
               J'accepte que Solenn traite mes données de santé pour personnaliser
               ses conseils. Je peux retirer ce consentement, exporter ou supprimer
               mes données à tout moment depuis les réglages.{' '}
@@ -1122,7 +1122,7 @@ function premiereLecture(a) {
             <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
               Continuer
               <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:'rgba(255,245,238,0.18)',borderRadius:8,width:28,height:28,flexShrink:0}}>
-                <ChevronIcon color="rgba(255,248,235,1)" size={14} direction="right" />
+                <ChevronIcon color="rgba(var(--rgb-creme-pale), 1)" size={14} direction="right" />
               </span>
             </span>
           </motion.button>
@@ -1176,11 +1176,11 @@ function premiereLecture(a) {
                 >
                   <span style={{
                     fontSize:15, fontWeight: isSel ? 600 : 400,
-                    color: 'rgba(255,248,235,1)',
+                    color: 'rgba(var(--rgb-creme-pale), 1)',
                   }}>
                     {opt.label}
                   </span>
-                  <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
+                  <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0.30}} />
                 </motion.button>
               )
             })}
@@ -1229,20 +1229,20 @@ function premiereLecture(a) {
                 <div style={iconCircleStyle(isSel)}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
-                      stroke="#C87B52" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                       fill="rgba(190,100,35,0.18)"/>
-                    <circle cx="8.5" cy="11.5" r="1.2" fill="#C87B52"/>
-                    <circle cx="12"  cy="7.5"  r="1.2" fill="#C87B52"/>
-                    <circle cx="15.5" cy="11.5" r="1.2" fill="#C87B52"/>
+                    <circle cx="8.5" cy="11.5" r="1.2" fill="var(--accent)"/>
+                    <circle cx="12"  cy="7.5"  r="1.2" fill="var(--accent)"/>
+                    <circle cx="15.5" cy="11.5" r="1.2" fill="var(--accent)"/>
                   </svg>
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(255,248,235,1)', transition:'color 0.16s' }}>
+                  <span style={{ fontSize:15, fontWeight: isSel ? 600 : 400, color: 'rgba(var(--rgb-creme-pale), 1)', transition:'color 0.16s' }}>
                     {opt.label}
                   </span>
-                  <span style={{ fontSize:13, color:'rgba(255,248,235,1)', fontWeight:400 }}>{opt.desc}</span>
+                  <span style={{ fontSize:13, color:'rgba(var(--rgb-creme-pale), 1)', fontWeight:400 }}>{opt.desc}</span>
                 </div>
-                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(255,220,160,0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
+                <div style={{marginLeft:'auto',width:10,height:10,borderRadius:'50%',background:'rgba(var(--rgb-creme-dore), 0.90)',flexShrink:0,opacity:isSel?1:0,transform:isSel?'scale(1)':'scale(0.2)',transition:'opacity 0.15s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'}} />
               </motion.button>
             )
           })}
@@ -1268,9 +1268,9 @@ function premiereLecture(a) {
             initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
             transition={{ delay:0.55, type:'spring', stiffness:300, damping:26 }}
             style={{
-              fontSize:15, lineHeight:1.65, color:'rgba(255,248,235,0.92)',
+              fontSize:15, lineHeight:1.65, color:'rgba(var(--rgb-creme-pale), 0.92)',
               background:'rgba(255,255,255,0.08)',
-              border:'1px solid rgba(255,220,160,0.28)',
+              border:'1px solid rgba(var(--rgb-creme-dore), 0.28)',
               borderRadius:18, padding:'16px 18px', margin:0,
             }}>
             {l.texte}
@@ -1283,18 +1283,18 @@ function premiereLecture(a) {
             whileTap={{ scale:0.97 }}
             style={{
               padding:'15px 26px', borderRadius:16, cursor:'pointer',
-              background:'rgba(255,235,210,0.32)',
+              background:'rgba(var(--rgb-creme), 0.32)',
               backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
-              border:'1px solid rgba(255,220,160,0.60)',
-              color:'rgba(255,248,235,1)', fontSize:15, fontWeight:600,
+              border:'1px solid rgba(var(--rgb-creme-dore), 0.60)',
+              color:'rgba(var(--rgb-creme-pale), 1)', fontSize:15, fontWeight:600,
               fontFamily:"'Poppins', system-ui, sans-serif",
-              boxShadow:'0 8px 28px rgba(200,123,82,0.30)',
+              boxShadow:'0 8px 28px rgba(var(--rgb-terracotta), 0.30)',
             }}>
             On commence
           </motion.button>
 
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.1 }}
-            style={{ fontSize:11.5, lineHeight:1.5, color:'rgba(255,248,235,0.55)', margin:0, textAlign:'center' }}>
+            style={{ fontSize:11.5, lineHeight:1.5, color:'rgba(var(--rgb-creme-pale), 0.55)', margin:0, textAlign:'center' }}>
             Dans deux semaines je pourrai te montrer ce qui a bougé, chiffres à l'appui.
           </motion.p>
         </div>
@@ -1318,7 +1318,7 @@ function premiereLecture(a) {
       // (signale par Jean le 2026-08-14, questionnaire sante).
       height:'100%',
       minHeight:'100%',
-      background:'linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%)',
+      background:'linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%)',
       fontFamily:"'Poppins', sans-serif",
       display:'flex', flexDirection:'column',
       position:'relative', overflowX:'hidden', overflowY:'auto',
@@ -1328,22 +1328,22 @@ function premiereLecture(a) {
         @keyframes liquidBlob1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,5%) scale(1.06)} 66%{transform:translate(-2%,-3%) scale(0.96)} }
         @keyframes liquidBlob2 { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-4%,3%) scale(1.08)} 70%{transform:translate(2%,-5%) scale(0.94)} }
         @keyframes liquidBlob3 { 0%,100%{transform:translate(0,0) scale(1)} 35%{transform:translate(2%,-4%) scale(1.05)} 65%{transform:translate(-3%,2%) scale(0.97)} }
-        @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(200,123,82,0.08),0 0 0 16px rgba(200,123,82,0.04)} 50%{box-shadow:0 0 0 12px rgba(200,123,82,0.13),0 0 0 22px rgba(200,123,82,0.06)} }
-        input:focus { outline:none; border-color:rgba(255,220,160,0.65) !important; box-shadow:0 0 0 3px rgba(255,220,160,0.12) !important; }
+        @keyframes revealPulse { 0%,100%{box-shadow:0 0 0 8px rgba(var(--rgb-terracotta), 0.08),0 0 0 16px rgba(var(--rgb-terracotta), 0.04)} 50%{box-shadow:0 0 0 12px rgba(var(--rgb-terracotta), 0.13),0 0 0 22px rgba(var(--rgb-terracotta), 0.06)} }
+        input:focus { outline:none; border-color:rgba(var(--rgb-creme-dore), 0.65) !important; box-shadow:0 0 0 3px rgba(var(--rgb-creme-dore), 0.12) !important; }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
           -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
-          -webkit-text-fill-color: rgba(255,248,235,1) !important;
+          -webkit-text-fill-color: rgba(var(--rgb-creme-pale), 1) !important;
           transition: background-color 5000s ease-in-out 0s;
         }
         @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 24px rgba(180,80,30,0.22)} 50%{box-shadow:0 8px 36px rgba(180,80,30,0.40)} }
         @keyframes heartbeat { 0%,100%{box-shadow:0 8px 24px rgba(180,80,30,0.22)} 50%{box-shadow:0 12px 36px rgba(180,80,30,0.38)} }
         @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-        button:focus-visible { outline:2px solid rgba(255,220,160,0.60); outline-offset:2px; }
+        button:focus-visible { outline:2px solid rgba(var(--rgb-creme-dore), 0.60); outline-offset:2px; }
         @media (min-width:600px) {
           html, body {
-            background: linear-gradient(160deg, #FFF6E8 0%, #F5DDB0 50%, #FFF6E8 100%);
+            background: linear-gradient(160deg, var(--fond-haut) 0%, var(--creme-milieu) 50%, var(--fond-haut) 100%);
             background-attachment: fixed;
             min-height: 100vh;
           }
@@ -1352,8 +1352,8 @@ function premiereLecture(a) {
             margin: 0 auto;
             height: 100%;
             box-shadow:
-              -1px 0 0 rgba(255,220,160,0.18),
-              1px 0 0 rgba(255,220,160,0.18),
+              -1px 0 0 rgba(var(--rgb-creme-dore), 0.18),
+              1px 0 0 rgba(var(--rgb-creme-dore), 0.18),
               0 0 60px rgba(180,80,20,0.12),
               0 20px 80px rgba(180,80,20,0.08);
             border-radius: 0 0 24px 24px;
@@ -1374,8 +1374,8 @@ function premiereLecture(a) {
       <div className="ob-header" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:100,
         backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-        background:'rgba(255,235,210,0.22)',
-        borderBottom:'1px solid rgba(255,220,160,0.28)',
+        background:'rgba(var(--rgb-creme), 0.22)',
+        borderBottom:'1px solid rgba(var(--rgb-creme-dore), 0.28)',
         boxShadow:'0 2px 24px rgba(180,80,20,0.07)',
         paddingTop:'calc(env(safe-area-inset-top,0px) + 20px)',
         paddingBottom:16,
@@ -1391,12 +1391,12 @@ function premiereLecture(a) {
               style={{
                 position:'absolute', left:20,
                 width:36, height:36, borderRadius:'50%',
-                background:'rgba(255,235,210,0.22)',
+                background:'rgba(var(--rgb-creme), 0.22)',
                 border:'none', cursor:'pointer',
                 display:'flex', alignItems:'center', justifyContent:'center',
               }}
             >
-              <BackIcon color="rgba(255,248,235,0.82)" size={18}/>
+              <BackIcon color="rgba(var(--rgb-creme-pale), 0.82)" size={18}/>
             </motion.button>
           )}
           <motion.span
@@ -1406,7 +1406,7 @@ function premiereLecture(a) {
             style={{
               fontSize:24, fontWeight:400, letterSpacing:'-0.03em',
               fontFamily:"'Cormorant Garamond', Georgia, serif", fontStyle:'italic',
-              color:'rgba(255,248,235,0.92)',
+              color:'rgba(var(--rgb-creme-pale), 0.92)',
               textShadow:'0 1px 10px rgba(180,80,20,0.25)',
             }}
           >

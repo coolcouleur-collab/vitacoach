@@ -6,8 +6,8 @@ import { SparkleIcon, BrainIcon, MoonIcon, FoodIcon } from "./Icons";
 ───────────────────────────────────────────── */
 const T = {
   creme: "#FFF8F4",
-  orange: "#C87B52",
-  or: "#E8962A",
+  orange: "var(--accent)",
+  or: "var(--or-plein)",
   nuit: "#0A1633",
 };
 
@@ -96,7 +96,7 @@ const GLOBAL_CSS = `
   .bl-btn-primary:hover {
     background: #b86940;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(200,123,82,0.4);
+    box-shadow: 0 8px 24px rgba(var(--rgb-terracotta), 0.4);
   }
 
   .bl-btn-secondary {
@@ -134,7 +134,7 @@ const GLOBAL_CSS = `
     text-align: center;
   }
   .bl-btn-outlined-orange:hover {
-    background: rgba(200,123,82,0.08);
+    background: rgba(var(--rgb-terracotta), 0.08);
   }
 
   .bl-btn-filled-orange {
@@ -150,12 +150,12 @@ const GLOBAL_CSS = `
     transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
     width: 100%;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(200,123,82,0.35);
+    box-shadow: 0 4px 20px rgba(var(--rgb-terracotta), 0.35);
   }
   .bl-btn-filled-orange:hover {
     opacity: 0.9;
     transform: translateY(-1px);
-    box-shadow: 0 8px 28px rgba(200,123,82,0.5);
+    box-shadow: 0 8px 28px rgba(var(--rgb-terracotta), 0.5);
   }
 
   .bl-btn-outlined-nuit {
@@ -213,8 +213,8 @@ const GLOBAL_CSS = `
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(200,123,82,0.12);
-    border: 1px solid rgba(200,123,82,0.25);
+    background: rgba(var(--rgb-terracotta), 0.12);
+    border: 1px solid rgba(var(--rgb-terracotta), 0.25);
     color: ${T.orange};
     border-radius: 28px;
     padding: 6px 16px;
@@ -243,15 +243,15 @@ const GLOBAL_CSS = `
   }
 
   .bl-problem-card {
-    background: rgba(200,123,82,0.06);
-    border: 1.5px solid rgba(200,123,82,0.14);
+    background: rgba(var(--rgb-terracotta), 0.06);
+    border: 1.5px solid rgba(var(--rgb-terracotta), 0.14);
     border-radius: 20px;
     padding: 28px 24px;
     flex: 1;
     transition: box-shadow 0.2s, transform 0.2s;
   }
   .bl-problem-card:hover {
-    box-shadow: 0 8px 32px rgba(200,123,82,0.12);
+    box-shadow: 0 8px 32px rgba(var(--rgb-terracotta), 0.12);
     transform: translateY(-3px);
   }
 
@@ -268,13 +268,13 @@ const GLOBAL_CSS = `
     color: #fff;
     font-family: 'Poppins', sans-serif;
     flex-shrink: 0;
-    box-shadow: 0 4px 16px rgba(200,123,82,0.35);
+    box-shadow: 0 4px 16px rgba(var(--rgb-terracotta), 0.35);
     margin: 0 auto 16px;
   }
 
   .bl-pricing-card {
     background: #fff;
-    border: 1.5px solid rgba(200,123,82,0.15);
+    border: 1.5px solid rgba(var(--rgb-terracotta), 0.15);
     border-radius: 20px;
     padding: 32px 28px;
     display: flex;
@@ -287,9 +287,9 @@ const GLOBAL_CSS = `
     transform: translateY(-4px);
   }
   .bl-pricing-card.featured {
-    background: linear-gradient(160deg, rgba(200,123,82,0.07) 0%, rgba(232,150,42,0.07) 100%);
+    background: linear-gradient(160deg, rgba(var(--rgb-terracotta), 0.07) 0%, rgba(var(--rgb-or), 0.07) 100%);
     border: 2px solid ${T.orange};
-    box-shadow: 0 8px 32px rgba(200,123,82,0.2);
+    box-shadow: 0 8px 32px rgba(var(--rgb-terracotta), 0.2);
     transform: scale(1.03);
   }
   .bl-pricing-card.featured:hover {
@@ -312,7 +312,7 @@ const GLOBAL_CSS = `
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(200,123,82,0.4);
+    box-shadow: 0 4px 12px rgba(var(--rgb-terracotta), 0.4);
   }
 
   .bl-feature-item {
@@ -327,7 +327,7 @@ const GLOBAL_CSS = `
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: rgba(200,123,82,0.15);
+    background: rgba(var(--rgb-terracotta), 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -388,7 +388,7 @@ function HeroSection({ onDemanderDemo }) {
           width: "420px",
           height: "420px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(200,123,82,0.18) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(var(--rgb-terracotta), 0.18) 0%, transparent 70%)",
           filter: "blur(32px)",
           pointerEvents: "none",
         }}
@@ -401,7 +401,7 @@ function HeroSection({ onDemanderDemo }) {
           width: "320px",
           height: "320px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(232,150,42,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(var(--rgb-or), 0.12) 0%, transparent 70%)",
           filter: "blur(20px)",
           pointerEvents: "none",
         }}
@@ -954,7 +954,7 @@ function DemoFormSection() {
           transform: "translateX(-50%)",
           width: "500px",
           height: "300px",
-          background: "radial-gradient(ellipse, rgba(200,123,82,0.15) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(var(--rgb-terracotta), 0.15) 0%, transparent 70%)",
           filter: "blur(32px)",
           pointerEvents: "none",
         }}
@@ -998,8 +998,8 @@ function DemoFormSection() {
             style={{
               maxWidth: "480px",
               margin: "0 auto",
-              background: "rgba(200,123,82,0.12)",
-              border: "1.5px solid rgba(200,123,82,0.35)",
+              background: "rgba(var(--rgb-terracotta), 0.12)",
+              border: "1.5px solid rgba(var(--rgb-terracotta), 0.35)",
               borderRadius: "20px",
               padding: "40px 32px",
             }}
@@ -1118,7 +1118,7 @@ function DemoFormSection() {
               disabled={loading}
               style={{
                 background: loading
-                  ? "rgba(200,123,82,0.5)"
+                  ? "rgba(var(--rgb-terracotta), 0.5)"
                   : `linear-gradient(135deg, ${T.orange} 0%, ${T.or} 100%)`,
                 color: "#fff",
                 border: "none",
@@ -1131,7 +1131,7 @@ function DemoFormSection() {
                 width: "100%",
                 marginTop: "6px",
                 transition: "opacity 0.2s, box-shadow 0.2s",
-                boxShadow: loading ? "none" : "0 6px 24px rgba(200,123,82,0.45)",
+                boxShadow: loading ? "none" : "0 6px 24px rgba(var(--rgb-terracotta), 0.45)",
               }}
             >
               {loading ? "Envoi en cours…" : "Demander ma démo gratuite →"}

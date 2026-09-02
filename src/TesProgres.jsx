@@ -100,10 +100,10 @@ export default function TesProgres({ history, userId }) {
           {progres.stats.map((st, i) => (
             <div key={i} style={{
               background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-              border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
+              border: '1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius: 14, padding: '13px 14px', fontFamily: F,
             }}>
               <div style={{ fontSize: 10.5, fontWeight: 600, color: ENCRE }}>{st.label}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#1f9d55' : '#C87B52', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: st.positif === true ? '#1f9d55' : 'var(--accent)', margin: '2px 0', fontVariantNumeric: 'tabular-nums' }}>{st.valeur}</div>
               <div style={{ fontSize: 10, color: ENCRE, lineHeight: 1.4 }}>{st.detail}</div>
               {st.serie && st.serie.length >= 3 && (() => {
                 const min = Math.min(...st.serie), max = Math.max(...st.serie)
@@ -124,7 +124,7 @@ export default function TesProgres({ history, userId }) {
       {progres?.enAttente > 0 && (
         <div style={{
           background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(200,123,82,0.18)', borderRadius: 14, padding: '13px 15px',
+          border: '1px solid rgba(var(--rgb-terracotta), 0.18)', borderRadius: 14, padding: '13px 15px',
           fontFamily: F, marginBottom: insights.length ? 12 : 0,
         }}>
           <div style={{ fontSize: 13, color: ENCRE, fontWeight: 500, lineHeight: 1.45 }}>
@@ -135,8 +135,8 @@ export default function TesProgres({ history, userId }) {
             Sommeil, pas, humeur et poids : je compare tes débuts à ta semaine en cours, chiffres à l'appui.
           </div>
           {/* Barre d'avancement vers la premiere comparaison */}
-          <div style={{ marginTop: 10, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(200,123,82,0.14)' }}>
-            <div style={{ width: `${Math.round(progres.joursSuivis / 7 * 100)}%`, height: '100%', borderRadius: 2, background: 'rgba(200,123,82,0.65)', transition: 'width 0.4s ease' }} />
+          <div style={{ marginTop: 10, height: 3, borderRadius: 2, overflow: 'hidden', background: 'rgba(var(--rgb-terracotta), 0.14)' }}>
+            <div style={{ width: `${Math.round(progres.joursSuivis / 7 * 100)}%`, height: '100%', borderRadius: 2, background: 'rgba(var(--rgb-terracotta), 0.65)', transition: 'width 0.4s ease' }} />
           </div>
         </div>
       )}
@@ -152,8 +152,8 @@ export default function TesProgres({ history, userId }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {insights.slice(0, 3).map((ins, i) => (
             <div key={i} style={{
-              background: 'linear-gradient(135deg, rgba(232,150,42,0.08), rgba(200,123,82,0.08))',
-              border: '1px solid rgba(232,150,42,0.22)', borderRadius: 14, padding: '12px 15px',
+              background: 'linear-gradient(135deg, rgba(var(--rgb-or), 0.08), rgba(var(--rgb-terracotta), 0.08))',
+              border: '1px solid rgba(var(--rgb-or), 0.22)', borderRadius: 14, padding: '12px 15px',
               fontFamily: F, fontSize: 12.5, color: ENCRE, lineHeight: 1.55,
               display: 'flex', gap: 9, alignItems: 'flex-start',
             }}>

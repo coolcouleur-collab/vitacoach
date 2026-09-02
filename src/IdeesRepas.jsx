@@ -26,10 +26,10 @@ const API = import.meta.env.VITE_API_URL || ''
 const EASE = [0.22, 1, 0.36, 1]
 
 const VERRE = {
-  background: 'rgba(255,235,210,0.32)',
+  background: 'rgba(var(--rgb-creme), 0.32)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
-  border: '1px solid rgba(255,220,160,0.40)',
+  border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
 }
 
 /** Les mêmes clés que agents/recettes.js, et il faut qu'elles le restent. */
@@ -84,7 +84,7 @@ function Recette({ r, index }) {
         <div style={{
           width: 38, height: 38, borderRadius: 12, flexShrink: 0, fontSize: 19,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+          background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
         }}>
           {r.emoji || '🍽️'}
         </div>
@@ -191,8 +191,8 @@ function Preferences({ prefs, onEnregistrer, onFermer }) {
               onClick={() => setRegime(r.id)}
               style={{
                 padding: '9px 13px', borderRadius: 999, cursor: 'pointer',
-                background: actif ? 'rgba(200,123,82,0.16)' : 'transparent',
-                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(200,123,82,0.28)',
+                background: actif ? 'rgba(var(--rgb-terracotta), 0.16)' : 'transparent',
+                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(var(--rgb-terracotta), 0.28)',
                 color: ENCRE, fontSize: 12.5, fontWeight: actif ? 700 : 500,
                 fontFamily: "'Poppins',sans-serif",
               }}
@@ -215,7 +215,7 @@ function Preferences({ prefs, onEnregistrer, onFermer }) {
         placeholder="arachides, coriandre, champignons"
         style={{
           width: '100%', boxSizing: 'border-box', padding: '11px 13px', borderRadius: 13,
-          background: 'rgba(255,255,255,0.35)', border: '1px solid rgba(200,123,82,0.28)',
+          background: 'rgba(255,255,255,0.35)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
           color: ENCRE, fontSize: 13, fontFamily: "'Poppins',sans-serif", outline: 'none',
         }}
       />
@@ -229,7 +229,7 @@ function Preferences({ prefs, onEnregistrer, onFermer }) {
           onClick={onFermer}
           style={{
             padding: '12px 15px', borderRadius: 14, cursor: 'pointer',
-            background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+            background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
             color: ENCRE, fontSize: 13, fontWeight: 600, fontFamily: "'Poppins',sans-serif",
           }}
         >
@@ -363,8 +363,8 @@ export default function IdeesRepas({ userId, profil, onProfilMaj }) {
               onClick={() => setMoment(m.id)}
               style={{
                 flex: 1, padding: '9px 4px', borderRadius: 12, cursor: 'pointer',
-                background: actif ? 'rgba(200,123,82,0.16)' : 'transparent',
-                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(200,123,82,0.26)',
+                background: actif ? 'rgba(var(--rgb-terracotta), 0.16)' : 'transparent',
+                border: actif ? `1.5px solid ${ICONE}` : '1px solid rgba(var(--rgb-terracotta), 0.26)',
                 color: ENCRE, fontSize: 12, fontWeight: actif ? 700 : 500,
                 fontFamily: "'Poppins',sans-serif",
               }}

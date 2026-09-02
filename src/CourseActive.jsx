@@ -25,10 +25,10 @@ import { enregistrerSeance, TYPES_SEANCE } from './seances'
 const EASE = [0.22, 1, 0.36, 1]
 
 const VERRE = {
-  background: 'rgba(255,235,210,0.42)',
+  background: 'rgba(var(--rgb-creme), 0.42)',
   backdropFilter: 'blur(14px)',
   WebkitBackdropFilter: 'blur(14px)',
-  border: '1px solid rgba(255,220,160,0.45)',
+  border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
 }
 
 /** L'écran reste allumé pendant l'effort. Le verrou est repris au retour. */
@@ -203,7 +203,7 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 9000,
-        background: 'linear-gradient(165deg, #FFF6E8 0%, #F5DDB0 55%, #FFF6E8 100%)',
+        background: 'linear-gradient(165deg, var(--fond-haut) 0%, var(--creme-milieu) 55%, var(--fond-haut) 100%)',
         display: 'flex', flexDirection: 'column',
         fontFamily: "'Poppins', sans-serif",
         paddingTop: 'calc(env(safe-area-inset-top, 0px) + 14px)',
@@ -228,7 +228,7 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
           aria-label="Fermer"
           style={{
             width: 38, height: 38, borderRadius: 12, flexShrink: 0, cursor: 'pointer',
-            background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
+            background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -321,7 +321,7 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
             <div style={{
               display: enregistre.ok ? 'flex' : 'none',
               gap: 10, marginTop: 16, paddingTop: 14,
-              borderTop: '1px solid rgba(200,123,82,0.18)',
+              borderTop: '1px solid rgba(var(--rgb-terracotta), 0.18)',
             }}>
               <Chiffre valeur={String(enregistre.stats.total.seances)} libelle="Cette semaine" taille={24} />
               <Chiffre valeur={`${enregistre.stats.total.minutes} min`} libelle="De mouvement" taille={24} />
@@ -361,7 +361,7 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
             style={{
               padding: '16px 20px', borderRadius: 16,
               cursor: demarrage ? 'not-allowed' : 'pointer', opacity: demarrage ? 0.5 : 1,
-              background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+              background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
               color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
             }}
           >
@@ -417,7 +417,7 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
                 onClick={() => { chrono.arreter(); gps.arreter(); veilleArreter(); onFermer?.() }}
                 style={{
                   padding: '13px 16px', borderRadius: 14, cursor: 'pointer',
-                  background: 'transparent', border: '1px solid rgba(200,123,82,0.30)',
+                  background: 'transparent', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
                   color: ENCRE, fontSize: 13.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
                 }}
               >

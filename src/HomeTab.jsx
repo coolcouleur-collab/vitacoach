@@ -9,7 +9,7 @@ import { ENCRE, ICONE, VERT } from './palette'
 import { programmeParId } from './programmes'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
-function BikeIcon({ color = '#C87B52', size = 20 }) {
+function BikeIcon({ color = 'var(--accent)', size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="5.5" cy="17.5" r="3.5" stroke={color} strokeWidth="2"/>
@@ -30,7 +30,7 @@ function SolennFace({ size = 34, isNight = false }) {
     <div className="liquid-avatar" style={{
       width: size, height: size,
       background: isNight ? 'transparent' : 'rgba(220,140,70,0.08)',
-      border: isNight ? '1.5px solid rgba(162,192,248,0.55)' : '1.5px solid rgba(200,123,82,0.28)',
+      border: isNight ? '1.5px solid rgba(162,192,248,0.55)' : '1.5px solid rgba(var(--rgb-terracotta), 0.28)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       flexShrink: 0,
       isolation: 'isolate',
@@ -374,7 +374,7 @@ function NovaOrb({ active, isNight = false, preset = 'day' }) {
 // ─── PALETTE TEXTE NUIT / JOUR ────────────────────────────────────────────────
 // Couleur unique des metriques : la meme dans l'orbite du soleil et dans la
 // feuille de saisie. Les changer separement recree l'incoherence.
-const ORBIT = ICONE   // etait #C87B52 a 2,39:1 ; seuil icone 3,0, desormais 3,86:1
+const ORBIT = ICONE   // etait var(--accent) a 2,39:1 ; seuil icone 3,0, desormais 3,86:1
 
 const nightText  = (op) => `rgba(180,210,255,${op})`
 // LE point unique ou se decide la couleur de TOUT le texte de l'accueil en
@@ -391,7 +391,7 @@ const nightText  = (op) => `rgba(180,210,255,${op})`
 // GRAISSE, qui existaient deja. C'est aussi ce qui evite le defaut que Jean a
 // vu le 2026-09-01 : deux couleurs de texte differentes sur le meme ecran.
 //
-// L'accent #C87B52 n'est pas abandonne : il garde les icones, les fonds, les
+// L'accent var(--accent) n'est pas abandonne : il garde les icones, les fonds, les
 // bordures et le grand score, ou sa taille suffit au seuil de 3,0.
 const warmText   = (op) => ENCRE
 const sunsetText = (op) => `rgba(255,225,200,${op})`
@@ -404,7 +404,7 @@ const OCEAN_PRESETS = {
     // du bleu clair : le Jour était la seule ambiance à introduire une couleur
     // froide saturée, et la rupture avec le fond doré se voyait (option B
     // choisie par Jean le 2026-08-08 parmi quatre maquettes).
-    sky:          'linear-gradient(180deg,#7FB5D8 0%,#A8CFE4 38%,#CFE3E8 65%,#E6E0DC 82%,#EDD8CC 100%)',
+    sky:          'linear-gradient(180deg,#7FB5D8 0%,#A8CFE4 38%,#CFE3E8 65%,#E6E0DC 82%,var(--fond) 100%)',
     sunMoonY:     'calc(100% - 157px)',
     bodyColor:    '#FFD900',
     bodyGlow:     'rgba(255,215,0,0.60)',
@@ -415,7 +415,7 @@ const OCEAN_PRESETS = {
     starOp:       0,
     reflectColor: 'rgba(255,220,60,0.35)',
     skyBiteColor: null,
-    skyBottom:    '#EDD8CC',   // raccord direct avec le fond de l'app
+    skyBottom:    'var(--fond)',   // raccord direct avec le fond de l'app
     ringColor1:   [1.0, 0.58, 0.20],   /* orange vif */
     ringColor2:   [1.0, 0.78, 0.38],   /* doré */
   },
@@ -933,7 +933,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   // se reconnaît à sa forme, pas à sa teinte. Avant, elles mélangeaient un bleu
   // ciel, un indigo, un rouge et un jaune Tailwind au milieu d'une palette
   // chaude (demande Jean 2026-08-08).
-  const orbitC = isNight ? '#9FC4E8' : '#C87B52'
+  const orbitC = isNight ? '#9FC4E8' : 'var(--accent)'
   // `atteint` vient de score.js : les seuils de la pastille et ceux du
   // score doivent bouger ensemble, et deux definitions ne le garantissent pas.
   const METRICS = [
@@ -972,8 +972,8 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   const paused = circleHovered || !!activeMetric
 
   // ── Couleur de l'arc selon le score, identique à SanteTab ──
-  const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(239,68,68,0.28)' : 'rgba(200,123,82,0.25)'
-  const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(239,68,68,0.05)' : 'rgba(200,123,82,0.05)'
+  const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(239,68,68,0.28)' : 'rgba(var(--rgb-terracotta), 0.25)'
+  const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(239,68,68,0.05)' : 'rgba(var(--rgb-terracotta), 0.05)'
 
   return (
     <>
@@ -1035,7 +1035,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 // clair, et le plus gros element de l'ecran etait une tache.
                 // La lune est CLAIRE : l'encre doit donc etre sombre, pas
                 // claire. #22385E donne 11:1 au centre, sans quitter la nuit.
-                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)',
+                color: preset === 'night' ? '#22385E' : 'rgba(var(--rgb-terracotta), 0.90)',
                 // Un halo pale, la nuit seulement. La lune n'est pas d'une
                 // seule teinte : elle porte un croissant d'ombre sur sa droite,
                 // et le chiffre etant centre, sa moitie droite tombait dedans.
@@ -1133,14 +1133,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '3px 11px', borderRadius: 20, marginBottom: 8,
                   background: isNight ? 'rgba(15,28,58,0.62)' : 'rgba(255,246,238,0.62)',
-                  border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(200,123,82,0.24)',
+                  border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(var(--rgb-terracotta), 0.24)',
                   fontFamily: "'Poppins',system-ui,sans-serif",
                   fontSize: 10.5, fontWeight: 600,
                   color: isNight ? 'rgba(190,215,250,0.85)' : ENCRE,
                 }}>
                   {streak >= 7
-                    ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />
-                    : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(200,123,82,0.85)'} />}
+                    ? <FireIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(var(--rgb-terracotta), 0.85)'} />
+                    : <LeafIcon size={11} color={isNight ? 'rgba(190,215,250,0.85)' : 'rgba(var(--rgb-terracotta), 0.85)'} />}
                   {`${streak} jours d'affilée`}
                 </div>
               )}
@@ -1489,13 +1489,13 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
           // deja corrects.
           paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 118px)',
           boxShadow:'0 -10px 52px rgba(0,0,0,0.16)',
-          border:'1.5px solid rgba(200,123,82,0.16)',
+          border:'1.5px solid rgba(var(--rgb-terracotta), 0.16)',
           borderBottom:'none',
         }}
       >
         {/* Handle */}
         <div style={{ width:36, height:3, borderRadius:2,
-          background:'rgba(200,123,82,0.15)', margin:'0 auto 28px' }} />
+          background:'rgba(var(--rgb-terracotta), 0.15)', margin:'0 auto 28px' }} />
 
         {/* Onglets, 4 icônes */}
         <div style={{ display:'flex', justifyContent:'center', gap:8, marginBottom:40 }}>
@@ -1623,17 +1623,17 @@ function NovaLogBtn({ onClick }) {
       style={{
         marginTop:12, display:'flex', alignItems:'center', gap:8,
         padding:'9px 28px', borderRadius:100, cursor:'pointer',
-        background: hovered ? 'rgba(200,123,82,0.08)' : 'rgba(255,248,240,0.18)',
-        border:'1px solid rgba(200,123,82,0.22)',
+        background: hovered ? 'rgba(var(--rgb-terracotta), 0.08)' : 'rgba(255,248,240,0.18)',
+        border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
         fontFamily:"'Poppins',system-ui,sans-serif", fontSize:13, fontWeight:500,
         color: ENCRE,   // le survol se voit au fond de la carte, pas au texte
         boxShadow: hovered
-          ? '0 8px 24px rgba(200,123,82,0.18), 0 2px 8px rgba(0,0,0,0.06)'
-          : '0 4px 16px rgba(200,123,82,0.10), 0 1px 4px rgba(0,0,0,0.05)',
+          ? '0 8px 24px rgba(var(--rgb-terracotta), 0.18), 0 2px 8px rgba(0,0,0,0.06)'
+          : '0 4px 16px rgba(var(--rgb-terracotta), 0.10), 0 1px 4px rgba(0,0,0,0.05)',
         transition:'all 0.2s ease',
       }}
     >
-      <HeartIcon size={14} color={hovered ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.72)'} />
+      <HeartIcon size={14} color={hovered ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(var(--rgb-terracotta), 0.72)'} />
       <span>Mettre à jour mes métriques</span>
     </button>
   )
@@ -1646,7 +1646,7 @@ function MagneticGlowBtn({ label, iconEl, onClick }) {
       background="linear-gradient(150deg,#FFF3EC 0%,#F0D5BA 50%,#E8C4A8 100%)"
       hoverBackground="linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%)"
       borderRadius={24} blur={0} lightDirection="top-left"
-      shadowHoverColor="rgba(200,123,82,0.28)" shadowHoverIntensity={1.1}
+      shadowHoverColor="rgba(var(--rgb-terracotta), 0.28)" shadowHoverIntensity={1.1}
       style={{ userSelect:'none' }}
       onClick={onClick}
     >
@@ -1775,7 +1775,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
             }} />
           )}
         </div>
-        <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(200,123,82,0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
+        <div style={{ fontSize:12, fontWeight:500, color: val > 0 ? color : 'rgba(var(--rgb-terracotta), 0.40)', lineHeight:1, letterSpacing:'-0.3px' }}>
           {val > 0 ? fmt(val) : '·'}
         </div>
         <div style={{ fontSize:10, color:ENCRE, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.5px' }}>{label}</div>
@@ -2090,7 +2090,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
           style={{
             width:28, height:28, borderRadius:'50%', flexShrink:0,
             background: 'transparent',
-            border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(200,123,82,0.12)'}`,
+            border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-terracotta), 0.12)'}`,
             cursor:'pointer', outline:'none',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}
@@ -2100,22 +2100,22 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
             animate={{ rotate: collapsed ? 0 : 45 }}
             transition={{ type:'spring', stiffness:420, damping:26 }}
           >
-            <line x1="6" y1="1" x2="6" y2="11" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(200,123,82,0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
-            <line x1="1" y1="6" x2="11" y2="6" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(200,123,82,0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="6" y1="1" x2="6" y2="11" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="1" y1="6" x2="11" y2="6" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
           </motion.svg>
         </motion.button>
       </div>
 
       {/* Progress bar */}
-      <div style={{ position:'relative', height:3, borderRadius:8, background:'rgba(200,123,82,0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
+      <div style={{ position:'relative', height:3, borderRadius:8, background:'rgba(var(--rgb-terracotta), 0.10)', marginBottom: collapsed ? 0 : 14, overflow:'hidden' }}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 1.1, type:'spring', stiffness:55, damping:16 }}
           style={{
             height:'100%', borderRadius:8, position:'relative', overflow:'hidden',
-            background:'linear-gradient(90deg,#FFD4A0,#E8A07A,#C87B52,#C87B52)',
-            boxShadow:'0 0 6px rgba(200,123,82,0.45)',
+            background:'linear-gradient(90deg,#FFD4A0,#E8A07A,var(--accent),var(--accent))',
+            boxShadow:'0 0 6px rgba(var(--rgb-terracotta), 0.45)',
           }}
         >
           {/* Shimmer */}
@@ -2228,9 +2228,9 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
           padding: '13px 15px', borderRadius: 20, cursor: 'pointer',
           background: isNight
             ? 'linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)'
-            : 'linear-gradient(135deg, rgba(200,123,82,0.16) 0%, rgba(200,123,82,0.06) 70%)',
-          border: isNight ? '1.5px solid rgba(180,210,255,0.22)' : '1.5px solid rgba(200,123,82,0.30)',
-          boxShadow: isNight ? '0 6px 22px rgba(0,0,0,0.25)' : '0 6px 22px rgba(200,123,82,0.14)',
+            : 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.16) 0%, rgba(var(--rgb-terracotta), 0.06) 70%)',
+          border: isNight ? '1.5px solid rgba(180,210,255,0.22)' : '1.5px solid rgba(var(--rgb-terracotta), 0.30)',
+          boxShadow: isNight ? '0 6px 22px rgba(0,0,0,0.25)' : '0 6px 22px rgba(var(--rgb-terracotta), 0.14)',
         }}
       >
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -2251,11 +2251,11 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
           {/* Barre d'avancement : voir la progression compte autant que l'action */}
           <div style={{
             marginTop: 8, height: 3, borderRadius: 2, overflow: 'hidden',
-            background: isNight ? 'rgba(180,210,255,0.14)' : 'rgba(200,123,82,0.14)',
+            background: isNight ? 'rgba(180,210,255,0.14)' : 'rgba(var(--rgb-terracotta), 0.14)',
           }}>
             <div style={{
               width: `${Math.round(progression.filter(Boolean).length / 21 * 100)}%`, height: '100%',
-              borderRadius: 2, background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(200,123,82,0.65)',
+              borderRadius: 2, background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(var(--rgb-terracotta), 0.65)',
               transition: 'width 0.4s ease',
             }} />
           </div>
@@ -2266,15 +2266,15 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
           style={{
             width: 34, height: 34, borderRadius: '50%', flexShrink: 0, cursor: fait ? 'default' : 'pointer',
             background: fait
-              ? (isNight ? 'rgba(159,196,232,0.85)' : 'rgba(200,123,82,0.85)')
+              ? (isNight ? 'rgba(159,196,232,0.85)' : 'rgba(var(--rgb-terracotta), 0.85)')
               : (isNight ? 'rgba(10,20,45,0.50)' : 'rgba(255,246,238,0.60)'),
-            border: isNight ? '1.5px solid rgba(180,210,255,0.35)' : '1.5px solid rgba(200,123,82,0.38)',
+            border: isNight ? '1.5px solid rgba(180,210,255,0.35)' : '1.5px solid rgba(var(--rgb-terracotta), 0.38)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
           }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke={fait ? (isNight ? '#0a142d' : '#fff') : (isNight ? 'rgba(180,210,255,0.55)' : 'rgba(200,123,82,0.55)')}
+            stroke={fait ? (isNight ? '#0a142d' : '#fff') : (isNight ? 'rgba(180,210,255,0.55)' : 'rgba(var(--rgb-terracotta), 0.55)')}
             strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -2455,7 +2455,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                 flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6,
                 padding:'13px 6px', borderRadius:18, cursor:'pointer',
                 background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(255,246,238,0.62)',
-                border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(200,123,82,0.26)',
+                border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(var(--rgb-terracotta), 0.26)',
                 fontFamily:"'Poppins',system-ui,sans-serif",
               }}
             >
@@ -2480,7 +2480,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           borderRadius:20, cursor:'pointer',
           background: isNight
             ? 'linear-gradient(135deg, rgba(200,220,255,0.10) 0%, rgba(180,210,255,0.05) 100%)'
-            : 'linear-gradient(135deg, rgba(200,123,82,0.18) 0%, rgba(200,123,82,0.08) 60%, rgba(200,123,82,0.05) 100%)',
+            : 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.18) 0%, rgba(var(--rgb-terracotta), 0.08) 60%, rgba(var(--rgb-terracotta), 0.05) 100%)',
           display:'flex', alignItems:'center', gap:13,
         }}
       >
@@ -2491,7 +2491,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           <div style={{ fontSize:11, color:tc(0.75), marginTop:3, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>Disponible · répond en quelques secondes</div>
         </div>
         <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-          stroke={isNight ? 'rgba(200,220,255,0.65)' : 'rgba(200,123,82,0.75)'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          stroke={isNight ? 'rgba(200,220,255,0.65)' : 'rgba(var(--rgb-terracotta), 0.75)'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
           className="arrow-anim"
           style={{ flexShrink:0 }}>
           <polyline points="9 18 15 12 9 6"/>
@@ -2618,8 +2618,8 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
                   ? s >= 70 ? 'linear-gradient(180deg,rgba(198,222,255,0.95),rgba(150,190,245,0.85))'
                   : s >= 40 ? 'linear-gradient(180deg,rgba(160,195,240,0.70),rgba(120,160,215,0.60))'
                   : s > 0   ? 'linear-gradient(180deg,rgba(120,150,200,0.45),rgba(90,120,170,0.38))' : null
-                  : s >= 70 ? 'linear-gradient(180deg,#90593B,#6C422C)'
-                  : s >= 40 ? 'linear-gradient(180deg,#C87B52,#A06242)'
+                  : s >= 70 ? 'linear-gradient(180deg,var(--brun-moyen),var(--brun-fonce))'
+                  : s >= 40 ? 'linear-gradient(180deg,var(--accent),#A06242)'
                   : s > 0   ? 'linear-gradient(180deg,#E4C0A9,#D2A183)' : null
                 return (
                   <div key={i} style={{ flex:1, height:BAR_H, display:'flex', alignItems:'flex-end' }}>
@@ -2657,7 +2657,7 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
                 remarque » juste en dessous : les repeter ici mettrait deux fois
                 la meme observation sur le meme ecran. */}
             {avecObservations && observations.length > 0 && (
-              <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${isNight ? 'rgba(140,180,240,0.16)' : 'rgba(200,123,82,0.16)'}` }}>
+              <div style={{ marginTop: 12, paddingTop: 11, borderTop: `1px solid ${isNight ? 'rgba(140,180,240,0.16)' : 'rgba(var(--rgb-terracotta), 0.16)'}` }}>
                 <div style={{ fontSize:9, color:tc(0.80), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:7 }}>
                   Solenn a remarqué
                 </div>
@@ -2680,7 +2680,7 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
                   >
                     <span style={{
                       width:4, height:4, borderRadius:'50%', flexShrink:0, marginTop:6,
-                      background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(200,123,82,0.65)',
+                      background: isNight ? 'rgba(159,196,232,0.75)' : 'rgba(var(--rgb-terracotta), 0.65)',
                     }} />
                     <span style={{ fontSize:11.5, lineHeight:1.45, color:tc(0.82) }}>{ins.insight}</span>
                   </div>
@@ -2798,7 +2798,7 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
   const skyBg = currentPreset === 'night'
     ? `linear-gradient(180deg, ${skyBottomColor} 0px, ${skyBottomColor} 462px, rgba(9,24,48,0.68) 560px, rgba(9,24,48,0.42) 800px, rgba(9,24,48,0.18) 1100px, rgba(9,24,48,0.10) 1400px)`
     // Fondu vers TRANSPARENT : le ciel doit laisser réapparaître le halo doré
-    // du calque global. En le faisant fondre vers #EDD8CC opaque (ce que
+    // du calque global. En le faisant fondre vers var(--fond) opaque (ce que
     // j'avais fait le 2026-07-25 pour masquer la bande du bas), l'accueil
     // recouvrait entièrement ce halo d'un aplat abricot, d'où le fond « rose »
     // que Jean ne voyait QUE sur l'accueil, les autres pages restant dorées.
@@ -2902,16 +2902,16 @@ const hc = {
     display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
     boxShadow:'0 0 6px rgba(232,160,122,0.7)' },
   greetName: { marginBottom:36, textAlign:'center' },
-  greetNameAccent: { background:'linear-gradient(135deg,#C87B52,#E8A07A)',
+  greetNameAccent: { background:'linear-gradient(135deg,var(--accent),#E8A07A)',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:250, height:250,
     display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 },
   logBtn: {
     display:'flex', alignItems:'center', gap:8, padding:'14px 32px',
-    background:'linear-gradient(145deg, #C87B52, #C87B52)',
+    background:'linear-gradient(145deg, var(--accent), var(--accent))',
     color:'#fff', border:'none', borderRadius:20, fontSize:13, fontWeight:500,
     cursor:'pointer', fontFamily:"'Poppins',system-ui,sans-serif",
-    boxShadow:'0 12px 36px rgba(200,123,82,0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
+    boxShadow:'0 12px 36px rgba(var(--rgb-terracotta), 0.42), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)',
     transition:'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)' },
 
   strip: { display:'flex', gap:10, padding:'14px 18px' },

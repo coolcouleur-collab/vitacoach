@@ -14,10 +14,10 @@ const SERIF = "'Cormorant Garamond', Georgia, serif"
 
 const card = {
   background: 'rgba(255,255,255,0.72)',
-  border: '1px solid rgba(200,123,82,0.18)',
+  border: '1px solid rgba(var(--rgb-terracotta), 0.18)',
   borderRadius: 16,
   padding: '18px 20px',
-  boxShadow: '0 8px 26px rgba(200,123,82,0.08)',
+  boxShadow: '0 8px 26px rgba(var(--rgb-terracotta), 0.08)',
 }
 
 function Stat({ label, value, sub, alert }) {
@@ -72,7 +72,7 @@ export default function AdminRetention() {
             placeholder="Clé admin"
             style={{
               width: '100%', boxSizing: 'border-box', padding: '11px 14px', borderRadius: 12,
-              border: '1px solid rgba(200,123,82,0.30)', fontFamily: F, fontSize: 14, outline: 'none',
+              border: '1px solid rgba(var(--rgb-terracotta), 0.30)', fontFamily: F, fontSize: 14, outline: 'none',
               background: '#fff', color: '#0A1633',
             }}
           />
@@ -81,7 +81,7 @@ export default function AdminRetention() {
             disabled={loading || !input}
             style={{
               width: '100%', marginTop: 10, padding: '12px', borderRadius: 12, border: 'none',
-              background: 'rgba(255,235,210,0.32)', color: AMBRE,
+              background: 'rgba(var(--rgb-creme), 0.32)', color: AMBRE,
               fontFamily: F, fontSize: 14, fontWeight: 600, cursor: 'pointer', opacity: loading ? 0.6 : 1,
             }}
           >
@@ -106,7 +106,7 @@ export default function AdminRetention() {
           <h1 style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 32, fontWeight: 500, color: '#0A1633', margin: 0 }}>Rétention</h1>
           <button onClick={() => charger(key)} style={{
             fontFamily: F, fontSize: 12, fontWeight: 600, color: AMBRE, background: 'transparent',
-            border: '1px solid rgba(200,123,82,0.35)', borderRadius: 99, padding: '6px 16px', cursor: 'pointer',
+            border: '1px solid rgba(var(--rgb-terracotta), 0.35)', borderRadius: 99, padding: '6px 16px', cursor: 'pointer',
           }}>
             {loading ? '…' : 'Actualiser'}
           </button>
@@ -140,7 +140,7 @@ export default function AdminRetention() {
               Inscriptions par créateur (liens ?ref=)
             </div>
             {Object.entries(data.refSources).sort((a, b) => b[1] - a[1]).map(([code, n]) => (
-              <div key={code} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(200,123,82,0.10)', fontSize: 13 }}>
+              <div key={code} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(var(--rgb-terracotta), 0.10)', fontSize: 13 }}>
                 <span style={{ fontWeight: 600, color: AMBRE }}>{code}</span>
                 <span style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(10,22,51,0.70)' }}>{n} inscription{n > 1 ? 's' : ''}</span>
               </div>

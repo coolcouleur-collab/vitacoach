@@ -35,9 +35,9 @@ function CheckSVG({ checked }) {
     <div style={{
       width: 22, height: 22, borderRadius: 12, flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: checked ? 'rgba(255,235,210,0.32)' : 'rgba(200,123,82,0.06)',
-      border: checked ? '2px solid transparent' : '2px solid rgba(200,123,82,0.35)',
-      boxShadow: checked ? '0 2px 8px rgba(200,123,82,0.40)' : 'none',
+      background: checked ? 'rgba(var(--rgb-creme), 0.32)' : 'rgba(var(--rgb-terracotta), 0.06)',
+      border: checked ? '2px solid transparent' : '2px solid rgba(var(--rgb-terracotta), 0.35)',
+      boxShadow: checked ? '0 2px 8px rgba(var(--rgb-terracotta), 0.40)' : 'none',
       transition: 'all 0.2s ease',
     }}>
       <AnimatePresence>
@@ -69,8 +69,8 @@ function ProgressRing({ pct, size = 72, stroke = 6 }) {
     <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
       <defs>
         <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#C87B52"/>
-          <stop offset="100%" stopColor="#E8962A"/>
+          <stop offset="0%" stopColor="var(--accent)"/>
+          <stop offset="100%" stopColor="var(--or-plein)"/>
         </linearGradient>
       </defs>
       <circle cx={size/2} cy={size/2} r={r} fill="none"
@@ -86,7 +86,7 @@ function ProgressRing({ pct, size = 72, stroke = 6 }) {
 }
 
 // ─── Section avec étapes cochables ────────────────────────────────────────────
-function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, color = '#C87B52' }) {
+function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, color = 'var(--accent)' }) {
   const done = etapes.filter(e => checked[e.id]).length
   return (
     <motion.div
@@ -94,8 +94,8 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: EASE }}
       style={{
-        background: 'rgba(255,235,210,0.22)',
-        border: '1px solid rgba(255,220,160,0.28)',
+        background: 'rgba(var(--rgb-creme), 0.22)',
+        border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
         borderRadius: 20,
         padding: '18px 16px',
         marginBottom: 12,
@@ -119,8 +119,8 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
         </div>
         {etapes.length > 0 && (
           <div style={{
-            fontSize: 11, fontWeight: 600, color: done === etapes.length ? 'rgba(200,123,82,0.90)' : 'rgba(200,123,82,0.60)',
-            fontFamily: 'Poppins,sans-serif', background: done === etapes.length ? 'rgba(200,123,82,0.18)' : 'rgba(200,123,82,0.08)',
+            fontSize: 11, fontWeight: 600, color: done === etapes.length ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(var(--rgb-terracotta), 0.60)',
+            fontFamily: 'Poppins,sans-serif', background: done === etapes.length ? 'rgba(var(--rgb-terracotta), 0.18)' : 'rgba(var(--rgb-terracotta), 0.08)',
             padding: '3px 8px', borderRadius: 12,
           }}>
             {done}/{etapes.length}
@@ -134,7 +134,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
           <button key={e.id} onClick={() => onToggle(e.id)}
             style={{
               display: 'flex', alignItems: 'flex-start', gap: 10,
-              background: checked[e.id] ? 'rgba(200,123,82,0.06)' : 'transparent',
+              background: checked[e.id] ? 'rgba(var(--rgb-terracotta), 0.06)' : 'transparent',
               border: 'none', borderRadius: 12, padding: '10px 10px',
               cursor: 'pointer', textAlign: 'left', width: '100%',
               transition: 'background 0.2s',
@@ -181,7 +181,7 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
                   onClick={ev => { ev.stopPropagation(); onVoirGeste(matchExercice(`${e.titre} ${e.description || ''}`)) }}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6,
-                    background: 'rgba(255,235,210,0.45)', border: '1px solid rgba(255,220,160,0.45)',
+                    background: 'rgba(var(--rgb-creme), 0.45)', border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
                     borderRadius: 99, padding: '5px 12px', cursor: 'pointer',
                     fontFamily: 'Poppins,sans-serif', fontSize: 10.5, fontWeight: 600, color: AMBRE,
                   }}
@@ -207,8 +207,8 @@ function NutritionCard({ nutrition }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
       style={{
-        background: 'rgba(255,235,210,0.22)',
-        border: '1px solid rgba(255,220,160,0.28)',
+        background: 'rgba(var(--rgb-creme), 0.22)',
+        border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
         borderRadius: 20, padding: '18px 16px', marginBottom: 12,
         backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
       }}
@@ -224,7 +224,7 @@ function NutritionCard({ nutrition }) {
         {(nutrition.repas || []).map((r, i) => (
           <div key={i} style={{
             display: 'flex', gap: 10, alignItems: 'flex-start',
-            background: 'rgba(200,123,82,0.05)', borderRadius: 12, padding: '10px 12px',
+            background: 'rgba(var(--rgb-terracotta), 0.05)', borderRadius: 12, padding: '10px 12px',
           }}>
             <svg width="12" height="12" viewBox="0 0 12 12" style={{ flexShrink: 0, marginTop: 3 }}>
               <circle cx="6" cy="6" r="4.5" fill="none" stroke={ICONE} strokeWidth="1.6" opacity="0.75" />
@@ -243,7 +243,7 @@ function NutritionCard({ nutrition }) {
       </div>
 
       {nutrition.supplements?.length > 0 && (
-        <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(200,123,82,0.06)', borderRadius: 12 }}>
+        <div style={{ marginTop: 12, padding: '10px 12px', background: 'rgba(var(--rgb-terracotta), 0.06)', borderRadius: 12 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: ENCRE, fontFamily: 'Poppins,sans-serif', marginBottom: 4, display:'flex', alignItems:'center', gap:5 }}>
             <SparkleIcon size={11} color={ICONE} /> Suppléments
           </div>
@@ -267,7 +267,7 @@ function EmptyRoutine({ generating, onGenerate }) {
         justifyContent: 'center', padding: '60px 24px', textAlign: 'center',
       }}
     >
-      <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="#9C5D08" /></div>
+      <div style={{ marginBottom: 20, display:'flex', justifyContent:'center' }}><SunIcon size={56} color="var(--ambre-fonce)" /></div>
       <div style={{ fontSize: 18, fontWeight: 700, color: ENCRE, fontFamily: 'Poppins,sans-serif', marginBottom: 8, letterSpacing: '-0.4px' }}>
         Pas encore de routine
       </div>
@@ -279,14 +279,14 @@ function EmptyRoutine({ generating, onGenerate }) {
         disabled={generating}
         style={{
           padding: '14px 28px', borderRadius: 16, border: 'none',
-          background: generating ? 'rgba(200,123,82,0.20)' : 'rgba(255,235,210,0.32)',
+          background: generating ? 'rgba(var(--rgb-terracotta), 0.20)' : 'rgba(var(--rgb-creme), 0.32)',
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
           color: ENCRE,   // l'attente est signalee par l'animation, pas par un texte efface
           fontSize: 14, fontWeight: 700, fontFamily: 'Poppins,sans-serif',
           cursor: generating ? 'default' : 'pointer',
           display: 'flex', alignItems: 'center', gap: 8,
           transition: 'all 0.2s',
-          boxShadow: generating ? 'none' : '0 4px 20px rgba(200,123,82,0.35)',
+          boxShadow: generating ? 'none' : '0 4px 20px rgba(var(--rgb-terracotta), 0.35)',
         }}
       >
         <RefreshSVG spinning={generating} />
@@ -465,7 +465,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             title="Nouveau programme"
             style={{
               width: 38, height: 38, borderRadius: 12, border: 'none',
-              background: 'rgba(200,123,82,0.12)',
+              background: 'rgba(var(--rgb-terracotta), 0.12)',
               color: ENCRE,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
@@ -481,7 +481,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             title="Régénérer"
             style={{
               width: 38, height: 38, borderRadius: 12, border: 'none',
-              background: generating ? 'rgba(200,123,82,0.10)' : 'rgba(200,123,82,0.12)',
+              background: generating ? 'rgba(var(--rgb-terracotta), 0.10)' : 'rgba(var(--rgb-terracotta), 0.12)',
               color: ENCRE,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: generating ? 'default' : 'pointer',
@@ -496,7 +496,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       <div style={{ padding: '14px 20px 0' }}>
         <div style={{
           display: 'flex', gap: 6, padding: 4, borderRadius: 16,
-          background: 'rgba(200,123,82,0.10)', border: '1px solid rgba(200,123,82,0.18)',
+          background: 'rgba(var(--rgb-terracotta), 0.10)', border: '1px solid rgba(var(--rgb-terracotta), 0.18)',
         }}>
           {/* « Sport » et non « Programme ». L'onglet parent s'appelle
               Programmes : un sous-onglet du meme nom obligeait a se demander
@@ -510,10 +510,10 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             <button key={o.id} onClick={() => setVue(o.id)} style={{
               flex: 1, padding: '9px 0', borderRadius: 12, cursor: 'pointer',
               border: vue === o.id ? '1px solid rgba(108,66,44,0.55)' : '1px solid transparent',
-              background: vue === o.id ? 'linear-gradient(135deg,#6C422C,#90593B)' : 'transparent',
+              background: vue === o.id ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'transparent',
               color: vue === o.id ? '#fff' : ENCRE,
               fontFamily: 'Poppins,sans-serif', fontSize: 13, fontWeight: vue === o.id ? 700 : 500,
-              boxShadow: vue === o.id ? '0 3px 10px rgba(200,123,82,0.16)' : 'none',
+              boxShadow: vue === o.id ? '0 3px 10px rgba(var(--rgb-terracotta), 0.16)' : 'none',
               transition: 'all 0.18s ease',
             }}>{o.label}</button>
           ))}
@@ -552,12 +552,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <style>{`@keyframes routinePulse { 0%,100%{opacity:.45} 50%{opacity:.80} }`}</style>
             {[1, 2, 3].map(i => (
-              <div key={i} style={{ borderRadius: 18, background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.22)', padding: '14px 16px', animation: `routinePulse ${1.2 + i * 0.15}s ease-in-out infinite` }}>
-                <div style={{ height: 13, width: '40%', borderRadius: 8, background: 'rgba(200,123,82,0.20)', marginBottom: 14 }} />
+              <div key={i} style={{ borderRadius: 18, background: 'rgba(var(--rgb-creme), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.22)', padding: '14px 16px', animation: `routinePulse ${1.2 + i * 0.15}s ease-in-out infinite` }}>
+                <div style={{ height: 13, width: '40%', borderRadius: 8, background: 'rgba(var(--rgb-terracotta), 0.20)', marginBottom: 14 }} />
                 {[1, 2, 3].map(j => (
                   <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 22, height: 22, borderRadius: 8, background: 'rgba(200,123,82,0.15)', flexShrink: 0 }} />
-                    <div style={{ flex: 1, height: 10, borderRadius: 6, background: 'rgba(200,123,82,0.12)', width: `${55 + j * 12}%` }} />
+                    <div style={{ width: 22, height: 22, borderRadius: 8, background: 'rgba(var(--rgb-terracotta), 0.15)', flexShrink: 0 }} />
+                    <div style={{ flex: 1, height: 10, borderRadius: 6, background: 'rgba(var(--rgb-terracotta), 0.12)', width: `${55 + j * 12}%` }} />
                   </div>
                 ))}
               </div>
@@ -571,12 +571,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
             background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             borderRadius: 20, padding: '16px 28px', textAlign: 'center',
-            boxShadow: '0 16px 48px rgba(0,0,0,0.40), 0 4px 12px rgba(200,123,82,0.18)',
-            border: '1.5px solid rgba(255,220,160,0.60)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.40), 0 4px 12px rgba(var(--rgb-terracotta), 0.18)',
+            border: '1.5px solid rgba(var(--rgb-creme-dore), 0.60)',
             animation: 'celebPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
             display: 'flex', alignItems: 'center', gap: 12,
           }}>
-            <span style={{ display:'flex' }}><StarIcon size={28} color="#9C5D08" /></span>
+            <span style={{ display:'flex' }}><StarIcon size={28} color="var(--ambre-fonce)" /></span>
             <div>
               <div style={{ fontSize: 15, fontWeight: 800, color: ENCRE, fontFamily: 'Poppins,sans-serif' }}>Routine complète !</div>
               <div style={{ fontSize: 12, color: ENCRE, fontFamily: 'Poppins,sans-serif', marginTop: 2 }}>100% des étapes accomplies aujourd'hui</div>
@@ -587,7 +587,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         {/* Erreur */}
         {vue === 'routine' && !loading && error && (
           <div style={{
-            background: 'rgba(200,123,82,0.08)', border: '1px solid rgba(200,123,82,0.22)',
+            background: 'rgba(var(--rgb-terracotta), 0.08)', border: '1px solid rgba(var(--rgb-terracotta), 0.22)',
             borderRadius: 12, padding: '12px 16px', marginBottom: 12,
             fontSize: 13, color: ROUGE, fontFamily: 'Poppins,sans-serif',
           }}>
@@ -614,8 +614,8 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(200,123,82,0.12), rgba(232,150,42,0.08))',
-                  border: '1px solid rgba(200,123,82,0.14)',
+                  background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.12), rgba(var(--rgb-or), 0.08))',
+                  border: '1px solid rgba(var(--rgb-terracotta), 0.14)',
                   borderRadius: 20, padding: '18px 16px', marginBottom: 16,
                   display: 'flex', gap: 16, alignItems: 'center',
                 }}
@@ -662,14 +662,14 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
                   style={{
-                    background: 'rgba(232,150,42,0.08)',
-                    border: '1px solid rgba(232,150,42,0.18)',
+                    background: 'rgba(var(--rgb-or), 0.08)',
+                    border: '1px solid rgba(var(--rgb-or), 0.18)',
                     borderRadius: 16, padding: '14px 16px',
                     marginBottom: 16,
                     display: 'flex', gap: 12, alignItems: 'flex-start',
                   }}
                 >
-                  <LightbulbIcon size={22} color="#9C5D08" />
+                  <LightbulbIcon size={22} color="var(--ambre-fonce)" />
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: AMBRE, fontFamily: 'Poppins,sans-serif', marginBottom: 4 }}>
                       {routine.astuce.titre || 'Astuce du jour'}
@@ -684,7 +684,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               {/* ── Matin ── */}
               {routine.matin?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
-                  icon={<SunIcon size={22} color="#9C5D08" />}
+                  icon={<SunIcon size={22} color="var(--ambre-fonce)" />}
                   titre={routine.matin.titre || 'Matin'}
                   heure={routine.matin.heure}
                   etapes={routine.matin.etapes}
@@ -699,7 +699,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               {/* ── Après-midi ── */}
               {routine.apresmidi?.etapes?.length > 0 && (
                 <Section onVoirGeste={id => setShowExos(id)}
-                  icon={<SunIcon size={22} color="#9C5D08" />}
+                  icon={<SunIcon size={22} color="var(--ambre-fonce)" />}
                   titre={routine.apresmidi.titre || 'Après-midi'}
                   heure={routine.apresmidi.heure}
                   etapes={routine.apresmidi.etapes}
@@ -729,12 +729,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                     exit={{ opacity: 0 }}
                     style={{
                       textAlign: 'center', padding: '20px 16px',
-                      background: 'linear-gradient(135deg, rgba(200,123,82,0.10), rgba(232,150,42,0.08))',
-                      border: '1px solid rgba(255,220,160,0.28)',
+                      background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.10), rgba(var(--rgb-or), 0.08))',
+                      border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
                       borderRadius: 20, marginTop: 8,
                     }}
                   >
-                    <div style={{ display:'flex', justifyContent:'center', marginBottom: 8 }}><StarIcon size={36} color="#9C5D08" /></div>
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom: 8 }}><StarIcon size={36} color="var(--ambre-fonce)" /></div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: ENCRE, fontFamily: 'Poppins,sans-serif' }}>
                       Journée accomplie !
                     </div>
@@ -760,7 +760,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               <NutritionCard nutrition={routine.nutrition} />
             ) : (
               <div style={{
-                background: 'rgba(255,235,210,0.22)', border: '1px solid rgba(255,220,160,0.28)',
+                background: 'rgba(var(--rgb-creme), 0.22)', border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
                 borderRadius: 18, padding: '18px 20px', marginBottom: 14,
                 fontFamily: 'Poppins,sans-serif', fontSize: 13, color: ENCRE, lineHeight: 1.55,
               }}>
@@ -795,12 +795,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
               onClick={() => { try { window.dispatchEvent(new CustomEvent('solenn:photo-repas')) } catch {} }}
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+                background: 'rgba(var(--rgb-creme), 0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', borderRadius: 18,
                 padding: '14px 16px', cursor: 'pointer', marginBottom: 8,
                 fontFamily: 'Poppins,sans-serif', textAlign: 'left',
               }}>
-              <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1.5px solid rgba(var(--rgb-terracotta), 0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
                 </svg>
@@ -839,12 +839,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         {vue === 'programme' && (
         <button onClick={() => setCourseOuverte(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-          background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+          background: 'rgba(var(--rgb-creme), 0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', borderRadius: 18,
           padding: '14px 16px', cursor: 'pointer', marginTop: 4, marginBottom: 8,
           fontFamily: 'Poppins,sans-serif', textAlign: 'left',
         }}>
-          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="4" r="2" />
               <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
@@ -861,12 +861,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         {vue === 'programme' && (
         <button onClick={() => setShowExos(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-          background: 'rgba(255,235,210,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,220,160,0.40)', borderRadius: 18,
+          background: 'rgba(var(--rgb-creme), 0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.40)', borderRadius: 18,
           padding: '14px 16px', cursor: 'pointer', marginTop: 4, marginBottom: 8,
           fontFamily: 'Poppins,sans-serif', textAlign: 'left',
         }}>
-          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1.5px solid rgba(200,123,82,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(var(--rgb-terracotta), 0.12)', border: '1.5px solid rgba(var(--rgb-terracotta), 0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round"><path d="M14.4 14.4 9.6 9.6M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829zM5.343 2.515a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829L6.404 12.77a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829z"/></svg>
           </div>
           <div style={{ flex: 1 }}>

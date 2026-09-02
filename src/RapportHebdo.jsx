@@ -57,12 +57,12 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
 
   const getScoreColor = (score) => {
     if (score > 70) return '#1f9d55'
-    if (score > 50) return '#E8962A'
+    if (score > 50) return 'var(--or-plein)'
     // En dessous de 20 on est presque toujours face à une semaine sans données
     // saisies, pas à un échec : un gros 0 rouge accueille l'utilisateur par une
     // sanction dès sa première semaine (retour Jean 2026-08-08).
     if (score > 20) return '#ef4444'
-    return 'rgba(200,123,82,0.55)'
+    return 'rgba(var(--rgb-terracotta), 0.55)'
   }
 
   const formatSemaine = (semaine) => {
@@ -85,7 +85,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           <div
             key={i}
             style={{
-              background: 'rgba(200, 123, 82, 0.06)',
+              background: 'rgba(var(--rgb-terracotta), 0.06)',
               borderRadius: 12,
               height: i === 1 ? 80 : i === 2 ? 60 : 100,
               animation: 'pulse 1.6s ease-in-out infinite',
@@ -110,10 +110,10 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{
-          background: 'rgba(200, 123, 82, 0.08)',
+          background: 'rgba(var(--rgb-terracotta), 0.08)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
-          border: '1px solid rgba(255,220,160,0.28)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
           borderRadius: 20,
           padding: '28px 24px',
           textAlign: 'center',
@@ -147,11 +147,11 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           style={{
             // Verre de cuivre profond, CTA unifié Solenn (2026-07-24)
             marginTop: 8,
-            background: 'rgba(255,235,210,0.32)',
+            background: 'rgba(var(--rgb-creme), 0.32)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             color: ENCRE,
-            border: '1px solid rgba(255,235,210,0.45)',
+            border: '1px solid rgba(var(--rgb-creme), 0.45)',
             borderRadius: 16,
             padding: '12px 24px',
             fontFamily: 'Poppins, sans-serif',
@@ -175,10 +175,10 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{
-          background: 'rgba(200, 123, 82, 0.08)',
+          background: 'rgba(var(--rgb-terracotta), 0.08)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
-          border: '1px solid rgba(255,220,160,0.28)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
           borderRadius: 20,
           padding: '28px 24px',
           textAlign: 'center',
@@ -219,7 +219,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
             marginTop: 8,
             background: 'transparent',
             color: ENCRE,
-            border: '1.5px solid #C87B52',
+            border: '1.5px solid var(--accent)',
             borderRadius: 16,
             padding: '11px 24px',
             fontFamily: 'Poppins, sans-serif',
@@ -242,8 +242,8 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   const sections = [
     { key: 'semaine',  label: 'Cette semaine',       texte: rapport.analyse,       icon: <CalendarIcon size={15} color={ICONE} /> },
     { key: 'fort',     label: 'Ton point fort',      texte: rapport.point_fort,    icon: <SparkleIcon size={15} color={ICONE} /> },
-    { key: 'mieux',    label: 'À améliorer',         texte: rapport.point_progres, icon: <LightbulbIcon size={15} color="#9C5D08" /> },
-    { key: 'focus',    label: 'La semaine prochaine', texte: rapport.focus_prochain, icon: <StarIcon size={15} color="#9C5D08" /> },
+    { key: 'mieux',    label: 'À améliorer',         texte: rapport.point_progres, icon: <LightbulbIcon size={15} color="var(--ambre-fonce)" /> },
+    { key: 'focus',    label: 'La semaine prochaine', texte: rapport.focus_prochain, icon: <StarIcon size={15} color="var(--ambre-fonce)" /> },
   ].filter(s => s.texte)
 
   return (
@@ -255,10 +255,10 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
     >
       {/* Header card */}
       <div style={{
-        background: 'rgba(200, 123, 82, 0.10)',
+        background: 'rgba(var(--rgb-terracotta), 0.10)',
         backdropFilter: 'blur(18px)',
         WebkitBackdropFilter: 'blur(18px)',
-        border: '1px solid rgba(255,220,160,0.28)',
+        border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
         borderRadius: 20,
         padding: '20px 20px 16px',
         display: 'flex',
@@ -267,7 +267,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-            <span style={{ flexShrink: 0, display: 'flex' }}><CalendarIcon size={32} color="#9C5D08" /></span>
+            <span style={{ flexShrink: 0, display: 'flex' }}><CalendarIcon size={32} color="var(--ambre-fonce)" /></span>
             <div>
               <p style={{
                 fontFamily: 'Poppins, sans-serif',
@@ -287,7 +287,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
                   fontSize: 11,
                   fontWeight: 500,
                   color: ENCRE,
-                  background: 'rgba(200, 123, 82, 0.12)',
+                  background: 'rgba(var(--rgb-terracotta), 0.12)',
                   borderRadius: 8,
                   padding: '2px 8px',
                 }}>
@@ -322,13 +322,13 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       {/* Une seule phrase mise en avant : la victoire (ou la stat phare) */}
       {(rapport.victoire_semaine || rapport.stat_phare) && (
         <div style={{
-          background: 'rgba(255,235,210,0.35)',
+          background: 'rgba(var(--rgb-creme), 0.35)',
           borderRadius: 16,
           padding: '12px 16px',
           display: 'flex',
           alignItems: 'flex-start',
           gap: 10,
-          border: '1px solid rgba(255,220,160,0.45)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
         }}>
           <span style={{ fontSize: 15, color: VERT, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
           <p style={{
@@ -351,8 +351,8 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
         const ouvert = openSection === s.key
         return (
           <div key={s.key} style={{
-            background: ouvert ? 'rgba(200,123,82,0.10)' : 'rgba(255,235,210,0.22)',
-            border: '1px solid rgba(255,220,160,0.28)',
+            background: ouvert ? 'rgba(var(--rgb-terracotta), 0.10)' : 'rgba(var(--rgb-creme), 0.22)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
             borderRadius: 16,
             overflow: 'hidden',
             transition: 'background 0.2s',
@@ -421,9 +421,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
           onClick={handleGenerer}
           disabled={generating}
           style={{
-            background: 'rgba(255,235,210,0.32)',
+            background: 'rgba(var(--rgb-creme), 0.32)',
             color: ENCRE,
-            border: '1px solid rgba(255,220,160,0.60)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.60)',
             borderRadius: 12,
             padding: '8px 18px',
             fontFamily: 'Poppins, sans-serif',
