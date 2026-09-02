@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, Component, lazy, Suspense } from 'react'
+import { scoreJour } from './score'
 import { motion, AnimatePresence } from 'framer-motion'
 import { playFx } from './sfx'
 import GlowLoader from './GlowLoader'
@@ -595,17 +596,44 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
 }
 
 // Copie locale de scoreJour, SanteTab ne l'exporte plus (Fast Refresh incompatible)
-function scoreJour(m) {
-  let s = 0
-  if (m.pas  >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
-  if (m.sommeil >= 7.5) s += 25; else if (m.sommeil >= 6) s += 18; else if (m.sommeil >= 5) s += 10; else if (m.sommeil > 0) s += 5
-  if (m.eau >= 8) s += 20; else if (m.eau >= 6) s += 15; else if (m.eau >= 4) s += 10; else if (m.eau > 0) s += 5
-  if (m.humeur === 5) s += 20; else if (m.humeur === 4) s += 15; else if (m.humeur === 3) s += 10; else if (m.humeur > 0) s += 5
-  if (m.fc >= 50 && m.fc <= 80) s += 15; else if (m.fc > 0 && m.fc <= 100) s += 8
-  return Math.min(s, 100)
-}
+// Le score vient de score.js, source unique depuis le 2 septembre.
+// Il en existait trois copies identiques a un espace pres.
 
 // ─── PRESET HEURE (sunrise 6-9, day 9-18, sunset 18-21, night 21-6) ──────────
+/**
+ * L'ambiance choisie a la main, si elle est encore valable.
+ *
+ * Rend null des que la fenetre naturelle a change depuis la pose du choix, et
+ * nettoie le stockage au passage : une preference perimee qui traine finit par
+ * ressortir un jour ou personne ne l'attend.
+ */
+function lireAmbianceManuelle() {
+  try {
+    const brut = localStorage.getItem('solenn_preset_manuel')
+    if (!brut) return null
+    // Ancien format : une simple chaine, sans fenetre. On la considere posee
+    // dans la fenetre courante, donc valable jusqu'au prochain changement.
+    const o = brut.startsWith('{')
+      ? JSON.parse(brut)
+      : { valeur: brut, fenetre: getOceanPreset(new Date().getHours()) }
+    if (o.fenetre === getOceanPreset(new Date().getHours())) return o.valeur
+    localStorage.removeItem('solenn_preset_manuel')
+    return null
+  } catch {
+    return null
+  }
+}
+
+/** Pose un choix d'ambiance, en gravant la fenetre ou il a ete fait. */
+function poserAmbianceManuelle(valeur) {
+  try {
+    localStorage.setItem('solenn_preset_manuel', JSON.stringify({
+      valeur,
+      fenetre: getOceanPreset(new Date().getHours()),
+    }))
+  } catch {}
+}
+
 function getOceanPreset(hour) {
   if (hour >= 6  && hour < 9)  return 'sunrise'
   if (hour >= 9  && hour < 18) return 'day'
@@ -807,9 +835,30 @@ const [messages, setMessages] = useState(() => {
   // Ambiance choisie à la main dans Réglages. Distincte de homePreset, qui est
   // l'ambiance COURANTE remontée par HomeTab : sans cette séparation le choix
   // de l'utilisateur était aussitôt écrasé par l'heure (bug signalé 2026-08-08).
-  const [presetManuel, setPresetManuel] = useState(() => {
-    try { return localStorage.getItem('solenn_preset_manuel') || null } catch { return null }
-  })
+  // L'ambiance choisie a la main tient jusqu'au PROCHAIN changement naturel,
+  // puis l'app reprend son deroulé. Regle posee par Jean le 2 septembre :
+  // quelqu'un qui met la nuit un matin veut un ecran sombre maintenant, pas
+  // une app bloquee en nuit jusqu'a ce qu'il y repense. A la prochaine bascule
+  // de l'horloge, le choix expire et l'ambiance suivante s'affiche.
+  //
+  // On memorise donc la FENETRE dans laquelle le choix a ete pose. Des que la
+  // fenetre naturelle change, le choix ne vaut plus.
+  const [presetManuel, setPresetManuel] = useState(() => lireAmbianceManuelle())
+
+  // L'expiration ne peut pas attendre le prochain demarrage de l'app :
+  // quelqu'un qui force la nuit a 17h55 doit voir le coucher de soleil arriver
+  // a 18h, ecran ouvert, sans rien faire. On revoit donc la validite chaque
+  // minute, et au retour au premier plan, ou l'horloge a pu sauter d'un coup.
+  useEffect(() => {
+    if (!presetManuel) return
+    const revoir = () => { if (!lireAmbianceManuelle()) setPresetManuel(null) }
+    const t = setInterval(revoir, 60000)
+    document.addEventListener('visibilitychange', revoir)
+    return () => {
+      clearInterval(t)
+      document.removeEventListener('visibilitychange', revoir)
+    }
+  }, [presetManuel])
 
   // ── Célébrations mémorables ──────────────────────────────────────────────────
   const [milestone, setMilestone]       = useState(null)   // { emoji, titre, texte }
@@ -1982,7 +2031,7 @@ const [messages, setMessages] = useState(() => {
             }}
             onPresetChange={p => {
               setPresetManuel(p); setHomePreset(p)
-              try { localStorage.setItem('solenn_preset_manuel', p) } catch {}
+              poserAmbianceManuelle(p)
               setShowSettings(false)
             }}
             onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, startTransition } from 'react'
+import { scoreJour, atteint, CLES as CLES_SCORE } from './score'
 import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
@@ -20,15 +21,8 @@ function BikeIcon({ color = '#C87B52', size = 20 }) {
 }
 
 // Copie locale, évite d'importer SanteTab (JSX au niveau module → crash)
-function scoreJour(m) {
-  let s = 0
-  if (m.pas >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
-  if (m.sommeil >= 7.5) s += 25; else if (m.sommeil >= 6) s += 18; else if (m.sommeil >= 5) s += 10; else if (m.sommeil > 0) s += 5
-  if (m.eau >= 8) s += 20; else if (m.eau >= 6) s += 15; else if (m.eau >= 4) s += 10; else if (m.eau > 0) s += 5
-  if (m.humeur === 5) s += 20; else if (m.humeur === 4) s += 15; else if (m.humeur === 3) s += 10; else if (m.humeur > 0) s += 5
-  if (m.fc >= 50 && m.fc <= 80) s += 15; else if (m.fc > 0 && m.fc <= 100) s += 8
-  return Math.min(s, 100)
-}
+// Le score vient de score.js, source unique depuis le 2 septembre.
+// Il en existait trois copies identiques a un espace pres.
 
 // ─── SOLENN FACE (liquid morph, cohérent avec App.jsx) ──────────────────────
 function SolennFace({ size = 34, isNight = false }) {
@@ -936,64 +930,8 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   // ciel, un indigo, un rouge et un jaune Tailwind au milieu d'une palette
   // chaude (demande Jean 2026-08-08).
   const orbitC = isNight ? '#9FC4E8' : '#C87B52'
-  /**
-   * Une metrique est-elle dans le vert ?
-   *
-   * Les seuils sont ceux des VERDICTS affiches sur le meme ecran, et c'est
-   * la seule regle qui compte ici : la pastille ne doit jamais approuver ce
-   * que la phrase juste en dessous reproche. C'est exactement ce qui se
-   * passait avec une nuit de 4 h, cochee en vert sous « ton sommeil tire le
-   * reste vers le bas ».
-   *
-   * D'ou des seuils qui peuvent paraitre severes, 10 000 pas notamment : ce
-   * n'est pas un choix separe, c'est le chiffre que la phrase reclame deja
-   * quelques lignes plus bas dans ce fichier. Les deux bougent ensemble.
-   *
-   * `null` quand la metrique n'est pas renseignee : la pastille ne s'affiche
-   * pas dans ce cas, et il ne faut surtout pas repondre « non atteint ».
-   */
-  const atteint = (cle, v) => {
-    if (!v) return null
-    if (cle === 'eau')     return v >= 8        // verdict : « < 8 » apres midi
-    if (cle === 'pas')     return v >= 10000    // verdict : « < 10000 »
-    if (cle === 'sommeil') return v >= 7        // verdict : « < 7 tire vers le bas »
-    if (cle === 'humeur')  return v >= 3        // verdict : « < 3 »
-    if (cle === 'fc')      return v >= 50 && v <= 80
-    return null
-  }
-
-  const METRICS = [
-    { iconEl:<WaterIcon size={22} color={orbitC} />, val:metriques?.eau,     color:orbitC, key:'eau', atteint:atteint('eau', metriques?.eau),     fmt: v => v+'v' },
-    { iconEl:<RunIcon   size={22} color={orbitC} />, val:metriques?.pas,     color:orbitC, key:'pas', atteint:atteint('pas', metriques?.pas),     fmt: v => v>=1000 ? Math.round(v/1000)+'k' : v },
-    { iconEl:<MoonIcon  size={22} color={orbitC} />, val:metriques?.sommeil, color:orbitC, key:'sommeil', atteint:atteint('sommeil', metriques?.sommeil), fmt: v => v+'h' },
-    { iconEl:<MoodIcon  size={22} color={orbitC} />, val:metriques?.humeur,  color:orbitC, key:'humeur', atteint:atteint('humeur', metriques?.humeur),  fmt: v => v+'/5' },
-    { iconEl:<HeartIcon size={22} color={orbitC} />, val:metriques?.fc,      color:orbitC, key:'fc', atteint:atteint('fc', metriques?.fc),      fmt: v => v },
-  ]
-  /**
-   * Combien de metriques Solenn connait vraiment aujourd'hui.
-   *
-   * Les quatre que le score annonce mesurer, et pas la frequence cardiaque,
-   * qui vient de Sante et que personne ne saisit a la main.
-   */
-  const connues = ['sommeil', 'eau', 'pas', 'humeur']
-    .filter(c => (metriques?.[c] || 0) > 0)
-
-  /**
-   * En dessous de trois metriques, le chiffre ne veut pas dire ce qu'il a
-   * l'air de vouloir dire.
-   *
-   * Avec le seul sommeil renseigne a 4 h, le calcul donne 5 sur 100, et
-   * l'anneau affichait « 5 » comme un verdict de sante. Il signifiait surtout
-   * « je ne sais rien des quatre autres ». Quelqu'un qui ouvre l'app le matin
-   * et voit 5 se croit en tres mauvaise sante alors qu'il n'a rien saisi.
-   *
-   * L'app traitait deja le cas du zero par un tiret, exactement pour cette
-   * raison. Un seul champ rempli retombait dans le meme piege.
-   */
-  const assezPourUnScore = connues.length >= 3
-  const manquantes = ['sommeil', 'eau', 'pas', 'humeur']
-    .filter(c => !connues.includes(c))
-    .map(c => ({ sommeil: 'ton sommeil', eau: 'ton eau', pas: 'tes pas', humeur: 'ton humeur' })[c])
+  // `atteint` vient de score.js : les seuils de la pastille et ceux du
+  // score doivent bouger ensemble, et deux definitions ne le garantissent pas.
 
   const paused = circleHovered || !!activeMetric
 
@@ -1045,18 +983,23 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   donnée (2026-08-11). */}
               <span style={{ fontSize: score > 0 && assezPourUnScore ? 26 : 24, fontWeight:500, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif",
-                // 0,55 datait de l'encre claire sur fond navy. Avec l'encre
-                // sombre sur la lune claire, ce meme 0,55 donne 2,61 a 3,12
-                // pour 1, soit juste sous le seuil de 3. Le tiret redevient
-                // lisible sans redevenir aussi present qu'un vrai score.
-                opacity: score > 0 && assezPourUnScore ? 1 : 0.78,
+                // Le repli etait un POINT MEDIAN, pas un tiret : quelques pixels
+                // au centre d'un anneau de trois centimetres. Ni Jean ni moi ne
+                // le distinguions sur les captures, et pour cause. Il ne disait
+                // rien non plus : au centre d'un grand cercle, il ressemblait a
+                // une panne.
+                // « 1/4 » met une information la ou l'oeil attend un chiffre, et
+                // repond a la question que le point posait sans y repondre.
+                // L'opacite remonte donc : ce n'est plus une absence qu'on
+                // attenue, c'est une mesure qu'on lit.
+                opacity: score > 0 && assezPourUnScore ? 1 : 0.88,
                 // MESURE : en rgba(180,210,255,0.90), ce chiffre affichait 1,07
                 // a 1,43 pour 1 sur le disque, dont le degrade commence a
                 // #F8FBFF. Le minimum est 3. C'etait du bleu clair sur du bleu
                 // clair, et le plus gros element de l'ecran etait une tache.
                 // La lune est CLAIRE : l'encre doit donc etre sombre, pas
                 // claire. #22385E donne 11:1 au centre, sans quitter la nuit.
-                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 && assezPourUnScore ? score : '·'}</span>
+                color: preset === 'night' ? '#22385E' : 'rgba(200,123,82,0.90)' }}>{score > 0 && assezPourUnScore ? score : `${connues.length}/4`}</span>
             </div>
           </div>
 
@@ -1179,9 +1122,21 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   manque, et cette ligne en formait une troisieme qui redisait
                   la deuxieme, en la contredisant parfois. */}
               {!assezPourUnScore && connues.length > 0 && p.cle && (
-                <div style={{
+                // Cliquable, et pas seulement informative. Elle nommait ce qui
+                // manque sans jamais dire OU le donner : un premier
+                // utilisateur ne devine pas que les bulles autour de l'anneau
+                // se touchent pour renseigner. Elle ouvre desormais la saisie
+                // sur la premiere metrique absente, donc elle repond a la
+                // question qu'elle pose.
+                <div
+                  onClick={() => onLog?.(CLES_SCORE.find(c => !connues.includes(c)))}
+                  style={{
                   fontSize: 11.5, lineHeight: 1.45, marginTop: 9,
                   fontFamily: "'Poppins',system-ui,sans-serif",
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  textDecorationColor: isNight ? 'rgba(180,205,240,0.35)' : 'rgba(148,77,38,0.35)',
+                  textUnderlineOffset: 3,
                   color: isNight ? 'rgba(180,205,240,0.66)' : ENCRE,
                 }}>
                   {manquantes.length === 1

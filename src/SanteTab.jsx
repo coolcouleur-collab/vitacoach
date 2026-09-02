@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { scoreJour } from './score'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon, SparkleIcon } from './Icons'
 import RapportHebdo from './RapportHebdo'
@@ -48,15 +49,8 @@ const HUMEUR_ICONS = [null,
   <HappyIcon size={20} color={ICONE} />,
 ]
 
-function scoreJour(m) {
-  let s = 0
-  if (m.pas  >= 10000) s += 20; else if (m.pas >= 7000) s += 15; else if (m.pas >= 5000) s += 10; else if (m.pas >= 2000) s += 5
-  if (m.sommeil >= 7.5) s += 25; else if (m.sommeil >= 6) s += 18; else if (m.sommeil >= 5) s += 10; else if (m.sommeil > 0) s += 5
-  if (m.eau >= 8) s += 20; else if (m.eau >= 6) s += 15; else if (m.eau >= 4) s += 10; else if (m.eau > 0) s += 5
-  if (m.humeur === 5) s += 20; else if (m.humeur === 4) s += 15; else if (m.humeur === 3) s += 10; else if (m.humeur > 0) s += 5
-  if (m.fc >= 50 && m.fc <= 80) s += 15; else if (m.fc > 0 && m.fc <= 100) s += 8
-  return Math.min(s, 100)
-}
+// Le score vient de score.js, source unique depuis le 2 septembre.
+// Il en existait trois copies identiques a un espace pres.
 
 // ─── SPARKLINE 7 JOURS ────────────────────────────────────────────────────────
 function Sparkline({ history, metricKey, color, goal, onLog }) {
