@@ -4,6 +4,7 @@ import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, SadIcon, NeutralIcon
 import RapportHebdo from './RapportHebdo'
 import Challenge21j from './Challenge21j'
 import TesProgres from './TesProgres'
+import ProgressionProgramme from './ProgressionProgramme'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 
@@ -675,6 +676,11 @@ export default function SanteTab({ metriques, profil, onUpdate, score, history =
       )}
 
       <SousTitre>Sur la durée</SousTitre>
+      {/* La progression du programme arrive de l'onglet Programmes, ou elle
+          repondait a « ou j'en suis ? » au milieu d'un ecran qui repond a
+          « qu'est-ce que je fais aujourd'hui ? ». Deux questions qu'on ne se
+          pose pas au meme moment. */}
+      <ProgressionProgramme userId={userId} />
       <TesProgres history={history} userId={userId} />
       <SousTitre>Le détail</SousTitre>
       <HistoriqueSection history={history} onLog={openEdit} />

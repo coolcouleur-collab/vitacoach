@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import CatalogueProgrammes from './CatalogueProgrammes'
 import { programmeParId, FAMILLES } from './programmes'
+import { enregistrerSeance, lireSeances, seancesDuJour } from './seances'
 import { reposerRappels, demanderAutorisation } from './notificationsProgramme'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,6 +12,7 @@ import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
 const ExercicesGuide = lazy(() => import('./ExercicesGuide'))
 const SeanceActive = lazy(() => import('./SeanceActive'))
+const CourseActive = lazy(() => import('./CourseActive'))
 
 const API = import.meta.env.VITE_API_URL || ''
 
@@ -117,7 +119,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
-  const [showGrille, setShowGrille] = useState(false)
 
   // Coches d'exercices du jour. Locales a l'appareil et remises a zero chaque
   // jour : c'est un rituel d'entrainement, pas une donnee de sante.
@@ -186,6 +187,12 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   const [exoGuide, setExoGuide] = useState(null)
   const [seanceOuverte, setSeanceOuverte] = useState(false)
   const [pourquoiOuvert, setPourquoiOuvert] = useState(false)
+  const [courseOuverte, setCourseOuverte] = useState(false)
+  // Les seances deja faites aujourd'hui, pour que la carte de course sache
+  // dire « deja fait » au lieu de reproposer benoitement la meme chose.
+  const [faitesAujourdhui, setFaitesAujourdhui] = useState(
+    () => seancesDuJour(lireSeances(profil)),
+  )
 
   const fetchChallenge = async () => {
     try {
@@ -273,7 +280,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   let jourActuel = 1
   let duree = challenge?.challenge?.jours?.length || challenge?.duree || 21
   let progression = Array(duree).fill(false)
-  let completedCount = 0
   let jours = []
   let milestones = []
 
@@ -289,7 +295,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     jourActuel = Math.min(Math.max(diffJours + 1, 1), duree)
 
     progression = challenge.progression || Array(duree).fill(false)
-    completedCount = progression.filter(Boolean).length
   }
 
   // L'objectif du profil peut avoir changé DEPUIS la création du programme :
@@ -381,9 +386,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     .sort((a, b) => a.jour - b.jour)
   const prochainMilestone = prochainsJoursMilestone[0] || null
 
-  // Les paliers suivent la duree : sur 42 jours, feliciter au 21e et plus
-  // jamais ensuite laisse toute la seconde moitie sans un seul repere.
-  const MILESTONES_JOURS = duree <= 21 ? [7, 14, duree] : [7, 14, 21, Math.round(duree / 2) + 7, duree]
 
   // ── STYLES ────────────────────────────────────────────────────────
   const styles = {
@@ -728,6 +730,55 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 </p>
               )}
 
+                {/* LA COURSE, tous les jours et quel que soit le programme.
+                    Elle ne vient pas du plan genere : elle est posee ici en
+                    dur, parce qu'elle est l'activite maitresse et qu'elle ne
+                    doit dependre ni du jour tire ni du programme choisi.
+                    Elle ne conditionne pas la validation du jour : c'est un
+                    socle, pas une punition supplementaire. */}
+                {(() => {
+                  const courses = faitesAujourdhui.filter(x => x.type === 'course')
+                  const metres = courses.reduce((n, c) => n + (c.metres || 0), 0)
+                  const minutes = Math.round(courses.reduce((n, c) => n + c.dureeMs, 0) / 60000)
+                  return (
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setCourseOuverte(true)}
+                      style={{
+                        width: '100%', marginBottom: 10, padding: '13px 15px', borderRadius: 16,
+                        display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
+                        background: courses.length ? 'rgba(22,101,52,0.07)' : 'rgba(255,235,210,0.32)',
+                        border: courses.length
+                          ? '1px solid rgba(22,101,52,0.28)'
+                          : `1.5px solid ${ICONE}`,
+                        cursor: 'pointer', fontFamily: "'Poppins',sans-serif",
+                      }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: 11, flexShrink: 0, fontSize: 17,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)',
+                      }}>🏃</div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: ENCRE }}>
+                          Course à pied
+                        </div>
+                        <div style={{ fontSize: 11.5, color: ENCRE, marginTop: 1 }}>
+                          {courses.length
+                            ? `Fait aujourd'hui : ${minutes} min${metres > 0 ? `, ${(metres / 1000).toFixed(2).replace('.', ',')} km` : ''}`
+                            : 'Chronomètre, distance et allure, tous les jours'}
+                        </div>
+                      </div>
+                      {courses.length > 0 && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={VERT}
+                             strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+                             style={{ flexShrink: 0 }}>
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      )}
+                    </motion.button>
+                  )
+                })()}
+
               {/* ── Séance structurée du programme (exercices + reps + photos) ── */}
               {jourActuelData.seance?.length > 0 && (
                 <div style={{ margin: '4px 0 10px' }}>
@@ -980,6 +1031,17 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             </Suspense>
           )}
 
+          {courseOuverte && (
+            <Suspense fallback={null}>
+              <CourseActive
+                userId={userId}
+                mode="course"
+                onTermine={s => setFaitesAujourdhui(l => [...l, { ...s, type: 'course' }])}
+                onFermer={() => setCourseOuverte(false)}
+              />
+            </Suspense>
+          )}
+
           {/* Le lecteur de seance. Sa fin coche les exercices ET valide le
               jour : quelqu'un qui vient de faire sa seance dans l'app n'a
               aucune raison de devoir la recocher a la main ensuite. */}
@@ -990,265 +1052,32 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 titre={jourActuelData.titre || jourActuelData.action}
                 jour={jourActuel}
                 onFermer={() => setSeanceOuverte(false)}
-                onTermine={() => {
+                onTermine={bilan => {
                   const tous = {}
                   jourActuelData.seance.forEach((_, i) => { tous[i] = true })
                   try { localStorage.setItem(cleExos, JSON.stringify(tous)) } catch {}
                   setExosFaits(tous)
                   setSeanceOuverte(false)
+                  // La seance compte comme activite, au meme titre qu'une
+                  // course : cocher des cases validait le jour mais ne laissait
+                  // aucune trace de l'effort dans les progres.
+                  if (bilan?.dureeMs) {
+                    enregistrerSeance(userId, {
+                      type: 'seance',
+                      dureeMs: bilan.dureeMs,
+                      exercices: bilan.exercices,
+                      debut: bilan.debut,
+                      fin: bilan.fin,
+                      jour: jourActuel,
+                    }).then(r => {
+                      if (r.seance) setFaitesAujourdhui(l => [...l, r.seance])
+                    })
+                  }
                 }}
               />
             </Suspense>
           )}
 
-          {/* ── HEADER ── */}
-          <div
-            style={{
-              background: 'rgba(255,235,210,0.22)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-              borderRadius: '20px',
-              padding: '24px 28px',
-              border: '1px solid rgba(255,220,160,0.28)',
-              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '12px',
-                marginBottom: '16px',
-              }}
-            >
-              <h2
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: 'italic',
-                  fontSize: '22px',
-                  fontWeight: 700,
-                  color: ENCRE,
-                  margin: 0,
-                  flex: 1,
-                }}
-              >
-                {/* Le titre invente par le modele, « Équilibre Vital 21 Jours »,
-                    ne disait rien a personne : le suivi porte un nom
-                    fonctionnel, l'objectif est deja dans Ton cap
-                    (constat Jean 2026-08-13). */}
-                Ta progression sur {duree} jours{numCycle > 1 ? ` · cycle ${numCycle}` : ''}
-              </h2>
-
-              <div
-                style={{
-                  background: 'rgba(232,150,42,0.12)',
-                  color: AMBRE,
-                  borderRadius: '12px',
-                  padding: '6px 14px',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Jour {jourActuel} / {duree}
-              </div>
-            </div>
-
-            {/* Barre de progression */}
-            <div style={{ marginBottom: '4px' }}>
-              <div
-                style={{
-                  height: '6px',
-                  borderRadius: '12px',
-                  background: 'rgba(200,123,82,0.12)',
-                  overflow: 'hidden',
-                }}
-              >
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(completedCount / duree) * 100}%` }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  style={{
-                    height: '100%',
-                    borderRadius: '12px',
-                    background: 'linear-gradient(90deg, #C87B52 0%, #E8962A 100%)',
-                  }}
-                />
-              </div>
-              <p
-                style={{
-                  fontSize: '11px',
-                  color: ENCRE,
-                  marginTop: '6px',
-                  textAlign: 'right',
-                }}
-              >
-                {completedCount} / {duree} jours complétés
-              </p>
-              <button
-                onClick={() => setShowGrille(v => !v)}
-                style={{
-                  marginTop: 8, padding: '7px 14px', borderRadius: 12, cursor: 'pointer',
-                  background: 'transparent', border: '1px solid rgba(200,123,82,0.28)',
-                  color: ENCRE, fontSize: 11.5, fontWeight: 600,
-                  fontFamily: "'Poppins', sans-serif",
-                }}>
-                {showGrille ? 'Masquer ma progression' : 'Voir ma progression jour par jour'}
-              </button>
-            </div>
-          </div>
-
-          {/* ── GRILLE 21 JOURS, repliée par défaut. La page ouvrait sur
-               trois rangées de cases avant de dire quoi FAIRE aujourd'hui :
-               c'était le cœur du « brouillon » (redesign Jean 2026-08-13).
-               Le détail reste à un tap, la barre suffit au quotidien. ── */}
-          {showGrille && (
-          <div
-            style={{
-              background: 'rgba(255,235,210,0.22)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-              borderRadius: '20px',
-              padding: '24px 28px',
-              border: '1px solid rgba(255,220,160,0.28)',
-              boxShadow: '0 4px 24px rgba(200,123,82,0.08)',
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: '13px',
-                fontWeight: 600,
-                color: ENCRE,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: '16px',
-              }}
-            >
-              Progression
-            </h3>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(7, 1fr)',
-                gap: '8px',
-              }}
-            >
-              {Array.from({ length: duree }, (_, i) => {
-                const numJour = i + 1
-                const estPasse = numJour < jourActuel
-                const estAujourdhui = numJour === jourActuel
-                const estFutur = numJour > jourActuel
-                const estComplete = progression[i]
-                const estMilestone = MILESTONES_JOURS.includes(numJour)
-
-                let bgColor = 'rgba(200,123,82,0.04)'
-                let borderColor = 'rgba(200,123,82,0.08)'
-                let textColor = 'rgba(200,123,82,0.35)'
-                let borderWidth = '1px'
-
-                if (estPasse && estComplete) {
-                  bgColor = 'rgba(34,197,94,0.15)'
-                  borderColor = '#22c55e'
-                  textColor = '#22c55e'
-                } else if (estPasse && !estComplete) {
-                  // Jour passé non fait : simplement estompé, jamais rouge.
-                  // Une grille de 13 cases rouges transforme un programme raté
-                  // en mur d'échecs et donne envie de fermer l'app, l'inverse
-                  // de ce qu'un coach doit produire (retour Jean 2026-08-08).
-                  bgColor = 'rgba(200,123,82,0.05)'
-                  borderColor = 'rgba(200,123,82,0.12)'
-                  textColor = 'rgba(200,123,82,0.28)'
-                } else if (estAujourdhui) {
-                  bgColor = 'rgba(232,150,42,0.18)'
-                  borderColor = '#E8962A'
-                  textColor = '#C87B52'
-                  borderWidth = '2px'
-                }
-
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: i * 0.03 }}
-                    style={{
-                      position: 'relative',
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '12px',
-                      background: bgColor,
-                      border: `${borderWidth} solid ${borderColor}`,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'default',
-                    }}
-                  >
-                    {/* Indicateur pulsant pour aujourd'hui */}
-                    {estAujourdhui && (
-                      <motion.div
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
-                        transition={{ duration: 1.8, repeat: Infinity }}
-                        style={{
-                          position: 'absolute',
-                          inset: '-3px',
-                          borderRadius: '12px',
-                          border: '2px solid #E8962A',
-                          pointerEvents: 'none',
-                        }}
-                      />
-                    )}
-
-                    {/* Badge étoile milestone */}
-                    {estMilestone && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '-6px',
-                          right: '-6px',
-                          fontSize: '10px',
-                          lineHeight: 1,
-                          zIndex: 1,
-                        }}
-                      >
-                        <StarIcon size={10} color="white" />
-                      </div>
-                    )}
-
-                    {/* Contenu */}
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        fontWeight: estAujourdhui ? 700 : 500,
-                        color: textColor,
-                        lineHeight: 1,
-                      }}
-                    >
-                      {estPasse && estComplete ? '✓' : numJour}
-                    </span>
-                    {estPasse && estComplete && (
-                      <span
-                        style={{
-                          fontSize: '8px',
-                          color: textColor,
-                          lineHeight: 1,
-                          marginTop: '1px',
-                        }}
-                      >
-                        {numJour}
-                      </span>
-                    )}
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-          )}
 
           {/* ── PROCHAIN MILESTONE ── */}
           {prochainMilestone && (

@@ -20,6 +20,7 @@ import { useChrono, formater } from './useChrono'
 import { useCourse, allure, formaterAllure, formaterDistance } from './useCourse'
 import { ENCRE, ICONE, AMBRE, VERT } from './palette'
 import { veilleDemarrer, veilleMettreAJour, veilleArreter } from './ecranVeille'
+import { enregistrerSeance, TYPES_SEANCE } from './seances'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -73,10 +74,15 @@ function Chiffre({ valeur, libelle, taille = 42 }) {
 }
 
 /**
- * @param {function} onTermine reçoit { dureeMs, metres, allureSecParKm, debut, fin }
+ * @param {string}   userId
+ * @param {string}   mode      'course' ou 'marche'. Même écran, même mesure,
+ *                             mais ce ne sont pas la même chose ni pour la
+ *                             personne ni dans ses totaux.
+ * @param {function} onTermine appelé APRÈS l'enregistrement, avec la séance
  * @param {function} onFermer  sortie sans enregistrer
  */
-export default function CourseActive({ onTermine, onFermer }) {
+export default function CourseActive({ userId, mode = 'course', onTermine, onFermer }) {
+  const genre = TYPES_SEANCE[mode] || TYPES_SEANCE.course
   const chrono = useChrono({ cle: 'solenn_chrono_course', reprendre: false })
   const gps = useCourse()
   const [fini, setFini] = useState(false)
@@ -84,6 +90,11 @@ export default function CourseActive({ onTermine, onFermer }) {
   const [totalM, setTotalM] = useState(0)
   const [confirmer, setConfirmer] = useState(false)
   const [demarrage, setDemarrage] = useState(true)
+  // null tant qu'on n'a pas enregistre, puis { stats, serie } : c'est ce qui
+  // permet de feliciter avec des chiffres vrais plutot qu'avec un « bravo »
+  // qui ne veut rien dire.
+  const [enregistre, setEnregistre] = useState(null)
+  const [enCoursEnreg, setEnCoursEnreg] = useState(false)
 
   useEcranAllume(chrono.enCours)
 
@@ -105,7 +116,7 @@ export default function CourseActive({ onTermine, onFermer }) {
       // pour continuer a travailler en arriere plan. Si elle echoue, la course
       // se deroule quand meme, simplement sans ecran de veille.
       veilleDemarrer({
-        titre: 'Course en cours',
+        titre: genre.nom + ' en cours',
         texte: 'Recherche du signal',
         base: Date.now(),
         court: true,
@@ -132,7 +143,7 @@ export default function CourseActive({ onTermine, onFermer }) {
     if (empreinte === dernierEnvoi.current) return
     dernierEnvoi.current = empreinte
     veilleMettreAJour({
-      titre: 'Course en cours',
+      titre: genre.nom + ' en cours',
       texte,
       // Maintenant moins l'ecoule : c'est ce qui permet au systeme de
       // retrouver le bon compte apres une pause, sans repartir de zero.
@@ -149,6 +160,34 @@ export default function CourseActive({ onTermine, onFermer }) {
     setTotalMs(ms)
     setTotalM(gps.metres)
     setFini(true)
+  }
+
+  /**
+   * Enregistre, puis felicite.
+   *
+   * L'ancien bouton appelait onTermine, qui refermait l'ecran. Rien n'etait
+   * ecrit nulle part : ni felicitations, ni chiffre qui bouge, ni trace.
+   * Quelqu'un qui vient de courir vingt minutes et qui ne voit rien se passer
+   * ne recommence pas, et il a raison.
+   */
+  async function enregistrer() {
+    if (enCoursEnreg) return
+    setEnCoursEnreg(true)
+    const fin = Date.now()
+    const seance = {
+      type: mode,
+      dureeMs: totalMs,
+      metres: Math.round(totalM),
+      debut: fin - totalMs,
+      fin,
+    }
+    const r = await enregistrerSeance(userId, seance)
+    setEnCoursEnreg(false)
+    // Meme si l'ecriture echoue, on montre l'ecran de fin : l'effort a eu
+    // lieu, et le nier a cause d'une panne de reseau serait le pire moment
+    // pour rappeler qu'il y a un serveur derriere.
+    setEnregistre({ ok: r.ok, stats: r.stats, serie: r.serie })
+    onTermine?.({ ...seance, allureSecParKm: secParKm ? Math.round(secParKm) : null })
   }
 
   const secParKm = allure(fini ? totalM : gps.metres, fini ? totalMs : chrono.ms)
@@ -176,7 +215,7 @@ export default function CourseActive({ onTermine, onFermer }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
             textTransform: 'uppercase', color: AMBRE }}>
-            {fini ? 'Terminé' : 'En course'}
+            {fini ? 'Terminé' : genre.nom}
           </div>
           {!fini && (
             <div style={{ fontSize: 12, color: signal.ton, marginTop: 3, fontWeight: 600 }}>
@@ -231,7 +270,7 @@ export default function CourseActive({ onTermine, onFermer }) {
           </div>
         )}
 
-        {fini && (
+        {fini && !enregistre && (
           <div style={{ ...VERRE, borderRadius: 18, padding: '16px 16px', marginTop: 30 }}>
             <div style={{ fontSize: 13.5, lineHeight: 1.6, color: ENCRE }}>
               {totalM >= 100
@@ -239,23 +278,77 @@ export default function CourseActive({ onTermine, onFermer }) {
                 : `${formater(totalMs)} de sortie. La distance n'a pas pu être mesurée, mais le temps compte quand même.`}
             </div>
             <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={() => onTermine?.({
-                dureeMs: totalMs,
-                metres: Math.round(totalM),
-                allureSecParKm: secParKm ? Math.round(secParKm) : null,
-                debut: Date.now() - totalMs,
-                fin: Date.now(),
-              })}
+              whileTap={enCoursEnreg ? undefined : { scale: 0.98 }}
+              onClick={enregistrer}
+              disabled={enCoursEnreg}
               style={{
-                width: '100%', marginTop: 16, padding: '15px', borderRadius: 16, cursor: 'pointer',
+                width: '100%', marginTop: 16, padding: '15px', borderRadius: 16,
+                cursor: enCoursEnreg ? 'not-allowed' : 'pointer', opacity: enCoursEnreg ? 0.6 : 1,
                 background: 'transparent', border: `1.5px solid ${ICONE}`,
                 color: ENCRE, fontSize: 14.5, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
               }}
             >
-              Enregistrer cette sortie
+              {enCoursEnreg ? 'Enregistrement…' : `Enregistrer cette ${mode === 'marche' ? 'marche' : 'sortie'}`}
             </motion.button>
           </div>
+        )}
+
+        {enregistre && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            style={{ ...VERRE, borderRadius: 18, padding: '18px 16px', marginTop: 30 }}
+          >
+            <div style={{ fontSize: 28, marginBottom: 8 }}>{genre.emoji}</div>
+            {/* Le titre suit ce qui s'est REELLEMENT passe. Il annoncait
+                « Marche enregistree » puis, deux lignes plus bas, que
+                l'enregistrement avait echoue : l'ecran se contredisait a
+                trois centimetres d'intervalle. */}
+            <div style={{ fontSize: 17, fontWeight: 700, color: ENCRE, lineHeight: 1.25 }}>
+              {enregistre.ok ? genre.verbe : `${genre.nom} terminée`}
+            </div>
+
+            {/* Des chiffres vrais, pas un « bravo » qui ne veut rien dire.
+                Ce qui encourage, c'est de voir que ca s'additionne. */}
+            <div style={{ fontSize: 13.5, lineHeight: 1.6, color: ENCRE, marginTop: 9 }}>
+              {!enregistre.ok
+                ? `${formaterDistance(totalM)} en ${formater(totalMs)}. Tu l'as fait, c'est ce qui compte.`
+                : enregistre.serie > 1
+                  ? `${enregistre.serie} jours d'affilée que tu bouges. C'est la série qui construit, pas la performance du jour.`
+                  : "C'est enregistré. Le prochain jour où tu bouges, la série démarre."}
+            </div>
+
+            <div style={{
+              display: enregistre.ok ? 'flex' : 'none',
+              gap: 10, marginTop: 16, paddingTop: 14,
+              borderTop: '1px solid rgba(200,123,82,0.18)',
+            }}>
+              <Chiffre valeur={String(enregistre.stats.total.seances)} libelle="Cette semaine" taille={24} />
+              <Chiffre valeur={`${enregistre.stats.total.minutes} min`} libelle="De mouvement" taille={24} />
+              {enregistre.stats.total.metres > 0 && (
+                <Chiffre valeur={formaterDistance(enregistre.stats.total.metres)} libelle="Parcourus" taille={24} />
+              )}
+            </div>
+
+            {!enregistre.ok && (
+              <div style={{ fontSize: 11.5, lineHeight: 1.5, color: ENCRE, opacity: 0.8, marginTop: 12 }}>
+                L'enregistrement n'a pas pu être envoyé, sans doute un problème de réseau.
+                Ton effort compte quand même, mais il n'apparaîtra pas dans tes progrès.
+              </div>
+            )}
+
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onFermer?.()}
+              style={{
+                width: '100%', marginTop: 18, padding: '15px', borderRadius: 16, cursor: 'pointer',
+                background: 'transparent', border: `1.5px solid ${ICONE}`,
+                color: ENCRE, fontSize: 14.5, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              Terminé
+            </motion.button>
+          </motion.div>
         )}
       </div>
 

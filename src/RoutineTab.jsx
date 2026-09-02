@@ -829,9 +829,13 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
           </div>
         )}
 
-        {/* ── 3. Sortir courir. Séparé du programme : une envie de sortir ne
-             se planifie pas la veille, et l'app doit pouvoir compter un temps
-             et une distance sans qu'on ait ouvert une séance. ── */}
+        {/* ── 3. La marche.
+             La COURSE a quitte cet endroit : elle est devenue l'activite
+             maitresse, presente dans les exercices de chaque jour, quel que
+             soit le programme. Ce qui reste ici est la marche, qui se compte
+             aussi mais n'est pas la meme chose : on ne s'y prepare pas, on
+             n'a pas d'allure a tenir, et elle doit rester disponible meme un
+             jour ou on ne veut surtout pas courir. ── */}
         {vue === 'programme' && (
         <button onClick={() => setCourseOuverte(true)} style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
@@ -842,13 +846,13 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         }}>
           <div style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, background: 'rgba(200,123,82,0.12)', border: '1px solid rgba(200,123,82,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="13" cy="4" r="2" />
-              <path d="m8 20 3-6 3 2 2 4M6 12l3-4 4 1 2 3" />
+              <circle cx="12" cy="4" r="2" />
+              <path d="M11 21v-6l-2-3 1-4 3 2 2 2M10 8 8 12M13 15l2 6" />
             </svg>
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>Sortir courir</div>
-            <div style={{ fontSize: 11, color: ENCRE, marginTop: 1 }}>Temps, distance et allure en direct</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: ENCRE }}>Aller marcher</div>
+            <div style={{ fontSize: 11, color: ENCRE, marginTop: 1 }}>Comptée aussi, sans allure à tenir</div>
           </div>
         </button>
         )}
@@ -877,8 +881,9 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
       {courseOuverte && (
         <React.Suspense fallback={null}>
           <CourseActive
+            userId={userId}
+            mode="marche"
             onFermer={() => setCourseOuverte(false)}
-            onTermine={() => setCourseOuverte(false)}
           />
         </React.Suspense>
       )}
