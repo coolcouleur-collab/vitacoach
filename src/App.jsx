@@ -497,11 +497,14 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   // claire, plus par un écart de contraste. C'est ce qui permet aux quatre
   // libellés d'être lisibles en même temps. Après : 6,49 et 5,95.
   //
-  // Le mode nuit n'est pas concerné, ses bleus sur fond bleu foncé sont justes.
+  // La nuit N'ETAIT PAS juste non plus, contrairement a ce que disait cette
+  // ligne : mesure le 2 septembre sur le site en ligne, les libelles inactifs
+  // tombaient a 2,83:1 a 9,5 px. L'opacite de txtDim passe de 0,42 a 0,65,
+  // soit 4,97:1, et l'onglet ouvert reste distinct par sa graisse et son 0,92.
   const pillBg    = isNight ? 'rgba(10,22,58,0.60)'      : 'rgba(120,55,10,0.24)'
   const txtHigh   = isNight ? 'rgba(160,200,255,0.92)'   : '#5A2A05'
   const txtMid    = isNight ? 'rgba(160,200,255,0.88)'   : '#5A2A05'
-  const txtDim    = isNight ? 'rgba(160,200,255,0.42)'   : 'rgba(90,42,5,0.82)'
+  const txtDim    = isNight ? 'rgba(160,200,255,0.65)'   : 'rgba(90,42,5,0.82)'
   const divider   = isNight ? 'rgba(160,200,255,0.18)'   : 'rgba(255,238,228,0.18)'
   const activeBg  = isNight ? 'rgba(160,200,255,0.14)'   : 'rgba(255,238,228,0.14)'
 
@@ -2478,7 +2481,18 @@ padding: isMobile
                       display:'flex', alignItems:'center', justifyContent:'center',
                       cursor:'pointer', color:ENCRE,
                       fontFamily:F, fontSize:12, fontWeight:600,
-                      transition:'all .15s ease',
+                      // PAS `all`. Mesure le 2 septembre sur le site en ligne :
+                      // ce bouton etait le seul element de l'accueil a rester
+                      // brun sur le navy. Son parent etait bien en bleu, son
+                      // --encre valait #C8DEFF, et il n'avait plus aucune
+                      // couleur en ligne : il gardait six transitions EN COURS,
+                      // dont une sur `color`. Une transition active fige la
+                      // valeur calculee, et celle-ci repartait a chaque rendu
+                      // du bandeau sans jamais atteindre sa cible.
+                      //
+                      // Seul `transform` est anime ici, par onMouseDown. On
+                      // laisse le fond et la bordure, on retire `color`.
+                      transition:'transform .15s ease, background .15s ease, border-color .15s ease',
                     }}
                     onMouseDown={e => e.currentTarget.style.transform='scale(0.92)'}
                     onMouseUp={e => e.currentTarget.style.transform='scale(1)'}
