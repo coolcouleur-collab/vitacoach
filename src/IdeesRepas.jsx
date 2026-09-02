@@ -18,6 +18,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { syncProfilSupabase } from './profilSync'
 import { motion } from 'framer-motion'
 import { ENCRE, ICONE, ACCENT, AMBRE } from './palette'
 import { authHeaders } from './supabase'
@@ -310,18 +311,31 @@ export default function IdeesRepas({ userId, profil, onProfilMaj }) {
     }
   }, [userId, moment])
 
+  // L'ecriture passait par un upsert brut dans un `try { } catch {}` muet.
+  // Un echec ressemblait donc a une reussite : le panneau se fermait, le
+  // bouton passait a « Modifier mes exclusions », et la base n'avait rien
+  // recu. Au rechargement suivant le profil du serveur ecrasait la copie
+  // locale, et les exclusions avaient disparu. C'est pour ca que les recettes
+  // ne s'y adaptaient pas : il n'y avait jamais rien eu a quoi s'adapter
+  // (diagnostique le 3 septembre sur le compte de Jean).
+  //
+  // Meme bug que le 14 aout, « je remplis mon profil et ca s'enleve », qui
+  // n'avait ete corrige que dans App.jsx.
   async function enregistrerPrefs(p) {
+    const local = JSON.parse(localStorage.getItem('vitacoach_profil') || '{}')
+    const maj = { ...local, ...profil, preferences_alimentaires: p }
+    localStorage.setItem('vitacoach_profil', JSON.stringify(maj))
+
+    const r = await syncProfilSupabase(userId, maj).catch(e => ({ error: e }))
+    if (r?.error) {
+      // On NE ferme pas et on NE confirme pas : une exclusion alimentaire
+      // qu'on croit enregistree est pire qu'une exclusion qu'on sait perdue.
+      setErreur("Tes exclusions n'ont pas pu être enregistrées. Réessaie dans un instant.")
+      return
+    }
+    setErreur(null)
     setReglages(false)
-    try {
-      const m = await import('./supabase')
-      const local = JSON.parse(localStorage.getItem('vitacoach_profil') || '{}')
-      const maj = { ...local, ...profil, preferences_alimentaires: p }
-      localStorage.setItem('vitacoach_profil', JSON.stringify(maj))
-      await m.supabase.from('profils').upsert(
-        { user_id: userId, profil: maj }, { onConflict: 'user_id' },
-      )
-      onProfilMaj?.(maj)
-    } catch {}
+    onProfilMaj?.(maj)
   }
 
   return (

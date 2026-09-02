@@ -59,6 +59,7 @@ const PaywallOffre  = lazy(() => import('./PaywallOffre'))
 import { LeafIcon, HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
+import { syncProfilSupabase } from './profilSync'
 import { isNativeApp } from './hooks/useCapacitor'
 
 // ─── HAPTIC UTILITY ──────────────────────────────────────────────────────────
@@ -357,52 +358,9 @@ async function syncMetriquesSupabase(userId, m) {
 // Le client ne les ecrit JAMAIS : il recopie ceux de la base.
 // Champs ecrits par le SERVEUR, webhook Stripe, agent memoire, mise a Pro
 // manuelle. Le client ne les produit pas : il doit les recopier depuis la base
-// avant d'ecrire, sinon il les efface.
-const CHAMPS_SERVEUR = ['isPro', 'proSince', 'proPlan', 'proEnd', 'proManuel',
-  'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId',
-  'memoire_longue']
-
-async function syncProfilSupabase(userId, profil) {
-  if (!userId) return
-  const supabase = await getSupabase()
-
-  // Cet upsert reecrit le profil ENTIER, il ne fusionne pas. Sans la
-  // preservation ci-dessous, terminer l'inscription, qui construit un profil
-  // avec `isPro: false` en dur (Onboarding.jsx), effacait l'abonnement de
-  // quelqu'un qui venait de payer. Meme piege pour toute sauvegarde de profil
-  // faite depuis l'app (2026-08-14).
-  const aEcrire = { ...profil }
-  try {
-    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
-    for (const k of CHAMPS_SERVEUR) {
-      if (data?.profil?.[k] !== undefined) aEcrire[k] = data.profil[k]
-    }
-  } catch (_) {}
-
-  // PAS de updated_at : la colonne n'existe pas dans `profils`. Elle etait
-  // pourtant envoyee a chaque sauvegarde, et PostgREST rejetait TOUTE
-  // l'ecriture, code PGRST204. Aucun profil rempli dans l'app n'a jamais
-  // atteint la base : ils ne vivaient que dans le navigateur. D'ou le
-  // « je remplis mon profil et ça s'enlève », et le questionnaire qui
-  // recommence des qu'on vide les donnees du site (diagnostique 2026-08-14).
-  // L'erreur etait avalee, et la nouvelle tentative renvoyait exactement la
-  // meme requete : elle echouait pareil.
-  const { error } = await supabase.from('profils').upsert({
-    user_id: userId, profil: aEcrire,
-  }, { onConflict: 'user_id' })
-  if (error) {
-    console.error('[profil] sauvegarde refusee par la base,', error.message)
-    setTimeout(async () => {
-      try {
-        const sb = await getSupabase()
-        const { error: e2 } = await sb.from('profils').upsert({
-          user_id: userId, profil: aEcrire,
-        }, { onConflict: 'user_id' })
-        if (e2) console.error('[profil] seconde tentative refusee,', e2.message)
-      } catch (_) {}
-    }, 4000)
-  }
-}
+// avant d'ecrire, sinon il les efface. La fonction vit desormais dans
+// src/profilSync.js : deux autres ecrans en avaient besoin et faisaient
+// chacun leur upsert muet a la place.
 
 // Convertit base64url en Uint8Array pour VAPID
 function urlBase64ToUint8Array(base64String) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import CatalogueProgrammes from './CatalogueProgrammes'
 import { programmeParId, FAMILLES } from './programmes'
+import { syncProfilSupabase } from './profilSync'
 import { enregistrerSeance, lireSeances, seancesDuJour } from './seances'
 import { reposerRappels, demanderAutorisation } from './notificationsProgramme'
 import { createPortal } from 'react-dom'
@@ -143,15 +144,12 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       const pLocal = JSON.parse(localStorage.getItem('vitacoach_profil') || '{}')
       const maj = { ...pLocal, objectif: obj, objectifs: [obj] }
       localStorage.setItem('vitacoach_profil', JSON.stringify(maj))
-      const m = await import('./supabase')
-      // La base d'abord : le generateur serveur y lit l'objectif.
-      // Sans updated_at : la colonne n'existe pas, l'envoyer faisait rejeter
-      // toute l'ecriture (PGRST204). Le changement d'objectif n'arrivait donc
-      // jamais en base, et le generateur serveur relisait l'ancien.
-      await m.supabase.from('profils').upsert(
-        { user_id: userId, profil: maj },
-        { onConflict: 'user_id' },
-      )
+      // La base d'abord : le generateur serveur y lit l'objectif. L'upsert
+      // brut etait avale par le `catch {}` ci-dessous : un refus de la base
+      // passait inapercu, et le generateur relisait l'ancien objectif sans
+      // que personne ne comprenne pourquoi. Meme fonction que partout
+      // ailleurs, qui journalise l'echec et retente une fois.
+      await syncProfilSupabase(userId, maj)
     } catch {}
   }
   const bravoLance = useRef(false)
