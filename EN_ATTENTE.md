@@ -509,11 +509,28 @@ sombre, chercher d'abord un second calcul d'ambiance.
 - `App.jsx` l.4083 : le style `bottomNav` n'est reference nulle part.
 - La colonne `score` de Supabase porte toujours deux sens differents.
 
-### Deploiement
+### Deploiement, ce qui a change le 2 septembre
 
-Vercel a manque les evenements GitHub deux fois aujourd'hui. Un commit vide
-n'a pas suffi la seconde fois, le deploiement est reparti seul apres une
-vingtaine de minutes. Si ca recommence : reconnecter le depot dans Vercel,
-`Settings` puis `Git`, ce qui recree le webhook cote GitHub. Au passage, deux
-projets (`vitacoach` et `vitacoach-w3yd`) se construisent a chaque push alors
-qu'un seul sert meet-solenn.com.
+**meet-solenn.com et meet-solenn.fr sont servis par `vitacoach-w3yd`**, pas par
+`vitacoach`. Je m'etais trompe en sens inverse au depart : verifier avant de
+toucher a un projet.
+
+Deux changements faits avec l'accord de Jean :
+
+1. **`vitacoach` est debranche du depot.** Il ne sert aucun domaine et se
+   construisait pourtant a chaque push, ce qui doublait la file d'attente sur
+   un forfait Hobby qui n'execute qu'une construction a la fois. Ses reglages
+   sont conserves, Vercel le dit explicitement au moment de deconnecter.
+
+2. **Un Deploy Hook existe sur `vitacoach-w3yd`**, nomme `deploiement-manuel`,
+   branche `main`. Une requete POST sur son URL construit le dernier commit.
+   Deux essais : deploiement en ligne en 40 et 45 secondes, contre plus de
+   vingt minutes d'attente auparavant.
+
+   L'URL est un secret, elle n'est pas dans le depot. Elle se retrouve dans
+   Vercel, `vitacoach-w3yd` puis `Settings` puis `Git`, section Deploy Hooks.
+
+**Ce qui n'etait PAS le probleme** : il n'existe aucun webhook sur le depot
+GitHub. Vercel passe par une GitHub App, installee et fonctionnelle aux cotes
+de Railway et Render. Reconnecter le depot n'aurait donc rien recree, et aurait
+coupe la chaine de production pour rien.
