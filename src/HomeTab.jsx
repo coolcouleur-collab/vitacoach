@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, startTransition } from 'react'
-import { scoreJour, atteint, formaterPas, CLES as CLES_SCORE } from './score'
+import { scoreJour, atteint, formaterPas, CLES as CLES_SCORE, LIBELLES as LIBELLES_SCORE } from './score'
 import { createPortal } from 'react-dom'
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from 'framer-motion'
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
@@ -1186,9 +1186,22 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   textUnderlineOffset: 3,
                   color: isNight ? 'rgba(180,205,240,0.66)' : ENCRE,
                 }}>
-                  {manquantes.length === 1
-                    ? `Il me manque ${manquantes[0]} pour te donner un vrai chiffre.`
-                    : `Il me manque ${manquantes.slice(0, -1).join(', ')} et ${manquantes[manquantes.length - 1]} pour te donner un vrai chiffre.`}
+                  {(() => {
+                    // La metrique dont le verdict vient de parler est ecartee.
+                    // « C'est le mouvement qui manque » suivi de « il me manque
+                    // tes pas » redemandait ce qui venait d'etre dit, deux
+                    // lignes plus haut. L'app evitait deja cette redite dans
+                    // l'autre sens, entre le verdict et la carte de question :
+                    // c'est le meme mecanisme, etendu.
+                    const restantes = manquantes.filter(m => m !== LIBELLES_SCORE[p.cle])
+                    // Si le verdict couvre la SEULE metrique manquante, il n'y
+                    // a plus rien a dire : la ligne disparait au lieu d'afficher
+                    // « Il me manque  pour te donner un vrai chiffre. »
+                    if (!restantes.length) return null
+                    return restantes.length === 1
+                      ? `Il me manque ${restantes[0]} pour te donner un vrai chiffre.`
+                      : `Il me manque ${restantes.slice(0, -1).join(', ')} et ${restantes[restantes.length - 1]} pour te donner un vrai chiffre.`
+                  })()}
                 </div>
               )}
 
