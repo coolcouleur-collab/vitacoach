@@ -2514,7 +2514,7 @@ padding: isMobile
                 width:'76%', maxWidth:300,
                 background: nuitNav
                   ? 'linear-gradient(160deg, rgba(18,32,64,0.92) 0%, rgba(10,22,48,0.95) 100%)'
-                  : 'linear-gradient(160deg, rgba(255,243,220,0.28) 0%, rgba(255,224,175,0.20) 100%)',
+                  : 'linear-gradient(160deg, rgba(var(--rgb-bulle), 0.28) 0%, rgba(255,224,175,0.20) 100%)',
                 backdropFilter:'blur(40px)', WebkitBackdropFilter:'blur(40px)',
                 borderLeft: nuitNav ? '1px solid rgba(160,200,255,0.16)' : '1px solid rgba(210,145,40,0.09)',
                 boxShadow:'none',
@@ -2932,7 +2932,7 @@ padding: isMobile
                 position:'fixed', zIndex:60,
                 top:'calc(env(safe-area-inset-top, 0px) + 14px)', left:14,
                 width:38, height:38, borderRadius:'50%', cursor:'pointer',
-                background:'rgba(255,246,238,0.82)',
+                background:'rgba(var(--rgb-bulle), 0.82)',
                 backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
                 border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
                 boxShadow:'0 4px 16px rgba(var(--rgb-terracotta), 0.18)',
@@ -3264,7 +3264,7 @@ padding: isMobile
 }
 function NutritionCard({ nutrition }) {
   return (
-    <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(255,246,238,0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
+    <div style={{ ...sr.card, background:'linear-gradient(145deg, rgba(34,197,94,0.06), rgba(var(--rgb-bulle), 0.60))', border:'1px solid rgba(34,197,94,0.18)' }}>
       <div style={sr.cardHeader}>
         <span style={{ fontSize:18, display:'flex', alignItems:'center' }}><FoodIcon size={18} color="#22c55e" /></span>
         <span style={{ ...sr.cardTitre, color: VERT, fontWeight:600, fontSize:13 }}>{nutrition.titre}</span>
@@ -3292,7 +3292,7 @@ function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checke
   return (
     <div style={{
       ...sr.card,
-      background: `linear-gradient(145deg, ${accent}09, rgba(255,246,238,0.60))`,
+      background: `linear-gradient(145deg, ${accent}09, rgba(var(--rgb-bulle), 0.60))`,
       border: `1px solid ${accent}22`,
     }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
@@ -3350,7 +3350,7 @@ const sr = {
     padding:'12px 16px', marginBottom:14, boxShadow:'0 2px 10px rgba(var(--rgb-terracotta), 0.05)' },
   empty: { background:'rgba(255,248,242,0.85)', border:'1px solid rgba(var(--rgb-terracotta), 0.12)', borderRadius:20, padding:'48px 32px',
     textAlign:'center', boxShadow:'0 4px 20px rgba(var(--rgb-terracotta), 0.06)' },
-  motivCard: { background:'rgba(255,246,238,0.28)',
+  motivCard: { background:'rgba(var(--rgb-bulle), 0.28)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.08)', borderRadius:16, padding:'14px 18px', textAlign:'center' },
   card: { background:'rgba(255,248,242,0.70)', border:'1px solid rgba(var(--rgb-terracotta), 0.10)', borderRadius:18, padding:'14px 16px',
     boxShadow:'none' },
@@ -4029,7 +4029,7 @@ const s = {
   userMsg: { display:'flex', justifyContent:'flex-end', marginBottom:10 },
   botMsg: { display:'flex', alignItems:'flex-start', marginBottom:10, gap:10 },
   userBubble: {
-    background:'rgba(255,248,238,0.88)',
+    background:'rgba(var(--rgb-bulle), 0.88)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.20)',
     color:ENCRE,
     // maxWidth 100% et non 76 : le wrapper limite DEJA a 76 %, les deux
@@ -4040,7 +4040,7 @@ const s = {
     boxShadow:'0 4px 22px rgba(var(--rgb-terracotta), 0.08), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   botBubble: {
-    background:'rgba(255,248,238,0.88)',
+    background:'rgba(var(--rgb-bulle), 0.88)',
     border:'1px solid rgba(var(--rgb-terracotta), 0.20)',
     color:ENCRE,
     padding:'14px 20px', borderRadius:'5px 20px 20px 20px', maxWidth:'100%',

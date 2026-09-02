@@ -85,7 +85,7 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
           onClick={e => { e.stopPropagation(); onToggle() }}
           style={{
             width: 30, height: 30, borderRadius: '50%', flexShrink: 0, cursor: 'pointer',
-            background: fait ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(255,246,238,0.70)',
+            background: fait ? 'rgba(var(--rgb-terracotta), 0.90)' : 'rgba(var(--rgb-bulle), 0.70)',
             border: fait ? '1.5px solid rgba(var(--rgb-terracotta), 0.90)' : '1.5px solid rgba(var(--rgb-terracotta), 0.40)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
@@ -499,7 +499,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
           padding: '10px 14px', borderRadius: 14,
-          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
+          background: 'rgba(var(--rgb-bulle), 0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
           fontFamily: "'Poppins', sans-serif",
         }}>
           <TargetIcon size={15} color={ICONE} />
@@ -519,7 +519,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           Replie par defaut, parce qu'on ne relit pas ca tous les jours. */}
       {progCourant && (
         <div style={{
-          background: 'rgba(255,246,238,0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
+          background: 'rgba(var(--rgb-bulle), 0.55)', border: '1px solid rgba(var(--rgb-terracotta), 0.20)',
           borderRadius: 14, padding: '10px 14px', marginBottom: 12,
           fontFamily: "'Poppins', sans-serif",
         }}>
@@ -591,7 +591,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       )}
       {proposerReprise && (
         <div style={{
-          background: 'rgba(255,246,238,0.70)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
+          background: 'rgba(var(--rgb-bulle), 0.70)', border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
           borderRadius: 16, padding: '14px 16px', marginBottom: 14,
           fontFamily: "'Poppins', sans-serif",
         }}>
@@ -1006,7 +1006,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 // n'a AUCUN element fonce.
                 position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 66px)',
                 left: 0, right: 0, margin: '0 auto', zIndex: 9999,
-                background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+                background: 'rgba(var(--rgb-bulle), 0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
                 borderRadius: 20, padding: '14px 24px',
                 border: '1.5px solid rgba(var(--rgb-creme-dore), 0.60)',
                 boxShadow: '0 16px 48px rgba(120,60,20,0.25)',
@@ -1134,7 +1134,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
               style={{
                 // Claire et non sombre : c'etait le seul element fonce de toute
                 // l'app, il jurait avec la charte (constat Jean 2026-08-12).
-                background: 'rgba(255,246,238,0.96)',
+                background: 'rgba(var(--rgb-bulle), 0.96)',
                 backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
                 border: '1px solid rgba(var(--rgb-terracotta), 0.28)',
                 boxShadow: '0 18px 60px rgba(120,60,20,0.28)',
@@ -1158,7 +1158,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                     <button key={o} onClick={() => setObjChoisi(o)} style={{
                       display: 'flex', alignItems: 'center', gap: 9, textAlign: 'left',
                       padding: '10px 13px', borderRadius: 13, cursor: 'pointer',
-                      background: actif ? 'rgba(var(--rgb-creme), 0.55)' : 'rgba(255,246,238,0.40)',
+                      background: actif ? 'rgba(var(--rgb-creme), 0.55)' : 'rgba(var(--rgb-bulle), 0.40)',
                       border: actif ? '1.5px solid rgba(var(--rgb-or), 0.60)' : '1px solid rgba(var(--rgb-terracotta), 0.20)',
                       fontFamily: "'Poppins', sans-serif", transition: 'all 0.15s',
                     }}>

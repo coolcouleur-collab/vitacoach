@@ -569,7 +569,7 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
         {showCelebration && (
           <div style={{
             position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', zIndex: 9999,
-            background: 'rgba(255,246,238,0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+            background: 'rgba(var(--rgb-bulle), 0.96)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
             borderRadius: 20, padding: '16px 28px', textAlign: 'center',
             boxShadow: '0 16px 48px rgba(0,0,0,0.40), 0 4px 12px rgba(var(--rgb-terracotta), 0.18)',
             border: '1.5px solid rgba(var(--rgb-creme-dore), 0.60)',

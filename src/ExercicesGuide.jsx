@@ -590,7 +590,7 @@ export default function ExercicesGuide({ onClose, initial = null }) {
         <button onClick={onClose} aria-label="Fermer le guide" style={{
           position: 'sticky', top: 0, float: 'right', zIndex: 5,
           width: 32, height: 32, borderRadius: '50%', cursor: 'pointer',
-          background: 'rgba(255,246,238,0.92)', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
+          background: 'rgba(var(--rgb-bulle), 0.92)', border: '1px solid rgba(var(--rgb-terracotta), 0.30)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 10px rgba(var(--rgb-terracotta), 0.15)', marginLeft: 8,
         }}>

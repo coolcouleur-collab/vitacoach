@@ -144,7 +144,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       // 45 % de texte, les cinq visages étaient à peine visibles
                       // et ne semblaient pas cliquables (retour Jean 2026-08-08).
                       // C'est pourtant la première interaction de la journée.
-                      background: active ? `${teinteHumeur(m.color)}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(255,246,238,0.55)'),
+                      background: active ? `${teinteHumeur(m.color)}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-bulle), 0.55)'),
                       border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(var(--rgb-terracotta), 0.30)')}`,
                       color: tc(active ? 0.95 : 0.72),
                     }}

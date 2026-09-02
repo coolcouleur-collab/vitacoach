@@ -129,7 +129,7 @@ const inputBase = {
   width: '100%', boxSizing: 'border-box',
   padding: '1rem 1.4rem', borderRadius: '1.4rem',
   border: '1.5px solid rgba(var(--rgb-terracotta), 0.22)',
-  background: 'rgba(255,246,238,0.96)',
+  background: 'rgba(var(--rgb-bulle), 0.96)',
   outline: 'none',
   fontFamily: 'var(--font)', fontSize: 'max(1.4rem,16px)',
   color: ENCRE, lineHeight: 1.6,
@@ -299,7 +299,7 @@ function ReplyItem({ r, postId, onEdit, onDelete, onVote, userId }) {
   return (
     <div style={{
       display:'flex', gap:'.8rem', padding:'1rem 1.2rem',
-      background:'rgba(255,246,238,0.50)', borderRadius:16,
+      background:'rgba(var(--rgb-bulle), 0.50)', borderRadius:16,
       border:'1px solid rgba(var(--rgb-terracotta), 0.12)',
     }}>
       <Avatar name={r.author} size={28} />

@@ -69,6 +69,8 @@
   /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
      ici pour que le document lui-meme suive l'ambiance. */
   --bg:        #EDD8CC;
+  /* Les bulles du chat et plusieurs cartes. */
+  --rgb-bulle: 255, 248, 238;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -117,6 +119,8 @@
   --halo-2:    #16294F;
   --halo-3:    #122140;
   --bg:        #0F1C3A;
+  /* Les bulles du chat et plusieurs cartes. */
+  --rgb-bulle: 26, 44, 78;
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -177,6 +181,8 @@
   /* tokens.css pose `body { background: var(--bg) }`. On redefinit --bg
      ici pour que le document lui-meme suive l'ambiance. */
   --bg:        #EDD8CC;
+  /* Les bulles du chat et plusieurs cartes. */
+  --rgb-bulle: 255, 248, 238;
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;

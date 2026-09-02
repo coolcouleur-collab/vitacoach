@@ -1132,7 +1132,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '3px 11px', borderRadius: 20, marginBottom: 8,
-                  background: isNight ? 'rgba(15,28,58,0.62)' : 'rgba(255,246,238,0.62)',
+                  background: isNight ? 'rgba(15,28,58,0.62)' : 'rgba(var(--rgb-bulle), 0.62)',
                   border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(var(--rgb-terracotta), 0.24)',
                   fontFamily: "'Poppins',system-ui,sans-serif",
                   fontSize: 10.5, fontWeight: 600,
@@ -1259,7 +1259,7 @@ function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day',
         background: isActive ? `${m.color}28` : springing ? `${m.color}18`
           : preset === 'night'   ? 'rgba(10,20,45,0.55)'
           : preset === 'sunset'  ? 'rgba(80,25,5,0.28)'
-          : 'rgba(255,246,238,0.42)',
+          : 'rgba(var(--rgb-bulle), 0.42)',
         border:`1.5px solid ${isActive ? m.color+'90' : filled ? m.color+'66' : isNight ? m.color+'44' : m.color+'55'}`,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
         gap:1.5, cursor:'pointer',
@@ -1715,7 +1715,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       }}>
       {/* Inner card, fond teinté couleur + transparent */}
       <div style={{
-        background:`linear-gradient(145deg, ${color}07, rgba(255,246,238,0.72))`,
+        background:`linear-gradient(145deg, ${color}07, rgba(var(--rgb-bulle), 0.72))`,
         borderRadius:20, padding:'8px 4px 7px',
         boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.65)`,
         display:'flex', flexDirection:'column', alignItems:'center', gap:3,
@@ -2267,7 +2267,7 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
             width: 34, height: 34, borderRadius: '50%', flexShrink: 0, cursor: fait ? 'default' : 'pointer',
             background: fait
               ? (isNight ? 'rgba(159,196,232,0.85)' : 'rgba(var(--rgb-terracotta), 0.85)')
-              : (isNight ? 'rgba(10,20,45,0.50)' : 'rgba(255,246,238,0.60)'),
+              : (isNight ? 'rgba(10,20,45,0.50)' : 'rgba(var(--rgb-bulle), 0.60)'),
             border: isNight ? '1.5px solid rgba(180,210,255,0.35)' : '1.5px solid rgba(var(--rgb-terracotta), 0.38)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
@@ -2454,7 +2454,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               style={{
                 flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6,
                 padding:'13px 6px', borderRadius:18, cursor:'pointer',
-                background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(255,246,238,0.62)',
+                background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(var(--rgb-bulle), 0.62)',
                 border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(var(--rgb-terracotta), 0.26)',
                 fontFamily:"'Poppins',system-ui,sans-serif",
               }}
@@ -2588,7 +2588,7 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
               ? "linear-gradient(145deg,rgba(255,175,70,0.36),rgba(245,140,30,0.26))"
               : preset === 'sunset'
                 ? "linear-gradient(145deg,rgba(220,80,30,0.32),rgba(180,50,15,0.22))"
-                : "linear-gradient(145deg,rgba(255,252,242,0.46),rgba(252,240,218,0.32))"}
+                : "linear-gradient(145deg,rgba(var(--rgb-bulle), 0.46),rgba(252,240,218,0.32))"}
           borderRadius={20} blur={10} lightDirection="top-left"
           shadowHoverColor={isNight ? "rgba(100,150,255,0.12)" : "rgba(217,119,6,0.14)"} shadowHoverIntensity={0.7}
           isHoverable={false} style={{ width:'100%' }}
