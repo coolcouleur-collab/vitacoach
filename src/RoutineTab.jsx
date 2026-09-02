@@ -535,7 +535,12 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
             ? "Pour t'engager sur un objectif physique, avec des séances et une progression."
             : vue === 'routine'
               ? "Pour reprendre un rythme sans t'engager sur un programme sportif."
-              : "Pour remettre de l'ordre dans tes repas, sans rien compter."}
+              // Disait mot pour mot ce que dit deja la carte du programme,
+              // quinze lignes plus bas : « Remettre de l'ordre dans les
+              // assiettes, sans rien compter. » Cette phrase decrit l'ONGLET,
+              // qui contient aussi les repas du jour, les idees et la photo,
+              // pas seulement le programme qu'on peut y commencer.
+              : "Tes repas du jour, des idées quand tu sèches, et un programme si tu veux t'y tenir."}
         </div>
       </div>
 
@@ -775,8 +780,14 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 borderRadius: 18, padding: '18px 20px', marginBottom: 14,
                 fontFamily: 'Poppins,sans-serif', fontSize: 13, color: ENCRE, lineHeight: 1.55,
               }}>
-                Tes repas du jour arrivent avec ta routine : génère-la dans l'onglet
-                Routine, et le petit-déjeuner, le déjeuner et le dîner apparaîtront ici.
+                {/* Disait d'aller generer sa routine ailleurs, sans preciser
+                    que la meme page propose deja « Trouve-moi des idees » un
+                    peu plus bas. Deux chemins pour la meme question, dont un
+                    qui demande un detour : la phrase dit maintenant ce qui les
+                    distingue. */}
+                Pour voir ici tes trois repas du jour, génère ta routine dans l'onglet
+                Routine. Si tu cherches juste une idée pour un repas, « Trouve-moi
+                des idées » plus bas répond tout de suite.
               </div>
             )}
 

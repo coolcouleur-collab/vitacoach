@@ -339,6 +339,10 @@ export default function CatalogueProgrammes({
   // Ce qui sera perdu si l'utilisateur commence un programme. Chaine vide ou
   // null quand il n'y a rien en cours : la fiche n'affiche alors rien.
   avertissement = null,
+  // Vrai quand un programme tourne deja. La phrase d'accueil cesse alors de
+  // promettre qu'on peut changer quand on veut : ce serait le contraire de
+  // l'avertissement affiche trois lignes plus haut.
+  remplacement = false,
 }) {
   const [ouvert, setOuvert] = useState(null)
   // Sans famille, le catalogue entier. C'est ce que voit l'ecran de
@@ -385,9 +389,15 @@ export default function CatalogueProgrammes({
                   l'ecran affichait « Un programme, CONSTRUITS a partir de ton
                   profil ». C'est le cas de Nutrition, qui n'en propose qu'un.
                   Les deux versions sont maintenant ecrites en entier. */}
+              {/* « Tu pourras en changer quand tu veux » a ete ecrit pour
+                  quelqu'un qui n'a encore aucun programme. Vrai a
+                  l'inscription, faux ensuite : la page affichait cette
+                  promesse trois lignes sous « sa progression sera perdue ».
+                  Une phrase disait que changer est libre, l'autre que ca
+                  coute tout l'avancement, les deux a l'ecran en meme temps. */}
               {sousTitre || (liste.length === 1
-                ? 'Un programme, construit à partir de ton profil. Tu pourras en changer quand tu veux.'
-                : `${liste.length} programmes, construits à partir de ton profil. Tu pourras en changer quand tu veux.`)}
+                ? `Un programme, construit à partir de ton profil.${remplacement ? '' : ' Tu pourras en changer quand tu veux.'}`
+                : `${liste.length} programmes, construits à partir de ton profil.${remplacement ? '' : ' Tu pourras en changer quand tu veux.'}`)}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>

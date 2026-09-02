@@ -495,6 +495,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         <CatalogueProgrammes
           profil={profil}
           famille={famille}
+          remplacement={ailleurs}
           avertissement={ailleurs
             ? `« ${enCours?.titre || challenge.challenge?.titre} » est en cours dans l'onglet ${FAMILLES[familleEnCours]?.onglet || 'Sport'}. Le commencer ici le remplacera, et sa progression sera perdue.`
             : null}
