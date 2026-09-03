@@ -808,6 +808,26 @@ sections 1 à 10 restent comme journal.
    menstruel**, comme la politique le fait maintenant. Une divergence entre le
    formulaire et la politique est ce que les revues détectent en premier.
 
+## EN ATTENTE : LE PLAN RENDER
+
+La lenteur au premier lancement. Cause **non prouvée**. Render coupe le service
+après quinze minutes sans trafic et le réveil prend trente secondes à une
+minute — c'est plausible, mais je ne l'ai pas mesuré, mes propres tests
+maintenant le serveur éveillé.
+
+Ce qui est certain et déjà corrigé : quatre écrans appelaient le réseau sans
+aucun cache. Programmes et Ta semaine sont réglés. Il reste Tes progrès et la
+progression du programme.
+
+Le protocole qui tranchera, sans rien dépenser : ne pas ouvrir l'app pendant
+vingt minutes, puis aller dans Progrès et compter ; fermer, rouvrir, refaire le
+même chemin et compter. Premier lent puis second instantané = mise en veille,
+et le plan payant est justifié. Les deux lents = autre cause.
+
+Non expliqué à ce jour : la bulle « prépare un petit déj » de l'accueil ne fait
+aucun appel réseau et ses métriques sont déjà en cache. Son délai n'a pas de
+cause visible dans le code.
+
 ## TROIS DÉCISIONS QUI T'APPARTIENNENT
 
 6. **La révocation des jetons** chez Withings, Oura et Garmin à la suppression
