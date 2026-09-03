@@ -829,7 +829,7 @@ const TABLES_UTILISATEUR = [
   // Elle est en TETE de cette liste : si la purge echoue en cours de route,
   // c'est celle-la qu'il faut avoir effacee en premier.
   'integrations_sante',
-  'metriques', 'metriques_integrations',
+  'metriques_integrations',
   'repas', 'user_insights', 'morning_messages',
   'push_subscriptions', 'push_tokens',
 

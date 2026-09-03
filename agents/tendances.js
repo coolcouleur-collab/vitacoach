@@ -35,8 +35,13 @@ async function fetchHistoriqueMetriques(userId, jours = 7) {
   const depuis = new Date()
   depuis.setDate(depuis.getDate() - jours)
 
+  // `metriques` n'existe pas dans la base : verifie le 2026-09-04, la table
+  // repond 404. La table reelle est `user_metrics`, utilisee partout ailleurs
+  // avec les memes colonnes user_id et date. Le nom n'avait jamais ete
+  // propage ici, et l'agent journalisait son erreur avant de rendre null :
+  // les tendances n'ont donc jamais rien produit, en silence.
   const { data, error } = await supabase
-    .from('metriques')
+    .from('user_metrics')
     .select('*')
     .eq('user_id', userId)
     .gte('date', depuis.toISOString().split('T')[0])
