@@ -3126,7 +3126,18 @@ padding: isMobile
         )}
 
         {/* ══ DYNAMIC NAV (mobile) ══ */}
-        {isMobile && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={ambiance} items={navItems} />}
+        {/* La barre du bas DISPARAIT quand le clavier est ouvert.
+            Elle est en position:fixed avec un zIndex de 100, donc elle passait
+            par-dessus la zone de saisie du chat : impossible d'ecrire une
+            reponse a Solenn, sur l'ecran qui est le coeur de l'app (retour Jean,
+            2026-09-04). Le decalage kbOffset remontait bien la barre de saisie,
+            mais rien ne retirait la navigation de son chemin.
+            La cacher est aussi ce qu'il faut faire en soi : pendant qu'on ecrit,
+            on n'a pas besoin de quatre destinations sous le pouce, on a besoin
+            de place. Meme raisonnement que la seance de respiration.
+            Le test porte sur le clavier et non sur l'onglet : le meme
+            recouvrement guettait toutes les autres zones de saisie. */}
+        {isMobile && kbOffset === 0 && <DynamicNav onglet={onglet} setOnglet={setOnglet} forumUnread={forumUnread} F={F} preset={ambiance} items={navItems} />}
       </main>
 
       {/* Celebration overlay */}
