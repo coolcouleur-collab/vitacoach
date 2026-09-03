@@ -1956,12 +1956,12 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
         display:'flex', alignItems:'center', gap:13,
         padding:'7px 12px', minHeight:44, borderRadius:12, cursor:'pointer',
         background: t.isDone
-          ? `linear-gradient(135deg, ${t.color}40 0%, ${t.color}22 100%)`
-          : `linear-gradient(135deg, ${t.color}55 0%, ${t.color}35 60%, ${t.color}20 100%)`,
+          ? `linear-gradient(135deg, ${`rgba(${t.trame}, 0.251)`} 0%, ${`rgba(${t.trame}, 0.133)`} 100%)`
+          : `linear-gradient(135deg, ${`rgba(${t.trame}, 0.333)`} 0%, ${`rgba(${t.trame}, 0.208)`} 60%, ${`rgba(${t.trame}, 0.125)`} 100%)`,
         border:`1.5px solid ${t.isDone ? t.color+'55' : t.color+'88'}`,
         boxShadow: t.isDone
           ? '0 2px 8px rgba(0,0,0,0.08)'
-          : `0 6px 22px ${t.color}38, 0 2px 8px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.50)`,
+          : `0 6px 22px ${`rgba(${t.trame}, 0.220)`}, 0 2px 8px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.50)`,
         opacity: t.isDone ? 0.65 : 1,
         transition:'all 0.28s cubic-bezier(0.34,1.56,0.64,1)',
       }}
@@ -1971,12 +1971,12 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
         <div style={{
           width:32, height:32, borderRadius:8, flexShrink:0,
           background: t.isDone
-            ? `linear-gradient(135deg,${t.color},${t.color}cc)`
-            : `linear-gradient(135deg, ${t.color}35, ${t.color}20)`,
-          border:`1px solid ${t.color}${t.isDone ? '55' : '45'}`,
+            ? `linear-gradient(135deg,${t.color},${`rgba(${t.trame}, 0.8)`})`
+            : `linear-gradient(135deg, ${`rgba(${t.trame}, 0.208)`}, ${`rgba(${t.trame}, 0.125)`})`,
+          border:`1px solid rgba(${t.trame}, ${t.isDone ? 0.333 : 0.271})`,
           display:'flex', alignItems:'center', justifyContent:'center',
           fontSize:17, lineHeight:1,
-          boxShadow: t.isDone ? `0 4px 12px ${t.color}40` : `0 4px 12px ${t.color}30`,
+          boxShadow: t.isDone ? `0 4px 12px ${`rgba(${t.trame}, 0.251)`}` : `0 4px 12px ${`rgba(${t.trame}, 0.188)`}`,
           transition:'all 0.25s cubic-bezier(0.34,1.56,0.64,1)',
         }}>
           {t.isDone
@@ -2000,7 +2000,7 @@ function DailyTaskItem({ t, i, onToggle, isNight = false, preset = 'day' }) {
 
       {/* Badge progression ou flèche */}
       {t.auto && t.current > 0
-        ? <div style={{ fontSize:10, fontWeight:500, color:t.color, background:`${t.color}15`, padding:'3px 8px', borderRadius:8, flexShrink:0 }}>
+        ? <div style={{ fontSize:10, fontWeight:500, color:t.color, background:`${`rgba(${t.trame}, 0.082)`}`, padding:'3px 8px', borderRadius:8, flexShrink:0 }}>
             {t.fmt(t.current)}
           </div>
         : <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
@@ -2023,43 +2023,43 @@ function generateDailyTasks(profil, metriques) {
   const objectif = profil?.objectifs?.[0] || ''
   const tasks = [
     {
-      id:'eau', Icon: WaterIcon, color:ICONE,
+      id:'eau', Icon: WaterIcon, color:ICONE, trame:'var(--rgb-icone)',
       title:'Hydratation du jour',
       detail:'Objectif : 8 verres d\'eau',
       goal:8, auto:true, fmt: v => `${v}/8 verres`,
     },
     {
-      id:'pas', Icon: WalkIcon, color:ICONE,
+      id:'pas', Icon: WalkIcon, color:ICONE, trame:'var(--rgb-icone)',
       title:'Marche active',
       detail:'10 000 pas pour activer ton métabolisme',
       goal:10000, auto:true, fmt: v => v>=1000 ? `${Math.round(v/1000)}k/10k pas` : `${v}/10k pas`,
     },
     h < 14 ? {
-      id:'matin', Icon: SunIcon, color:ICONE,
+      id:'matin', Icon: SunIcon, color:ICONE, trame:'var(--rgb-icone)',
       title:'Démarrage matinal',
       detail: profil?.reveil ? `Levé à ${profil.reveil}, 15 min de lumière naturelle` : '15 min de lumière naturelle ce matin',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     } : {
-      id:'soir', Icon: MoonIcon, color:ICONE,
+      id:'soir', Icon: MoonIcon, color:ICONE, trame:'var(--rgb-icone)',
       title:'Prépare ton sommeil',
       detail: profil?.coucher ? `Écrans off 30 min avant ${profil.coucher}` : 'Écrans éteints 30 min avant dormir',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'nutrition', Icon: FoodIcon, color: VERT,
+      id:'nutrition', Icon: FoodIcon, color:VERT, trame:'var(--rgb-vert)',
       title: regime === 'végétarien' ? 'Protéines végétales' : regime === 'vegan' ? 'Équilibre vegan' : regime === 'sans gluten' ? 'Repas sans gluten' : 'Repas équilibrés',
       detail:'3 repas / légumes · protéines · glucides lents',
       goal:3, auto:false, fmt: v => `${v}/3 repas`,
     },
     {
       id:'sport', Icon: niveau==='avancé' ? MuscleIcon : niveau==='intermédiaire' ? BikeIcon : WalkIcon,
-      color:ICONE,
+      color:ICONE, trame:'var(--rgb-icone)',
       title: niveau==='avancé' ? 'Session entraînement' : niveau==='intermédiaire' ? 'Cardio 30 min' : 'Mouvement doux',
       detail: niveau==='avancé' ? '45-60 min d\'effort physique' : niveau==='intermédiaire' ? 'Cardio modéré + échauffement' : '20-30 min de stretching ou marche',
       goal:1, auto:false, fmt: v => v ? 'Fait !' : 'À faire',
     },
     {
-      id:'objectif', Icon: TargetIcon, color:ICONE,
+      id:'objectif', Icon: TargetIcon, color:ICONE, trame:'var(--rgb-icone)',
       title: objectif || 'Ton objectif du jour',
       detail: objectif ? `Un pas de plus vers « ${objectif} »` : 'Avance d\'un pas vers ton grand objectif',
       goal:1, auto:false, fmt: v => v ? 'Accompli !' : 'En cours',

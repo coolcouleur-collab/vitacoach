@@ -2981,7 +2981,7 @@ padding: isMobile
                       <SolennFace size={30} />
                     </div>
                     <div style={{ padding:'10px 6px', display:'flex', alignItems:'center' }}>
-                      <GlowLoader count={5} size={6} color={ICONE} glowStyle="soft" speed={1.1} gap={5} />
+                      <GlowLoader count={5} size={6} color={ICONE} trame="var(--rgb-icone)" glowStyle="soft" speed={1.1} gap={5} />
                     </div>
                   </div>
                 )}
@@ -3405,54 +3405,6 @@ function NutritionCard({ nutrition }) {
           <span style={{display:'flex',alignItems:'center',gap:4}}><PillIcon size={13} color="#22c55e" />{nutrition.supplements.join(' · ')}</span>
         </div>
       )}
-    </div>
-  )
-}
-
-function RoutineSection({ id, icon, iconEl, titre, heure, etapes, accent, checked, onToggle }) {
-  const doneCount = etapes?.filter((_, i) => checked[`${id}_${i}`]).length || 0
-  const total = etapes?.length || 0
-  return (
-    <div style={{
-      ...sr.card,
-      background: `linear-gradient(145deg, ${accent}09, rgba(var(--rgb-bulle), 0.60))`,
-      border: `1px solid ${accent}22`,
-    }}>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <span style={{ fontSize:18, display:'flex', alignItems:'center' }}>{iconEl || icon}</span>
-          <div>
-            <div style={{ ...sr.cardTitre, color: accent, fontWeight:600, fontSize:13 }}>{titre}</div>
-            {heure && <div style={{ fontSize:10, color:`${accent}70`, marginTop:1 }}>{heure}</div>}
-          </div>
-        </div>
-        {total > 0 && (
-          <div style={{ fontSize:10, color: doneCount===total ? accent : `${accent}60`, fontWeight:500,
-            background: doneCount===total ? accent+'15' : `${accent}08`, padding:'2px 8px', borderRadius:12 }}>
-            {doneCount}/{total}
-          </div>
-        )}
-      </div>
-      {etapes?.map((e, i) => {
-        const done = checked[`${id}_${i}`]
-        return (
-          <div key={i} style={{ ...sr.etapeRow, opacity: done ? 0.50 : 1 }} onClick={() => onToggle(`${id}_${i}`)}>
-            <div style={{ width:22, height:22, borderRadius:7, flexShrink:0, cursor:'pointer',
-              border: `1.5px solid ${done ? accent : accent+'30'}`,
-              background: done ? accent+'18' : 'rgba(var(--rgb-bulle), 0.60)',
-              display:'flex', alignItems:'center', justifyContent:'center' }}>
-              {done && <span style={{ fontSize:11, color:accent }}>✓</span>}
-            </div>
-            <span style={{ minWidth:26, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill={ICONE} fillOpacity="0.65"/></svg>
-            </span>
-            <div>
-              <div style={{ fontWeight:500, fontSize:13, color:ENCRE, textDecoration: done ? 'line-through' : 'none' }}>{e.action || e.titre}</div>
-              <div style={{ fontSize:11, color:ENCRE, marginTop:2 }}>{e.detail || e.description}</div>
-            </div>
-          </div>
-        )
-      })}
     </div>
   )
 }

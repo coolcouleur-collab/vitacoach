@@ -426,7 +426,7 @@ function CinematicSlider({ onCommencer }) {
             width: `${((cur + 1) / N) * 100}%`,
             background: `linear-gradient(90deg,${SLIDE.color},${SLIDE.accent})`,
             transition: 'width 0.65s cubic-bezier(0.76,0,0.24,1), background 0.4s',
-            boxShadow: `0 0 8px ${SLIDE.accent}80`,
+            boxShadow: `0 0 8px rgba(var(--rgb-or), 0.502)`,
           }} />
         </div>
       </div>

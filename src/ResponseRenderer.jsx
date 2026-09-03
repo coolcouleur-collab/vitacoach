@@ -20,6 +20,26 @@ function parseRich(text) {
   } catch { return null }
 }
 
+// ─── OPACITE SUR UNE COULEUR ───────────────────────────────────────────────
+// Une opacite ne se concatene pas a un jeton de theme : `var(--accent)28` n'est
+// pas une couleur, et le navigateur ignore la declaration entiere. Trois des six
+// types de cartes ci-dessous utilisent un jeton ; leurs bordures et leurs ombres
+// ne s'affichaient donc pas du tout, alors que les trois autres, ecrites en
+// hexadecimal, les affichaient. Le chat melangeait deux styles de carte sans
+// raison visible, et c'est le type le plus frequent qui perdait son contour.
+//
+// color-mix() reglerait le cas en une ligne, mais demande Safari 16.2 et l'app
+// cible iOS 15. On convertit donc en triplet RGB, ce qui marche partout.
+const RGB_DEFAUT = 'var(--rgb-terracotta)'   // la valeur exacte de --accent
+const enTriplet = c => {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(c || '').trim())
+  if (!m) return RGB_DEFAUT                  // un jeton var(--x) retombe ici
+  const h = m[1].length === 3 ? m[1].replace(/./g, d => d + d) : m[1]
+  const n = parseInt(h, 16)
+  return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`
+}
+const opa = (rgb, a) => `rgba(${rgb}, ${a})`
+
 // ─── Type config ──────────────────────────────────────────────────────────────
 const TYPES = {
   meals:     { accent:'var(--accent)', labelEl:<><FoodIcon size={13} color={ICONE} /> Repas</>,      gradient:'rgba(var(--rgb-verre), 0.32)' },
@@ -179,6 +199,7 @@ function BookingCard({ data }) {
 function RichCard({ item, accent, index }) {
   const [pressed, setPressed] = useState(false)
   const color = item.color || accent
+  const rgb   = enTriplet(color)
 
   return (
     <div
@@ -186,13 +207,13 @@ function RichCard({ item, accent, index }) {
         position:'relative',
         background:'rgba(255,255,255,0.20)',
         backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-        border:`1px solid ${color}28`,
-        borderLeft:`3px solid ${color}99`,
+        border:`1px solid ${opa(rgb, 0.157)}`,
+        borderLeft:`3px solid ${opa(rgb, 0.6)}`,
         borderRadius:18,
         padding:'14px 16px',
         display:'flex', gap:12, alignItems:'flex-start',
         transform: pressed ? 'scale(0.97)' : 'scale(1)',
-        boxShadow:`0 4px 16px ${color}12, inset 0 1px 0 rgba(255,255,255,0.6)`,
+        boxShadow:`0 4px 16px ${opa(rgb, 0.071)}, inset 0 1px 0 rgba(255,255,255,0.6)`,
         transition:'transform 0.15s ease',
         animation:`slideUp 0.3s ${index * 0.06}s ease both`,
         overflow:'hidden',
@@ -207,9 +228,9 @@ function RichCard({ item, accent, index }) {
       <div style={{
         width:42, height:42, borderRadius:14, flexShrink:0,
         background:`rgba(255,255,255,0.30)`,
-        border:`1px solid ${color}30`,
+        border:`1px solid ${opa(rgb, 0.188)}`,
         display:'flex', alignItems:'center', justifyContent:'center', fontSize:20,
-        boxShadow:`0 3px 10px ${color}20`,
+        boxShadow:`0 3px 10px ${opa(rgb, 0.125)}`,
       }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M5 12h14M13 6l6 6-6 6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -219,16 +240,16 @@ function RichCard({ item, accent, index }) {
       {/* Text */}
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap', marginBottom:4 }}>
-          <span style={{ fontSize:13, fontWeight:700, color:`${color}dd`, lineHeight:1.25 }}>{item.title}</span>
+          <span style={{ fontSize:13, fontWeight:700, color:`${opa(rgb, 0.867)}`, lineHeight:1.25 }}>{item.title}</span>
           {item.badge && (
-            <span style={{ fontSize:10, fontWeight:600, color:`${color}cc`, background:`${color}15`, border:`1px solid ${color}22`, borderRadius:7, padding:'2px 8px', flexShrink:0 }}>
+            <span style={{ fontSize:10, fontWeight:600, color:`${opa(rgb, 0.8)}`, background:`${opa(rgb, 0.082)}`, border:`1px solid ${opa(rgb, 0.133)}`, borderRadius:7, padding:'2px 8px', flexShrink:0 }}>
               {item.badge}
             </span>
           )}
         </div>
         {item.desc && <div style={{ fontSize:12, color:ENCRE, lineHeight:1.6, marginBottom:item.sub ? 5 : 0 }}>{item.desc}</div>}
         {item.sub && (
-          <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:`${color}cc`, fontWeight:600, background:`${color}12`, borderRadius:6, padding:'3px 8px' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:11, color:`${opa(rgb, 0.8)}`, fontWeight:600, background:`${opa(rgb, 0.071)}`, borderRadius:6, padding:'3px 8px' }}>
             {item.sub}
           </div>
         )}
@@ -241,8 +262,8 @@ function RichCard({ item, accent, index }) {
 function TypeHeader({ cfg, count }) {
   return (
     <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14, animation:'fadeIn 0.3s ease both' }}>
-      <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:`1px solid ${cfg.accent}30`, borderRadius:20, padding:'7px 16px' }}>
-        <span style={{ fontSize:13, fontWeight:700, color:`${cfg.accent}dd`, letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:`1px solid ${opa(enTriplet(cfg.accent), 0.188)}`, borderRadius:20, padding:'7px 16px' }}>
+        <span style={{ fontSize:13, fontWeight:700, color:`${opa(enTriplet(cfg.accent), 0.867)}`, letterSpacing:'0.2px', display:'flex', alignItems:'center', gap:6 }}>{cfg.labelEl || cfg.label}</span>
       </div>
       {count > 0 && <span style={{ fontSize:11, color:'rgba(var(--rgb-sourdine), 0.55)', fontWeight:600 }}>{count} suggestion{count > 1 ? 's' : ''}</span>}
     </div>
@@ -316,7 +337,7 @@ export default function ResponseRenderer({ content }) {
       {items.length > 0 && <TypeHeader cfg={cfg} count={items.length} />}
 
       {data.intro && (
-        <p style={{ margin:'0 0 14px', fontSize:13, color:ENCRE, lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${cfg.accent}66`, borderRadius:'0 12px 12px 0', border:`1px solid ${cfg.accent}18`, animation:'fadeIn 0.3s ease both' }}>
+        <p style={{ margin:'0 0 14px', fontSize:13, color:ENCRE, lineHeight:1.6, padding:'10px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderLeft:`3px solid ${opa(enTriplet(cfg.accent), 0.4)}`, borderRadius:'0 12px 12px 0', border:`1px solid ${opa(enTriplet(cfg.accent), 0.094)}`, animation:'fadeIn 0.3s ease both' }}>
           {data.intro}
         </p>
       )}
@@ -328,8 +349,8 @@ export default function ResponseRenderer({ content }) {
       )}
 
       {data.outro && (
-        <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'11px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', border:`1px solid ${cfg.accent}20`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
-          <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={15} color={`${cfg.accent}99`} /></span>
+        <div style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'11px 14px', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', border:`1px solid ${opa(enTriplet(cfg.accent), 0.125)}`, borderRadius:14, animation:'fadeIn 0.4s ease both' }}>
+          <span style={{ display:'flex', flexShrink:0 }}><ChatIcon size={15} color={`${opa(enTriplet(cfg.accent), 0.6)}`} /></span>
           <span style={{ fontSize:12, color:ENCRE, lineHeight:1.6 }}>{data.outro}</span>
         </div>
       )}

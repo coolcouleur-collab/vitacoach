@@ -6,13 +6,17 @@
  *
  * Props (compatibles avec l'ancien composant, les props dots sont ignorées) :
  *   size     {number}  Diamètre du soleil en px (défaut 34)
- *   color    {string}  Couleur principale (défaut copper var(--accent))
+ *   color    {string}  Couleur PLEINE de la bille (defaut var(--accent))
+ *   trame    {string}  La meme en triplet RGB, pour les halos. Une opacite ne
+ *                      se concatene pas a un jeton : `var(--accent)44` n'est
+ *                      pas une couleur et le halo ne s'affichait pas du tout.
  *   fullPage {boolean} Overlay plein écran centré
  */
 
 export default function GlowLoader({
   size = 34,
   color = 'var(--accent)',
+  trame = 'var(--rgb-terracotta)',
   fullPage = false,
 }) {
   const halo = size * 2.4
@@ -39,14 +43,14 @@ export default function GlowLoader({
         {/* Halo extérieur */}
         <div className="solenn-loader-halo" style={{
           position: 'absolute', inset: 0, borderRadius: '50%',
-          background: `radial-gradient(circle, ${color}44 0%, ${color}1a 45%, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(${trame}, 0.267) 0%, rgba(${trame}, 0.102) 45%, transparent 70%)`,
           animation: 'solennHalo 2.4s ease-in-out infinite',
         }} />
         {/* Cœur du soleil */}
         <div className="solenn-loader-core" style={{
           width: size, height: size, borderRadius: '50%',
           background: `radial-gradient(circle at 38% 34%, var(--creme-milieu) 0%, var(--or-plein) 55%, ${color} 100%)`,
-          boxShadow: `0 0 ${size * 0.7}px ${color}55`,
+          boxShadow: `0 0 ${size * 0.7}px rgba(${trame}, 0.333)`,
           animation: 'solennBreath 2.4s ease-in-out infinite',
         }} />
       </div>
