@@ -3385,7 +3385,7 @@ const sr = {
 // images, mais des vêtements posés à plat, pas des photoshoots de personnes).
 // Requête biaisée « flat lay clothing » ; si l'image manque, la carte reste
 // belle avec l'icône. Skeleton clair (fini le fond sombre).
-function TenueCard({ tenue, style: extraStyle }) {
+function TenueCard({ tenue, style: extraStyle, mesureRef, profil }) {
   const [imgSrc, setImgSrc] = useState(null)
   const [imgState, setImgState] = useState('loading') // loading | ok | ko
   // Unsplash impose de créditer le photographe quand on affiche ses photos
@@ -3394,14 +3394,29 @@ function TenueCard({ tenue, style: extraStyle }) {
   useEffect(() => {
     if (tenue.imageUrl) { setImgSrc(tenue.imageUrl); setImgState('ok'); return }
     const base = tenue.searchQuery || tenue.imagePrompt || tenue.titre || ''
-    // « flat lay » force les photos de vêtements posés, sans mannequin
-    const q = `flat lay clothing outfit ${base}`
-    const alt = `flat lay fashion clothes ${tenue.searchQueryAlt || ''}`.trim()
+    // Le prefixe « flat lay » (vetements poses, sans mannequin) a ete retire :
+    // le serveur, lui, construit une requete « ootd full body street style ».
+    // Les deux se contredisaient dans la meme chaine, et c'est le genre de
+    // requete qui rend n'importe quoi (constat 2026-09-03).
+    const q = base
+    const alt = (tenue.searchQueryAlt || '').trim()
     // Le SEXE declare part avec la requete. Le serveur forcait « woman » en
     // dur : un homme recevait des tenues feminines, alors que Solenn s'adresse
     // aux deux. Et le retirer sans rien mettre a la place aurait rendu les
     // suggestions generiques, ce qui n'est pas mieux : Jean veut du sur mesure.
-    fetch(`/api/image?prompt=${encodeURIComponent(q)}&alt=${encodeURIComponent(alt)}&sexe=${encodeURIComponent(profil?.sexe || 'nsp')}`)
+    // `profil` n'etait pas dans la portee de ce composant : il est declare dans
+    // le composant racine et CapsuleSlider ne le transmettait pas. La ligne
+    // levait donc une ReferenceError, et le sexe n'a jamais pu partir avec la
+    // requete alors que Solenn se veut sur mesure. Le titre et la piece
+    // maitresse manquaient aussi : le serveur les lit, personne ne les envoyait.
+    const params = new URLSearchParams({
+      prompt: q,
+      alt,
+      titre: tenue.titre || '',
+      piece: tenue.pieceCle || '',
+      sexe: profil?.sexe || 'nsp',
+    })
+    fetch(`/api/image?${params}`)
       .then(r => r.json())
       .then(d => {
         if (d.url) { setImgSrc(d.url); setImgState('ok'); setCredit(d.credit || null) }
@@ -3499,7 +3514,7 @@ function TenueCard({ tenue, style: extraStyle }) {
 }
 
 // Skeleton card shown while tenues are loading
-function SkeletonCard({ style: extraStyle }) {
+function SkeletonCard({ style: extraStyle , mesureRef }) {
   return (
     <div style={{
       width: 280,
@@ -3535,10 +3550,32 @@ function SkeletonCard({ style: extraStyle }) {
   )
 }
 
-function CapsuleSlider({ tenues, loading }) {
+function CapsuleSlider({ tenues, loading, profil }) {
   const [active, setActive] = useState(0)
   const touchStartX = useRef(null)
   const containerRef = useRef(null)
+
+  // La scene etait haute de 480 px en dur, quelles que soient les cartes, qui
+  // sont en position absolue dedans et ne peuvent donc pas la dimensionner.
+  // Une fiche courte laissait un grand vide au bas de la page ; une fiche
+  // longue debordait sous la barre de navigation, ou les fleches se cachaient
+  // (captures Jean 2026-09-03). La scene suit maintenant la carte affichee.
+  // Les 36 px ajoutes sont le decalage des deux cartes qui depassent derriere
+  // (18 px par rang), sinon leur bas serait coupe.
+  const carteRef = useRef(null)
+  const [hauteur, setHauteur] = useState(480)
+  useEffect(() => {
+    const el = carteRef.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const mesurer = () => setHauteur(h => {
+      const n = el.offsetHeight + 36
+      return Math.abs(n - h) < 2 ? h : n      // evite une boucle de rendu
+    })
+    mesurer()
+    const ro = new ResizeObserver(mesurer)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [active, tenues, loading])
   const count = loading ? 6 : tenues.length
   const clamp = v => Math.max(0, Math.min(count - 1, v))
 
@@ -3566,7 +3603,8 @@ function CapsuleSlider({ tenues, loading }) {
         style={{
           position: 'relative',
           width: '100%',
-          height: 480,
+          height: hauteur,
+          transition: 'height 0.35s cubic-bezier(.4,0,.2,1)',
           perspective: '900px',
           overflow: 'visible',
         }}
@@ -3594,12 +3632,14 @@ function CapsuleSlider({ tenues, loading }) {
             cursor: abs === 0 ? 'default' : 'pointer',
           }
 
-          if (loading) return <SkeletonCard key={i} style={cardStyle} />
+          if (loading) return <SkeletonCard key={i} style={cardStyle} mesureRef={abs === 0 ? carteRef : undefined} />
           return (
             <TenueCard
               key={i}
               tenue={tenues[i]}
               style={cardStyle}
+              mesureRef={abs === 0 ? carteRef : undefined}
+              profil={profil}
             />
           )
         })}
@@ -3747,7 +3787,10 @@ function TenuesModule({ profil }) {
   }
 
   return (
-    <div style={{ paddingBottom: 20, boxSizing:'border-box', width:'100%' }}>
+    // Plus de paddingBottom ici : la page qui contient ce module reserve deja
+    // 120 px pour la barre du bas, ce qui correspond a ce qu'elle occupe
+    // (safe-area + 68). Les 20 px s'ajoutaient par-dessus.
+    <div style={{ boxSizing:'border-box', width:'100%' }}>
       <style>{`
   .tenues-ville-input { border: 1px solid rgba(var(--rgb-creme-dore), 0.35) !important; box-shadow: none !important; }
   .tenues-ville-input:focus { border-color: rgba(var(--rgb-terracotta), 0.50) !important; box-shadow: 0 0 0 3px rgba(var(--rgb-terracotta), 0.10) !important; outline: none !important; }
@@ -3834,7 +3877,7 @@ function TenuesModule({ profil }) {
       {/* Capsule Slider, hors du panel pour ne pas être rogné par les bords */}
       {(loading || tenues.length > 0) && (
         <div style={{ marginTop: 20 }}>
-          <CapsuleSlider tenues={tenues} loading={loading} />
+          <CapsuleSlider tenues={tenues} loading={loading} profil={profil} />
         </div>
       )}
     </div>

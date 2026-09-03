@@ -56,6 +56,45 @@ try {
 }
 
 // Stockage en mémoire des subscriptions (remplacer par DB en prod)
+// ─────────────────────────────────────────────────────────────────────────────
+// DESECHAPPER LE TEXTE DU MODELE
+//
+// Le modele renvoie du JSON, mais il lui arrive d'echapper en HTML ce qu'il
+// ecrit dedans. Repere sur la marque « & Other Stories », affichee telle
+// quelle « &amp; Other Stories » dans une fiche tenue (capture Jean
+// 2026-09-03). React affiche le texte litteralement, a juste titre : c'est au
+// producteur du texte de le rendre propre, pas a l'affichage de deviner.
+//
+// On ne traite que les entites nommees courantes plus les numeriques. Pas de
+// bibliotheque : le texte vient d'un modele, pas d'une page web, et une table
+// complete serait du poids pour rien.
+// ─────────────────────────────────────────────────────────────────────────────
+const ENTITES = {
+  amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", nbsp:' ', eacute:'é', egrave:'è',
+  ecirc:'ê', agrave:'à', ccedil:'ç', ugrave:'ù', ocirc:'ô', icirc:'î', hellip:'…',
+  laquo:'«', raquo:'»', rsquo:'’', deg:'°', euro:'€', times:'×',
+}
+function desechapper(v) {
+  if (typeof v === 'string') {
+    return v.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (tout, corps) => {
+      if (corps[0] === '#') {
+        const n = corps[1] === 'x' || corps[1] === 'X'
+          ? parseInt(corps.slice(2), 16) : parseInt(corps.slice(1), 10)
+        return Number.isFinite(n) && n > 0 && n <= 0x10FFFF ? String.fromCodePoint(n) : tout
+      }
+      const c = ENTITES[corps.toLowerCase()]
+      return c === undefined ? tout : c
+    })
+  }
+  if (Array.isArray(v)) return v.map(desechapper)
+  if (v && typeof v === 'object') {
+    const o = {}
+    for (const k of Object.keys(v)) o[k] = desechapper(v[k])
+    return o
+  }
+  return v
+}
+
 const pushSubscriptions = new Map()
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -484,7 +523,8 @@ Propose 6 tenues. Réponds UNIQUEMENT en JSON valide :
       "titre": "Nom tendance de la tenue",
       "description": "3 pièces max séparées par ' · ' : ex: Manteau crème · Jean slim · Sneakers blanches",
       "pourquoi": "1 phrase courte sur l'adaptation météo/occasion",
-      "imagePrompt": "[style_keyword] [outfit_keyword1] [outfit_keyword2] street fashion editorial photography"
+      "imagePrompt": "[style_keyword] [outfit_keyword1] [outfit_keyword2] street fashion editorial photography",
+      "pieceCle": "EN ANGLAIS, le vetement principal et sa couleur, 2 a 4 mots, rien d'autre. Ex: 'green cropped blazer', 'cream linen midi dress', 'navy wool coat'. JAMAIS un accessoire (sac, lunettes, ceinture, bijoux) : ils donnent des gros plans d'objet au lieu d'une tenue portee."
     }
   ]
 }`
@@ -501,7 +541,7 @@ Propose 6 tenues. Réponds UNIQUEMENT en JSON valide :
     const text = response.choices[0].message.content
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     const data = JSON.parse(jsonMatch[0])
-    res.json({ tenues: data.tenues, meteo: meteoDisplay || meteo })
+    res.json({ tenues: desechapper(data.tenues), meteo: meteoDisplay || meteo })
   } catch {
     res.json({ tenues: [], meteo: meteoDisplay || meteo, erreur: 'Erreur de parsing' })
   }
@@ -538,37 +578,65 @@ app.get('/api/image', async (req, res) => {
   // des tenues feminines. On suit le profil, et on ne suppose rien quand il
   // n'est pas renseigne (regle posee par Jean : Solenn s'adresse aux hommes
   // ET aux femmes).
+  const rawPiece = req.query.piece || ''
   const sexe = req.query.sexe || 'nsp'
   const QUI = sexe === 'homme' ? 'man ' : sexe === 'femme' ? 'woman ' : ''
 
   // ── Construire la requête à partir des pièces réelles de la tenue ────────────
   // Priorité : imagePrompt (contient les vêtements concrets) > titre (style)
-  function styleToQuery(titre, imagePrompt) {
-    // 1. Extraire les mots-clés vêtements/couleurs du imagePrompt
-    const stopWords = new Set([
-      'street','fashion','editorial','photography','outfit','style','photo',
-      'woman','man','wearing','with','and','the','for','full','body','shot',
-      'professional','white','background','look','chic','elegant'
-    ])
-    const colors = new Set(['black','white','beige','grey','gray','brown','navy','cream',
-      'camel','olive','khaki','burgundy','red','blue','green','yellow','pink','orange'])
+  // ── De la tenue a la requete image ──────────────────────────────────────────
+  //
+  // L'ancienne version prenait les QUATRE PREMIERS mots du imagePrompt une fois
+  // les mots vides retires, sans regarder ce qu'ils designaient. Une tenue dont
+  // la description commencait par un accessoire donnait donc une requete
+  // centree sur cet accessoire, et Pexels rendait un gros plan de sac ou de
+  // chaussures au lieu d'une silhouette (constat Jean 2026-09-03, la fiche
+  // « Quiet Luxe Cream » montrait une robe cadree a la taille).
+  //
+  // Deux corrections : on ne garde que des mots qu'on reconnait comme vetement
+  // ou couleur, et on ecarte explicitement les accessoires, qui sont la cause
+  // directe des gros plans. La liste `colors` existait deja mais n'etait
+  // utilisee nulle part.
+  const VETEMENTS = new Set([
+    'dress','blazer','coat','jacket','trench','parka','cardigan','sweater','jumper',
+    'hoodie','shirt','blouse','tshirt','tee','top','knit','turtleneck','vest',
+    'jeans','denim','trousers','pants','chinos','skirt','shorts','jumpsuit',
+    'suit','overcoat','raincoat','windbreaker','poncho','kimono','tunic','romper',
+    'sneakers','boots','loafers','heels','sandals','flats','mocassins','derbies',
+    'linen','wool','cotton','leather','silk','cashmere','tweed','satin','corduroy',
+    'midi','maxi','mini','cropped','oversized','tailored','pleated','straight','slim',
+  ])
+  const ACCESSOIRES = new Set([
+    'bag','handbag','purse','clutch','tote','backpack','belt','scarf','hat','cap',
+    'sunglasses','glasses','jewelry','jewellery','necklace','earrings','bracelet',
+    'watch','ring','gloves','socks','tights','umbrella','wallet',
+  ])
+  const COULEURS = new Set([
+    'black','white','beige','grey','gray','brown','navy','cream','ivory','ecru',
+    'camel','olive','khaki','burgundy','red','blue','green','yellow','pink',
+    'orange','purple','taupe','sand','charcoal','pastel',
+  ])
 
-    const words = (imagePrompt || '')
-      .toLowerCase()
-      .replace(/[^a-z\s]/g, ' ')
-      .split(/\s+/)
-      .filter(w => w.length > 2 && !stopWords.has(w))
+  function motsUtiles(texte) {
+    return (texte || '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/)
+      .filter(m => m.length > 2 && !ACCESSOIRES.has(m) && (VETEMENTS.has(m) || COULEURS.has(m)))
+  }
 
-    // Garder couleurs + items de vêtements (mots substantiels hors style générique)
-    const clothingItems = words.slice(0, 6)
-
-    if (clothingItems.length >= 2) {
-      // "ootd" (outfit of the day) force Unsplash à retourner des photos
-      // de personnes en pied — évite les close-ups de sacs/accessoires
-      return `${QUI}${clothingItems.slice(0,4).join(' ')} ootd full body street style`
+  function styleToQuery(titre, imagePrompt, pieceCle) {
+    // 1. La piece maitresse, quand le modele l'a donnee : c'est la source la
+    //    plus sure, elle est deja en anglais et deja centree sur un vetement.
+    const cle = motsUtiles(pieceCle)
+    if (cle.length >= 1) {
+      return `${QUI}${[...new Set(cle)].slice(0, 4).join(' ')} ootd full body street style`
     }
 
-    // 2. Fallback sur le titre si imagePrompt trop vague
+    // 2. Sinon, ce qu'on reconnait dans le imagePrompt.
+    const trouves = [...new Set(motsUtiles(imagePrompt))]
+    if (trouves.length >= 2) {
+      return `${QUI}${trouves.slice(0, 4).join(' ')} ootd full body street style`
+    }
+
+    // 3. Sinon le titre, qui porte au moins le style.
     const t = (titre || '').toLowerCase()
     if (t.match(/quiet.?luxury|luxe/))       return QUI + 'luxury minimal coat ootd full body street style'
     if (t.match(/streetwear|street/))         return QUI + 'streetwear urban ootd full body street photography'
@@ -579,18 +647,17 @@ app.get('/api/image', async (req, res) => {
     if (t.match(/minimal/))                   return QUI + 'minimalist clean ootd full body street style'
     if (t.match(/casual/))                    return QUI + 'casual chic ootd full body effortless street style'
     if (t.match(/vintage|retro/))             return QUI + 'vintage retro ootd full body fashion'
-    if (t.match(/trench|imperméable/))        return QUI + 'trench coat ootd full body rainy street style'
+    if (t.match(/trench|imperm/))             return QUI + 'trench coat ootd full body rainy street style'
     return QUI + 'fashion ootd full body street style trendy outfit'
   }
 
-  // ── Source 1 : Unsplash (qualité éditoriale, pas de clé requise) ───────────
+  // ── Repli ───────────────────────────────────────────────────────────────────
+  // Ici vivait source.unsplash.com. Unsplash a retire ce service : il repond
+  // 503 sur toutes les requetes (verifie le 2026-09-03). Chaque appel attendait
+  // donc six secondes pour rien avant de tomber sur le repli suivant, et
+  // c'etait le chemin pris a chaque fois que Pexels ne rendait rien.
   async function unsplashUrl(prompt, lock, titre) {
-    const query = styleToQuery(titre, prompt)
-    // sig unique par carte → image différente garantie
-    const seed = (lock * 137 + 42) % 9999
-    const url = `https://source.unsplash.com/400x560/?${encodeURIComponent(query)}&sig=${seed}`
-    const resp = await axios.get(url, { timeout: 6000, maxRedirects: 5 })
-    return resp.request?.res?.responseUrl || resp.config?.url || url
+    return loremFlickrUrl(prompt, lock)
   }
 
   // ── Fallback keywords basiques ─────────────────────────────────────────────
@@ -618,10 +685,10 @@ app.get('/api/image', async (req, res) => {
   }
 
   try {
-    const query = styleToQuery(rawTitre, rawPrompt)
+    const query = styleToQuery(rawTitre, rawPrompt, rawPiece)
     console.log('🔍 Recherche Pexels:', query)
     const response = await axios.get(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&orientation=portrait`,
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=40&orientation=portrait`,
       { headers: { Authorization: process.env.PEXELS_API_KEY }, timeout: 8000 }
     )
     // On filtre AVANT de choisir : sinon `lock` designe un rang dans une liste
