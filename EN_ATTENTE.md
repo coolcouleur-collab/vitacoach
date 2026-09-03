@@ -779,3 +779,59 @@ Outil ajoute ce jour-la : le compilateur TypeScript passe sur le code en mode
 - **La croix du bouton flottant du forum** est en creme fige. Le forum est un des
   ecrans que je n'ai jamais pu rendre : je ne sais pas sur quel fond elle se
   pose, donc je n'y touche pas a l'aveugle.
+
+# ═══ ÉTAT AU 4 SEPTEMBRE 2026, AVANT SOUMISSION ═══
+
+Cette section remplace ce qui précède pour ce qui concerne la sortie. Les
+sections 1 à 10 restent comme journal.
+
+## CE QUI BLOQUE LA SOUMISSION, ET QUI NE DÉPEND QUE DE TOI
+
+1. **Reconstruire les paquets.** Le `www` embarqué dans iOS date du **21 juillet**,
+   celui d'Android du **2 septembre**. Deux jours de corrections n'y sont pas,
+   dont la clé caméra qui évite un plantage. C'est le point le plus important
+   de cette liste : tant qu'il n'est pas fait, rien de ce qui suit n'existe
+   dans ce que tu soumettras.
+
+2. **Tester la suppression de compte sur un compte jetable.** La purge couvre
+   désormais quatorze tables au lieu de six. C'est la seule façon de vérifier
+   qu'elle fonctionne, et je ne la lancerai pas sur de vraies données.
+
+3. **Tester la photo de repas dans le paquet natif**, en choisissant « Prendre
+   une photo ». C'est exactement le chemin qui terminait l'application avant
+   aujourd'hui, faute de `NSCameraUsageDescription`.
+
+4. **Les deux déclarations Play Console.**
+
+5. **Les formulaires de confidentialité**, Data Safety chez Google et App
+   Privacy chez Apple. Ils doivent déclarer **position, photos et cycle
+   menstruel**, comme la politique le fait maintenant. Une divergence entre le
+   formulaire et la politique est ce que les revues détectent en premier.
+
+## TROIS DÉCISIONS QUI T'APPARTIENNENT
+
+6. **La révocation des jetons** chez Withings, Oura et Garmin à la suppression
+   du compte. Effacer les nôtres satisfait l'article 17 ; révoquer chez le
+   fournisseur demande de vérifier leurs API, ce que je n'ai pas fait plutôt
+   que d'écrire des appels approximatifs.
+
+7. **La photo « Chaise au mur »** montre un ballon lesté alors que le programme
+   promet « sans matériel ».
+
+8. **Le forum.** Le code est intact et documenté, retiré du lancement pour la
+   conformité UGC. Le garder coûte 37 Ko dans le paquet et rien d'autre.
+
+## CORRIGÉ LE 3 ET LE 4 SEPTEMBRE, ET VÉRIFIÉ
+
+Sécurité et conformité : aucun secret dans le paquet livré, les neuf tables
+Supabase protégées ligne par ligne sans compte, la suppression complétée de
+huit tables dont les jetons de santé, la politique complétée de trois
+collectes, deux autorisations iOS manquantes ajoutées.
+
+Fonctionnel : la course mesure enfin la distance hors paquet natif, le chat
+est utilisable clavier ouvert, les écrans se rechargent après un déploiement
+au lieu de rester muets, les programmes s'affichent instantanément.
+
+Interface : dix-huit couleurs figées passées aux jetons, seize conditions
+inutiles retirées, les photos de tenues ne montrent plus du tissu, Respiration
+et Soins renommés Calme et Naturel.
