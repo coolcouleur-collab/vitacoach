@@ -2391,8 +2391,37 @@ padding: isMobile
               <div style={{ ...s.voileEntete, background: ambiance === 'night'
                 ? 'linear-gradient(180deg, rgba(7,15,30,1) 0%, rgba(7,15,30,0.98) 55%, rgba(7,15,30,0.72) 78%, rgba(7,15,30,0) 100%)'
                 : 'linear-gradient(180deg, rgba(240,220,203,1) 0%, rgba(240,220,203,0.98) 55%, rgba(240,220,203,0.72) 78%, rgba(240,220,203,0) 100%)' }} />
+              {/* Retour. Les pages outils (Style, Respiration, Soins, Cycle,
+                  Sante) ne figurent pas dans la barre du bas : on y entre depuis
+                  l'accueil et rien ne permettait d'en ressortir. Le balayage iOS
+                  existe mais il est invisible, et il n'existe pas sur Android.
+                  Il vit DANS l'entete et non en flottant : un bouton fixe au coin
+                  haut-gauche se pose sur le logo, qui occupe deja ce coin.
+                  L'entete est en pointerEvents:none pour laisser passer le
+                  defilement, le bouton doit donc les reprendre pour lui. */}
+              {['style', 'breathwork', 'beaute', 'herbal', 'cycle'].includes(onglet) && (
+                <button
+                  onClick={() => setOnglet('accueil')}
+                  aria-label="Retour à l'accueil"
+                  style={{
+                    pointerEvents:'auto', flexShrink:0, marginRight:10,
+                    width:34, height:34, borderRadius:'50%', cursor:'pointer',
+                    background:'rgba(var(--rgb-bulle), 0.82)',
+                    border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+              )}
+
               {/* Logo, identique sur tous les onglets */}
-              <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
+              {/* marginRight:auto, sinon le space-between de l'entete met le logo
+                  au centre des qu'un bouton retour le precede. */}
+              <div style={{ display:'flex', flexDirection:'column', gap:2, marginRight:'auto' }}>
                 <style>{`
                   @keyframes headerShimmer {
                     0%   { background-position: -200% center; }
@@ -2975,40 +3004,7 @@ padding: isMobile
 
           </div>{/* end keyed tab wrapper */}
 
-          {/* Ce bouton est VOLONTAIREMENT hors du conteneur d'onglet ci-dessus.
-              Ce conteneur porte l'animation tabFade, dont la derniere image est
-              transform:translateY(0) ; avec fill-mode both, ce transform reste
-              applique pour toujours. Un transform, meme nul, cree un bloc
-              conteneur : a l'interieur, position:fixed se refere au conteneur et
-              non a l'ecran. Le bouton descendait donc avec la page et se posait
-              sur la premiere carte du Cycle (constat 2026-09-03). */}
 
-          {/* Retour, les pages outils (Style, Respiration, Soins, Cycle) ne
-              figurent pas dans la barre du bas : on y entre depuis l'accueil et
-              rien ne permettait d'en ressortir. Le balayage iOS existe mais il
-              n'est pas visible, et il n'existe pas du tout sur Android
-              (constat 2026-08-12). Un seul bouton pour les quatre pages. */}
-          {['style', 'breathwork', 'beaute', 'herbal', 'cycle'].includes(onglet) && (
-            <button
-              onClick={() => setOnglet('accueil')}
-              aria-label="Retour à l'accueil"
-              style={{
-                position:'fixed', zIndex:60,
-                top:'calc(env(safe-area-inset-top, 0px) + 14px)', left:14,
-                width:38, height:38, borderRadius:'50%', cursor:'pointer',
-                background:'rgba(var(--rgb-bulle), 0.82)',
-                backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-                border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
-                boxShadow:'0 4px 16px rgba(var(--rgb-terracotta), 0.18)',
-                display:'flex', alignItems:'center', justifyContent:'center',
-              }}
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-          )}
 
         </div>
 

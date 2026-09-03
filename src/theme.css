@@ -44,6 +44,7 @@
   --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
   --rgb-creme-dore: 255, 220, 160;   /* 163 */
   --rgb-creme:      255, 235, 210;   /* 129 */
+  --rgb-feuille: 255, 244, 232;   /* le fond de la feuille Parametres */
   --rgb-or:         232, 150, 42;    /* 111 */
   --rgb-blanc:      255, 255, 255;   /*  94 */
   --rgb-creme-pale: 255, 248, 235;   /*  58 */
@@ -164,6 +165,7 @@
   --rgb-terracotta: 180, 210, 255;
   --rgb-creme-dore: 140, 180, 240;
   --rgb-creme:      100, 150, 255;
+  --rgb-feuille:  20,  36,  72;   /* la meme, en navy : 11,23:1 pour l'encre */
   --rgb-or:         159, 196, 232;
   --rgb-blanc:      200, 222, 255;
   --rgb-creme-pale: 120, 160, 220;
@@ -256,6 +258,7 @@
   --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
   --rgb-creme-dore: 255, 220, 160;   /* 163 */
   --rgb-creme:      255, 235, 210;   /* 129 */
+  --rgb-feuille: 255, 244, 232;   /* le fond de la feuille Parametres */
   --rgb-or:         232, 150, 42;    /* 111 */
   --rgb-blanc:      255, 255, 255;   /*  94 */
   --rgb-creme-pale: 255, 248, 235;   /*  58 */

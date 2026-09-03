@@ -10,12 +10,25 @@ import { AMBRE, ENCRE, ICONE, ROUGE } from './palette'
 // pas avec l'univers translucide de Solenn). Textes terracotta sur fond clair,
 // conformément à la règle des surfaces claires.
 const C = {
-  bg: 'rgba(255,244,232,0.90)',
-  bgCard: 'rgba(var(--rgb-creme), 0.45)',
-  bgCardHover: 'rgba(255,232,212,0.60)',
+  // Le fond etait du creme fige pendant que les textes suivaient les jetons.
+  // De nuit ca donnait de l'encre pale sur du creme : 1,03:1, soit du texte
+  // invisible sur toute la feuille (captures Jean 2026-09-03). Mesure apres
+  // correction : 11,23:1 sur la feuille, 9,83:1 sur une carte.
+  bg: 'rgba(var(--rgb-feuille), 0.90)',
+  // --rgb-creme vaut 100,150,255 de nuit : les cartes viraient au bleuet sous
+  // un texte bleu pale. --rgb-verre est le verre des cartes, et il est
+  // identique a --rgb-creme de jour : le mode jour ne bouge pas d'un pixel.
+  bgCard: 'rgba(var(--rgb-verre), 0.45)',
+  bgCardHover: 'rgba(var(--rgb-verre), 0.60)',
   border: 'rgba(var(--rgb-terracotta), 0.20)',
   borderStrong: 'rgba(var(--rgb-terracotta), 0.38)',
   accent: 'var(--accent)',
+  // --accent est marque « decor seulement, jamais du texte » dans theme.css,
+  // et cette feuille s'en servait pour ses titres de section, le nom du profil
+  // et ses petites capitales : 2,95:1 de jour, la ou 11 px en demandent 4,5.
+  // --ambre-fonce existe exactement pour ca (« petites capitales et chiffres ») :
+  // 4,75:1 de jour, 7,12:1 de nuit. L'accent reste aux bordures et aux fonds.
+  textAccent: 'var(--ambre-fonce)',
   accentLight: 'rgba(var(--rgb-terracotta), 0.14)',
   accentMid: 'rgba(var(--rgb-terracotta), 0.28)',
   text: ENCRE,        // seuil 4,5
@@ -48,7 +61,7 @@ function SectionTitle({ children }) {
       fontSize: 11,
       letterSpacing: '0.10em',
       textTransform: 'uppercase',
-      color: C.accent,
+      color: C.textAccent,
       marginBottom: 10,
       marginTop: 4,
     }}>
@@ -87,7 +100,7 @@ function ObjectifBadge({ label }) {
       fontFamily: C.font,
       fontSize: 11,
       fontWeight: 600,
-      color: C.accent,
+      color: C.textAccent,
       marginRight: 5,
       marginBottom: 5,
     }}>
@@ -231,7 +244,7 @@ function PresetBtn({ icon, label, value, active, onClick }) {
         fontFamily: C.font,
         fontSize: 10,
         fontWeight: active ? 700 : 500,
-        color: active ? C.accent : C.textMuted,
+        color: active ? C.textAccent : C.textMuted,
         letterSpacing: '0.01em',
       }}>
         {label}
@@ -318,7 +331,7 @@ function PillPicker({ options, value, onChange }) {
               padding: '7px 13px', borderRadius: 20,
               border: active ? `1.5px solid ${C.accent}` : `1px solid ${C.border}`,
               background: active ? C.accentLight : 'transparent',
-              color: active ? C.accent : C.textMuted,
+              color: active ? C.textAccent : C.textMuted,
               fontFamily: C.font, fontSize: 12, fontWeight: active ? 700 : 500,
               cursor: 'pointer', outline: 'none',
               WebkitTapHighlightColor: 'transparent',
@@ -336,7 +349,7 @@ function PillPicker({ options, value, onChange }) {
 function EditField({ label, children }) {
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ fontFamily: C.font, fontSize: 11, fontWeight: 700, color: C.accent, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>
+      <div style={{ fontFamily: C.font, fontSize: 11, fontWeight: 700, color: C.textAccent, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>
         {label}
       </div>
       {children}
@@ -639,7 +652,7 @@ export default function SettingsSheet({
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: editMode ? 20 : 16 }}>
                 <Avatar nom={editMode ? (editValues.nom || profil.nom) : (profil.nom || profil.prenom)} size={52} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: C.font, fontWeight: 700, fontSize: 16, color: C.accent, lineHeight: 1.25, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontFamily: C.font, fontWeight: 700, fontSize: 16, color: C.textAccent, lineHeight: 1.25, marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {[profil.prenom, profil.nom].filter(Boolean).join(' ') || profil.nom || ','}
                   </div>
                   {profil.age && (
@@ -649,7 +662,7 @@ export default function SettingsSheet({
                 {!editMode ? (
                   <button
                     onClick={() => setEditMode(true)}
-                    style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${C.accent}`, background: C.accentLight, fontFamily: C.font, fontSize: 12, fontWeight: 700, color: C.accent, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
+                    style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${C.accent}`, background: C.accentLight, fontFamily: C.font, fontSize: 12, fontWeight: 700, color: C.textAccent, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
                   >
                     Modifier
                   </button>
@@ -692,12 +705,12 @@ export default function SettingsSheet({
                        (constat Jean 2026-08-12). */
                     .ss-edit-input { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px;
                       border:1px solid rgba(var(--rgb-terracotta), 0.32); background:rgba(255,255,255,0.55);
-                      font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:rgba(110,60,30,0.95); outline:none;
+                      font-family:'Poppins',system-ui,sans-serif; font-size:16px; color:var(--texte-base); outline:none;
                       transition:border-color 0.18s; }
                     .ss-edit-input:focus { border-color:var(--accent); }
                     .ss-time-input { padding:8px 12px; border-radius:10px; border:1px solid rgba(var(--rgb-terracotta), 0.32);
                       background:rgba(255,255,255,0.55); font-family:'Poppins',system-ui,sans-serif; font-size:16px;
-                      color:rgba(110,60,30,0.95); outline:none; }
+                      color:var(--texte-base); outline:none; }
                     .ss-time-input:focus { border-color:var(--accent); }
                   `}</style>
 
@@ -920,7 +933,7 @@ export default function SettingsSheet({
                     fontFamily: C.font,
                     fontSize: 11,
                     fontWeight: 700,
-                    color: C.accent,
+                    color: C.textAccent,
                   }}>
                     {trialDaysLeft !== null
                       ? `${trialDaysLeft} jour${trialDaysLeft > 1 ? 's' : ''} restant${trialDaysLeft > 1 ? 's' : ''}`
@@ -1193,7 +1206,7 @@ export default function SettingsSheet({
                 style={{
                   display: 'inline-block', marginTop: 10,
                   fontFamily: C.font, fontSize: 12, fontWeight: 600,
-                  color: C.accent, textDecoration: 'underline', textUnderlineOffset: 3,
+                  color: C.textAccent, textDecoration: 'underline', textUnderlineOffset: 3,
                 }}
               >
                 Politique de confidentialité
