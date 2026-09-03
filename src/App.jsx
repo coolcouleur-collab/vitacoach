@@ -2308,15 +2308,30 @@ padding: isMobile
           {isMobile && onglet === 'accueil' && (
             <div style={{
               position:'fixed', top:0, left:0, right:0, zIndex:50,
-              background: ambiance === 'night'
-                ? 'linear-gradient(180deg, rgba(7,15,30,0.92) 0%, rgba(7,15,30,0.72) 55%, rgba(7,15,30,0) 100%)'
-                : 'linear-gradient(180deg, rgba(240,220,203,0.92) 0%, rgba(240,220,203,0.70) 55%, rgba(240,220,203,0) 100%)',
-              backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
+              // AUCUNE couleur de fond ici. Le commentaire juste au-dessus dit
+              // « transparent sur Accueil » : c'est le degrade qui contredisait
+              // l'intention. Il posait du creme a 92 % sur le haut du ciel, qui
+              // est presque noir au lever (#1A1540) et au coucher (#0E1F4A). La
+              // bande s'ecartait de son ciel de 11:1 au lever : c'est le filet
+              // blanc signale par Jean le 2026-09-03, et il se voyait aussi de
+              // jour, dont le ciel est bleu et non creme.
+              // Seul reste un flou, qui n'a pas de couleur. Il vit dans un calque
+              // a part, juste en dessous : pose ici, son masque de fondu
+              // s'appliquerait aussi au logo et a sa signature, qui palliraient.
+              // C'est exactement l'erreur corrigee ce matin sur l'autre entete.
               padding:'10px 18px',
               paddingBottom:16,   // apres le raccourci, sinon il l'ecrase
               paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
               display:'flex', justifyContent:'space-between', alignItems:'center',
             }}>
+              {/* Le flou, sans aucune couleur : le ciel garde la sienne. */}
+              <div style={{
+                position:'absolute', left:0, right:0, top:0, bottom:-24, zIndex:-1,
+                backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
+                WebkitMaskImage:'linear-gradient(180deg, #000 0%, #000 62%, transparent 100%)',
+                maskImage:'linear-gradient(180deg, #000 0%, #000 62%, transparent 100%)',
+              }} />
+
               {/* Logo */}
               {(() => {
                 // Creme FRANC partout : le logo variait selon l'ambiance et
