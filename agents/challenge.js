@@ -256,8 +256,12 @@ ${prog.id === 'defi21'
 ${prog.famille === 'nutrition' ? `═══ AUCUNE SÉANCE ═══
 Ce programme est un RÉÉQUILIBRAGE ALIMENTAIRE. Il ne contient pas de sport.
 Le champ "seance" vaut null sur TOUS les jours, sans exception.
-N'écris jamais « Séance A », « Séance B », « squats », « gainage », « séries »
-ni « répétitions » dans "action" : ces mots n'ont rien à faire ici.
+N'écris jamais dans "action" : « Séance A », « Séance B », « squats »,
+« gainage », « séries », « répétitions », ni aucun sport d'endurance —
+course à pied, footing, jogging, vélo, natation, cardio, HIIT.
+Exemple de ce qu'il ne faut PAS écrire : « 20 minutes de course à pied ».
+Exemple de ce qu'il faut écrire à la place : « Ajoute une source de protéines
+à ton petit-déjeuner : deux œufs, du fromage blanc ou des amandes ».
 Le mouvement, s'il apparaît, se limite à une marche mentionnée en passant,
 au maximum une fois par semaine, jamais comme l'action principale du jour.
 Chaque jour porte une action ALIMENTAIRE concrète : une façon de composer un
@@ -392,10 +396,19 @@ Format JSON :
     if (prog.famille === 'nutrition') {
       const avecSeance = c.jours.filter(j => Array.isArray(j.seance) && j.seance.length).length
       if (avecSeance > Math.ceil(c.jours.length / 5)) return false
+      // La liste ne couvrait que la musculation. Le modele ecrivait donc
+      // « 20 minutes de course a pied » comme action du jour dans un programme
+      // alimentaire, et rien ne l'arretait : c'est exactement ce que Jean a vu.
+      // Les accents sont retires avant comparaison, sinon « velo » ne trouve
+      // jamais « velo » ecrit correctement.
       const MOUVEMENT = ['squat', 'fente', 'gainage', 'pompe', 'abdo', 'burpee',
-                         'seance a', 'seance b', 'series', 'repetitions', 'entrainement']
+                         'seance a', 'seance b', 'series', 'repetitions', 'entrainement',
+                         'course', 'courir', 'footing', 'jogging', 'sprint', 'run',
+                         'velo', 'cyclisme', 'pedal', 'natation', 'nager', 'piscine',
+                         'cardio', 'hiit', 'muscu', 'renforcement', 'workout']
+      const sansAccent = t => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
       const sportifs = c.jours.filter(j => {
-        const a = (j.action || '').toLowerCase()
+        const a = sansAccent(j.action)
         return MOUVEMENT.some(m => a.includes(m))
       }).length
       if (sportifs > Math.ceil(c.jours.length / 5)) return false
