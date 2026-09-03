@@ -3750,7 +3750,7 @@ function TenuesModule({ profil }) {
     -webkit-box-shadow: 0 0 0px 1000px rgba(255,235,200,0.15) inset !important;
     -webkit-text-fill-color: rgba(var(--rgb-terracotta), 0.92) !important;
   }
-  .tenues-select option { background: #F5E8D8; color: rgba(160,80,20,0.92); }
+  .tenues-select option { background: var(--fond-option); color: var(--texte-option); }
 `}</style>
       {/* Controls, toujours visibles */}
       <div style={{ ...st.panel, marginBottom: 0 }}>

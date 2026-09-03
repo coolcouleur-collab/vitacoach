@@ -129,6 +129,11 @@
      La valeur de jour reprend le rendu exact, --rgb-creme-clair valant
      255,246,232. */
   --degrade-tenue: linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%);
+  /* La liste deroulante native du selecteur de tenue. Un <option> ne suit
+     pas le theme tout seul : son fond etait #F5E8D8 en dur, donc creme la
+     nuit, avec du texte brun dessus (mesure a 4,15:1, sous le seuil). */
+  --fond-option:  #F5E8D8;
+  --texte-option: rgba(160,80,20,0.92);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -212,6 +217,8 @@
   --degrade-squelette:     linear-gradient(110deg, rgba(30,50,90,0.55) 30%, rgba(45,70,120,0.95) 50%, rgba(30,50,90,0.55) 70%);
   --degrade-squelette-2:   linear-gradient(110deg, rgba(30,50,90,0.6) 30%, rgba(45,70,120,0.9) 50%, rgba(30,50,90,0.6) 70%);
   --degrade-tenue: linear-gradient(165deg, rgba(26,44,78,0.96) 0%, rgba(30,50,88,0.94) 55%, rgba(34,58,102,0.92) 100%);
+  --fond-option:  #16294F;
+  --texte-option: #C8DEFF;
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -332,6 +339,11 @@
      La valeur de jour reprend le rendu exact, --rgb-creme-clair valant
      255,246,232. */
   --degrade-tenue: linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%);
+  /* La liste deroulante native du selecteur de tenue. Un <option> ne suit
+     pas le theme tout seul : son fond etait #F5E8D8 en dur, donc creme la
+     nuit, avec du texte brun dessus (mesure a 4,15:1, sous le seuil). */
+  --fond-option:  #F5E8D8;
+  --texte-option: rgba(160,80,20,0.92);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
