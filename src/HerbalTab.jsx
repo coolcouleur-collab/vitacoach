@@ -230,7 +230,11 @@ function HeroBg() {
 }
 
 // ─── AI RECO EXPANDABLE CARD ──────────────────────────────────────────────────
-function AIRecoCard({ r, onChat, index }) {
+// `cat` etait lu ici aussi sans etre une prop. J'avais corrige le jumeau
+// HerbItem ce matin et rate celui-ci : le detecteur de noms inexistants ne
+// l'a signale qu'apres, une fois le premier reparé. Le bouton « Pourquoi
+// celle-ci ? » de ces cartes levait donc une ReferenceError au clic.
+function AIRecoCard({ r, onChat, index, cat }) {
   const [open, setOpen]       = useState(false)
   const [pressed, setPressed] = useState(false)
   const c = ETIQUETTE
@@ -395,7 +399,7 @@ function AIRecoCard({ r, onChat, index }) {
 }
 
 // ─── AI RECO SECTION ─────────────────────────────────────────────────────────
-function AIReco({ profil, onChat }) {
+function AIReco({ profil, onChat, cat }) {
   const [loading, setLoading] = useState(false)
   const [items, setItems]     = useState(null)
   const [err, setErr]         = useState(false)
@@ -451,7 +455,7 @@ function AIReco({ profil, onChat }) {
         {items && (
           <div style={{ marginTop:14, display:'flex', flexDirection:'column', gap:8, borderTop:'1px solid rgba(var(--rgb-terracotta), 0.18)', paddingTop:14 }}>
             {items.map((r, i) => (
-              <AIRecoCard key={i} r={r} onChat={onChat} index={i} />
+              <AIRecoCard key={i} r={r} onChat={onChat} index={i} cat={cat} />
             ))}
           </div>
         )}
@@ -1138,7 +1142,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
            navigation avant même qu'on ait pu lire quoi que ce soit. Il est
            descendu ici : le besoin d'aide naît quand la liste n'a pas répondu,
            pas avant de l'avoir parcourue (décision Jean 2026-08-11). */}
-      <AIReco profil={profil} onChat={onChat} />
+      <AIReco profil={profil} onChat={onChat} cat={cat} />
 
       {/* L'ancien avertissement de bas de page a ete retire : il faisait doublon
           avec le bandeau permanent ajoute en tete (2026-08-12). Deux mises en

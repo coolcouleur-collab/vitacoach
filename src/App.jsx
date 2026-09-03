@@ -40,22 +40,60 @@ async function authHeaders() {
   try { const m = await import('./supabase'); return await m.authHeaders() } catch { return {} }
 }
 
-const MorningCheckin = lazy(() => import('./MorningCheckin'))
-const SettingsSheet  = lazy(() => import('./SettingsSheet'))
+// ─────────────────────────────────────────────────────────────────────────────
+// CHARGER UN ECRAN, MEME APRES UN DEPLOIEMENT
+//
+// Les ecrans sont charges a la demande. Leur nom de fichier contient une
+// empreinte de leur contenu : a chaque deploiement, les noms changent. Une app
+// restee ouverte garde en cache l'ancien index.html, qui reclame des fichiers
+// qui n'existent plus. L'import echoue, et l'ecran ne s'ouvre tout simplement
+// pas — sans message, sans rien. C'est ce que Jean a vu sur Soins le
+// 2026-09-04, alors que le fichier etait bien deploye et repondait en 200 :
+// son app demandait l'ancien nom.
+//
+// On reessaie une fois, au cas ou le reseau ait seulement hoquete. Si ca echoue
+// encore, on recharge : la page recupere le nouvel index.html et les bons noms.
+// Le garde-fou de soixante secondes empeche une boucle de rechargement si la
+// panne vient d'ailleurs, tout en laissant le mecanisme rejouer plus tard.
+// ─────────────────────────────────────────────────────────────────────────────
+const CLE_RECHARGE = 'solenn_recharge_module'
+
+function ecran(charger) {
+  return lazy(() => charger().catch(async () => {
+    try { return await charger() } catch (_) {}
+    try {
+      const dernier = Number(sessionStorage.getItem(CLE_RECHARGE) || 0)
+      if (Date.now() - dernier > 60000) {
+        sessionStorage.setItem(CLE_RECHARGE, String(Date.now()))
+        window.location.reload()
+      }
+    } catch (_) {
+      // sessionStorage indisponible (navigation privee stricte) : on recharge
+      // quand meme, le risque de boucle est preferable a un ecran mort.
+      window.location.reload()
+    }
+    // Le rechargement n'est pas instantane : on rend du vide en attendant,
+    // plutot que de laisser l'erreur remonter et blanchir toute l'app.
+    return { default: () => null }
+  }))
+}
+
+const MorningCheckin = ecran(() => import('./MorningCheckin'))
+const SettingsSheet  = ecran(() => import('./SettingsSheet'))
 
 // Lazy, chargés uniquement quand l'utilisateur y accède
-const Auth          = lazy(() => import('./Auth'))
-const Landing       = lazy(() => import('./Landing'))
-const Forum         = lazy(() => import('./Forum'))
-const Onboarding    = lazy(() => import('./Onboarding'))
-const HomeTab       = lazy(() => import('./HomeTab'))
-const HerbalTab     = lazy(() => import('./HerbalTab'))
-const SanteTab      = lazy(() => import('./SanteTab'))
-const RoutineTab    = lazy(() => import('./RoutineTab'))
-const ChatHistory   = lazy(() => import('./ChatHistory'))
-const BreathworkTab = lazy(() => import('./BreathworkTab'))
-const CycleTab      = lazy(() => import('./CycleTab'))
-const PaywallOffre  = lazy(() => import('./PaywallOffre'))
+const Auth          = ecran(() => import('./Auth'))
+const Landing       = ecran(() => import('./Landing'))
+const Forum         = ecran(() => import('./Forum'))
+const Onboarding    = ecran(() => import('./Onboarding'))
+const HomeTab       = ecran(() => import('./HomeTab'))
+const HerbalTab     = ecran(() => import('./HerbalTab'))
+const SanteTab      = ecran(() => import('./SanteTab'))
+const RoutineTab    = ecran(() => import('./RoutineTab'))
+const ChatHistory   = ecran(() => import('./ChatHistory'))
+const BreathworkTab = ecran(() => import('./BreathworkTab'))
+const CycleTab      = ecran(() => import('./CycleTab'))
+const PaywallOffre  = ecran(() => import('./PaywallOffre'))
 import { LeafIcon, HomeIcon, ChatIcon, HeartIcon, RoutineIcon, ForumIcon, SendIcon, BellIcon, BellOffIcon, StarIcon, TargetIcon, LightbulbIcon, MoonIcon, SunIcon, FoodIcon, PillIcon, RefreshIcon, SparkleIcon, LoadingIcon, WeatherIcon, RunIcon, ThumbsUpIcon, StyleIcon, BreathworkIcon, CycleIcon, FireIcon, WaterIcon, WalkIcon, BalanceIcon } from './Icons'
 import ResponseRenderer, { isRich } from './ResponseRenderer'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
