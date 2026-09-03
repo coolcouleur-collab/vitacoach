@@ -355,6 +355,31 @@ Format JSON :
       const aDuHaut = avecSeance.some(j => j.seance.some(e => HAUT.includes(e?.exo)))
       if (!aDuHaut) return false
     }
+    // Le controle SYMETRIQUE, qui manquait. On verifiait que les programmes
+    // sportifs portent bien des seances, mais rien ne verifiait que le
+    // programme ALIMENTAIRE n'en porte pas. Le controle etait donc a sens
+    // unique : si le modele repondait du sport a une consigne nutritionnelle,
+    // plus rien ne l'arretait et le programme partait tel quel.
+    //
+    // Jean l'a vu de l'exterieur : « le programme nutritionnel est sportif,
+    // alors que c'est cense etre un reequilibrage alimentaire » (2026-09-04).
+    //
+    // Sa consigne dit « au maximum une marche, jamais de seance construite, et
+    // le champ seance reste null presque partout ». On la fait respecter : au
+    // plus un jour sur cinq avec une seance, et pas de journee dominee par le
+    // mouvement. Un echec ici declenche une seconde tentative, comme pour les
+    // autres controles, et non un repli sportif.
+    if (prog.famille === 'nutrition') {
+      const avecSeance = c.jours.filter(j => Array.isArray(j.seance) && j.seance.length).length
+      if (avecSeance > Math.ceil(c.jours.length / 5)) return false
+      const MOUVEMENT = ['squat', 'fente', 'gainage', 'pompe', 'abdo', 'burpee',
+                         'seance a', 'seance b', 'series', 'repetitions', 'entrainement']
+      const sportifs = c.jours.filter(j => {
+        const a = (j.action || '').toLowerCase()
+        return MOUVEMENT.some(m => a.includes(m))
+      }).length
+      if (sportifs > Math.ceil(c.jours.length / 5)) return false
+    }
     return true
   }
 
