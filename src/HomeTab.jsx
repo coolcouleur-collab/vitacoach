@@ -2411,12 +2411,20 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               background: isNight
                 ? `linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)`
                 : `linear-gradient(135deg, rgba(var(--rgb-terracotta),0.13) 0%, rgba(var(--rgb-terracotta),0.055) 60%, rgba(var(--rgb-terracotta),0.024) 100%)`,
-              // Contour franc, comme demande : 3,28:1 de jour et 4,29:1 de nuit,
-              // la ou un contour de controle en demande 3.
+              // Le lisere maison, celui de toutes les cartes de l'app :
+              // rgba(--rgb-creme-dore). C'est clair sur clair de jour, donc
+              // discret — 1,19:1 mesure — mais le terracotta est la couleur des
+              // TEXTES, pas des bordures (Jean, 2026-09-04). Et pas d'ombre non
+              // plus : elle detacherait la carte, au prix d'un relief que cette
+              // interface n'utilise nulle part ailleurs.
+              // Ce qui rend ces cartes lisibles n'est donc pas leur contour mais
+              // leur fond, leur pastille d'icone et leur chevron. Le vrai defaut
+              // corrige reste le meme : avant, la concatenation invalide leur
+              // retirait TOUT a la fois, contour, fond et pastille.
               border: '1.5px solid var(--contour-carte)',
               boxShadow: isNight
-                ? `0 6px 22px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(180,210,255,0.08)`
-                : `0 6px 22px ${s.color}22, 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75)`,
+                ? '0 6px 22px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(180,210,255,0.08)'
+                : 'inset 0 1px 0 rgba(255,255,255,0.75)',
               transition:'box-shadow 0.2s ease',
             }}
           >

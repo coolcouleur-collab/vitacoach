@@ -85,3 +85,46 @@ export async function readWeightHistory(days = 30) {
     poids: parseFloat(parseFloat(r.quantity).toFixed(1)),
   }))
 }
+
+/**
+ * La frequence cardiaque SUR UNE FENETRE precise, pour le bilan d'une course.
+ *
+ * Un telephone n'a pas de capteur cardiaque : ces relevés viennent d'une montre
+ * ou d'un bracelet, deja synchronises dans Sante par leur propre application.
+ * On ne les mesure pas, on les relit apres coup — d'ou le fait que ce soit
+ * possible pour le BILAN et pas en direct pendant l'effort.
+ *
+ * Rend null quand il n'y a rien a dire : pas d'iPhone, pas d'autorisation, ou
+ * aucun relevé sur le creneau. Un ecran de fin de course n'a pas a afficher
+ * « -- » a la place d'un chiffre qu'il n'aura jamais.
+ *
+ * `limit: 0` demande tout ce qui existe sur la fenetre : une course d'une heure
+ * avec une montre qui releve chaque seconde en produit des milliers, mais on
+ * n'en garde que trois nombres.
+ */
+export async function readHeartRateWindow(debut, fin) {
+  if (!isHealthKitAvailable()) return null
+  try {
+    const plugin = await hk()
+    const res = await plugin.queryHKitSampleType({
+      sampleName: 'heartRate',
+      startDate: new Date(debut).toISOString(),
+      endDate: new Date(fin).toISOString(),
+      limit: 0,
+    })
+    const data = res?.resultData || []
+    const bpm = data
+      .map(d => parseFloat(d.quantity))
+      // Un relevé aberrant fausse la moyenne autant que le maximum. En dessous
+      // de 30 ou au-dessus de 230, ce n'est plus un coeur humain a l'effort.
+      .filter(v => Number.isFinite(v) && v >= 30 && v <= 230)
+    if (!bpm.length) return null
+    return {
+      moyenne: Math.round(bpm.reduce((s, v) => s + v, 0) / bpm.length),
+      max: Math.round(Math.max(...bpm)),
+      releves: bpm.length,
+    }
+  } catch (_) {
+    return null
+  }
+}
