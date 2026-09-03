@@ -73,7 +73,7 @@ function Sparkline({ history, metricKey, color, goal, onLog }) {
       onClick={e => { e.stopPropagation(); onLog?.(metricKey) }}
       style={{
         width:'100%', marginTop:8, padding:'9px 0', borderRadius:10, cursor:'pointer',
-        background:`${color}14`, border:`1px dashed ${color}55`,
+        background:`rgba(var(--rgb-encre), 0.078)`, border:`1px dashed rgba(var(--rgb-encre), 0.333)`,
         fontFamily:'Poppins,sans-serif', fontSize:10.5, fontWeight:600, color:`${color}`,
       }}>
       + Ajouter
@@ -89,10 +89,10 @@ function Sparkline({ history, metricKey, color, goal, onLog }) {
             <div style={{
               width:'100%', height:`${pct}%`, minHeight: d.val > 0 ? 4 : 2,
               background: d.val > 0
-                ? isToday ? `linear-gradient(to top, ${color}, ${color}cc)` : `${color}55`
+                ? isToday ? `linear-gradient(to top, ${color}, rgba(var(--rgb-encre), 0.8))` : `rgba(var(--rgb-encre), 0.333)`
                 : 'rgba(0,0,0,0.05)',
               borderRadius:'12px 12px 0 0',
-              boxShadow: isToday && d.val > 0 ? `0 0 8px ${color}60` : 'none',
+              boxShadow: isToday && d.val > 0 ? `0 0 8px rgba(var(--rgb-encre), 0.376)` : 'none',
               transition:'height 0.5s ease',
             }} />
           </div>
@@ -142,7 +142,7 @@ function HistoriqueSection({ history, onLog }) {
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginTop:12 }}>
             {metricsToShow.map(m => (
               <div key={m.key} style={{
-                background:`${m.color}08`, border:`1px solid ${m.color}20`,
+                background:`rgba(var(--rgb-encre), 0.031)`, border:`1px solid rgba(var(--rgb-encre), 0.125)`,
                 borderRadius:12, padding:'12px 14px',
               }}>
                 <div style={{ fontSize:10, color:m.color, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:4 }}>
@@ -557,17 +557,17 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                 <div style={{
                   width: 34, height: 34, borderRadius: 8, flexShrink: 0,
-                  background: `${m.color}22`,
+                  background: `rgba(var(--rgb-encre), 0.133)`,
                   border: `1.5px solid ${m.color}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: done ? `0 2px 8px ${m.color}40` : `0 1px 4px ${m.color}20`,
+                  boxShadow: done ? `0 2px 8px rgba(var(--rgb-encre), 0.251)` : `0 1px 4px rgba(var(--rgb-encre), 0.125)`,
                 }}>{m.iconEl}</div>
                 {done && (
                   <span style={{
                     fontSize: 9, color: '#fff',
                     background: m.color,
                     padding: '3px 8px', borderRadius: 12, fontWeight: 800,
-                    boxShadow: `0 2px 8px ${m.color}50`
+                    boxShadow: `0 2px 8px rgba(var(--rgb-encre), 0.314)`
                   }}>✓</span>
                 )}
               </div>
@@ -576,7 +576,7 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
                 fontWeight: val > 0 ? 800 : 300,
                 color: ENCRE,
                 lineHeight: 1, marginBottom: 3,
-                textShadow: val > 0 ? `0 2px 12px ${m.color}40` : 'none',
+                textShadow: val > 0 ? `0 2px 12px rgba(var(--rgb-encre), 0.251)` : 'none',
                 letterSpacing: val > 0 ? 'normal' : 2,
               }}>
                 {val > 0 ? m.fmt(val) : '–'}
@@ -610,11 +610,11 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
                 <div style={{ height: 5, background: h2r(m.color, 0.28), borderRadius: 99, overflow: 'visible', position: 'relative', marginTop: 6 }}>
                   <div style={{
                     height: '100%', width: `${pct}%`,
-                    background: `linear-gradient(90deg, ${m.color}99, ${m.color})`,
+                    background: `linear-gradient(90deg, rgba(var(--rgb-encre), 0.6), ${m.color})`,
                     borderRadius: 99,
                     transition: 'width 0.7s cubic-bezier(.34,1.56,.64,1)',
                     position: 'relative',
-                    boxShadow: `0 0 8px ${m.color}70`,
+                    boxShadow: `0 0 8px rgba(var(--rgb-encre), 0.439)`,
                   }}>
                     {pct > 5 && (
                       <div style={{
@@ -715,11 +715,11 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
             <div style={ss.modalHandle} />
             <div style={{
               width: 64, height: 64, borderRadius: 20,
-              background: `linear-gradient(145deg, ${editMetric.color}20, ${editMetric.color}10)`,
-              border: `2px solid ${editMetric.color}35`,
+              background: `linear-gradient(145deg, rgba(var(--rgb-encre), 0.125), rgba(var(--rgb-encre), 0.063))`,
+              border: `2px solid rgba(var(--rgb-encre), 0.208)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 30, margin: '0 auto 12px',
-              boxShadow: `0 6px 20px ${editMetric.color}25, inset 0 1px 0 rgba(255,255,255,0.8)`
+              boxShadow: `0 6px 20px rgba(var(--rgb-encre), 0.145), inset 0 1px 0 rgba(255,255,255,0.8)`
             }}>{editMetric.iconEl}</div>
             <div style={{ fontSize: 18, fontWeight: 900, color: ENCRE, marginBottom: 4, textAlign: 'center' }}>
               {editMetric.label}
@@ -736,10 +736,10 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
                       style={{
                         ...ss.humeurBtn,
                         ...(parseInt(tempVal) === n ? {
-                          background: `linear-gradient(145deg, ${editMetric.color}, ${editMetric.color}cc)`,
+                          background: `linear-gradient(145deg, ${editMetric.color}, rgba(var(--rgb-encre), 0.8))`,
                           border: 'none',
                           transform: 'scale(1.12)',
-                          boxShadow: `0 6px 18px ${editMetric.color}45, inset 0 1px 0 rgba(255,255,255,0.3)`
+                          boxShadow: `0 6px 18px rgba(var(--rgb-encre), 0.271), inset 0 1px 0 rgba(255,255,255,0.3)`
                         } : {})
                       }}
                       onClick={() => setTempVal(n.toString())}>
@@ -752,7 +752,7 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
                 </div>
               </div>
             ) : (
-              <input style={{ ...ss.modalInput, borderColor: `${editMetric.color}35` }}
+              <input style={{ ...ss.modalInput, borderColor: `rgba(var(--rgb-encre), 0.208)` }}
                 type="number" step={editMetric.step}
                 value={tempVal}
                 onChange={e => setTempVal(e.target.value)}
@@ -767,8 +767,8 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
               <button
                 style={{
                   ...ss.btnSave,
-                  background: `linear-gradient(145deg, ${editMetric.color}, ${editMetric.color}cc)`,
-                  boxShadow: `0 8px 24px ${editMetric.color}40, 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.25)`
+                  background: `linear-gradient(145deg, ${editMetric.color}, rgba(var(--rgb-encre), 0.8))`,
+                  boxShadow: `0 8px 24px rgba(var(--rgb-encre), 0.251), 0 4px 12px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.25)`
                 }}
                 onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
                 onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}

@@ -1268,17 +1268,17 @@ function MetricDot({ m, x, y, filled, isActive, isNight = false, preset = 'day',
       style={{
         position:'absolute', left:x-21, top:y-21, width:42, height:42, zIndex:3,
         borderRadius:13, overflow:'visible',
-        background: isActive ? `${m.color}28` : springing ? `${m.color}18`
+        background: isActive ? `rgba(var(--rgb-icone), 0.157)` : springing ? `rgba(var(--rgb-icone), 0.094)`
           : preset === 'night'   ? 'rgba(10,20,45,0.55)'
           : preset === 'sunset'  ? 'rgba(80,25,5,0.28)'
           : 'rgba(var(--rgb-bulle), 0.42)',
-        border:`1.5px solid ${isActive ? m.color+'90' : filled ? m.color+'66' : isNight ? m.color+'44' : m.color+'55'}`,
+        border:`1.5px solid ${isActive ? 'rgba(var(--rgb-icone), 0.565)' : filled ? 'rgba(var(--rgb-icone), 0.4)' : isNight ? 'rgba(var(--rgb-icone), 0.267)' : 'rgba(var(--rgb-icone), 0.333)'}`,
         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
         gap:1.5, cursor:'pointer',
         boxShadow: isActive
-          ? `0 0 0 4px ${m.color}35, 0 0 28px ${m.color}80, inset 0 1px 0 rgba(255,255,255,1)`
+          ? `0 0 0 4px rgba(var(--rgb-icone), 0.208), 0 0 28px rgba(var(--rgb-icone), 0.502), inset 0 1px 0 rgba(255,255,255,1)`
           : filled
-          ? `0 0 0 3px ${m.color}18, 0 0 16px ${m.color}45, inset 0 1px 0 rgba(255,255,255,1)`
+          ? `0 0 0 3px rgba(var(--rgb-icone), 0.094), 0 0 16px rgba(var(--rgb-icone), 0.271), inset 0 1px 0 rgba(255,255,255,1)`
           : '0 4px 16px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(0,0,0,0.02)',
         transform: isActive ? 'scale(0.84)' : 'scale(1)',
         animation: springing ? 'metricSpring 0.55s cubic-bezier(0.34,1.56,0.64,1) both' : 'none',
@@ -1559,14 +1559,14 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
                 position:'absolute', top:'50%', left:'50%',
                 transform:'translate(-50%,-50%)',
                 width:140, height:140, borderRadius:'50%',
-                background:`radial-gradient(circle, ${m.color}65 0%, ${m.color}30 40%, transparent 70%)`,
+                background:`radial-gradient(circle, rgba(var(--rgb-icone), 0.396) 0%, rgba(var(--rgb-icone), 0.188) 40%, transparent 70%)`,
                 filter:'blur(8px)',
                 transition:'background 0.3s ease',
                 pointerEvents:'none',
               }} />
               <div style={{
                 position:'relative',
-                filter:`drop-shadow(0 0 8px ${m.color}99)`,
+                filter:`drop-shadow(0 0 8px rgba(var(--rgb-icone), 0.6))`,
                 transition:'filter 0.3s ease',
               }}>{m.iconLg}</div>
             </div>
@@ -1587,7 +1587,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
             <div style={{ display:'flex', alignItems:'center', gap:32 }}>
               <button onClick={dec} style={{
                 background:'none', border:'none', cursor:'pointer',
-                color:`${m.color}90`, fontSize:32, fontWeight:200, lineHeight:1,
+                color:`rgba(var(--rgb-icone), 0.565)`, fontSize:32, fontWeight:200, lineHeight:1,
                 fontFamily:"'Poppins',system-ui,sans-serif", padding:'4px 8px',
               }}>−</button>
 
@@ -1597,7 +1597,7 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
                 minWidth:90, textAlign:'center',
               }}>
                 {m.fmt(vals[m.key])}
-                <span style={{ fontSize:16, fontWeight:300, color:`${m.color}60`, marginLeft:4 }}>{m.unit}</span>
+                <span style={{ fontSize:16, fontWeight:300, color:`rgba(var(--rgb-icone), 0.376)`, marginLeft:4 }}>{m.unit}</span>
               </span>
 
               <button onClick={inc} style={{
