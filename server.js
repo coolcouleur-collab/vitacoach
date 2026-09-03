@@ -565,6 +565,26 @@ const MOTS_ECARTES = [
   'pillow', 'bedsheet', 'sheets',
 ]
 
+// Le mot « man » dans la requete ne suffit pas : Pexels classe par pertinence
+// globale et rend regulierement une femme pour « man wool coat ootd »
+// (verifie le 2026-09-03, photo 6181737 et suivantes). Or Solenn se veut sur
+// mesure, et un homme qui recoit des tenues feminines, c'est le defaut que
+// Jean avait deja signale.
+//
+// On lit la description fournie par la banque et on ECARTE seulement ce qui
+// designe clairement l'autre sexe. Une description vide ou neutre est gardee :
+// beaucoup de photos n'ont pas d'alt, et sur-filtrer viderait le vivier.
+//
+// Attention au piege : « woman » contient « man ». D'ou les limites de mot.
+function sexeCompatible(photo, sexe) {
+  if (sexe !== 'homme' && sexe !== 'femme') return true
+  const t = ` ${(photo?.alt || '')} `.toLowerCase()
+  const feminin  = /(woman|women|female|girl|girls|lady|ladies)/.test(t)
+  const masculin = /(man|men|male|boy|boys|guy|guys|gentleman)/.test(t)
+  if (feminin === masculin) return true          // neutre, ou les deux : on garde
+  return sexe === 'homme' ? masculin : feminin
+}
+
 function photoConvenable(photo) {
   const texte = `${photo?.alt || ''} ${photo?.url || ''}`.toLowerCase()
   return !MOTS_ECARTES.some(m => texte.includes(m))
@@ -709,9 +729,17 @@ app.get('/api/image', async (req, res) => {
     // On filtre AVANT de choisir : sinon `lock` designe un rang dans une liste
     // qui contient des photos ecartees, et le meme rang ne rend plus la meme
     // chose d'un appel a l'autre.
-    const photos = (response.data.photos || []).filter(photoConvenable)
-    const ecartees = (response.data.photos || []).length - photos.length
+    const brutes = response.data.photos || []
+    const convenables = brutes.filter(photoConvenable)
+    // Le sexe affine, il ne doit pas vider : si plus rien ne reste apres ce
+    // second tamis, on retombe sur les photos simplement convenables.
+    const auBonSexe = convenables.filter(p => sexeCompatible(p, sexe))
+    const photos = auBonSexe.length > 0 ? auBonSexe : convenables
+    const ecartees = brutes.length - convenables.length
     if (ecartees) console.log(`🚫 ${ecartees} photo(s) ecartee(s) : contenu deplace`)
+    if (auBonSexe.length !== convenables.length) {
+      console.log(`👤 ${convenables.length - auBonSexe.length} photo(s) ecartee(s) : autre sexe que « ${sexe} »`)
+    }
     if (photos.length > 0) {
       const photo = photos[lock % photos.length]
       res.json({ url: photo.src.large })
