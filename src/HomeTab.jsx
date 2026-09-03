@@ -837,7 +837,7 @@ function phraseCoach({ score, metriques, streak = 0, heure, history = [], repeti
     },
     (m.eau || 0) < 8 && h >= 12 && {
       cle: 'eau', ecart: (8 - (m.eau || 0)) / 8 * 0.8,
-      quoi: `Il te manque surtout l'eau, ${m.eau || 0} verres sur 8.`,
+      quoi: `Il te manque surtout l'eau, ${m.eau || 0} verre${(m.eau || 0) > 1 ? 's' : ''} sur 8.`,
       action: 'Un verre maintenant, le retard se rattrape vite.',
     },
     (m.pas || 0) < 10000 && h >= 12 && h < 21 && {
@@ -976,8 +976,14 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
   const paused = circleHovered || !!activeMetric
 
   // ── Couleur de l'arc selon le score, identique à SanteTab ──
-  const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(239,68,68,0.28)' : 'rgba(var(--rgb-terracotta), 0.25)'
-  const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(239,68,68,0.05)' : 'rgba(var(--rgb-terracotta), 0.05)'
+  // Le rouge du bas de l'echelle est parti le 2026-09-04. CheckinCard porte
+  // le principe depuis le 8 aout : « Aucun rouge : dire qu'on va mal n'est
+  // pas une faute, c'est une information, MEME PRINCIPE QUE LE SCORE ». Le
+  // score s'en reclamait sans l'appliquer : en dessous de 40 il virait au
+  // rouge d'alerte. On reprend la teinte basse des humeurs, celle que ce
+  // principe a produit ailleurs, et qui suit les deux themes.
+  const arcColor = score >= 80 ? 'rgba(34,197,94,0.28)' : score >= 60 ? 'rgba(56,189,248,0.28)' : score >= 40 ? 'rgba(245,158,11,0.28)' : score > 0 ? 'rgba(var(--rgb-humeur-1), 0.34)' : 'rgba(var(--rgb-terracotta), 0.25)'
+  const arcTrack = score >= 80 ? 'rgba(34,197,94,0.05)' : score >= 60 ? 'rgba(56,189,248,0.05)' : score >= 40 ? 'rgba(245,158,11,0.05)' : score > 0 ? 'rgba(var(--rgb-humeur-1), 0.06)' : 'rgba(var(--rgb-terracotta), 0.05)'
 
   return (
     <>

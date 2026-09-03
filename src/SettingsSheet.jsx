@@ -1055,9 +1055,10 @@ export default function SettingsSheet({
                 limite pour ce qu'elle est. Le vrai theme sombre est le
                 chantier n°1 d'apres lancement (arbitrage Jean, 2026-09-01). */}
             <SectionTitle>Ambiance de l'accueil</SectionTitle>
-            <div style={{ fontSize: 11.5, color: ENCRE, opacity: 0.78, margin: '-6px 0 10px', lineHeight: 1.5 }}>
-              Le reste de l'app reste clair pour l'instant.
-            </div>
+            {/* « Le reste de l'app reste clair pour l'instant » a ete retire le
+                2026-09-04 : c'etait vrai le 1er septembre, quand seul l'accueil
+                s'assombrissait. Depuis la passe de mode nuit, toute l'app suit
+                l'ambiance. La phrase mentait a l'utilisateur sur sa propre app. */}
             <Card>
               <div style={{ display: 'flex', gap: 8 }}>
                 {PRESETS.map(p => (
