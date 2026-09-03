@@ -814,6 +814,27 @@ const TABLES_UTILISATEUR = [
   'cycle_periods', 'cycle_symptoms', 'chat_feedback',
   'forum_likes', 'forum_reply_votes', 'forum_reports', 'forum_mentions',
   'forum_replies', 'forum_posts',
+
+  // ── Ajoutees le 2026-09-04, avant soumission ────────────────────────────
+  // Huit tables portant un user_id echappaient a la purge. Le serveur y ecrit,
+  // la suppression les ignorait : le droit a l'effacement n'etait donc pas
+  // satisfait, et la politique de confidentialite promettait une suppression
+  // que le code ne faisait pas.
+  //
+  // `integrations_sante` est la plus grave : elle contient les access_token et
+  // refresh_token de Withings, Oura et Garmin. Les laisser en place, c'est
+  // garder apres la suppression du compte la capacite d'aller chercher les
+  // donnees de sante de quelqu'un chez un tiers.
+  //
+  // Elle est en TETE de cette liste : si la purge echoue en cours de route,
+  // c'est celle-la qu'il faut avoir effacee en premier.
+  'integrations_sante',
+  'metriques', 'metriques_integrations',
+  'repas', 'user_insights', 'morning_messages',
+  'push_subscriptions', 'push_tokens',
+
+  // `profils` reste EN DERNIER : les etapes precedentes peuvent avoir besoin
+  // d'y lire quelque chose, et c'est la ligne qui porte l'identite.
   'profils',
 ]
 
@@ -847,6 +868,12 @@ app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
     console.error('[Suppression] Annulation Stripe echouee pour', userId, '-', e.message)
   }
 
+  // NOTE, a traiter avec Jean : effacer integrations_sante retire NOTRE acces,
+  // ce qui satisfait l'article 17 — nous ne traitons plus rien. La revocation
+  // cote fournisseur, elle, demanderait d'appeler les points d'API de Withings,
+  // Oura et Garmin, que je n'ai pas verifies. Ecrire des appels approximatifs
+  // qui echouent en silence serait pire que de ne rien ecrire : ca donnerait
+  // l'illusion d'une revocation qui n'a pas lieu.
   for (const table of TABLES_UTILISATEUR) {
     try {
       const { error } = await supabase.from(table).delete().eq('user_id', userId)

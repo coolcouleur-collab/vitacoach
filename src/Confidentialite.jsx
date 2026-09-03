@@ -30,7 +30,7 @@ export default function Confidentialite() {
     <div style={S.page}>
       <div style={S.card}>
         <h1 style={S.h1}>Politique de confidentialité</h1>
-        <p style={S.date}>Solenn, dernière mise à jour : 30 août 2026</p>
+        <p style={S.date}>Solenn, dernière mise à jour : 4 septembre 2026</p>
 
         <p style={S.p}>
           Solenn est une application de coaching bien-être. Ta vie privée est au cœur de notre
@@ -45,6 +45,26 @@ export default function Confidentialite() {
           <li style={S.li}><strong>Données de bien-être</strong> : sommeil, pas, hydratation, humeur, poids, saisies par toi ou synchronisées depuis des services que tu connectes volontairement (Apple Santé, Oura, Garmin, Withings).</li>
           <li style={S.li}><strong>Conversations</strong> : tes échanges avec le coach Solenn, pour assurer la continuité du suivi.</li>
           <li style={S.li}><strong>Paiement</strong> : géré par Stripe ; nous ne stockons jamais tes numéros de carte.</li>
+          {/* Les trois entrées ci-dessous ont été ajoutées le 4 septembre 2026 :
+              l'app collectait ces données sans que cette page les mentionne.
+              Chacune décrit ce que le code fait réellement, y compris ce qui
+              n'est PAS conservé, parce que c'est là que se joue la confiance. */}
+          <li style={S.li}><strong>Position</strong> : uniquement quand tu démarres une sortie, pour
+            mesurer ta distance et ton allure. Sur iPhone, la mesure continue quand l'écran est
+            verrouillé, sinon ta sortie s'arrêterait de compter dans ta poche : c'est pourquoi
+            l'autorisation demandée est « toujours ». <strong>Ton tracé ne quitte jamais ton
+            téléphone</strong> : seuls la durée, la distance et les horaires de la sortie sont
+            enregistrés. Séparément, tes coordonnées peuvent être envoyées une fois à
+            OpenStreetMap pour retrouver le nom de ta ville, qui sert aux conseils météo ; seul
+            ce nom est conservé, sur ton téléphone.</li>
+          <li style={S.li}><strong>Photos de repas</strong> : si tu en envoies une, elle est transmise
+            à Groq pour être analysée. <strong>La photo n'est pas conservée</strong> : seuls le
+            résultat de l'analyse (plats reconnus, calories et macronutriments estimés) et son
+            résumé sont enregistrés.</li>
+          <li style={S.li}><strong>Cycle menstruel</strong> : dates de règles et symptômes, uniquement
+            si tu actives le suivi du cycle. Ce sont des données de santé relevant de l'article 9
+            du RGPD : elles ne servent qu'à t'afficher ton cycle et à adapter les conseils du
+            moment, elles ne sont ni partagées ni utilisées à d'autres fins.</li>
         </ul>
 
         <h2 style={S.h2}>2. Utilisation des données</h2>
@@ -71,6 +91,7 @@ export default function Confidentialite() {
           <li style={S.li}>Groq (génération des réponses du coach IA)</li>
           <li style={S.li}>Stripe (paiement de l'abonnement Pro)</li>
           <li style={S.li}>Apple Santé, Oura, Garmin, Withings (uniquement si tu les connectes)</li>
+          <li style={S.li}>OpenStreetMap (retrouver le nom de ta ville à partir de tes coordonnées)</li>
           <li style={S.li}>Vercel et Render (hébergement)</li>
         </ul>
 
