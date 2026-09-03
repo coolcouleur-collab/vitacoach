@@ -77,6 +77,14 @@
 	<!-- ─── Localisation ──────────────────────────────────────────────────── -->
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Solenn continue de mesurer ta sortie quand l'écran est verrouillé. Ta position n'est jamais partagée ni envoyée ailleurs.</string>
+	<!-- L'app ouvre un selecteur de photo pour le repas (input type=file).
+	     Sur iOS, la feuille propose « Prendre une photo » : sans cette cle, le
+	     systeme TERMINE l'application a l'instant ou la camera s'ouvre. Ajoute
+	     le 2026-09-04, avant soumission, apres avoir constate l'absence. -->
+	<key>NSCameraUsageDescription</key>
+	<string>Solenn ouvre l'appareil photo quand tu choisis de photographier ton repas. La photo est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Solenn accede a tes photos quand tu en choisis une pour montrer ton repas. Elle est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Solenn utilise ta position pour mesurer la distance et l'allure de tes sorties, et pour adapter les recommandations météo de ta routine.</string>
 
