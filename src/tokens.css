@@ -272,3 +272,21 @@ body {
   border: 2px solid rgba(var(--rgb-verre), 0.95);
 }
 .curseur-solenn:focus-visible { outline: 2px solid var(--icone); outline-offset: 3px; }
+
+/* ─── Défilement dans les sections de Respiration ─────────────────────────────
+   Les cartes sont des motion.button : framer-motion capture le pointeur pour
+   son effet d'appui, et sur WebKit ça peut empêcher le défilement natif quand
+   le geste démarre dessus. Sur Postures, où la grille de photos couvre toute la
+   zone qui défile, plus aucun glissement ne passait (retour Jean 2026-09-03).
+   Les autres sections tiennent dans l'écran, donc le défaut ne s'y voyait pas.
+   `pan-y` redonne la priorité au défilement vertical sans rien retirer à
+   l'appui, qui reste un geste sans déplacement. */
+.section-respiration button,
+.section-respiration a,
+.section-respiration [role="button"] {
+  touch-action: pan-y;
+}
+/* Sauf le jeu : sa toile a besoin du geste entier pour viser les bulles. */
+.section-respiration canvas {
+  touch-action: none;
+}

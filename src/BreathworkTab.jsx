@@ -180,7 +180,7 @@ export default function BreathworkTab() {
     // Sur l'iPhone de Jean ca faisait 123 px de vide entre l'entete et la
     // rangee des sections, et 120 de trop sous la derniere carte
     // (captures du 2026-09-03). On ne garde qu'une respiration locale.
-    <div style={{ padding: '4px 16px 12px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
+    <div className="section-respiration" style={{ padding: '4px 16px 12px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
 
       {/* Le selecteur de SECTION, au-dessus de tout le reste. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18, justifyContent: 'center' }}>
