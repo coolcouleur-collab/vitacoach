@@ -1,5 +1,51 @@
 # En attente, Solenn
 
+## UNE DECISION QUI REVIENT A JEAN : les photos deja en base
+
+Depuis le commit `06e4cf8`, les photos de repas ne partent plus vers
+`solenn_chats`. Mais les conversations ecrites AVANT ce correctif peuvent
+encore en contenir, en base64 dans la colonne `messages`.
+
+Je ne peux pas compter les lignes concernees : seule la cle anonyme est sur
+cette machine, et RLS renvoie zero ligne (verifie le 4 septembre, `*/0`). Il
+faut donc la console SQL de Supabase.
+
+La requete ci-dessous retire uniquement la cle `image` de chaque message et
+laisse tout le reste intact. Elle est encadree par une transaction : rien n'est
+definitif tant que le `commit` n'est pas lance, et le compte final doit valoir
+zero avant de le lancer. Le garde-fou `jsonb_typeof(messages) = 'array'` evite
+d'ecraser une ligne dont la colonne ne serait pas un tableau.
+
+```sql
+begin;
+
+-- 1. combien de conversations sont concernees
+select count(*) as a_nettoyer, count(distinct user_id) as comptes
+from solenn_chats
+where jsonb_typeof(messages) = 'array' and messages::text like '%data:image%';
+
+-- 2. retirer la cle image, en preservant l'ordre des messages
+update solenn_chats
+set messages = (
+  select coalesce(jsonb_agg(e - 'image' order by n), '[]'::jsonb)
+  from jsonb_array_elements(messages) with ordinality as t(e, n)
+)
+where jsonb_typeof(messages) = 'array' and messages::text like '%data:image%';
+
+-- 3. doit valoir zero
+select count(*) as restantes from solenn_chats where messages::text like '%data:image%';
+
+-- si restantes = 0 et que le compte de l'etape 1 te parait juste :
+commit;
+-- sinon :
+-- rollback;
+```
+
+Cette requete n'a pas ete executee ni testee sur les donnees reelles. Lancer
+d'abord l'etape 1 seule : si le compte ne designe que les comptes de test, la
+decision est sans enjeu.
+
+
 ## Corrige le 4 septembre 2026, en ligne
 
 - **Fuite de donnees entre comptes sur un appareil partage.** Les quatre chemins
