@@ -321,7 +321,9 @@ Format JSON :
       "titre": "titre court du jour",
       "action": "action concrète et précise, avec la durée",
       "duree": "ex: 10 min",
-      "seance": [{ "exo": "squat", "reps": "3 × 10" }],
+      "seance": ${prog.famille === 'nutrition'
+        ? 'null,   ← TOUJOURS null pour ce programme, sans aucune exception'
+        : '[{ "exo": "squat", "reps": "3 × 10" }],'}
       "nutrition": "un conseil alimentaire concret, ou null si le jour n'en porte pas",
       "pourquoi": "1 phrase qui explique POURQUOI ça marche"
     }
