@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { programmeParId } from './src/programmes.js'
 import express from 'express'
 import Groq from 'groq-sdk'
 import Stripe from 'stripe'
@@ -1931,8 +1932,17 @@ app.post('/api/rapport-hebdo', ownerGuard, async (req, res) => {
 // GET  /api/challenge?userId=...   → challenge actif
 // POST /api/challenge-create       → créer un nouveau challenge
 // POST /api/challenge-progress     → marquer un jour comme complété
+// PLUSIEURS PROGRAMMES EN MEME TEMPS, un par famille.
+//
+// Avant, cette route rendait LE programme actif, le plus recent, quelle que
+// soit sa famille. Commencer un programme de nutrition eteignait donc celui
+// de sport, et l'app prevenait « sa progression sera perdue ».
+//
+// Demande de Jean le 3 septembre : on peut desormais suivre du sport, une
+// routine et de la nutrition en parallele. La famille n'est pas une colonne,
+// elle se deduit du `type` range dans le JSON du challenge.
 app.get('/api/challenge', ownerGuard, async (req, res) => {
-  const { userId } = req.query
+  const { userId, famille } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   try {
     const { data } = await supabase
@@ -1941,9 +1951,17 @@ app.get('/api/challenge', ownerGuard, async (req, res) => {
       .eq('user_id', userId)
       .eq('actif', true)
       .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
-    res.json({ challenge: data || null })
+
+    const actifs = data || []
+    if (!famille) return res.json({ challenge: actifs[0] || null })
+
+    // Les programmes crees avant le catalogue n'ont pas de type : ce sont des
+    // defis 21 jours, donc du sport. Sans ce repli ils disparaitraient.
+    const dansLaFamille = actifs.find(c => {
+      const prog = programmeParId(c.challenge?.type)
+      return (prog?.famille || 'sport') === famille
+    })
+    res.json({ challenge: dansLaFamille || null })
   } catch (e) {
     res.json({ challenge: null })
   }
@@ -1966,8 +1984,18 @@ app.post('/api/challenge-create', ownerGuard, async (req, res) => {
     // l'exclure du menage, et on risquerait d'eteindre celui qu'on vient de
     // creer. Deux programmes actifs sont recuperables, zero ne l'est pas.
     if (result?.id) {
-      await supabase.from('challenges').update({ actif: false })
-        .eq('user_id', userId).eq('actif', true).neq('id', result.id)
+      // On n'eteint que les programmes de la MEME famille. Un programme de
+      // nutrition ne doit plus effacer celui de sport : ils coexistent
+      // desormais, un par onglet (demande de Jean, 3 septembre).
+      const familleNeuve = programmeParId(type)?.famille || 'sport'
+      const { data: autres } = await supabase.from('challenges')
+        .select('id, challenge').eq('user_id', userId).eq('actif', true).neq('id', result.id)
+      const aEteindre = (autres || [])
+        .filter(c => (programmeParId(c.challenge?.type)?.famille || 'sport') === familleNeuve)
+        .map(c => c.id)
+      if (aEteindre.length) {
+        await supabase.from('challenges').update({ actif: false }).in('id', aEteindre)
+      }
     }
     res.json({ succes: true, challenge: result })
   } catch (e) {

@@ -201,6 +201,10 @@ function Section({ icon, titre, heure, etapes, checked, onToggle, onVoirGeste, c
 // ─── Carte Nutrition ──────────────────────────────────────────────────────────
 function NutritionCard({ nutrition }) {
   if (!nutrition) return null
+  // Ni repas, ni supplements, ni message : la carte n'affichait plus que son
+  // titre et un vide, ce que Jean a vu le 3 septembre. Une carte qui ne dit
+  // rien ne doit pas exister.
+  if (!nutrition.repas?.length && !nutrition.supplements?.length && !nutrition.indisponible) return null
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -219,6 +223,27 @@ function NutritionCard({ nutrition }) {
           {nutrition.titre || 'Nutrition du jour'}
         </div>
       </div>
+
+      {/* Le filet alimentaire, quand il a du retirer les repas, laisse une
+          explication ici. Elle etait produite par le serveur depuis ce matin
+          et n'etait affichee NULLE PART : la carte montrait un titre et du
+          vide. Un filet silencieux ressemble a un bug. */}
+      {nutrition.indisponible && (
+        <div style={{
+          display: 'flex', gap: 9, alignItems: 'flex-start',
+          background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.28)',
+          borderRadius: 12, padding: '10px 12px',
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ROUGE} strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span style={{ fontSize: 12, lineHeight: 1.55, color: ENCRE, fontFamily: 'Poppins,sans-serif' }}>
+            {nutrition.indisponible}
+          </span>
+        </div>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {(nutrition.repas || []).map((r, i) => (
@@ -709,8 +734,11 @@ export default function RoutineTab({ userId, profil, isPro, onPasserPro }) {
                 />
               )}
 
-              {/* ── Nutrition ── */}
-              <NutritionCard nutrition={routine.nutrition} />
+              {/* Les repas du jour ne s'affichent plus ICI. Ils viennent de la
+                  routine, donc ils etaient rendus dans les deux onglets. La
+                  routine porte le RYTHME de la journee, Nutrition porte les
+                  repas : c'est la separation que Jean a posee, et la carte
+                  s'y tenait mal (demande du 3 septembre). */}
 
               {/* ── Après-midi ── */}
               {routine.apresmidi?.etapes?.length > 0 && (

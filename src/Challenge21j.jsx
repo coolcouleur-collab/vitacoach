@@ -115,7 +115,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   // secondes (constat Jean 2026-08-12). Le cache rend l'ecran instantane, le
   // reseau le rafraichit derriere.
   const [challenge, setChallenge] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem('solenn_challenge_cache') || 'null') } catch { return null }
+    try { return JSON.parse(sessionStorage.getItem(`solenn_challenge_cache_${famille}`) || 'null') } catch { return null }
   })
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -199,11 +199,11 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       // rafraichit en silence.
       if (!challenge) setLoading(true)
       setError(null)
-      const res = await fetch(`${API}/api/challenge?userId=${userId}`, { headers: await authHeaders() })
+      const res = await fetch(`${API}/api/challenge?userId=${userId}&famille=${famille}`, { headers: await authHeaders() })
       if (!res.ok) throw await erreurServeur(res, "Ton programme n'a pas pu être chargé. Réessaie dans un instant.")
       const data = await res.json()
       setChallenge(data.challenge || null)
-      try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(data.challenge || null)) } catch {}
+      try { sessionStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(data.challenge || null)) } catch {}
       // Chaque ouverture fait AVANCER la fenetre glissante des rappels. iOS
       // n'en garde que 64 en attente : on ne peut pas poser un programme de
       // 42 jours d'un coup, il faut revenir en poser la suite. Sans appel
@@ -345,7 +345,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     } catch {}
     const maj = { ...challenge, date_debut: nouveauDebut }
     setChallenge(maj)
-    try { sessionStorage.setItem('solenn_challenge_cache', JSON.stringify(maj)) } catch {}
+    try { sessionStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(maj)) } catch {}
     ignorerReprise()
   }
 

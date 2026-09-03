@@ -490,9 +490,24 @@ export async function runChallengeCheck(pushSubscriptions) {
 
   if (!challenges?.length) return { verifies: 0 }
 
+  // UNE SEULE NOTIFICATION PAR PERSONNE ET PAR JOUR.
+  //
+  // Depuis que l'on peut suivre plusieurs programmes en parallele, un par
+  // famille (3 septembre), cette boucle en trouve jusqu'a trois pour la meme
+  // personne. Sans ce filtre, elle recevrait trois rappels le meme matin, ce
+  // qui est le meilleur moyen de faire couper les notifications.
+  //
+  // On garde le plus recent : c'est celui sur lequel elle vient de s'engager.
+  const parPersonne = new Map()
+  for (const c of challenges) {
+    const vu = parPersonne.get(c.user_id)
+    if (!vu || new Date(c.created_at) > new Date(vu.created_at)) parPersonne.set(c.user_id, c)
+  }
+  const aVerifier = [...parPersonne.values()]
+
   let verifies = 0
 
-  for (const ch of challenges) {
+  for (const ch of aVerifier) {
     try {
       const debut = new Date(ch.date_debut)
       const jourActuel = Math.floor((Date.now() - debut.getTime()) / (24 * 60 * 60 * 1000)) + 1
