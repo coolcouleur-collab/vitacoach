@@ -124,7 +124,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   // famille. Quelqu'un qui se trompe restait pris 21 ou 42 jours, et Jean
   // s'est retrouvee avec un programme dont le contenu ne lui convenait pas,
   // sans pouvoir le regenerer (2026-09-04).
-  const [voirCatalogue, setVoirCatalogue] = useState(false)
+  const [confirmRecommencer, setConfirmRecommencer] = useState(false)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
@@ -228,7 +228,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
-  const handleCreerChallenge = async (type = 'defi21', reglages = {}) => {
+  const handleCreerChallenge = async (type = 'defi21', reglages = {}, recommence = false) => {
     try {
       setCreating(true)
       setError(null)
@@ -242,6 +242,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           userId, type,
           duree: reglages.duree || null,
           intensite: reglages.intensite || null,
+          // Dit au generateur que la personne a DEJA suivi ce programme : il
+          // doit varier les exercices, sans quoi « recommencer » rendrait
+          // exactement le meme texte et ne donnerait aucune impression de neuf.
+          recommence,
         }),
       })
       if (!res.ok) {
@@ -258,7 +262,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       // programme. Demandee a froid au premier lancement, elle est refusee, et
       // iOS ne repropose jamais la fenetre.
       await demanderAutorisation()
-      setVoirCatalogue(false)
       await fetchChallenge()
     } catch (err) {
       setError(err.message)
@@ -467,7 +470,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   const familleEnCours = progCourant?.famille || 'sport'
   const ailleurs = !!challenge && familleEnCours !== famille
 
-  if (!challenge || ailleurs || voirCatalogue) {
+  if (!challenge || ailleurs) {
     const enCours = challenge ? programmeParId(challenge.challenge?.type) : null
     return (
       <div style={styles.container}>
@@ -475,34 +478,6 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             choix, et non apres : quelqu'un qui decouvre en validant que son
             programme alimentaire vient d'etre remplace par du sport ne le
             pardonne pas. */}
-        {/* Ouvert a la demande, alors qu'un programme de CETTE famille tourne :
-            le meme avertissement que pour un programme d'ailleurs, et surtout
-            une porte de sortie. Sans elle, ouvrir le catalogue par curiosite
-            serait un piege. */}
-        {voirCatalogue && !ailleurs && challenge && (
-          <div style={{
-            background: 'rgba(var(--rgb-verre), 0.32)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
-            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: 18, padding: '14px 16px', marginBottom: 14,
-            fontFamily: "'Poppins', sans-serif",
-          }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: ENCRE, marginBottom: 4 }}>
-              Tu suis « {enCours?.titre || challenge.challenge?.titre} »
-            </div>
-            <div style={{ fontSize: 12.5, lineHeight: 1.55, color: ENCRE, marginBottom: 12 }}>
-              En commencer un autre le remplacera, et sa progression sera perdue.
-            </div>
-            <button
-              onClick={() => setVoirCatalogue(false)}
-              style={{
-                padding: '9px 16px', borderRadius: 14, cursor: 'pointer',
-                background: 'transparent', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
-                color: ENCRE, fontSize: 12.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
-              }}>
-              Revenir à mon programme
-            </button>
-          </div>
-        )}
         {ailleurs && (
           <div style={{
             background: 'rgba(var(--rgb-verre), 0.32)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
@@ -1371,11 +1346,14 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
         )}
       </AnimatePresence>, document.body)}
 
-      {/* Changer de programme. Discret et en dernier : ce n'est pas ce qu'on
-          vient faire ici, mais il faut que ce soit possible. Le catalogue
-          rappellera que la progression sera perdue, et offrira le retour. */}
+      {/* RECOMMENCER, et non changer. Ma premiere version ouvrait le catalogue :
+          c'etait a cote. Quelqu'un qui veut du sport va dans l'onglet Sport, le
+          choix de la famille est deja fait par la navigation. Ce qu'on veut ici,
+          c'est repartir a zero sur le MEME programme, avec des exercices qui
+          varient — l'impression de renouveau (Jean, 2026-09-04).
+          Discret et en dernier : ce n'est pas ce qu'on vient faire ici. */}
       <button
-        onClick={() => setVoirCatalogue(true)}
+        onClick={() => setConfirmRecommencer(true)}
         style={{
           display: 'block', margin: '18px auto 4px', padding: '9px 18px',
           borderRadius: 14, cursor: 'pointer', background: 'transparent',
@@ -1383,8 +1361,52 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           color: ENCRE, fontSize: 12, fontWeight: 600,
           fontFamily: "'Poppins', sans-serif", opacity: 0.9,
         }}>
-        Changer de programme
+        Recommencer ce programme
       </button>
+
+      {confirmRecommencer && (
+        <div style={{
+          margin: '10px auto 4px', maxWidth: 340, padding: '14px 16px', borderRadius: 16,
+          background: 'rgba(var(--rgb-verre), 0.32)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+          fontFamily: "'Poppins', sans-serif",
+        }}>
+          <div style={{ fontSize: 12.5, lineHeight: 1.55, color: ENCRE, marginBottom: 12 }}>
+            Tu repars au jour 1 du même programme, avec des exercices renouvelés.
+            Ta progression actuelle sera perdue.
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => setConfirmRecommencer(false)}
+              style={{
+                flex: 1, padding: '10px', borderRadius: 12, cursor: 'pointer',
+                background: 'transparent', border: '1px solid rgba(var(--rgb-creme-dore), 0.35)',
+                color: ENCRE, fontSize: 12.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
+              }}>
+              Annuler
+            </button>
+            <button
+              disabled={creating}
+              onClick={() => {
+                setConfirmRecommencer(false)
+                handleCreerChallenge(challenge?.challenge?.type, {}, true)
+              }}
+              style={{
+                flex: 1, padding: '10px', borderRadius: 12,
+                cursor: creating ? 'wait' : 'pointer',
+                background: 'rgba(var(--rgb-verre), 0.40)',
+                border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                color: AMBRE, fontSize: 12.5, fontWeight: 700, fontFamily: "'Poppins', sans-serif",
+                opacity: creating ? 0.6 : 1,
+              }}>
+              {creating ? 'Génération…' : 'Recommencer'}
+            </button>
+          </div>
+          {error && (
+            <div style={{ fontSize: 12, color: ROUGE, marginTop: 10, lineHeight: 1.45 }}>{error}</div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

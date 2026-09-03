@@ -92,7 +92,7 @@ const PROGRAMME_POIDS = {
 // generation depuis le 2026-08-12.
 const OBJECTIF_POIDS_RE = /poids|mincir|maigrir|corps|réconcilier|silhouette/i
 
-export async function creerChallenge(userId, duree = null, typeId = 'defi21', intensiteId = null) {
+export async function creerChallenge(userId, duree = null, typeId = 'defi21', intensiteId = null, recommence = false) {
   // Le programme choisi commande tout : la duree, la consigne donnee au
   // modele, ce qu'on accepte en retour, et le repli. Il vient du catalogue
   // partage avec le client, pour que la promesse affichee a l'ecran et le
@@ -253,7 +253,17 @@ ${prog.id === 'defi21'
 5. PROGRESSE. Semaine 1 on installe, semaine 2 on monte, semaine 3 on ancre.
    Prévois 1 jour de récupération plus léger tous les 3 à 4 jours.
 
-═══ SÉANCES ═══
+${prog.famille === 'nutrition' ? `═══ AUCUNE SÉANCE ═══
+Ce programme est un RÉÉQUILIBRAGE ALIMENTAIRE. Il ne contient pas de sport.
+Le champ "seance" vaut null sur TOUS les jours, sans exception.
+N'écris jamais « Séance A », « Séance B », « squats », « gainage », « séries »
+ni « répétitions » dans "action" : ces mots n'ont rien à faire ici.
+Le mouvement, s'il apparaît, se limite à une marche mentionnée en passant,
+au maximum une fois par semaine, jamais comme l'action principale du jour.
+Chaque jour porte une action ALIMENTAIRE concrète : une façon de composer un
+repas, un aliment à ajouter, une situation à préparer, une habitude à installer.
+
+` : `═══ SÉANCES ═══
 Quand un jour comporte du mouvement, décris-le dans "seance" avec ces identifiants
 UNIQUEMENT : squat, gainage, fente, pont, chaise, chatvache, marche, etirement,
 pompe, pompegenoux, superman, dips, mountainclimber, jumpingjack, crunch,
@@ -282,8 +292,16 @@ Repère : environ +10 % par semaine, et une petite marche entre deux séances
 consécutives du même exercice. Par exemple squat 3 × 8 au jour 2, 3 × 10 au
 jour 5, 3 × 12 au jour 9, 4 × 12 au jour 16.
 Les jours de récupération font exception : ils redescendent volontairement.
+`}
 
-INTERDITS dans tous les textes : le tiret cadratin (—) et les emojis dans
+${recommence ? `═══ NOUVEAU CYCLE ═══
+Cette personne a DEJA suivi ce programme en entier. Elle le recommence.
+Ne reproduis pas le meme contenu : change les exercices retenus, l'ordre des
+themes, les formulations et les exemples. Le squelette et la progression
+restent, la matiere change. Elle doit reconnaitre le programme sans avoir
+l'impression de relire les memes journees.
+
+` : ''}INTERDITS dans tous les textes : le tiret cadratin (—) et les emojis dans
 les messages. Ponctue avec des virgules, des deux-points ou des points.
 TUTOIE toujours, jamais de vous : Solenn tutoie partout dans l'app.
 Les messages de milestones sont AFFICHÉS AVANT d'être atteints, comme
