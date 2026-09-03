@@ -218,8 +218,14 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
   // renonce : le message d'erreur juste en dessous annoncait l'indisponibilite
   // pendant que le titre cherchait encore. Les deux se contredisaient sur la
   // meme capture (Jean, 2026-09-04).
+  // Dire pourquoi rien ne bouge. Des points qui arrivent mais que le filtre
+  // rejette tous donnaient exactement le meme ecran qu'un signal absent :
+  // chrono qui tourne, distance a zero, et aucune explication (constat Jean,
+  // 2026-09-04). Maintenant l'entete le dit.
   const signal = gps.erreur ? { texte: 'Sans position', ton: '#B91C1C' }
     : gps.precision == null ? { texte: 'Recherche du signal', ton: AMBRE }
+    : gps.points === 0 && gps.rejetes >= 3
+      ? { texte: `Signal trop imprécis, ${gps.precision} m`, ton: '#B91C1C' }
     : gps.precision <= 10 ? { texte: 'Signal bon', ton: VERT }
     : gps.precision <= 25 ? { texte: `Signal moyen, ${gps.precision} m`, ton: AMBRE }
     : { texte: `Signal faible, ${gps.precision} m`, ton: '#B91C1C' }

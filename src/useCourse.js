@@ -59,7 +59,21 @@ const PositionCourse = registerPlugin('PositionCourse')
 const surIphone = () =>
   Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
 
-const PRECISION_MAX  = 25    // mètres
+// Le plafond de precision depend de la SOURCE, et c'est ce qui manquait.
+//
+// 25 m est le bon reglage pour CoreLocation, qui annonce 5 a 15 m en exterieur.
+// Mais l'API du navigateur, celle utilisee dans l'app installee depuis le site,
+// se cale d'abord sur le Wi-Fi et les antennes : elle annonce couramment 20 a
+// 100 m, et met une a deux minutes avant que le GPS prenne la main. Avec un
+// plafond a 25, TOUS ses points etaient rejetes : le chrono tournait, la
+// distance restait a zero (constat Jean, 2026-09-04, une vraie sortie).
+//
+// Accepter des points moins precis ne fabrique pas de distance fantome : le
+// seuil de deplacement vaut deja DEUX FOIS la precision annoncee. Un point a
+// 60 m de precision ne compte que si l'on a bouge de 120 m, ce qui est un vrai
+// deplacement. Le filtre s'adapte donc au lieu de tout jeter.
+const PRECISION_MAX_NATIF = 25   // mètres, CoreLocation
+const PRECISION_MAX_WEB   = 70   // mètres, API du navigateur
 const BOND_MIN       = 5     // mètres, plancher absolu
 const BOND_PRECISION = 2     // le seuil vaut 2 fois la précision annoncée
 const VITESSE_ARRET  = 0.7   // m/s, sous quoi on est à l'arrêt (marche ~ 1,3)
@@ -91,7 +105,8 @@ export function evaluerPoint(precedent, point) {
   if (!Number.isFinite(point?.lat) || !Number.isFinite(point?.lon)) {
     return { garde: false, metres: 0, motif: 'coordonnees invalides' }
   }
-  if (Number.isFinite(point.precision) && point.precision > PRECISION_MAX) {
+  const plafond = point.natif ? PRECISION_MAX_NATIF : PRECISION_MAX_WEB
+  if (Number.isFinite(point.precision) && point.precision > plafond) {
     return { garde: false, metres: 0, motif: 'precision insuffisante' }
   }
 
@@ -100,7 +115,11 @@ export function evaluerPoint(precedent, point) {
   // « immobile » pendant que les coordonnees, elles, continuent de gigoter.
   // Une vitesse negative signifie « je ne sais pas », il ne faut pas la lire.
   const aLaVitesse = Number.isFinite(point.vitesse) && point.vitesse >= 0
-  if (aLaVitesse && point.vitesse < VITESSE_ARRET) {
+  // On ne rejette « a l'arret » que s'il existe DEJA un point de reference.
+  // Sinon le tout premier point, pris a l'arret par definition puisqu'on vient
+  // d'appuyer sur Demarrer, etait jete — et sans premier point, aucune distance
+  // ne peut jamais etre calculee.
+  if (precedent && aLaVitesse && point.vitesse < VITESSE_ARRET) {
     return { garde: false, metres: 0, motif: 'a l arret' }
   }
 
@@ -223,7 +242,7 @@ export function useCourse() {
           setErreur("Sans acces a ta position, la distance ne peut pas etre mesuree.")
           return false
         }
-        ecoute.current = PositionCourse.addListener('position', traiter)
+        ecoute.current = PositionCourse.addListener('position', p => traiter({ ...p, natif: true }))
         const r = await PositionCourse.demarrer()
         if (!r?.demarre) {
           setErreur("La position n'a pas pu demarrer.")
