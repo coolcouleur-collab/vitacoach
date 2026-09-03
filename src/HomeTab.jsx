@@ -2341,13 +2341,17 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
   const pas = metriques?.pas || 0
 
   const allSuggestions = [
-    // Retards rattrapables. Le seuil dépend de l'heure : à 9 h, zéro verre
-    // n'est pas un retard, c'est le début de la journée. On n'alerte donc qu'à
-    // partir de midi, et on ne monte en tête qu'en fin d'après-midi, quand il
-    // reste peu de temps pour rattraper. Borné à 22 h : conseiller de boire à
-    // 2 h du matin dessert le sommeil.
-    eau < 6 && h >= 12 && h < 22 && dejaDit !== 'eau' && { prio: (h >= 17 && eau < 4) ? 1 : 4,
-      icon:<WaterIcon size={15} color={TC} />, label:'Pense à boire',           sub:`${eau} verre${eau > 1 ? 's' : ''} sur 8 aujourd'hui`, tab:'sante', color:TC },
+    // « Pense à boire » a été retirée le 2026-09-04, comme la carte Style avant
+    // elle et pour la même raison : elle est devenue un doublon.
+    //
+    // La barre d'hydratation a rejoint l'accueil la veille, et elle est rendue
+    // juste au-dessus de cette liste. La carte affichait donc le même nombre de
+    // verres à trois centimètres de la barre qui l'affiche déjà, et son appui
+    // envoyait vers Progrès — où le bloc d'hydratation n'existe plus depuis ce
+    // déplacement. Elle promettait une action et ouvrait un écran de lecture.
+    //
+    // Ne pas la rétablir sans déplacer la barre : c'est leur voisinage qui rend
+    // la carte inutile, pas la carte elle-même.
     pas < 5000 && h >= 12 && h < 20 && dejaDit !== 'pas' && { prio: (h >= 16 && pas < 3000) ? 2 : 5,
       icon:<RunIcon size={15} color={TC} />,   label:'Bouger un peu plus',            sub:`${formaterPas(pas)} / 10k pas`, tab:'sante', color:TC },
 
@@ -2359,7 +2363,10 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
     h >= 18 && h < 22 && { prio:3, icon:<MoonIcon size={15} color={TC} />,  label:'Routine du soir',       sub:'Déconnecte et récupère',               tab:'routine', color:TC },
     // 22 h → 5 h : la nuit n'était couverte que jusqu'à minuit, il ne restait
     // plus rien à proposer entre 0 h et 5 h.
-    (h >= 22 || h < 5) && { prio:2, icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',   sub:'Écrans off · respiration · détente',   tab:'sante',   color:TC },
+    // Elle promet « respiration · détente » et ouvrait Progrès, un tableau de
+    // chiffres : la seule carte de cette liste dont la destination ne tenait pas
+    // la promesse du sous-titre. Calme porte la respiration et les sons.
+    (h >= 22 || h < 5) && { prio:2, icon:<MoonIcon size={15} color={TC} />,  label:'Prépare ton sommeil',   sub:'Écrans off · respiration · détente',   tab:'breathwork',   color:TC },
 
     // La carte Style a ete retiree le 2 septembre. Deux raisons.
     //
