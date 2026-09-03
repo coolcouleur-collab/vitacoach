@@ -365,6 +365,12 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   const [modalOura,      setModalOura]       = useState(false)
   const [toast,          setToast]           = useState(null)
   const [oauthBanner,    setOauthBanner]     = useState(null)
+  // Le retour OAuth vaut pour Withings comme pour Garmin : la banniere doit
+  // nommer le bon service, sinon un echec Garmin s'affiche « erreur Withings ».
+  const [oauthNom,       setOauthNom]        = useState('')
+  // Ce que le serveur a reellement configure. Tant qu'on ne le sait pas, on
+  // n'affiche aucun bouton qui pourrait ne mener nulle part.
+  const [dispoServeur,   setDispoServeur]    = useState(null)
   const [syncing,        setSyncing]         = useState(false)
   const [hkConnected,    setHkConnected]     = useState(() => localStorage.getItem(HK_KEY) === 'true')
   const [hkLastSync,     setHkLastSync]      = useState(() => localStorage.getItem(HK_KEY + '_last'))
@@ -382,11 +388,16 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
 
     // ── Retour OAuth Withings ──────────────────────────────────────────────
     const params = new URLSearchParams(window.location.search)
-    if (params.get('integration') === 'withings') {
+    const retour = params.get('integration')
+    if (retour === 'withings' || retour === 'garmin') {
       const statut = params.get('status')
+      setOauthNom(PROVIDERS.find(p => p.id === retour)?.nom || retour)
       window.history.replaceState({}, '', window.location.pathname)
 
-      if (statut === 'ok') {
+      if (statut === 'indisponible') {
+        setOauthBanner('indisponible')
+        setTimeout(() => setOauthBanner(null), 6000)
+      } else if (statut === 'ok') {
         setOauthBanner('ok')
         // Déclencher sync automatique
         if (userId) {
@@ -395,7 +406,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             .then(h => fetch('/api/sync-now', {
               method:  'POST',
               headers: { 'Content-Type': 'application/json', ...h },
-              body:    JSON.stringify({ userId, provider: 'withings' }),
+              body:    JSON.stringify({ userId, provider: retour }),
             }))
             .finally(() => setSyncing(false))
         }
@@ -410,6 +421,19 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       }
     }
   }, [userId])
+
+  // Un bouton « Connecter » qui ne peut pas aboutir est pire qu'un bouton
+  // absent : il promet, puis ejecte. On demande donc au serveur, et un echec de
+  // cette requete laisse `null`, traite comme « disponible » pour ne pas cacher
+  // une integration qui marche a cause d'un simple hoquet reseau.
+  useEffect(() => {
+    let vivant = true
+    fetch('/api/connect/disponibles')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (vivant && d) setDispoServeur(d) })
+      .catch(() => {})
+    return () => { vivant = false }
+  }, [])
 
   async function chargerIntegrations() {
     try {
@@ -573,7 +597,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             </svg>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: VERT, lineHeight: 1.3 }}>
-                Withings connecté !
+                {oauthNom || 'Service'} connecté !
               </div>
               <div style={{ fontSize: 12, color: VERT, marginTop: 2, opacity: 0.85 }}>
                 {syncing ? 'Synchronisation en cours…' : 'Synchronisation lancée, données disponibles dans quelques secondes.'}
@@ -591,7 +615,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
           </motion.div>
         )}
 
-        {oauthBanner === 'error' && (
+        {(oauthBanner === 'error' || oauthBanner === 'indisponible') && (
           <motion.div
             key="banner-error"
             initial={{ opacity: 0, y: -16, scale: 0.97 }}
@@ -618,10 +642,14 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
             </svg>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: ROUGE, lineHeight: 1.3 }}>
-                Erreur de connexion Withings
+                {oauthBanner === 'indisponible'
+                  ? `${oauthNom || 'Ce service'} arrive bientôt`
+                  : `Erreur de connexion ${oauthNom || ''}`.trim()}
               </div>
               <div style={{ fontSize: 12, color: ROUGE, marginTop: 2, opacity: 0.85 }}>
-                Réessaye depuis le bouton ci-dessous, ou vérifie ton compte Withings.
+                {oauthBanner === 'indisponible'
+                  ? "La connexion n'est pas encore ouverte. Tes autres sources continuent de fonctionner."
+                  : 'Réessaye depuis le bouton ci-dessous, ou vérifie ton compte.'}
               </div>
             </div>
             <button
@@ -641,7 +669,12 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         Appareils & Services
       </div>
 
-      {PROVIDERS.map(provider => {
+      {PROVIDERS.map(brut => {
+        // `disponible` est une valeur d'affichage, pas une constante : Withings
+        // et Garmin ne s'affichent connectables que si le serveur a leurs cles.
+        const provider = (dispoServeur && brut.methode === 'oauth' && dispoServeur[brut.id] === false)
+          ? { ...brut, disponible: false }
+          : brut
         const isHK = provider.id === 'apple_health'
         const fiche = isHK && santeInfo.plateforme === 'android'
           ? { ...provider, nom: 'Health Connect',

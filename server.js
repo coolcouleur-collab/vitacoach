@@ -1886,9 +1886,28 @@ app.delete('/api/disconnect', ownerGuard, async (req, res) => {
 
 // ── WITHINGS OAuth 2.0 ────────────────────────────────────────────────────────
 // GET /api/connect/withings?userId=... → redirect vers Withings
+// L'adresse publique de l'app, ou reviennent tous les retours d'integration.
+const APP_URL = process.env.VITE_APP_URL || 'https://meet-solenn.com'
+
+// 4 — l'app demande au serveur ce qui est reellement branche, pour ne pas
+// proposer un bouton qui ne peut mener nulle part. Aucune valeur secrete n'est
+// renvoyee, seulement des booleens.
+app.get('/api/connect/disponibles', (_req, res) => {
+  res.json({
+    withings: !!process.env.WITHINGS_CLIENT_ID,
+    garmin:   !!process.env.GARMIN_CONSUMER_KEY,
+  })
+})
+
+// Une integration dont la cle n'est pas configuree ne doit JAMAIS ejecter la
+// personne hors de l'app. Sans ce garde-fou, client_id valait `undefined` et on
+// envoyait l'utilisateur sur une page d'erreur de Withings, d'ou il ne pouvait
+// revenir qu'avec le bouton Precedent : le pire des echecs, celui qui donne
+// l'impression que Solenn est cassee (releve le 2026-09-03).
 app.get('/api/connect/withings', ownerGuard, (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).send('userId manquant')
+  if (!process.env.WITHINGS_CLIENT_ID) return res.redirect(`${APP_URL}/?integration=withings&status=indisponible`)
   const params = new URLSearchParams({
     response_type: 'code',
     client_id:     process.env.WITHINGS_CLIENT_ID,
@@ -1995,9 +2014,10 @@ function garminOAuthHeader(method, url, extraParams, tokenSecret = '') {
 app.get('/api/connect/garmin', ownerGuard, async (req, res) => {
   const { userId } = req.query
   if (!userId) return res.status(400).json({ error: 'userId requis' })
-  if (!process.env.GARMIN_CONSUMER_KEY) {
-    return res.json({ message: 'Garmin non configuré — GARMIN_CONSUMER_KEY manquant', disponible: false })
-  }
+  // Le bouton fait `window.location.href`, donc la reponse s'affiche en pleine
+  // page : renvoyer du JSON jetait l'utilisateur sur un ecran de texte brut
+  // exposant le nom de la variable d'environnement manquante.
+  if (!process.env.GARMIN_CONSUMER_KEY) return res.redirect(`${APP_URL}/?integration=garmin&status=indisponible`)
   try {
     const cbUrl = `${process.env.API_BASE_URL}/api/connect/garmin/callback`
     const authHeader = garminOAuthHeader('POST', 'https://connectapi.garmin.com/oauth-service/oauth/request_token', {
