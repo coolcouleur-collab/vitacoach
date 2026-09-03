@@ -14,7 +14,11 @@ const ACCENT_FICHE       = AMBRE   // etait var(--or-plein) : 1,73:1 en texte de
 // Le vert ne subsiste QUE sur le badge « Étudié », ou il signifie validé.
 // Ailleurs il etait decoratif et jurait avec la palette ambre (2026-08-12).
 const ETIQUETTE    = ENCRE   // s'appelait GREEN et contenait du terracotta a 2,3:1
-const CTA_GRAD     = 'rgba(var(--rgb-creme), 0.32)'
+// --rgb-creme vaut 100,150,255 de nuit : ce fond virait au bleuet et son
+// libelle tombait a 4,15:1. --rgb-verre est le verre des surfaces, et il est
+// identique a --rgb-creme de jour : le mode jour ne bouge pas. Apres : 6,54:1
+// de nuit, 5,03:1 de jour (mesure 2026-09-03).
+const CTA_GRAD     = 'rgba(var(--rgb-verre), 0.32)'
 
 // Le profil courant, pose par HerbalTab au rendu. Les cartes de fiches sont
 // definies hors du composant et ne recoivent pas ses props : ce relais evite
@@ -382,7 +386,7 @@ function AIRecoCard({ r, onChat, index }) {
               )
             }}
           >
-            <ChatIcon color="#fff" size={13} /> Pourquoi celle-ci ?
+            <ChatIcon color={AMBRE} size={13} /> Pourquoi celle-ci ?
           </button>
         </div>
       </div>
@@ -687,7 +691,7 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
               )
             }}
           >
-            <ChatIcon color="#fff" size={13} /> Pourquoi celle-ci ?
+            <ChatIcon color={AMBRE} size={13} /> Pourquoi celle-ci ?
           </button>
         </div>
       </div>
@@ -902,7 +906,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
             boxShadow:'0 8px 28px rgba(var(--rgb-terracotta), 0.40), 0 2px 6px rgba(var(--rgb-or), 0.30)',
             animation:'popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
           }}>
-            <LeafIcon color="#fff" size={28} />
+            <LeafIcon color={ICONE} size={28} />
           </div>
           {/* Title */}
           <div style={{

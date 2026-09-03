@@ -244,7 +244,7 @@ function PresetBtn({ icon, label, value, active, onClick }) {
         fontFamily: C.font,
         fontSize: 10,
         fontWeight: active ? 700 : 500,
-        color: active ? C.textAccent : C.textMuted,
+        color: active ? C.text : C.textMuted,
         letterSpacing: '0.01em',
       }}>
         {label}
@@ -331,7 +331,7 @@ function PillPicker({ options, value, onChange }) {
               padding: '7px 13px', borderRadius: 20,
               border: active ? `1.5px solid ${C.accent}` : `1px solid ${C.border}`,
               background: active ? C.accentLight : 'transparent',
-              color: active ? C.textAccent : C.textMuted,
+              color: active ? C.text : C.textMuted,
               fontFamily: C.font, fontSize: 12, fontWeight: active ? 700 : 500,
               cursor: 'pointer', outline: 'none',
               WebkitTapHighlightColor: 'transparent',
@@ -662,7 +662,7 @@ export default function SettingsSheet({
                 {!editMode ? (
                   <button
                     onClick={() => setEditMode(true)}
-                    style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${C.accent}`, background: C.accentLight, fontFamily: C.font, fontSize: 12, fontWeight: 700, color: C.textAccent, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
+                    style={{ padding: '7px 14px', borderRadius: 20, border: `1.5px solid ${C.accent}`, background: C.accentLight, fontFamily: C.font, fontSize: 12, fontWeight: 700, color: C.text, cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
                   >
                     Modifier
                   </button>
@@ -1106,7 +1106,7 @@ export default function SettingsSheet({
                     Suivi du cycle menstruel
                   </div>
                   <div style={{ fontFamily: C.font, fontSize: 11, color: C.textMuted, fontWeight: 500 }}>
-                    {profil.cycle ? "Activé, tu le trouves dans « Tes outils » sur l'accueil" : "Désactivé, active-le quand tu veux"}
+                    {profil.cycle ? "Activé, tu le trouves dans Progrès" : "Désactivé, active-le quand tu veux"}
                   </div>
                 </div>
                 <ToggleSwitch
