@@ -704,7 +704,7 @@ function NewPostForm({ onSubmit, onCancel, authors = [] }) {
             padding: '.4rem 1.1rem', borderRadius: 20,
             fontSize: 'max(1.1rem,11px)', fontWeight: 700,
             cursor: 'pointer', fontFamily: 'var(--font)',
-            background: category === c ? 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.70), rgba(190,112,30,0.80))' : 'rgba(var(--rgb-terracotta), 0.08)',
+            background: category === c ? 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.70), rgba(var(--rgb-or), 0.80))' : 'rgba(var(--rgb-terracotta), 0.08)',
             color: category === c ? 'rgba(255,245,225,0.92)' : 'rgba(var(--rgb-terracotta), 0.55)',
             border: category === c ? 'none' : '1px solid rgba(var(--rgb-terracotta), 0.18)',
             boxShadow: category === c ? '0 3px 10px rgba(var(--rgb-terracotta), 0.28)' : 'none',

@@ -24,10 +24,10 @@ function parseRich(text) {
 const TYPES = {
   meals:     { accent:'var(--accent)', labelEl:<><FoodIcon size={13} color={ICONE} /> Repas</>,      gradient:'rgba(var(--rgb-verre), 0.32)' },
   exercises: { accent:'#F59E0B', labelEl:<><MuscleIcon size={13} color="#F59E0B" /> Exercices</>,  gradient:'linear-gradient(135deg,#F59E0B,#D97706)' },
-  tips:      { accent:'var(--accent)', labelEl:<><LightbulbIcon size={13} color={ICONE} /> Conseils</>, gradient:'linear-gradient(135deg,var(--accent),#9E5C35)' },
+  tips:      { accent:'var(--accent)', labelEl:<><LightbulbIcon size={13} color={ICONE} /> Conseils</>, gradient:'linear-gradient(135deg,var(--accent),var(--brun-moyen))' },
   plants:    { accent:'#34c759', labelEl:<><LeafIcon size={13} color="#34c759" /> Plantes</>,      gradient:'linear-gradient(135deg,#34c759,#16a34a)' },
   routine:   { accent:'#38bdf8', labelEl:<><CalendarIcon size={13} color="#38bdf8" /> Programme</>,gradient:'linear-gradient(135deg,#38bdf8,#0ea5e9)' },
-  generic:   { accent:'var(--accent)', labelEl:<><ChatIcon size={13} color={ICONE} /> Suggestions</>, gradient:'linear-gradient(135deg,var(--accent),#9E5C35)' },
+  generic:   { accent:'var(--accent)', labelEl:<><ChatIcon size={13} color={ICONE} /> Suggestions</>, gradient:'linear-gradient(135deg,var(--accent),var(--brun-moyen))' },
 }
 
 // ─── Global keyframes injected once ──────────────────────────────────────────
@@ -67,7 +67,7 @@ function BookingCard({ data }) {
 
       {/* Header gradient */}
       <div style={{
-        background:'linear-gradient(135deg, var(--accent), #9E5C35)',
+        background:'linear-gradient(135deg, var(--accent), var(--brun-moyen))',
         padding:'16px 20px',
         display:'flex', alignItems:'center', gap:14,
       }}>
@@ -131,7 +131,7 @@ function BookingCard({ data }) {
             onClick={() => setAdded(true)}>
             <div style={{
               padding:'14px 16px', borderRadius:16,
-              background: added ? 'linear-gradient(135deg,#34c759,#16a34a)' : 'linear-gradient(135deg,var(--accent),#9E5C35)',
+              background: added ? 'linear-gradient(135deg,#34c759,#16a34a)' : 'linear-gradient(135deg,var(--accent),var(--brun-moyen))',
               color:'#fff',
               fontSize:14, fontWeight:700,
               boxShadow: added ? '0 6px 20px rgba(52,199,89,0.35)' : '0 6px 24px rgba(var(--rgb-terracotta), 0.38)',

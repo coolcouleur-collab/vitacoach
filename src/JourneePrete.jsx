@@ -33,8 +33,8 @@ export default function JourneePrete({ userId, onOpenRoutine, metriques, onUpdat
   const tc      = isNight ? (op) => `rgba(180,210,255,${op})` : () => ENCRE
   const panneau = isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(255,255,255,0.22)'
   const panneau2= isNight ? 'rgba(15,28,58,0.70)'   : 'rgba(var(--rgb-bulle), 0.62)'
-  const trait   = isNight ? 'rgba(180,210,255,0.20)': 'rgba(var(--rgb-terracotta), 0.22)'
-  const trait2  = isNight ? 'rgba(180,210,255,0.24)': 'rgba(var(--rgb-terracotta), 0.30)'
+  const trait   = 'rgba(var(--rgb-terracotta), 0.22)'
+  const trait2  = 'rgba(var(--rgb-terracotta), 0.30)'
   const icone   = isNight ? 'rgba(180,210,255,0.78)': ICONE
   const [data, setData] = useState(null)
 

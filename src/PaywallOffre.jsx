@@ -50,11 +50,11 @@ function Halos() {
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       <div style={{
         position: 'absolute', top: '-15%', left: '-10%', width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.50) 0%, rgba(200,100,40,0.22) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.50) 0%, rgba(var(--rgb-terracotta), 0.22) 45%, transparent 70%)',
       }} />
       <div style={{
         position: 'absolute', bottom: '-10%', right: '-8%', width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.38) 0%, rgba(180,90,30,0.16) 45%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(var(--rgb-terracotta), 0.38) 0%, rgba(var(--rgb-or), 0.16) 45%, transparent 70%)',
       }} />
       <div style={{
         position: 'absolute', top: '30%', left: '25%', width: 700, height: 700, borderRadius: '50%',

@@ -1009,7 +1009,7 @@ export default function SettingsSheet({
                     cursor: 'pointer',
                     outline: 'none',
                     WebkitTapHighlightColor: 'transparent',
-                    boxShadow: '0 8px 24px rgba(158,88,52,0.20), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.32)',
+                    boxShadow: '0 8px 24px rgba(var(--rgb-terracotta), 0.20), inset 0 1px 0 rgba(var(--rgb-creme-pale), 0.32)',
                     marginBottom: 8,
                     transition: 'opacity 0.15s ease, transform 0.12s ease',
                   }}

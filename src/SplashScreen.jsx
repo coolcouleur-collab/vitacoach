@@ -59,7 +59,7 @@ export default function SplashScreen({ onDone }) {
           transition={{ duration: 0.70, ease: EASE_SPRING, delay: 0.06 }}
           style={{
             width: 88, height: 88, borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.28), rgba(190,112,30,0.18))',
+            background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.28), rgba(var(--rgb-or), 0.18))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 0 0 10px rgba(var(--rgb-terracotta), 0.07), 0 0 0 20px rgba(var(--rgb-terracotta), 0.04)',
             position: 'relative', overflow: 'hidden',
@@ -83,7 +83,7 @@ export default function SplashScreen({ onDone }) {
             letterSpacing: '-0.02em', lineHeight: 1,
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontStyle: 'italic',
-            background: 'linear-gradient(90deg, var(--accent) 0%, var(--or-plein) 28%, var(--accent) 50%, #F0B060 72%, var(--accent) 100%)',
+            background: 'linear-gradient(90deg, var(--accent) 0%, var(--or-plein) 28%, var(--accent) 50%, var(--or-plein) 72%, var(--accent) 100%)',
             backgroundSize: '200% auto',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',

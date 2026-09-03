@@ -1139,7 +1139,7 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '3px 11px', borderRadius: 20, marginBottom: 8,
                   background: isNight ? 'rgba(15,28,58,0.62)' : 'rgba(var(--rgb-bulle), 0.62)',
-                  border: isNight ? '1px solid rgba(180,210,255,0.24)' : '1px solid rgba(var(--rgb-terracotta), 0.24)',
+                  border: '1px solid rgba(var(--rgb-terracotta), 0.24)',
                   fontFamily: "'Poppins',system-ui,sans-serif",
                   fontSize: 10.5, fontWeight: 600,
                   color: isNight ? 'rgba(190,215,250,0.85)' : ENCRE,
@@ -1634,7 +1634,7 @@ function NovaLogBtn({ onClick }) {
       style={{
         marginTop:12, display:'flex', alignItems:'center', gap:8,
         padding:'9px 28px', borderRadius:100, cursor:'pointer',
-        background: hovered ? 'rgba(var(--rgb-terracotta), 0.08)' : 'rgba(255,248,240,0.18)',
+        background: hovered ? 'rgba(var(--rgb-terracotta), 0.08)' : 'rgba(var(--rgb-verre), 0.18)',
         border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
         fontFamily:"'Poppins',system-ui,sans-serif", fontSize:13, fontWeight:500,
         color: ENCRE,   // le survol se voit au fond de la carte, pas au texte
@@ -2103,7 +2103,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
           style={{
             width:28, height:28, borderRadius:'50%', flexShrink:0,
             background: 'transparent',
-            border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-terracotta), 0.12)'}`,
+            border: `1px solid ${'rgba(var(--rgb-terracotta), 0.12)'}`,
             cursor:'pointer', outline:'none',
             display:'flex', alignItems:'center', justifyContent:'center',
           }}
@@ -2113,8 +2113,8 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
             animate={{ rotate: collapsed ? 0 : 45 }}
             transition={{ type:'spring', stiffness:420, damping:26 }}
           >
-            <line x1="6" y1="1" x2="6" y2="11" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
-            <line x1="1" y1="6" x2="11" y2="6" stroke={isNight ? "rgba(180,210,255,0.55)" : "rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="6" y1="1" x2="6" y2="11" stroke={"rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
+            <line x1="1" y1="6" x2="11" y2="6" stroke={"rgba(var(--rgb-terracotta), 0.85)"} strokeWidth="1.6" strokeLinecap="round"/>
           </motion.svg>
         </motion.button>
       </div>
@@ -2127,7 +2127,7 @@ function DailyTasks({ profil, metriques, onSwitchTab, isNight = false, preset = 
           transition={{ duration: 1.1, type:'spring', stiffness:55, damping:16 }}
           style={{
             height:'100%', borderRadius:8, position:'relative', overflow:'hidden',
-            background:'linear-gradient(90deg,#FFD4A0,#E8A07A,var(--accent),var(--accent))',
+            background:'linear-gradient(90deg,rgb(var(--rgb-creme-dore)),var(--or-plein),var(--accent),var(--accent))',
             boxShadow:'0 0 6px rgba(var(--rgb-terracotta), 0.45)',
           }}
         >
@@ -2242,7 +2242,7 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
           background: isNight
             ? 'linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)'
             : 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.16) 0%, rgba(var(--rgb-terracotta), 0.06) 70%)',
-          border: isNight ? '1.5px solid rgba(180,210,255,0.22)' : '1.5px solid rgba(var(--rgb-terracotta), 0.30)',
+          border: '1.5px solid rgba(var(--rgb-terracotta), 0.30)',
           boxShadow: isNight ? '0 6px 22px rgba(0,0,0,0.25)' : '0 6px 22px rgba(var(--rgb-terracotta), 0.14)',
         }}
       >
@@ -2264,7 +2264,7 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
           {/* Barre d'avancement : voir la progression compte autant que l'action */}
           <div style={{
             marginTop: 8, height: 3, borderRadius: 2, overflow: 'hidden',
-            background: isNight ? 'rgba(180,210,255,0.14)' : 'rgba(var(--rgb-terracotta), 0.14)',
+            background: 'rgba(var(--rgb-terracotta), 0.14)',
           }}>
             <div style={{
               width: `${Math.round(progression.filter(Boolean).length / 21 * 100)}%`, height: '100%',
@@ -2281,13 +2281,13 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
             background: fait
               ? (isNight ? 'rgba(159,196,232,0.85)' : 'rgba(var(--rgb-terracotta), 0.85)')
               : (isNight ? 'rgba(10,20,45,0.50)' : 'rgba(var(--rgb-bulle), 0.60)'),
-            border: isNight ? '1.5px solid rgba(180,210,255,0.35)' : '1.5px solid rgba(var(--rgb-terracotta), 0.38)',
+            border: '1.5px solid rgba(var(--rgb-terracotta), 0.38)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
           }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke={fait ? (isNight ? '#0a142d' : '#fff') : (isNight ? 'rgba(180,210,255,0.55)' : 'rgba(var(--rgb-terracotta), 0.55)')}
+            stroke={fait ? (isNight ? '#0a142d' : '#fff') : ('rgba(var(--rgb-terracotta), 0.55)')}
             strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -2485,7 +2485,7 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
                 flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6,
                 padding:'13px 6px', borderRadius:18, cursor:'pointer',
                 background: isNight ? 'rgba(15,28,58,0.70)' : 'rgba(var(--rgb-bulle), 0.62)',
-                border: isNight ? '1.5px solid rgba(180,210,255,0.20)' : '1.5px solid rgba(var(--rgb-terracotta), 0.26)',
+                border: '1.5px solid rgba(var(--rgb-terracotta), 0.26)',
                 fontFamily:"'Poppins',system-ui,sans-serif",
               }}
             >
@@ -2618,7 +2618,7 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
               ? "linear-gradient(145deg,rgba(255,175,70,0.36),rgba(245,140,30,0.26))"
               : preset === 'sunset'
                 ? "linear-gradient(145deg,rgba(220,80,30,0.32),rgba(180,50,15,0.22))"
-                : "linear-gradient(145deg,rgba(var(--rgb-bulle), 0.46),rgba(252,240,218,0.32))"}
+                : "linear-gradient(145deg,rgba(var(--rgb-bulle), 0.46),rgba(var(--rgb-verre), 0.32))"}
           borderRadius={20} blur={10} lightDirection="top-left"
           shadowHoverColor={isNight ? "rgba(100,150,255,0.12)" : "rgba(217,119,6,0.14)"} shadowHoverIntensity={0.7}
           isHoverable={false} style={{ width:'100%' }}
@@ -3007,7 +3007,7 @@ const hc = {
     display:'inline-block', animation:'dotPulse 2s ease-in-out infinite',
     boxShadow:'0 0 6px rgba(232,160,122,0.7)' },
   greetName: { marginBottom:36, textAlign:'center' },
-  greetNameAccent: { background:'linear-gradient(135deg,var(--accent),#E8A07A)',
+  greetNameAccent: { background:'linear-gradient(135deg,var(--accent),var(--or-plein))',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' },
   circleWrap: { position:'relative', width:250, height:250,
     display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 },

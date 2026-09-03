@@ -242,7 +242,7 @@ function HealthPermModal({ onAllow, onLater, isNight = false }) {
           <div key={label} style={{
             display:'flex', alignItems:'center', gap:12,
             padding:'10px 14px', borderRadius:13, marginBottom:7,
-            background:'rgba(200,100,40,0.06)', border:'1px solid rgba(var(--rgb-creme-dore), 0.18)',
+            background:'rgba(var(--rgb-terracotta), 0.06)', border:'1px solid rgba(var(--rgb-creme-dore), 0.18)',
           }}>
             <span style={{ display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
               <Icon size={18} color={encre2} />
@@ -2630,7 +2630,7 @@ padding: isMobile
                 width:'76%', maxWidth:300,
                 background: nuitNav
                   ? 'linear-gradient(160deg, rgba(18,32,64,0.92) 0%, rgba(10,22,48,0.95) 100%)'
-                  : 'linear-gradient(160deg, rgba(var(--rgb-bulle), 0.28) 0%, rgba(255,224,175,0.20) 100%)',
+                  : 'linear-gradient(160deg, rgba(var(--rgb-bulle), 0.28) 0%, rgba(var(--rgb-creme-dore), 0.20) 100%)',
                 backdropFilter:'blur(40px)', WebkitBackdropFilter:'blur(40px)',
                 borderLeft: nuitNav ? '1px solid rgba(160,200,255,0.16)' : '1px solid rgba(210,145,40,0.09)',
                 boxShadow:'none',
@@ -3110,7 +3110,7 @@ padding: isMobile
             style={{
               position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 106px)', right: 18,
               width: 52, height: 52, borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.42), rgba(190,112,30,0.48))',
+              background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta), 0.42), rgba(var(--rgb-or), 0.48))',
               border: '1px solid rgba(255,220,170,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
@@ -4054,7 +4054,7 @@ const s = {
   logo: {
     fontSize:20, fontWeight:900, letterSpacing:'-0.04em',
     /* Géré par ShinyLogoText, statique par défaut, shimmer au hover/tap */
-    background:'linear-gradient(90deg, var(--accent) 0%, #F5C8AA 18%, #FFF3EC 34%, #F5C8AA 50%, var(--accent) 66%, #FCDEC8 82%, var(--accent) 100%)',
+    background:'linear-gradient(90deg, var(--accent) 0%, rgb(var(--rgb-creme-dore)) 18%, rgb(var(--rgb-creme-pale)) 34%, rgb(var(--rgb-creme-dore)) 50%, var(--accent) 66%, rgb(var(--rgb-creme)) 82%, var(--accent) 100%)',
     backgroundSize:'250% 100%',
     WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
   },

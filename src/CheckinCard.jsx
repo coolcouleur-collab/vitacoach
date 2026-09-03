@@ -145,7 +145,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       // et ne semblaient pas cliquables (retour Jean 2026-08-08).
                       // C'est pourtant la première interaction de la journée.
                       background: active ? `${teinteHumeur(m.color)}26` : (isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-bulle), 0.55)'),
-                      border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : (isNight ? 'rgba(180,210,255,0.22)' : 'rgba(var(--rgb-terracotta), 0.30)')}`,
+                      border: `1.5px solid ${active ? `${teinteHumeur(m.color)}88` : ('rgba(var(--rgb-terracotta), 0.30)')}`,
                       color: tc(active ? 0.95 : 0.72),
                     }}
                   >
@@ -177,7 +177,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                           padding: '6px 13px', borderRadius: 20, cursor: 'pointer', outline: 'none',
                           WebkitTapHighlightColor: 'transparent', fontFamily: F,
                           fontSize: 12, fontWeight: sel ? 700 : 500,
-                          border: `1px solid ${sel ? warmText(0.55) : (isNight ? 'rgba(180,210,255,0.14)' : 'rgba(var(--rgb-terracotta), 0.16)')}`,
+                          border: `1px solid ${sel ? warmText(0.55) : ('rgba(var(--rgb-terracotta), 0.16)')}`,
                           background: sel ? warmText(0.14) : 'transparent',
                           color: sel ? (isNight ? nightText(0.95) : warmText(0.95)) : tc(0.60),
                           transition: 'all 0.18s',
@@ -213,8 +213,8 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
             style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '12px 14px', borderRadius: 16,
-              background: isNight ? 'rgba(180,210,255,0.05)' : 'rgba(var(--rgb-terracotta), 0.06)',
-              border: `1px solid ${isNight ? 'rgba(180,210,255,0.10)' : 'rgba(var(--rgb-terracotta), 0.14)'}`,
+              background: 'rgba(var(--rgb-terracotta), 0.06)',
+              border: `1px solid ${'rgba(var(--rgb-terracotta), 0.14)'}`,
             }}
           >
             {savedMood && (
@@ -236,7 +236,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
               onClick={() => { setEditing(true); setMood(saved.mood); setTags(saved.tags || []) }}
               style={{
                 padding: '6px 13px', borderRadius: 20, cursor: 'pointer', outline: 'none',
-                border: `1px solid ${isNight ? 'rgba(180,210,255,0.16)' : 'rgba(var(--rgb-terracotta), 0.22)'}`,
+                border: `1px solid ${'rgba(var(--rgb-terracotta), 0.22)'}`,
                 background: 'transparent', color: tc(0.70),
                 fontSize: 11, fontWeight: 600, fontFamily: F, flexShrink: 0,
                 WebkitTapHighlightColor: 'transparent',
