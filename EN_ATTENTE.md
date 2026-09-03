@@ -673,3 +673,43 @@ Ouvre-les et envoie des captures : c'est le dernier angle mort.
 - Le catalogue de programmes annonce toujours **« Un programme, construit a
   partir de ton profil »** au singulier cote nutrition, ce qui est exact
   aujourd'hui mais faux des qu'un second programme alimentaire existera.
+
+## 8. Passe du 3 septembre : Sante Naturelle, Cycle, Parametres, Style, Respiration
+
+Corrige et deploye, rien a faire de ton cote sauf verifier a l'oeil :
+
+- Le **bouton retour** des cinq pages outils ne collait plus au haut de
+  l'ecran. Son parent porte l'animation `tabFade`, dont la derniere image est
+  `transform:translateY(0)` ; avec `fill-mode:both` ce transform reste applique
+  pour toujours, et un transform meme nul cree un bloc conteneur, dans lequel
+  `position:fixed` se refere au conteneur et non a l'ecran. Le bouton descendait
+  avec la page et se posait sur la premiere carte du Cycle. Il vit maintenant
+  DANS la barre d'entete, a gauche du logo.
+- L'**entete** appliquait son masque de fondu au texte et pas seulement au
+  voile : le sous-titre palissait pendant que le contenu defilant dessous
+  restait net, d'ou la collision sur tes captures. Le voile est devenu un
+  calque a part.
+- Les **bandes de categories** de Sante Naturelle avaient un fondu en creme
+  code en dur, visible comme une bande claire sur le navy. Remplace par un
+  masque sans couleur, pose seulement du cote ou il reste a defiler.
+- Les **Parametres** etaient illisibles la nuit : fond creme fige sous des
+  textes qui suivaient les jetons, soit **1,03:1**. Corrige a 11,23:1.
+- Trois defauts plus anciens, **de jour**, trouves en verifiant : les titres de
+  section des Parametres a 2,95:1, le badge « ETUDIE » a 2,49:1, et les icones
+  blanches de Sante Naturelle a **1,27:1**, donc invisibles.
+
+### Ce qui reste, mineur
+
+- « **Version du ...** », en bas des Parametres, est a 4,34:1 de jour au lieu
+  de 4,5. C'est le jeton des libelles decoratifs, seuil 3,0, et il s'agit d'une
+  mention technique. A trancher : le laisser ou l'aligner sur le texte courant.
+- Les avantages **barres** de la carte Pro (ce que l'essai n'inclut pas) sont a
+  4,25:1. Du texte desactive n'est pas soumis au seuil, mais si tu preferes
+  qu'ils se lisent quand meme, dis-le.
+
+### Ce que je n'ai pas pu mesurer
+
+Le navigateur ou je mesure est connecte au profil **Camille**, pas au tien.
+La page **Cycle** ne s'ouvre donc pas de ce cote, et son releve n'a pas ete
+fait ecran rendu : je n'ai verifie que son code, qui est propre. Envoie une
+capture du Cycle apres ce deploiement pour fermer ce point.
