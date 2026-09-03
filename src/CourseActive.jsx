@@ -21,6 +21,7 @@ import { useCourse, allure, formaterAllure, formaterDistance } from './useCourse
 import { ENCRE, ICONE, AMBRE, VERT } from './palette'
 import { veilleDemarrer, veilleMettreAJour, veilleArreter } from './ecranVeille'
 import { enregistrerSeance, TYPES_SEANCE } from './seances'
+import { readHeartRateWindow } from './useHealthKit'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -88,6 +89,12 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
   const [fini, setFini] = useState(false)
   const [totalMs, setTotalMs] = useState(0)
   const [totalM, setTotalM] = useState(0)
+  // La frequence cardiaque de la sortie. `null` tant qu'on ne sait pas, et
+  // `null` pour toujours s'il n'y a rien a dire : sans montre, sans iPhone
+  // natif ou sans autorisation, on n'affiche RIEN plutot qu'un tiret. Un
+  // ecran de fin de course n'a pas a promettre un chiffre qu'il n'aura jamais.
+  const [fc, setFc] = useState(null)
+  const fenetre = useRef(null)
   const [confirmer, setConfirmer] = useState(false)
   const [demarrage, setDemarrage] = useState(true)
   // null tant qu'on n'a pas enregistre, puis { stats, serie } : c'est ce qui
@@ -160,6 +167,15 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
     setTotalMs(ms)
     setTotalM(gps.metres)
     setFini(true)
+
+    // Le creneau exact de la sortie, fige ici : `enregistrer` peut etre appele
+    // plusieurs minutes plus tard si la personne reste sur l'ecran de fin, et
+    // la fenetre cardiaque doit couvrir l'effort, pas l'attente.
+    const fin = Date.now()
+    fenetre.current = { debut: fin - ms, fin }
+    // Le telephone n'a pas de capteur : ces relevés viennent d'une montre deja
+    // synchronisee dans Sante. On les relit, on ne les mesure pas.
+    readHeartRateWindow(fin - ms, fin).then(setFc).catch(() => {})
   }
 
   /**
@@ -178,8 +194,13 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
       type: mode,
       dureeMs: totalMs,
       metres: Math.round(totalM),
-      debut: fin - totalMs,
-      fin,
+      // Le creneau fige a l'arret, pas celui de l'appui sur Enregistrer.
+      debut: fenetre.current?.debut ?? fin - totalMs,
+      fin: fenetre.current?.fin ?? fin,
+      // Absents quand aucune montre n'a rien releve : le bilan ne doit pas
+      // enregistrer des zeros qui se liraient plus tard comme des mesures.
+      fcMoyenne: fc?.moyenne ?? null,
+      fcMax: fc?.max ?? null,
     }
     const r = await enregistrerSeance(userId, seance)
     setEnCoursEnreg(false)
@@ -265,6 +286,16 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
           <Chiffre valeur={formaterDistance(fini ? totalM : gps.metres)} libelle="Distance" />
           <Chiffre valeur={formaterAllure(secParKm)} libelle="Allure / km" />
         </div>
+
+        {/* La frequence cardiaque n'apparait qu'a la fin, et seulement si une
+            montre a releve quelque chose. Plus petite que les trois chiffres du
+            haut : elle se lit apres l'effort, pas en courant. */}
+        {fini && fc && (
+          <div style={{ display: 'flex', gap: 8, marginTop: 22 }}>
+            <Chiffre valeur={`${fc.moyenne}`} libelle="FC moyenne" taille={30} />
+            <Chiffre valeur={`${fc.max}`} libelle="FC max" taille={30} />
+          </div>
+        )}
 
         {gps.erreur && (
           <div style={{
