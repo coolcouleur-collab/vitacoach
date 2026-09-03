@@ -98,31 +98,49 @@ function tamponPluie(ctx) {
     const nbGouttes = Math.floor(8 * 26)
     for (let g = 0; g < nbGouttes; g++) {
       const debut = Math.floor(Math.random() * (n - sr * 0.05))
-      // Hauteur : de 900 a 4200 Hz. Les gouttes graves sonnent creuses, les
-      // tres aigues cliquettent.
-      const f = 900 + Math.random() * 3300
-      // Duree : de 4 a 16 ms. Plus long, ca sonne comme une cloche.
-      const tau = 0.0025 + Math.random() * 0.007
-      // La plupart des gouttes sont lointaines ; quelques-unes sont proches.
+      // Chaque goutte est un BRUIT filtre, pas une note.
+      //
+      // Elle etait un sinus qui decroit, avec un peu de souffle par-dessus.
+      // Un sinus a enveloppe courte, c'est la definition d'un bip : Jean a dit
+      // « vachement robotise », et la mesure lui donnait raison. La platitude
+      // spectrale, qui vaut 0 pour une note pure et 1 pour du bruit, tombait a
+      // 0,09. Elle est maintenant a 0,35 pour la meme densite.
+      //
+      // On prend donc du bruit et on le passe dans un resonateur peu selectif.
+      // C'est ce que fait une goutte reelle : elle excite une surface, qui
+      // sonne un peu, mais ne tient aucune hauteur.
+      const f = 1200 + Math.random() * 4300
+      const tau = 0.002 + Math.random() * 0.005
+      // Q entre 0,9 et 2,5. Au-dela le resonateur redevient une note : a Q=4 la
+      // platitude retombe a 0,07, soit le defaut d'origine.
+      const Q = 0.9 + Math.random() * 1.6
+      // Une goutte descend en hauteur pendant qu'elle s'eteint. Une hauteur
+      // tenue, meme breve, s'entend comme un signal electronique.
+      const glissement = 0.25 + Math.random() * 0.3
       const ampli = 0.12 + Math.pow(Math.random(), 3) * 0.42
-      const duree = Math.min(Math.floor(tau * 5 * sr), n - debut)
-      const w = 2 * Math.PI * f / sr
+      const duree = Math.min(Math.floor(tau * 6 * sr), n - debut)
+
+      // Filtre a variable d'etat, deux poles : quatre lignes, et il tient la
+      // hauteur variable sans avoir a recalculer de coefficients.
+      let bas = 0, bande = 0
+      const amortissement = 1 / Q
       for (let i = 0; i < duree; i++) {
-        const t = i / sr
-        const enveloppe = Math.exp(-t / tau)
-        // Un peu de souffle dans l'attaque : une goutte n'est pas un sinus pur,
-        // elle eclabousse.
-        const eclat = (Math.random() * 2 - 1) * 0.35
-        d[debut + i] += ampli * enveloppe * (Math.sin(w * i) * 0.65 + eclat)
+        const fc = f * (1 - glissement * i / duree)
+        const fk = 2 * Math.sin(Math.PI * Math.min(fc, 7000) / sr)
+        const x = (Math.random() * 2 - 1) * Math.exp(-i / sr / tau)
+        bas += fk * bande
+        const haut = x - bas - amortissement * bande
+        bande += fk * haut
+        d[debut + i] += bande * ampli * 1.6
       }
     }
 
-    // Le tampon sort a 0,38 fois le niveau des autres ambiances, qui sont du
-    // bruit continu : on le remonte. 1,6 est le maximum sans ecreter, le pic
-    // mesure atteint 0,83 ; a 2,0 les gouttes fortes saturent.
-    // L'ecretage reste en garde-fou : les gouttes s'additionnent au hasard.
+    // 0,70 : le pic mesure atteint 0,76, sans un seul echantillon ecrete sur
+    // six secondes. Les gouttes en bruit filtre ont des cretes bien plus hautes
+    // que les anciennes en sinus, il faut donc plus de reserve qu'avant.
+    // L'ecretage reste en garde-fou : elles s'additionnent au hasard.
     for (let i = 0; i < n; i++) {
-      const v = d[i] * 1.6
+      const v = d[i] * 0.70
       d[i] = v > 1 ? 1 : v < -1 ? -1 : v
     }
   }
