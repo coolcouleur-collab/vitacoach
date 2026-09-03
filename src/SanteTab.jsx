@@ -316,6 +316,66 @@ function InsightsCarousel({ insights, onClose }) {
 // Le meme titre de section etait recopie a l'identique a chaque usage. Un
 // role, un endroit : c'est la regle qu'on vient de poser pour les couleurs,
 // elle vaut aussi pour la mise en page.
+// ─── LES QUATRE VUES DU RETROSPECTIF ───────────────────────────────────────
+// La page empilait six blocs analytiques sous les cartes du jour, tous montes
+// en meme temps. Trois d'entre eux lancent leur propre requete au montage :
+// ouvrir Progres declenchait donc trois appels reseau avant d'afficher quoi que
+// ce soit, et le bilan de la semaine, le plus lent, tenait le haut de la pile.
+// C'est ce que Jean decrivait par « ta semaine prend beaucoup de temps a
+// s'afficher » : ce n'etait pas le rapport qui etait lent, c'etait la page qui
+// attendait tout le monde.
+//
+// Une seule vue est montee a la fois. L'ordre des pastilles conserve la
+// hierarchie decidee le 2026-08-12, du plus court au plus long terme : le bilan
+// de la semaine, ce qu'on a fait, la duree, puis les chiffres bruts.
+const VUES = [
+  { id: 'semaine', label: 'Ta semaine' },
+  { id: 'fait',    label: 'Ce que tu as fait' },
+  { id: 'duree',   label: 'Sur la durée' },
+  { id: 'detail',  label: 'Le détail' },
+]
+
+function RangeeVues({ vue, setVue }) {
+  return (
+    <div
+      role="tablist"
+      aria-label="Période"
+      style={{
+        display: 'flex', gap: 7, overflowX: 'auto', padding: '2px 4px 12px',
+        scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      {VUES.map(v => {
+        const actif = vue === v.id
+        return (
+          <button
+            key={v.id}
+            role="tab"
+            aria-selected={actif}
+            onClick={() => setVue(v.id)}
+            style={{
+              flexShrink: 0, padding: '9px 15px', borderRadius: 14, cursor: 'pointer',
+              fontFamily: 'Poppins,sans-serif', fontSize: 12.5,
+              fontWeight: actif ? 700 : 500,
+              color: actif ? '#fff' : ENCRE,
+              background: actif
+                ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))'
+                : 'rgba(var(--rgb-verre), 0.28)',
+              border: actif
+                ? '1px solid rgba(var(--rgb-brun-fonce),0.55)'
+                : '1px solid rgba(var(--rgb-creme-dore), 0.38)',
+              backdropFilter: actif ? undefined : 'blur(18px)',
+              WebkitBackdropFilter: actif ? undefined : 'blur(18px)',
+            }}
+          >
+            {v.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function SousTitre({ children, premier = false }) {
   return (
     <>
@@ -328,6 +388,7 @@ function SousTitre({ children, premier = false }) {
 }
 
 export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate, score, history = [], userId, isPro, onPasserPro, onSwitchTab }) {
+  const [vue, setVue] = useState('semaine')
   const [editMode, setEditMode]           = useState(null)
   const [tempVal, setTempVal]             = useState('')
   const [insights, setInsights]           = useState(null)
@@ -638,14 +699,15 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
            duree arrivaient AVANT le bilan de la semaine et les blocs se
            suivaient sans respiration ni hierarchie : brouillon
            (constat Jean 2026-08-12). ── */}
-      <SousTitre>Ta semaine</SousTitre>
-      {userId && (
+      <SousTitre>Ton recul</SousTitre>
+      <RangeeVues vue={vue} setVue={setVue} />
+
+      {vue === 'semaine' && userId && (
         <div style={{ marginBottom: 22 }}>
           <RapportHebdo userId={userId} isPro={isPro} onPasserPro={onPasserPro} />
         </div>
       )}
 
-      <SousTitre>Sur la durée</SousTitre>
       {/* La progression du programme arrive de l'onglet Programmes, ou elle
           repondait a « ou j'en suis ? » au milieu d'un ecran qui repond a
           « qu'est-ce que je fais aujourd'hui ? ». Deux questions qu'on ne se
@@ -659,11 +721,22 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
       {/* isNight={false} preset="day" etait ecrit en dur ici : en deplacant le
           graphe de l'accueil vers Progres, je lui ai fige le jour. Sa carte de
           verre restait donc en creme sous une encre de nuit, a 4,08:1. */}
-      <WeeklySparkline history={history} isNight={ambiance === 'night'} preset={ambiance}
-        userId={userId} avecObservations={false} />
-      <TesSeances profil={profil} />
-      <ProgressionProgramme userId={userId} />
-      <TesProgres history={history} userId={userId} />
+      {vue === 'fait' && (
+        <>
+          <TesSeances profil={profil} />
+          <ProgressionProgramme userId={userId} />
+        </>
+      )}
+
+      {vue === 'duree' && (
+        <>
+          <WeeklySparkline history={history} isNight={ambiance === 'night'} preset={ambiance}
+            userId={userId} avecObservations={false} />
+          <TesProgres history={history} userId={userId} />
+        </>
+      )}
+
+      {vue === 'detail' && <HistoriqueSection history={history} onLog={openEdit} />}
       {/* Le Cycle arrive de « Tes outils », sur l'accueil, ou il etait range
           avec Style, Respiration et Soins. Ces trois-la s'ouvrent pour FAIRE
           quelque chose ; le cycle s'ouvre pour consulter, comme tout ce qui
@@ -698,8 +771,6 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
         </button>
       )}
 
-      <SousTitre>Le détail</SousTitre>
-      <HistoriqueSection history={history} onLog={openEdit} />
 
       {/* ── Sections retirées le 2026-07-24 pour alléger la page (décision Jean) :
            « Conseils personnalisés » → remplacés par Tes progrès + insights ;
