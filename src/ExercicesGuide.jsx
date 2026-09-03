@@ -151,6 +151,40 @@ const AnimPompeGenoux = () => (
   />
 )
 
+// Les quatre animations des exercices arrives le 3 septembre, en remplacement
+// de ceux qu'aucune banque d'images ne savait montrer.
+const AnimCrunchVelo = () => (
+  <DeuxPoses labelA="Coude vers genou" labelB="On change"
+    poseA={<><circle cx="70" cy="72" r="6" {...S} /><path d="M64 74 L30 78 M44 76 L54 62 M36 77 L20 70" {...S} /></>}
+    poseB={<><circle cx="70" cy="72" r="6" {...S} /><path d="M64 74 L30 78 M44 76 L34 62 M36 77 L54 66" {...S} /></>}
+    duree={2.4}
+  />
+)
+
+const AnimSquatSumo = () => (
+  <DeuxPoses labelA="Pieds larges" labelB="Descends"
+    poseA={<><circle cx="50" cy="26" r="6" {...S} /><path d="M50 32 L50 58 M50 58 L30 84 M50 58 L70 84" {...S} /></>}
+    poseB={<><circle cx="50" cy="38" r="6" {...S} /><path d="M50 44 L50 62 M50 62 L28 72 L26 84 M50 62 L72 72 L74 84" {...S} /></>}
+    duree={3}
+  />
+)
+
+const AnimEnfant = () => (
+  <DeuxPoses labelA="À genoux" labelB="Pose le front"
+    poseA={<><circle cx="46" cy="44" r="6" {...S} /><path d="M46 50 L46 70 M46 70 L30 80 M46 70 L64 80" {...S} /></>}
+    poseB={<><circle cx="30" cy="74" r="6" {...S} /><path d="M36 76 L64 72 M36 76 L14 80 M64 72 L74 82" {...S} /></>}
+    duree={3.4}
+  />
+)
+
+const AnimEtireIschio = () => (
+  <DeuxPoses labelA="Allongé" labelB="Monte la jambe"
+    poseA={<><circle cx="20" cy="76" r="6" {...S} /><path d="M26 78 L62 80 M62 80 L86 82" {...S} /></>}
+    poseB={<><circle cx="20" cy="76" r="6" {...S} /><path d="M26 78 L62 80 M62 80 L74 52 M32 78 L70 58" {...S} /></>}
+    duree={3.4}
+  />
+)
+
 const AnimSuperman = () => (
   <DeuxPoses labelA="À plat ventre" labelB="Soulève"
     poseA={<><circle cx="20" cy="80" r="6" {...S} /><path d="M26 82 L74 82 M26 82 L12 86 M74 82 L88 86" {...S} /></>}
@@ -202,22 +236,6 @@ const AnimRussianTwist = () => (
   />
 )
 
-const AnimBirdDog = () => (
-  <DeuxPoses labelA="À quatre pattes" labelB="Bras et jambe opposés"
-    poseA={<><circle cx="24" cy="56" r="6" {...S} /><path d="M30 60 L68 62 M34 62 L34 88 M64 63 L64 88" {...S} /></>}
-    poseB={<><circle cx="24" cy="54" r="6" {...S} /><path d="M30 58 L68 60 M30 56 L10 48 M34 60 L34 88 M68 60 L90 54" {...S} /></>}
-    duree={3.0}
-  />
-)
-
-const AnimDonkeyKick = () => (
-  <DeuxPoses labelA="À quatre pattes" labelB="Pousse le talon au ciel"
-    poseA={<><circle cx="26" cy="56" r="6" {...S} /><path d="M32 60 L68 62 M36 62 L36 88 M64 63 L64 88" {...S} /></>}
-    poseB={<><circle cx="26" cy="56" r="6" {...S} /><path d="M32 60 L66 60 M36 62 L36 88 M66 60 L76 42 L88 34" {...S} /></>}
-    duree={2.6}
-  />
-)
-
 const AnimMollets = () => (
   <DeuxPoses labelA="Talons au sol" labelB="Monte sur la pointe" duree={1.9}
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 58 M50 32 L60 42 M50 58 L47 76 L47 92 M50 58 L53 76 L53 92" {...S} /></>}
@@ -240,13 +258,6 @@ const AnimGenouxHauts = () => (
   />
 )
 
-const AnimSquatSaute = () => (
-  <DeuxPoses labelA="Descends en squat" labelB="Explose vers le haut" duree={1.8}
-    poseA={<><circle cx="46" cy="36" r="7" {...S} /><path d="M47 43 L50 62 M48 50 L62 54 M50 62 L64 68 L60 92 M50 62 L38 70 L42 92" {...S} /></>}
-    poseB={<><circle cx="50" cy="8" r="7" {...S} /><path d="M50 15 L50 46 M50 22 L38 8 M50 22 L62 8 M50 46 L42 62 L40 78 M50 46 L58 62 L60 78" {...S} /></>}
-  />
-)
-
 const AnimFenteLaterale = () => (
   <DeuxPoses labelA="Debout" labelB="Grand pas sur le côté"
     poseA={<><circle cx="50" cy="16" r="7" {...S} /><path d="M50 23 L50 56 M50 32 L60 42 M50 56 L46 74 L46 92 M50 56 L54 74 L54 92" {...S} /></>}
@@ -260,14 +271,6 @@ const AnimPlancheLaterale = () => (
     poseA={<><circle cx="22" cy="66" r="6" {...S} /><path d="M28 70 L70 78 M30 72 L30 86 M70 78 L88 84" {...S} /></>}
     poseB={<><circle cx="22" cy="58" r="6" {...S} /><path d="M28 62 L70 74 M30 64 L30 84 M70 74 L88 82 M26 56 L26 40" {...S} /></>}
     duree={3.2}
-  />
-)
-
-const AnimLegRaise = () => (
-  <DeuxPoses labelA="Allongé, jambes au sol" labelB="Monte les jambes"
-    poseA={<><circle cx="18" cy="84" r="6" {...S} /><path d="M24 86 L52 86 M52 86 L88 88" {...S} /></>}
-    poseB={<><circle cx="18" cy="84" r="6" {...S} /><path d="M24 86 L52 86 M52 86 L66 52 L70 40" {...S} /></>}
-    duree={2.6}
   />
 )
 
@@ -346,12 +349,14 @@ export const PHOTOS_EXOS = {
   jumpingjack:     { url: P(6339477),  pos: '50%' },
   genouxhauts:     { url: P(6339342),  pos: '50%' },
 
-  // REJETEES apres verification, elles montraient autre chose :
-  //   leg raise 14942844 : genoux plies et bassin enroule, c'est un crunch
-  //     inverse et non un releve de jambes tendues ;
-  //   step-up 13896897 : aucune caisse visible, et au recadrage de 130px elle
-  //     serait coupee de toute facon. Le geste lu est « genoux hauts ».
-  legraise: null, stepup: null,
+  // REJETEE apres verification : leg raise 14942844 montrait genoux plies et
+  // bassin enroule, un crunch inverse et non un releve de jambes tendues.
+  // L'exercice lui-meme a disparu le 3 septembre, remplace par le crunch velo.
+  //
+  // Le step-up 13896897 avait ete rejete le meme jour, « aucune caisse
+  // visible ». Reexamine le 3 septembre au VRAI recadrage, source 867x1300 et
+  // non 600x400 : la caisse est bien la, et a 70 % de hauteur elle est entiere
+  // sous le pied. C'est le cadrage qui etait mal simule, pas la photo.
 
   // JAMAIS TROUVEES. Pexels et Unsplash ne renvoient que le mouvement voisin :
   //   pompes sur genoux -> pompes classiques (deja 17 recherches en aout) ;
@@ -360,8 +365,16 @@ export const PHOTOS_EXOS = {
   //   squat saute -> uniquement des sauts sur caisse, autre geste ;
   //   (fente laterale : rayee le 3 septembre, la photo existait, elle etait
   //    simplement rangee sous « fentes alternees ».)
-  birddog: null, donkeykick: null,
-  squatsaute: null,
+  // Les quatre exercices sans photo ont ete REMPLACES le 3 septembre, a la
+  // demande de Jean : « on peut pas laisser juste des animations ». Plutot que
+  // de chercher indefiniment des images qui n'existent pas dans les banques,
+  // on a cherche des exercices que les banques savent montrer. Chacune
+  // verifiee en la REGARDANT, puis au recadrage reel de 130 px.
+  crunchvelo:  { url: P(7721988),  pos: '50%' },   // coude vers genou oppose
+  enfant:      { url: P(3822147),  pos: '50%' },   // front au sol, bras devant
+  etireischio: { url: P(7593010),  pos: '50%' },   // allonge, jambe tenue en l'air
+  squatsumo:   { url: P(7746282),  pos: '50%' },   // pieds larges, genoux flechis
+  stepup:      { url: P(13896897), pos: '70%' },   // un pied sur la caisse
   // Trouvee le 3 septembre, la ou on ne la cherchait plus : elle etait posee
   // sur « Fentes alternees ». Adducteurs et appui lateral, c'est bien ce
   // mouvement-la.
@@ -511,18 +524,18 @@ export const EXOS = [
     erreurs: ['Bouger seulement les bras sans tourner le buste', 'Arrondir complètement le dos'],
   },
   {
-    id: 'birddog', nom: 'Bird-dog', duree: '3 × 8 / côté', cible: 'Dos · équilibre',
-    mots: ['bird dog', 'bird-dog', 'quadrupède'],
-    Anim: AnimBirdDog,
-    etapes: ['À quatre pattes, dos plat', 'Tends le bras droit et la jambe gauche en même temps', 'Deux secondes de tenue, reviens, change de côté'],
-    erreurs: ['Cambrer en levant la jambe trop haut', 'Tourner les hanches au lieu de rester carré'],
+    id: 'enfant', nom: 'Posture de l\'enfant', duree: '3 × 30 s', cible: 'Dos · détente',
+    mots: ['posture enfant', 'child pose', 'balasana'],
+    Anim: AnimEnfant,
+    etapes: ['À genoux, gros orteils qui se touchent', 'Assieds-toi sur les talons et avance les mains loin devant', 'Pose le front au sol et respire dans le dos'],
+    erreurs: ['Forcer les fesses sur les talons si les genoux tirent', 'Retenir sa respiration : c\'est elle qui fait le travail'],
   },
   {
-    id: 'donkeykick', nom: 'Coup de pied d\'âne', duree: '3 × 12 / jambe', cible: 'Fessiers',
-    mots: ['donkey kick', 'coup de pied'],
-    Anim: AnimDonkeyKick,
-    etapes: ['À quatre pattes, genou plié à 90°', 'Pousse le talon vers le plafond, jambe pliée', 'Redescends sans poser le genou, recommence'],
-    erreurs: ['Cambrer le bas du dos pour monter plus haut', 'Balancer la jambe au lieu de pousser'],
+    id: 'etireischio', nom: 'Étirement ischio-jambiers', duree: '3 × 30 s / jambe', cible: 'Arrière des cuisses',
+    mots: ['ischio', 'ischio-jambiers', 'étirement jambe'],
+    Anim: AnimEtireIschio,
+    etapes: ['Allongé sur le dos, une jambe pliée pied au sol', 'Monte l\'autre jambe et attrape-la derriere la cuisse', 'Tire doucement vers toi, jambe presque tendue'],
+    erreurs: ['Tirer sur le genou au lieu de l\'arrière de la cuisse', 'Décoller la tête et les épaules du sol'],
   },
   {
     id: 'mollets', nom: 'Élévations mollets', duree: '3 × 15', cible: 'Mollets',
@@ -546,11 +559,11 @@ export const EXOS = [
     erreurs: ['Se pencher en arrière pour monter les genoux', 'Atterrir sur les talons'],
   },
   {
-    id: 'squatsaute', nom: 'Squats sautés', duree: '3 × 8', cible: 'Jambes · explosivité',
-    mots: ['squat sauté', 'jump squat'],
-    Anim: AnimSquatSaute,
-    etapes: ['Descends en squat complet', 'Explose vers le haut, bras vers le ciel', 'Atterris genoux souples et enchaîne directement'],
-    erreurs: ['Atterrir jambes tendues : ça cogne les genoux', 'Réduire la descente pour sauter plus vite'],
+    id: 'squatsumo', nom: 'Squat sumo', duree: '3 × 12', cible: 'Cuisses · intérieur',
+    mots: ['squat sumo', 'sumo squat', 'squat large'],
+    Anim: AnimSquatSumo,
+    etapes: ['Pieds bien plus larges que les épaules, pointes vers l\'extérieur', 'Descends en gardant le buste droit', 'Pousse dans les talons pour remonter'],
+    erreurs: ['Les genoux qui rentrent vers l\'intérieur', 'Se pencher en avant au lieu de descendre droit'],
   },
   {
     id: 'fentelaterale', nom: 'Fentes latérales', duree: '3 × 8 / côté', cible: 'Jambes · adducteurs',
@@ -567,11 +580,11 @@ export const EXOS = [
     erreurs: ['Les hanches qui s\'affaissent vers le sol', 'L\'épaule qui remonte vers l\'oreille'],
   },
   {
-    id: 'legraise', nom: 'Relevés de jambes', duree: '3 × 10', cible: 'Bas des abdominaux',
-    mots: ['relevé de jambes', 'leg raise'],
-    Anim: AnimLegRaise,
-    etapes: ['Allongé, mains sous le bas du dos', 'Monte les jambes tendues à la verticale', 'Redescends LENTEMENT sans poser les talons'],
-    erreurs: ['Le bas du dos qui décolle en cambrant', 'Laisser tomber les jambes au lieu de freiner'],
+    id: 'crunchvelo', nom: 'Crunch vélo', duree: '3 × 12 / côté', cible: 'Abdominaux · obliques',
+    mots: ['crunch vélo', 'bicycle crunch', 'pédalage'],
+    Anim: AnimCrunchVelo,
+    etapes: ['Allongé, mains derrière la tête sans tirer dessus', 'Amène le coude droit vers le genou gauche', 'Change de côté sans reposer les épaules'],
+    erreurs: ['Tirer sur la nuque avec les mains', 'Aller vite au lieu d\'aller loin dans la rotation'],
   },
 ]
 

@@ -40,15 +40,15 @@ const EXO_INFOS = {
   jumpingjack:     { nom: 'Jumping jacks' },
   crunch:          { nom: 'Crunch' },
   russiantwist:    { nom: 'Torsions russes' },
-  birddog:         { nom: 'Bird-dog' },
-  donkeykick:      { nom: "Coup de pied d'âne" },
+  enfant:          { nom: "Posture de l'enfant" },
+  etireischio:     { nom: 'Étirement ischio-jambiers' },
   mollets:         { nom: 'Élévations mollets' },
   stepup:          { nom: 'Montées sur chaise' },
   genouxhauts:     { nom: 'Montées de genoux' },
-  squatsaute:      { nom: 'Squats sautés' },
+  squatsumo:       { nom: 'Squat sumo' },
   fentelaterale:   { nom: 'Fentes latérales' },
   planchelateral:  { nom: 'Planche latérale' },
-  legraise:        { nom: 'Relevés de jambes' },
+  crunchvelo:      { nom: 'Crunch vélo' },
 }
 
 function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
