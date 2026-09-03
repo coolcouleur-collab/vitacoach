@@ -123,6 +123,12 @@
   --degrade-bouton-survol: linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%);
   --degrade-squelette:     linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%);
   --degrade-squelette-2:   linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%);
+  /* La carte d'une tenue. Deux de ses trois arrets etaient ecrits en dur en
+     creme : la nuit, la carte restait chaude et l'encre bleu clair y
+     disparaissait purement et simplement (capture de Jean, 3 septembre).
+     La valeur de jour reprend le rendu exact, --rgb-creme-clair valant
+     255,246,232. */
+  --degrade-tenue: linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;
@@ -205,6 +211,7 @@
   --degrade-bouton-survol: linear-gradient(150deg,#1E3055 0%,#22375F 50%,#2A4270 100%);
   --degrade-squelette:     linear-gradient(110deg, rgba(30,50,90,0.55) 30%, rgba(45,70,120,0.95) 50%, rgba(30,50,90,0.55) 70%);
   --degrade-squelette-2:   linear-gradient(110deg, rgba(30,50,90,0.6) 30%, rgba(45,70,120,0.9) 50%, rgba(30,50,90,0.6) 70%);
+  --degrade-tenue: linear-gradient(165deg, rgba(26,44,78,0.96) 0%, rgba(30,50,88,0.94) 55%, rgba(34,58,102,0.92) 100%);
   /* La meme aurore, avec LE CIEL DE L'ACCUEIL : ce sont les quatre teintes
      du preset `night` de l'anneau, pour que le chat soit la meme nuit. */
   --aurore-1:  #050E22;
@@ -319,6 +326,12 @@
   --degrade-bouton-survol: linear-gradient(150deg,#FFFAF6 0%,#F5E3CC 50%,#EED0B0 100%);
   --degrade-squelette:     linear-gradient(110deg, rgba(245,225,195,0.55) 30%, rgba(255,242,220,0.95) 50%, rgba(245,225,195,0.55) 70%);
   --degrade-squelette-2:   linear-gradient(110deg, rgba(245,225,195,0.6) 30%, rgba(255,240,215,0.9) 50%, rgba(245,225,195,0.6) 70%);
+  /* La carte d'une tenue. Deux de ses trois arrets etaient ecrits en dur en
+     creme : la nuit, la carte restait chaude et l'encre bleu clair y
+     disparaissait purement et simplement (capture de Jean, 3 septembre).
+     La valeur de jour reprend le rendu exact, --rgb-creme-clair valant
+     255,246,232. */
+  --degrade-tenue: linear-gradient(165deg, rgba(255,246,232,0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%);
   /* L'aurore animee, le fond de l'onglet Solenn. */
   --aurore-1:  #FFD49A;
   --aurore-2:  #F5C8AA;

@@ -136,8 +136,18 @@ Format JSON :
   "stat_phare": { "valeur": "...", "label": "..." },
   "analyse": "2-3 phrases authentiques et chaleureuses sur la semaine",
   "point_fort": "ce qui s'est bien passé",
-  "point_progres": "1 chose à améliorer, formulée positivement",
-  "focus_prochain": "1 seul focus actionnable pour la semaine prochaine",
+  "point_progres": "1 chose à améliorer, formulée positivement", // ne repete pas le titre : l ecran affiche deja « A ameliorer »
+CE QUE L'APP FAIT DEJA. Ton conseil doit s'appuyer dessus, jamais demander de
+le faire a la main :
+- des RAPPELS quotidiens, activables dans Reglages ;
+- un CHECK-IN du matin pour noter sommeil, eau, pas et humeur ;
+- des PROGRAMMES de sport, de routine et de nutrition, un par famille ;
+- des IDEES DE REPAS qui respectent les exclusions alimentaires ;
+- un CHRONOMETRE de course et de marche, avec distance.
+Conseiller « fixe-toi un rappel quotidien » quand l'app en propose, c'est
+renvoyer quelqu'un a un carnet papier devant l'outil qui le remplace.
+
+  "focus_prochain": "1 seul focus actionnable pour la semaine prochaine, qui S'APPUIE SUR L'APP",
   "message_solenn": "message personnel de Solenn à ${nom}, 1-2 phrases max, intime et sincère"
 }`
 

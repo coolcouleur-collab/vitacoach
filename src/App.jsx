@@ -3411,7 +3411,7 @@ function TenueCard({ tenue, style: extraStyle }) {
       display: 'flex', flexDirection: 'column',
       boxShadow: '0 16px 48px rgba(180,100,40,0.18), 0 2px 8px rgba(180,100,40,0.10)',
       border: '1px solid rgba(var(--rgb-creme-dore), 0.45)',
-      background: 'linear-gradient(165deg, rgba(var(--rgb-creme-clair), 0.96) 0%, rgba(251,232,204,0.94) 55%, rgba(245,221,176,0.92) 100%)',
+      background: 'var(--degrade-tenue)',
       backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
       ...extraStyle,
     }}>
