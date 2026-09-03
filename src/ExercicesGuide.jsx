@@ -302,7 +302,12 @@ export const PHOTOS_EXOS = {
   // Regle posee en aout, apres le meme constat sur les pompes sur genoux : une
   // photo qui enseigne un AUTRE geste est pire que l'animation, qui montre le
   // bon. Mieux vaut pas d'image qu'une image fausse.
-  fente:     null,
+  // Retrouvee le 3 septembre, en regardant les images au lieu de lire les
+  // descriptions : genou avant flechi, jambe arriere tendue, entierement
+  // visible au recadrage de 130 px. Le premier candidat, 7243157, etait
+  // decrit « forward lunge » mais coupait les jambes au cadrage : c'est
+  // exactement le piege que la note d'aout signalait.
+  fente:     { url: P(8770407), pos: '50%' },
   pont:      { url: P(4534643), pos: '70%' },
   chaise:    { url: P(6740054), pos: '50%' },
   chatvache: { url: P(6303431), pos: '50%' },
@@ -315,11 +320,18 @@ export const PHOTOS_EXOS = {
   dips:        { url: P(6496123), pos: '50%' },
   // Trouvees sur Unsplash le 2026-08-13, apres l'ajout de la cle : Pexels
   // n'avait rien de juste pour ces deux mouvements.
-  // Pompes sur genoux : DIX-SEPT recherches sur les deux banques, aucune photo
-  // qui montre reellement les genoux au sol. Celle retenue le 2026-08-13
-  // montrait une planche jambes tendues, signalee par Jean : une photo qui
-  // enseigne un autre geste est pire que l'animation, qui montre le bon.
-  pompegenoux: null,
+  // Pompes sur genoux : DIX-SEPT recherches en aout n'avaient rien donne, et
+  // celle retenue le 2026-08-13 montrait une planche jambes tendues, signalee
+  // par Jean. La carte affichait donc son animation, seule d'une grille de
+  // photos, ce que Jean a releve le 3 septembre.
+  //
+  // Trouvee ce jour-la, et voici ce qui a change : les recherches precedentes
+  // se fiaient aux DESCRIPTIONS Pexels, qui disent toutes « push-ups » sans
+  // distinguer les variantes. Celle-ci a ete choisie en REGARDANT les images,
+  // puis verifiee au recadrage reel de 130 px. Buste descendu, genoux au sol,
+  // tibias releves : « genoux au sol, chevilles croisees et relevees », les
+  // termes memes de la fiche.
+  pompegenoux: { url: P(4775186), pos: '50%' },
   superman:    { url: 'https://images.unsplash.com/photo-1591258370814-01609b341790?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080', pos: '50%' },
   // Vague 2 : animations pour l'instant, la recherche de photos justes se
   // fera en lot (le taux de photos reellement exactes est faible, voir les
