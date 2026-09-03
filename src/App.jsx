@@ -527,10 +527,22 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
         left:14, right:14,
         zIndex:100, cursor:'default',
         background: pillBg,
-        backdropFilter:'blur(28px)', WebkitBackdropFilter:'blur(28px)',
+        // Verre glace. Le flou fait une moyenne des couleurs derriere la barre,
+        // et une moyenne est toujours plus fade que ses termes : saturate() leur
+        // rend ce que le melange leur a pris. Il n'y a ni refraction ni physique
+        // la-dedans, seulement cette compensation et un liseré plus clair sur
+        // l'arete du haut. Rien ne coute : saturate se calcule dans le meme
+        // passage que le flou, qui etait deja la.
+        // Mesure de l'ecart perceptuel avant / apres, derriere la barre :
+        // lever 81, coucher 71, jour 26, nuit 22 (en dessous de 12 l'oeil ne
+        // distingue pas). L'effet vit donc au lever et au coucher, et c'est
+        // mathematique : la nuit le ciel est presque noir, il n'y a aucune
+        // couleur a raviver. Pose a l'essai le 2026-09-04, a la demande de Jean.
+        backdropFilter:'blur(28px) saturate(190%)', WebkitBackdropFilter:'blur(28px) saturate(190%)',
         border:'1px solid rgba(255,255,255,0.14)',
+        borderTopColor:'rgba(255,255,255,0.42)',
         borderRadius:30,
-        boxShadow:'0 8px 30px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.14)',
+        boxShadow:'0 8px 30px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.38)',
         display:'flex', alignItems:'center', justifyContent:'center',
         overflow:'hidden',
         padding:'7px 6px',

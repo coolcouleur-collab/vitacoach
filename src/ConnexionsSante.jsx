@@ -64,6 +64,7 @@ const PROVIDERS = [
     icon:        ICONS.withings,
     description: 'Balance, tensiomètre, montre, marque française',
     couleur:     'var(--accent)',
+    trame:       'var(--rgb-terracotta)',
     donnees:     ['Poids', 'Tension artérielle', 'FC repos', 'Sommeil', 'Température'],
     methode:     'oauth',   // redirect OAuth
     disponible:  true,
@@ -74,6 +75,7 @@ const PROVIDERS = [
     icon:        ICONS.oura,
     description: 'Meilleure qualité de données sommeil au monde',
     couleur:     'var(--or-plein)',
+    trame:       'var(--rgb-or)',
     donnees:     ['Sommeil (stades)', 'HRV', 'Readiness', 'Pas', 'FC'],
     methode:     'token',   // Personal Access Token
     disponible:  true,
@@ -84,6 +86,7 @@ const PROVIDERS = [
     icon:        ICONS.garmin,
     description: 'GPS, sport, stress, fréquence cardiaque',
     couleur:     'var(--accent)',
+    trame:       'var(--rgb-terracotta)',
     donnees:     ['Pas', 'Calories', 'Stress', 'Sommeil', 'FC'],
     methode:     'oauth',
     disponible:  true,
@@ -97,6 +100,7 @@ const PROVIDERS = [
     icon:        ICONS.apple_health,
     description: 'Via l\'app native iOS, sync automatique',
     couleur:     '#ef4444',
+    trame:       '239, 68, 68',
     donnees:     ['Pas', 'Sommeil', 'FC', 'Calories', 'Poids'],
     methode:     'native',
     disponible:  true,
@@ -139,8 +143,10 @@ function ProviderCard({ provider, connecte, lastSync, onConnect, onDisconnect, o
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
         <div style={{
           width: 44, height: 44, borderRadius: 12,
-          background: `${provider.couleur}18`,
-          border: `1px solid ${provider.couleur}30`,
+          // provider.couleur vaut var(--accent) : ni le fond ni la bordure de
+          // cette pastille ne s'affichaient. On passe par le triplet.
+          background: `rgba(${provider.trame}, 0.09)`,
+          border: `1px solid rgba(${provider.trame}, 0.19)`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0,
         }}>

@@ -42,6 +42,8 @@
 
   /* ── Les huit familles, en triplets, pour les opacités ── */
   --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
+  --rgb-icone:      175,  91,  45;   /* #AF5B2D en triplet, pour les halos */
+  --rgb-ambre:      138,  82,   6;   /* #8A5206 en triplet */
   --rgb-creme-dore: 255, 220, 160;   /* 163 */
   --rgb-creme:      255, 235, 210;   /* 129 */
   --rgb-feuille: 255, 244, 232;   /* le fond de la feuille Parametres */
@@ -164,6 +166,8 @@
      la terracotta reste la couleur des traits et des fonds légers, le crème
      reste celle du verre. Ce sont les mêmes surfaces, dans l'autre lumière. */
   --rgb-terracotta: 180, 210, 255;
+  --rgb-icone:      159, 196, 232;   /* #9FC4E8 en triplet, pour les halos */
+  --rgb-ambre:      143, 179, 224;   /* #8FB3E0 en triplet */
   --rgb-creme-dore: 140, 180, 240;
   --rgb-creme:      100, 150, 255;
   --rgb-feuille:  20,  36,  72;   /* la meme, en navy : 11,23:1 pour l'encre */
@@ -258,6 +262,8 @@
 
   /* ── Les huit familles, en triplets, pour les opacités ── */
   --rgb-terracotta: 200, 123, 82;    /* 615 occurrences */
+  --rgb-icone:      175,  91,  45;   /* #AF5B2D en triplet, pour les halos */
+  --rgb-ambre:      138,  82,   6;   /* #8A5206 en triplet */
   --rgb-creme-dore: 255, 220, 160;   /* 163 */
   --rgb-creme:      255, 235, 210;   /* 129 */
   --rgb-feuille: 255, 244, 232;   /* le fond de la feuille Parametres */

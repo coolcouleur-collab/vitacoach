@@ -491,7 +491,9 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
             <svg viewBox="0 0 120 120" style={{ width: 120, height: 120, transform: 'rotate(-90deg)' }}>
               <defs>
                 <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor={`${scoreColor}55`} />
+                  {/* scoreColor vaut var(--accent) : la concatenation rendait cet arret de
+                      degrade invalide, l'anneau perdait sa nuance de depart. */}
+                  <stop offset="0%" stopColor="rgba(var(--rgb-terracotta),0.33)" />
                   <stop offset="100%" stopColor={scoreColor} />
                 </linearGradient>
               </defs>
@@ -500,7 +502,7 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
               <circle cx="60" cy="60" r="52" fill="none"
                 stroke="url(#scoreGrad)" strokeWidth="10" strokeLinecap="round"
                 strokeDasharray={`${dash} ${circumference}`}
-                style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: `drop-shadow(0 0 5px ${scoreColor}40)` }} />
+                style={{ transition: 'stroke-dasharray 1.2s ease, stroke 0.5s ease', filter: 'drop-shadow(0 0 5px rgba(var(--rgb-terracotta),0.25))' }} />
               <circle cx={tipX} cy={tipY} r="5" fill="none" stroke={scoreColor} strokeWidth="2"
                 style={{ animation: 'tipRing 2s ease-out infinite', transformOrigin: `${tipX}px ${tipY}px` }} />
               <circle cx={tipX} cy={tipY} r="5" fill={scoreColor}

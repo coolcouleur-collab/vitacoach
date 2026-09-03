@@ -14,11 +14,11 @@ const sunsetText = (op) => `rgba(255,225,200,${op})`
 // l'app (retour Jean 2026-08-08). Aucun rouge : dire qu'on va mal n'est pas une
 // faute, c'est une information, même principe que le score et la grille du défi.
 const MOODS = [
-  { val: 1, label: 'Très mal',   color: 'rgb(var(--rgb-humeur-1))', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
-  { val: 2, label: 'Pas top',    color: 'rgb(var(--rgb-humeur-2))', mouth: 'M8 16 Q11 14.5 14 16' },
-  { val: 3, label: 'Ça va',      color: 'rgb(var(--rgb-humeur-3))', mouth: 'M8 15.5 L14 15.5' },
-  { val: 4, label: 'Bien',       color: 'var(--ambre-fonce)', mouth: 'M8 14.5 Q11 16.5 14 14.5' },
-  { val: 5, label: 'Très bien',  color: AMBRE, mouth: 'M8 14 Q11 17.5 14 14' },
+  { val: 1, label: 'Très mal',   color: 'rgb(var(--rgb-humeur-1))', trame: 'var(--rgb-humeur-1)', mouth: 'M8 16.5 Q11 13.5 14 16.5' },
+  { val: 2, label: 'Pas top',    color: 'rgb(var(--rgb-humeur-2))', trame: 'var(--rgb-humeur-2)', mouth: 'M8 16 Q11 14.5 14 16' },
+  { val: 3, label: 'Ça va',      color: 'rgb(var(--rgb-humeur-3))', trame: 'var(--rgb-humeur-3)', mouth: 'M8 15.5 L14 15.5' },
+  { val: 4, label: 'Bien',       color: 'var(--ambre-fonce)', trame: 'var(--rgb-ambre)', mouth: 'M8 14.5 Q11 16.5 14 14.5' },
+  { val: 5, label: 'Très bien',  color: AMBRE, trame: 'var(--rgb-ambre)', mouth: 'M8 14 Q11 17.5 14 14' },
 ]
 
 const TAGS = ['Énergie', 'Motivation', 'Sérénité', 'Gratitude', 'Stress', 'Fatigue', 'Anxiété', 'Douleurs']
@@ -27,7 +27,7 @@ function MoodFace({ mood, size = 38, active }) {
   const stroke = active ? mood.color : 'currentColor'
   return (
     <svg width={size} height={size} viewBox="0 0 22 22" fill="none" style={{ display: 'block' }}>
-      <circle cx="11" cy="11" r="9.2" stroke={stroke} strokeWidth="1.4" fill={active ? `${mood.color}22` : 'none'} />
+      <circle cx="11" cy="11" r="9.2" stroke={stroke} strokeWidth="1.4" fill={active ? `rgba(${mood.trame}, 0.13)` : 'none'} />
       <circle cx="7.8" cy="8.8" r="1.05" fill={stroke} />
       <circle cx="14.2" cy="8.8" r="1.05" fill={stroke} />
       <path d={mood.mouth} stroke={stroke} strokeWidth="1.4" strokeLinecap="round" fill="none" />
@@ -194,7 +194,7 @@ export default function CheckinCard({ userId, onUpdate, isNight = false, preset 
                       width: '100%', padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
                       background: 'rgba(var(--rgb-verre), 0.32)',
                       backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                      color: AMBRE, fontSize: 13, fontWeight: 700, fontFamily: F,
+                      color: AMBRE, trame: 'var(--rgb-ambre)', fontSize: 13, fontWeight: 700, fontFamily: F,
                       boxShadow: '0 3px 14px rgba(var(--rgb-terracotta), 0.30)', outline: 'none',
                       WebkitTapHighlightColor: 'transparent',
                     }}

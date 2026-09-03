@@ -1068,7 +1068,9 @@ function NovaGlowScore({ score, scoreColor, profil, metriques, onLog, presetManu
               stroke={arcColor}
               strokeWidth="3.5"
               strokeLinecap="round"
-              style={{ filter:`drop-shadow(0 0 6px ${arcColor}88)` }}
+              // arcColor est deja un rgba() : lui coller « 88 » donnait du CSS invalide,
+              // donc AUCUNE lueur. Le halo prend la meme teinte, plus dense.
+              style={{ filter:`drop-shadow(0 0 6px ${arcColor.replace(/[\d.]+\)$/, '0.55)')})` }}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: (score ?? 0) / 100 }}
               transition={{ duration: 1.5, delay: 0.4, type:'spring', stiffness:45, damping:18 }}
@@ -1514,7 +1516,12 @@ function MetricBottomSheet({ metriques, onUpdate, onClose, initialKey = 'eau' })
               }}>
                 <div style={{
                   opacity: active ? 1 : 0.60,
-                  filter: active ? `drop-shadow(0 0 7px ${it.color}cc) drop-shadow(0 0 18px ${it.color}55)` : `drop-shadow(0 0 4px ${it.color}44)`,
+                  // it.color vaut var(--icone) : la concatenation d'une transparence
+                  // hexadecimale n'a jamais rien produit. Les icones n'avaient donc
+                  // aucune lueur, ni active ni au repos.
+                  filter: active
+                    ? 'drop-shadow(0 0 7px rgba(var(--rgb-icone),0.80)) drop-shadow(0 0 18px rgba(var(--rgb-icone),0.33))'
+                    : 'drop-shadow(0 0 4px rgba(var(--rgb-icone),0.27))',
                   transition:'all 0.3s ease',
                 }}>
                   {it.icon}
@@ -1706,8 +1713,10 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
         padding:'1.5px', borderRadius:20,
         /* Glow border couleur du sujet, statique + suit le curseur */
         background: glowing
-          ? `radial-gradient(circle 220px at ${glowPos.x}% ${glowPos.y}%, ${color}70, ${color}30 42%, ${color}14 68%)`
-          : `${color}28`,
+          // Meme defaut : `color` vaut var(--icone), la bordure lumineuse de ces
+          // anneaux n'existait tout simplement pas.
+          ? `radial-gradient(circle 220px at ${glowPos.x}% ${glowPos.y}%, rgba(var(--rgb-icone),0.44), rgba(var(--rgb-icone),0.19) 42%, rgba(var(--rgb-icone),0.08) 68%)`
+          : 'rgba(var(--rgb-icone),0.16)',
         animation:`tabFade 0.4s ease ${index * 0.08}s both`,
         transition: glowing
           ? 'background 0s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1)'
@@ -1719,9 +1728,9 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
       }}>
       {/* Inner card, fond teinté couleur + transparent */}
       <div style={{
-        background:`linear-gradient(145deg, ${color}07, rgba(var(--rgb-bulle), 0.72))`,
+        background:'linear-gradient(145deg, rgba(var(--rgb-icone),0.03), rgba(var(--rgb-bulle), 0.72))',
         borderRadius:20, padding:'8px 4px 7px',
-        boxShadow:`0 6px 20px ${color}18, inset 0 1px 0 rgba(255,255,255,0.65)`,
+        boxShadow:'0 6px 20px rgba(var(--rgb-icone),0.09), inset 0 1px 0 rgba(255,255,255,0.65)',
         display:'flex', flexDirection:'column', alignItems:'center', gap:3,
         position:'relative', zIndex:1,
         transition:'box-shadow 0.3s ease',
@@ -1773,7 +1782,7 @@ function MetricRing({ iconEl, label, val, goal, color, fmt, index }) {
           {done && (
             <div style={{
               position:'absolute', inset:-4, borderRadius:'50%',
-              border:`2px solid ${color}40`,
+              border:'2px solid rgba(var(--rgb-icone),0.25)',
               animation:'scoreGlow 2s ease-in-out infinite',
               pointerEvents:'none',
             }} />
