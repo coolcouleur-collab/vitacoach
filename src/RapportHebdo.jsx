@@ -57,19 +57,37 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   }
 
   const getScoreColor = (score) => {
+    // L'ECHELLE DOIT ETRE MONOTONE. Elle ne l'etait pas : le rouge s'appliquait
+    // de 21 a 50, et la couleur douce en dessous de 20. Un score de 32 sortait
+    // donc en rouge quand un 14 restait calme. Progresser de 14 a 32 faisait
+    // ROUGIR le chiffre (constat de Jean sur deux captures, 3 septembre).
+    //
+    // L'intention d'aout etait bonne : « un gros 0 rouge accueille
+    // l'utilisateur par une sanction des sa premiere semaine ». Mais elle
+    // reposait sur l'idee qu'un score bas signale une semaine sans donnees.
+    // C'est faux : `moyenneScores` ecarte deja les jours vides et rend `null`
+    // pour une semaine entierement vide. Un score bas est donc un vrai score.
+    //
+    // On applique donc l'intention PARTOUT plutot qu'a une tranche : pas de
+    // rouge sur un bilan hebdomadaire. Le vert et l'or recompensent, le reste
+    // est neutre. Le texte du rapport dit ce qui ne va pas, une couleur n'a pas
+    // a accuser.
     if (score > 70) return '#1f9d55'
     if (score > 50) return 'var(--or-plein)'
-    // En dessous de 20 on est presque toujours face à une semaine sans données
-    // saisies, pas à un échec : un gros 0 rouge accueille l'utilisateur par une
-    // sanction dès sa première semaine (retour Jean 2026-08-08).
-    if (score > 20) return '#ef4444'
     return 'rgba(var(--rgb-terracotta), 0.55)'
   }
 
   const formatSemaine = (semaine) => {
     if (!semaine) return ''
     try {
+      // La date stockee est « il y a sept jours », donc n'importe quel jour de
+      // la semaine : l'ecran a affiche « Semaine du 27/08 », un jeudi, ce qui
+      // ne veut rien dire. On recule jusqu'au lundi pour que l'etiquette
+      // designe une vraie semaine (constat de Jean, 3 septembre).
       const date = new Date(semaine)
+      const jour = date.getDay()              // 0 = dimanche
+      const recul = jour === 0 ? 6 : jour - 1
+      date.setDate(date.getDate() - recul)
       const dd = String(date.getDate()).padStart(2, '0')
       const mm = String(date.getMonth() + 1).padStart(2, '0')
       return `Semaine du ${dd}/${mm}`

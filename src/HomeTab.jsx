@@ -2594,17 +2594,22 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
           isHoverable={false} style={{ width:'100%' }}
         >
           <div style={{ padding:'12px 14px', position:'relative', zIndex:3 }}>
+            {/* Opacites relevees le 3 septembre. Cette carte est posee sur un
+                verre plus CLAIR que le fond de page : mesuree en ligne, elle
+                ramenait ses petits libelles entre 3,24 et 4,04:1. Le probleme
+                n'est pas la couleur du texte mais le fond sur lequel il se pose,
+                et c'est l'opacite qui rattrape. */}
             {/* Header */}
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
               <div>
-                <div style={{ fontSize:9, color:tc(0.80), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:3 }}>
+                <div style={{ fontSize:9, color:tc(0.92), fontWeight:500, textTransform:'uppercase', letterSpacing:'0.6px', marginBottom:3 }}>
                   Évolution · 14 jours
                 </div>
                 <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
-                  <span style={{ fontSize:15, fontWeight:600, color:avg > 0 ? tc(0.90) : tc(0.65), letterSpacing: avg > 0 ? '-0.3px' : '0px', lineHeight:1 }}>
+                  <span style={{ fontSize:15, fontWeight:600, color:avg > 0 ? tc(0.90) : tc(0.82), letterSpacing: avg > 0 ? '-0.3px' : '0px', lineHeight:1 }}>
                     {avg > 0 ? avg : '·'}
                   </span>
-                  {avg > 0 && <span style={{ fontSize:9, color:tc(0.55), fontWeight:400 }}>/100</span>}
+                  {avg > 0 && <span style={{ fontSize:9, color:tc(0.75), fontWeight:400 }}>/100</span>}
                 </div>
               </div>
             </div>
