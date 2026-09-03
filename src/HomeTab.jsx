@@ -38,7 +38,11 @@ function SolennFace({ size = 34, isNight = false }) {
     }}>
       <span style={{
         fontSize: size * 0.44, fontWeight: 700,
-        color: isNight ? 'rgba(220,235,255,0.92)' : 'rgba(255,230,190,0.92)',
+        // Le jour, cette pastille etait du creme sur une carte creme : 1,33:1,
+        // donc un « S » invisible. Le jumeau de App.jsx avait deja la bonne
+        // paire, encre le jour et creme la nuit ; seule cette copie-ci etait
+        // restee en arriere (mesure 2026-09-03).
+        color: isNight ? 'rgba(220,235,255,0.92)' : ENCRE,
         fontFamily: "'Poppins',system-ui,sans-serif", lineHeight: 1,
         letterSpacing: '-0.02em', userSelect: 'none',
       }}>S</span>
