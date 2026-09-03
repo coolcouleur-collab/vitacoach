@@ -29,6 +29,11 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
   contenir des photos en base. A decider avec Jean, ce n'est pas une suppression
   a faire sans elle.
 
+- **Les deux fiches ne nomment pas les memes services, c'est voulu.** Play
+  parle de Health Connect, App Store d'Apple Sante. Withings et Oura figurent
+  sur les deux parce qu'ils se connectent directement dans Solenn. Garmin ne
+  figure sur aucune des deux tant que sa cle n'est pas posee.
+
 - **Garmin n'est PAS configure en production.** `/api/connect/disponibles`
   repond `{"withings":true,"garmin":false}`. La carte Garmin affiche donc
   « Bientot » et n'est pas cliquable. La fiche Play Store ne doit pas promettre
@@ -98,9 +103,9 @@ Des bilans hebdomadaires qui te montrent ce qui a bougé, chiffres à l'appui.
 
 TES DONNÉES, TES RÈGLES
 
-Connexion facultative à Apple Santé, Withings, Garmin et Oura. Aucune montre
-n'est nécessaire, la tienne est un bonus, jamais une condition. Tes données ne
-sont partagées avec personne. Tu peux supprimer ton compte et tout ce qu'il
+Connexion facultative à Health Connect, et directement à Withings et Oura.
+Sans montre, tu saisis toi-même ton sommeil et ta fréquence cardiaque ; avec,
+ils remontent automatiquement. Tes données ne sont partagées avec personne. Tu peux supprimer ton compte et tout ce qu'il
 contient depuis l'application, en trois clics, à tout moment.
 
 21 premiers jours offerts, sans engagement et sans paiement demandé.
@@ -313,7 +318,7 @@ tranche d'âge 18 et plus.
 
 > Solenn est ton coach bien-être au quotidien, propulsé par l'IA : nutrition,
 > sommeil, routines et challenges 21 jours, adaptés à tes données réelles
-> (Apple Santé, Withings, Garmin). 21 premiers jours offerts.
+> (Apple Santé, Withings, Oura). 21 premiers jours offerts.
 > Solenn n'est pas un dispositif médical ; ses conseils ne remplacent pas
 > l'avis d'un professionnel de santé.
 
