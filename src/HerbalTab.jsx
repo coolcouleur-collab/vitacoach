@@ -782,17 +782,6 @@ function besoinDuMoment(metriques, history) {
 // catInitiale : « Tes outils » propose une entree Beaute qui doit ouvrir
 // directement sur cette categorie. Sans ca la page s'ouvrait toujours sur
 // Plantes et l'entree mentait sur sa destination.
-// ─────────────────────────────────────────────────────────────────────────────
-// UNE BANDE QUI DEFILE
-//
-// Les rangees de puces (SANTE, BEAUTE, APPROCHE) sont plus larges que l'ecran.
-// Sans rien au bord, la derniere puce est tranchee en plein milieu d'un mot et
-// rien ne dit qu'on peut la faire defiler : ca se lit comme un defaut d'affichage
-// et pas comme une invitation (captures Jean 2026-09-03, « Tisan… » coupe net).
-//
-// Le fondu n'est pose que du cote ou il reste vraiment quelque chose a voir.
-// Un fondu permanent a droite mentirait une fois la bande au bout.
-// ─────────────────────────────────────────────────────────────────────────────
 /** Le libelle affiche d'une categorie, tous groupes confondus. */
 function libelleCat(id) {
   const c = CATS.find(x => x.id === id) || APPROCHES.find(x => x.id === id)
@@ -899,52 +888,6 @@ function SelecteurCategorie({ cat, setCat }) {
           ))}
         </div>
       )}
-    </div>
-  )
-}
-
-function BandeDefilante({ style, children }) {
-  const ref = useRef(null)
-  const [bords, setBords] = useState({ gauche:false, droite:false })
-
-  const mesurer = React.useCallback(() => {
-    const el = ref.current
-    if (!el) return
-    const reste = el.scrollWidth - el.clientWidth - el.scrollLeft
-    setBords(b => {
-      const n = { gauche: el.scrollLeft > 4, droite: reste > 4 }
-      return (n.gauche === b.gauche && n.droite === b.droite) ? b : n
-    })
-  }, [])
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    mesurer()
-    el.addEventListener('scroll', mesurer, { passive:true })
-    // Les puces arrivent apres le premier rendu : sans cet observateur la mesure
-    // resterait celle d'une bande encore vide, donc « rien a defiler ».
-    const ro = new ResizeObserver(mesurer)
-    ro.observe(el)
-    for (const enfant of el.children) ro.observe(enfant)
-    window.addEventListener('resize', mesurer)
-    return () => {
-      el.removeEventListener('scroll', mesurer)
-      ro.disconnect()
-      window.removeEventListener('resize', mesurer)
-    }
-  }, [mesurer, children])
-
-  const masque =
-    bords.gauche && bords.droite
-      ? 'linear-gradient(90deg, transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%)'
-      : bords.droite ? 'linear-gradient(90deg, #000 calc(100% - 26px), transparent 100%)'
-      : bords.gauche ? 'linear-gradient(90deg, transparent 0, #000 26px)'
-      : 'none'
-
-  return (
-    <div ref={ref} style={{ ...style, WebkitMaskImage:masque, maskImage:masque }}>
-      {children}
     </div>
   )
 }
@@ -1286,10 +1229,6 @@ const hb = {
   groupeTitre: {
     fontSize:10.5, fontWeight:700, letterSpacing:'0.10em', textTransform:'uppercase',
     color:ENCRE, opacity:0.72, padding:'12px 16px 0', fontFamily:'Poppins,sans-serif',
-  },
-  catRow: {
-    display:'flex', gap:8, padding:'8px 16px 10px',
-    overflowX:'auto', scrollbarWidth:'none', WebkitOverflowScrolling:'touch',
   },
 
   // ── Count row
