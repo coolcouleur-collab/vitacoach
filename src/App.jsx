@@ -2927,7 +2927,7 @@ padding: isMobile
 
           {/* ── Santé ── */}
           {onglet === 'sante' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined }}>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 12 : undefined }}>
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>
@@ -2962,7 +2962,7 @@ padding: isMobile
           {/* ── Style ── */}
 
           {onglet === 'style' && (
-            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
+            <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 12 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
               {!isMobile && (
                 <div style={s.pageHeader}>
                   <div>

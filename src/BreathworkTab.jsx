@@ -168,7 +168,13 @@ export default function BreathworkTab() {
   const isActive  = running && !done
 
   return (
-    <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 64px) 16px 120px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
+    // Le conteneur qui defile reserve deja, sur mobile et hors accueil,
+    // safe-area+76 en haut et safe-area+118 en bas (App.jsx). Ce qui
+    // s'ajoutait ici comptait le decalage une seconde fois.
+    // Sur l'iPhone de Jean ca faisait 123 px de vide entre l'entete et la
+    // rangee des sections, et 120 de trop sous la derniere carte
+    // (captures du 2026-09-03). On ne garde qu'une respiration locale.
+    <div style={{ padding: '4px 16px 12px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
 
       {/* Le selecteur de SECTION, au-dessus de tout le reste. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18, justifyContent: 'center' }}>

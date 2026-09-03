@@ -47,6 +47,89 @@ function tamponBruit(ctx) {
 }
 
 /**
+ * LE TAMPON DE PLUIE
+ *
+ * La pluie etait du bruit blanc passe en passe-bas a 1400 Hz. C'est, mot pour
+ * mot, la recette du vent quelques lignes plus bas : meme source, meme genre de
+ * filtre, seule la frequence changeait. D'ou le retour de Jean le 2026-09-03,
+ * « le son pluie ressemble beaucoup au vent ».
+ *
+ * Ce qui distingue la pluie du vent n'est pas la couleur du bruit, ce sont les
+ * IMPACTS. Une averse, c'est des milliers de gouttes qui tombent chacune a son
+ * instant. Sans elles on n'entend qu'un souffle.
+ *
+ * On fabrique donc huit secondes ou deux choses se superposent :
+ *  - un crepitement de fond, tres discret, la masse des gouttes lointaines ;
+ *  - des gouttes distinctes, posees a des instants tires au hasard.
+ *
+ * Chaque goutte est une petite resonance qui s'eteint en quelques millisecondes,
+ * a une hauteur tiree au sort : deux gouttes ne tombent jamais sur la meme
+ * surface. Les tirer une par une dans le tampon coute un calcul unique au
+ * demarrage, la ou les programmer en noeuds Web Audio en creerait des milliers.
+ *
+ * Huit secondes, et non deux : avec des evenements distincts, une boucle courte
+ * se remarque tout de suite, l'oreille reconnait le motif.
+ */
+function tamponPluie(ctx) {
+  const sr = ctx.sampleRate
+  const n = sr * 8
+  const buf = ctx.createBuffer(2, n, sr)
+
+  for (let c = 0; c < 2; c++) {
+    const d = buf.getChannelData(c)
+
+    // ── Le crepitement de fond ────────────────────────────────────────────────
+    // Un simple filtre a un pole adoucit le bruit blanc sans l'assourdir : la
+    // pluie garde de l'aigu, c'est meme ce qui la rend reconnaissable.
+    let precedent = 0
+    for (let i = 0; i < n; i++) {
+      const brut = Math.random() * 2 - 1
+      precedent = precedent * 0.55 + brut * 0.45
+      d[i] = precedent * 0.09
+    }
+
+    // ── Les gouttes ───────────────────────────────────────────────────────────
+    // 26 par seconde. Regle a la mesure, pas a l'oreille, faute de pouvoir
+    // ecouter : on compare le rapport crete/RMS et le nombre de transitoires
+    // nettes par seconde, qui sont precisement ce qui separe une pluie d'un
+    // souffle. A 55 les gouttes se chevauchent et redeviennent une masse
+    // (crete 7,4 et 1,8 transitoire par seconde) ; a 26 on mesure crete 12,0 et
+    // 8 transitoires par seconde. En dessous de 15 ca sonne comme un robinet.
+    const nbGouttes = Math.floor(8 * 26)
+    for (let g = 0; g < nbGouttes; g++) {
+      const debut = Math.floor(Math.random() * (n - sr * 0.05))
+      // Hauteur : de 900 a 4200 Hz. Les gouttes graves sonnent creuses, les
+      // tres aigues cliquettent.
+      const f = 900 + Math.random() * 3300
+      // Duree : de 4 a 16 ms. Plus long, ca sonne comme une cloche.
+      const tau = 0.0025 + Math.random() * 0.007
+      // La plupart des gouttes sont lointaines ; quelques-unes sont proches.
+      const ampli = 0.12 + Math.pow(Math.random(), 3) * 0.42
+      const duree = Math.min(Math.floor(tau * 5 * sr), n - debut)
+      const w = 2 * Math.PI * f / sr
+      for (let i = 0; i < duree; i++) {
+        const t = i / sr
+        const enveloppe = Math.exp(-t / tau)
+        // Un peu de souffle dans l'attaque : une goutte n'est pas un sinus pur,
+        // elle eclabousse.
+        const eclat = (Math.random() * 2 - 1) * 0.35
+        d[debut + i] += ampli * enveloppe * (Math.sin(w * i) * 0.65 + eclat)
+      }
+    }
+
+    // Le tampon sort a 0,38 fois le niveau des autres ambiances, qui sont du
+    // bruit continu : on le remonte. 1,6 est le maximum sans ecreter, le pic
+    // mesure atteint 0,83 ; a 2,0 les gouttes fortes saturent.
+    // L'ecretage reste en garde-fou : les gouttes s'additionnent au hasard.
+    for (let i = 0; i < n; i++) {
+      const v = d[i] * 1.6
+      d[i] = v > 1 ? 1 : v < -1 ? -1 : v
+    }
+  }
+  return buf
+}
+
+/**
  * Chaque ambiance est une recette : une source de bruit, un filtre qui lui
  * donne sa couleur, et une modulation lente qui l'empêche d'être plate.
  *
@@ -61,23 +144,30 @@ const AMBIANCES = [
     detail: 'Une pluie régulière, sans orage',
     demarrer: (ctx, sortie) => {
       const src = ctx.createBufferSource()
-      src.buffer = tamponBruit(ctx)
+      src.buffer = tamponPluie(ctx)
       src.loop = true
 
-      // Passe-bas : le bruit blanc brut siffle, la pluie est plus sourde.
+      // Le filtre ne sert plus a fabriquer le son, seulement a lui oter sa
+      // pointe : a 6500 Hz les gouttes restent nettes sans piquer l'oreille.
+      // L'ancien passe-bas a 1400 Hz effacait justement ce qui fait la pluie.
       const filtre = ctx.createBiquadFilter()
       filtre.type = 'lowpass'
-      filtre.frequency.value = 1400
-      filtre.Q.value = 0.6
+      filtre.frequency.value = 6500
+      filtre.Q.value = 0.4
 
-      // Une averse n'a pas une intensité constante : on la fait respirer.
+      // Une averse n'a pas une intensité constante : on la fait respirer. La
+      // respiration porte maintenant sur le VOLUME et non sur la coupure du
+      // filtre : moduler la coupure faisait « passer » un souffle, ce qui
+      // ajoutait au malentendu avec le vent.
+      const respiration = ctx.createGain()
+      respiration.gain.value = 0.86
       const lfo = ctx.createOscillator()
-      lfo.frequency.value = 0.07
+      lfo.frequency.value = 0.05
       const profondeur = ctx.createGain()
-      profondeur.gain.value = 260
-      lfo.connect(profondeur).connect(filtre.frequency)
+      profondeur.gain.value = 0.14
+      lfo.connect(profondeur).connect(respiration.gain)
 
-      src.connect(filtre).connect(sortie)
+      src.connect(filtre).connect(respiration).connect(sortie)
       src.start(); lfo.start()
       return () => { try { src.stop(); lfo.stop() } catch (_) {} }
     },

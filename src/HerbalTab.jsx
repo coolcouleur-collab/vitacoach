@@ -1146,7 +1146,10 @@ const hb = {
   // 100 px ne suffisaient pas : la pastille de navigation flotte a
   // env(safe-area-inset-bottom) + 10 et mesure ~62 px, elle recouvrait donc la
   // derniere fiche. On reserve sa hauteur reelle.
-  page: { paddingBottom:'calc(env(safe-area-inset-bottom, 0px) + 132px)', animation:'tabFade 0.28s ease both' },
+  // Le conteneur qui defile reserve deja, sur mobile et hors accueil,
+  // safe-area+76 en haut et safe-area+118 en bas (App.jsx). Ce qui
+  // s'ajoutait ici comptait le decalage une seconde fois.
+  page: { paddingBottom:14, animation:'tabFade 0.28s ease both' },
 
   // ── Aurora hero header
   hero: {
