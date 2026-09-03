@@ -578,7 +578,12 @@ const MOTS_ECARTES = [
 // Attention au piege : « woman » contient « man ». D'ou les limites de mot.
 function sexeCompatible(photo, sexe) {
   if (sexe !== 'homme' && sexe !== 'femme') return true
-  const t = ` ${(photo?.alt || '')} `.toLowerCase()
+  // On lit l'adresse EN PLUS de la description. `alt` est souvent vide ou
+  // neutre chez Pexels : la photo 19099710, une femme en long manteau, passait
+  // le filtre et arrivait sur un profil homme (constat 2026-09-03). L'adresse,
+  // elle, porte un resume : /photo/a-woman-in-a-black-coat-19099710/. C'est le
+  // meme raisonnement que photoConvenable, qui lisait deja les deux.
+  const t = ` ${(photo?.alt || '')} ${(photo?.url || '').replace(/[-/]/g, ' ')} `.toLowerCase()
   const feminin  = /(woman|women|female|girl|girls|lady|ladies)/.test(t)
   const masculin = /(man|men|male|boy|boys|guy|guys|gentleman)/.test(t)
   if (feminin === masculin) return true          // neutre, ou les deux : on garde
@@ -600,7 +605,10 @@ app.get('/api/image', async (req, res) => {
   // ET aux femmes).
   const rawPiece = req.query.piece || ''
   const sexe = req.query.sexe || 'nsp'
-  const QUI = sexe === 'homme' ? 'man ' : sexe === 'femme' ? 'woman ' : ''
+  // « man » seul se dilue dans le classement par pertinence. « menswear » et
+  // « womenswear » sont des termes que les banques indexent comme categorie,
+  // ils pesent beaucoup plus lourd dans la recherche.
+  const QUI = sexe === 'homme' ? 'man menswear ' : sexe === 'femme' ? 'woman womenswear ' : ''
 
   // ── Construire la requête à partir des pièces réelles de la tenue ────────────
   // Priorité : imagePrompt (contient les vêtements concrets) > titre (style)
