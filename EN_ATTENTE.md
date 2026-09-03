@@ -2,6 +2,19 @@
 
 ## UNE DECISION QUI REVIENT A JEAN : les photos deja en base
 
+MISE A JOUR DU 4 SEPTEMBRE, APRES COUP : ne pas lancer la requete SQL plus bas
+sauf necessite. `solenn_chats` figure dans `TABLES_UTILISATEUR` (server.js),
+donc supprimer un compte de test efface ses conversations, photos comprises.
+Passer par la suppression de compte depuis l'app evite d'executer un `update`
+non teste sur la table de production. La requete reste consignee ici au cas ou
+un vrai compte serait concerne.
+
+L'EXCEPTION : le compte d'examen coolcouleur+review@gmail.com ne doit PAS etre
+supprime, Google en a besoin. Le bouton « Nouvelle conversation » ne supprime
+rien cote serveur, il n'existe aucune route d'effacement de conversation. Le
+plus simple est donc de ne pas envoyer de photo de repas depuis ce compte.
+
+
 Depuis le commit `06e4cf8`, les photos de repas ne partent plus vers
 `solenn_chats`. Mais les conversations ecrites AVANT ce correctif peuvent
 encore en contenir, en base64 dans la colonne `messages`.
