@@ -164,6 +164,9 @@ export function useCourse() {
 
   const dernier = useRef(null)
   const veille = useRef(null)
+  // Le repli navigateur a sa propre montre : son identifiant n'a rien a voir
+  // avec celui du greffon, et les melanger empecherait de l'arreter.
+  const veilleWeb = useRef(null)
   const ecoute = useRef(null)
   const trace = useRef([])
 
@@ -199,6 +202,10 @@ export function useCourse() {
         await Geolocation.clearWatch({ id: veille.current })
       } catch {}
       veille.current = null
+    }
+    if (veilleWeb.current != null) {
+      try { navigator.geolocation.clearWatch(veilleWeb.current) } catch {}
+      veilleWeb.current = null
     }
   }, [])
 
@@ -237,30 +244,67 @@ export function useCourse() {
     }
 
     // ── Android et le web, par le plugin generique ──────────────────────
+    // Le point d'arrivee de chaque position, quelle qu'en soit la source.
+    const recevoir = (coords, t) => traiter({
+      lat: coords.latitude,
+      lon: coords.longitude,
+      t: t || Date.now(),
+      precision: coords.accuracy,
+      vitesse: coords.speed,
+    })
+
     try {
       const { Geolocation } = await import('@capacitor/geolocation')
-      const perm = await Geolocation.requestPermissions()
-      if (perm?.location !== 'granted' && perm?.coarseLocation !== 'granted') {
-        setErreur("Sans acces a ta position, la distance ne peut pas etre mesuree.")
-        return false
-      }
+
+      // requestPermissions() s'appuie sur l'API Permissions du navigateur, que
+      // SAFARI N'IMPLEMENTE PAS pour la position. Sur l'iPhone de Jean, dans
+      // l'app installee depuis le site, cet appel levait — et le catch global
+      // affichait « La position n'est pas disponible sur cet appareil » alors
+      // que la position marche parfaitement : c'est la demande d'autorisation
+      // qui n'existe pas, pas la position. Sa course restait a 0 m et l'allure
+      // a --:-- (capture du 2026-09-04).
+      //
+      // Un echec ici n'est donc plus fatal. Le navigateur demande lui-meme
+      // l'autorisation au premier watchPosition, c'est son fonctionnement
+      // normal ; on ne renonce que sur un refus EXPLICITE.
+      try {
+        const perm = await Geolocation.requestPermissions()
+        if (perm && perm.location === 'denied' && perm.coarseLocation === 'denied') {
+          setErreur("Sans acces a ta position, la distance ne peut pas etre mesuree.")
+          return false
+        }
+      } catch (_) { /* pas d'API Permissions : on tente la montre directement */ }
 
       veille.current = await Geolocation.watchPosition(
         { enableHighAccuracy: true, timeout: 15000 },
         (pos, err) => {
           if (err || !pos?.coords) return
-          traiter({
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            t: pos.timestamp || Date.now(),
-            precision: pos.coords.accuracy,
-            vitesse: pos.coords.speed,
-          })
+          recevoir(pos.coords, pos.timestamp)
         },
       )
       setActif(true)
       return true
     } catch (e) {
+      // ── Dernier recours : l'API du navigateur, sans greffon ─────────────
+      // Elle existe partout, y compris dans l'app installee depuis le site.
+      // C'est celle qu'App.jsx utilise deja pour trouver la ville.
+      if (typeof navigator !== 'undefined' && navigator.geolocation) {
+        try {
+          veilleWeb.current = navigator.geolocation.watchPosition(
+            pos => { if (pos?.coords) recevoir(pos.coords, pos.timestamp) },
+            err => {
+              // On ne parle que du refus : une erreur passagere de signal ne
+              // doit pas afficher un message definitif.
+              if (err && err.code === 1) {
+                setErreur("Sans acces a ta position, la distance ne peut pas etre mesuree.")
+              }
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 2000 },
+          )
+          setActif(true)
+          return true
+        } catch (_) { /* on tombe sur le message ci-dessous */ }
+      }
       setErreur("La position n'est pas disponible sur cet appareil.")
       return false
     }

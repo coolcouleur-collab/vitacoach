@@ -193,7 +193,12 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
   const secParKm = allure(fini ? totalM : gps.metres, fini ? totalMs : chrono.ms)
 
   // Le signal, dit honnetement. « Cherche » tant qu'aucun point n'est arrive.
-  const signal = gps.precision == null ? { texte: 'Recherche du signal', ton: AMBRE }
+  // L'entete disait « Recherche du signal » meme quand le GPS avait DEJA
+  // renonce : le message d'erreur juste en dessous annoncait l'indisponibilite
+  // pendant que le titre cherchait encore. Les deux se contredisaient sur la
+  // meme capture (Jean, 2026-09-04).
+  const signal = gps.erreur ? { texte: 'Sans position', ton: '#B91C1C' }
+    : gps.precision == null ? { texte: 'Recherche du signal', ton: AMBRE }
     : gps.precision <= 10 ? { texte: 'Signal bon', ton: VERT }
     : gps.precision <= 25 ? { texte: `Signal moyen, ${gps.precision} m`, ton: AMBRE }
     : { texte: `Signal faible, ${gps.precision} m`, ton: '#B91C1C' }
