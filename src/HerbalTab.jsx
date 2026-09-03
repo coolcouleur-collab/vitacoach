@@ -793,6 +793,116 @@ function besoinDuMoment(metriques, history) {
 // Le fondu n'est pose que du cote ou il reste vraiment quelque chose a voir.
 // Un fondu permanent a droite mentirait une fois la bande au bout.
 // ─────────────────────────────────────────────────────────────────────────────
+/** Le libelle affiche d'une categorie, tous groupes confondus. */
+function libelleCat(id) {
+  const c = CATS.find(x => x.id === id) || APPROCHES.find(x => x.id === id)
+  return c ? c.label : id
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LE SELECTEUR DE CATEGORIE
+//
+// Il y avait ONZE pastilles reparties en trois rangees titrees (Sante, Beaute,
+// Approche), soit six rangees d'interface pour UN SEUL choix : `cat` est une
+// valeur unique, les trois groupes n'etaient qu'un rangement visuel. Deux de
+// ces rangees defilaient horizontalement et coupaient les mots au bord.
+//
+// Le critere qui decide de replier ou non : on replie un REGLAGE, jamais
+// l'offre de la page. Choisir « Cheveux » plutot que « Sommeil » est un filtre,
+// on le pose une fois et on lit la liste en dessous. Les six sections de
+// Respiration, elles, disent ce que l'app sait faire : les replier reviendrait
+// a cacher que la meditation guidee existe, et elles restent donc depliees.
+//
+// Le choix courant est ecrit sur la pastille : on ne remplace pas « voir » par
+// « se souvenir », on remplace « tout voir » par « voir ce qui est choisi ».
+// ─────────────────────────────────────────────────────────────────────────────
+function SelecteurCategorie({ cat, setCat }) {
+  const [ouvert, setOuvert] = useState(false)
+  const boite = useRef(null)
+
+  useEffect(() => {
+    if (!ouvert) return
+    const dehors = e => { if (boite.current && !boite.current.contains(e.target)) setOuvert(false) }
+    const echap  = e => { if (e.key === 'Escape') { setOuvert(false); boite.current?.querySelector('button')?.focus() } }
+    document.addEventListener('pointerdown', dehors)
+    document.addEventListener('keydown', echap)
+    return () => {
+      document.removeEventListener('pointerdown', dehors)
+      document.removeEventListener('keydown', echap)
+    }
+  }, [ouvert])
+
+  return (
+    <div ref={boite} style={{ position:'relative', padding:'12px 16px 10px', zIndex:20 }}>
+      <button
+        onClick={() => setOuvert(o => !o)}
+        aria-expanded={ouvert}
+        aria-label={`Categorie : ${libelleCat(cat)}. Toucher pour changer.`}
+        style={{
+          display:'inline-flex', alignItems:'center', gap:9,
+          padding:'10px 16px', borderRadius:20, cursor:'pointer',
+          fontFamily:'Poppins,sans-serif',
+          background:'rgba(var(--rgb-verre), 0.28)',
+          backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
+          border:'1px solid rgba(var(--rgb-creme-dore), 0.38)',
+        }}>
+        <span style={{ fontSize:10, fontWeight:700, letterSpacing:'0.10em',
+                       textTransform:'uppercase', color:ENCRE, opacity:0.68 }}>
+          Je cherche
+        </span>
+        <span style={{ fontSize:13.5, fontWeight:700, color:ENCRE }}>{libelleCat(cat)}</span>
+        <svg width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"
+          style={{ transform: ouvert ? 'rotate(180deg)' : 'none', transition:'transform 0.2s ease' }}>
+          <path d="M1 1l4.5 4.5L10 1" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+        </svg>
+      </button>
+
+      {ouvert && (
+        <div style={{
+          position:'absolute', left:16, right:16, top:'calc(100% - 2px)',
+          borderRadius:18, padding:'6px 12px 12px', zIndex:30,
+          background:'rgba(var(--rgb-verre), 0.55)',
+          backdropFilter:'blur(26px)', WebkitBackdropFilter:'blur(26px)',
+          border:'1px solid rgba(var(--rgb-creme-dore), 0.38)',
+          boxShadow:'0 14px 40px rgba(var(--rgb-terracotta), 0.22)',
+          animation:'tabFade 0.18s ease both',
+        }}>
+          {GROUPES.map(g => (
+            <div key={g.titre}>
+              <div style={{ ...hb.groupeTitre, padding:'10px 4px 6px' }}>{g.titre}</div>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:6 }}>
+                {g.ids.map(id => {
+                  const actif = cat === id
+                  return (
+                    <button
+                      key={id}
+                      aria-current={actif ? 'true' : undefined}
+                      onClick={() => { setCat(id); setOuvert(false) }}
+                      style={{
+                        textAlign:'left', padding:'9px 12px', borderRadius:12,
+                        cursor:'pointer', fontFamily:'Poppins,sans-serif',
+                        fontSize:12.5, fontWeight: actif ? 700 : 500,
+                        color: actif ? '#fff' : ENCRE,
+                        background: actif
+                          ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))'
+                          : 'rgba(var(--rgb-terracotta), 0.06)',
+                        border: actif
+                          ? '1px solid rgba(var(--rgb-brun-fonce),0.55)'
+                          : '1px solid rgba(var(--rgb-terracotta), 0.16)',
+                      }}>
+                      {libelleCat(id)}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function BandeDefilante({ style, children }) {
   const ref = useRef(null)
   const [bords, setBords] = useState({ gauche:false, droite:false })
@@ -874,11 +984,6 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
   // active restait hors champ : on voyait « Sommeil, Stress, Energie » en haut
   // et des recettes capillaires en dessous, sans comprendre le lien. On amene
   // donc la pastille active dans le champ de vision (2026-08-11).
-  const catRowRef = useRef(null)
-  useEffect(() => {
-    const el = catRowRef.current?.querySelector('[data-actif="1"]')
-    if (el?.scrollIntoView) el.scrollIntoView({ inline: 'center', block: 'nearest' })
-  }, [cat])
   // 5. La mise en garde d'abord : c'est l'information la plus importante en
   //    securite, elle etait en bas de liste et coupee par la barre de nav.
   // 4. Puis les protocoles (Recette) groupes avant les ingredients : « Ortie »
@@ -1063,55 +1168,9 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         )}
       </div>
 
-      {/* Le fondu qui signale qu'il reste des categories vit maintenant dans
-          BandeDefilante, sous forme de masque. L'ancien etait un calque de creme
-          codee en dur : sur le navy de nuit il se voyait comme une bande claire
-          au bord droit, et il couvrait aussi le titre du groupe puisqu'il
-          s'etendait sur toute la hauteur (captures Jean 2026-09-03). */}
-      <div ref={catRowRef}>
-        {GROUPES.map(g => (
-          <div key={g.titre} style={{ position:'relative' }}>
-            <div style={hb.groupeTitre}>{g.titre}</div>
-            <BandeDefilante style={hb.catRow}>
-              {g.ids.map(id => {
-                const c = CATS.find(x => x.id === id) || APPROCHES.find(x => x.id === id)
-                if (!c) return null
-                const active = cat === c.id
-                return (
-                  <button
-                    key={c.id}
-                    data-actif={active ? '1' : '0'}
-                    style={{
-                      flexShrink:0, padding:'10px 20px', borderRadius:20,
-                      border: active ? '1px solid rgba(var(--rgb-brun-fonce),0.55)' : '1px solid rgba(var(--rgb-terracotta), 0.16)',
-                      fontSize:12, fontWeight:700,
-                      cursor:'pointer', fontFamily:'Poppins,sans-serif',
-                      whiteSpace:'nowrap',
-                      // Pastille pleine + texte blanc pour l'onglet ouvert, la
-                      // regle des actions principales. L'ancien fond etait du
-                      // creme a 32 % sous du blanc, soit 1,37:1. Le terracotta
-                      // est celui des boutons, pas une huitieme nuance.
-                      background: active
-                        ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))'
-                        : 'rgba(var(--rgb-terracotta), 0.06)',
-                      backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
-                      color: active ? '#fff' : ENCRE,
-                      boxShadow: active
-                        ? '0 6px 20px rgba(var(--rgb-brun-fonce),0.30)'
-                        : 'none',
-                      transform: active ? 'scale(1.04)' : 'scale(1)',
-                      transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease',
-                    }}
-                    onClick={() => setCat(c.id)}
-                  >
-                    {c.label}
-                  </button>
-                )
-              })}
-            </BandeDefilante>
-          </div>
-        ))}
-      </div>
+      {/* Une pastille au lieu de six rangees. Le detail du pourquoi est
+          au-dessus de SelecteurCategorie. */}
+      <SelecteurCategorie cat={cat} setCat={setCat} />
 
       {/* ── Count row ── */}
       <div style={hb.countRow}>
