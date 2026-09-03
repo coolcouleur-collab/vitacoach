@@ -96,6 +96,7 @@ const SECTIONS = [
 export default function BreathworkTab() {
   const [section, setSection]         = useState('respirer')
   const [techId, setTechId]           = useState('coherence')
+  const [techOuvert, setTechOuvert]   = useState(false)
   const [running, setRunning]         = useState(false)
   const [phaseIdx, setPhaseIdx]       = useState(0)
   const [cycleCount, setCycleCount]   = useState(0)
@@ -220,39 +221,68 @@ export default function BreathworkTab() {
 
       {section === 'respirer' && <>
 
-      {/* Technique tabs, flexWrap : tout visible d'un coup, plus de rangée
-          coupée au bord de l'écran (retour Jean 2026-07-25).
-          Masquees pendant la seance, comme les sections : changer de technique
-          en cours redemarre tout. */}
+      {/* LA TECHNIQUE, EN UNE LIGNE.
+          Il y avait deux rangees de pastilles, puis une ligne de sous-titre,
+          puis un bloc « Phases » a deux encadres tout en bas : trois blocs pour
+          dire une seule chose, quelle technique et a quel rythme. Le cercle,
+          qui est la raison d'etre de l'ecran, arrivait quatrieme.
+          Le critere est le meme que pour les sections : on replie un REGLAGE,
+          pas une offre. On garde la meme technique presque a chaque fois ; les
+          trois autres n'interessent qu'au moment de changer. */}
       {!isActive && (
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 4, marginBottom: 16, justifyContent: 'center' }}>
-        {TECHNIQUES.map(t => {
-          const sel = techId === t.id
-          return (
-            <button key={t.id} onClick={() => switchTech(t.id)} style={{
-              flexShrink: 0,
-              padding: '7px 14px',
-              borderRadius: 20,
-              border: `1px solid ${sel ? 'rgba(var(--rgb-brun-fonce),0.55)' : 'rgba(var(--rgb-terracotta), 0.35)'}`,
-              background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              color: sel ? '#fff' : ENCRE,
-              fontSize: 12, fontWeight: sel ? 600 : 400,
-              cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap',
-              transition: 'all 0.18s',
-            }}>
-              {t.name}
-            </button>
-          )
-        })}
+      <div style={{ marginBottom: 22 }}>
+        <button
+          onClick={() => setTechOuvert(o => !o)}
+          aria-expanded={techOuvert}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+            padding: '11px 15px', borderRadius: 18, cursor: 'pointer',
+            fontFamily: F, textAlign: 'left',
+            background: 'rgba(var(--rgb-verre), 0.28)',
+            backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)',
+            border: '1px solid rgba(var(--rgb-creme-dore), 0.34)',
+          }}>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <span style={{ display: 'block', fontSize: 13.5, fontWeight: 700, color: ENCRE }}>
+              {tech.name}
+            </span>
+            {/* Le rythme remplace le bloc « Phases » : « Inspire 5s · Expire 5s »
+                est une phrase, pas un tableau. Et il se lit AVANT de commencer,
+                la ou l'ancien bloc l'affichait tout en bas de page. */}
+            <span style={{ display: 'block', fontSize: 11.5, color: ENCRE, opacity: 0.82, marginTop: 2 }}>
+              {tech.phases.map(p => `${p.label} ${p.dur}s`).join(' · ')}
+            </span>
+          </span>
+          <svg width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"
+            style={{ flexShrink: 0, transform: techOuvert ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
+            <path d="M1 1l4.5 4.5L10 1" stroke={ICONE} strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+          </svg>
+        </button>
+
+        {techOuvert && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 7, marginTop: 8 }}>
+            {TECHNIQUES.map(t => {
+              const sel = techId === t.id
+              return (
+                <button key={t.id}
+                  onClick={() => { switchTech(t.id); setTechOuvert(false) }}
+                  aria-current={sel ? 'true' : undefined}
+                  style={{
+                    textAlign: 'left', padding: '10px 13px', borderRadius: 14,
+                    cursor: 'pointer', fontFamily: F,
+                    border: `1px solid ${sel ? 'rgba(var(--rgb-brun-fonce),0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
+                    background: sel ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.30)',
+                    color: sel ? '#fff' : ENCRE,
+                  }}>
+                  <span style={{ display: 'block', fontSize: 12.5, fontWeight: sel ? 700 : 500 }}>{t.name}</span>
+                  <span style={{ display: 'block', fontSize: 10.5, opacity: 0.82, marginTop: 2 }}>{t.subtitle}</span>
+                </button>
+              )
+            })}
+          </div>
+        )}
       </div>
       )}
-
-      {/* Subtitle */}
-      <div style={{ textAlign: 'center', marginBottom: 28 }}>
-        <div style={{ fontSize: 13, color: am(0.82), letterSpacing: '0.01em' }}>{tech.subtitle}</div>
-      </div>
 
       {/* Breathing circle */}
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
@@ -369,32 +399,9 @@ export default function BreathworkTab() {
         )}
       </div>
 
-      {/* Phase breakdown. Masque pendant la seance : il annonce le rythme a
-          qui hesite encore, et pendant la seance le cercle dit deja « Inspire
-          4 ». Le garder revenait a ecrire deux fois la meme information, et
-          c'est lui qui poussait le bas de la page hors de l'ecran. */}
-      {!isActive && (
-      <div style={{ ...CARD, marginBottom: 16 }}>
-        <div style={{ fontSize: 11, color: am(0.80), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          {tech.phases.map((p, i) => {
-            const active = isActive && phaseIdx === i
-            return (
-              <div key={i} style={{
-                flex: 1, textAlign: 'center',
-                background: active ? 'linear-gradient(135deg,var(--brun-fonce),var(--brun-moyen))' : 'rgba(var(--rgb-verre), 0.35)',
-                border: `1px solid ${active ? 'rgba(var(--rgb-brun-fonce),0.55)' : 'rgba(var(--rgb-terracotta), 0.28)'}`,
-                borderRadius: 14, padding: '10px 4px',
-                transition: 'all 0.3s ease',
-              }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: active ? '#fff' : ENCRE, marginBottom: 3 }}>{p.label}</div>
-                <div style={{ fontSize: 15, fontWeight: 300, color: active ? 'rgba(255,255,255,0.92)' : ENCRE }}>{p.dur}s</div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      )}
+      {/* Le bloc « Phases » a ete fondu dans la ligne de technique, en haut :
+          « Inspire 5s · Expire 5s » est une phrase, pas un tableau a deux
+          encadres, et elle se lit au moment ou l'on choisit. */}
 
       {/* L'historique non plus : on ne lit pas ses seances passees
           pendant qu'on en fait une. */}

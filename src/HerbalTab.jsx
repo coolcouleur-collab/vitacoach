@@ -809,7 +809,7 @@ function libelleCat(id) {
 // Le choix courant est ecrit sur la pastille : on ne remplace pas « voir » par
 // « se souvenir », on remplace « tout voir » par « voir ce qui est choisi ».
 // ─────────────────────────────────────────────────────────────────────────────
-function SelecteurCategorie({ cat, setCat }) {
+function SelecteurCategorie({ cat, setCat, compact = false }) {
   const [ouvert, setOuvert] = useState(false)
   const boite = useRef(null)
 
@@ -826,23 +826,28 @@ function SelecteurCategorie({ cat, setCat }) {
   }, [ouvert])
 
   return (
-    <div ref={boite} style={{ position:'relative', padding:'12px 16px 10px', zIndex:20 }}>
+    <div ref={boite} style={{ position:'relative', zIndex:20,
+      padding: compact ? 0 : '12px 16px 10px', flexShrink: compact ? 0 : undefined }}>
       <button
         onClick={() => setOuvert(o => !o)}
         aria-expanded={ouvert}
         aria-label={`Categorie : ${libelleCat(cat)}. Toucher pour changer.`}
         style={{
           display:'inline-flex', alignItems:'center', gap:9,
-          padding:'10px 16px', borderRadius:20, cursor:'pointer',
+          padding: compact ? '11px 13px' : '10px 16px', borderRadius: compact ? 14 : 20, cursor:'pointer',
           fontFamily:'Poppins,sans-serif',
           background:'rgba(var(--rgb-verre), 0.28)',
           backdropFilter:'blur(18px)', WebkitBackdropFilter:'blur(18px)',
           border:'1px solid rgba(var(--rgb-creme-dore), 0.38)',
         }}>
-        <span style={{ fontSize:10, fontWeight:700, letterSpacing:'0.10em',
-                       textTransform:'uppercase', color:ENCRE, opacity:0.68 }}>
-          Je cherche
-        </span>
+        {/* « Je cherche » disparait dans la rangee : le champ juste a cote le
+            dit deja, et le repeter serait du bruit. */}
+        {!compact && (
+          <span style={{ fontSize:10, fontWeight:700, letterSpacing:'0.10em',
+                         textTransform:'uppercase', color:ENCRE, opacity:0.68 }}>
+            Je cherche
+          </span>
+        )}
         <span style={{ fontSize:13.5, fontWeight:700, color:ENCRE }}>{libelleCat(cat)}</span>
         <svg width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"
           style={{ transform: ouvert ? 'rotate(180deg)' : 'none', transition:'transform 0.2s ease' }}>
@@ -852,7 +857,10 @@ function SelecteurCategorie({ cat, setCat }) {
 
       {ouvert && (
         <div style={{
-          position:'absolute', left:16, right:16, top:'calc(100% - 2px)',
+          position:'absolute', top:'calc(100% + 6px)',
+          // Aligne a DROITE en mode compact : la pastille y est collee, un
+          // panneau ouvert vers la gauche sortirait de l'ecran.
+          ...(compact ? { right:0, width:'min(300px, calc(100vw - 40px))' } : { left:16, right:16 }),
           borderRadius:18, padding:'6px 12px 12px', zIndex:30,
           background:'rgba(var(--rgb-verre), 0.55)',
           backdropFilter:'blur(26px)', WebkitBackdropFilter:'blur(26px)',
@@ -902,6 +910,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
   // en impose une (l'entree Soins ouvre sur les cheveux).
   const besoin = useMemo(() => besoinDuMoment(metriques, history), [metriques, history])
   const [cat, setCat] = useState(catInitiale || besoin?.cat || 'sommeil')
+  const [avertOuvert, setAvertOuvert] = useState(false)
   const [recherche, setRecherche] = useState('')
   const [cure, setCure] = useState(lireCure)
 
@@ -992,19 +1001,38 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       {/* 8. Disclaimer medical PERMANENT. Obligatoire pour une app de sante en
              Europe, et place avant tout contenu : un avertissement qu'il faut
              chercher ne protege personne. */}
-      <div style={{
-        margin:'0 16px 4px', padding:'10px 13px', borderRadius:14,
-        background:'rgba(var(--rgb-bulle), 0.72)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
-        display:'flex', alignItems:'flex-start', gap:9,
-      }}>
+      {/* Il reste EN TETE et il reste toujours la : c'est une protection
+          reglementaire, un avertissement qu'il faut chercher ne protege
+          personne, et je ne le deplace pas.
+          Mais il faisait quatre lignes qu'on relit a chaque visite alors qu'on
+          les a comprises la premiere fois, avant tout contenu de la page (Jean
+          trouvait Soins brouillon, 2026-09-04). L'essentiel tient sur une ligne,
+          visible sans rien toucher ; le detail medical se deplie. */}
+      <button
+        onClick={() => setAvertOuvert(o => !o)}
+        aria-expanded={avertOuvert}
+        style={{
+          margin:'0 16px 4px', width:'calc(100% - 32px)', textAlign:'left',
+          padding:'10px 13px', borderRadius:14, cursor:'pointer',
+          background:'rgba(var(--rgb-bulle), 0.72)', border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
+          display:'flex', alignItems:'flex-start', gap:9, fontFamily:'Poppins,sans-serif',
+        }}>
         <span style={{ marginTop:1, flexShrink:0 }}><WarnTriangleIcon size={13} color={ICONE} /></span>
-        <span style={{ fontSize:11, lineHeight:1.5, color:TXT_SOFT }}>
-          Information éducative sur des usages traditionnels. Solenn n'est pas un
-          professionnel de santé et ne remplace ni un diagnostic ni un traitement.
-          Demande l'avis de ton médecin ou de ton pharmacien avant toute prise,
-          en particulier si tu suis un traitement, si tu es enceinte ou si tu allaites.
+        <span style={{ flex:1, fontSize:11, lineHeight:1.5, color:TXT_SOFT }}>
+          Information éducative, ce n'est pas un avis médical.
+          {avertOuvert && (
+            <span style={{ display:'block', marginTop:6 }}>
+              Solenn n'est pas un professionnel de santé et ne remplace ni un
+              diagnostic ni un traitement. Demande l'avis de ton médecin ou de ton
+              pharmacien avant toute prise, en particulier si tu suis un traitement,
+              si tu es enceinte ou si tu allaites.
+            </span>
+          )}
         </span>
-      </div>
+        <span style={{ flexShrink:0, fontSize:10.5, fontWeight:700, color:ICONE, marginTop:1 }}>
+          {avertOuvert ? 'Réduire' : 'Lire'}
+        </span>
+      </button>
 
       {/* Cure en cours ou terminée */}
       {cure && (
@@ -1090,34 +1118,42 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         </div>
       )}
 
-      {/* Recherche par symptome, traverse toutes les categories */}
-      <div style={{ margin:'0 16px 10px', position:'relative' }}>
-        <input
-          value={recherche}
-          onChange={e => setRecherche(e.target.value)}
-          placeholder="Pellicules, ballonnements, insomnie…"
-          style={{
-            width:'100%', boxSizing:'border-box', padding:'11px 36px 11px 14px',
-            borderRadius:14, border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
-            background:'rgba(var(--rgb-bulle), 0.72)', color:TXT_MAIN,
-            fontSize:13, fontFamily:'Poppins,sans-serif', outline:'none',
-          }}
-        />
-        {recherche && (
-          <button
-            onClick={() => setRecherche('')}
-            aria-label="Effacer"
+      {/* CHERCHER, EN UNE SEULE RANGEE.
+          La page offrait trois chemins vers la meme chose : la recherche par
+          symptome, la categorie, et « Analyser » plus bas. Trois systemes qui
+          repondent a « qu'est-ce qui pourrait m'aider ? », poses cote a cote
+          sans hierarchie — c'est ce qui la rendait brouillonne (Jean,
+          2026-09-04).
+          Les deux premiers sont un seul besoin : on decrit, ou on parcourt. Ils
+          tiennent donc sur une ligne, le champ prend la place et la categorie
+          reste a cote comme filtre. « Analyser » garde sa place en bas, apres
+          la liste : il n'a de sens que quand elle n'a pas repondu. */}
+      <div style={{ display:'flex', alignItems:'center', gap:8, margin:'0 16px 12px' }}>
+        <div style={{ flex:1, minWidth:0, position:'relative' }}>
+          <input
+            value={recherche}
+            onChange={e => setRecherche(e.target.value)}
+            placeholder="Pellicules, insomnie…"
             style={{
-              position:'absolute', right:10, top:'50%', transform:'translateY(-50%)',
-              background:'none', border:'none', cursor:'pointer', padding:4,
-              color:ENCRE, fontSize:16, lineHeight:1,
-            }}>×</button>
-        )}
+              width:'100%', boxSizing:'border-box', padding:'11px 32px 11px 14px',
+              borderRadius:14, border:'1px solid rgba(var(--rgb-terracotta), 0.22)',
+              background:'rgba(var(--rgb-bulle), 0.72)', color:TXT_MAIN,
+              fontSize:13, fontFamily:'Poppins,sans-serif', outline:'none',
+            }}
+          />
+          {recherche && (
+            <button
+              onClick={() => setRecherche('')}
+              aria-label="Effacer"
+              style={{
+                position:'absolute', right:8, top:'50%', transform:'translateY(-50%)',
+                background:'none', border:'none', cursor:'pointer', padding:4,
+                color:ENCRE, fontSize:16, lineHeight:1,
+              }}>×</button>
+          )}
+        </div>
+        <SelecteurCategorie cat={cat} setCat={setCat} compact />
       </div>
-
-      {/* Une pastille au lieu de six rangees. Le detail du pourquoi est
-          au-dessus de SelecteurCategorie. */}
-      <SelecteurCategorie cat={cat} setCat={setCat} />
 
       {/* ── Count row ── */}
       <div style={hb.countRow}>
