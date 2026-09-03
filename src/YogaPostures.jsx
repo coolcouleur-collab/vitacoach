@@ -182,10 +182,21 @@ function Minuteur({ duree, onFini }) {
 
 export default function YogaPostures() {
   const [ouverte, setOuverte] = useState(null)
+  const racine = useRef(null)
+
+  // Ouvrir une fiche remet la vue en haut. Sans cela, toucher une carte du bas
+  // de la grille ouvre la fiche a la position ou l'on etait : la photo est
+  // au-dessus de l'ecran, et le bas de la fiche depasse en dessous. C'est ce
+  // que Jean decrit par « le bas de la page coupe » (2026-09-04).
+  useEffect(() => {
+    if (!ouverte) return
+    racine.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [ouverte])
   const p = POSTURES.find(x => x.id === ouverte)
 
   return (
-    <div style={{ ...CARD, marginBottom: 14 }}>
+    // scrollMarginTop : la vue s'arrete sous l'entete fixe et non dessous.
+    <div ref={racine} style={{ ...CARD, marginBottom: 14, scrollMarginTop: 12 }}>
       <div style={{ fontSize: 15, fontWeight: 700, color: ENCRE, fontFamily: F, marginBottom: 3 }}>
         Postures
       </div>
@@ -258,6 +269,7 @@ export default function YogaPostures() {
               }}>
               Retour aux postures
             </button>
+            <div style={{ height: 6 }} />
           </motion.div>
         )}
       </AnimatePresence>
