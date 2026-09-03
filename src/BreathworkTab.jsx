@@ -5,6 +5,7 @@ import SonsCalmes from './SonsCalmes'
 import YogaPostures from './YogaPostures'
 import MeditationGuidee from './MeditationGuidee'
 import JeuApaisant from './JeuApaisant'
+import MusiqueCalme from './MusiqueCalme'
 
 const F = "'Poppins', system-ui, sans-serif"
 // L'opacite recue est volontairement IGNOREE, comme warmText sur l'accueil.
@@ -81,6 +82,7 @@ const SECTIONS = [
   { id: 'respirer',   nom: 'Respirer' },
   { id: 'postures',   nom: 'Postures' },
   { id: 'meditation', nom: 'Méditation' },
+  { id: 'musique',    nom: 'Musique' },
   { id: 'sons',       nom: 'Sons' },
   { id: 'jeu',        nom: 'Pause' },
 ]
@@ -188,6 +190,7 @@ export default function BreathworkTab() {
 
       {section === 'postures'   && <YogaPostures />}
       {section === 'meditation' && <MeditationGuidee />}
+      {section === 'musique'    && <MusiqueCalme />}
       {section === 'sons'       && <SonsCalmes />}
       {section === 'jeu'        && <JeuApaisant />}
 
