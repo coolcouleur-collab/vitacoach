@@ -3518,7 +3518,7 @@ function TenueCard({ tenue, style: extraStyle, mesureRef, profil }) {
   }, [])
 
   return (
-    <div style={{
+    <div ref={mesureRef} style={{
       width: 280,
       height: 420,
       borderRadius: 24,
@@ -3608,7 +3608,7 @@ function TenueCard({ tenue, style: extraStyle, mesureRef, profil }) {
 // Skeleton card shown while tenues are loading
 function SkeletonCard({ style: extraStyle , mesureRef }) {
   return (
-    <div style={{
+    <div ref={mesureRef} style={{
       width: 280,
       height: 420,
       borderRadius: 24,
@@ -3697,6 +3697,11 @@ function CapsuleSlider({ tenues, loading, profil }) {
           width: '100%',
           height: hauteur,
           transition: 'height 0.35s cubic-bezier(.4,0,.2,1)',
+          // La reference etait passee aux cartes sans jamais etre branchee sur
+          // leur racine : la mesure ne se faisait pas et la scene restait a sa
+          // valeur de depart, 480 px pour des cartes de 420. Soixante pixels de
+          // vide, puis les fleches, puis le bas de page (constat Jean,
+          // 2026-09-04, « le bas de la page est coupe »).
           perspective: '900px',
           overflow: 'visible',
         }}

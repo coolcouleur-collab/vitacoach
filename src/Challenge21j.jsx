@@ -874,13 +874,26 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                 </div>
               )}
 
-                {/* LA COURSE, tous les jours et quel que soit le programme.
+                {/* LA COURSE, tous les jours — SAUF dans le reequilibrage
+                    alimentaire.
                     Elle ne vient pas du plan genere : elle est posee ici en
                     dur, parce qu'elle est l'activite maitresse et qu'elle ne
                     doit dependre ni du jour tire ni du programme choisi.
                     Elle ne conditionne pas la validation du jour : c'est un
-                    socle, pas une punition supplementaire. */}
-                {(() => {
+                    socle, pas une punition supplementaire.
+
+                    L'EXCEPTION, ajoutee le 2026-09-04. Cette carte revenait
+                    dans l'onglet Nutrition, et Jean l'a lue pour ce qu'elle
+                    montrait : « le programme alimentaire me propose une course
+                    a pied ». Elle l'avait deja signale comme l'incoherence la
+                    plus visible de l'app.
+                    Le raisonnement d'origine tient pour un programme sportif ou
+                    generaliste. Il ne tient pas ici : quelqu'un qui choisit un
+                    reequilibrage alimentaire n'a pas choisi de courir, et lui
+                    poser une course sous le titre de son programme, c'est lui
+                    dire qu'on n'a pas compris sa demande. La course reste
+                    accessible depuis l'onglet Sport, ou elle a son sens. */}
+                {famille !== 'nutrition' && (() => {
                   const courses = faitesAujourdhui.filter(x => x.type === 'course')
                   const metres = courses.reduce((n, c) => n + (c.metres || 0), 0)
                   const minutes = Math.round(courses.reduce((n, c) => n + c.dureeMs, 0) / 60000)
@@ -929,7 +942,10 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
                     jours sans elan : quelqu'un qui renonce a la seance devait
                     descendre tout en bas pour la trouver. Elle est comptee au
                     meme titre que la course, sa place est ici. */}
-                {onMarcher && (
+                {/* La marche suit la meme regle que la course : elle est du
+                    mouvement, elle n'a pas sa place dans un programme
+                    alimentaire. */}
+                {famille !== 'nutrition' && onMarcher && (
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     onClick={onMarcher}
