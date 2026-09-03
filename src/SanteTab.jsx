@@ -522,44 +522,12 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
         </div>
       )}
 
-      {/* ── Quick Water Bar ── */}
-      <div style={ss.waterBar}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-          <span style={{ display:'flex', filter: 'drop-shadow(0 2px 6px rgba(var(--rgb-terracotta), 0.45))' }}><WaterIcon size={24} color={ICONE} /></span>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 10, color: ENCRE, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5 }}>
-              <span style={{display:'flex',alignItems:'center',gap:5}}><WaterIcon size={11} color={ICONE} />Hydratation du jour</span>
-            </div>
-            <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} style={{
-                  flex: 1, height: 14, borderRadius: 7,
-                  background: i < (metriques.eau || 0)
-                    ? 'linear-gradient(180deg, rgba(var(--rgb-or), 0.9), rgba(var(--rgb-terracotta), 0.9))'
-                    : 'rgba(var(--rgb-terracotta), 0.10)',
-                  boxShadow: i < (metriques.eau || 0)
-                    ? '0 3px 8px rgba(var(--rgb-terracotta), 0.30), inset 0 1px 0 rgba(255,255,255,0.5)'
-                    : 'none',
-                  transition: 'all 0.3s ease',
-                  border: i < (metriques.eau || 0) ? 'none' : '1px solid rgba(var(--rgb-creme-dore), 0.28)'
-                }} />
-              ))}
-            </div>
-            <div style={{ fontSize: 13, color: ENCRE, fontWeight: 800, letterSpacing: -0.3 }}>
-              {metriques.eau || 0}<span style={{ fontSize: 11, fontWeight: 500, color: ENCRE }}> / 8 verres d'eau</span>
-            </div>
-          </div>
-        </div>
-        <button
-          style={ss.btnWater}
-          onClick={addWater}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.96)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          +1 verre
-        </button>
-      </div>
+      {/* La barre d'hydratation a rejoint l'ACCUEIL le 2026-09-04.
+          « Personne n'ira dans Progres pour dire qu'il a bu un verre d'eau »
+          (Jean) : c'est un geste, et les gestes vivent sur l'accueil. Progres
+          garde la mesure dans sa grille, ce qui est son role : consulter.
+          Le parcours etait meme absurde : l'accueil disait « pense a boire »
+          et renvoyait ICI pour le noter. */}
 
       {/* ── Metrics Grid ── */}
       <div style={ss.grid}>

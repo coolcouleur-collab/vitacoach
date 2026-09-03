@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, Ani
 import { WaterIcon, MoodIcon, HeartIcon, FlashIcon, FireIcon, DiamondIcon, LeafIcon, MeditateIcon, FoodIcon, MoonIcon, SunIcon, TargetIcon, ChatIcon, SparkleIcon, StarIcon, LightbulbIcon, BrainIcon, RunIcon, CalendarIcon, WalkIcon, MuscleIcon } from './Icons'
 import CheckinCard from './CheckinCard'
 import JourneePrete from './JourneePrete'
-import { ENCRE, ICONE, VERT } from './palette'
+import { ENCRE, ICONE, VERT, AMBRE } from './palette'
 import { programmeParId } from './programmes'
 
 // ─── Icône vélo (inline, absente d'Icons.jsx) ───────────────────────────────
@@ -2738,6 +2738,71 @@ export function WeeklySparkline({ history, isNight = false, preset = 'day', user
 }
 
 // ─── HOME TAB EXPORT ──────────────────────────────────────────────────────────
+/**
+ * L'HYDRATATION DU JOUR, sur l'accueil.
+ *
+ * Elle vivait dans Progres. Or noter un verre d'eau est un GESTE, et Progres
+ * est un ecran de consultation : personne n'y va pour declarer qu'il a bu
+ * (Jean, 2026-09-04). Le parcours etait meme circulaire, l'accueil disait
+ * « pense a boire » et renvoyait vers Progres pour le noter.
+ *
+ * Le meme critere que la seance de respiration : un ecran montre ce qui sert
+ * MAINTENANT. L'accueil agit, Progres constate.
+ */
+function BarreEau({ metriques, onUpdate }) {
+  const bu = metriques?.eau || 0
+  function ajouter() {
+    onUpdate('eau', Math.min(bu + 1, 20))
+    if (window?.Capacitor?.isNativePlatform?.()) {
+      import('@capacitor/haptics').then(({ Haptics, ImpactStyle }) => {
+        Haptics.impact({ style: ImpactStyle.Light })
+      }).catch(() => {})
+    }
+  }
+  return (
+    <div style={{ padding: '0 18px', marginBottom: 14 }}>
+      <div style={{
+        background: 'rgba(var(--rgb-verre), 0.22)',
+        border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+        backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+        borderRadius: 20, padding: '16px 18px',
+        display: 'flex', alignItems: 'center', gap: 12,
+      }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 10, color: ENCRE, fontWeight: 800, textTransform: 'uppercase',
+                        letterSpacing: 1, marginBottom: 5, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <WaterIcon size={11} color={ICONE} />Hydratation du jour
+          </div>
+          <div style={{ display: 'flex', gap: 5, marginBottom: 6 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} style={{
+                flex: 1, height: 14, borderRadius: 7,
+                background: i < bu
+                  ? 'linear-gradient(180deg, rgba(var(--rgb-or), 0.9), rgba(var(--rgb-terracotta), 0.9))'
+                  : 'rgba(var(--rgb-terracotta), 0.10)',
+                border: i < bu ? 'none' : '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+                transition: 'background 0.3s ease',
+              }} />
+            ))}
+          </div>
+          <div style={{ fontSize: 13, color: ENCRE, fontWeight: 800, letterSpacing: -0.3 }}>
+            {bu}<span style={{ fontSize: 11, fontWeight: 500, color: ENCRE }}> / 8 verres d'eau</span>
+          </div>
+        </div>
+        <button onClick={ajouter} style={{
+          background: 'rgba(var(--rgb-verre), 0.32)',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.28)',
+          color: AMBRE, borderRadius: 50, padding: '10px 18px',
+          fontSize: 12, fontWeight: 700, cursor: 'pointer',
+          fontFamily: 'Poppins,sans-serif', flexShrink: 0, letterSpacing: 0.2,
+        }}>
+          +1 verre
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function HomeTab({ profil, metriques, score, scoreColor, onLog, onUpdate, onSwitchTab, onChat, streak = 0, xp = 0, level = 1, history = [], onPresetChange, presetManuel = null, userId }) {
   const [showSheet, setShowSheet] = useState(false)
   const [modeJournee, setModeJournee] = useState(null)
@@ -2889,6 +2954,8 @@ export default function HomeTab({ profil, metriques, score, scoreColor, onLog, o
           à faire, un tableau de bord, pas un coach. Les suggestions du moment
           remontent donc juste après le check-in ; l'historique et les analyses
           restent accessibles en dessous (refonte demandée par Jean 2026-08-08). */}
+      <BarreEau metriques={metriques} onUpdate={onUpdate} />
+
       <ContextualShortcuts profil={profil} metriques={metriques} onNavigate={onSwitchTab} isNight={isNight} score={score} dejaDit={phrase.cle} />
 
       {/* Évolution = raccourci vers Progrès. Toujours affichée, même sans
