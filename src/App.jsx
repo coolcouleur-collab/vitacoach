@@ -4011,12 +4011,14 @@ const s = {
     transition:'color 0.2s ease, border-color 0.2s ease',
   },
   proBadge: {
-    background:'rgba(245,212,184,0.35)', color:ENCRE,
+    // Creme fige sous du texte qui suit les jetons : de nuit, une tache
+    // claire sous de l'encre pale. --rgb-verre vaut le meme creme de jour.
+    background:'rgba(var(--rgb-verre), 0.35)', color:ENCRE,
     border:'1px solid rgba(var(--rgb-terracotta), .15)',
     padding:'8px 12px', borderRadius:10, fontSize:11, fontWeight:700, textAlign:'center',
   },
   btnEdit: {
-    background:'rgba(245,235,215,0.22)', color:ENCRE, border:'1px solid rgba(var(--rgb-terracotta), 0.14)',
+    background:'rgba(var(--rgb-verre), 0.22)', color:ENCRE, border:'1px solid rgba(var(--rgb-terracotta), 0.14)',
     padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:12,
     fontFamily:F, fontWeight:500, textAlign:'center', width:'100%',
     transition:'border-color .2s, color .2s',
@@ -4152,14 +4154,6 @@ const s = {
     display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
   },
 
-  // ── Bottom nav ────────────────────────────────────────────────────────────────
-  bottomNav: {
-    position:'fixed', bottom:0, left:0, right:0, display:'flex',
-    background:'rgba(242,242,240,.99)',
-    borderTop:'1px solid rgba(0,0,0,.06)',
-    padding:'8px 6px 14px', zIndex:100,
-    boxShadow:'0 -8px 40px rgba(0,0,0,.06)',
-  },
   navBot: {
     flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:0,
     padding:'6px 4px 2px', border:'none', background:'transparent', cursor:'pointer',

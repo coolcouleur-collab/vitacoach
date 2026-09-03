@@ -748,3 +748,34 @@ cle d'API sur tes comptes.
 Le code Pexels est deja ecrit et deja filtre (orientation portrait, 40
 resultats, et le filtre des photos deplacees que j'avais pose apres ta remarque
 sur la femme allongee). Il ne lui manque que la cle.
+
+## 10. Audit du 3 septembre, fait sans captures
+
+Outil ajoute ce jour-la : le compilateur TypeScript passe sur le code en mode
+`checkJs` et signale les noms qui ne designent rien. C'est ce qui a attrape le
+`profil` manquant des tenues et, dans la foulee, un second cas.
+
+### Trouve et corrige
+
+- **« Pourquoi celle-ci ? » ne marchait pas sur les plantes.** `HerbItem` lisait
+  `cat`, la categorie ouverte, sans l'avoir en prop : le bouton levait une
+  ReferenceError et n'ouvrait jamais le chat. Meme classe que les tenues, un
+  bloc recopie dont la copie a perdu sa portee.
+- **`bottomNav`, du code mort**, avec un blanc casse fige dedans qui serait
+  devenu un defaut de nuit le jour ou quelqu'un l'aurait rebranche.
+- **`proBadge` et `btnEdit`** de la barre laterale : creme fige sous du texte qui
+  suit les jetons.
+
+### Signale, pas corrige, et pourquoi
+
+- **43 `transition:'all'`** repartis sur douze fichiers. Une transition en cours
+  fige la valeur calculee : basculer l'ambiance pendant qu'elle tourne laisse la
+  couleur d'avant. J'en ai corrige une le 2 septembre, celle d'un bouton. Les
+  reprendre toutes est un gros diff pour un defaut qui ne se produit que si on
+  change d'ambiance a l'instant precis d'une transition. A trancher.
+- **76 `catch` qui avalent l'erreur en silence.** La plupart sont legitimes
+  (fermer un contexte audio deja ferme). Les quatre qui comptent, cotes admin et
+  B2B, sont deja notes au point 2.
+- **La croix du bouton flottant du forum** est en creme fige. Le forum est un des
+  ecrans que je n'ai jamais pu rendre : je ne sais pas sur quel fond elle se
+  pose, donc je n'y touche pas a l'aveugle.

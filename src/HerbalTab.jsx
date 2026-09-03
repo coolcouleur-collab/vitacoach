@@ -467,7 +467,13 @@ function AIReco({ profil, onChat }) {
 }
 
 // ─── HERB ITEM, glass card with expand ──────────────────────────────────────
-function HerbItem({ item, onChat, onCure, cureActive }) {
+// `cat` etait lu dans le message envoye au chat sans etre une prop : la
+// categorie ouverte vit dans le composant de page, pas ici. Le bouton
+// « Pourquoi celle-ci ? » levait donc une ReferenceError et n'ouvrait rien.
+// Detecte le 2026-09-03 en passant le code au compilateur TypeScript, qui
+// signale les noms qui ne designent rien. Meme classe que le `profil`
+// manquant des tenues : un bloc recopie dont la copie a perdu sa portee.
+function HerbItem({ item, onChat, onCure, cureActive, cat }) {
   const [open, setOpen] = useState(false)
   const [pressed, setPressed] = useState(false)
 
@@ -1121,7 +1127,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
       {/* ── Items list ── */}
       <div style={hb.list}>
         {items.map((item, i) => (
-          <HerbItem key={i} item={item} onChat={onChat} onCure={demarrerCure} cureActive={!!cure} />
+          <HerbItem key={i} item={item} onChat={onChat} onCure={demarrerCure} cureActive={!!cure} cat={cat} />
         ))}
       </div>
 
