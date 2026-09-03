@@ -73,6 +73,7 @@
   --rgb-bulle: 255, 248, 238;
   --rgb-encre: 124, 76, 51;
   --rgb-verre:  255, 235, 210;   /* le verre des cartes et boutons */
+  --vert-preuve: #166534;   /* badge « Etudie » : 5,09:1 sur son fond creme */
   /* La carte de reponse riche du chat, un degrade opaque sans variante
      de nuit : elle restait blanche sous une encre devenue bleu clair. */
   --carte-haut: #FFF3EE;
@@ -186,6 +187,7 @@
   --rgb-bulle: 26, 44, 78;
   --rgb-encre: 200, 222, 255;
   --rgb-verre:   34,  58, 102;   /* pire cas mesure : 5,93:1 */
+  --vert-preuve: #4ADE80;   /* meme badge sur navy : 7,30:1 */
   --carte-haut: #1A2C4E;   /* 10,14:1 avec l encre de nuit */
   --carte-bas:  #1E3258;
   /* Les memes, en nuit. Mesures : humeur 4,77 / 5,31 / 6,76:1 ; survol
@@ -283,6 +285,7 @@
   --rgb-bulle: 255, 248, 238;
   --rgb-encre: 124, 76, 51;
   --rgb-verre:  255, 235, 210;   /* le verre des cartes et boutons */
+  --vert-preuve: #166534;   /* badge « Etudie » : 5,09:1 sur son fond creme */
   /* La carte de reponse riche du chat, un degrade opaque sans variante
      de nuit : elle restait blanche sous une encre devenue bleu clair. */
   --carte-haut: #FFF3EE;

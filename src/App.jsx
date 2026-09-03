@@ -2387,9 +2387,10 @@ padding: isMobile
             // jumeau quelques lignes plus haut avait deja sa version de nuit.
             // Memes points d'arret, memes opacites, autre couleur.
             return (
-            <div style={ambiance === 'night'
-              ? { ...s.mobileHeader, background:'linear-gradient(180deg, rgba(7,15,30,1) 0%, rgba(7,15,30,0.98) 48%, rgba(7,15,30,0.70) 72%, rgba(7,15,30,0) 100%)' }
-              : s.mobileHeader}>
+            <div style={s.mobileHeader}>
+              <div style={{ ...s.voileEntete, background: ambiance === 'night'
+                ? 'linear-gradient(180deg, rgba(7,15,30,1) 0%, rgba(7,15,30,0.98) 55%, rgba(7,15,30,0.72) 78%, rgba(7,15,30,0) 100%)'
+                : 'linear-gradient(180deg, rgba(240,220,203,1) 0%, rgba(240,220,203,0.98) 55%, rgba(240,220,203,0.72) 78%, rgba(240,220,203,0) 100%)' }} />
               {/* Logo, identique sur tous les onglets */}
               <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
                 <style>{`
@@ -2930,32 +2931,6 @@ padding: isMobile
           )}
 
           {/* ── Style ── */}
-          {/* Retour, les pages outils (Style, Respiration, Soins, Cycle) ne
-              figurent pas dans la barre du bas : on y entre depuis l'accueil et
-              rien ne permettait d'en ressortir. Le balayage iOS existe mais il
-              n'est pas visible, et il n'existe pas du tout sur Android
-              (constat 2026-08-12). Un seul bouton pour les quatre pages. */}
-          {['style', 'breathwork', 'beaute', 'herbal', 'cycle'].includes(onglet) && (
-            <button
-              onClick={() => setOnglet('accueil')}
-              aria-label="Retour à l'accueil"
-              style={{
-                position:'fixed', zIndex:60,
-                top:'calc(env(safe-area-inset-top, 0px) + 14px)', left:14,
-                width:38, height:38, borderRadius:'50%', cursor:'pointer',
-                background:'rgba(var(--rgb-bulle), 0.82)',
-                backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
-                border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
-                boxShadow:'0 4px 16px rgba(var(--rgb-terracotta), 0.18)',
-                display:'flex', alignItems:'center', justifyContent:'center',
-              }}
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-          )}
 
           {onglet === 'style' && (
             <div style={{ padding: isMobile ? '0 16px 0' : '28px 0 0', paddingBottom: isMobile ? 120 : undefined, boxSizing:'border-box', width:'100%', overflow:'hidden' }}>
@@ -2999,6 +2974,41 @@ padding: isMobile
           )}
 
           </div>{/* end keyed tab wrapper */}
+
+          {/* Ce bouton est VOLONTAIREMENT hors du conteneur d'onglet ci-dessus.
+              Ce conteneur porte l'animation tabFade, dont la derniere image est
+              transform:translateY(0) ; avec fill-mode both, ce transform reste
+              applique pour toujours. Un transform, meme nul, cree un bloc
+              conteneur : a l'interieur, position:fixed se refere au conteneur et
+              non a l'ecran. Le bouton descendait donc avec la page et se posait
+              sur la premiere carte du Cycle (constat 2026-09-03). */}
+
+          {/* Retour, les pages outils (Style, Respiration, Soins, Cycle) ne
+              figurent pas dans la barre du bas : on y entre depuis l'accueil et
+              rien ne permettait d'en ressortir. Le balayage iOS existe mais il
+              n'est pas visible, et il n'existe pas du tout sur Android
+              (constat 2026-08-12). Un seul bouton pour les quatre pages. */}
+          {['style', 'breathwork', 'beaute', 'herbal', 'cycle'].includes(onglet) && (
+            <button
+              onClick={() => setOnglet('accueil')}
+              aria-label="Retour à l'accueil"
+              style={{
+                position:'fixed', zIndex:60,
+                top:'calc(env(safe-area-inset-top, 0px) + 14px)', left:14,
+                width:38, height:38, borderRadius:'50%', cursor:'pointer',
+                background:'rgba(var(--rgb-bulle), 0.82)',
+                backdropFilter:'blur(14px)', WebkitBackdropFilter:'blur(14px)',
+                border:'1px solid rgba(var(--rgb-terracotta), 0.30)',
+                boxShadow:'0 4px 16px rgba(var(--rgb-terracotta), 0.18)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+              }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                stroke={ICONE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          )}
 
         </div>
 
@@ -3987,14 +3997,25 @@ const s = {
     // logo, capture Jean 2026-07-27, voile renforcé + backdrop blur masqué)
     // Voile plus couvrant sur sa moitié haute : les cartes du carrousel
     // passaient par-dessus le logo en scrollant (retour Jean 2026-08-08).
-    background:'linear-gradient(180deg, rgba(240,220,203,1) 0%, rgba(240,220,203,0.98) 48%, rgba(240,220,203,0.70) 72%, rgba(240,220,203,0) 100%)',
-    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
-    WebkitMaskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
-    maskImage:'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
+    // Le voile n'est plus porte par ce conteneur mais par un calque enfant
+    // (voileEntete ci-dessous). Le masque de fondu s'appliquait a l'element ET
+    // a ses enfants : le sous-titre « Ton soleil, meme la nuit » tombait dans la
+    // zone qui s'efface, donc il palissait pendant que le contenu defilait
+    // dessous restait net. Les deux textes se lisaient l'un sur l'autre
+    // (captures Jean 2026-09-03, Sante Naturelle et Cycle).
     paddingBottom: 18,
     position:'fixed', top:0, left:0, right:0, zIndex:50,
     pointerEvents:'none',
   },
+  voileEntete: {
+    position:'absolute', left:0, right:0, top:0, bottom:-30, zIndex:-1,
+    backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)',
+    // Opaque jusqu'a 70 % : le texte de l'entete se termine avant, le fondu
+    // n'entame donc plus que du vide.
+    WebkitMaskImage:'linear-gradient(180deg, #000 0%, #000 70%, transparent 100%)',
+    maskImage:'linear-gradient(180deg, #000 0%, #000 70%, transparent 100%)',
+  },
+
   backBtn: {
     width:36, height:36, borderRadius:12,
     background:'rgba(0,0,0,.04)', border:'1px solid rgba(0,0,0,.08)',

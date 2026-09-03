@@ -517,7 +517,9 @@ function HerbItem({ item, onChat, onCure, cureActive }) {
                 fontSize:8.5, fontWeight:700, padding:'2px 7px', borderRadius:10,
                 textTransform:'uppercase', letterSpacing:'0.3px',
                 background: item.preuve === 'Étudié' ? 'rgba(34,197,94,0.12)' : 'rgba(var(--rgb-terracotta), 0.10)',
-                color: item.preuve === 'Étudié' ? '#1f9d55' : 'rgba(var(--rgb-terracotta), 0.75)',
+                // Le vert etait code en dur : 2,49:1 de jour et 3,64:1 de nuit,
+                // pour un texte de 8,5 px qui en demande 4,5. Mesure 2026-09-03.
+                color: item.preuve === 'Étudié' ? 'var(--vert-preuve)' : 'rgba(var(--rgb-terracotta), 0.75)',
                 border: item.preuve === 'Étudié' ? '1px solid rgba(34,197,94,0.28)' : '1px solid rgba(var(--rgb-terracotta), 0.22)',
               }}>{item.preuve}</span>
             </div>
@@ -770,6 +772,63 @@ function besoinDuMoment(metriques, history) {
 // catInitiale : « Tes outils » propose une entree Beaute qui doit ouvrir
 // directement sur cette categorie. Sans ca la page s'ouvrait toujours sur
 // Plantes et l'entree mentait sur sa destination.
+// ─────────────────────────────────────────────────────────────────────────────
+// UNE BANDE QUI DEFILE
+//
+// Les rangees de puces (SANTE, BEAUTE, APPROCHE) sont plus larges que l'ecran.
+// Sans rien au bord, la derniere puce est tranchee en plein milieu d'un mot et
+// rien ne dit qu'on peut la faire defiler : ca se lit comme un defaut d'affichage
+// et pas comme une invitation (captures Jean 2026-09-03, « Tisan… » coupe net).
+//
+// Le fondu n'est pose que du cote ou il reste vraiment quelque chose a voir.
+// Un fondu permanent a droite mentirait une fois la bande au bout.
+// ─────────────────────────────────────────────────────────────────────────────
+function BandeDefilante({ style, children }) {
+  const ref = useRef(null)
+  const [bords, setBords] = useState({ gauche:false, droite:false })
+
+  const mesurer = React.useCallback(() => {
+    const el = ref.current
+    if (!el) return
+    const reste = el.scrollWidth - el.clientWidth - el.scrollLeft
+    setBords(b => {
+      const n = { gauche: el.scrollLeft > 4, droite: reste > 4 }
+      return (n.gauche === b.gauche && n.droite === b.droite) ? b : n
+    })
+  }, [])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    mesurer()
+    el.addEventListener('scroll', mesurer, { passive:true })
+    // Les puces arrivent apres le premier rendu : sans cet observateur la mesure
+    // resterait celle d'une bande encore vide, donc « rien a defiler ».
+    const ro = new ResizeObserver(mesurer)
+    ro.observe(el)
+    for (const enfant of el.children) ro.observe(enfant)
+    window.addEventListener('resize', mesurer)
+    return () => {
+      el.removeEventListener('scroll', mesurer)
+      ro.disconnect()
+      window.removeEventListener('resize', mesurer)
+    }
+  }, [mesurer, children])
+
+  const masque =
+    bords.gauche && bords.droite
+      ? 'linear-gradient(90deg, transparent 0, #000 26px, #000 calc(100% - 26px), transparent 100%)'
+      : bords.droite ? 'linear-gradient(90deg, #000 calc(100% - 26px), transparent 100%)'
+      : bords.gauche ? 'linear-gradient(90deg, transparent 0, #000 26px)'
+      : 'none'
+
+  return (
+    <div ref={ref} style={{ ...style, WebkitMaskImage:masque, maskImage:masque }}>
+      {children}
+    </div>
+  )
+}
+
 export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, metriques, history }) {
   profilCourant = profil
   // Le besoin du moment decide de la categorie d'ouverture, sauf si l'appelant
@@ -994,13 +1053,16 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
         )}
       </div>
 
-      {/* Le fondu a droite signale qu'il reste des categories : sans lui, la
-          derniere est coupee net et rien n'indique qu'on peut faire defiler. */}
+      {/* Le fondu qui signale qu'il reste des categories vit maintenant dans
+          BandeDefilante, sous forme de masque. L'ancien etait un calque de creme
+          codee en dur : sur le navy de nuit il se voyait comme une bande claire
+          au bord droit, et il couvrait aussi le titre du groupe puisqu'il
+          s'etendait sur toute la hauteur (captures Jean 2026-09-03). */}
       <div ref={catRowRef}>
         {GROUPES.map(g => (
           <div key={g.titre} style={{ position:'relative' }}>
             <div style={hb.groupeTitre}>{g.titre}</div>
-            <div style={hb.catRow}>
+            <BandeDefilante style={hb.catRow}>
               {g.ids.map(id => {
                 const c = CATS.find(x => x.id === id) || APPROCHES.find(x => x.id === id)
                 if (!c) return null
@@ -1028,7 +1090,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                         ? '0 6px 20px rgba(var(--rgb-brun-fonce),0.30)'
                         : 'none',
                       transform: active ? 'scale(1.04)' : 'scale(1)',
-                      transition:'all 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+                      transition:'transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease',
                     }}
                     onClick={() => setCat(c.id)}
                   >
@@ -1036,11 +1098,7 @@ export default function HerbalTab({ profil, onChat, onBack, catInitiale = null, 
                   </button>
                 )
               })}
-            </div>
-            <div style={{
-              position:'absolute', top:0, right:0, bottom:0, width:34, pointerEvents:'none',
-              background:'linear-gradient(90deg, rgba(237,216,204,0) 0%, rgba(237,216,204,0.85) 100%)',
-            }} />
+            </BandeDefilante>
           </div>
         ))}
       </div>
