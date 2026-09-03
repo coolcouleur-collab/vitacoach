@@ -8,9 +8,24 @@ import { ENCRE, ICONE, ROUGE, VERT } from './palette'
 const API = import.meta.env.VITE_API_URL || ''
 
 export default function RapportHebdo({ userId, isPro, onPasserPro }) {
-  const [rapport, setRapport] = useState(null)
-  const [semaine, setSemaine] = useState(null)
-  const [loading, setLoading] = useState(true)
+  // Le rapport est lu depuis le cache AVANT le reseau. Il n'y en avait aucun :
+  // chaque ouverture de « Ta semaine » attendait la reponse du serveur, et sur
+  // un hebergement qui se met en veille cette attente se compte en dizaines de
+  // secondes (retour Jean, 2026-09-04). Un bilan hebdomadaire ne change pas
+  // d'une ouverture a l'autre : l'afficher tout de suite est sans risque, le
+  // reseau le rafraichit derriere.
+  const CACHE = `solenn_rapport_${userId || 'anon'}`
+  const [rapport, setRapport] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(CACHE) || 'null')?.rapport ?? null } catch { return null }
+  })
+  const [semaine, setSemaine] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(`solenn_rapport_${userId || 'anon'}`) || 'null')?.semaine ?? null } catch { return null }
+  })
+  // `true` seulement quand il n'y a rien a montrer. Avec un rapport en cache,
+  // partir sur un squelette reviendrait a cacher ce qu'on a deja.
+  const [loading, setLoading] = useState(() => {
+    try { return !JSON.parse(localStorage.getItem(`solenn_rapport_${userId || 'anon'}`) || 'null')?.rapport } catch { return true }
+  })
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState(null)
   // Section dépliée du bilan (une seule à la fois), le bilan était un mur
@@ -18,7 +33,9 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
   const [openSection, setOpenSection] = useState(null)
 
   const fetchRapport = async () => {
-    setLoading(true)
+    // Pas de squelette si le cache montre deja quelque chose : remplacer un
+    // bilan lisible par un squelette serait un recul.
+    setLoading(r => (rapport ? false : true))
     setError(null)
     try {
       const res = await fetch(`${API}/api/rapport-hebdo?userId=${userId}`, { headers: await authHeaders() })
@@ -26,6 +43,7 @@ export default function RapportHebdo({ userId, isPro, onPasserPro }) {
       const data = await res.json()
       setRapport(data.rapport || null)
       setSemaine(data.semaine || null)
+      try { localStorage.setItem(CACHE, JSON.stringify({ rapport: data.rapport || null, semaine: data.semaine || null })) } catch {}
     } catch (err) {
       setError(err.message)
     } finally {

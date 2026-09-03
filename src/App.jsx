@@ -2767,7 +2767,7 @@ padding: isMobile
                     // il doit donc partir a la deconnexion, sinon le compte
                     // suivant verrait le programme du precedent.
                     Object.keys(localStorage)
-                      .filter(k => k.startsWith('solenn_challenge_cache_'))
+                      .filter(k => k.startsWith('solenn_challenge_cache_') || k.startsWith('solenn_rapport_'))
                       .forEach(k => localStorage.removeItem(k))
                     oublierAbonnement()
                     setUser(null)
