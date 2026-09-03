@@ -1871,10 +1871,22 @@ const [messages, setMessages] = useState(() => {
         // Sauvegarde Supabase de la conversation (fire & forget)
         if (user?.id) {
           setTimeout(async () => {
+            // Les images sont retirees ici comme elles le sont deja du cache
+            // local douze lignes plus haut. Seul ce chemin les gardait : la
+            // photo d'un repas partait donc en base64 dans la colonne `messages`
+            // de solenn_chats, et y restait. Trois consequences, toutes
+            // mauvaises. L'app promet l'inverse dans sa propre demande
+            // d'autorisation iOS, « la photo reste sur ton telephone ». La
+            // declaration Data safety deposee le 4 septembre dit « ephemere »,
+            // ce qui aurait ete faux. Et chaque message suivant renvoyait toutes
+            // les photos de la journee, soit des centaines de kilo-octets par
+            // frappe. L'intention etait deja la, elle n'avait ete appliquee
+            // qu'a la moitie des chemins.
+            const sansImages = (messagesRef.current || []).map(({ image, ...m }) => m)
             fetch('/api/chat-save', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-              body: JSON.stringify({ userId: user.id, messages: messagesRef.current }),
+              body: JSON.stringify({ userId: user.id, messages: sansImages }),
             }).catch(() => {})
           }, 500)
         }

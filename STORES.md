@@ -6,6 +6,44 @@ Apple (App Review Guidelines) et Google Play (Health Content and Services).
 
 ---
 
+## Verifie le 4 septembre 2026, pour la fiche et les formulaires
+
+- **Position exacte : ephemere, confirme.** `useCourse.js` ne contient aucune
+  ecriture (ni `setItem`, ni `insert`, ni `fetch`). La seance enregistree porte
+  sept champs : type, duree, metres, debut, fin, FC moyenne, FC max. Aucune
+  coordonnee. Aucune table de trace cote serveur, et `CourseService.kt` ne
+  persiste rien. La declaration « ephemere » tient.
+
+- **Position en arriere-plan : absente.** `ACCESS_BACKGROUND_LOCATION` n'est pas
+  dans le manifeste, et la politique de confidentialite n'en parle pas non plus.
+  Rien a retirer, rien a declarer.
+
+- **Photos de repas : ephemeres depuis aujourd'hui seulement.** Elles ne
+  l'etaient pas. La photo partait en base64 dans le tableau `messages`, envoye a
+  `/api/chat-save` et ecrit dans `solenn_chats`. Le cache local, lui, les
+  retirait deja. La politique publiee affirmait pourtant « La photo n'est pas
+  conservee », et l'autorisation iOS promet « elle reste sur ton telephone » :
+  le code contredisait ses deux promesses. Corrige. La route d'analyse envoie
+  bien l'image a Groq sans jamais l'ecrire.
+  ATTENTION : les conversations deja enregistrees avant ce correctif peuvent
+  contenir des photos en base. A decider avec Jean, ce n'est pas une suppression
+  a faire sans elle.
+
+- **Garmin n'est PAS configure en production.** `/api/connect/disponibles`
+  repond `{"withings":true,"garmin":false}`. La carte Garmin affiche donc
+  « Bientot » et n'est pas cliquable. La fiche Play Store ne doit pas promettre
+  Garmin tant que la cle n'est pas posee sur Render.
+
+- **Withings et Oura ne passent pas par Health Connect.** Ils se connectent
+  directement dans Solenn, Withings en OAuth et Oura par jeton personnel. Une
+  formulation qui les presente comme des exemples d'apps Health Connect decrit
+  mal le fonctionnement.
+
+- **La saisie manuelle de la frequence cardiaque existe.** `fc` est une tuile
+  editable de Progres, au meme titre que le sommeil. Dire « sans montre, tu la
+  saisis toi-meme » est exact.
+
+
 ## 1. Google Play — fiche store
 
 ### Brève description (80 caractères maximum)
