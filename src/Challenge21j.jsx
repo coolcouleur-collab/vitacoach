@@ -110,12 +110,19 @@ function SeanceRow({ item, onFiche, fait = false, onToggle, index = 0 }) {
  *                          famille demandee.
  */
 export default function Challenge21j({ userId, isPro, onPasserPro, profil, famille = 'sport', onMarcher }) {
+  // localStorage et non sessionStorage : le cache etait vide a chaque
+  // fermeture de l'app, donc il ne servait qu'aux allers-retours entre
+  // onglets d'une meme session. A l'ouverture, celle ou l'attente se voit,
+  // il etait toujours vide et les seances mettaient plusieurs secondes a
+  // apparaitre (Jean, 2026-09-04). Un programme de 21 ou 42 jours ne change
+  // pas d'une ouverture a l'autre : le garder est sans risque, et le reseau
+  // le rafraichit derriere.
   // Affichage immediat depuis le cache : chaque ouverture de l'onglet
   // repassait par Render, reveil compris, et la page restait vide plusieurs
   // secondes (constat Jean 2026-08-12). Le cache rend l'ecran instantane, le
   // reseau le rafraichit derriere.
   const [challenge, setChallenge] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem(`solenn_challenge_cache_${famille}`) || 'null') } catch { return null }
+    try { return JSON.parse(localStorage.getItem(`solenn_challenge_cache_${famille}`) || 'null') } catch { return null }
   })
   const [loading, setLoading] = useState(true)
   // Il n'existait AUCUN moyen de changer de programme une fois lance : ni
@@ -210,7 +217,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       if (!res.ok) throw await erreurServeur(res, "Ton programme n'a pas pu être chargé. Réessaie dans un instant.")
       const data = await res.json()
       setChallenge(data.challenge || null)
-      try { sessionStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(data.challenge || null)) } catch {}
+      try { localStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(data.challenge || null)) } catch {}
       // Chaque ouverture fait AVANCER la fenetre glissante des rappels. iOS
       // n'en garde que 64 en attente : on ne peut pas poser un programme de
       // 42 jours d'un coup, il faut revenir en poser la suite. Sans appel
@@ -356,7 +363,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     } catch {}
     const maj = { ...challenge, date_debut: nouveauDebut }
     setChallenge(maj)
-    try { sessionStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(maj)) } catch {}
+    try { localStorage.setItem(`solenn_challenge_cache_${famille}`, JSON.stringify(maj)) } catch {}
     ignorerReprise()
   }
 

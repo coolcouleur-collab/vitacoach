@@ -2753,6 +2753,12 @@ padding: isMobile
                     await sb.auth.signOut()
                     localStorage.removeItem('vitacoach_user')
                     localStorage.removeItem('vitacoach_profil')
+                    // Le programme est desormais garde entre deux ouvertures :
+                    // il doit donc partir a la deconnexion, sinon le compte
+                    // suivant verrait le programme du precedent.
+                    Object.keys(localStorage)
+                      .filter(k => k.startsWith('solenn_challenge_cache_'))
+                      .forEach(k => localStorage.removeItem(k))
                     oublierAbonnement()
                     setUser(null)
                     setProfil(null)
