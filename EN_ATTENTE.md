@@ -1,5 +1,61 @@
 # En attente, Solenn
 
+## Corrige le 4 septembre 2026, en ligne
+
+- **Fuite de donnees entre comptes sur un appareil partage.** Les quatre chemins
+  de deconnexion effacaient trois choses differentes ; l'historique de
+  conversation, les metriques, les tenues et la ville survivaient au changement
+  de compte. C'est l'origine du « Solenn m'appelle Camille » : ce n'etait pas un
+  artefact de session. Une seule fonction `oublierSession()` les remplace, avec
+  une liste blanche des cles qui appartiennent a l'appareil. Commit `9735074`.
+
+- **Withings et Garmin ejectaient l'utilisateur hors de l'app.** Marques
+  disponibles en dur sans verifier que le serveur avait leurs cles. Withings
+  construisait un `client_id=undefined` et envoyait la personne sur une page
+  d'erreur de Withings ; Garmin repondait du JSON affiche en pleine page avec le
+  nom de la variable manquante. Le serveur expose desormais `/api/connect/
+  disponibles` et la carte porte son badge « Bientot » au lieu d'un bouton qui ne
+  mene nulle part. Risque de rejet Play ecarte. Commit `a94d9a4`.
+
+- **La page rouge « Erreur React » est remplacee par un filet.** Un rechargement
+  silencieux, une seule fois, garde par soixante secondes ; la deuxieme erreur
+  dans la meme minute affiche un ecran aux couleurs de l'app. Teste dans le
+  navigateur avec une erreur de rendu simulee, en theme jour et nuit. Commit
+  `c5e7332`.
+
+- **Deux cartes de l'accueil qui ne tenaient pas leur promesse.** « Prepare ton
+  sommeil » annoncait « respiration, detente » et ouvrait Progres ; elle ouvre
+  Calme. « Pense a boire » est retiree : la barre d'hydratation est rendue juste
+  au-dessus d'elle depuis hier, et la carte renvoyait vers Progres ou le bloc
+  d'hydratation n'existe plus. Commit `14f2871`.
+
+## Le plan produit recu le 4 septembre : ce qu'il faut en garder
+
+Deux de ses affirmations sur l'app ne tiennent pas, verifiees dans le code :
+les graphes vides de Progres ont deja un etat vide actionnable depuis le
+2026-08-08, et les boutons d'integration ne « ne faisaient rien », ils
+ejectaient hors de l'app (pire, et corrige ci-dessus). Traiter ses constats
+comme des hypotheses a verifier, pas comme des faits.
+
+Ce qui reste vrai et urgent, avant soumission :
+
+- **La formulation « sans montre » dans la fiche Play Store.** Un telephone seul
+  ne mesure ni le sommeil ni la frequence cardiaque. Promettre leur analyse sans
+  montre est une allegation trompeuse au sens des regles Play, et la tuile
+  Progres dit deja « Connecte ta montre ou saisis-la ». Formulation juste :
+  « Sans montre : Solenn utilise les donnees deja dans ton telephone, et te pose
+  une question quand il lui en manque une. »
+
+- **Le programme nutrition qui propose encore des seances de sport.** Signale
+  deux fois par Jean, toujours ouvert.
+
+Ce qui est du v2, apres les premiers utilisateurs, et surtout pas maintenant :
+le renommage des quatre onglets (les captures et la fiche Play seraient a
+refaire), le brief du matin en notification (permission, planification, tache
+serveur, regles Play sur les notifications), la memoire citee, la correlation
+hebdomadaire. Bonnes idees, aucune ne se decide sans donnees d'usage reelles.
+
+
 ## Chantier « application sportive », ouvert le 2 septembre 2026
 
 Jean a demande que Programme devienne une vraie application sportive, et a
