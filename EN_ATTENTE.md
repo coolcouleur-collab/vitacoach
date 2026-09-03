@@ -600,3 +600,76 @@ nouvelle sauvegarde de profil doit passer par elle**, jamais par un
 - **La generation d'un programme se fait en un seul essai**, sans relance. Un
   echec de l'IA renvoie l'utilisateur a un message, la ou une seconde tentative
   suffirait probablement.
+
+---
+
+# POUR DEMAIN, CE QUI NE DEPEND QUE DE JEAN
+
+Etabli le 3 septembre au soir. Tout le reste est fait et en ligne.
+
+## 1. La session Mac, la plus lourde
+
+**L'ecran de veille iPhone pendant une course.** Le code Swift est ecrit, il
+n'est PAS dans le projet Xcode : `SolennActivite` apparait zero fois dans
+`project.pbxproj`. Sept etapes detaillees dans `ios/LiveActivity/LISEZ-MOI.md`,
+compter une heure dont la moitie a attendre Xcode.
+
+Deux pieges qui font perdre une soiree, rappeles ici :
+- ouvrir le `.xcworkspace`, **pas** le `.xcodeproj` ;
+- mettre `SolennActiviteAttributes.swift` dans **les DEUX** cibles.
+
+Une Live Activity ne s'affiche que sur un **iPhone reel**, jamais dans le
+simulateur.
+
+## 2. Reconstruire les paquets
+
+C'est le point qui rend tout le reste invisible.
+
+- **iOS** : le `www` embarque date du **21 juillet**. L'app native ne contient
+  AUCUN des deux derniers mois de travail.
+- **Android** : le bundle date du **30 aout**.
+
+Tout ce qui a ete fait depuis ne vit que sur le web.
+
+## 3. A tester sur un vrai telephone
+
+- Une course sur un parcours dont tu connais la distance, puis verrouiller
+  l'ecran pendant qu'elle tourne.
+- Health Connect sur Android.
+- Les rappels quotidiens, sur plusieurs jours.
+- Une inscription complete, en te declarant femme puis homme.
+
+## 4. Play Console
+
+Deux declarations a faire avant publication : le **service de premier plan**
+(type `location`) et les **applications de sante**.
+
+## 5. Verifier la chaine alimentaire de bout en bout
+
+Les corrections sont sur **Render**, et je ne peux pas savoir de l'exterieur
+quelle version il execute.
+
+Le test : ressaisir tes exclusions, **recharger la page** pour verifier que le
+bouton dit bien « Modifier mes exclusions », puis regenerer ta routine et
+regarder tes trois repas du jour. S'ils respectent tes exclusions, la chaine
+complete fonctionne, y compris le maillon qui n'avait jamais rien verifie.
+
+## 6. Les trois ecrans que je n'ai jamais pu voir
+
+Ils demandent une action reelle, donc je ne les ai jamais vus rendus : leur
+mode nuit et leur rangement n'ont **jamais ete mesures**.
+
+- la seance en cours,
+- le bilan d'une course,
+- le forum.
+
+Ouvre-les et envoie des captures : c'est le dernier angle mort.
+
+## 7. Deux decisions qui t'appartiennent
+
+- La photo de **« Chaise au mur »** montre un ballon leste, alors que le
+  programme annonce « sans materiel ». Le geste est juste, l'accessoire est
+  facultatif. La retirer au profit de l'animation, ou la garder ?
+- Le catalogue de programmes annonce toujours **« Un programme, construit a
+  partir de ton profil »** au singulier cote nutrition, ce qui est exact
+  aujourd'hui mais faux des qu'un second programme alimentaire existera.
