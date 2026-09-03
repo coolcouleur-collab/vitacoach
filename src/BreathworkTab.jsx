@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AMBRE, ENCRE, ROUGE } from './palette'
+import { AMBRE, ENCRE, ROUGE, ICONE } from './palette'
+import SonsCalmes from './SonsCalmes'
+import YogaPostures from './YogaPostures'
+import MeditationGuidee from './MeditationGuidee'
+import JeuApaisant from './JeuApaisant'
 
 const F = "'Poppins', system-ui, sans-serif"
 // L'opacite recue est volontairement IGNOREE, comme warmText sur l'accueil.
@@ -69,7 +73,20 @@ const TECHNIQUES = [
   },
 ]
 
+// La page ne portait qu'une chose, la respiration. Elle en porte cinq depuis
+// le 3 septembre : respirer, des postures, une meditation guidee, des sons et
+// un jeu. Un selecteur en tete, pour qu'aucune ne soit enterree sous les
+// autres et qu'on arrive directement sur ce qu'on est venu chercher.
+const SECTIONS = [
+  { id: 'respirer',   nom: 'Respirer' },
+  { id: 'postures',   nom: 'Postures' },
+  { id: 'meditation', nom: 'Méditation' },
+  { id: 'sons',       nom: 'Sons' },
+  { id: 'jeu',        nom: 'Pause' },
+]
+
 export default function BreathworkTab() {
+  const [section, setSection]         = useState('respirer')
   const [techId, setTechId]           = useState('coherence')
   const [running, setRunning]         = useState(false)
   const [phaseIdx, setPhaseIdx]       = useState(0)
@@ -150,6 +167,31 @@ export default function BreathworkTab() {
 
   return (
     <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 64px) 16px 120px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
+
+      {/* Le selecteur de SECTION, au-dessus de tout le reste. */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18, justifyContent: 'center' }}>
+        {SECTIONS.map(x => {
+          const on = section === x.id
+          return (
+            <button key={x.id} onClick={() => { stop(); setSection(x.id) }} style={{
+              padding: '8px 15px', borderRadius: 20, cursor: 'pointer', fontFamily: F,
+              fontSize: 12.5, fontWeight: on ? 700 : 500, color: ENCRE,
+              background: on ? 'rgba(var(--rgb-verre), 0.45)' : 'rgba(var(--rgb-verre), 0.18)',
+              border: `1px solid ${on ? ICONE : 'rgba(var(--rgb-creme-dore), 0.32)'}`,
+              whiteSpace: 'nowrap', transition: 'all 0.18s',
+            }}>
+              {x.nom}
+            </button>
+          )
+        })}
+      </div>
+
+      {section === 'postures'   && <YogaPostures />}
+      {section === 'meditation' && <MeditationGuidee />}
+      {section === 'sons'       && <SonsCalmes />}
+      {section === 'jeu'        && <JeuApaisant />}
+
+      {section === 'respirer' && <>
 
       {/* Technique tabs, flexWrap : tout visible d'un coup, plus de rangée
           coupée au bord de l'écran (retour Jean 2026-07-25) */}
@@ -333,6 +375,8 @@ export default function BreathworkTab() {
           ))}
         </div>
       )}
+      </>}
+
     </div>
   )
 }
