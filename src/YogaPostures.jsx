@@ -87,7 +87,12 @@ const POSTURES = [
     nom: 'Posture du cobra',
     cible: 'Dos · ouverture',
     duree: 45,
-    img: photo(3823076),          // bassin au sol, buste deroule, bras tendus
+    // 3823076 montrait un CHIEN TETE EN HAUT : bassin et cuisses decolles,
+    // c'est-a-dire exactement l'erreur que cette fiche demande d'eviter deux
+    // lignes plus bas. Une photo qui enseigne la faute est pire que pas de
+    // photo. 6958063 est un vrai cobra, verifie au recadrage reel de la
+    // carte, et vient de la meme serie que le relachement (6958068).
+    img: photo(6958063),          // bassin ET cuisses au sol, buste releve
     etapes: [
       'À plat ventre, mains posées sous les épaules',
       'Déroule le buste vers le haut sans forcer sur les bras',

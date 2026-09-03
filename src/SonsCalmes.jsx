@@ -418,7 +418,8 @@ export default function SonsCalmes() {
           type="range" min="0" max="1" step="0.01" value={volume}
           onChange={e => setVolume(Number(e.target.value))}
           aria-label="Volume"
-          style={{ flex: 1, accentColor: ICONE }}
+          className="curseur-solenn"
+          style={{ flex: 1, '--remplissage': `${volume * 100}%` }}
         />
       </div>
 

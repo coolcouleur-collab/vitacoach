@@ -13,7 +13,13 @@ const F = "'Poppins', system-ui, sans-serif"
 // partait de var(--accent), une couleur de FOND (2,39:1), et l'alpha ne faisait
 // que l'effacer davantage. L'etat selectionne passe desormais par la
 // pastille pleine, plus par un ecart d'opacite illisible.
-const am = (a) => ENCRE
+// ATTENTION : l'argument est ignore, volontairement. Cette fonction reglait
+// une opacite ; la passe de mode nuit l'a remplacee par le jeton d'encre,
+// qui est deja au bon contraste. Les `am(0.75)` et `am(0.92)` du fichier
+// rendent donc tous exactement la meme couleur. La signature est gardee
+// pour ne pas toucher aux douze appels, mais ne comptez pas sur elle pour
+// creer une hierarchie : passez par la taille et la graisse.
+const am = (_opaciteIgnoree) => ENCRE
 
 const CARD = {
   background: 'rgba(var(--rgb-verre), 0.22)',
@@ -277,19 +283,22 @@ export default function BreathworkTab() {
                     {/* `remaining` etait calcule depuis toujours et n'etait
                         affiche nulle part : sans lui, impossible de savoir
                         combien de temps tenir. */}
-                    {running && (
-                      <div style={{ fontSize: 30, fontWeight: 300, color: am(0.80), lineHeight: 1.1, marginTop: 2,
-                        fontFamily: "'Poppins', system-ui, sans-serif", fontVariantNumeric: 'tabular-nums' }}>
-                        {remaining}
-                      </div>
-                    )}
-                    <div style={{ fontSize: 22, fontWeight: 300, color: am(0.88), marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
+                    {/* Un seul compteur. Il y en avait DEUX empiles : celui-ci,
+                        et un second a 22 px juste en dessous. Le bloc englobant
+                        est deja `!done && isActive`, et isActive vaut
+                        `running && !done` : la condition `running` du premier
+                        etait donc toujours vraie quand le second s'affichait.
+                        Les deux nombres se lisaient l'un sous l'autre pendant
+                        toute la seance. Personne ne l'avait vu parce que cet
+                        ecran ne se voit qu'en cours de respiration. */}
+                    <div style={{ fontSize: 30, fontWeight: 300, color: am(0.80), lineHeight: 1.1, marginTop: 2,
+                      fontFamily: "'Poppins', system-ui, sans-serif", fontVariantNumeric: 'tabular-nums' }}>
                       {remaining}
                     </div>
                   </>
                 )}
                 {!done && !isActive && (
-                  <div style={{ fontSize: 14, color: am(0.75) }}>Prêt</div>
+                  <div style={{ fontSize: 18, fontWeight: 500, letterSpacing: '0.01em', color: am(0.75) }}>Prêt</div>
                 )}
               </motion.div>
             </AnimatePresence>

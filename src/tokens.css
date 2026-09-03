@@ -233,3 +233,42 @@ body {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
 }
+
+/* ─── La barre de volume des ambiances sonores ────────────────────────────────
+   `accent-color` ne peint que la partie remplie et le curseur : la piste vide
+   restait au gris clair du navigateur, ce qui donnait une barre blanche en
+   travers du navy (captures Jean 2026-09-03, Musique et Sons).
+   Le remplissage est passé en variable depuis React, parce que WebKit n'a pas
+   d'équivalent à ::-moz-range-progress. */
+.curseur-solenn {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 22px;
+  cursor: pointer;
+}
+.curseur-solenn::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg,
+    var(--icone) 0 var(--remplissage, 50%),
+    rgba(var(--rgb-creme-dore), 0.26) var(--remplissage, 50%) 100%);
+}
+.curseur-solenn::-moz-range-track {
+  height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg,
+    var(--icone) 0 var(--remplissage, 50%),
+    rgba(var(--rgb-creme-dore), 0.26) var(--remplissage, 50%) 100%);
+}
+.curseur-solenn::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--icone);
+  border: 2px solid rgba(var(--rgb-verre), 0.95);
+  margin-top: -5.5px;
+}
+.curseur-solenn::-moz-range-thumb {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--icone);
+  border: 2px solid rgba(var(--rgb-verre), 0.95);
+}
+.curseur-solenn:focus-visible { outline: 2px solid var(--icone); outline-offset: 3px; }
