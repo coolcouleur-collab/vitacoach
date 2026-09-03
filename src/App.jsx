@@ -3391,7 +3391,11 @@ function TenueCard({ tenue, style: extraStyle }) {
     // « flat lay » force les photos de vêtements posés, sans mannequin
     const q = `flat lay clothing outfit ${base}`
     const alt = `flat lay fashion clothes ${tenue.searchQueryAlt || ''}`.trim()
-    fetch(`/api/image?prompt=${encodeURIComponent(q)}&alt=${encodeURIComponent(alt)}`)
+    // Le SEXE declare part avec la requete. Le serveur forcait « woman » en
+    // dur : un homme recevait des tenues feminines, alors que Solenn s'adresse
+    // aux deux. Et le retirer sans rien mettre a la place aurait rendu les
+    // suggestions generiques, ce qui n'est pas mieux : Jean veut du sur mesure.
+    fetch(`/api/image?prompt=${encodeURIComponent(q)}&alt=${encodeURIComponent(alt)}&sexe=${encodeURIComponent(profil?.sexe || 'nsp')}`)
       .then(r => r.json())
       .then(d => {
         if (d.url) { setImgSrc(d.url); setImgState('ok'); setCredit(d.credit || null) }

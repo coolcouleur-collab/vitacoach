@@ -508,10 +508,38 @@ Propose 6 tenues. Réponds UNIQUEMENT en JSON valide :
 })
 
 // Recherche images mode
+// CE QU'UNE PHOTO DE TENUE NE DOIT PAS MONTRER.
+//
+// La recherche porte sur des mots de mode, et les banques y rangent aussi du
+// boudoir : Jean a recu, pour un look « Casual Cafe », une femme allongee sur
+// un lit en nuisette. Rien a voir avec un conseil vestimentaire, et deplace
+// dans une app de bien-etre.
+//
+// On lit la description que la banque fournit et on ecarte. Le filtre est
+// volontairement large : rater une photo correcte ne coute rien, en laisser
+// passer une deplacee coute la confiance.
+const MOTS_ECARTES = [
+  'bed', 'bedroom', 'lingerie', 'underwear', 'bra ', 'panties', 'nightgown',
+  'sleep', 'nude', 'naked', 'boudoir', 'topless', 'bikini', 'swimsuit',
+  'towel', 'bath', 'shower', 'sensual', 'seductive', 'erotic', 'intimate',
+  'pillow', 'bedsheet', 'sheets',
+]
+
+function photoConvenable(photo) {
+  const texte = `${photo?.alt || ''} ${photo?.url || ''}`.toLowerCase()
+  return !MOTS_ECARTES.some(m => texte.includes(m))
+}
+
 app.get('/api/image', async (req, res) => {
   const lock = req.query.lock != null ? Number(req.query.lock) : 0
   const rawPrompt = req.query.prompt || 'fashion outfit'
   const rawTitre = req.query.titre || ''
+  // « woman » etait ecrit en dur dans toutes les requetes : un homme recevait
+  // des tenues feminines. On suit le profil, et on ne suppose rien quand il
+  // n'est pas renseigne (regle posee par Jean : Solenn s'adresse aux hommes
+  // ET aux femmes).
+  const sexe = req.query.sexe || 'nsp'
+  const QUI = sexe === 'homme' ? 'man ' : sexe === 'femme' ? 'woman ' : ''
 
   // ── Construire la requête à partir des pièces réelles de la tenue ────────────
   // Priorité : imagePrompt (contient les vêtements concrets) > titre (style)
@@ -537,22 +565,22 @@ app.get('/api/image', async (req, res) => {
     if (clothingItems.length >= 2) {
       // "ootd" (outfit of the day) force Unsplash à retourner des photos
       // de personnes en pied — évite les close-ups de sacs/accessoires
-      return `woman ${clothingItems.slice(0,4).join(' ')} ootd full body street style`
+      return `${QUI}${clothingItems.slice(0,4).join(' ')} ootd full body street style`
     }
 
     // 2. Fallback sur le titre si imagePrompt trop vague
     const t = (titre || '').toLowerCase()
-    if (t.match(/quiet.?luxury|luxe/))       return 'woman luxury minimal coat ootd full body street style'
-    if (t.match(/streetwear|street/))         return 'woman streetwear urban ootd full body street photography'
-    if (t.match(/y2k/))                       return 'woman Y2K fashion ootd full body trendy aesthetic'
-    if (t.match(/office|bureau|slay/))        return 'woman blazer power dressing ootd full body street style'
-    if (t.match(/athleisure|sport/))          return 'woman athleisure sporty ootd full body street style'
-    if (t.match(/boho|boheme/))               return 'woman bohemian boho ootd full body street style'
-    if (t.match(/minimal/))                   return 'woman minimalist clean ootd full body street style'
-    if (t.match(/casual/))                    return 'woman casual chic ootd full body effortless street style'
-    if (t.match(/vintage|retro/))             return 'woman vintage retro ootd full body fashion'
-    if (t.match(/trench|imperméable/))        return 'woman trench coat ootd full body rainy street style'
-    return 'woman fashion ootd full body street style trendy outfit'
+    if (t.match(/quiet.?luxury|luxe/))       return QUI + 'luxury minimal coat ootd full body street style'
+    if (t.match(/streetwear|street/))         return QUI + 'streetwear urban ootd full body street photography'
+    if (t.match(/y2k/))                       return QUI + 'Y2K fashion ootd full body trendy aesthetic'
+    if (t.match(/office|bureau|slay/))        return QUI + 'blazer power dressing ootd full body street style'
+    if (t.match(/athleisure|sport/))          return QUI + 'athleisure sporty ootd full body street style'
+    if (t.match(/boho|boheme/))               return QUI + 'bohemian boho ootd full body street style'
+    if (t.match(/minimal/))                   return QUI + 'minimalist clean ootd full body street style'
+    if (t.match(/casual/))                    return QUI + 'casual chic ootd full body effortless street style'
+    if (t.match(/vintage|retro/))             return QUI + 'vintage retro ootd full body fashion'
+    if (t.match(/trench|imperméable/))        return QUI + 'trench coat ootd full body rainy street style'
+    return QUI + 'fashion ootd full body street style trendy outfit'
   }
 
   // ── Source 1 : Unsplash (qualité éditoriale, pas de clé requise) ───────────
@@ -596,8 +624,13 @@ app.get('/api/image', async (req, res) => {
       `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&orientation=portrait`,
       { headers: { Authorization: process.env.PEXELS_API_KEY }, timeout: 8000 }
     )
-    const photos = response.data.photos
-    if (photos && photos.length > 0) {
+    // On filtre AVANT de choisir : sinon `lock` designe un rang dans une liste
+    // qui contient des photos ecartees, et le meme rang ne rend plus la meme
+    // chose d'un appel a l'autre.
+    const photos = (response.data.photos || []).filter(photoConvenable)
+    const ecartees = (response.data.photos || []).length - photos.length
+    if (ecartees) console.log(`🚫 ${ecartees} photo(s) ecartee(s) : contenu deplace`)
+    if (photos.length > 0) {
       const photo = photos[lock % photos.length]
       res.json({ url: photo.src.large })
     } else {
