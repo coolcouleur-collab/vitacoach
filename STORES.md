@@ -102,8 +102,21 @@ moment de la soumission.
       (relevé le 2026-08-30). La page a été créée le même jour, et /privacy
       redirige désormais vers la politique pour qu'aucun lien déjà déposé ne
       tombe dans le vide.
-- [ ] **Permissions Health Connect** : déclarer EXACTEMENT trois types, et
-      seulement ceux-là : **pas, fréquence cardiaque, sommeil**.
+- [ ] **Permissions Health Connect (Android)** : déclarer EXACTEMENT trois
+      types, et seulement ceux-là : **pas, fréquence cardiaque, sommeil**.
+      ⚠️ CORRIGÉ le 2026-09-04 : le manifeste Android demandait encore
+      `READ_WEIGHT`, alors que `HEALTH_READ_TYPES` n'en demande que trois et que
+      `syncHealthData` ne renvoie que ces trois mesures. Le commentaire du code
+      avertissait du « data overreach », mais personne n'avait mis le manifeste
+      à jour. Permission retirée, AAB reconstruit.
+- [ ] **Permissions HealthKit (iOS)** : QUATRE types, pas trois — la ligne
+      ci-dessus ne vaut que pour Android. `stepCount`, `heartRate`,
+      `sleepAnalysis` **et `bodyMass`**.
+      ⚠️ Le poids EST lu sur iOS, contrairement à ce que ce document affirmait :
+      `readWeightHistory` alimente l'historique de Connexions santé. La
+      déclaration Apple doit donc l'inclure.
+      `bodyFatPercentage` était demandé sans qu'aucune requête ne le lise :
+      retiré le 2026-09-04.
       ⚠️ Pas le poids : il est saisi à la main dans l'app, jamais lu depuis
       Health. Le code demandait huit types (dont distance, calories, poids,
       taille, activité) et n'en lisait que trois ; ramené à trois le
@@ -121,6 +134,18 @@ moment de la soumission.
       Gérer → Répondre au nouveau questionnaire.
 - [ ] **Data safety form** : déclarer données santé collectées, chiffrées en
       transit, non partagées à des fins publicitaires.
+      ⚠️ INCOMPLET, revu le 2026-09-04. Trois collectes manquaient à ce
+      formulaire comme elles manquaient à la politique de confidentialité :
+      · **Position précise**, y compris en arrière-plan sur iOS, pour mesurer
+        les sorties. Le tracé ne quitte pas le téléphone, seuls durée, distance
+        et horaires sont enregistrés — mais la collecte se déclare.
+      · **Photos**, celles des repas, transmises à Groq pour analyse. La photo
+        n'est pas conservée, seule l'analyse l'est.
+      · **Cycle menstruel**, dates et symptômes. Catégorie particulière au sens
+        de l'article 9 du RGPD, déjà déclarée dans « Applis de santé » mais à
+        reporter ici aussi.
+      Le formulaire et la politique doivent dire la même chose : une divergence
+      entre les deux est ce que les revues détectent en premier.
 - [ ] **Contenu généré par les utilisateurs : NON.** ⚠️ Une réponse « oui »
       avait été cochée à l'époque où le forum était prévu. Le forum a été retiré
       du lancement le 2026-07-21 et vérifié inaccessible le 2026-08-25 : les

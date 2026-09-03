@@ -3,9 +3,14 @@ import { Capacitor } from '@capacitor/core'
 export const isHealthKitAvailable = () =>
   Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
 
+// UNIQUEMENT ce qui est reellement interroge. `bodyFatPercentage` figurait ici
+// sans qu'aucune requete ne le lise : verifie le 2026-09-04, zero appel a
+// queryHKitSampleType avec ce type. Demander l'acces a la masse grasse de
+// quelqu'un sans jamais s'en servir est un motif de rejet, article 5.1.1.
+// `bodyMass` reste : il est lu par readTodayHealthData et readWeightHistory,
+// c'est l'historique de poids affiche dans Connexions sante.
 const READ_TYPES = [
   'bodyMass',
-  'bodyFatPercentage',
   'stepCount',
   'sleepAnalysis',
   'heartRate',
