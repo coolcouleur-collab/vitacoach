@@ -169,10 +169,10 @@ const AnimSquatSumo = () => (
   />
 )
 
-const AnimEnfant = () => (
-  <DeuxPoses labelA="À genoux" labelB="Pose le front"
-    poseA={<><circle cx="46" cy="44" r="6" {...S} /><path d="M46 50 L46 70 M46 70 L30 80 M46 70 L64 80" {...S} /></>}
-    poseB={<><circle cx="30" cy="74" r="6" {...S} /><path d="M36 76 L64 72 M36 76 L14 80 M64 72 L74 82" {...S} /></>}
+const AnimCobra = () => (
+  <DeuxPoses labelA="À plat ventre" labelB="Déroule le buste"
+    poseA={<><circle cx="18" cy="80" r="6" {...S} /><path d="M24 82 L86 84 M28 82 L26 88" {...S} /></>}
+    poseB={<><circle cx="22" cy="58" r="6" {...S} /><path d="M26 63 L52 80 M52 80 L88 84 M28 64 L30 84" {...S} /></>}
     duree={3.4}
   />
 )
@@ -371,7 +371,7 @@ export const PHOTOS_EXOS = {
   // on a cherche des exercices que les banques savent montrer. Chacune
   // verifiee en la REGARDANT, puis au recadrage reel de 130 px.
   crunchvelo:  { url: P(7721988),  pos: '50%' },   // coude vers genou oppose
-  enfant:      { url: P(3822147),  pos: '50%' },   // front au sol, bras devant
+  cobra:       { url: P(3823076),  pos: '50%' },   // bassin au sol, buste deroule
   etireischio: { url: P(7593010),  pos: '50%' },   // allonge, jambe tenue en l'air
   squatsumo:   { url: P(7746282),  pos: '50%' },   // pieds larges, genoux flechis
   stepup:      { url: P(13896897), pos: '70%' },   // un pied sur la caisse
@@ -524,11 +524,11 @@ export const EXOS = [
     erreurs: ['Bouger seulement les bras sans tourner le buste', 'Arrondir complètement le dos'],
   },
   {
-    id: 'enfant', nom: 'Posture de l\'enfant', duree: '3 × 30 s', cible: 'Dos · détente',
-    mots: ['posture enfant', 'child pose', 'balasana'],
-    Anim: AnimEnfant,
-    etapes: ['À genoux, gros orteils qui se touchent', 'Assieds-toi sur les talons et avance les mains loin devant', 'Pose le front au sol et respire dans le dos'],
-    erreurs: ['Forcer les fesses sur les talons si les genoux tirent', 'Retenir sa respiration : c\'est elle qui fait le travail'],
+    id: 'cobra', nom: 'Posture du cobra', duree: '3 × 20 s', cible: 'Dos · ouverture',
+    mots: ['cobra', 'bhujangasana', 'extension du dos'],
+    Anim: AnimCobra,
+    etapes: ['À plat ventre, mains posées sous les épaules', 'Déroule le buste vers le haut sans forcer sur les bras', 'Épaules basses et loin des oreilles, respire, puis redescends'],
+    erreurs: ['Pousser sur les bras au point de cambrer le bas du dos', 'Monter les épaules vers les oreilles'],
   },
   {
     id: 'etireischio', nom: 'Étirement ischio-jambiers', duree: '3 × 30 s / jambe', cible: 'Arrière des cuisses',

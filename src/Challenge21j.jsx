@@ -40,7 +40,7 @@ const EXO_INFOS = {
   jumpingjack:     { nom: 'Jumping jacks' },
   crunch:          { nom: 'Crunch' },
   russiantwist:    { nom: 'Torsions russes' },
-  enfant:          { nom: "Posture de l'enfant" },
+  cobra:           { nom: 'Posture du cobra' },
   etireischio:     { nom: 'Étirement ischio-jambiers' },
   mollets:         { nom: 'Élévations mollets' },
   stepup:          { nom: 'Montées sur chaise' },
@@ -1073,7 +1073,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             </motion.div>
           )}
 
-          {/* DEMAIN, carte SOEUR et non enfant.
+          {/* DEMAIN, carte SOEUR, et non imbriquee dedans.
               Ce bloc etait a l'interieur du cadre « AUJOURD'HUI » : la
               hierarchie visuelle disait donc que demain fait partie
               d'aujourd'hui. C'est de la que venait la confusion qu'on avait
