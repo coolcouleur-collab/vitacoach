@@ -711,9 +711,36 @@ function getOceanPreset(hour) {
 // deconnexion : sans elle, `vitacoach_pro` survivait au changement de compte
 // et le compte suivant cree sur le meme navigateur s'affichait Pro sans avoir
 // jamais paye (constate par Jean le 2026-08-14).
-function oublierAbonnement() {
-  localStorage.removeItem('vitacoach_pro')
-  localStorage.removeItem('vitacoach_stripe_session')
+
+// Cles qui appartiennent a l'APPAREIL et non au compte : elles seules
+// survivent a la deconnexion. Tout le reste est efface par defaut, y compris
+// les cles ajoutees plus tard. C'est volontairement la liste des exceptions
+// qu'on maintient, jamais la liste des choses a effacer : une nouvelle cle
+// oubliee ici fuit vers le compte suivant, une nouvelle cle oubliee dans
+// l'autre sens se contente d'etre reconstruite.
+const CLES_APPAREIL = new Set([
+  'solenn_essai',           // debut d'essai : l'effacer rendrait l'essai infini
+  'solenn_lang',            // langue de l'interface
+  'solenn_preset_manuel',   // theme choisi a la main (jour / nuit)
+  'solenn_diagnostics',     // interrupteur de debogage
+  'vitacoach_health_perm',  // miroir d'une autorisation systeme
+  'vitacoach_ref',          // source d'acquisition, portee par l'appareil
+  // Ne JAMAIS ajouter ici 'vitacoach_pro' ni 'vitacoach_stripe_session' :
+  // l'abonnement appartient au compte, pas a l'appareil. Quand ils survivaient
+  // a la deconnexion, le compte suivant cree sur le meme telephone s'affichait
+  // Pro sans avoir jamais paye (constate par Jean le 2026-08-14).
+])
+
+// Efface les donnees personnelles que le compte qui se deconnecte laisse sur
+// l'appareil. Sans elle, l'historique de conversation, les metriques, les
+// tenues et la ville survivaient au changement de compte : sur un telephone
+// partage la personne suivante en heritait, et Solenn pouvait l'appeler par
+// le prenom du compte precedent (constate le 2026-09-03).
+function oublierSession() {
+  Object.keys(localStorage)
+    .filter(k => (k.startsWith('vitacoach_') || k.startsWith('solenn_')) && !CLES_APPAREIL.has(k))
+    .forEach(k => localStorage.removeItem(k))
+  try { sessionStorage.clear() } catch {}
 }
 
 export default function App() {
@@ -747,8 +774,7 @@ export default function App() {
   const [user, setUser]         = useState(() => {
     if (localStorage.getItem('solenn_remember_me') === 'false' && !sessionStorage.getItem('solenn_active_session')) {
       // "Don't remember me" session ended, clear stale auth
-      localStorage.removeItem('vitacoach_user')
-      localStorage.removeItem('solenn_remember_me')
+      oublierSession()
       getSupabase().then(sb => sb.auth.signOut())
       return null
     }
@@ -1918,9 +1944,7 @@ const [messages, setMessages] = useState(() => {
       <Onboarding onBack={async () => {
         const sb = await getSupabase()
         await sb.auth.signOut()
-        localStorage.removeItem('vitacoach_user')
-        localStorage.removeItem('vitacoach_profil')
-        oublierAbonnement()
+        oublierSession()
         setUser(null); setProfil(null); setIsPro(false)
       }} onTermine={p => {
         // Attribution influence, rattachée une seule fois, à l'inscription
@@ -2299,9 +2323,7 @@ const [messages, setMessages] = useState(() => {
               <button onClick={async () => {
                 const sb = await getSupabase()
                 await sb.auth.signOut()
-                localStorage.removeItem('vitacoach_user')
-                localStorage.removeItem('vitacoach_profil')
-                oublierAbonnement()
+                oublierSession()
                 setUser(null); setProfil(null); setIsPro(false)
               }} style={{...s.btnEdit, flex:1, color: navEncre, display:'flex', alignItems:'center', justifyContent:'center', gap:5}}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={navEncre} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -2761,15 +2783,7 @@ padding: isMobile
                   <button onClick={async () => {
                     const sb = await getSupabase()
                     await sb.auth.signOut()
-                    localStorage.removeItem('vitacoach_user')
-                    localStorage.removeItem('vitacoach_profil')
-                    // Le programme est desormais garde entre deux ouvertures :
-                    // il doit donc partir a la deconnexion, sinon le compte
-                    // suivant verrait le programme du precedent.
-                    Object.keys(localStorage)
-                      .filter(k => k.startsWith('solenn_challenge_cache_') || k.startsWith('solenn_rapport_'))
-                      .forEach(k => localStorage.removeItem(k))
-                    oublierAbonnement()
+                    oublierSession()
                     setUser(null)
                     setProfil(null)
                     setIsPro(false)
