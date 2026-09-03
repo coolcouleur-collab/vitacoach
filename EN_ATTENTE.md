@@ -174,7 +174,17 @@ le gros dossier de Google. Verifie apres compilation.
 Le bundle Android depose chez Google date du 30 aout, l'iOS embarque du
 21 juillet. Rien de ce chantier n'y est.
 
-### Un defaut confirme, PAS corrige : le rapport hebdomadaire
+### CORRIGE le 4 septembre : le rapport hebdomadaire
+
+Cette note disait « PAS corrige » alors que le correctif etait en place :
+`agents/rapport-hebdo.js` importe `scoreJour` depuis `src/score.js` et recalcule
+la moyenne a partir des metriques brutes ; plus aucune lecture de la colonne
+`score`. Verifie le 4 septembre. Le texte d'origine est conserve ci-dessous
+parce qu'il explique le piege, qui lui reste entier : deux notions differentes
+portent toujours le meme nom dans la base, et la prochaine personne qui lira
+cette colonne refera l'erreur. Renommer demande une migration.
+
+### Le piege d'origine, toujours valable comme mise en garde
 
 Le rapport envoie a Solenn la ligne « Score bien-etre : X/100 ». Ce X vient de
 la moyenne de la colonne `score` de `user_metrics`. Or cette colonne ne
