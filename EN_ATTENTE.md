@@ -713,3 +713,38 @@ Le navigateur ou je mesure est connecte au profil **Camille**, pas au tien.
 La page **Cycle** ne s'ouvre donc pas de ce cote, et son releve n'a pas ete
 fait ecran rendu : je n'ai verifie que son code, qui est propre. Envoie une
 capture du Cycle apres ce deploiement pour fermer ce point.
+
+## 9. UNE CLE PEXELS, GRATUITE, POUR LES PHOTOS DE TENUES
+
+C'est le point qui compte le plus dans cette liste, et il ne depend que de toi.
+
+**Ce que j'ai constate.** J'ai interroge le serveur de production directement :
+
+    GET /api/image?piece=cream+linen+midi+dress&titre=Quiet+Luxe+Cream
+    -> {"url":"https://loremflickr.com/400/560/fashion,editorial,fashion/..."}
+
+Autrement dit : **une photo de mode prise au hasard**, sans aucun rapport avec
+la tenue decrite. C'est pour ca que certaines vont et d'autres pas du tout : ce
+n'est pas de la selection, c'est du tirage au sort.
+
+**Pourquoi.** Le code interroge Pexels quand `PEXELS_API_KEY` existe. Elle
+n'existe pas sur Render. Il retombait alors sur `source.unsplash.com`, qu'Unsplash
+a retire (il repond 503 sur tout), puis sur LoremFlickr avec des mots-cles
+generiques.
+
+**Ce que j'ai corrige en attendant.** LoremFlickr recoit au moins les vrais
+vetements et couleurs de la tenue au lieu de « fashion, editorial ». Ca reste de
+la photo Flickr, donc inegale, mais elle parle du bon vetement.
+
+**Ce qu'il faut faire, et que je ne ferai pas a ta place.** Je ne cree pas de
+cle d'API sur tes comptes.
+
+1. Va sur `pexels.com/api`, cree une cle. C'est gratuit, sans carte, 200
+   requetes par heure, ce qui est tres large ici.
+2. Sur Render, service `solenn-api`, onglet Environment, ajoute la variable
+   `PEXELS_API_KEY` avec cette cle.
+3. Le service redemarre seul. Ouvre Style et regarde.
+
+Le code Pexels est deja ecrit et deja filtre (orientation portrait, 40
+resultats, et le filtre des photos deplacees que j'avais pose apres ta remarque
+sur la femme allongee). Il ne lui manque que la cle.

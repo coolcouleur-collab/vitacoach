@@ -661,16 +661,31 @@ app.get('/api/image', async (req, res) => {
   }
 
   // ── Fallback keywords basiques ─────────────────────────────────────────────
-  function fashionKeywords(prompt) {
-    const words = (prompt || '').toLowerCase().split(/\s+/)
-    const styleWords = ['streetwear','minimal','chic','elegant','casual','bohemian','sporty','vintage','luxury','formal','blazer','denim','leather','knit','trench','coat','dress']
-    const found = words.filter(w => styleWords.includes(w))
-    return found.length ? found.slice(0,3) : ['fashion','editorial','style']
+  // ── Le repli sans cle ───────────────────────────────────────────────────────
+  //
+  // Sans PEXELS_API_KEY, tout finit ici. L'ancienne version cherchait des mots
+  // de STYLE (« minimal », « chic »...) dans la description ; quand elle n'en
+  // trouvait pas, elle renvoyait « fashion, editorial », c'est-a-dire une photo
+  // de mode au hasard, sans aucun rapport avec la tenue decrite. C'est ce que
+  // le serveur de production renvoyait pour toutes les cartes le 2026-09-03.
+  //
+  // On lui donne au moins les vetements et les couleurs. LoremFlickr reste de
+  // la photo Flickr, donc inegale : la vraie solution est une cle Pexels, qui
+  // est gratuite. Note laissee dans EN_ATTENTE.
+  function fashionKeywords(prompt, piece, titre) {
+    const mots = [...new Set([...motsUtiles(piece), ...motsUtiles(prompt)])]
+    if (mots.length) return mots.slice(0, 3)
+    const t = (titre || '').toLowerCase()
+    if (t.match(/luxe|luxury|minimal/)) return ['coat', 'minimalist']
+    if (t.match(/street/))              return ['streetwear', 'urban']
+    if (t.match(/sport|athleisure/))    return ['sportswear', 'athletic']
+    if (t.match(/boho|boheme/))         return ['bohemian', 'dress']
+    return ['outfit', 'clothing']
   }
 
   // ── Source 2 : LoremFlickr (fallback garanti) ──────────────────────────────
   function loremFlickrUrl(prompt, lock) {
-    const kw = fashionKeywords(prompt).slice(0, 2).join(',') || 'fashion'
+    const kw = fashionKeywords(prompt, rawPiece, rawTitre).join(',') || 'outfit'
     return `https://loremflickr.com/400/560/${kw},fashion/all?lock=${lock}`
   }
 
