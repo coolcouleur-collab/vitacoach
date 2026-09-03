@@ -2462,12 +2462,12 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
         <div style={{ display:'flex', gap:8, marginTop:10 }}>
           {[
             { tab:'style',      label:'Style',       icon:<SparkleIcon  size={17} color={TC} /> },
-            { tab:'breathwork', label:'Respiration', icon:<MeditateIcon size={17} color={TC} /> },
+            { tab:'breathwork', label:'Calme',       icon:<MeditateIcon size={17} color={TC} /> },
             // Beauté ouvre Santé Naturelle sur sa catégorie. Cette page n'avait
             // AUCUNE entrée permanente : elle n'était atteignable que par deux
             // cartes horaires de « Pour toi maintenant », donc invisible en
             // dehors de leurs créneaux (constat Jean 2026-08-11).
-            { tab:'beaute',     label:'Soins',       icon:<LeafIcon     size={17} color={TC} /> },
+            { tab:'beaute',     label:'Naturel',     icon:<LeafIcon     size={17} color={TC} /> },
             // Le Cycle a quitte « Tes outils » le 2 septembre. Ce n'est pas un
             // outil : on n'ouvre pas le suivi de son cycle pour FAIRE quelque
             // chose, on l'ouvre pour consulter, exactement comme Progres. Il

@@ -420,7 +420,17 @@ const NAV_ITEMS = [
   { id:'routine',   label:'Programmes', Icon: RoutineIcon },
   { id:'sante',     label:'Progrès',    Icon: HeartIcon },
   { id:'style',     label:'Style',      Icon: StyleIcon },
-  { id:'breathwork',label:'Respiration',Icon: BreathworkIcon },
+// Renomme le 2026-09-04. « Respiration » ne designait qu'UNE des six
+// sections de la page — Respirer, Postures, Meditation, Musique, Sons,
+// Pause — et cachait donc les cinq autres : personne ne va chercher de la
+// musique calme dans un onglet qui s'appelle Respiration. « Calme » nomme
+// l'etat recherche, ou les six mènent.
+// « Soins » evoquait le cosmetique alors que le contenu est surtout
+// sommeil, stress, digestion, immunite — et surtout le pave contredisait
+// le titre de la page, « Sante Naturelle ». « Naturel » raccorde les deux.
+// « Remedes » aurait ete plus exact mais contredit l'avertissement de la
+// page, qui dit ne remplacer ni diagnostic ni traitement.
+  { id:'breathwork',label:'Calme',Icon: BreathworkIcon },
   // PAS de forum ici. Il a ete retire du lancement le 2026-07-21, et la fiche
   // Play Console declare que Solenn ne contient AUCUN contenu genere par les
   // utilisateurs. Le laisser dans cette liste etait un piege : elle sert de
@@ -2025,7 +2035,7 @@ const [messages, setMessages] = useState(() => {
 
   const outils = [
     { id:'style',      Icon: StyleIcon,      label:'Style' },
-    { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
+    { id:'breathwork', Icon: BreathworkIcon, label:'Calme' },
     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
   ]
 
@@ -2704,8 +2714,8 @@ padding: isMobile
                   </div>
                   {[
                     { id:'style',      Icon: StyleIcon,      label:'Style' },
-                    { id:'breathwork', Icon: BreathworkIcon, label:'Respiration' },
-                    { id:'beaute',     Icon: LeafIcon,       label:'Soins' },
+                    { id:'breathwork', Icon: BreathworkIcon, label:'Calme' },
+                    { id:'beaute',     Icon: LeafIcon,       label:'Naturel' },
                     ...(profil?.cycle ? [{ id:'cycle', Icon: CycleIcon, label:'Cycle' }] : []),
                   ].map(({ id, Icon, label }) => (
                     <button key={id} onClick={() => { setOnglet(id); setMenuOpen(false) }} style={{
