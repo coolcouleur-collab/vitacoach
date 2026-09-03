@@ -590,6 +590,19 @@ function sexeCompatible(photo, sexe) {
   return sexe === 'homme' ? masculin : feminin
 }
 
+// Ce qu'une photo de TENUE ne doit pas etre : un bout d'etoffe.
+// Meme quand la requete est propre, la banque glisse des gros plans de matiere
+// dans les resultats. On les ecarte sur ce qu'elle en dit elle-meme.
+const MOTS_TISSU = [
+  'fabric', 'textile', 'texture', 'cloth ', 'swatch', 'thread', 'sewing',
+  'weave', 'woven', 'knitting', 'yarn', 'stitch', 'embroider', 'pattern detail',
+  'close up', 'closeup', 'macro', 'folded', 'pile of', 'stack of', 'roll of',
+]
+function photoEstUneTenue(photo) {
+  const t = `${photo?.alt || ''} ${(photo?.url || '').replace(/[-/]/g, ' ')}`.toLowerCase()
+  return !MOTS_TISSU.some(m => t.includes(m))
+}
+
 function photoConvenable(photo) {
   const texte = `${photo?.alt || ''} ${photo?.url || ''}`.toLowerCase()
   return !MOTS_ECARTES.some(m => texte.includes(m))
@@ -625,13 +638,28 @@ app.get('/api/image', async (req, res) => {
   // ou couleur, et on ecarte explicitement les accessoires, qui sont la cause
   // directe des gros plans. La liste `colors` existait deja mais n'etait
   // utilisee nulle part.
-  const VETEMENTS = new Set([
+  // TROIS listes et non une, et c'est la correction qui manquait.
+  //
+  // « linen », « wool », « cotton », « leather » sont des MATIERES. Dans une
+  // banque d'images elles designent d'abord des gros plans de tissu : des
+  // milliers de photos de lin plie, de laine tricotee, de cuir tendu. Les
+  // mettre dans le meme sac que « dress » ou « blazer » revenait a chercher du
+  // textile. D'ou les photos de tissu au lieu de tenues (Jean, 2026-09-04, et
+  // elle le signalait depuis plusieurs jours).
+  //
+  // Regle : une requete doit contenir au moins UNE piece. Les matieres et les
+  // coupes ne sont que des adjectifs, elles ne partent jamais seules.
+  const PIECES = new Set([
     'dress','blazer','coat','jacket','trench','parka','cardigan','sweater','jumper',
-    'hoodie','shirt','blouse','tshirt','tee','top','knit','turtleneck','vest',
+    'hoodie','shirt','blouse','tshirt','tee','top','turtleneck','vest',
     'jeans','denim','trousers','pants','chinos','skirt','shorts','jumpsuit',
     'suit','overcoat','raincoat','windbreaker','poncho','kimono','tunic','romper',
-    'sneakers','boots','loafers','heels','sandals','flats','mocassins','derbies',
-    'linen','wool','cotton','leather','silk','cashmere','tweed','satin','corduroy',
+    'sneakers','boots','loafers','heels','sandals','flats',
+  ])
+  const MATIERES = new Set([
+    'linen','wool','cotton','leather','silk','cashmere','tweed','satin','corduroy','knit',
+  ])
+  const COUPES = new Set([
     'midi','maxi','mini','cropped','oversized','tailored','pleated','straight','slim',
   ])
   const ACCESSOIRES = new Set([
@@ -646,8 +674,15 @@ app.get('/api/image', async (req, res) => {
   ])
 
   function motsUtiles(texte) {
-    return (texte || '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/)
-      .filter(m => m.length > 2 && !ACCESSOIRES.has(m) && (VETEMENTS.has(m) || COULEURS.has(m)))
+    const mots = (texte || '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/)
+      .filter(m => m.length > 2 && !ACCESSOIRES.has(m)
+                && (PIECES.has(m) || MATIERES.has(m) || COUPES.has(m) || COULEURS.has(m)))
+    // Sans piece, ce ne sont que des adjectifs : « cream linen » cherche du
+    // tissu creme, pas une tenue. On rend une liste vide, l'appelant retombera
+    // sur le titre, qui porte au moins un style.
+    if (!mots.some(m => PIECES.has(m))) return []
+    // La piece d'abord : elle doit peser le plus lourd dans la requete.
+    return [...mots].sort((a, b) => (PIECES.has(b) ? 1 : 0) - (PIECES.has(a) ? 1 : 0))
   }
 
   function styleToQuery(titre, imagePrompt, pieceCle) {
@@ -738,7 +773,8 @@ app.get('/api/image', async (req, res) => {
     // qui contient des photos ecartees, et le meme rang ne rend plus la meme
     // chose d'un appel a l'autre.
     const brutes = response.data.photos || []
-    const convenables = brutes.filter(photoConvenable)
+    // Deux tamis distincts : ce qui est deplace, et ce qui n'est pas une tenue.
+    const convenables = brutes.filter(photoConvenable).filter(photoEstUneTenue)
     // Le sexe affine, il ne doit pas vider : si plus rien ne reste apres ce
     // second tamis, on retombe sur les photos simplement convenables.
     const auBonSexe = convenables.filter(p => sexeCompatible(p, sexe))
