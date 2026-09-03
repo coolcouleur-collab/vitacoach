@@ -118,6 +118,13 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
     try { return JSON.parse(sessionStorage.getItem(`solenn_challenge_cache_${famille}`) || 'null') } catch { return null }
   })
   const [loading, setLoading] = useState(true)
+  // Il n'existait AUCUN moyen de changer de programme une fois lance : ni
+  // bouton, ni route serveur. Le catalogue ne reapparaissait que si aucun
+  // programme ne tournait, ou si celui en cours appartenait a une autre
+  // famille. Quelqu'un qui se trompe restait pris 21 ou 42 jours, et Jean
+  // s'est retrouvee avec un programme dont le contenu ne lui convenait pas,
+  // sans pouvoir le regenerer (2026-09-04).
+  const [voirCatalogue, setVoirCatalogue] = useState(false)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
@@ -251,6 +258,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       // programme. Demandee a froid au premier lancement, elle est refusee, et
       // iOS ne repropose jamais la fenetre.
       await demanderAutorisation()
+      setVoirCatalogue(false)
       await fetchChallenge()
     } catch (err) {
       setError(err.message)
@@ -459,7 +467,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
   const familleEnCours = progCourant?.famille || 'sport'
   const ailleurs = !!challenge && familleEnCours !== famille
 
-  if (!challenge || ailleurs) {
+  if (!challenge || ailleurs || voirCatalogue) {
     const enCours = challenge ? programmeParId(challenge.challenge?.type) : null
     return (
       <div style={styles.container}>
@@ -467,6 +475,34 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
             choix, et non apres : quelqu'un qui decouvre en validant que son
             programme alimentaire vient d'etre remplace par du sport ne le
             pardonne pas. */}
+        {/* Ouvert a la demande, alors qu'un programme de CETTE famille tourne :
+            le meme avertissement que pour un programme d'ailleurs, et surtout
+            une porte de sortie. Sans elle, ouvrir le catalogue par curiosite
+            serait un piege. */}
+        {voirCatalogue && !ailleurs && challenge && (
+          <div style={{
+            background: 'rgba(var(--rgb-verre), 0.32)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: 18, padding: '14px 16px', marginBottom: 14,
+            fontFamily: "'Poppins', sans-serif",
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: ENCRE, marginBottom: 4 }}>
+              Tu suis « {enCours?.titre || challenge.challenge?.titre} »
+            </div>
+            <div style={{ fontSize: 12.5, lineHeight: 1.55, color: ENCRE, marginBottom: 12 }}>
+              En commencer un autre le remplacera, et sa progression sera perdue.
+            </div>
+            <button
+              onClick={() => setVoirCatalogue(false)}
+              style={{
+                padding: '9px 16px', borderRadius: 14, cursor: 'pointer',
+                background: 'transparent', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
+                color: ENCRE, fontSize: 12.5, fontWeight: 600, fontFamily: "'Poppins', sans-serif",
+              }}>
+              Revenir à mon programme
+            </button>
+          </div>
+        )}
         {ailleurs && (
           <div style={{
             background: 'rgba(var(--rgb-verre), 0.32)', border: '1px solid rgba(var(--rgb-creme-dore), 0.40)',
@@ -1334,6 +1370,21 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
           </motion.div>
         )}
       </AnimatePresence>, document.body)}
+
+      {/* Changer de programme. Discret et en dernier : ce n'est pas ce qu'on
+          vient faire ici, mais il faut que ce soit possible. Le catalogue
+          rappellera que la progression sera perdue, et offrira le retour. */}
+      <button
+        onClick={() => setVoirCatalogue(true)}
+        style={{
+          display: 'block', margin: '18px auto 4px', padding: '9px 18px',
+          borderRadius: 14, cursor: 'pointer', background: 'transparent',
+          border: '1px solid rgba(var(--rgb-creme-dore), 0.32)',
+          color: ENCRE, fontSize: 12, fontWeight: 600,
+          fontFamily: "'Poppins', sans-serif", opacity: 0.9,
+        }}>
+        Changer de programme
+      </button>
     </div>
   )
 }
