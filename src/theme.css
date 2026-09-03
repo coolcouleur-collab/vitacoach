@@ -113,6 +113,7 @@
      endroits pour des bordures et une ombre, qui restaient chaudes la nuit.
      Meme valeur que --brun-fonce, dont il est la forme decomposee. */
   --rgb-brun-fonce:      108,  66,  44;
+  --contour-carte: rgba(108, 66, 44, 0.72);   /* 3,28:1 sur le creme */
   /* Le halo anime du bouton « Demander a Solenn ». L'animation vit dans
      tokens.css et ses deux etapes etaient ecrites en dur : un anneau creme
      et une lueur terracotta, qui detonnaient sur le navy (capture de Jean,
@@ -213,6 +214,7 @@
   --texte-base:          #C8DEFF;
   --rgb-fond:             15,  28,  58;
   --rgb-brun-fonce:       36,  57,  95;
+  --contour-carte: rgba(180, 210, 255, 0.55); /* 4,29:1 sur la carte navy */
   --ombre-cta-1: 0 0 0 1.5px rgba(200,222,255,0.22), 0 6px 22px rgba(100,150,255,0.12), 0 2px 6px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.10);
   --ombre-cta-2: 0 0 0 1.5px rgba(200,222,255,0.40), 0 6px 22px rgba(100,150,255,0.20), 0 2px 6px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.10);
   /* L'encre de nuit y tient a 10,14:1 et 8,62:1. */
@@ -327,6 +329,7 @@
      endroits pour des bordures et une ombre, qui restaient chaudes la nuit.
      Meme valeur que --brun-fonce, dont il est la forme decomposee. */
   --rgb-brun-fonce:      108,  66,  44;
+  --contour-carte: rgba(108, 66, 44, 0.72);   /* 3,28:1 sur le creme */
   /* Le halo anime du bouton « Demander a Solenn ». L'animation vit dans
      tokens.css et ses deux etapes etaient ecrites en dur : un anneau creme
      et une lueur terracotta, qui detonnaient sur le navy (capture de Jean,

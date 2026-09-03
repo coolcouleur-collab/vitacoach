@@ -2392,10 +2392,19 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
               padding: '13px 16px', minHeight: 68,
               borderRadius: 20,
               cursor:'pointer',
+              // `${s.color}38` supposait un hexadecimal a six chiffres auquel on
+              // ajoute une transparence. Depuis la passe de mode nuit, s.color
+              // vaut rgba(190,216,255,0.90) la nuit et var(--icone) le jour :
+              // les deux produisent du CSS invalide, verifie dans un navigateur.
+              // Ces cartes n'avaient donc PLUS DE CONTOUR DU TOUT, dans les deux
+              // themes, et la nuit leur fond est le meme navy que la page : il ne
+              // restait que le texte (retour Jean 2026-09-03).
               background: isNight
                 ? `linear-gradient(135deg, rgba(15,28,58,0.80) 0%, rgba(10,20,45,0.70) 100%)`
-                : `linear-gradient(135deg, ${s.color}22 0%, ${s.color}0e 60%, ${s.color}06 100%)`,
-              border: isNight ? `1.5px solid ${s.color}38` : `1.5px solid ${s.color}50`,
+                : `linear-gradient(135deg, rgba(var(--rgb-terracotta),0.13) 0%, rgba(var(--rgb-terracotta),0.055) 60%, rgba(var(--rgb-terracotta),0.024) 100%)`,
+              // Contour franc, comme demande : 3,28:1 de jour et 4,29:1 de nuit,
+              // la ou un contour de controle en demande 3.
+              border: '1.5px solid var(--contour-carte)',
               boxShadow: isNight
                 ? `0 6px 22px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(180,210,255,0.08)`
                 : `0 6px 22px ${s.color}22, 0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.75)`,
@@ -2404,10 +2413,10 @@ function ContextualShortcuts({ profil, metriques, onNavigate, isNight = false, s
           >
             <div style={{
               width:38, height:38, borderRadius:12, flexShrink:0,
-              background: `linear-gradient(135deg, ${s.color}35, ${s.color}20)`,
-              border: `1px solid ${s.color}45`,
+              background: 'linear-gradient(135deg, rgba(var(--rgb-terracotta),0.21), rgba(var(--rgb-terracotta),0.125))',
+              border: '1px solid rgba(var(--rgb-terracotta),0.27)',
               display:'flex', alignItems:'center', justifyContent:'center',
-              boxShadow: `0 4px 12px ${s.color}30`,
+              boxShadow: '0 4px 12px rgba(var(--rgb-terracotta),0.19)',
             }}>
               {s.icon}
             </div>

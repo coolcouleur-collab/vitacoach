@@ -182,7 +182,17 @@ export default function BreathworkTab() {
     // (captures du 2026-09-03). On ne garde qu'une respiration locale.
     <div className="section-respiration" style={{ padding: '4px 16px 12px', fontFamily: F, maxWidth: 480, margin: '0 auto' }}>
 
-      {/* Le selecteur de SECTION, au-dessus de tout le reste. */}
+      {/* Le selecteur de SECTION, au-dessus de tout le reste.
+          Il DISPARAIT pendant une seance. Deux raisons, l'une de fond et
+          l'autre mesurable :
+          - de fond : toucher « Postures » ou « Musique » en pleine coherence
+            cardiaque tue la seance en cours. Un ecran qui compte les cycles
+            n'a pas a offrir six portes de sortie a portee de pouce.
+          - mesurable : avec les six sections, les quatre techniques et le bloc
+            Phases, la page depasse l'ecran des que la seance ajoute son
+            compteur de cycles, et le bas devenait inatteignable
+            (capture Jean 2026-09-04, le bloc Phases coupe par la barre). */}
+      {!isActive && (
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 18, justifyContent: 'center' }}>
         {SECTIONS.map(x => {
           const on = section === x.id
@@ -200,6 +210,8 @@ export default function BreathworkTab() {
         })}
       </div>
 
+      )}
+
       {section === 'postures'   && <YogaPostures />}
       {section === 'meditation' && <MeditationGuidee />}
       {section === 'musique'    && <MusiqueCalme />}
@@ -209,7 +221,10 @@ export default function BreathworkTab() {
       {section === 'respirer' && <>
 
       {/* Technique tabs, flexWrap : tout visible d'un coup, plus de rangée
-          coupée au bord de l'écran (retour Jean 2026-07-25) */}
+          coupée au bord de l'écran (retour Jean 2026-07-25).
+          Masquees pendant la seance, comme les sections : changer de technique
+          en cours redemarre tout. */}
+      {!isActive && (
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 4, marginBottom: 16, justifyContent: 'center' }}>
         {TECHNIQUES.map(t => {
           const sel = techId === t.id
@@ -232,6 +247,7 @@ export default function BreathworkTab() {
           )
         })}
       </div>
+      )}
 
       {/* Subtitle */}
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
@@ -353,7 +369,11 @@ export default function BreathworkTab() {
         )}
       </div>
 
-      {/* Phase breakdown */}
+      {/* Phase breakdown. Masque pendant la seance : il annonce le rythme a
+          qui hesite encore, et pendant la seance le cercle dit deja « Inspire
+          4 ». Le garder revenait a ecrire deux fois la meme information, et
+          c'est lui qui poussait le bas de la page hors de l'ecran. */}
+      {!isActive && (
       <div style={{ ...CARD, marginBottom: 16 }}>
         <div style={{ fontSize: 11, color: am(0.80), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Phases</div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -374,9 +394,11 @@ export default function BreathworkTab() {
           })}
         </div>
       </div>
+      )}
 
-      {/* History */}
-      {sessions.length > 0 && (
+      {/* L'historique non plus : on ne lit pas ses seances passees
+          pendant qu'on en fait une. */}
+      {!isActive && sessions.length > 0 && (
         <div style={{ ...CARD }}>
           <div style={{ fontSize: 11, color: am(0.80), letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Sessions récentes</div>
           {sessions.slice(0, 5).map((s, i) => (
