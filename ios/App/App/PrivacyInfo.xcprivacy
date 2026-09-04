@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Manifeste de confidentialite, exige par Apple depuis mai 2024.
+	     Son absence fait rejeter l'envoi automatiquement (ITMS-91053), avant
+	     meme la relecture humaine.
+
+	     Capacitor fournit le sien pour ses frameworks ; il ne dispense pas
+	     l'app du sien. Ce fichier couvre la cible App. -->
+
+	<!-- Solenn ne suit personne a des fins publicitaires, et n'utilise aucun
+	     reseau publicitaire. -->
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+
+	<!-- Les « API a raison declaree ». C'est cette section qui declenche le
+	     rejet automatique quand elle manque. -->
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<!-- UserDefaults : la WebView et Capacitor y conservent les
+			     preferences de l'app, pour l'app elle-meme et rien d'autre. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+		<dict>
+			<!-- Horodatage de fichiers : la WebView ecrit son cache et ses
+			     donnees de site dans le conteneur de l'app. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>C617.1</string>
+			</array>
+		</dict>
+		<dict>
+			<!-- Espace disque : consulte avant d'ecrire dans le stockage local
+			     du navigateur embarque. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryDiskSpace</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>E174.1</string>
+			</array>
+		</dict>
+		<dict>
+			<!-- Heure de demarrage systeme : utilisee pour mesurer des durees
+			     sans dependre de l'horloge murale, notamment le chronometre
+			     de course. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

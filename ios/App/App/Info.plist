@@ -92,5 +92,10 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Utilise Face ID pour te connecter rapidement à Solenn.</string>
 
+	<!-- Solenn n'utilise que le chiffrement standard du systeme (HTTPS). Elle
+	     entre donc dans l'exemption, et cette cle evite qu'App Store Connect
+	     repose la question a chaque envoi. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

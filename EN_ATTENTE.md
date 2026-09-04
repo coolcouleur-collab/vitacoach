@@ -1,6 +1,27 @@
 # En attente, Solenn
 
-## SUR LE MAC : deux choses trouvees avant meme d'ouvrir Xcode (4 septembre)
+## SUR LE MAC : ce qui a ete prepare d'avance (4 septembre)
+
+Verifie depuis Windows pendant l'installation de Xcode, pour ne pas le decouvrir
+en route : les cibles iOS concordent (tout exige iOS 15 au plus, le projet est a
+15.0), l'icone fait bien 1024x1024, et `LaunchScreen.storyboard` existe et est
+declare. Rien de ce cote-la ne bloquera la compilation.
+
+**Deux fichiers ont ete ajoutes, ils demandent UN geste dans Xcode.**
+
+`ios/App/App/PrivacyInfo.xcprivacy` : le manifeste de confidentialite exige par
+Apple depuis mai 2024. Son absence fait rejeter l'envoi automatiquement, avant
+toute relecture humaine. Capacitor fournit le sien pour ses frameworks, ce qui
+ne dispense pas l'app du sien. **Il faut le glisser dans le navigateur de projet
+Xcode et cocher la cible App**, sinon il ne sera pas embarque dans le bundle :
+un fichier pose sur le disque ne suffit pas, Xcode doit le connaitre.
+
+`ITSAppUsesNonExemptEncryption = false` a ete ajoute a `Info.plist`. Solenn
+n'utilise que HTTPS, elle entre donc dans l'exemption. Cette cle evite qu'App
+Store Connect repose la question a chaque envoi.
+
+## Les deux vrais points d'attention iOS
+
 
 **1. Il n'existe aucun fichier d'entitlements.** `find ios -name "*.entitlements"`
 ne renvoie rien. HealthKit et les notifications push en exigent un. Xcode le
