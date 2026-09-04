@@ -1,5 +1,37 @@
 # En attente, Solenn
 
+## SUR LE MAC : deux choses trouvees avant meme d'ouvrir Xcode (4 septembre)
+
+**1. Il n'existe aucun fichier d'entitlements.** `find ios -name "*.entitlements"`
+ne renvoie rien. HealthKit et les notifications push en exigent un. Xcode le
+cree tout seul quand on ajoute la capacite dans l'onglet Signing & Capabilities,
+mais tant que ce n'est pas fait, HealthKit ne peut pas fonctionner sur iOS et
+Apple rejette une app qui declare des types de sante sans la capacite. C'est le
+tout premier geste a faire dans Xcode, avant meme d'essayer de compiler.
+
+**2. La position en arriere-plan est declaree mais rien ne l'utilise.**
+`UIBackgroundModes` contient `location`, et le texte de
+`NSLocationAlwaysAndWhenInUseUsageDescription` promet « Solenn continue de
+mesurer ta sortie quand l'ecran est verrouille ». Or :
+- le code ne demande jamais l'autorisation Always,
+- aucun fichier Swift n'active `allowsBackgroundLocationUpdates`,
+- le projet iOS ne contient que l'AppDelegate par defaut, la ou Android a trois
+  fichiers Kotlin dont `CourseService.kt` qui fait vraiment le travail.
+
+Deux consequences possibles, a verifier sur un vrai iPhone : la course s'arrete
+sans doute de compter quand l'ecran se verrouille, et Apple rejette souvent un
+mode d'arriere-plan declare que l'app n'utilise pas.
+
+Deux issues, au choix de Jean :
+- ecrire le code natif iOS qui active la mise a jour de position en arriere-plan
+  (l'equivalent de CourseService), ce qui tient la promesse faite a l'ecran ;
+- ou retirer `location` de `UIBackgroundModes` et la chaine Always, et assumer
+  que sur iPhone la course se mesure ecran allume.
+
+Ne rien decider avant d'avoir teste : le comportement reel se constate en une
+course de trois minutes avec verrouillage de l'ecran.
+
+
 ## UNE DECISION QUI REVIENT A JEAN : les photos deja en base
 
 MISE A JOUR DU 4 SEPTEMBRE, APRES COUP : ne pas lancer la requete SQL plus bas
