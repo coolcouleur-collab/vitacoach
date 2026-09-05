@@ -1,5 +1,43 @@
 # En attente, Solenn
 
+## ETAT DU MAC, 6 septembre 2026
+
+Xcode 26.3 (build 17C529) est installe dans Applications et repond en ligne de
+commande, avec le SDK iOS 26.2 et le simulateur iOS 26.3. Les trois gestes du
+bloc de reprise sont faits et commites (2797b05) : equipe de signature,
+`App.entitlements` avec HealthKit et push, `PrivacyInfo.xcprivacy` reference
+dans la phase Resources de la cible App. Xcode a reecrit `Info.plist` en
+dedoublonnant les cles : les commentaires qui expliquaient chaque cle ont
+disparu, le contenu est identique.
+
+### Ce qui bloque encore la compilation
+
+**Il n'y a ni Node.js ni Homebrew sur ce Mac.** Sans Node, pas de `vite build`,
+pas de `cap sync`, donc pas de dossier `ios/App/App/public` (il est ignore par
+git et n'existe pas ici). Le Mac est un Intel (x86_64) sous Sequoia 15.7.9 :
+prendre le binaire darwin-x64. Vite 8 exige Node 20.19 ou 22.12 au minimum.
+
+**`ios/App/CapApp-SPM/Package.swift` a ete genere depuis Windows** : les chemins
+vers `node_modules` y sont ecrits avec des antislashs, que Swift Package
+Manager sur Mac ne resout pas. Le premier `npx cap sync ios` sur le Mac le
+regenere avec des barres obliques. Il faut ensuite commiter ce fichier depuis
+le Mac, sinon la prochaine session Windows le recasse.
+
+### Menage a faire par Jean
+
+Dans Telechargements restent une copie de `Xcode.app` (4,7 Go) et l'archive
+`Xcode_26.3_Universal.xip` (2,7 Go). La copie installee dans Applications est
+distincte (inode different, meme version), les deux fichiers de Telechargements
+peuvent aller a la corbeille. La session Claude n'a pas ete autorisee a le
+faire.
+
+### Toujours ouvert
+
+Le test de course de trois minutes ecran verrouille sur un vrai iPhone, qui
+tranche le sort de `location` dans `UIBackgroundModes`. Et le numero de build :
+verifier dans App Store Connect si un build 1 de la version 1.1 existe deja.
+
+
 ## REPRISE SUR LE MAC, 4 septembre 2026 au soir
 
 Jean passe sur son MacBook pour la partie iOS. Une session Claude Code ne se
