@@ -1,41 +1,65 @@
 # En attente, Solenn
 
-## ETAT DU MAC, 6 septembre 2026
+## ETAT DU MAC, 6 septembre 2026 (mis a jour dans la nuit)
 
-Xcode 26.3 (build 17C529) est installe dans Applications et repond en ligne de
-commande, avec le SDK iOS 26.2 et le simulateur iOS 26.3. Les trois gestes du
-bloc de reprise sont faits et commites (2797b05) : equipe de signature,
-`App.entitlements` avec HealthKit et push, `PrivacyInfo.xcprivacy` reference
-dans la phase Resources de la cible App. Xcode a reecrit `Info.plist` en
-dedoublonnant les cles : les commentaires qui expliquaient chaque cle ont
-disparu, le contenu est identique.
+Xcode 26.3 (build 17C529) est installe dans Applications, avec le SDK iOS 26.2
+et le simulateur iOS 26.3. **Le projet compile, s'installe et s'ouvre sur
+l'ecran de connexion dans le simulateur iPhone 17 Pro**, avec l'icone Solenn.
+Tout est commite.
 
-### Ce qui bloque encore la compilation
+### Ce qui a ete fait sur le Mac
 
-**Il n'y a ni Node.js ni Homebrew sur ce Mac.** Sans Node, pas de `vite build`,
-pas de `cap sync`, donc pas de dossier `ios/App/App/public` (il est ignore par
-git et n'existe pas ici). Le Mac est un Intel (x86_64) sous Sequoia 15.7.9 :
-prendre le binaire darwin-x64. Vite 8 exige Node 20.19 ou 22.12 au minimum.
+- Les trois gestes du bloc de reprise : equipe de signature, `App.entitlements`
+  (HealthKit, push), `PrivacyInfo.xcprivacy` dans la phase Resources. Verifie
+  dans le bundle produit : le manifeste y est. Xcode a reecrit `Info.plist` en
+  dedoublonnant les cles ; les commentaires ont disparu, le contenu est le meme.
+- **Node.js 22.23.2 installe dans `~/.local/node`** (pas de Homebrew, pas de
+  droits admin, Mac Intel sous Sequoia 15.7.9). `~/.zprofile` l'ajoute au PATH.
+  Dans une session Claude, faire `export PATH="$HOME/.local/node/bin:$PATH"`
+  avant npm.
+- **`.env` cree sur le Mac avec la seule variable que lit le front** :
+  `VITE_API_URL=https://solenn-api.onrender.com` (l'URL de vercel.json). Sans
+  elle, le bundle iOS appelle l'API en relatif et les ecrans qui passent par
+  Render echouent en silence. `.env.example` pointait encore vers Railway,
+  corrige. Les cles serveur ne sont pas sur le Mac, elles ne servent qu'a
+  `server.js`.
+- **`Package.swift` regenere avec des barres obliques.** Ecrit depuis Windows,
+  il portait des antislashs que Swift Package Manager ne resout pas. Commite
+  depuis le Mac ; si une session Windows refait `cap sync`, le recommiter d'ici.
 
-**`ios/App/CapApp-SPM/Package.swift` a ete genere depuis Windows** : les chemins
-vers `node_modules` y sont ecrits avec des antislashs, que Swift Package
-Manager sur Mac ne resout pas. Le premier `npx cap sync ios` sur le Mac le
-regenere avec des barres obliques. Il faut ensuite commiter ce fichier depuis
-le Mac, sinon la prochaine session Windows le recasse.
+### Deux defauts trouves et corriges, qui auraient fait rejeter l'app
 
-### Menage a faire par Jean
+**1. Apple Sante n'etait pas dans le binaire iOS.** `@perfood/capacitor-healthkit`
+n'a pas de `Package.swift` : Capacitor 8 en mode SPM l'exclut a chaque
+`cap sync` (« does not have a Package.swift ») alors que `capacitor.config.json`
+demande la classe `CapacitorHealthkitPlugin`. La 2.0.0-alpha.2 a le meme
+defaut. Le fichier Swift du greffon (MIT) est copie dans
+`ios/App/App/CapacitorHealthkitPlugin.swift`, converti a `CAPBridgedPlugin`,
+et ajoute a la cible App. Verifie : la classe est dans le binaire et HealthKit
+est lie. Si le greffon npm change de version, reporter la difference a la main.
+**Le simulateur ne peut pas tester HealthKit** : la preuve finale reste le
+vrai iPhone.
 
-Dans Telechargements restent une copie de `Xcode.app` (4,7 Go) et l'archive
-`Xcode_26.3_Universal.xip` (2,7 Go). La copie installee dans Applications est
-distincte (inode different, meme version), les deux fichiers de Telechargements
-peuvent aller a la corbeille. La session Claude n'a pas ete autorisee a le
-faire.
+**2. L'icone iOS etait le logo par defaut de Capacitor** (croix bleue sur
+grille). La note du 4 septembre disait « l'icone fait 1024x1024 », c'etait vrai
+et trompeur. `public/icons/ios-1024.png` (l'orbe avec le S, comme sur Android)
+existait depuis mai mais n'avait jamais ete copie dans le catalogue Xcode, et
+il a une couche alpha, qu'App Store Connect refuse. Version opaque generee :
+l'orbe pose sur un carre de la couleur exacte de son bord (40, 22, 12), sans
+liseré. **Jean valide le rendu** : si elle prefere un autre fond de coins,
+le script est trivial a refaire.
 
-### Toujours ouvert
+### Ce qui reste, et que seule Jean peut faire
 
-Le test de course de trois minutes ecran verrouille sur un vrai iPhone, qui
-tranche le sort de `location` dans `UIBackgroundModes`. Et le numero de build :
-verifier dans App Store Connect si un build 1 de la version 1.1 existe deja.
+- Menage dans Telechargements : `Xcode.app` (4,7 Go) et
+  `Xcode_26.3_Universal.xip` (2,7 Go) sont des doublons de la copie installee
+  (inode different, meme version). A mettre a la corbeille.
+- Le test de course de trois minutes ecran verrouille sur un vrai iPhone, qui
+  tranche le sort de `location` dans `UIBackgroundModes` (voir plus bas).
+- Le numero de build : verifier dans App Store Connect si un build 1 de la
+  version 1.1 existe deja, sinon passer `CURRENT_PROJECT_VERSION` a 2.
+- Brancher l'iPhone et lancer depuis Xcode : `npm run cap:ios` ouvre le projet
+  avec le bundle a jour.
 
 
 ## REPRISE SUR LE MAC, 4 septembre 2026 au soir
