@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CAPACITOR_DEBUG</key>
+	<key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>fr</string>
 	<key>CFBundleDisplayName</key>
-        <string>Solenn</string>
+	<string>Solenn</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,8 +22,32 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Solenn ouvre l'appareil photo quand tu choisis de photographier ton repas. La photo est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Utilise Face ID pour te connecter rapidement à Solenn.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Solenn lit tes données de santé (sommeil, pas, fréquence cardiaque) pour personnaliser ton coaching et t'offrir des recommandations précises.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Solenn peut enregistrer certaines données dans Apple Santé (activité, bien-être) pour centraliser ton suivi.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Solenn continue de mesurer ta sortie quand l'écran est verrouillé. Ta position n'est jamais partagée ni envoyée ailleurs.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Solenn utilise ta position pour mesurer la distance et l'allure de tes sorties, et pour adapter les recommandations météo de ta routine.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Solenn accede a tes photos quand tu en choisis une pour montrer ton repas. Elle est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>remote-notification</string>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -35,8 +59,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -47,55 +69,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-
-	<!-- ─── Orientation : portrait uniquement pour une app mobile ────────── -->
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-
-	<!-- ─── Région française ──────────────────────────────────────────────── -->
-	<key>CFBundleDevelopmentRegion</key>
-	<string>fr</string>
-
-	<!-- ─── Notifications Push ────────────────────────────────────────────── -->
-	<key>NSSupportsLiveActivities</key>
-	<true/>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-		<string>remote-notification</string>
-		<string>fetch</string>
-	</array>
-
-	<!-- ─── Apple Health — permissions obligatoires App Store ─────────────── -->
-	<key>NSHealthShareUsageDescription</key>
-	<string>Solenn lit tes données de santé (sommeil, pas, fréquence cardiaque) pour personnaliser ton coaching et t'offrir des recommandations précises.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Solenn peut enregistrer certaines données dans Apple Santé (activité, bien-être) pour centraliser ton suivi.</string>
-
-	<!-- ─── Localisation ──────────────────────────────────────────────────── -->
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Solenn continue de mesurer ta sortie quand l'écran est verrouillé. Ta position n'est jamais partagée ni envoyée ailleurs.</string>
-	<!-- L'app ouvre un selecteur de photo pour le repas (input type=file).
-	     Sur iOS, la feuille propose « Prendre une photo » : sans cette cle, le
-	     systeme TERMINE l'application a l'instant ou la camera s'ouvre. Ajoute
-	     le 2026-09-04, avant soumission, apres avoir constate l'absence. -->
-	<key>NSCameraUsageDescription</key>
-	<string>Solenn ouvre l'appareil photo quand tu choisis de photographier ton repas. La photo est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Solenn accede a tes photos quand tu en choisis une pour montrer ton repas. Elle est analysee puis reste sur ton telephone, elle n'est jamais publiee.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Solenn utilise ta position pour mesurer la distance et l'allure de tes sorties, et pour adapter les recommandations météo de ta routine.</string>
-
-	<!-- ─── Face ID (si authentification biométrique plus tard) ──────────── -->
-	<key>NSFaceIDUsageDescription</key>
-	<string>Utilise Face ID pour te connecter rapidement à Solenn.</string>
-
-	<!-- Solenn n'utilise que le chiffrement standard du systeme (HTTPS). Elle
-	     entre donc dans l'exemption, et cette cle evite qu'App Store Connect
-	     repose la question a chaque envoi. -->
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>
