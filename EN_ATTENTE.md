@@ -1,5 +1,76 @@
 # En attente, Solenn
 
+## REPRISE SUR LE MAC, 4 septembre 2026 au soir
+
+Jean passe sur son MacBook pour la partie iOS. Une session Claude Code ne se
+transfere pas d'une machine a l'autre : ce bloc est le passage de relais. Lire
+aussi `CLAUDE.md` a la racine, qui porte les regles de Jean et les deux defauts
+qui reviennent sans cesse dans ce depot.
+
+### La version de Xcode a installer, et elle n'est pas evidente
+
+Le Mac de Jean est sur **macOS Sequoia 15.7.9** et ne peut pas monter en
+macOS 26 : la mise a niveau ne lui est pas proposee. L'App Store refuse donc
+Xcode en disant « macOS 26.2 requis », parce qu'il ne propose que la derniere
+version.
+
+**Prendre Xcode 26.3 sur `developer.apple.com/download/all`, pas l'App Store.**
+
+Verifie sur la page officielle des exigences systeme le 4 septembre :
+- Xcode 26.3 demande macOS Sequoia **15.6** minimum, donc il tourne sur 15.7.9
+- il embarque le **SDK iOS 26.2**
+- or depuis le **28 avril 2026**, un envoi sur App Store Connect doit etre
+  construit avec le SDK iOS 26 ou plus recent
+
+Xcode 26.3 est donc exactement le plafond de cette machine, et il suffit a
+publier. Xcode 26.4 et au-dela exigent Tahoe : ne pas les proposer. Le jour ou
+Apple exigera le SDK iOS 27, cette machine sera bloquee et il faudra soit un Mac
+plus recent, soit un service de compilation dans le cloud du type Codemagic.
+
+### Les trois gestes dans Xcode, avant meme de compiler
+
+1. L'equipe de signature, avec le compte developpeur de Jean.
+2. **Ajouter les capacites HealthKit et Push Notifications** dans Signing &
+   Capabilities. Il n'existe AUCUN fichier d'entitlements dans le projet, Xcode
+   le cree en ajoutant la capacite. Sans lui, HealthKit ne peut pas fonctionner
+   et Apple rejette une app qui declare des types de sante sans la capacite.
+   Cela veut dire que l'integration Apple Sante n'a jamais tourne sur iPhone.
+3. **Glisser `ios/App/App/PrivacyInfo.xcprivacy` dans le navigateur de projet et
+   cocher la cible App.** Le fichier existe deja sur le disque, mais Xcode doit
+   le connaitre, sinon il n'est pas embarque et l'envoi est rejete
+   automatiquement (le manifeste de confidentialite est exige depuis mai 2024).
+
+### Le test qui tranche une question ouverte
+
+`UIBackgroundModes` contient `location` et le texte de la permission promet que
+la course continue ecran verrouille. Or rien ne l'implemente : le code ne demande
+jamais l'autorisation Always, aucun Swift n'active
+`allowsBackgroundLocationUpdates`, et le projet iOS ne contient que l'AppDelegate
+par defaut la ou Android a `CourseService.kt`.
+
+**Faire une course de test de trois minutes avec verrouillage de l'ecran, sur un
+vrai iPhone.** Selon le resultat : soit ecrire l'equivalent iOS de CourseService,
+soit retirer `location` de `UIBackgroundModes` et la chaine Always. Un mode
+d'arriere-plan declare et inutilise est un motif de rejet frequent.
+
+### Ce qui est deja fait et n'a pas besoin d'etre refait
+
+Les cibles iOS concordent (tout exige iOS 15 au plus, le projet est a 15.0),
+l'icone fait 1024x1024, `LaunchScreen.storyboard` existe et est declare,
+`ITSAppUsesNonExemptEncryption` est pose. `MARKETING_VERSION` vaut 1.1 et
+`CURRENT_PROJECT_VERSION` vaut 1 : si un build 1 a deja ete envoye pour la
+version 1.1, passer a 2, App Store Connect refuse les doublons.
+
+Le simulateur ne sert a rien ici : ni HealthKit ni le GPS n'y existent.
+
+### Cote Android, rien n'attend le Mac
+
+Google Play ne demande aucun Mac. Il reste a Jean : coller le paragraphe validee
+dans la fiche (voir STORES.md), les captures d'ecran, et filmer trente secondes
+de course pour le formulaire « Services en avant-plan » que Google presentera au
+prochain depot du bundle.
+
+
 ## SUR LE MAC : ce qui a ete prepare d'avance (4 septembre)
 
 Verifie depuis Windows pendant l'installation de Xcode, pour ne pas le decouvrir

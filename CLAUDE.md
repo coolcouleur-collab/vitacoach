@@ -11,6 +11,9 @@ utilisateurs reels.
 
 ## Ou vit le suivi
 
+- **Si tu demarres sur le Mac de Jean** : le bloc « REPRISE SUR LE MAC » est en
+  tete d'`EN_ATTENTE.md`. Il porte la version exacte de Xcode a installer, qui
+  n'est pas celle de l'App Store, et les trois gestes a faire avant de compiler.
 - `EN_ATTENTE.md` : l'etat du travail, les decisions en attente, les pieges.
   **Le lire avant de proposer quoi que ce soit.** Les blocs les plus recents
   sont en haut.
