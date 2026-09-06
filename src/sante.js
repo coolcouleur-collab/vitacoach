@@ -54,7 +54,6 @@ function plateforme() {
  */
 export async function santeDisponible() {
   const p = plateforme()
-  console.log('[sante] plateforme', p, 'natif:', Capacitor.isNativePlatform())
 
   if (p === PLATEFORME.ios) {
     return {
@@ -94,7 +93,6 @@ export async function demanderAccesSante() {
   const p = plateforme()
 
   if (p === PLATEFORME.ios) {
-    console.log('[sante] demanderAccesSante sur iOS')
     await requestHealthKitPermissions()
     return true
   }

@@ -114,7 +114,6 @@ export function useChrono({ cle = CLE, reprendre = true } = {}) {
 
   const demarrer = useCallback(() => {
     const t = Date.now()
-    console.log('[chrono] demarrer', new Date(t).toISOString())
     setEtat({ statut: 'encours', depart: t, cumul: 0, debutSeance: t })
   }, [])
 
@@ -135,7 +134,6 @@ export function useChrono({ cle = CLE, reprendre = true } = {}) {
     const total = e.statut === 'encours'
       ? e.cumul + Math.max(0, Date.now() - e.depart)
       : e.cumul
-    console.log('[chrono] arreter', e.statut, 'total ms', total)
     setEtat(ARRET)
     return total
   }, [])

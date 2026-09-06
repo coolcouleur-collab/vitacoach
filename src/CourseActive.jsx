@@ -105,14 +105,6 @@ export default function CourseActive({ userId, mode = 'course', onTermine, onFer
 
   useEcranAllume(chrono.enCours)
 
-  // Diagnostic du 6 septembre 2026 : ce que le grand chiffre affiche, toutes
-  // les cinq secondes, pour le comparer a ce que Jean voit sur son iPhone.
-  useEffect(() => {
-    if (chrono.enCours && chrono.secondes % 5 === 0) {
-      console.log('[course] affiche', chrono.texte, 'gps', Math.round(gps.metres), 'm', 'demarrage:', demarrage, 'fini:', fini)
-    }
-  }, [chrono.secondes])   // eslint-disable-line react-hooks/exhaustive-deps
-
   // Le GPS d'abord, le chronometre ensuite. L'inverse ferait demarrer le temps
   // pendant que la fenetre d'autorisation est encore ouverte, et la course
   // commencerait avec trente secondes deja au compteur.

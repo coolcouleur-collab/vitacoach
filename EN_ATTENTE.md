@@ -1,5 +1,64 @@
 # En attente, Solenn
 
+## PREMIERE SESSION SUR UN VRAI IPHONE, 6 septembre 2026
+
+Solenn a tourne pour la premiere fois sur un iPhone (16 Pro Max, iOS 26.6.1,
+build Debug par cable, console attachee depuis le Mac avec
+`xcrun devicectl device process launch --console`). Cinq defauts qui ne
+pouvaient se voir nulle part ailleurs, tous corriges et commites :
+
+1. **La course affichait « position non disponible ».** useCourse.js appelle
+   sur iPhone un greffon natif « PositionCourse » dont le Swift n'existait
+   pas. Ecrit : `ios/App/App/PositionCoursePlugin.swift`, enregistre par
+   `SolennViewController` (Main.storyboard pointe dessus). Verifie sur
+   l'iPhone : points a 9 a 17 m de precision. Le mode arriere-plan
+   `location` est donc utilise pour de vrai ; la question de le retirer est
+   close. L'autorisation demandee est « pendant l'utilisation », qui suffit
+   pour une sortie lancee a la main ; la cle « toujours » d'Info.plist reste
+   sans etre demandee.
+2. **Apple Sante restait muet.** Trois causes empilees : la fenetre
+   d'accueil « Autoriser l'acces » ne demandait rien (elle posait un drapeau)
+   ; le chargeur du greffon faisait `await` sur un Proxy Capacitor, qui
+   repond a `then` et n'aboutit jamais ; et les noms de types d'autorisation
+   n'etaient pas ceux du greffon. Puis la lecture des resultats utilisait la
+   cle `quantity` au lieu de `value`, et `d.value === 'ASLEEP'` au lieu de
+   `sleepState === 'Asleep'` avec `duration` en heures.
+3. **Les appels `/api/...` relatifs n'avaient pas de serveur en natif** :
+   capacitor://localhost servait la page HTML avec un 200, et chaque
+   `r.json()` echouait en silence. Trente-cinq appels, iPhone ET Android.
+   `src/api.js`, importe en premier dans main.jsx, les route vers
+   VITE_API_URL en natif. Rien ne change sur le web.
+4. **Une seance enregistree n'apparaissait pas** dans « Tes seances » avant
+   un rechargement : App.jsx passe sa copie du profil aux onglets, et
+   seances.js n'ecrivait que localStorage. Evenement `solenn:profil` emis,
+   suivi dans App.jsx.
+5. Les echecs muets (enregistrement de seance, Apple Sante) ecrivent leur
+   raison dans la console, et une ecriture Supabase refusee rend ok:false.
+
+### Constats qui ne sont pas des bugs
+
+- Une seance de moins de trente secondes est refusee (« trop courte »), par
+  conception. Deux essais de Jean ont dure 3 et 10 secondes.
+- Progres (l'onglet « sante » du code) n'affiche la progression qu'a partir
+  de trois jours de donnees, et ne compare qu'a sept. Un iPhone neuf n'a
+  qu'un jour.
+- Sur l'iPhone de Jean, Apple Sante n'a que des pas : sommeil, frequence
+  cardiaque et poids ont rendu zero releve. Il faut une montre ou une saisie
+  manuelle dans l'app Sante pour les voir remonter. Non verifie : une saisie
+  de poids dans Sante puis « Sync » doit faire apparaitre le poids.
+- Le petit son au toucher vient de Web Audio, qui respecte le mode
+  silencieux sur iOS. Jean n'a pas dit si l'iPhone etait en silencieux.
+
+### Pour relancer sur l'iPhone
+
+`npm run build && npx cap sync ios`, puis dans Xcode choisir l'iPhone et
+Run ; ou en ligne de commande, `xcodebuild ... -destination 'id=<UDID>'
+-allowProvisioningUpdates build` puis `xcrun devicectl device install app`.
+Le mode developpeur est active sur l'iPhone, l'appareil est enregistre sur
+le compte, le profil de developpement existe. Un build Debug expire au bout
+de sept jours.
+
+
 ## ETAT DU MAC, 6 septembre 2026 (mis a jour dans la nuit)
 
 Xcode 26.3 (build 17C529) est installe dans Applications, avec le SDK iOS 26.2
