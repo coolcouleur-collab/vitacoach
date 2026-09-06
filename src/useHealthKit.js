@@ -56,24 +56,32 @@ export async function readTodayHealthData() {
 
   const metrics = {}
 
+  // Chaque releve porte sa valeur sous « value » (voir le Swift du greffon :
+  // "value": sample.quantity.doubleValue). Le code lisait « quantity », une
+  // cle qui n'existe pas : treize releves de pas recus, zero affiche
+  // (console iPhone, 6 septembre 2026).
   if (stepsR.status === 'fulfilled') {
     const data = stepsR.value.resultData || []
-    const total = data.reduce((s, d) => s + parseFloat(d.quantity || 0), 0)
+    const total = data.reduce((s, d) => s + parseFloat(d.value || 0), 0)
     if (total > 0) metrics.pas = Math.round(total)
   }
 
   if (sleepR.status === 'fulfilled') {
+    // Le greffon rend « sleepState » (Asleep ou InBed) et « duration » en
+    // heures. L'ancien code cherchait d.value === 'ASLEEP' : rien ne
+    // correspondait jamais, le sommeil restait vide. On prefere les phases de
+    // sommeil reel ; a defaut, le temps au lit.
     const data = sleepR.value.resultData || []
-    const ms = data
-      .filter(d => d.value === 'ASLEEP' || d.value === 'INBED')
-      .reduce((s, d) => s + (new Date(d.endDate) - new Date(d.startDate)), 0)
-    if (ms > 0) metrics.sommeil = parseFloat((ms / 3600000).toFixed(1))
+    const dormi = data.filter(d => d.sleepState === 'Asleep')
+    const retenu = dormi.length ? dormi : data.filter(d => d.sleepState === 'InBed')
+    const heures = retenu.reduce((s, d) => s + (parseFloat(d.duration) || 0), 0)
+    if (heures > 0) metrics.sommeil = parseFloat(heures.toFixed(1))
   }
 
   if (hrR.status === 'fulfilled') {
     const data = hrR.value.resultData || []
     if (data.length > 0) {
-      const avg = data.reduce((s, d) => s + parseFloat(d.quantity || 0), 0) / data.length
+      const avg = data.reduce((s, d) => s + parseFloat(d.value || 0), 0) / data.length
       metrics.fc = Math.round(avg)
     }
   }
@@ -81,7 +89,7 @@ export async function readTodayHealthData() {
   if (weightR.status === 'fulfilled') {
     const data = weightR.value.resultData || []
     if (data.length > 0) {
-      metrics.poids = parseFloat(parseFloat(data[data.length - 1].quantity).toFixed(1))
+      metrics.poids = parseFloat(parseFloat(data[data.length - 1].value).toFixed(1))
     }
   }
 
@@ -101,7 +109,7 @@ export async function readWeightHistory(days = 30) {
   })
   return (res.resultData || []).map(r => ({
     date:  new Date(r.startDate).toDateString(),
-    poids: parseFloat(parseFloat(r.quantity).toFixed(1)),
+    poids: parseFloat(parseFloat(r.value).toFixed(1)),
   }))
 }
 
@@ -133,7 +141,7 @@ export async function readHeartRateWindow(debut, fin) {
     })
     const data = res?.resultData || []
     const bpm = data
-      .map(d => parseFloat(d.quantity))
+      .map(d => parseFloat(d.value))
       // Un relevé aberrant fausse la moyenne autant que le maximum. En dessous
       // de 30 ou au-dessus de 230, ce n'est plus un coeur humain a l'effort.
       .filter(v => Number.isFinite(v) && v >= 30 && v <= 230)
