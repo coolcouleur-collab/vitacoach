@@ -26,6 +26,10 @@ import {
 /** Le pont Kotlin, écrit dans android/app/src/main/java/com/solenn/app. */
 const SanteConnect = registerPlugin('SanteConnect')
 
+/** Le drapeau local « Apple Sante / Health Connect connecte », lu par les
+ *  Reglages et pose par la fenetre d'accueil : une seule definition. */
+export const CLE_SANTE_CONNECTEE = 'vitacoach_healthkit_connected'
+
 export const PLATEFORME = {
   ios: 'ios',
   android: 'android',

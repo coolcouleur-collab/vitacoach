@@ -1337,9 +1337,24 @@ const [messages, setMessages] = useState(() => {
     return () => clearTimeout(t)
   }, [profil])
 
-  function allowHealth() {
+  async function allowHealth() {
     localStorage.setItem('vitacoach_health_perm', 'granted')
     setShowHealthPerm(false)
+    // Jusqu'au 6 septembre 2026, ce bouton posait le drapeau ci-dessus et se
+    // fermait : il ne demandait rien a personne. Sur iPhone, Jean a touche
+    // « Autoriser l'acces » et il ne s'est rien passe, la vraie demande
+    // vivant seulement dans Reglages, Appareils connectes. Meme chemin ici,
+    // par sante.js, pour qu'il n'y en ait qu'un.
+    try {
+      const { santeDisponible, demanderAccesSante, CLE_SANTE_CONNECTEE } = await import('./sante')
+      const info = await santeDisponible()
+      if (!info.disponible) return
+      const accorde = await demanderAccesSante()
+      if (accorde) localStorage.setItem(CLE_SANTE_CONNECTEE, 'true')
+      else console.warn('[sante] acces refuse depuis la fenetre d accueil')
+    } catch (e) {
+      console.warn('[sante] fenetre d accueil :', e?.message || e)
+    }
   }
   function laterHealth() {
     localStorage.setItem('vitacoach_health_perm', 'later')

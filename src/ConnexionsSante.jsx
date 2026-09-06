@@ -10,11 +10,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 // autrement, et la facade n'a pas encore d'equivalent. Tout le reste passe
 // par sante.js, qui choisit HealthKit ou Health Connect selon l'appareil.
 import { readWeightHistory } from './useHealthKit'
-import { santeDisponible, demanderAccesSante, lireSanteAujourdhui, ouvrirReglagesSante } from './sante'
+import { santeDisponible, demanderAccesSante, lireSanteAujourdhui, ouvrirReglagesSante, CLE_SANTE_CONNECTEE } from './sante'
 import { authHeaders } from './supabase'
 import { AMBRE, ENCRE, ICONE, ROUGE, VERT } from './palette'
 
-const HK_KEY = 'vitacoach_healthkit_connected'
+const HK_KEY = CLE_SANTE_CONNECTEE
 
 const C = {
   bg:       'rgba(255,248,244,0.0)',
