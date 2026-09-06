@@ -145,12 +145,10 @@ export function useCapacitor() {
   const requestHealthPermission = useCallback(async () => {
     if (!isNative || getPlatform() !== 'ios') return false
     try {
-      const { CapacitorHealthkit } = await import('@perfood/capacitor-healthkit')
-      await CapacitorHealthkit.requestAuthorization({
-        all: HEALTH_READ_TYPES,
-        read: HEALTH_READ_TYPES,
-        write: [],
-      })
+      // Une seule liste de types, dans useHealthKit.js : la copie qui vivait
+      // ici portait des noms Health Connect que HealthKit ne connait pas.
+      const { requestHealthKitPermissions } = await import('../useHealthKit')
+      await requestHealthKitPermissions()
       setHealthGranted(true)
       return true
     } catch (e) {

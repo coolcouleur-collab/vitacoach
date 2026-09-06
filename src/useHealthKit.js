@@ -9,10 +9,18 @@ export const isHealthKitAvailable = () =>
 // quelqu'un sans jamais s'en servir est un motif de rejet, article 5.1.1.
 // `bodyMass` reste : il est lu par readTodayHealthData et readWeightHistory,
 // c'est l'historique de poids affiche dans Connexions sante.
+//
+// ATTENTION, deux vocabulaires dans le greffon @perfood/capacitor-healthkit :
+// requestAuthorization attend les noms de sa fonction getTypes ('weight',
+// 'steps', 'activity', 'heartRate'), et queryHKitSampleType ceux de
+// getSampleType ('weight', 'stepCount', 'sleepAnalysis', 'heartRate'). Cette
+// liste portait les noms de requete : seule la frequence cardiaque etait
+// demandee, et la fenetre d'autorisation ne montrait qu'elle. Constate sur
+// iPhone le 6 septembre 2026, verifie dans le Swift du greffon.
 const READ_TYPES = [
-  'bodyMass',
-  'stepCount',
-  'sleepAnalysis',
+  'weight',      // bodyMass
+  'steps',       // stepCount
+  'activity',    // sleepAnalysis et seances
   'heartRate',
 ]
 
@@ -37,7 +45,7 @@ export async function readTodayHealthData() {
     plugin.queryHKitSampleType({ sampleName:'stepCount',     startDate:today.toISOString(), endDate:now.toISOString(),  limit:0  }),
     plugin.queryHKitSampleType({ sampleName:'sleepAnalysis', startDate:yest.toISOString(),  endDate:now.toISOString(),  limit:0  }),
     plugin.queryHKitSampleType({ sampleName:'heartRate',     startDate:today.toISOString(), endDate:now.toISOString(),  limit:20 }),
-    plugin.queryHKitSampleType({ sampleName:'bodyMass',      startDate:today.toISOString(), endDate:now.toISOString(),  limit:1  }),
+    plugin.queryHKitSampleType({ sampleName:'weight',        startDate:today.toISOString(), endDate:now.toISOString(),  limit:1  }),
   ])
 
   const metrics = {}
@@ -80,7 +88,7 @@ export async function readWeightHistory(days = 30) {
   const end   = new Date()
   const start = new Date(Date.now() - days * 86400000)
   const res   = await plugin.queryHKitSampleType({
-    sampleName: 'bodyMass',
+    sampleName: 'weight',
     startDate:  start.toISOString(),
     endDate:    end.toISOString(),
     limit:      days,
