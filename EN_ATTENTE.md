@@ -358,6 +358,12 @@ le renommage des quatre onglets (les captures et la fiche Play seraient a
 refaire), le brief du matin en notification (permission, planification, tache
 serveur, regles Play sur les notifications), la memoire citee, la correlation
 hebdomadaire. Bonnes idees, aucune ne se decide sans donnees d'usage reelles.
+S'y ajoute, demande par Jean le 6 septembre depuis son iPhone : **la
+frequence cardiaque sans montre ni bracelet**. Apple Sante ne peut pas la
+fournir sans capteur ; la seule voie est la mesure par la camera (doigt sur
+l'objectif, flash allume, lecture des variations de rougeur pendant une
+trentaine de secondes), une fonctionnalite native entiere sur iOS et Android,
+avec ses propres questions de precision et de validation par les stores.
 
 
 ## Chantier « application sportive », ouvert le 2 septembre 2026

@@ -9,5 +9,6 @@ import Capacitor
 class SolennViewController: CAPBridgeViewController {
     override open func capacitorDidLoad() {
         bridge?.registerPluginInstance(PositionCoursePlugin())
+        bridge?.registerPluginInstance(SonInterfacePlugin())
     }
 }

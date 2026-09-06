@@ -19,6 +19,8 @@
 		99A29AE5304CC8F900560A37 /* CapacitorHealthkitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A29AE4304CC8F900560A36 /* CapacitorHealthkitPlugin.swift */; };
 		99A29AE7304CC8F900560A39 /* PositionCoursePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A29AE6304CC8F900560A38 /* PositionCoursePlugin.swift */; };
 		99A29AE9304CC8F900560A3B /* SolennViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A29AE8304CC8F900560A3A /* SolennViewController.swift */; };
+		99A29AEB304CC8F900560A3D /* SonInterfacePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A29AEA304CC8F900560A3C /* SonInterfacePlugin.swift */; };
+		99A29AED304CC8F900560A3F /* Sons in Resources */ = {isa = PBXBuildFile; fileRef = 99A29AEC304CC8F900560A3E /* Sons */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		99A29AE4304CC8F900560A36 /* CapacitorHealthkitPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapacitorHealthkitPlugin.swift; sourceTree = "<group>"; };
 		99A29AE6304CC8F900560A38 /* PositionCoursePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionCoursePlugin.swift; sourceTree = "<group>"; };
 		99A29AE8304CC8F900560A3A /* SolennViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolennViewController.swift; sourceTree = "<group>"; };
+		99A29AEA304CC8F900560A3C /* SonInterfacePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonInterfacePlugin.swift; sourceTree = "<group>"; };
+		99A29AEC304CC8F900560A3E /* Sons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sons; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,9 +76,11 @@
 			isa = PBXGroup;
 			children = (
 				99A29AE1304CC8F900560A33 /* App.entitlements */,
+				99A29AEC304CC8F900560A3E /* Sons */,
 				99A29AE2304CC8F900560A34 /* PrivacyInfo.xcprivacy */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
+				99A29AEA304CC8F900560A3C /* SonInterfacePlugin.swift */,
 				99A29AE8304CC8F900560A3A /* SolennViewController.swift */,
 				99A29AE6304CC8F900560A38 /* PositionCoursePlugin.swift */,
 				99A29AE4304CC8F900560A36 /* CapacitorHealthkitPlugin.swift */,
@@ -159,6 +165,7 @@
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
+				99A29AED304CC8F900560A3F /* Sons in Resources */,
 				99A29AE3304CC8F900560A35 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -171,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				99A29AEB304CC8F900560A3D /* SonInterfacePlugin.swift in Sources */,
 				99A29AE9304CC8F900560A3B /* SolennViewController.swift in Sources */,
 				99A29AE7304CC8F900560A39 /* PositionCoursePlugin.swift in Sources */,
 				99A29AE5304CC8F900560A37 /* CapacitorHealthkitPlugin.swift in Sources */,

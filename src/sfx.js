@@ -4,6 +4,17 @@
 //         playFx('success')  → confirmation douce
 //         playFx('hover')    → survol discret
 
+import { Capacitor, registerPlugin } from '@capacitor/core'
+
+// Sur iPhone, WebKit classe le Web Audio comme de la musique : le son au
+// toucher jouait telephone en mode silencieux (Jean, 6 septembre 2026). Les
+// memes sons, rendus en fichiers, sont joues par iOS en categorie ambiante,
+// qui respecte le silencieux. Voir ios/App/App/SonInterfacePlugin.swift.
+// Ne jamais `await` ce greffon : c'est un Proxy qui repond a « then ».
+const SonInterface = registerPlugin('SonInterface')
+const SUR_IPHONE = typeof window !== 'undefined'
+  && Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios'
+
 let _ctx = null
 function getCtx() {
   if (!_ctx || _ctx.state === 'closed') {
@@ -24,6 +35,10 @@ if (typeof document !== 'undefined') {
 }
 
 export async function playFx(type = 'tap') {
+  if (SUR_IPHONE) {
+    SonInterface.jouer({ nom: type }).catch(() => {})
+    return
+  }
   try {
     const ctx = getCtx()
     if (!ctx) return
