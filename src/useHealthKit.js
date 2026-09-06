@@ -24,23 +24,25 @@ const READ_TYPES = [
   'heartRate',
 ]
 
+// NE JAMAIS rendre le greffon directement depuis une fonction async, ni
+// l'`await` : c'est un Proxy de Capacitor qui repond a TOUTE propriete,
+// `then` compris. `await` le prend alors pour une promesse et appelle son
+// `then`, qui n'aboutit jamais. Sur iPhone, le bouton Apple Sante restait
+// muet a jamais, sans erreur (constate a la trace, 6 septembre 2026). D'ou
+// l'enveloppe dans un objet ordinaire.
 async function hk() {
-  console.log('[sante] chargement du greffon HealthKit')
   const { CapacitorHealthkit } = await import('@perfood/capacitor-healthkit')
-  console.log('[sante] greffon charge :', typeof CapacitorHealthkit?.requestAuthorization)
-  return CapacitorHealthkit
+  return { plugin: CapacitorHealthkit }
 }
 
 export async function requestHealthKitPermissions() {
-  const plugin = await hk()
-  console.log('[sante] demande d autorisation HealthKit', READ_TYPES.join(','))
+  const { plugin } = await hk()
   await plugin.requestAuthorization({ all: [], read: READ_TYPES, write: [] })
-  console.log('[sante] autorisation HealthKit rendue')
 }
 
 // Retourne { pas, sommeil, fc, poids } pour aujourd'hui
 export async function readTodayHealthData() {
-  const plugin = await hk()
+  const { plugin } = await hk()
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const now   = new Date()
   const yest  = new Date(today.getTime() - 86400000)
@@ -88,7 +90,7 @@ export async function readTodayHealthData() {
 
 // Retourne un tableau [{ date: 'Mon Jan 01 2025', poids: 72.3 }] sur N jours
 export async function readWeightHistory(days = 30) {
-  const plugin = await hk()
+  const { plugin } = await hk()
   const end   = new Date()
   const start = new Date(Date.now() - days * 86400000)
   const res   = await plugin.queryHKitSampleType({
@@ -122,7 +124,7 @@ export async function readWeightHistory(days = 30) {
 export async function readHeartRateWindow(debut, fin) {
   if (!isHealthKitAvailable()) return null
   try {
-    const plugin = await hk()
+    const { plugin } = await hk()
     const res = await plugin.queryHKitSampleType({
       sampleName: 'heartRate',
       startDate: new Date(debut).toISOString(),
