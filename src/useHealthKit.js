@@ -25,13 +25,17 @@ const READ_TYPES = [
 ]
 
 async function hk() {
+  console.log('[sante] chargement du greffon HealthKit')
   const { CapacitorHealthkit } = await import('@perfood/capacitor-healthkit')
+  console.log('[sante] greffon charge :', typeof CapacitorHealthkit?.requestAuthorization)
   return CapacitorHealthkit
 }
 
 export async function requestHealthKitPermissions() {
   const plugin = await hk()
+  console.log('[sante] demande d autorisation HealthKit', READ_TYPES.join(','))
   await plugin.requestAuthorization({ all: [], read: READ_TYPES, write: [] })
+  console.log('[sante] autorisation HealthKit rendue')
 }
 
 // Retourne { pas, sommeil, fc, poids } pour aujourd'hui

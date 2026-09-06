@@ -794,6 +794,13 @@ export default function App() {
   const isFreeTrial = !isPro && !!user?.created_at && (Date.now() - new Date(user.created_at).getTime() < ESSAI_JOURS * 24 * 3600 * 1000)
   const hasFullAccess = isPro || isFreeTrial
   const [profil, setProfil]     = useState(() => safeParse('vitacoach_profil', null))
+  // Une ecriture locale du profil faite ailleurs (seances.js) doit se voir
+  // ici tout de suite : les onglets recoivent cette copie, pas localStorage.
+  useEffect(() => {
+    const suivre = e => { if (e.detail && typeof e.detail === 'object') setProfil(e.detail) }
+    window.addEventListener('solenn:profil', suivre)
+    return () => window.removeEventListener('solenn:profil', suivre)
+  }, [])
   const [profilLoading, setProfilLoading] = useState(() => {
     const u = safeParse('vitacoach_user', null)
     const p = safeParse('vitacoach_profil', null)

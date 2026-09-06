@@ -462,7 +462,8 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
   }
 
   async function connecter(provider) {
-    if (!userId) return
+    console.log('[sante] connecter', provider?.id, 'userId:', !!userId, 'dispo:', JSON.stringify(santeInfo))
+    if (!userId) { console.warn('[sante] pas d identifiant utilisateur'); return }
 
     if (provider.methode === 'oauth') {
       window.location.href = `/api/connect/${provider.id}?userId=${userId}`

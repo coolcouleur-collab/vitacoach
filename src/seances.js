@@ -201,9 +201,15 @@ export async function enregistrerSeance(userId, seance) {
     // prochain rechargement complet.
     try {
       const local = JSON.parse(localStorage.getItem('vitacoach_profil') || '{}')
-      localStorage.setItem('vitacoach_profil', JSON.stringify({ ...local, seances: liste }))
+      const nouveau = { ...local, seances: liste }
+      localStorage.setItem('vitacoach_profil', JSON.stringify(nouveau))
+      // App.jsx garde sa propre copie du profil en memoire et la passe aux
+      // onglets : sans ce signal, « Tes seances » n'affichait la seance
+      // qu'au prochain rechargement complet (constat iPhone, 6 septembre).
+      window.dispatchEvent(new CustomEvent('solenn:profil', { detail: nouveau }))
     } catch {}
 
+    console.log('[seances] seance enregistree', ajoutee.id, ajoutee.dureeMs, 'ms')
     return { ok: true, seance: ajoutee, stats: statsSeances(liste), serie: serieSeances(liste) }
   } catch (e) {
     console.warn('[seances] enregistrement impossible :', e?.message || e)
