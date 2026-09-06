@@ -314,6 +314,26 @@ tranche d'âge 18 et plus.
   15 % la 1re année sous 1 M$). En attendant, l'app iOS fonctionne en
   lecture du statut Pro synchronisé depuis le web.
 
+### Prealables App Store Connect, vus le 6 septembre 2026
+
+Constate sur appstoreconnect.apple.com, connectee avec le compte de Jean :
+la page « Apps » affiche « Aucune app ». Rien n'a jamais ete envoye a Apple,
+le build 1 de la version 1.1 est donc valable tel quel.
+
+Deux blocages a lever AVANT le premier envoi, tous deux par Jean elle-meme,
+titulaire du compte :
+
+1. **Le contrat de licence de l'Apple Developer Program** a ete mis a jour et
+   attend son acceptation, via « Compte » (en haut a droite d'App Store
+   Connect, ou sur developer.apple.com/account). Tant qu'il n'est pas
+   accepte, Apple refuse toute soumission et Xcode refuse l'envoi.
+2. **Le statut de commercant pour l'Union europeenne** (reglement DSA) doit
+   etre declare dans App Store Connect, rubrique Accords, contrats et
+   informations bancaires, ou depuis la banniere affichee sur la page.
+   Sans cette declaration, l'app est retiree de l'App Store dans l'UE.
+   Pour une personne qui vend un abonnement, c'est « commercant », avec une
+   adresse et un contact affiches sur la fiche.
+
 ### Description App Store (proposition)
 
 > Solenn est ton coach bien-être au quotidien, propulsé par l'IA : nutrition,

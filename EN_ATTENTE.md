@@ -115,8 +115,11 @@ le script est trivial a refaire.
   (inode different, meme version). A mettre a la corbeille.
 - Le test de course de trois minutes ecran verrouille sur un vrai iPhone, qui
   tranche le sort de `location` dans `UIBackgroundModes` (voir plus bas).
-- Le numero de build : verifier dans App Store Connect si un build 1 de la
-  version 1.1 existe deja, sinon passer `CURRENT_PROJECT_VERSION` a 2.
+- ~~Le numero de build~~ : regle le 6 septembre au soir. App Store Connect
+  affiche « Aucune app », rien n'a jamais ete envoye, le build 1 de la
+  version 1.1 est bon. En passant, deux prealables a la soumission Apple ont
+  ete reperes, consignes dans STORES.md section 2 : le contrat de licence a
+  accepter par Jean, et le statut de commercant UE (DSA) a declarer.
 - Brancher l'iPhone et lancer depuis Xcode : `npm run cap:ios` ouvre le projet
   avec le bundle a jour.
 
