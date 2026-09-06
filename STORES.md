@@ -115,6 +115,31 @@ Règles à tenir si tu la modifies : aucun tiret cadratin, aucun emoji, aucune
 promesse de résultat ni de guérison, et rien qui ne soit vrai dans l'app au
 moment de la soumission.
 
+### Etat de la fiche Play au 6 septembre 2026 au soir
+
+Fait dans Play Console (fiche com.solenn.app, compte 9203490416582323224) :
+la description complete porte la phrase Health Connect validee a la place du
+passage Apple Sante/Garmin dans « TES DONNEES, TES REGLES », 1634 caracteres,
+enregistree en brouillon et relue apres rechargement. Le bouton
+« Enregistrer » definitif n'est bloque que par les captures d'ecran.
+
+Ce que Google attend, pour ne pas recommencer :
+
+- **Captures d'ecran** : de 2 a 8 pour telephone, PNG ou JPEG, ratio 16:9 ou
+  9:16, chaque cote entre 320 et 3840 px. Une capture native d'un Android
+  recent (1080 x 2400) passe telle quelle. Tablettes facultatives. A prendre
+  sur un compte de demonstration avec quelques jours de donnees plausibles,
+  jamais sur un compte vide : les examinateurs voient ces captures.
+- **Video « Services en avant-plan »** : un lien YouTube (non repertorie
+  convient), trente secondes : ouvrir Solenn, demarrer une course,
+  verrouiller l'ecran, montrer la notification persistante du trace, revenir
+  et arreter la course. Le formulaire n'apparait qu'une fois un bundle
+  declarant le service depose, ce qui est le cas.
+- **Un nouveau bundle** : celui depose date du 30 aout, avant les
+  corrections du 6 septembre (appels /api/ en natif, casses sur Android
+  aussi). A reconstruire depuis le PC Windows : ce Mac n'a ni Android Studio
+  ni SDK Android.
+
 ### Checklist Play Console (à faire par Jean)
 
 - [ ] **Déclaration « Health apps »** : Play Console → Contenu de l'application
