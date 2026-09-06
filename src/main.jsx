@@ -1,3 +1,5 @@
+// En premier : en natif, il redirige les appels /api/ vers le serveur Render.
+import './api'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom/client'
 import Lenis from 'lenis'

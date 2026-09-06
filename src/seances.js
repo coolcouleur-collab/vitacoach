@@ -170,23 +170,32 @@ export function seancesDuJour(liste, maintenant = Date.now()) {
  */
 export async function enregistrerSeance(userId, seance) {
   const vide = { ok: false, seance: null, stats: statsSeances([]), serie: 0 }
-  if (!userId) return vide
+  // Dire pourquoi. Un echec muet a coute une session de diagnostic sur iPhone
+  // le 6 septembre 2026 : l'ecran disait « probleme de reseau » sans qu'on
+  // sache si c'etait l'identifiant, la base ou le reseau.
+  if (!userId) { console.warn('[seances] pas d identifiant utilisateur, seance non enregistree'); return vide }
 
   try {
     const m = await import('./supabase')
-    const { data } = await m.supabase
+    const { data, error: erreurLecture } = await m.supabase
       .from('profils').select('profil').eq('user_id', userId).single()
+    if (erreurLecture) console.warn('[seances] lecture du profil :', erreurLecture.message)
 
     const profil = data?.profil || {}
-    const { liste, ajoutee } = ajouterSeance(lireSeances(profil), seance)
+    const { liste, ajoutee, motif } = ajouterSeance(lireSeances(profil), seance)
     if (!ajoutee) {
+      console.warn('[seances] seance refusee :', motif)
       return { ok: false, seance: null, stats: statsSeances(liste), serie: serieSeances(liste) }
     }
 
     const maj = { ...profil, seances: liste }
-    await m.supabase.from('profils').upsert(
+    const { error: erreurEcriture } = await m.supabase.from('profils').upsert(
       { user_id: userId, profil: maj }, { onConflict: 'user_id' },
     )
+    if (erreurEcriture) {
+      console.warn('[seances] ecriture du profil :', erreurEcriture.message)
+      return { ok: false, seance: null, stats: statsSeances(liste), serie: serieSeances(liste) }
+    }
 
     // La copie locale suit, sinon l'app affiche l'ancien total jusqu'au
     // prochain rechargement complet.
@@ -197,6 +206,7 @@ export async function enregistrerSeance(userId, seance) {
 
     return { ok: true, seance: ajoutee, stats: statsSeances(liste), serie: serieSeances(liste) }
   } catch (e) {
+    console.warn('[seances] enregistrement impossible :', e?.message || e)
     return vide
   }
 }

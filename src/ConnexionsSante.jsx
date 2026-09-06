@@ -490,6 +490,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
         showToast(santeInfo.nom + ' connecté !')
         await syncAppleHealth()
       } catch (e) {
+        console.warn('[sante] autorisation :', e?.message || e)
         showToast('Autorisation refusée')
       } finally {
         setLoadingSync(null)
@@ -531,6 +532,7 @@ export default function ConnexionsSante({ userId, onMetriqueUpdate }) {
       setHkLastSync(now)
       showToast(`${synced} métriques synchronisées depuis Apple Santé`)
     } catch (e) {
+      console.warn('[sante] synchronisation :', e?.message || e)
       showToast('Erreur de sync Apple Santé')
     } finally {
       setLoadingSync(null)
