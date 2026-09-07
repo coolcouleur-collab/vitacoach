@@ -36,6 +36,11 @@ depuis des jours. Verifier dans le code avant de faire confiance a une note.
   l'interface, aucune recherche genree par defaut.
 - **Ne jamais proposer de vider ou supprimer** sans avoir verifie ou vivent
   reellement les donnees.
+- **Solenn ne prescrit pas de complement en premiere reponse.** Face a un
+  symptome, elle creuse ou donne un geste sur les habitudes ; une plante ou un
+  complement ne vient que sur demande, ou apres avoir compris la cause. Jean
+  a refuse le reflexe « prends du magnesium » le 7 septembre 2026 ; la regle
+  vit dans le prompt de `server.js`, section RÈGLE PLANTES.
 - **Ne pas sonder les deploiements en boucle.** Render a un limiteur de debit,
   et l'avoir declenche a casse l'ecran Style pour elle en pleine session.
 
