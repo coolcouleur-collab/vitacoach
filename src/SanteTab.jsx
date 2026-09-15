@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { scoreJour } from './score'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { WaterIcon, HeartIcon, MoodIcon, RunIcon, MoonIcon, SadIcon, NeutralIcon, HappyIcon, StarIcon, CalendarIcon, SparkleIcon } from './Icons'
@@ -33,12 +34,12 @@ function ScaleIcon({ color = 'var(--accent)', size = 18 }) {
 }
 
 const METRICS = [
-  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color={ICONE} />,   unit: '',      goal: 10000, color: ENCRE, fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex: 8500' },
-  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color={ICONE} />,  unit: 'h',    goal: 8,     color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex: 7.5' },
+  { key: 'pas',     label: 'Pas',            iconEl: <RunIcon size={18} color={ICONE} />,   unit: '',      goal: 10000, color: ENCRE, fmt: v => Math.round(v).toLocaleString('fr'), type: 'number', step: 100,  hint: 'Ex : 8500' },
+  { key: 'sommeil', label: 'Sommeil',         iconEl: <MoonIcon size={18} color={ICONE} />,  unit: 'h',    goal: 8,     color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.5, hint: 'Ex : 7,5' },
   { key: 'eau',     label: 'Hydratation',     iconEl: <WaterIcon size={18} color={ICONE} />, unit: ' v.',  goal: 8,     color: ENCRE, fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Verres d\'eau' },
-  { key: 'fc',      label: 'Fréq. Cardiaque', iconEl: <HeartIcon size={18} color={ICONE} />, unit: ' bpm', goal: 70,    color: ENCRE, fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'Ex: 68' },
+  { key: 'fc',      label: 'Fréquence cardiaque', iconEl: <HeartIcon size={18} color={ICONE} />, unit: ' bpm', goal: 70,    color: ENCRE, fmt: v => Math.round(v),                      type: 'number', step: 1,   hint: 'bpm au repos', placeholder: 'Ex : 68' },
   { key: 'humeur',  label: 'Humeur',          iconEl: <MoodIcon size={18} color={ICONE} />,  unit: '/5',   goal: 5,     color: ENCRE, fmt: v => v,                                  type: 'range',  step: 1,   hint: '1 = difficile, 5 = excellent' },
-  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color={ICONE} />, unit: ' kg',  goal: null,  color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex: 72.5' },
+  { key: 'poids',   label: 'Poids',           iconEl: <ScaleIcon size={18} color={ICONE} />, unit: ' kg',  goal: null,  color: ENCRE, fmt: v => Number(v).toFixed(1),               type: 'number', step: 0.1, hint: 'Ex : 72,5' },
 ]
 
 const HUMEUR_ICONS = [null,
@@ -417,7 +418,7 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
   function submitEdit() {
     const m = METRICS.find(m => m.key === editMode)
     if (!m) return
-    const val = m.type === 'range' ? parseInt(tempVal) : parseFloat(tempVal)
+    const val = m.type === 'range' ? parseInt(tempVal) : parseFloat(String(tempVal).replace(',', '.'))
     if (!isNaN(val) && val >= 0) onUpdate(editMode, val)
     setEditMode(null); setTempVal('')
   }
@@ -780,7 +781,13 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
            2026-07-25) : Santé = bilan, Routine = exécution quotidienne ── */}
 
       {/* ── Edit Modal ── */}
-      {editMode && editMetric && (
+      {/* Rendu dans <body> par un portail : <main> porte position: relative
+          et z-index: 1 (App.jsx), ce qui enferme tout son contenu dans un
+          contexte d'empilement de valeur 1. Rendu dedans, ce modal a z 1000
+          ne valait que 1 vu de l'exterieur, et la barre d'onglets mobile
+          (fixed, z 100, soeur de <main>) passait par-dessus. Constate le
+          15 septembre 2026 sur meet-solenn.com en fenetre de 420 px. */}
+      {editMode && editMetric && createPortal(
         <div style={ss.modalOverlay} onClick={() => setEditMode(null)}>
           <div style={ss.modalCard} onClick={e => e.stopPropagation()}>
             <div style={ss.modalHandle} />
@@ -824,11 +831,14 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
               </div>
             ) : (
               <input style={{ ...ss.modalInput, borderColor: `rgba(var(--rgb-encre), 0.208)` }}
-                type="number" step={editMetric.step}
+                type="text"
+                inputMode={editMetric.step < 1 ? 'decimal' : 'numeric'}
+                pattern={editMetric.step < 1 ? '[0-9]*[.,]?[0-9]*' : '[0-9]*'}
+                autoComplete="off"
                 value={tempVal}
                 onChange={e => setTempVal(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && submitEdit()}
-                placeholder={editMetric.hint}
+                placeholder={editMetric.placeholder || editMetric.hint}
                 autoFocus
               />
             )}
@@ -845,11 +855,12 @@ export default function SanteTab({ ambiance = 'day', metriques, profil, onUpdate
                 onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                 onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 onClick={submitEdit}>
-                ✓ Sauvegarder
+                Sauvegarder
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
