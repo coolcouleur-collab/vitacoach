@@ -1,5 +1,53 @@
 # En attente, Solenn
 
+## 21 SEPTEMBRE 2026 : le paquet Android est pret
+
+**Un piege evite de justesse, a connaitre.** `VITE_API_URL` manquait du `.env`
+du PC Windows. Le build passait sans broncher, mais `src/api.js` compilait
+`BASE` a chaine vide : le paquet se serait installe, ouvert, et n'aurait atteint
+aucun serveur. Exactement le defaut repare le 6 septembre, et rien ne l'aurait
+signale avant un test sur un vrai telephone.
+
+La variable a ete ajoutee au `.env` local (ce n'est pas un secret, l'URL est
+deja en clair dans App.jsx), et **`scripts/verifier-env-natif.mjs` refuse
+desormais tout `cap:build`, `cap:ios`, `cap:android` ou `cap:sync` sans elle.**
+
+### Le paquet
+
+`~/Desktop/solenn-1.1-versionCode3-<date>.aab`, 6,5 Mo, signe et verifie
+(`jarsigner` dit « jar verified »). versionCode 3, versionName 1.1,
+com.solenn.app.
+
+Controle avant livraison : le routeur `api.js` est bien compile avec son URL
+(`var k=\`https://solenn-api.onrender.com\`.replace`), exactement trois
+permissions Health Connect (READ_HEART_RATE, READ_SLEEP, READ_STEPS) conformes
+a STORES.md, aucun `ACCESS_BACKGROUND_LOCATION`, et `FOREGROUND_SERVICE_LOCATION`
+present pour le service de course.
+
+Audit du code ecrit par la session Mac : aucun identifiant libre, aucune
+declaration CSS morte, build vert.
+
+### Ce qui reste, et que Jean seule peut faire
+
+1. **Deposer ce paquet** dans Play Console, piste de test fermee.
+2. **Les captures d'ecran**, 2 a 8, sur un compte de demonstration avec
+   quelques jours de donnees plausibles. Jamais un compte vide.
+3. **La video « Services en avant-plan »**, trente secondes, YouTube non
+   repertorie : ouvrir Solenn, demarrer une course, verrouiller l'ecran,
+   montrer la notification, revenir, arreter.
+4. **Apple, deux prealables administratifs** : accepter le contrat de licence
+   mis a jour du Developer Program, et declarer le statut de commercant UE
+   (DSA). Sans eux, Apple refuse toute soumission.
+
+### Le point qui n'est plus reportable
+
+La production repond en **13 secondes pour la page et 18 pour l'API**, mesure
+le 21 septembre. C'est le reveil de l'instance Render en plan gratuit, qui
+s'endort apres inactivite. Un examinateur Google ou Apple ouvrira l'app a
+froid et attendra ces 18 secondes sans savoir pourquoi. Le plan payant avait
+ete mis en attente a juste titre ; il ne l'est plus.
+
+
 ## PREMIERE SESSION SUR UN VRAI IPHONE, 6 septembre 2026
 
 Solenn a tourne pour la premiere fois sur un iPhone (16 Pro Max, iOS 26.6.1,

@@ -7,10 +7,10 @@
     "build": "vite build",
     "start": "node server.js",
     "server": "node server.js",
-    "cap:build": "vite build && npx cap copy && npx cap sync",
-    "cap:ios": "vite build && npx cap copy ios && npx cap open ios",
-    "cap:android": "vite build && npx cap copy android && npx cap open android",
-    "cap:sync": "npx cap sync"
+    "cap:build": "node scripts/verifier-env-natif.mjs && vite build && npx cap copy && npx cap sync",
+    "cap:ios": "node scripts/verifier-env-natif.mjs && vite build && npx cap copy ios && npx cap open ios",
+    "cap:android": "node scripts/verifier-env-natif.mjs && vite build && npx cap copy android && npx cap open android",
+    "cap:sync": "node scripts/verifier-env-natif.mjs && npx cap sync"
   },
   "dependencies": {
     "@capacitor/geolocation": "^8.2.2",
