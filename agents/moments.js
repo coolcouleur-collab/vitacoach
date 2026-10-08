@@ -80,18 +80,25 @@ Format JSON :
 }
 
 // ─── Sauvegarde les moments dans le profil ────────────────────────────────────
-export async function sauvegarderMoments(userId, nouveauxMoments) {
+export async function sauvegarderMoments(userId, nouveauxMoments, conversationOuverteLe = null) {
   if (!nouveauxMoments?.length) return
 
   const supabase = getSupabase()
 
-  const { data: profilRow } = await supabase
+  // Lecture ratee ou profil absent : on n'ecrit rien. Avant, `profil` valait
+  // {} et l'upsert remplacait tout le profil par { moments_importants }.
+  const { data: profilRow, error: erreurLecture } = await supabase
     .from('profils')
     .select('profil')
     .eq('user_id', userId)
-    .single()
+    .maybeSingle()
+  if (erreurLecture || !profilRow?.profil) return
 
-  const profil           = profilRow?.profil || {}
+  const profil           = profilRow.profil
+  // Une conversation anterieure a « Reinitialiser memoire IA » ne doit plus
+  // rien nourrir : c'est la promesse de la page publique de suppression.
+  const oublieLe = profil.memoire_reinitialisee_le
+  if (oublieLe && conversationOuverteLe && conversationOuverteLe <= oublieLe) return
   const momentsExistants = profil?.moments_importants || []
 
   // Déduplique par description
@@ -107,10 +114,8 @@ export async function sauvegarderMoments(userId, nouveauxMoments) {
 
   await supabase
     .from('profils')
-    .upsert({
-      user_id: userId,
-      profil: { ...profil, moments_importants: momentsMAJ }
-    }, { onConflict: 'user_id' })
+    .update({ profil: { ...profil, moments_importants: momentsMAJ } })
+    .eq('user_id', userId)
 
   console.log(`[Moments] ${nouveaux.length} nouveaux moments sauvegardés pour ${userId.slice(0, 8)}`)
   return nouveaux
@@ -171,11 +176,14 @@ export async function runMomentsCheck(pushSubscriptions) {
   }
 
   // Extraction quotidienne depuis les conversations des dernières 24h
-  const dateRecente = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // Sur updated_at : `session_date` est du texte (« Thu Oct 08 2026 »), et
+  // le comparer a « 2026-10-07 » etait toujours vrai. Chaque jour, TOUTES
+  // les conversations de tous les comptes repartaient chez Groq.
+  const dateRecente = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
   const { data: recentChats } = await supabase
     .from('solenn_chats')
-    .select('user_id, messages')
-    .gte('session_date', dateRecente)
+    .select('user_id, messages, created_at')
+    .gte('updated_at', dateRecente)
 
   for (const chat of (recentChats || [])) {
     try {
@@ -188,7 +196,7 @@ export async function runMomentsCheck(pushSubscriptions) {
 
       const nouveaux = await extraireMoments(chat.user_id, texte)
       if (nouveaux.length) {
-        await sauvegarderMoments(chat.user_id, nouveaux)
+        await sauvegarderMoments(chat.user_id, nouveaux, chat.created_at)
       }
     } catch (_) {}
   }

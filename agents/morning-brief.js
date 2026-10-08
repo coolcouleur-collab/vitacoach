@@ -47,7 +47,9 @@ async function contexteVeille(sb, userId) {
     const [mHier, mJour, challenge, insight, dernierRepas, pesees] = await Promise.all([
       sb.from('user_metrics').select('sommeil, pas, humeur, eau').eq('user_id', userId).eq('date', hier).maybeSingle(),
       sb.from('user_metrics').select('sommeil').eq('user_id', userId).eq('date', today).maybeSingle(),
-      sb.from('challenges').select('challenge, progression, date_debut').eq('user_id', userId).eq('actif', true).maybeSingle(),
+      // Plusieurs programmes peuvent etre actifs (un par famille) : maybeSingle()
+      // echouait alors et le brief perdait tout contexte. On prend le plus recent.
+      sb.from('challenges').select('challenge, progression, date_debut').eq('user_id', userId).eq('actif', true).order('created_at', { ascending: false }).limit(1).maybeSingle(),
       sb.from('user_insights').select('insight, type').eq('user_id', userId).order('computed_at', { ascending: false }).limit(1).maybeSingle(),
       sb.from('repas').select('resume, analyse').eq('user_id', userId).eq('date', hier).order('created_at', { ascending: false }).limit(1).maybeSingle(),
       sb.from('user_metrics').select('date, poids').eq('user_id', userId).gt('poids', 0).gte('date', moisDernier).order('date', { ascending: true }),

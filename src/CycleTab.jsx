@@ -631,7 +631,7 @@ export default function CycleTab({ profil, userId, onChat }) {
             Une seule question pour démarrer :
           </div>
           <div style={{ fontSize: 14, fontWeight: 600, color: am(0.85), marginBottom: 8 }}>
-            Quand ont commencé tes dernières règles ?
+            Quand ont commencé tes dernières règles ?
           </div>
           <div style={{ fontSize: 12.5, color: am(0.60), lineHeight: 1.6 }}>
             Réponds avec un des boutons juste au-dessus, c'est aujourd'hui, ou tu choisis la date. À partir de là, Solenn apprend TON cycle et te prévient avant tes prochaines règles.

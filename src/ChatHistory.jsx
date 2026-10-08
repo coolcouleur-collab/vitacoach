@@ -265,7 +265,11 @@ export default function ChatHistory({
           .from('solenn_chats')
           .select('session_date, messages, created_at')
           .eq('user_id', userId)
-          .order('session_date', { ascending: false })
+          // PAS session_date : c'est du TEXTE au format toDateString()
+          // (« Mon Oct 06 2026 »), trie donc par nom de jour. Avec plus de
+          // trente sessions, les 30 premieres sautaient des lundis et des
+          // vendredis recents. created_at est une vraie date.
+          .order('created_at', { ascending: false })
           .limit(30)
 
         if (cancelled) return

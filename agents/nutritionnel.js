@@ -152,13 +152,18 @@ Format JSON :
     nb_mentions:   mentionsAli.length,
   }
 
-  // Sauvegarder dans profils
-  await supabase
-    .from('profils')
-    .upsert({
-      user_id: userId,
-      profil: { ...profil, nutrition_insights: insights }
-    }, { onConflict: 'user_id' })
+  // Sauvegarder dans profils. Relu juste avant d'ecrire, et seulement si la
+  // lecture aboutit : la copie lue en tete de fonction a plusieurs secondes
+  // (appel au modele), et une lecture ratee la laissait a {}, ce qui
+  // remplacait tout le profil par { nutrition_insights } (8 octobre 2026).
+  const { data: frais, error: erreurLecture } = await supabase
+    .from('profils').select('profil').eq('user_id', userId).maybeSingle()
+  if (!erreurLecture && frais?.profil) {
+    await supabase
+      .from('profils')
+      .update({ profil: { ...frais.profil, nutrition_insights: insights } })
+      .eq('user_id', userId)
+  }
 
   return insights
 }

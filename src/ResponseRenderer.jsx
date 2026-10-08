@@ -281,7 +281,12 @@ function nettoyerTexte(t) {
     .replace(/(^|\n)\s*#+\s*/g, '$1')          // ## titres
     .replace(/\p{Extended_Pictographic}/gu, '') // emojis
     .replace(/️|‍/g, '')             // sélecteurs de variante orphelins
-    .replace(/[ \t]+([,.!?;:])/g, '$1')        // espaces laissés par un emoji retiré
+    // Espaces laisses par un emoji retire. Avant ! ? ; : le francais VEUT une
+    // espace : l'ancienne regle la supprimait aussi, d'ou « Salut Camille! »
+    // et « objectif: » dans toutes les reponses (vu le 8 octobre 2026). On la
+    // garde, insecable pour que le signe ne passe pas seul a la ligne.
+    .replace(/[ \t]+([,.])/g, '$1')
+    .replace(/[ \t]+([!?;:])/g, '\u00a0$1')
     .replace(/(^|\n)[ \t]+/g, '$1')
     .replace(/\n{3,}/g, '\n\n')
     .trim()

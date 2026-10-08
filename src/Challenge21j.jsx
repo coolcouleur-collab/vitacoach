@@ -282,7 +282,7 @@ export default function Challenge21j({ userId, isPro, onPasserPro, profil, famil
       const res = await fetch(`${API}/api/challenge-progress`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
-        body: JSON.stringify({ userId, jour: jourIndex, complete: true }),
+        body: JSON.stringify({ userId, challengeId: challenge?.id, jour: jourIndex, complete: true }),
       })
       if (!res.ok) throw await erreurServeur(res, "Ce jour n'a pas pu être validé. Réessaie dans un instant.")
       await fetchChallenge()

@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { programmeParId } from './src/programmes.js'
 import express from 'express'
-import Groq from 'groq-sdk'
+import Groq, { toFile } from 'groq-sdk'
 import Stripe from 'stripe'
 import webpush from 'web-push'
 import dotenv from 'dotenv'
@@ -18,16 +18,46 @@ import {
   genererContexteMeteo, genererConseilsNutrition,
   extraireMoments, sauvegarderMoments,
 } from './agents/index.js'
-import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken } from './agents/sync-sante.js'
+import { runSyncSante, syncWithings, syncOura, syncGarmin, refreshWithingsToken, revoquerWithings } from './agents/sync-sante.js'
 import { genererRecettes, recettesSures, motsInterdits } from './agents/recettes.js'
 import { updateMetriques } from './agents/monitoring.js'
 import { rapportsCache } from './agents/tendances.js'
-import { ownerGuard, adminGuard } from './api/_auth.js'
+import { ownerGuard, adminGuard, exigerCompte } from './api/_auth.js'
 import { consumeQuota } from './api/_quota.js'
 
 dotenv.config()
 
 const app = express()
+
+// Express 4 NE RATTRAPE PAS le rejet d'un handler async. Une seule erreur non
+// prevue (une reponse Groq 429, un champ absent du corps, un `.catch` appele
+// sur une requete Supabase qui n'en a pas) devenait un rejet non gere, et
+// Node 22 ARRETE LE PROCESSUS sur un rejet non gere : tout le serveur Render
+// tombait, chaque utilisateur repartait sur un demarrage a froid, et les
+// abonnements push gardes en memoire etaient perdus. Reproduit en local le
+// 8 octobre 2026 avec un simple POST sur /api/demo-request.
+// Ici, chaque handler enregistre passe son rejet a next(), qui aboutit au
+// gestionnaire d'erreur JSON pose juste avant app.listen. Un seul endroit,
+// plutot qu'un try/catch a ajouter a la main dans soixante-dix routes.
+for (const methode of ['get', 'post', 'put', 'patch', 'delete']) {
+  const original = app[methode].bind(app)
+  app[methode] = (chemin, ...handlers) => {
+    // app.get('reglage') sans handler lit un reglage Express : on n'y touche pas.
+    if (!handlers.length) return original(chemin)
+    return original(chemin, ...handlers.map(h => (typeof h === 'function' && h.length < 4)
+      ? (req, res, next) => {
+          try {
+            const r = h(req, res, next)
+            if (r && typeof r.then === 'function') r.catch(next)
+          } catch (e) { next(e) }
+        }
+      : h))
+  }
+}
+// Filet de securite pour ce qui echappe aux routes (agents, minuteurs) : on
+// journalise au lieu de laisser Node arreter le serveur.
+process.on('unhandledRejection', e => console.error('[Serveur] rejet non gere :', e?.message || e))
+
 const groq   = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 // Les clés collées dans un dashboard (Render/Vercel) embarquent souvent un
@@ -131,7 +161,14 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
     const session = event.data.object
     const userId = session.metadata?.userId
     if (userId && supabase) {
-      const { data: existing } = await supabase.from('profils').select('profil').eq('user_id', userId).single()
+      const { data: existing, error: erreurLecture } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+      // Lecture ratee : on repond en erreur pour que Stripe renvoie l'evenement
+      // plus tard. Ecrire quand meme remplacait tout le profil (prenom,
+      // reglages, memoire) par les seuls champs d'abonnement.
+      if (erreurLecture) {
+        console.error('[Webhook] lecture du profil impossible pour', userId, '-', erreurLecture.message)
+        return res.status(500).json({ error: 'profil illisible, reessayer' })
+      }
       const updatedProfil = {
         ...(existing?.profil || {}),
         isPro: true,
@@ -163,7 +200,6 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
   res.json({ received: true })
 })
 
-app.use(express.json())
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -173,40 +209,27 @@ app.use((req, res, next) => {
   next()
 })
 
+// Apres les en-tetes CORS : une erreur du parseur (corps trop gros, JSON
+// mal forme) doit repartir AVEC eux, sinon l'app native, qui appelle depuis
+// une autre origine, voit une erreur reseau au lieu du message.
+// Limite du corps JSON : 8 Mo au lieu des 100 Ko par defaut d'Express.
+// Une photo de repas (1024 px, JPEG 0,75, en base64) pese 130 a 300 Ko et un
+// message vocal 100 a 500 Ko : avec la limite par defaut, Express repondait
+// 413 en HTML avant meme d'entrer dans la route, l'app echouait sur res.json()
+// et affichait « verifie ta connexion ». La route d'analyse avait pourtant
+// son propre controle a 6 Mo, jamais atteint (constate le 8 octobre 2026).
+app.use(express.json({ limit: '8mb' }))
+
 app.get('/',           (req, res) => res.json({ status: 'Solenn OK' }))
 app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: Date.now() }))
 
-// Inscription
-app.post('/api/inscription', async (req, res) => {
-  const { email, password } = req.body
-  const { data, error } = await supabase.auth.signUp({ email, password })
-  if (error) return res.json({ erreur: error.message })
-  res.json({ user: data.user })
-})
-
-// Connexion
-app.post('/api/connexion', async (req, res) => {
-  const { email, password } = req.body
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-  if (error) return res.json({ erreur: error.message })
-  res.json({ user: data.user, session: data.session })
-})
-
-// Sauvegarder profil en base
-app.post('/api/sauvegarder-profil', ownerGuard, async (req, res) => {
-  const { user_id, profil } = req.body
-  const { error } = await supabase.from('profils').upsert({ user_id, profil }, { onConflict: 'user_id' })
-  if (error) return res.json({ erreur: error.message })
-  res.json({ succes: true })
-})
-
-// Charger profil depuis la base
-app.get('/api/charger-profil', ownerGuard, async (req, res) => {
-  const { user_id } = req.query
-  const { data, error } = await supabase.from('profils').select('profil').eq('user_id', user_id).single()
-  if (error) return res.json({ profil: null })
-  res.json({ profil: data.profil })
-})
+// RETIREES le 8 octobre 2026 : /api/inscription, /api/connexion,
+// /api/sauvegarder-profil et /api/charger-profil. Aucun ecran ne les appelait
+// plus (l'app parle a Supabase directement), mais elles restaient ouvertes
+// avec la cle service_role, qui passe outre toutes les regles RLS. En mode
+// observation, charger-profil rendait le profil de N'IMPORTE QUEL compte, donnees
+// de sante comprises, sur simple identifiant, et sauvegarder-profil pouvait
+// l'ecraser ou se donner le statut Pro. Voir git log pour l'ancien code.
 
 // Chat principal
 app.post('/api/chat', ownerGuard, async (req, res) => {
@@ -851,7 +874,7 @@ const TABLES_UTILISATEUR = [
   'profils',
 ]
 
-app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
+app.post('/api/supprimer-compte', exigerCompte, async (req, res) => {
   const userId = req.authUser?.id || req.body?.userId
   if (!userId) return res.status(400).json({ error: 'userId requis' })
   if (!supabase) return res.status(500).json({ error: 'base indisponible' })
@@ -873,20 +896,37 @@ app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
       await stripe.subscriptions.cancel(subId)
       console.log('[Suppression] Abonnement', subId, 'annule pour', userId)
     } else if (prof?.profil?.isPro === true && !subId) {
-      echecs.push('stripe: compte Pro sans identifiant d abonnement, resilier a la main')
-      console.error('[Suppression] ATTENTION', userId, 'etait Pro sans stripeSubscriptionId')
+      // Un Pro SANS abonnement Stripe est un Pro accorde a la main
+      // (proManuel : compte d'examen Google, comptes offerts). Il n'y a rien a
+      // resilier. L'ancien code le comptait comme un ECHEC : tout etait efface,
+      // le compte d'authentification compris, mais la route repondait 500 et
+      // l'app affichait « Le serveur n'a pas pu supprimer le compte ». C'est
+      // exactement ce qu'aurait vu l'examinateur Google en testant la
+      // suppression avec coolcouleur+review (constate le 8 octobre 2026).
+      console.warn('[Suppression]', userId, 'etait Pro sans stripeSubscriptionId',
+        prof?.profil?.proManuel ? '(Pro manuel, rien a resilier)' : '(a verifier dans Stripe)')
     }
   } catch (e) {
     echecs.push(`stripe: ${e.message}`)
     console.error('[Suppression] Annulation Stripe echouee pour', userId, '-', e.message)
   }
 
-  // NOTE, a traiter avec Jean : effacer integrations_sante retire NOTRE acces,
-  // ce qui satisfait l'article 17 — nous ne traitons plus rien. La revocation
-  // cote fournisseur, elle, demanderait d'appeler les points d'API de Withings,
-  // Oura et Garmin, que je n'ai pas verifies. Ecrire des appels approximatifs
-  // qui echouent en silence serait pire que de ne rien ecrire : ca donnerait
-  // l'illusion d'une revocation qui n'a pas lieu.
+  // ── Revocation chez Withings, AVANT d'effacer integrations_sante ────────
+  // Effacer nos jetons satisfait deja l'article 17. Jean a decide le
+  // 8 octobre 2026 d'aller plus loin pour Withings, seul fournisseur en OAuth
+  // (voir revoquerWithings). Un echec est journalise sans bloquer : le droit
+  // a l'effacement prime.
+  try {
+    const { data: integ } = await supabase.from('integrations_sante')
+      .select('refresh_token').eq('user_id', userId).eq('provider', 'withings').maybeSingle()
+    if (integ?.refresh_token) {
+      const r = await revoquerWithings(integ)
+      if (r.ok) console.log('[Suppression] acces Withings revoque pour', userId)
+      else console.warn('[Suppression] revocation Withings impossible pour', userId, '-', r.raison)
+    }
+  } catch (e) {
+    console.warn('[Suppression] revocation Withings :', e.message)
+  }
   for (const table of TABLES_UTILISATEUR) {
     try {
       const { error } = await supabase.from(table).delete().eq('user_id', userId)
@@ -902,7 +942,10 @@ app.post('/api/supprimer-compte', ownerGuard, async (req, res) => {
   // Le compte d'authentification en dernier.
   try {
     const { error } = await supabase.auth.admin.deleteUser(userId)
-    if (error) echecs.push(`auth: ${error.message}`)
+    // « User not found » veut dire que le compte n'existe deja plus, par
+    // exemple apres un premier essai interrompu : c'est le resultat voulu.
+    // Le compter comme un echec rendait toute nouvelle tentative impossible.
+    if (error && !/not.?found/i.test(error.message || '')) echecs.push(`auth: ${error.message}`)
   } catch (e) {
     echecs.push(`auth: ${e.message}`)
   }
@@ -1098,7 +1141,7 @@ app.post('/api/push-subscribe', ownerGuard, async (req, res) => {
 })
 
 // ── Supprimer subscription ────────────────────────────────────────────────────
-app.post('/api/push-unsubscribe', ownerGuard, async (req, res) => {
+app.post('/api/push-unsubscribe', exigerCompte, async (req, res) => {
   const { userId, endpoint } = req.body
   pushSubscriptions.delete(userId || endpoint)
   // Filet : si l'identifiant manque ou ne correspond a rien, on retire par
@@ -1247,7 +1290,7 @@ app.post('/api/push-native-subscribe', ownerGuard, async (req, res) => {
 })
 
 // POST /api/push-native-unsubscribe → retire le jeton de cet appareil
-app.post('/api/push-native-unsubscribe', ownerGuard, async (req, res) => {
+app.post('/api/push-native-unsubscribe', exigerCompte, async (req, res) => {
   const userId = req.authUser?.id || req.body?.userId
   const { token } = req.body || {}
   if (!supabase) return res.json({ ok: true })
@@ -1443,7 +1486,7 @@ app.get('/api/abonnement', ownerGuard, async (req, res) => {
 // POST /api/abonnement/annuler → resiliation A LA FIN DE LA PERIODE PAYEE.
 // Jamais immediate : l'annee est deja reglee, la couper prive l'abonne de ce
 // qu'il a paye et ouvrirait un droit a remboursement.
-app.post('/api/abonnement/annuler', ownerGuard, async (req, res) => {
+app.post('/api/abonnement/annuler', exigerCompte, async (req, res) => {
   const userId = req.body?.userId || req.authUser?.id
   if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
   try {
@@ -1460,7 +1503,7 @@ app.post('/api/abonnement/annuler', ownerGuard, async (req, res) => {
 
 // POST /api/abonnement/reprendre → on annule l'annulation, tant que la periode
 // payee court encore.
-app.post('/api/abonnement/reprendre', ownerGuard, async (req, res) => {
+app.post('/api/abonnement/reprendre', exigerCompte, async (req, res) => {
   const userId = req.body?.userId || req.authUser?.id
   if (!userId || !supabase) return res.status(400).json({ erreur: 'userId requis' })
   try {
@@ -1616,6 +1659,35 @@ app.get('/api/morning-message', ownerGuard, async (req, res) => {
 // La « nutrition intuitive » de la landing, pour de vrai : photo → analyse →
 // mémoire nutritionnelle (table repas) que le brief matinal et les insights
 // peuvent relire. Remplace la saisie manuelle, corvée n°1 du wellness.
+// ── Transcription vocale ─────────────────────────────────────────────────────
+// Cette route n'existait QUE comme fonction Vercel (api/transcribe.js). Or
+// l'app native envoie tous ses /api/ vers Render (src/api.js) : le micro y
+// recevait une page 404, et le catch vide le remettait au repos sans texte.
+// Reprise a l'identique ici, Render devient la seule source (8 octobre 2026).
+app.post('/api/transcribe', ownerGuard, async (req, res) => {
+  const { audio, mime } = req.body || {}
+  if (!audio || typeof audio !== 'string') return res.status(400).json({ error: 'audio manquant' })
+  try {
+    const buffer = Buffer.from(audio, 'base64')
+    if (!buffer.length) return res.status(400).json({ error: 'audio vide' })
+    // 4 Mo ≈ 8 minutes d'opus : bien au-dela d'un message vocal legitime.
+    if (buffer.length > 4 * 1024 * 1024) return res.status(413).json({ error: 'audio trop long' })
+    const ext = /mp4|m4a|aac/.test(mime || '') ? 'm4a' : /ogg/.test(mime || '') ? 'ogg' : 'webm'
+    const transcription = await groq.audio.transcriptions.create({
+      file: await toFile(buffer, `message.${ext}`),
+      model: 'whisper-large-v3-turbo',
+      response_format: 'json',
+      temperature: 0,
+    })
+    const texte = (transcription?.text || '').trim()
+    if (!texte) return res.json({ texte: '', vide: true })
+    res.json({ texte })
+  } catch (err) {
+    console.error('Transcription error:', err.message)
+    res.status(500).json({ error: 'transcription impossible' })
+  }
+})
+
 app.post('/api/analyser-repas', ownerGuard, async (req, res) => {
   const { userId, image, moment } = req.body
   if (!userId || !image) return res.status(400).json({ error: 'userId et image requis' })
@@ -1822,7 +1894,9 @@ app.get('/api/chat-history', ownerGuard, async (req, res) => {
       .from('solenn_chats')
       .select('session_date, messages, updated_at')
       .eq('user_id', userId)
-      .order('session_date', { ascending: false })
+      // session_date est du texte (« Mon Oct 06 2026 ») : trie par nom de
+      // jour. updated_at est une vraie date, voir ChatHistory.jsx.
+      .order('updated_at', { ascending: false })
       .limit(parseInt(limit))
     if (error) return res.status(500).json({ error: error.message })
     res.json({ sessions: data || [] })
@@ -1889,8 +1963,20 @@ app.post('/api/sync-now', ownerGuard, async (req, res) => {
 })
 
 // DELETE /api/disconnect?userId=...&provider=... — déconnecte une intégration
-app.delete('/api/disconnect', ownerGuard, async (req, res) => {
-  const { userId, provider } = req.query
+app.delete('/api/disconnect', exigerCompte, async (req, res) => {
+  const { provider } = req.query
+  const userId = req.authUser.id
+  // Meme regle qu'a la suppression du compte : chez Withings, on demande
+  // aussi l'invalidation des jetons, sinon « deconnecter » ne deconnecte que
+  // de notre cote. Lu AVANT d'effacer le refresh_token qui sert a revoquer.
+  if (provider === 'withings') {
+    const { data: integ } = await supabase.from('integrations_sante')
+      .select('refresh_token').eq('user_id', userId).eq('provider', 'withings').maybeSingle()
+    if (integ?.refresh_token) {
+      const r = await revoquerWithings(integ)
+      if (!r.ok) console.warn('[Disconnect] revocation Withings impossible pour', userId, '-', r.raison)
+    }
+  }
   await supabase.from('integrations_sante')
     .update({ actif: false, access_token: null, refresh_token: null })
     .eq('user_id', userId).eq('provider', provider)
@@ -2138,6 +2224,29 @@ app.get('/api/memoire', ownerGuard, async (req, res) => {
   }
 })
 
+// POST /api/memoire/reinitialiser : « Reinitialiser memoire IA » dans les
+// Parametres. Le bouton ne vidait que la copie locale (vitacoach_memories),
+// alors que la page publique /suppression-compte promet que « Solenn oublie
+// alors tout ce qu'elle avait retenu de toi ». La memoire longue et les
+// moments importants, ranges en base par les agents, survivaient et
+// revenaient dans les reponses (constate le 8 octobre 2026). Ecrits par le
+// serveur, ils ne peuvent etre effaces que par lui.
+app.post('/api/memoire/reinitialiser', exigerCompte, async (req, res) => {
+  const userId = req.authUser.id
+  if (!supabase) return res.status(500).json({ error: 'base indisponible' })
+  const { data, error: e1 } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+  if (e1) return res.status(500).json({ error: e1.message })
+  if (!data?.profil) return res.json({ ok: true })
+  const { memoire_longue, moments_importants, ...reste } = data.profil
+  // La date de l'oubli : les agents de memoire et de moments ignorent
+  // desormais toute conversation ouverte avant elle. Sans cela, la memoire se
+  // reconstruisait le dimanche suivant a partir des memes conversations.
+  reste.memoire_reinitialisee_le = new Date().toISOString()
+  const { error: e2 } = await supabase.from('profils').update({ profil: reste }).eq('user_id', userId)
+  if (e2) return res.status(500).json({ error: e2.message })
+  res.json({ ok: true })
+})
+
 // ─── Rapport Hebdo ────────────────────────────────────────────────────────────
 // GET  /api/rapport-hebdo?userId=... → cache mémoire → Supabase → vide
 // POST /api/rapport-hebdo            → génère un rapport immédiatement
@@ -2251,15 +2360,20 @@ app.post('/api/challenge-create', ownerGuard, async (req, res) => {
 })
 
 app.post('/api/challenge-progress', ownerGuard, async (req, res) => {
-  const { userId, jour, complete } = req.body
+  const { userId, jour, complete, challengeId } = req.body
   if (!userId || jour == null) return res.status(400).json({ error: 'userId et jour requis' })
   try {
-    const { data } = await supabase
-      .from('challenges')
-      .select('id, progression')
-      .eq('user_id', userId)
-      .eq('actif', true)
-      .single()
+    // On vise LE programme coche, par son identifiant. L'ancien `.single()`
+    // sur « le » programme actif echouait des que deux tournaient en
+    // parallele (sport et nutrition, permis depuis le 3 septembre) : Supabase
+    // refuse .single() sur deux lignes, la route repondait 404 « Aucun
+    // challenge actif » et la case cochee disparaissait au rechargement.
+    // Sans identifiant (ancienne version de l'app), repli sur le plus recent.
+    let q = supabase.from('challenges').select('id, progression')
+      .eq('user_id', userId).eq('actif', true)
+    q = challengeId ? q.eq('id', challengeId) : q.order('created_at', { ascending: false }).limit(1)
+    const { data: lignes } = await q
+    const data = lignes?.[0]
     if (!data) return res.status(404).json({ error: 'Aucun challenge actif' })
 
     const progression = [...(data.progression || [])]
@@ -2384,11 +2498,14 @@ app.post('/api/demo-request', async (req, res) => {
   console.log(`[B2B Demo] ${nom} — ${entreprise} (${taille}) — ${email}`)
   // Sauvegarder dans Supabase si disponible
   if (supabase) {
-    await supabase.from('demo_requests').upsert({
+    // Une requete Supabase n'a PAS de `.catch` : l'ancien `.catch(...)` levait
+    // une TypeError qui arretait tout le serveur a chaque demande de demo.
+    const { error } = await supabase.from('demo_requests').upsert({
       nom, email, entreprise, taille,
       created_at: new Date().toISOString(),
       statut: 'nouveau'
-    }).catch(e => console.warn('[B2B Demo] Supabase insert failed (table may not exist yet):', e.message))
+    })
+    if (error) console.warn('[B2B Demo] Supabase insert failed (table may not exist yet):', error.message)
   }
   // Email de notification interne (vers contact@meet-solenn.com)
   // On utilise un simple log formaté pour l'instant + future intégration Resend/SendGrid
@@ -2498,6 +2615,17 @@ if (!process.env.VERCEL) {
     console.log('📡 Mode API pure — pas de dist/ → toutes les routes /api/ actives')
   }
 }
+
+// Gestionnaire d'erreur unique, en DERNIER : il recoit les rejets que le
+// rattrapage pose en tete de fichier transmet. Toujours du JSON, parce que
+// l'app fait `res.json()` sur toutes ses reponses : une page d'erreur HTML
+// d'Express faisait echouer ce parsing et masquait la vraie cause.
+app.use((err, req, res, next) => {
+  const statut = err?.status || err?.statusCode || 500
+  console.error(`[Serveur] ${req.method} ${req.originalUrl} :`, err?.message || err)
+  if (res.headersSent) return next(err)
+  res.status(statut).json({ error: statut === 413 ? 'Contenu trop volumineux' : statut < 500 ? 'Requete invalide' : 'Erreur serveur' })
+})
 
 // Export pour Vercel serverless
 export default app

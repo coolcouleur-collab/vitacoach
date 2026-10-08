@@ -179,7 +179,16 @@ export async function enregistrerSeance(userId, seance) {
     const m = await import('./supabase')
     const { data, error: erreurLecture } = await m.supabase
       .from('profils').select('profil').eq('user_id', userId).single()
-    if (erreurLecture) console.warn('[seances] lecture du profil :', erreurLecture.message)
+    // Une lecture ratee (reseau qui flanche apres une course, delai depasse)
+    // laissait `profil` a {} : on ecrivait alors { seances } comme profil
+    // ENTIER, ce qui effacait en base le prenom, le statut Pro, l'identifiant
+    // d'abonnement Stripe et la memoire de Solenn (constate le 8 octobre
+    // 2026). On n'ecrit donc que si la lecture a abouti. PGRST116 veut dire
+    // « aucune ligne » : un compte sans profil en base, on peut creer.
+    if (erreurLecture && erreurLecture.code !== 'PGRST116') {
+      console.warn('[seances] lecture du profil :', erreurLecture.message)
+      return vide
+    }
 
     const profil = data?.profil || {}
     const { liste, ajoutee, motif } = ajouterSeance(lireSeances(profil), seance)

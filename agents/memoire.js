@@ -31,16 +31,22 @@ function getSupabase() {
 }
 
 // ─── Analyse mémoire d'un utilisateur ────────────────────────────────────────
-async function analyserMemoireUser(userId) {
+async function analyserMemoireUser(userId, oublieLe = null) {
   const supabase = getSupabase()
   const groq = getGroq()
 
-  // Récupérer les 10 dernières sessions
-  const { data: sessions } = await supabase
+  // Les 10 dernieres sessions. Triees sur updated_at, une vraie date :
+  // session_date est du TEXTE (« Thu Oct 08 2026 ») et se triait par nom de
+  // jour. Apres une « Reinitialisation memoire IA », seules les sessions
+  // OUVERTES APRES comptent, sinon la memoire se reconstruisait le dimanche
+  // suivant a partir des memes conversations (8 octobre 2026).
+  let q = supabase
     .from('solenn_chats')
     .select('messages, session_date')
     .eq('user_id', userId)
-    .order('session_date', { ascending: false })
+  if (oublieLe) q = q.gt('created_at', oublieLe)
+  const { data: sessions } = await q
+    .order('updated_at', { ascending: false })
     .limit(10)
 
   if (!sessions?.length) return null
@@ -103,11 +109,14 @@ export async function runMemoireLongue() {
   const supabase = getSupabase()
 
   // Récupérer tous les users ayant chatté ces 14 derniers jours
-  const dateLimite = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // Sur updated_at : comparer session_date (« Thu Oct 08 2026 ») a
+  // « 2026-09-24 » est une comparaison de textes, toujours vraie, qui
+  // ramenait tous les comptes ayant jamais parle a Solenn.
+  const dateLimite = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
   const { data: rows } = await supabase
     .from('solenn_chats')
     .select('user_id')
-    .gte('session_date', dateLimite)
+    .gte('updated_at', dateLimite)
 
   if (!rows?.length) {
     console.log('[MemoireLongue] Aucun utilisateur actif')
@@ -120,24 +129,30 @@ export async function runMemoireLongue() {
 
   for (const userId of userIds) {
     try {
-      const memoire = await analyserMemoireUser(userId)
-      if (!memoire) continue
-
-      // Upsert dans profils.memoire_longue
-      const { data: profilExist } = await supabase
+      // Le profil est lu AVANT, et on ne continue que s'il a ete lu. Une
+      // lecture ratee donnait {} et l'upsert ecrivait { memoire_longue }
+      // comme profil ENTIER : prenom, statut Pro et abonnement effaces, avec
+      // la cle service_role qui passe outre toute protection (8 octobre 2026).
+      const { data: profilExist, error: erreurLecture } = await supabase
         .from('profils')
         .select('profil')
         .eq('user_id', userId)
-        .single()
+        .maybeSingle()
+      if (erreurLecture || !profilExist?.profil) continue
+      const profilActuel = profilExist.profil
 
-      const profilActuel = profilExist?.profil || {}
+      const memoire = await analyserMemoireUser(userId, profilActuel.memoire_reinitialisee_le || null)
+      if (!memoire) continue
 
+      // Relu juste avant d'ecrire : l'analyse prend plusieurs secondes, et
+      // reecrire la copie lue avant aurait efface ce que l'app a change entre-temps.
+      const { data: frais, error: e2 } = await supabase
+        .from('profils').select('profil').eq('user_id', userId).maybeSingle()
+      if (e2 || !frais?.profil) continue
       await supabase
         .from('profils')
-        .upsert({
-          user_id: userId,
-          profil: { ...profilActuel, memoire_longue: memoire }
-        }, { onConflict: 'user_id' })
+        .update({ profil: { ...frais.profil, memoire_longue: memoire } })
+        .eq('user_id', userId)
 
       traites++
       console.log(`[MemoireLongue] ✅ User ${userId.slice(0, 8)}... — ${memoire.themes_recurrents?.length || 0} thèmes`)

@@ -2228,7 +2228,7 @@ function DefiDuJour({ userId, isNight, onOuvrir }) {
       await fetch(`/api/challenge-progress`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await m.authHeaders()) },
-        body: JSON.stringify({ userId, jour: jour - 1, complete: true }),
+        body: JSON.stringify({ userId, challengeId: challenge.id, jour: jour - 1, complete: true }),
       })
     } catch {}
     setEnvoi(false)

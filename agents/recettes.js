@@ -492,17 +492,22 @@ Format JSON :
   // Garde en cache dans le profil : ces idees valent pour la journee, et les
   // regenerer a chaque ouverture de l'onglet coute un appel pour rien.
   try {
+    // Relu juste avant d'ecrire, et seulement si la lecture aboutit : la copie
+    // du debut a plusieurs secondes (generation), et une lecture ratee la
+    // laissait a {}, ce qui remplacait tout le profil par { recettes_cache }
+    // avec la cle service_role (8 octobre 2026).
+    const { data: frais, error: erreurLecture } = await supabase
+      .from('profils').select('profil').eq('user_id', userId).maybeSingle()
+    if (erreurLecture || !frais?.profil) throw new Error('profil illisible, cache non ecrit')
     const maj = {
-      ...profil,
+      ...frais.profil,
       recettes_cache: {
         date: new Date().toISOString().split('T')[0],
         moment,
         liste: recettes,
       },
     }
-    await supabase.from('profils').upsert(
-      { user_id: userId, profil: maj }, { onConflict: 'user_id' },
-    )
+    await supabase.from('profils').update({ profil: maj }).eq('user_id', userId)
   } catch (e) {
     // Le cache est un confort. Son echec ne doit pas priver des recettes.
   }

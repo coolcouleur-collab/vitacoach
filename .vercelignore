@@ -1,0 +1,18 @@
+# Le dossier api/ ne doit PAS partir chez Vercel (8 octobre 2026).
+#
+# Vercel sert ses propres fonctions AVANT d'appliquer les reecritures de
+# vercel.json. Chaque fichier de api/ devenait donc une fonction Vercel qui
+# court-circuitait Render sur le site : constate en ligne, /api/chat,
+# /api/transcribe et /api/tenues repondaient depuis Vercel (region iad1, aux
+# Etats-Unis), /api/supprimer-compte depuis Render.
+#
+# Consequence : sur meet-solenn.com, le chat tournait avec une vieille copie du
+# prompt, sans la RÈGLE PLANTES du 7 septembre, pendant que l'app native
+# utilisait celui de Render. Deux Solenn differentes selon l'appareil.
+#
+# server.js (Render) a toutes ces routes, transcribe compris depuis le
+# 8 octobre. En excluant api/, tout /api/ du site passe par la reecriture vers
+# Render : une seule source, la meme que l'app native.
+# server.js importe api/_auth.js et api/_quota.js : ils restent dans le depot,
+# Render en a besoin. Seul l'envoi chez Vercel est concerne.
+api

@@ -367,6 +367,15 @@ function ReactionBtn({ emoji, icon, active, onClick }) {
 }
 
 // ─── MÉTRIQUES UTILS ─────────────────────────────────────────────────────────
+// La date du jour TELLE QUE LA VIT LA PERSONNE, au format de la colonne
+// user_metrics.date. `toISOString()` donne la date UTC : entre minuit et 2 h
+// a Paris, l'app lisait la ligne de la veille comme celle du jour, et une
+// mise a jour faite dans ce creneau ecrasait les valeurs d'hier (150 pas a la
+// place de 9 000). Les agents du serveur ecrivent deja en date locale.
+function dateDuJour(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 const defaultMetriques = () => {
   const today = new Date().toDateString()
   try {
@@ -383,7 +392,7 @@ function sauverMetriques(m) {
 async function syncMetriquesSupabase(userId, m) {
   if (!userId) return
   const supabase = await getSupabase()
-  const today = new Date().toISOString().split('T')[0]
+  const today = dateDuJour()
   await supabase.from('user_metrics').upsert({
     user_id: userId, date: today,
     pas: m.pas||0, sommeil: m.sommeil||0, eau: m.eau||0,
@@ -454,6 +463,26 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
   const [open, setOpen] = React.useState(true)
   const ref = React.useRef(null)
   const active = items.find(i => i.id === onglet) || items[0]
+
+  // GRANDE TAILLE DE TEXTE. Sur Android, la WebView applique la taille de
+  // police du systeme a tout le texte, px compris. Mesure le 8 octobre 2026 :
+  // les quatre onglets tiennent a 130 %, mais debordent a 150 % sur un ecran
+  // de 360 px et a 200 % partout, « Programmes » sortant de la pastille.
+  // Quand les libelles ne tiennent plus, la barre passe en icones seules
+  // (chaque bouton garde son nom pour les lecteurs d'ecran). On mesure avec
+  // les libelles affiches, puis on remesure a chaque changement de taille.
+  const rangee = React.useRef(null)
+  const [compacte, setCompacte] = React.useState(false)
+  React.useLayoutEffect(() => {
+    if (compacte) return
+    const el = rangee.current
+    if (el && el.scrollWidth > el.clientWidth + 1) setCompacte(true)
+  })
+  React.useEffect(() => {
+    const remesurer = () => setCompacte(false)
+    window.addEventListener('resize', remesurer)
+    return () => window.removeEventListener('resize', remesurer)
+  }, [])
 
   // Écart entre l'écran réel et le viewport de mise en page. Mesuré chez Jean
   // le 2026-08-08 : 956 px d'écran pour 894 px de viewport, soit 62 px que les
@@ -582,7 +611,7 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
 
         {/* ── Ouvert ── */}
         {open && (
-          <motion.div key="open"
+          <motion.div key="open" ref={rangee}
             initial={{ opacity:0 }}
             animate={{ opacity:1, transition:{ duration:0.18, ease:'easeOut' } }}
             exit={{ opacity:0, transition:{ duration:0.1 } }}
@@ -595,18 +624,20 @@ function DynamicNav({ onglet, setOnglet, forumUnread, F, preset = 'day', items =
                   initial={{ opacity:0, filter:'blur(10px)' }}
                   animate={{ opacity:1, filter:'blur(0px)', transition:{ delay: 0.06 + i * 0.04, duration:0.22, ease:[0.22,1,0.36,1] } }}
                   onClick={() => { triggerHaptic('light'); setOnglet(item.id) }}
+                  aria-label={item.label}
+                  aria-current={isActive ? 'page' : undefined}
                   style={{
                     background: isActive ? activeBg : 'transparent',
                     border:'none', cursor:'pointer', borderRadius:14,
-                    padding:'6px 10px', fontFamily:F,
+                    padding: compacte ? '9px 14px' : '6px 10px', fontFamily:F,
                     display:'flex', flexDirection:'column', alignItems:'center', gap:3,
                     position:'relative',
                   }}
                 >
-                  <item.Icon color={isActive ? txtHigh : txtDim} size={17} />
-                  <span style={{ fontSize:9.5, fontWeight: isActive ? 700 : 500, letterSpacing:'0.2px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
+                  <item.Icon color={isActive ? txtHigh : txtDim} size={compacte ? 20 : 17} />
+                  {!compacte && <span aria-hidden="true" style={{ fontSize:9.5, fontWeight: isActive ? 700 : 500, letterSpacing:'0.2px', color: isActive ? txtHigh : txtDim, whiteSpace:'nowrap' }}>
                     {item.label}
-                  </span>
+                  </span>}
                   {item.id === 'forum' && forumUnread > 0 && (
                     <span style={{ position:'absolute', top:4, right:8, background:'#ef4444', color:'#fff', fontSize:8, fontWeight:800, borderRadius:20, minWidth:13, height:13, lineHeight:'13px', display:'flex', alignItems:'center', justifyContent:'center', padding:'0 2px' }}>
                       {forumUnread > 9 ? '9+' : forumUnread}
@@ -719,11 +750,16 @@ function getOceanPreset(hour) {
 // oubliee ici fuit vers le compte suivant, une nouvelle cle oubliee dans
 // l'autre sens se contente d'etre reconstruite.
 const CLES_APPAREIL = new Set([
-  'solenn_essai',           // debut d'essai : l'effacer rendrait l'essai infini
   'solenn_lang',            // langue de l'interface
   'solenn_preset_manuel',   // theme choisi a la main (jour / nuit)
-  'solenn_diagnostics',     // interrupteur de debogage
   'vitacoach_health_perm',  // miroir d'une autorisation systeme
+  // RETIRES le 8 octobre 2026 : 'solenn_essai' et 'solenn_diagnostics'. Leurs
+  // commentaires disaient « debut d'essai » et « interrupteur de debogage »,
+  // mais HomeTab y range l'essai de sept jours de la personne, avec sa
+  // MOYENNE de sommeil ou de pas d'avant, et le journal de ce que Solenn lui a
+  // deja dit. Gardes a la deconnexion, ils passaient au compte suivant :
+  // « ton sommeil est passe de [moyenne de A] a [moyenne de B] ». L'essai
+  // gratuit, lui, se compte sur la date de creation du compte, cote serveur.
   'vitacoach_ref',          // source d'acquisition, portee par l'appareil
   // Ne JAMAIS ajouter ici 'vitacoach_pro' ni 'vitacoach_stripe_session' :
   // l'abonnement appartient au compte, pas a l'appareil. Quand ils survivaient
@@ -923,12 +959,32 @@ const [messages, setMessages] = useState(() => {
   const [notifEnabled, setNotifEnabled] = useState(() => safeParse('vitacoach_notif', false))
 
   // ── Morning check-in ────────────────────────────────────────────────────────
-  const [showCheckin, setShowCheckin] = useState(() => {
+  const checkinAttendu = () => {
     const hr = new Date().getHours()
     const lastCheckin = localStorage.getItem('vitacoach_checkin_date')
     const todayStr = new Date().toDateString()
     return hr >= 6 && hr < 11 && lastCheckin !== todayStr
-  })
+  }
+  const [showCheckin, setShowCheckin] = useState(checkinAttendu)
+
+  // LE CHANGEMENT DE JOUR, app restee ouverte. Sur un telephone, l'app vit
+  // en arriere-plan pendant la nuit : les metriques en memoire restaient
+  // celles d'hier, et le premier geste du matin enregistrait le sommeil,
+  // l'eau et l'humeur d'hier comme ceux d'aujourd'hui (score gonfle). Le
+  // check-in du matin, calcule une seule fois au montage, ne s'affichait
+  // jamais. On reverifie au retour au premier plan et chaque minute.
+  useEffect(() => {
+    const verifier = () => {
+      const auj = new Date().toDateString()
+      setMetriques(m => (m?.date === auj ? m : defaultMetriques()))
+      if (checkinAttendu()) setShowCheckin(true)
+    }
+    const auRetour = () => { if (document.visibilityState === 'visible') verifier() }
+    document.addEventListener('visibilitychange', auRetour)
+    const t = setInterval(verifier, 60000)
+    return () => { document.removeEventListener('visibilitychange', auRetour); clearInterval(t) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // `useState('day')` etait le second point ou l'ambiance se dedoublait.
   //
   // homePreset est REMONTE par HomeTab, qui ne se monte que sur l'accueil.
@@ -1275,7 +1331,7 @@ const [messages, setMessages] = useState(() => {
   // ── Sync Supabase → local à la connexion ──────────────────────────────────
   useEffect(() => {
     if (!user?.id) return
-    const today = new Date().toISOString().split('T')[0]
+    const today = dateDuJour()
 
     getSupabase().then(supabase => {
       // Charger le profil depuis Supabase. ATTENTION AU SENS DU FLUX : la base
@@ -2212,8 +2268,17 @@ const [messages, setMessages] = useState(() => {
               setShowSettings(false)
             }}
             onToggleNotifs={() => notifEnabled ? desactiverNotifications() : activerNotifications()}
-            onResetMemoire={() => {
+            onResetMemoire={async () => {
               localStorage.removeItem('vitacoach_memories')
+              // La memoire rangee en base par le serveur aussi : c'est ce que
+              // promet la page publique de suppression.
+              try {
+                await fetch('/api/memoire/reinitialiser', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+                  body: JSON.stringify({ userId: user?.id }),
+                })
+              } catch {}
               setShowSettings(false)
             }}
             onExportData={() => {
@@ -4392,7 +4457,7 @@ const ChatInputBar = React.memo(function ChatInputBar({ onSend, onSendImage, dis
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
-          placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Pose une question à Solenn...'}
+          placeholder={micState === 'rec' ? "Je t'écoute…" : micState === 'trans' ? 'Je transcris…' : 'Écris à Solenn…'}
           disabled={disabled} />
         <button style={s.sendBtn} onClick={() => { triggerHaptic('light'); send() }}>
           <SendIcon color={ICONE} size={20} />

@@ -14,7 +14,12 @@ import { createClient } from '@supabase/supabase-js'
 
 let _client = null
 function client() {
-  if (!_client) _client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY)
+  // Repli sur la cle service_role : Render n'a peut-etre pas SUPABASE_ANON_KEY
+  // (SECURITE.md ne la demandait que sur Vercel). Le mode observation masquait
+  // ce manque ; avec les routes strictes, il aurait refuse toute suppression.
+  // auth.getUser(jeton) verifie le jeton de la personne, quelle que soit la cle.
+  if (!_client) _client = createClient(process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)
   return _client
 }
 
@@ -61,6 +66,28 @@ export function ownerGuard(req, res, next) {
     if (ENFORCE) res.status(500).json({ erreur: 'Erreur auth' })
     else next()
   })
+}
+
+/**
+ * Garde STRICTE, quel que soit REQUIRE_AUTH, pour les routes qui detruisent
+ * ou resilient : suppression du compte, resiliation, deconnexion d'une montre,
+ * desabonnement des notifications.
+ *
+ * Le mode observation laissait passer `{ userId }` sans jeton : un simple POST
+ * avec l'identifiant d'une autre personne effacait son compte, ses 22 tables
+ * et resiliait son abonnement Stripe. SECURITE.md decrivait le risque du mode
+ * observation comme de la LECTURE ; ici c'etait de la destruction (constate le
+ * 8 octobre 2026). L'app envoie deja son jeton sur ces six routes, rien ne
+ * change pour elle.
+ */
+export function exigerCompte(req, res, next) {
+  const claimed = req.query?.userId || req.body?.userId || req.query?.user_id || req.body?.user_id || null
+  getAuthUser(req).then(user => {
+    if (!user) return res.status(401).json({ erreur: 'Non authentifié' })
+    if (claimed && String(claimed) !== String(user.id)) return res.status(403).json({ erreur: 'Accès refusé' })
+    req.authUser = user
+    next()
+  }).catch(() => res.status(500).json({ erreur: 'Erreur auth' }))
 }
 
 /** Garde admin pour les endpoints sensibles (broadcast, triggers) :

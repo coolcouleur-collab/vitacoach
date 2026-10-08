@@ -1,5 +1,108 @@
 # En attente, Solenn
 
+## 8 OCTOBRE 2026 : audit complet, bugs et design
+
+Audit fait sur le code et sur des captures de tous les ecrans (jour et nuit,
+compte de demonstration simule, 360 et 390 px, texte de 100 a 200 %). Le
+bundle Android du 21 septembre est ANTERIEUR a ces corrections : il faut le
+refaire avant de le deposer (versionCode 4).
+
+### Ce que Jean seule peut faire, dans cet ordre
+
+1. **Pousser ce commit** depuis GitHub Desktop. Render et Vercel se
+   redeploient seuls.
+2. **Verifier sur Render** que `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_URL`
+   sont bien presentes (Environment). Les routes de suppression et de
+   resiliation exigent desormais un jeton verifie, quel que soit REQUIRE_AUTH.
+3. **Executer `db/proteger-abonnement.sql`** dans Supabase (SQL Editor, coller,
+   Run). Il ne modifie aucune donnee, il pose la regle qui empeche l'app
+   d'ecrire `isPro`. La derniere ligne doit renvoyer une ligne.
+4. **Tester une fois sur le site** : le chat, le micro, une photo de repas,
+   et la suppression du compte de demonstration (pas de coolcouleur+review).
+5. **Refaire le bundle Android** (`npm run cap:android`), puis le deposer.
+
+### Les defauts graves, corriges
+
+- **Le serveur Render tombait en entier** sur une seule erreur non prevue :
+  Express 4 ne rattrape pas le rejet d'un handler async, et Node 22 arrete
+  le processus. Une demande de demo B2B suffisait (`.catch` sur une requete
+  Supabase qui n'en a pas). Rattrapage general pose en tete de server.js,
+  gestionnaire d'erreur JSON unique en fin de fichier.
+- **N'importe qui pouvait supprimer le compte d'un autre** avec son seul
+  identifiant : en mode observation, `ownerGuard` laissait passer `{userId}`
+  sans jeton. Nouvelle garde stricte `exigerCompte` (api/_auth.js) sur six
+  routes : supprimer-compte, abonnement/annuler et reprendre, disconnect,
+  push-unsubscribe et push-native-unsubscribe.
+- **Quatre routes anciennes retirees** (inscription, connexion,
+  sauvegarder-profil, charger-profil) : plus appelees, mais ouvertes avec la
+  cle service_role. charger-profil rendait le profil de n'importe qui.
+- **N'importe qui pouvait se donner le statut Pro** en reecrivant son profil
+  avec la cle publique. Corrige par le declencheur SQL ci-dessus (a executer).
+- **Sur le site, le chat tournait avec une vieille copie de Solenn** : Vercel
+  sert les fichiers de `api/` AVANT d'appliquer la reecriture vers Render.
+  Verifie en ligne : /api/chat, /api/transcribe et /api/tenues repondaient
+  depuis Vercel (iad1), sans la RÈGLE PLANTES du 7 septembre. `.vercelignore`
+  exclut maintenant `api/` : tout passe par Render, comme l'app native.
+  Contrepartie connue : le premier message du site subit le demarrage a froid
+  de Render, comme dans l'app.
+- **La suppression de compte repondait « echec »** pour un Pro manuel, donc
+  pour le compte d'examen Google, alors que tout etait efface. Corrige, et un
+  « User not found » au second essai n'est plus un echec.
+- **Plusieurs agents pouvaient effacer un profil entier** : une lecture ratee
+  donnait `{}`, puis l'ecriture remplacait tout le profil (seances.js,
+  memoire.js, moments.js, nutritionnel.js, recettes.js, webhook Stripe). Ils
+  relisent maintenant juste avant d'ecrire et n'ecrivent rien sans lecture.
+
+### Les defauts fonctionnels, corriges
+
+- Le micro etait muet dans l'app native : /api/transcribe n'existait que chez
+  Vercel. Route ajoutee a server.js.
+- Les photos de repas etaient refusees : limite JSON d'Express a 100 Ko.
+  Passee a 8 Mo, et les erreurs du parseur repartent avec les en-tetes CORS.
+- Valider un jour de programme echouait des que sport et nutrition tournaient
+  ensemble (`.single()` sur deux lignes). L'app envoie maintenant l'id.
+- Entre minuit et 2 h, les metriques lisaient et ecrasaient la ligne de la
+  veille (date UTC). Date locale partout, et remise a zero au changement de
+  jour quand l'app est restee ouverte la nuit.
+- `solenn_essai` et `solenn_diagnostics` survivaient a la deconnexion : le
+  compte suivant voyait la moyenne de sommeil du precedent.
+- L'historique des conversations se triait par nom de jour (session_date est
+  du texte). Les agents de memoire et de moments, eux, ramenaient TOUTES les
+  conversations de tous les comptes a chaque passage, pour la meme raison.
+- « Reinitialiser memoire IA » ne vidait que l'appareil. Il vide maintenant
+  la memoire en base et pose `memoire_reinitialisee_le`, que les agents
+  respectent : la page publique de suppression dit enfin vrai.
+
+### Design, corrige
+
+- La barre du bas tient a 130 % depuis qu'elle n'a plus que quatre onglets.
+  Au-dela (150 % sur 360 px, 200 % partout), elle passe en icones seules.
+- « Pose une question a Solenn... » etait coupe : « Ecris a Solenn… ».
+- Les reponses perdaient l'espace avant « ! ? ; : » (« Salut Camille! »).
+- Un « ? » seul sur sa ligne dans Cycle.
+
+### Decisions de Jean, 8 octobre 2026
+
+- **Withings** : revocation chez le fournisseur a la suppression du compte et
+  a la deconnexion (`revoquerWithings`, API verifiee dans la reference
+  officielle). Oura et Garmin : rien a faire.
+- **Chaise au mur** : photo retiree, l'animation prend le relais.
+- **Forum** : garde desactive, a reprendre en v2 avec moderation.
+- **43 `transition:'all'`** : apres le lancement.
+
+### A verifier une fois, cote Stripe
+
+Un ancien defaut de seances.js pouvait reduire un profil a `{ seances }`.
+Si un abonne payant a ete touche, son profil n'a plus `stripeSubscriptionId`
+et une suppression de compte ne pourrait plus resilier. Dans Stripe, verifier
+que chaque abonnement actif correspond a un compte Pro dans Supabase.
+
+### Toujours en attente, sans changement
+
+La cle Pexels sur Render (point 9 plus bas), les recettes a relier au
+programme alimentaire (v2), la question Render payant, les captures et la
+video Play Console, les deux prealables Apple.
+
 ## 21 SEPTEMBRE 2026 : le paquet Android est pret
 
 **Un piege evite de justesse, a connaitre.** `VITE_API_URL` manquait du `.env`

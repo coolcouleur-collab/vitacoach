@@ -172,6 +172,60 @@ export async function refreshWithingsToken(userId, integration) {
   return null
 }
 
+// ─── WITHINGS : revoquer l'acces chez Withings ───────────────────────────────
+// Decide par Jean le 8 octobre 2026 : a la suppression du compte (et a la
+// deconnexion), on ne se contente plus d'effacer NOS jetons, on demande a
+// Withings de les invalider. Oura passe par un jeton personnel que seule la
+// personne peut revoquer depuis son compte Oura, et Garmin n'est pas actif en
+// production : Withings est le seul fournisseur concerne.
+//
+// Points d'API verifies le 8 octobre 2026 dans la reference officielle
+// (developer.withings.com/api-reference, « OAuth 2.0 - Revoke user access »
+// et « Signature v2 - Getnonce ») :
+//   1. POST /v2/signature  action=getnonce, client_id, timestamp,
+//      signature = HMAC-SHA256(secret, "getnonce,<client_id>,<timestamp>")
+//   2. POST /v2/oauth2     action=revoke, client_id, nonce, userid,
+//      signature = HMAC-SHA256(secret, "revoke,<client_id>,<nonce>")
+//      (valeurs de action, client_id, nonce, triees par nom de cle)
+// L'identifiant Withings de la personne n'est pas conserve en base : on le
+// recupere en rafraichissant le jeton, la reponse de requesttoken le porte.
+//
+// Ne leve jamais : renvoie { ok, raison }. L'appelant journalise, et un echec
+// ne bloque ni la suppression du compte ni la deconnexion.
+export async function revoquerWithings(integration) {
+  const clientId = process.env.WITHINGS_CLIENT_ID
+  const secret   = process.env.WITHINGS_CLIENT_SECRET
+  if (!clientId || !secret) return { ok: false, raison: 'Withings non configure' }
+  if (!integration?.refresh_token) return { ok: false, raison: 'aucun jeton a revoquer' }
+  const signer = valeurs => crypto.createHmac('sha256', secret).update(valeurs.join(',')).digest('hex')
+  const form = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 10000 }
+  try {
+    const { data: jeton } = await axios.post('https://wbsapi.withings.net/v2/oauth2', new URLSearchParams({
+      action: 'requesttoken', client_id: clientId, client_secret: secret,
+      grant_type: 'refresh_token', refresh_token: integration.refresh_token,
+    }), form)
+    const userid = jeton?.body?.userid
+    if (!userid) return { ok: false, raison: `identifiant Withings introuvable (statut ${jeton?.status})` }
+
+    const timestamp = Math.floor(Date.now() / 1000)
+    const { data: n } = await axios.post('https://wbsapi.withings.net/v2/signature', new URLSearchParams({
+      action: 'getnonce', client_id: clientId, timestamp: String(timestamp),
+      signature: signer(['getnonce', clientId, timestamp]),
+    }), form)
+    const nonce = n?.body?.nonce
+    if (!nonce) return { ok: false, raison: `nonce refuse (statut ${n?.status})` }
+
+    const { data: r } = await axios.post('https://wbsapi.withings.net/v2/oauth2', new URLSearchParams({
+      action: 'revoke', client_id: clientId, nonce, userid: String(userid),
+      signature: signer(['revoke', clientId, nonce]),
+    }), form)
+    if (r?.status !== 0) return { ok: false, raison: `revocation refusee (statut ${r?.status})` }
+    return { ok: true }
+  } catch (e) {
+    return { ok: false, raison: e.message }
+  }
+}
+
 // ─── OURA RING ────────────────────────────────────────────────────────────────
 // Docs : https://cloud.ouraring.com/docs/
 // Auth : Personal Access Token (pas d'OAuth nécessaire)

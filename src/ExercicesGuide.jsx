@@ -312,7 +312,10 @@ export const PHOTOS_EXOS = {
   // exactement le piege que la note d'aout signalait.
   fente:     { url: P(8770407), pos: '50%' },
   pont:      { url: P(4534643), pos: '70%' },
-  chaise:    { url: P(6740054), pos: '50%' },
+  // `chaise` retire le 8 octobre 2026, decision de Jean : la photo 6740054
+  // montrait un ballon leste alors que le programme annonce « sans
+  // materiel ». Meme regle que pour les pompes sur genoux : l'exercice
+  // retombe sur son animation (AnimChaise), qui montre le bon geste.
   chatvache: { url: P(6303431), pos: '50%' },
   marche:    { url: P(8539234), pos: '50%' },
   etirement: { url: P(7880157), pos: '25%' },

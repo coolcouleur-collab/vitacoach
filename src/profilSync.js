@@ -29,7 +29,13 @@ async function getSupabase() {
 // efface l'abonnement de quelqu'un qui vient de payer.
 export const CHAMPS_SERVEUR = ['isPro', 'proSince', 'proPlan', 'proEnd', 'proManuel',
   'stripeSessionId', 'stripeCustomerId', 'stripeSubscriptionId',
-  'memoire_longue']
+  'memoire_longue',
+  // Ajoutes le 8 octobre 2026. Ecrits en base par le serveur (recettes,
+  // nutrition, moments) ou directement par seances.js, jamais par cette
+  // fonction : une copie locale plus ancienne, venue d'un autre appareil ou
+  // d'avant le passage d'un agent, les effacait a la sauvegarde suivante.
+  'seances', 'recettes_cache', 'nutrition_insights', 'moments_importants',
+  'memoire_reinitialisee_le']
 
 export async function syncProfilSupabase(userId, profil) {
   if (!userId) return
@@ -37,9 +43,13 @@ export async function syncProfilSupabase(userId, profil) {
 
   const aEcrire = { ...profil }
   try {
-    const { data } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
+    const { data, error } = await supabase.from('profils').select('profil').eq('user_id', userId).maybeSingle()
     for (const k of CHAMPS_SERVEUR) {
       if (data?.profil?.[k] !== undefined) aEcrire[k] = data.profil[k]
+      // Absent d'une ligne bien lue : le serveur l'a retire (memoire
+      // reinitialisee, par exemple). La copie locale ne doit pas le remettre.
+      // Seulement si la lecture a abouti : sur une erreur, on ne sait rien.
+      else if (!error && data?.profil) delete aEcrire[k]
     }
   } catch (_) {}
 
